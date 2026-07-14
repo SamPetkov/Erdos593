@@ -1,0 +1,13 @@
+.gitignore
+CITATION.cff
+MANIFEST.txt
+README.md
+REVISION_NOTES.md
+SHA256SUMS
+SOURCE_LEDGER.md
+build.sh
+create-private-repo.sh
+erdos593_obligatory_triple_systems.md
+erdos593_obligatory_triple_systems.pdf
+erdos593_obligatory_triple_systems.tex
+references.bib

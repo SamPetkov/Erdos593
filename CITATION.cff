@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "Please cite this manuscript using the metadata below."
+title: "Obligatory Triple Systems: A self-contained proof of Erdős Problem 593"
+type: article
+authors:
+  - family-names: Pekov
+    given-names: Samuil
+version: 1.0.0
+date-released: 2026-07-11
