@@ -19,7 +19,7 @@
 
 \hypersetup{
   pdftitle={Obligatory Triple Systems: A Self-Contained Proof of Erdos Problem 593},
-  pdfauthor={Samuil Pekov},
+  pdfauthor={Samuil Petkov},
   pdfsubject={A self-contained ZFC proof of Erdos Problem 593}
 }
 
@@ -62,7 +62,9 @@
   {\par\addvspace{0.26\baselineskip}}
 
 \title[Obligatory Triple Systems]{Obligatory Triple Systems:\\A Self-Contained Proof of Erd\H{o}s Problem 593}
-\author[Samuil Pekov]{Samuil Pekov}
+\author[Samuil Petkov]{Samuil Petkov}
+\address{\'Ecole normale sup\'erieure -- PSL, Paris, France}
+\email{samuil.petkov@ens.psl.eu}
 \date{July 11, 2026}
 
 \begin{document}
@@ -75,9 +77,22 @@ We prove the exact characterisation of finite obligatory triple systems. After i
 
 \begin{quote}\small
 \textit{Bibliographic note.}
-A contemporaneous preprint by Eric Li claims resolutions of Erd\H{o}s Problems 593 and 1177 \autocite{li2026}. It is cited solely for bibliographic completeness; no claim from that preprint is used as a premise or presented here as independently verified.
+The author developed the results and arguments in this manuscript independently, without consulting Eric Li's manuscript, and learned of Li's contemporaneous preprint only afterward. Li also presents the same classification and, in a more general cardinal form, the same one-apex sequence lift, together with closely related Levi-bridge and quotient-forest arguments \autocite{li2026}. The present proofs do not use Li's results as premises; the citations record the contemporaneous work and the substantive overlap.
 \end{quote}
 
+\section{Conventions and definitions}\label{conventions-and-definitions}
+
+A \emph{triple system} is a simple \(3\)-uniform hypergraph \(H=(V(H),E(H))\), so \(E(H)\subseteq[V(H)]^3\). A colouring \(c:V(H)\to\lambda\) is \emph{proper} when no hyperedge is monochromatic, and \(\chi(H)\) is the least cardinal \(\lambda\) admitting such a colouring. An embedding of a triple system \(F\) in \(H\) is an injective map \(f:V(F)\to V(H)\) such that \(f[e]\in E(H)\) for every \(e\in E(F)\); embeddings are not required to be induced. A finite triple system \(F\) is \emph{obligatory} if every triple system \(H\) with \(\chi(H)>\aleph_0\) contains an embedding of \(F\). A point is \emph{isolated} if it belongs to no hyperedge, and \(F^\circ\) denotes the result of deleting all isolated points.
+
+All ordinary graphs in this paper are simple. A triple system is \emph{linear} when any two distinct hyperedges meet in at most one point. Its \emph{Levi graph} \(I(F)\) is the bipartite graph with classes \(V(F)\) and \(E(F)\), where a point-node \(p\) is adjacent to a hyperedge-node \(e\) exactly when \(p\in e\). A \emph{bridge} is an edge of a graph whose deletion increases the number of connected components. A \emph{Berge cycle of length} \(\ell\ge2\) consists of distinct points \(p_0,\ldots,p_{\ell-1}\) and distinct hyperedges \(e_0,\ldots,e_{\ell-1}\) such that \(p_i\in e_i\cap e_{i+1}\), with indices modulo \(\ell\). Equivalently, it is a simple cycle of length \(2\ell\) in \(I(F)\).
+
+For a finite simple graph \(J\), its \emph{private-vertex expansion} \(J^+\) has vertex set
+\[
+V(J)\mathbin{\dot\cup}\{p_a:a\in E(J)\}
+\]
+and hyperedges \(\{u,v,p_{\{u,v\}}\}\) for \(\{u,v\}\in E(J)\), where the points \(p_a\) are new and pairwise distinct. A \emph{one-point amalgamation} of vertex-disjoint triple systems \(F_0,F_1\) is obtained by choosing \(x_i\in V(F_i)\), identifying \(x_0\) with \(x_1\), and making no other identifications or new hyperedges. Finite disjoint unions and finite edgeless systems include the empty cases.
+
+\Needspace{10\baselineskip}
 \section{Main theorem}\label{main-theorem}
 
 \phantomsection
@@ -120,6 +135,9 @@ Every other ingredient required for the classification is proved below.
 
 \paragraph{Background.}
 The problem was posed by Erd\H{o}s and is catalogued as Erd\H{o}s Problem 593 \autocite{erdos1995,bloom593}. Background on obligatory subsystems, large-chromatic set systems, and high-girth constructions may be found in \autocite{komjath2001,hajnalkomjath2008,ehr1973,erdoshajnal1966,egh1975,komjath2008,reiher2024,reihergirth2024,wang2026}.
+
+\paragraph{Relation to Li's proof.}
+Li's main theorem states the same classification, and Sections~3--5 of his preprint use the same one-apex sequence lift in a more general cardinal form, bridge selectors, and a quotient-forest reconstruction \autocite[Theorem~1.1 and Sections~3--5]{li2026}. The independently developed proof below instead proves the bipartite-expansion atom directly, deletes all Levi bridges in the intrinsic reconstruction, and packages the avoidance argument as an exact finite-linear-trace theorem. These are differences in proof and presentation, not a claim that the classification or all of its central structural ideas are new here.
 
 \section{1. Preliminary lemmas}\label{preliminary-lemmas}
 
@@ -187,7 +205,7 @@ For the second, every finite subgraph has at most \(d|V|\) edges and therefore a
 \label{lemma-1.4-closure-chain-lemma}
 \begin{lemmabox}{Lemma 1.4: closure-chain lemma}
 
-Let \(\kappa\) be an infinite cardinal and let
+Let \(\kappa\) be an uncountable cardinal, let \(1\le r<\omega\), and let
 
 \[
 \Phi:[\kappa]^r\longrightarrow[\kappa]^{<\omega}
@@ -445,7 +463,7 @@ Let \(A\) be one colour class. Then
 S_v\cap A=\varnothing\qquad(v\in A).
 \]
 
-Consequently \(H[A]\) contains no copy of \(F\). Indeed, if \(\varphi\) were such a copy and \(v=\varphi(r)\), its off-root part would have to meet \(S_v\) although both are subsets of \(A\). Since \(F\) is obligatory, every \(F\)-free triple system is countably chromatic. Thus each of the finitely many colour classes of \(D_B\) induces a countably chromatic subsystem, and \(H[B]\) is countably chromatic.
+Consequently \(H[A]\) contains no copy of \(F\). Indeed, if \(\varphi\) were such a copy and \(v=\varphi(r)\), its off-root part would have to meet \(S_v\) although both are subsets of \(A\). Since \(F\) is obligatory, every \(F\)-free triple system is countably chromatic. Thus each of the finitely many colour classes of \(D_B\) induces a countably chromatic subsystem. Tagging a vertex by its finite \(D_B\)-colour and its countable colour inside that class gives a countable proper colouring of \(H[B]\).
 
 If \(H[R_m(F,r;H)]\) were countably chromatic as well, tagging the two sides would give a countable colouring of \(H\). This contradicts \(\chi(H)>\aleph_0\). \(\square\)
 
@@ -468,9 +486,9 @@ By Lemma 4.3, the set
 R=R_m(F_1,r_1;H)
 \]
 
-induces an uncountably chromatic subsystem of every uncountably chromatic \(H\). Hence \(H[R]\) contains a copy of \(F_2\). Let \(v\) be the image of \(r_2\).
+induces an uncountably chromatic subsystem of every uncountably chromatic \(H\). Hence \(H[R]\) contains a copy of \(F_2\); write \(\varphi\) for its embedding and let \(v=\varphi(r_2)\).
 
-At \(v\) there are \(m\) rooted copies of \(F_1\) with pairwise disjoint off-root sets. The copy of \(F_2\) has only \(m-1\) vertices other than \(v\), so at most \(m-1\) of those petals meet it. One rooted \(F_1\)-copy avoids the \(F_2\)-copy outside \(v\). Their union is the required one-point amalgamation. \(\square\)
+At \(v\) there are \(m\) rooted copies of \(F_1\) with pairwise disjoint off-root sets. The set \(\varphi(V(F_2)\setminus\{r_2\})\) has \(m-1\) vertices, so it meets at most \(m-1\) of those off-root sets. One rooted \(F_1\)-copy therefore avoids the \(F_2\)-copy outside \(v\). Their union is the required one-point amalgamation. \(\square\)
 
 Corollary 3.3, Lemma 4.1, Proposition 4.4, and the trivial edgeless case prove
 
@@ -481,6 +499,7 @@ Corollary 3.3, Lemma 4.1, Proposition 4.4, and the trivial edgeless case prove
 \section{5. Equivalence of the constructive and intrinsic descriptions}\label{equivalence-of-the-constructive-and-intrinsic-descriptions}
 
 We prove \((2)\Longleftrightarrow(3)\). Isolated vertices may be ignored by Lemma 1.1.
+A bridge-selector formulation and a related quotient-forest reconstruction appear in Li's proof \autocite[Sections~4--5]{li2026}; here we delete every Levi bridge and reconstruct directly from all bridge-deleted components.
 
 \phantomsection
 \label{proposition-5.1-the-intrinsic-conditions-are-preserved-by-the-generators-and-operations}
@@ -506,7 +525,7 @@ Thus
 Suppose \(F\) is finite, has no isolated vertices, and satisfies the three intrinsic conditions. Then \(F\in\mathcal B\).
 
 \end{propositionbox}
-\textit{Proof.} Put \(L=I(F)\). Delete all bridges of \(L\), and let \(\mathscr C\) be the set of connected components of the resulting graph.
+\textit{Proof.} If \(E(F)=\varnothing\), then the assumption that \(F\) has no isolated vertices gives \(V(F)=\varnothing\), and \(F\) is an edgeless generator. Hence assume \(E(F)\ne\varnothing\). Put \(L=I(F)\), let \(B(L)\) be its set of bridges, and let \(\mathscr C\) be the set of connected components of \(L-B(L)\).
 
 Consider a hyperedge-node \(e\). Since \(e\) is incident with a bridge and has degree three, it has at most two nonbridge incidences. It cannot have exactly one: a nonbridge incidence lies on a cycle, and that cycle must leave \(e\) through a second nonbridge incidence. Therefore every hyperedge-node has either no nonbridge incidences or exactly two.
 
@@ -531,26 +550,24 @@ Thus the hyperedges belonging to \(C\), together with their third points \(p_e\)
 
 \subsubsection{Components consisting of one hyperedge-node}\label{components-consisting-of-one-hyperedge-node}
 
-If a hyperedge-node \(e\) has no nonbridge incidence, it is an isolated component after the bridges are deleted. Its single triple is the expansion of a one-edge bipartite graph. Thus every hyperedge of \(F\) belongs to a piece \(P_C\) isomorphic to \(J^+\) for a finite bipartite graph \(J\).
+If a hyperedge-node \(e\) has no nonbridge incidence, it is an isolated component after the bridges are deleted. Its single triple is the expansion of a one-edge bipartite graph. Thus every hyperedge of \(F\) belongs to a piece \(P_C\) isomorphic to \(J^+\) for a finite bipartite graph \(J\). The hyperedge sets of these pieces partition \(E(F)\). Their vertex sets cover \(V(F)\): every point is incident with a hyperedge, and it either lies in that hyperedge-node's bridge-deleted component or is the point endpoint of a bridge leaving it.
 
 \subsubsection{Quotient forest}\label{quotient-forest}
 
-Contract every component of \(L\) after bridge deletion. The original bridges become edges of a graph \(T\). This graph is a forest. Indeed, a cycle in the quotient would lift, by paths within the contracted components, to a cycle in \(L\) containing one of the purported bridges.
+Contract every component of \(L-B(L)\). The original bridges become edges of a quotient multigraph \(T\). Two distinct bridges cannot join the same pair of bridge-deleted components: paths inside those two components, together with the two bridges, would form a cycle containing both, contradicting that they are bridges. Thus \(T\) is a simple graph. It is a forest, because a cycle in the quotient would similarly lift to a cycle in \(L\) containing a purported bridge.
 
-Components of \(T\) that contain hyperedge-nodes will be called active. For an active component \(C\), the piece \(P_C\) consists of the hyperedges represented in \(C\), all point-nodes of \(C\), and the point endpoints of bridge incidences leaving hyperedge-nodes in \(C\).
+A vertex \(C\in V(T)=\mathscr C\) is called \emph{active} if the bridge-deleted component \(C\) contains a hyperedge-node. For an active \(C\), the piece \(P_C\) consists of the hyperedges represented in \(C\), all point-nodes of \(C\), and the point endpoints of bridge incidences leaving hyperedge-nodes in \(C\). An inactive component contains no hyperedge-node and hence no incidence of \(L-B(L)\), so it is a singleton point-node.
 
 \phantomsection
 \label{claim-5.2.1-running-intersection}
 \begin{claimbox}{Claim 5.2.1: running intersection}
 
-Root each component of the forest \(T\), and order the active components by nondecreasing depth, with arbitrary order among equal-depth components. When an active component \(C\) is added, its piece \(P_C\) meets the union of the earlier pieces in at most one point.
+Every component of \(T\) contains an active vertex, because \(F\) has no isolated vertices. Choose an active root in each component, and order the active vertices by nondecreasing depth, with arbitrary order among equal-depth vertices. When an active component \(C\) is added, its piece \(P_C\) meets the union of the earlier pieces in at most one point.
 
 \end{claimbox}
-\textbf{Proof of the claim.} Every point of \(P_C\) is either a point-node belonging to \(C\), or the point endpoint of a quotient-tree edge incident with \(C\) whose hyperedge endpoint lies in \(C\).
+\textbf{Proof of the claim.} For a point \(p\in V(F)\), let \(X(p)\in\mathscr C\) be the component of \(L-B(L)\) containing the point-node \(p\). The active pieces containing \(p\) are precisely \(P_{X(p)}\), when \(X(p)\) is active, together with the pieces \(P_D\) at active neighbours \(D\) of \(X(p)\) whose corresponding original bridge has point endpoint \(p\). Thus the vertices of \(T\) indexing pieces that contain \(p\) are contained in the closed star centred at \(X(p)\).
 
-Suppose \(p\in P_C\) also lies in an earlier piece \(P_D\). In the Levi graph, the occurrences of the same point-node \(p\) in the two pieces are linked through the component of \(L\) containing \(p\). Consequently the unique path in \(T\) from \(C\) to \(D\) passes through the quotient component containing \(p\), and the first edge on that path leaving \(C\) is incident with \(p\).
-
-Because \(D\) is earlier, it is not strictly inside a child subtree of \(C\). Hence the path from \(C\) to \(D\) must leave \(C\) through the parent direction, except when \(C\) and \(D\) are siblings attached to the same inactive point component; in that case the same parent point is used. The quotient is a forest, so \(C\) has only one parent edge and two distinct parent incidences cannot join the same pair of quotient components. Thus every point shared with an earlier piece is the same point \(p_C\) determined by the parent direction. Therefore
+Suppose that \(p\in P_C\) also lies in an earlier piece. If \(X(p)=C\), every other piece containing \(p\) is indexed by a neighbour of \(C\), and only the parent neighbour can be earlier. If \(X(p)\ne C\), then \(C\) is a neighbour of \(X(p)\). The vertex \(X(p)\) cannot be a child of \(C\), because then \(X(p)\) and all its other neighbours in the star would be deeper than \(C\). Hence \(X(p)\) is the parent of \(C\). In either case, \(p\) is the point endpoint of the unique parent edge of \(C\). The same reasoning applies to every point shared with an earlier piece, so all such points coincide with this parent point \(p_C\), and
 
 \[
 P_C\cap\bigcup_{D\text{ earlier}}P_D\subseteq\{p_C\}.
@@ -558,7 +575,7 @@ P_C\cap\bigcup_{D\text{ earlier}}P_D\subseteq\{p_C\}.
 
 For a root active component the intersection is empty. \(\square\)
 
-Starting with a root piece, add the active pieces in this order. If the new intersection is empty, use a disjoint union. If it is the singleton \(\{p_C\}\), use a one-point amalgamation at that point. Several earlier pieces may already contain the same inactive attachment point, but the new step still identifies only that one existing vertex. Different components of \(T\) are combined by disjoint union. Hence \(F\in\mathcal B\). \(\square\)
+Starting with the root piece in each component, add the active pieces in this order. If the new intersection is empty, use a disjoint union. If it is the singleton \(\{p_C\}\), use a one-point amalgamation at that point. Several earlier pieces may already contain the same inactive attachment point, but the new step still identifies only that one existing vertex. Because the pieces partition the hyperedges and cover the vertices of \(F\), the resulting triple system is exactly \(F\). Different components of \(T\) are combined by disjoint union. Hence \(F\in\mathcal B\). \(\square\)
 
 This proves
 
@@ -573,6 +590,8 @@ Combining (5.1) and (5.2),
 \]
 
 \section{6. The sequence lift used in the avoidance constructions}\label{the-sequence-lift-used-in-the-avoidance-constructions}
+
+Li introduces the same one-apex sequence lift in the more general form \(\operatorname{Lift}(G,\kappa)\) and analyzes its bridge traces \autocite[Sections~3--4]{li2026}. Our construction is its \(\kappa=\omega_1\) specialization, followed here by a different finite-linear-trace decomposition; we give the complete argument.
 
 Let \(G=(X,A)\) be an arbitrary graph, where \(A=E(G)\) is also regarded as an alphabet. Let
 
@@ -598,7 +617,7 @@ For \(s\in T\), an edge \(a=\{x,y\}\in A\), a sequence \(t\in T\) extending \(s^
 \{x_s,y_s,z_t\}\in E(\mathcal L(G)). \tag{6.1}
 \]
 
-The two vertices \(x_s,y_s\) form the base pair and \(z_t\) is the apex. The base node is uniquely recoverable from a hyperedge, so the system is simple and \(3\)-uniform.
+The two vertices \(x_s,y_s\) form the base pair and \(z_t\) is the apex. Since \(t\) properly extends \(s\), these are three distinct vertices. In the resulting triple, the sequence node occurring twice uniquely identifies \(s\); its two graph labels identify the edge \(a=\{x,y\}\), and the remaining vertex identifies \(t,z\). Thus each hyperedge arises from unique data, up to interchanging \(x\) and \(y\), and the system is simple and \(3\)-uniform.
 
 \end{definitionbox}
 \phantomsection
@@ -646,7 +665,9 @@ is a monochromatic hyperedge. Therefore the colours \(k_{s_\alpha}\), \(\alpha<\
 Every finite linear subhypergraph \(K\) of \(\mathcal L(G)\) is obtainable, by finite disjoint unions and one-point amalgamations, from systems \(J^+\) where \(J\) is a finite subgraph of \(G\).
 
 \end{theorembox}
-\textit{Proof.} Every hyperedge of \(\mathcal L(G)\) has a unique base node \(s\): exactly two of its vertices have sequence coordinate \(s\), while the apex has a strictly longer sequence coordinate. Group the hyperedges of \(K\) by their base nodes, and let \(K_s\) consist of the hyperedges based at \(s\).
+\textit{Proof.} First set aside every isolated vertex of \(K\). Each is a one-vertex edgeless factor, hence isomorphic to \(J^+\) for a one-vertex edgeless subgraph \(J\) of \(G\), and may be restored by disjoint union at the end. We may therefore assume that every vertex of \(K\) lies in a hyperedge.
+
+Every hyperedge of \(\mathcal L(G)\) has a unique base node \(s\): exactly two of its vertices have sequence coordinate \(s\), while the apex has a strictly longer sequence coordinate. Group the hyperedges of \(K\) by their base nodes, and let \(K_s\) be the subhypergraph whose hyperedges are those based at \(s\) and whose vertices are their union.
 
 For a fixed graph edge \(a=\{x,y\}\in E(G)\), at most one hyperedge of \(K_s\) can have base pair \(\{x_s,y_s\}\), since two such hyperedges would share two vertices and violate linearity. Hyperedges of \(K_s\) associated with distinct graph edges have distinct apices: if \(z_t\) were the apex for graph edges \(a\) and \(a'\), the coordinate of \(t\) immediately after \(s\) would have to be both \(a\) and \(a'\). It follows that \(K_s\) is precisely \(J_s^+\), where \(J_s\) is the finite subgraph of \(G\) consisting of the graph edges used at \(s\).
 
@@ -662,7 +683,11 @@ We claim that \(Q\) is a forest. Suppose it has a cycle, and choose on that cycl
 
 On the remainder of the cycle, consecutive base nodes share a point and are therefore comparable. Every base node there has length at least that of \(s\). Comparable descendants of \(s\) lie in the same immediate branch below \(s\), so the remainder of the cycle cannot move from the \(a\)-branch to the \(a'\)-branch without passing through a base node shorter than \(s\). This contradicts the choice of \(s\). Hence \(Q\) is acyclic.
 
-Root each component of \(Q\). Start with the factor at a root base node, and attach every child factor at the unique shared point represented by the intervening point-node of \(Q\). By (6.2) and acyclicity, every step is a one-point amalgamation. Different components are combined by disjoint union. \(\square\)
+Root each component of \(Q\) at a base node, and order its base nodes by nondecreasing even distance from the root. For a nonroot base node \(s\), let \(p_s\) be the point-node adjacent to \(s\) on the path to the root. Since \(Q\) is a tree, any earlier factor meeting \(K_s\) does so at \(p_s\); earlier siblings can also meet \(K_s\), but only at this same point. Equation (6.2) then gives
+\[
+V(K_s)\cap\bigcup_{u\text{ earlier}}V(K_u)\subseteq\{p_s\}.
+\]
+Starting with the root factor, add the remaining factors in this order by disjoint unions or one-point amalgamations as appropriate. Different components of \(Q\), and the isolated factors removed at the start, are combined by disjoint union. \(\square\)
 
 \phantomsection
 \label{corollary-6.4-restrictions-on-finite-linear-traces}
@@ -785,7 +810,7 @@ is an arc of \(\delta D\). We have
 D_{r+1}(\kappa)\cong\delta D_r(\kappa).
 \]
 
-We use the following fact: if \(D\) is acyclic and the underlying graph of \(D\) has odd girth \(g\), then the underlying graph of \(\delta D\) has odd girth at least \(g+2\).
+We use the following fact: if \(D\) is acyclic and the underlying graph of \(D\) has odd girth \(g\), then the underlying graph of \(\delta D\) has odd girth at least \(g+2\). Indeed, a directed cycle in \(\delta D\) would concatenate to a directed closed walk in \(D\), which would contain a directed cycle; hence \(\delta D\) is also acyclic.
 
 Take an odd cycle \(a_0,\ldots,a_{m-1}\) in the underlying graph of \(\delta D\). Record, around the cycle, whether each adjacency is oriented forward or backward in \(\delta D\). Since \(\delta D\) is acyclic, the cyclic sign sequence is not constant. It therefore has at least two sign changes, and the number of sign changes is even.
 
@@ -848,7 +873,7 @@ Let \(\kappa=(2^{\aleph_0})^+\). Define a triple system \(T_\kappa\) whose verti
 
 This triple system is linear: two distinct triangles of a complete graph cannot share two graph edges, because two graph edges of a triangle determine the third edge and the three underlying vertices.
 
-It is uncountably chromatic. A countable vertex-colouring of \(T_\kappa\) is a countable edge-colouring of \(K_\kappa\). By (8.1) there is a monochromatic set of type \(\aleph_1\), and in particular a monochromatic graph triangle. This is a monochromatic hyperedge of \(T_\kappa\).
+It is uncountably chromatic. A countable vertex-colouring of \(T_\kappa\) is a countable edge-colouring of \(K_\kappa\). By (8.1) there is a monochromatic subset of cardinality \(\aleph_1\), and in particular a monochromatic graph triangle. This is a monochromatic hyperedge of \(T_\kappa\).
 
 If a finite triple system \(F\) is nonlinear, it has two distinct edges sharing at least two vertices. No injective embedding of those edges can exist in the linear host \(T_\kappa\). Thus \(T_\kappa\) is \(F\)-free. \(\square\)
 
@@ -937,6 +962,6 @@ All embeddings are non-induced: additional host hyperedges on the image vertices
 \printbibliography[heading=bibintoc,title={References}]
 
 \section*{Ethics and AI-assistance statement}
-This manuscript was completed with assistance from OpenAI's ChatGPT-5.6 Pro for proof development, adversarial checking, drafting, editing, bibliographic organisation, and typesetting. Samuil Pekov is the sole author and accepts responsibility for the verification of all mathematical arguments, citations, and conclusions. The AI system is not an author.
+This manuscript was completed with assistance from OpenAI's ChatGPT-5.6 Pro for proof development, adversarial checking, drafting, editing, bibliographic organisation, and typesetting. Samuil Petkov is the sole author and accepts responsibility for the verification of all mathematical arguments, citations, and conclusions. The AI system is not an author.
 
 \end{document}
