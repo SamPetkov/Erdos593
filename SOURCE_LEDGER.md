@@ -49,4 +49,4 @@ The arXiv v1 TeX source was inspected directly. Its Part I proof of the Erdős 5
 
 ## AI-use record
 
-OpenAI’s ChatGPT-5.6 Pro was used in proof development, adversarial checking, exposition, source organisation, and typesetting. The paper states that Samuil Petkov reviewed the complete manuscript and accepts responsibility for all mathematical claims, citations, and remaining errors.
+OpenAI’s ChatGPT-5.6 Pro was used for proof development, adversarial checking, and analysis of Li’s arguments. The paper states that Samuil Petkov reviewed the complete manuscript and accepts responsibility for all mathematical claims, citations, and remaining errors.

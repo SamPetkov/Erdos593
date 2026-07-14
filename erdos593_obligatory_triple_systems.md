@@ -776,4 +776,4 @@ All embeddings are non-induced: additional host hyperedges on the image vertices
 
 # Ethics and AI-assistance statement
 
-This manuscript was completed with assistance from OpenAI's ChatGPT-5.6 Pro for proof development, adversarial checking, drafting, editing, bibliographic organisation, and typesetting. Samuil Petkov is the sole author and accepts responsibility for the verification of all mathematical arguments, citations, and conclusions. The AI system is not an author.
+This manuscript was completed with assistance from OpenAI's ChatGPT-5.6 Pro for proof development, adversarial checking, and analysis of Li's arguments. Samuil Petkov is the sole author and accepts responsibility for the verification of all mathematical arguments, citations, and conclusions. The AI system is not an author.

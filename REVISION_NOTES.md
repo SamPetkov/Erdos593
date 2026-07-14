@@ -11,5 +11,6 @@
 6. Preserved citation numbering in order of first appearance and retained the complete proof, the non-induced containment convention, and the ZFC scope.
 7. Added repository support files: `README.md`, `.gitignore`, `CITATION.cff`, and `create-private-repo.sh`.
 8. Preserved the reproducible PDF timestamp of 11 July 2026, 12:00 UTC.
-9. Added the author's ENS--PSL affiliation and institutional email, and corrected the de Bruijn--Erdos page range to 371--373.
+9. Added the author's ENS--PSL affiliation and institutional email directly beneath the author name, and corrected the de Bruijn--Erdos page range to 371--373.
 10. Repaired the scope of Lemma 1.4, supplied the missing formal definitions, completed the quotient-forest and finite-trace bookkeeping, and made the auxiliary colouring and odd-girth arguments explicit.
+11. Narrowed the ethics statement to proof development, adversarial checking, and analysis of Li's arguments.
