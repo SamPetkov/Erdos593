@@ -67,6 +67,8 @@ import Erdos593.TripleSystem.SameRankColoring
 import Erdos593.TripleSystem.LowCrossingAtomBridge
 import Erdos593.TripleSystem.LowCrossingColoring
 import Erdos593.TripleSystem.LowEdgeRankClassification
+import Erdos593.TripleSystem.PositiveAtomColoringAssembly
+import Erdos593.TripleSystem.PositiveAtomClassical
 import Erdos593.TripleSystem.SequenceLiftChromatic
 import Erdos593.TripleSystem.SingleEdgePiece
 import Erdos593.TripleSystem.SingleEdgePieceConstructible
