@@ -962,6 +962,34 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
 - Disposition: local canonical proof accepted; Aristotle independently
   validated the pre-merge source, and no remote source was merged.
 
+## O27: tagged apex-image equivalence for selected edges
+
+- Submitted (UTC): 2026-07-15 21:49:02. The authenticated Aristotle dashboard
+  request is `17bdeb15-b201-4c71-912f-227e6c772595`.
+- Exact task boundary: independently validate only
+  `SequenceLift.selectedEdgeEquiv_sigmaBaseApexImage_of_linear` from public
+  `main`: under linearity, compose the selected-edge/base-fibre sigma
+  equivalence with the individual canonical-apex-image equivalences. The
+  prompt requires retaining the active base-node sigma tag and explicitly
+  forbids an untagged union, cross-fibre apex identification, any
+  finiteness/cardinality consequence, trace decomposition, atom theorem,
+  `sorry`, `admit`, project `axiom`, `unsafe`, `native_decide`, and
+  resource-limit overrides.
+- Submitted files: none. The dashboard received only the public repository
+  reference and exact bounded theorem prompt; no local tree, attachment,
+  credential, secret, or private project content was uploaded.
+- Local independent implementation: the exact focused module
+  `Erdos593/TripleSystem/SequenceLiftTaggedBaseApexEquiv.lean` was committed
+  on public `main` at `22fa0ae04db9fb34e7b45d0e94a22c6acacc2a18`. Its strict
+  source check and focused canonical build (1,233 Lake jobs) pass under
+  Lean/mathlib `v4.32.0`; its axiom audit reports only `propext`,
+  `Classical.choice`, and `Quot.sound`.
+- Remote status: validation started. No returned source has been merged; any
+  result remains subject to the exact-statement, source-gap, and canonical
+  Lean 4.32 compilation audit before comparison or adoption.
+- Disposition: local canonical proof accepted; remote proof retained as an
+  independent pending validation.
+
 ## Record format
 
 For every submission, record:
