@@ -105,7 +105,12 @@ cardinality statement, or trace decomposition. The project is not yet a
 complete machine-checked
 proof of Erdős Problem 593: the full
 finite-trace theorem, isolated-vertex reconstruction bridge, and the remaining
-infinitary avoidance direction are open. Their dependency order is recorded in
+infinitary avoidance direction are open. `SequenceLiftTaggedBaseApexEquiv`
+combines the tagged selected-edge/base-fibre equivalence with the local
+canonical-apex image maps, retaining the active base-node tag and therefore
+introducing no untagged apex union, cross-fibre identification, cardinality
+statement, trace decomposition, or atom claim. Their dependency order is
+recorded in
 `FORMALIZATION_MAP.md`.
 
 ## Build
@@ -125,7 +130,8 @@ public obligatory endpoints, sequence-trace rigidity lemmas, and the
 `SequenceLiftBaseFiberSupportIndex` / `SequenceLiftBaseFiberCardinality` /
 `SequenceLiftBaseFiberTraceSum` / `SequenceLiftBaseFiberEquiv` /
 `SequenceLiftTaggedBaseLetterEquiv` /
-`SequenceLiftTaggedBaseLetterSourceEquiv` / `SequenceLiftBaseApexEquiv`
+`SequenceLiftTaggedBaseLetterSourceEquiv` / `SequenceLiftBaseApexEquiv` /
+`SequenceLiftTaggedBaseApexEquiv`
 canonical trace-key and fibre modules on
 every pull request and
 push to `main`. The workflow deliberately

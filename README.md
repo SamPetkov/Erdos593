@@ -158,6 +158,10 @@ identification, finite-cardinality, or trace claim.
 `SequenceLiftBaseApexEquiv` separately identifies one linear canonical base
 fibre with its own canonical-apex image; it makes no cross-fibre
 identification, global union, cardinality, or trace claim.
+`SequenceLiftTaggedBaseApexEquiv` composes the tagged selected-edge/base-fibre
+equivalence with those local apex-image maps, retaining the active base-node
+tag; it makes no untagged apex union, cross-fibre identification,
+cardinality, trace, or atom claim.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

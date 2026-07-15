@@ -59,12 +59,16 @@ finite fibre-cardinality layer proves the exact selected-edge and source-index
 sum; its local-letter-sum refinement rewrites that sum as the distinct
 base-letter images in separate active fibres and as the trace-key image. It
 does not identify base letters across fibres or prove a global finite-trace
-decomposition. The tagged sigma equivalence identifies a selected edge family,
-and then an embedded source-edge type, with those separate local base-letter
-images only under a linearity hypothesis; the active base-node tag remains
-present throughout. It does not construct an untagged global union or trace
-decomposition, which remains open alongside reconstruction across isolated
-vertices and the remaining infinitary avoidance direction.
+decomposition. The tagged base-letter sigma equivalences identify a selected
+edge family, and then an embedded source-edge type, with separate local
+base-letter images only under a linearity hypothesis. The companion tagged
+apex-image sigma equivalence identifies selected edges with the separate
+canonical-apex images of their active base fibres. The active base-node tag
+remains present throughout; these interfaces create neither an untagged global
+union nor a cross-fibre identification, and make no cardinality, trace, or
+atom claim. The global finite-trace decomposition remains open alongside
+reconstruction across isolated vertices and the remaining infinitary avoidance
+direction.
 
 ## Reproduction and exactness check
 
@@ -86,10 +90,10 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-+ Deterministic regeneration check: passed for 97 source modules, 44 external
-  Mathlib imports, 14,510 physical lines, 12,708 nonblank lines, 589,664 UTF-8
+- Deterministic regeneration check: passed for 98 source modules, 44 external
+  Mathlib imports, 14,555 physical lines, 12,742 nonblank lines, 591,477 UTF-8
   bytes, and SHA-256
-  `00ad146f1108f57d52a05a5f3d4f102b69c1dd855e001279b8a790c07c38e015`.
+  `f1070acf82c98145f7376d9294628f6b667bbd987906f179f280649750a277e4`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
@@ -111,7 +115,8 @@ module checks recorded below.
   jobs), and
   `Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv` (1,231
   Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseApexEquiv` (1,227
-  Lake jobs),
+  Lake jobs), and `Erdos593.TripleSystem.SequenceLiftTaggedBaseApexEquiv`
+  (1,233 Lake jobs),
   passed under the pinned Lean/mathlib `v4.32.0` toolchain.
 - Source audit: the complete imported closure, including
   `SequenceLiftBaseNode`, `SequenceLiftBaseNormalForm`, and
@@ -121,7 +126,8 @@ module checks recorded below.
   `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberCardinality`,
   `SequenceLiftBaseFiberTraceSum`, `SequenceLiftBaseFiberEquiv`,
   `SequenceLiftTaggedBaseLetterEquiv`,
-  `SequenceLiftTaggedBaseLetterSourceEquiv`, `SequenceLiftBaseApexEquiv`, and
+  `SequenceLiftTaggedBaseLetterSourceEquiv`, `SequenceLiftBaseApexEquiv`,
+  `SequenceLiftTaggedBaseApexEquiv`, and
   the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
@@ -257,6 +263,14 @@ The local O26 apex-image equivalence can also be audited directly:
 import Erdos593.TripleSystem.SequenceLiftBaseApexEquiv
 
 #print axioms Erdos593.SequenceLift.baseFiberEquivBaseApexImage_of_linear
+```
+
+The O27 tagged apex-image equivalence can also be audited directly:
+
+```lean
+import Erdos593.TripleSystem.SequenceLiftTaggedBaseApexEquiv
+
+#print axioms Erdos593.SequenceLift.selectedEdgeEquiv_sigmaBaseApexImage_of_linear
 ```
 
 In addition to this declaration-level check, scan every source in the local
