@@ -51,10 +51,13 @@ the unique point of every lifted edge away from its canonical base and proves
 that, inside a linear canonical base fibre, it is private to its edge and
 apex-injective. The support-index layer reindexes this partition by the exact
 active-base subtype and, for a finite embedded source, supplies a source-edge
-surjection and the corresponding active-index cardinal upper bounds.
-These are local finite-trace interfaces only: a fibre-cardinality sum and a
-global finite-trace decomposition remain unproved, alongside reconstruction
-across isolated vertices and the remaining infinitary avoidance direction.
+surjection and the corresponding active-index cardinal upper bounds. The
+finite fibre-cardinality layer proves the exact selected-edge and source-index
+sum; its local-letter-sum refinement rewrites that sum as the distinct
+base-letter images in separate active fibres and as the trace-key image. It
+does not identify base letters across fibres or prove a global finite-trace
+decomposition, which remains open alongside reconstruction across isolated
+vertices and the remaining infinitary avoidance direction.
 
 ## Reproduction and exactness check
 
@@ -76,10 +79,10 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 92 source modules, 44 external
-  Mathlib imports, 14,186 physical lines, 12,444 nonblank lines, 576,057 UTF-8
+- Deterministic regeneration check: passed for 93 source modules, 44 external
+  Mathlib imports, 14,295 physical lines, 12,538 nonblank lines, 581,003 UTF-8
   bytes, and SHA-256
-  `1fdbe1aec04a18e5739faa1dc9c5c69f143c3f88fc1fe35be7807086a0937c52`.
+  `66632c3c01cef148af1e692d91ad00833e0b20ebebd0607b94f6cc3f157a9df6`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
@@ -94,6 +97,7 @@ module checks recorded below.
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseApex` (1,226 Lake jobs),
   and `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality` (1,289
+  Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum` (1,290
   Lake jobs),
   passed under the pinned Lean/mathlib `v4.32.0` toolchain.
 - Source audit: the complete imported closure, including
@@ -101,7 +105,8 @@ module checks recorded below.
   `SequenceLiftBaseLetter`, `SequenceLiftFiniteTrace`, and
   `SequenceLiftBaseFiber`, `SequenceLiftBaseFiberIndex`,
   `SequenceLiftBaseFiberPartition`, `SequenceLiftBaseApex`,
-  `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberCardinality`, and
+  `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberCardinality`,
+  `SequenceLiftBaseFiberTraceSum`, and
   the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
@@ -192,6 +197,18 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.edgeIndexEquiv_sigmaBaseFiberIndex
 #print axioms Erdos593.SequenceLift.edgeImage_ncard_eq_sum_baseFiberIndex
 #print axioms Erdos593.SequenceLift.edge_card_eq_sum_baseFiberIndex_card
+```
+
+For the fibre-local O22 endpoint, a focused audit need not rely on rebuilding
+the umbrella module; import its focused module directly:
+
+```lean
+import Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum
+
+#print axioms Erdos593.SequenceLift.ncard_eq_sum_baseLetter_image_activeBaseNodeIndex_of_linear
+#print axioms Erdos593.SequenceLift.edgeImage_ncard_eq_sum_baseLetter_image_ncard
+#print axioms Erdos593.SequenceLift.edge_card_eq_sum_baseLetter_image_ncard
+#print axioms Erdos593.SequenceLift.traceKey_image_ncard_eq_sum_baseLetter_image_ncard
 ```
 
 In addition to this declaration-level check, scan every source in the local

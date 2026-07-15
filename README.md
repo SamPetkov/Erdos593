@@ -60,9 +60,13 @@ The author reports developing the proof independently, without consulting Eric L
   linear canonical-base fibre, this apex is private to its own edge and hence
   apex-injective. A finite-support index reindexes the partition over the
   subtype of active base nodes; a source-edge map is surjective onto this
-  index, yielding its finite-cardinality bound. These are factor-local and
-  set-theoretic only: they supply neither a fibre-cardinality sum nor a global
-  finite-trace decomposition; a dependency map records their place.
+  index, yielding its finite-cardinality bound. The finite fibre-cardinality
+  layer proves the exact selected-edge sum, while the local-letter-sum layer
+  rewrites it as a sum of distinct base-letter images in separate fibres and,
+  for a finite linear no-isolated embedded source, as the trace-key image
+  cardinality. It deliberately retains multiplicity
+  across base fibres and proves no global base-letter union or finite-trace
+  decomposition; a dependency map records their place.
   Reconstruction across isolated vertices,
   the remaining finite-trace decomposition, and the infinitary avoidance
   direction remain open.
@@ -137,6 +141,9 @@ supply a fibre-cardinality sum or a global finite-trace decomposition. The
 finite `SequenceLiftBaseFiberCardinality` layer now supplies that exact
 selected-edge fibre sum and the matching source-index sigma/cardinality
 identities, but it does not sum global base-letter images or traces.
+`SequenceLiftBaseFiberTraceSum` now expresses the same sum through the
+separate local base-letter images and the trace-key image, without identifying
+base letters across distinct fibres or asserting a global trace decomposition.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

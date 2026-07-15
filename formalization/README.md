@@ -84,7 +84,11 @@ source-edge surjection and cardinal bound for that index. It still proves no
 fibre-cardinality sum or global trace decomposition. `SequenceLiftBaseFiberCardinality`
 now proves the exact finite selected-edge fibre sum and the corresponding
 source-index sigma/cardinality identities. It deliberately does not sum global
-base-letter images or traces. The project is not yet a
+base-letter images or traces. `SequenceLiftBaseFiberTraceSum` expresses that
+same finite sum using the distinct base-letter image within each separate
+active fibre, and therefore also counts the trace-key image. It neither
+identifies base letters across fibres nor supplies a global base-letter union
+or trace decomposition. The project is not yet a
 complete machine-checked
 proof of Erdős Problem 593: the full
 finite-trace theorem, isolated-vertex reconstruction bridge, and the remaining
@@ -105,7 +109,8 @@ public obligatory endpoints, sequence-trace rigidity lemmas, and the
 `SequenceLiftBaseLetter` / `SequenceLiftFiniteTrace` /
 `SequenceLiftBaseFiber` / `SequenceLiftBaseFiberIndex` /
 `SequenceLiftBaseFiberPartition` / `SequenceLiftBaseApex` /
-`SequenceLiftBaseFiberSupportIndex` / `SequenceLiftBaseFiberCardinality`
+`SequenceLiftBaseFiberSupportIndex` / `SequenceLiftBaseFiberCardinality` /
+`SequenceLiftBaseFiberTraceSum`
 canonical trace-key and fibre modules on
 every pull request and
 push to `main`. The workflow deliberately
