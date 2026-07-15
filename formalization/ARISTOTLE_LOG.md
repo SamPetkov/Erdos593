@@ -903,6 +903,33 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
 - Disposition: local proof pending release validation; remote proof retained as
   an independent running comparison.
 
+## O14: canonical base letter and linear trace key
+
+- Submitted (UTC): 2026-07-15 17:53:27. Aristotle web-dashboard request
+  `6c293fda-8907-437c-bb30-d23aa50f8be7`; the authenticated dashboard did not
+  expose a separate project identifier for this text-only request.
+- Exact task boundary: return an independent Lean 4 formalization of the
+  bounded `SequenceLiftBaseLetter` API: base-letter existence and uniqueness,
+  its `Classical.choose` selector, the canonical `(baseNode, baseLetter)` key,
+  and injectivity of that key on every linear edge restriction. The prompt
+  explicitly excluded any claim of a global finite-trace decomposition and
+  highlighted the dependent transport required when canonical base nodes are
+  equal. It forbids `sorry`, `admit`, `axiom`, `unsafe`, and new global
+  assumptions.
+- Submitted files: none. The dashboard received only the explicit theorem
+  prompt and local API context; no repository tree, attachment, credential, or
+  secret was uploaded.
+- Local independent implementation: the same bounded module has a passing
+  strict source check under Lean/mathlib `v4.32.0`:
+  `lake env lean -DwarningAsError=true
+  Erdos593/TripleSystem/SequenceLiftBaseLetter.lean`.
+- Remote status at the first successful dashboard poll: `RUNNING`. No returned
+  source has been merged; any result remains subject to exact-statement,
+  source-gap, and canonical Lean 4.32 compilation audits before comparison or
+  adoption.
+- Disposition: local proof pending release validation; remote proof retained as
+  an independent running comparison.
+
 ## Record format
 
 For every submission, record:
