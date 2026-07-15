@@ -151,6 +151,10 @@ images from distinct fibres nor produces a global trace equivalence.
 the sigma of those separate fibre images while retaining the active base-node
 tag.  It does not form an untagged global base-letter image or a trace
 decomposition.
+`SequenceLiftTaggedBaseLetterSourceEquiv` carries that same tagged
+identification back to the original source-edge type for an embedding with a
+linear selected image; it likewise makes no untagged union, cross-fibre
+identification, finite-cardinality, or trace claim.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

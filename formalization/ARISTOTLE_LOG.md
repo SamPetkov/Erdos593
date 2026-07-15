@@ -930,6 +930,34 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
 - Disposition: local proof pending release validation; remote proof retained as
   an independent running comparison.
 
+## O25: tagged base-letter equivalence for embedded source edges
+
+- Submitted (UTC): 2026-07-15 21:07. The authenticated Aristotle dashboard
+  displayed the text-only task at 2026-07-16 00:07 local time and did not
+  expose a standalone project or task identifier in the visible card.
+- Exact task boundary: independently validate only
+  `SequenceLift.edgeIndexEquiv_sigmaBaseLetterImage_of_linear`: under
+  linearity of an embedding image, compose the exact source-edge/image
+  equivalence with the existing tagged selected-edge/base-letter sigma
+  equivalence. The prompt explicitly forbade a global base-letter union,
+  cross-fibre identification, finite-cardinality claim, trace decomposition,
+  `sorry`, `admit`, `axiom`, `unsafe`, and new global assumptions.
+- Submitted files: none. The dashboard received only the public repository
+  reference and bounded theorem prompt; no local tree, attachment, credential,
+  secret, or private project content was uploaded.
+- Local independent implementation: the exact focused module
+  `Erdos593/TripleSystem/SequenceLiftTaggedBaseLetterSourceEquiv.lean`
+  was independently written and accepted before the remote job left its
+  queue. Its strict source check and focused canonical build (1,231 Lake jobs)
+  pass under Lean/mathlib `v4.32.0`.
+- Remote status at the first successful dashboard poll: `QUEUED`. A later
+  dashboard poll found the independent task `RUNNING` after it cloned/read the
+  public repository. No remote source has been merged; any return remains
+  subject to exact-statement, source-gap, and canonical Lean 4.32 compilation
+  and axiom audits.
+- Disposition: local canonical proof accepted; remote task retained as an
+  independent pending comparison.
+
 ## Record format
 
 For every submission, record:

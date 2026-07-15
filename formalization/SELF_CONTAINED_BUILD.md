@@ -56,6 +56,10 @@ finite fibre-cardinality layer proves the exact selected-edge and source-index
 sum; its local-letter-sum refinement rewrites that sum as the distinct
 base-letter images in separate active fibres and as the trace-key image. It
 does not identify base letters across fibres or prove a global finite-trace
+decomposition. The tagged sigma equivalence identifies a selected edge family,
+and then an embedded source-edge type, with those separate local base-letter
+images only under a linearity hypothesis; the active base-node tag remains
+present throughout. It does not construct an untagged global union or trace
 decomposition, which remains open alongside reconstruction across isolated
 vertices and the remaining infinitary avoidance direction.
 
@@ -79,10 +83,10 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-+ Deterministic regeneration check: passed for 95 source modules, 44 external
-  Mathlib imports, 14,408 physical lines, 12,628 nonblank lines, 585,583 UTF-8
++ Deterministic regeneration check: passed for 96 source modules, 44 external
+  Mathlib imports, 14,453 physical lines, 12,662 nonblank lines, 587,558 UTF-8
   bytes, and SHA-256
-  `214bfdadc35180c078b7290dc3a73f706a6a91874c5e539cc03d96e28b127624`.
+  `10881e718c04b02d88caf8a43b20ac785ec3587c5020085317aed76d4e6f0509`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
@@ -101,7 +105,9 @@ module checks recorded below.
   Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv` (1,226
   Lake jobs), and
   `Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterEquiv` (1,230 Lake
-  jobs),
+  jobs), and
+  `Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv` (1,231
+  Lake jobs),
   passed under the pinned Lean/mathlib `v4.32.0` toolchain.
 - Source audit: the complete imported closure, including
   `SequenceLiftBaseNode`, `SequenceLiftBaseNormalForm`, and
@@ -110,7 +116,8 @@ module checks recorded below.
   `SequenceLiftBaseFiberPartition`, `SequenceLiftBaseApex`,
   `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberCardinality`,
   `SequenceLiftBaseFiberTraceSum`, `SequenceLiftBaseFiberEquiv`,
-  `SequenceLiftTaggedBaseLetterEquiv`, and
+  `SequenceLiftTaggedBaseLetterEquiv`,
+  `SequenceLiftTaggedBaseLetterSourceEquiv`, and
   the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
@@ -230,6 +237,14 @@ import Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterEquiv
 
 #print axioms Erdos593.SequenceLift.sigmaBaseFiberEquivSelectedEdge
 #print axioms Erdos593.SequenceLift.selectedEdgeEquiv_sigmaBaseLetterImage_of_linear
+```
+
+The embedded-source O25 tagged equivalence can also be audited directly:
+
+```lean
+import Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv
+
+#print axioms Erdos593.SequenceLift.edgeIndexEquiv_sigmaBaseLetterImage_of_linear
 ```
 
 In addition to this declaration-level check, scan every source in the local
