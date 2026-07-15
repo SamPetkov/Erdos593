@@ -1,8 +1,17 @@
 import Mathlib.Combinatorics.SimpleGraph.Acyclic
 import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Combinatorics.SimpleGraph.Coloring.Constructions
+import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
+import Mathlib.Combinatorics.SimpleGraph.Copy
+import Mathlib.Combinatorics.SimpleGraph.Finite
 import Mathlib.Combinatorics.SimpleGraph.Sum
+import Mathlib.Data.Countable.Basic
+import Mathlib.Data.Finset.Sort
+import Mathlib.Data.Prod.Lex
 import Mathlib.Data.Set.Card
+import Mathlib.Data.Set.Finite.Range
+import Mathlib.SetTheory.Cardinal.Basic
+import Mathlib.SetTheory.Cardinal.Order
 
 /-!
 # Erdős Problem 593: Project-Self-Contained Lean Checkpoint
@@ -19,14 +28,16 @@ dependency order. Its only imports are from the Mathlib version pinned by this
 project's lake-manifest.json and lean-toolchain.
 
 This file is NOT a full formal proof of Erdős Problem 593. The verified content
-includes the finite incidence/Levi-graph kernel, bridge-block contraction and
-cycle lifting, the exact bridge-component quotient forest and
-closed-star/rooted-depth kernels, active-component private-point expansion
-data, complete disjoint-union preservation, and one-point-amalgamation
-infrastructure. Major missing layers
-are the even-cycle theorem for bipartite expansion generators, preservation
-under one-point amalgamation, packaging and final reconstruction, and the
-obligatoriness, infinite, and avoidance parts of the manuscript.
+now includes the complete finite structural classification: the exact
+constructive class, all generator and closure preservation theorems, the
+bridge-block quotient forest, active and degree-zero expansion pieces, the
+rooted running-intersection reconstruction, and the equivalence between
+constructibility and the intrinsic Levi conditions after isolated vertices are
+removed. It also includes the chromatic-cardinal interface, finite-deletion and
+obligatory disjoint-union closure, and the exact isolated-vertex reduction for
+obligatoriness. Major missing layers are the complete-bipartite expansion atom,
+rooted-abundance/obligatory one-point-amalgamation theorem, the remaining
+infinitary positive argument, and the sequence-lift avoidance direction.
 
 Generated deterministically from Erdos593.lean and its exact transitive local
 import closure. Each source boundary records its relative path and normalized
@@ -1778,6 +1789,349 @@ END SOURCE MODULE: Erdos593.TripleSystem.BridgeBlockExpansion
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.BridgeBlockPackaging
+Source: Erdos593/TripleSystem/BridgeBlockPackaging.lean
+Normalized SHA-256: 4ec2c413b4695c03986cbc934a5eeb2abbc2887e3afb5f746fc09986fcc535f8
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_BridgeBlockPackaging
+
+namespace Erdos593
+
+open scoped Sym2
+
+universe u v
+
+namespace TripleSystem
+namespace BridgeBlock
+
+noncomputable section
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+  [DecidableRel F.levi.Adj]
+
+private noncomputable abbrev packagingCore :=
+  Erdos593.SimpleGraph.bridgeFree F.levi
+
+/-- The unique contractible hyperedge represented by an edge of the
+contracted graph. -/
+noncomputable def graphEdgeWitness (hlinear : F.Linear) {C : Component F} :
+    (contractedGraph F C).edgeSet → ContractibleEdge F C := by
+  intro a
+  let x := a.1.out.1
+  let y := a.1.out.2
+  have hxy : (contractedGraph F C).Adj x y := by
+    change Quot.mk (Sym2.Rel (Point F C)) a.1.out ∈
+      (contractedGraph F C).edgeSet
+    simpa only [Quot.out_eq] using a.2
+  exact edgeWitness F hlinear hxy
+
+theorem graphEdgeWitness_spec (hlinear : F.Linear) {C : Component F}
+    (a : (contractedGraph F C).edgeSet) :
+    (Erdos593.SimpleGraph.bridgeFree F.levi).Adj
+        (Sum.inl a.1.out.1.1)
+        (Sum.inr (graphEdgeWitness F hlinear (C := C) a).1) ∧
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Adj
+        (Sum.inl a.1.out.2.1)
+        (Sum.inr (graphEdgeWitness F hlinear (C := C) a).1) := by
+  unfold graphEdgeWitness
+  dsimp only
+  exact edgeWitness_spec F hlinear _
+
+/-- Contracted graph edges and degree-two hyperedge-nodes are in canonical
+bijection. -/
+-- ARISTOTLE_REVERSE_TARGET P1
+theorem graphEdgeWitness_bijective (hlinear : F.Linear) (C : Component F) :
+    Function.Bijective (graphEdgeWitness F hlinear (C := C)) := by
+  constructor
+  · intro a b hw
+    apply Subtype.ext
+    have ha : (contractedGraph F C).Adj a.1.out.1 a.1.out.2 := by
+      change Quot.mk (Sym2.Rel (Point F C)) a.1.out ∈
+        (contractedGraph F C).edgeSet
+      simpa only [Quot.out_eq] using a.2
+    have hb : (contractedGraph F C).Adj b.1.out.1 b.1.out.2 := by
+      change Quot.mk (Sym2.Rel (Point F C)) b.1.out ∈
+        (contractedGraph F C).edgeSet
+      simpa only [Quot.out_eq] using b.2
+    have hw' : edgeWitness F hlinear ha = edgeWitness F hlinear hb := by
+      simpa only [graphEdgeWitness] using hw
+    have hout := contracted_edge_eq_of_edgeWitness_eq F hlinear ha hb hw'
+    exact a.1.out_eq.symm.trans (hout.trans b.1.out_eq)
+  · intro e
+    let B := packagingCore F
+    have hcard : (B.neighborFinset (Sum.inr e.1)).card = 2 := by
+      rw [_root_.SimpleGraph.card_neighborFinset_eq_degree]
+      exact e.2.2
+    obtain ⟨z, w, hzw, hneighbors⟩ := Finset.card_eq_two.mp hcard
+    have hzmem : z ∈ B.neighborFinset (Sum.inr e.1) := by
+      rw [hneighbors]
+      simp
+    have hwmem : w ∈ B.neighborFinset (Sum.inr e.1) := by
+      rw [hneighbors]
+      simp
+    have hze : B.Adj (Sum.inr e.1) z :=
+      (B.mem_neighborFinset _ _).mp hzmem
+    have hwe : B.Adj (Sum.inr e.1) w :=
+      (B.mem_neighborFinset _ _).mp hwmem
+    have hle : B ≤ F.levi := by
+      dsimp only [B, packagingCore, Erdos593.SimpleGraph.bridgeFree]
+      exact F.levi.deleteEdges_le _
+    rcases z with x | f
+    · rcases w with y | g
+      · change (packagingCore F).Adj (Sum.inr e.1) (Sum.inl x) at hze
+        change (packagingCore F).Adj (Sum.inr e.1) (Sum.inl y) at hwe
+        have hxC : Sum.inl x ∈ C.supp :=
+          C.mem_supp_of_adj_mem_supp e.2.1 hze
+        have hyC : Sum.inl y ∈ C.supp :=
+          C.mem_supp_of_adj_mem_supp e.2.1 hwe
+        let px : Point F C := ⟨x, hxC⟩
+        let py : Point F C := ⟨y, hyC⟩
+        have hxy : px ≠ py := by
+          intro h
+          apply hzw
+          simpa [px, py] using congrArg Subtype.val h
+        have hadj : (contractedGraph F C).Adj px py := by
+          refine (contractedGraph_adj F C px py).mpr ⟨hxy, e, ?_, ?_⟩
+          · exact hze.symm
+          · exact hwe.symm
+        let a : (contractedGraph F C).edgeSet :=
+          ⟨s(px, py), hadj⟩
+        refine ⟨a, ?_⟩
+        have houtAdj : (contractedGraph F C).Adj a.1.out.1 a.1.out.2 := by
+          change Quot.mk (Sym2.Rel (Point F C)) a.1.out ∈
+            (contractedGraph F C).edgeSet
+          simpa only [Quot.out_eq] using a.2
+        have hout1 : a.1.out.1 = px ∨ a.1.out.1 = py := by
+          simpa only [a, Sym2.mem_iff] using Sym2.out_fst_mem a.1
+        have hout2 : a.1.out.2 = px ∨ a.1.out.2 = py := by
+          simpa only [a, Sym2.mem_iff] using Sym2.out_snd_mem a.1
+        have heout1 : (packagingCore F).Adj
+            (Sum.inl a.1.out.1.1) (Sum.inr e.1) := by
+          rcases hout1 with h | h
+          · simpa only [h] using hze.symm
+          · simpa only [h] using hwe.symm
+        have heout2 : (packagingCore F).Adj
+            (Sum.inl a.1.out.2.1) (Sum.inr e.1) := by
+          rcases hout2 with h | h
+          · simpa only [h] using hze.symm
+          · simpa only [h] using hwe.symm
+        apply (contractedGraph_existsUnique_edge F hlinear houtAdj).unique
+        · exact graphEdgeWitness_spec F hlinear a
+        · exact ⟨heout1, heout2⟩
+      · exact (F.not_levi_adj_edge_edge (hle hwe)).elim
+    · exact (F.not_levi_adj_edge_edge (hle hze)).elim
+
+/-- The resulting canonical edge equivalence. -/
+noncomputable def graphEdgeEquivContractibleEdge (hlinear : F.Linear)
+    (C : Component F) :
+    (contractedGraph F C).edgeSet ≃ ContractibleEdge F C :=
+  Equiv.ofBijective (graphEdgeWitness F hlinear (C := C))
+    (graphEdgeWitness_bijective F hlinear C)
+
+/-- In an active component, the degree-two hyperedge subtype is canonically
+equivalent to the subtype of all component hyperedges. -/
+-- ARISTOTLE_REVERSE_TARGET P2
+noncomputable def contractibleEdgeEquivHyperedge
+    (hbridge : F.BridgeAtEveryEdge) {C : Component F}
+    (hC : HasIncidence F C) : ContractibleEdge F C ≃ Hyperedge F C := by
+  exact
+    { toFun := fun e => ⟨e.1, e.2.1⟩
+      invFun := contractibleEdgeOfHyperedge F hbridge hC
+      left_inv := by
+        intro e
+        apply Subtype.ext
+        rfl
+      right_inv := by
+        intro e
+        apply Subtype.ext
+        rfl }
+
+/-- Contracted graph edges are canonically equivalent to the original
+hyperedges belonging to an active bridge-free component. -/
+noncomputable def graphEdgeEquivHyperedge
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {C : Component F} (hC : HasIncidence F C) :
+    (contractedGraph F C).edgeSet ≃ Hyperedge F C :=
+  (graphEdgeEquivContractibleEdge F hlinear C).trans
+    (contractibleEdgeEquivHyperedge F hbridge hC)
+
+/-- Membership in a contracted ordinary edge is exactly surviving
+bridge-free incidence with its hyperedge witness. -/
+-- ARISTOTLE_REVERSE_TARGET P3
+theorem mem_graphEdge_iff_bridgeFree_adj_graphEdgeWitness
+    (hlinear : F.Linear) {C : Component F}
+    (a : (contractedGraph F C).edgeSet) (x : Point F C) :
+    x ∈ (a.1 : Sym2 (Point F C)) ↔
+      (packagingCore F).Adj (Sum.inl x.1)
+        (Sum.inr (graphEdgeWitness F hlinear (C := C) a).1) := by
+  have hspec := graphEdgeWitness_spec F hlinear a
+  change (packagingCore F).Adj
+        (Sum.inl a.1.out.1.1)
+        (Sum.inr (graphEdgeWitness F hlinear (C := C) a).1) ∧
+      (packagingCore F).Adj
+        (Sum.inl a.1.out.2.1)
+        (Sum.inr (graphEdgeWitness F hlinear (C := C) a).1) at hspec
+  have houtAdj : (contractedGraph F C).Adj a.1.out.1 a.1.out.2 := by
+    change Quot.mk (Sym2.Rel (Point F C)) a.1.out ∈
+      (contractedGraph F C).edgeSet
+    simpa only [Quot.out_eq] using a.2
+  have houtNe : a.1.out.1 ≠ a.1.out.2 :=
+    ((contractedGraph_adj F C _ _).mp houtAdj).1
+  constructor
+  · intro hx
+    have hx' : x ∈ s(a.1.out.1, a.1.out.2) := by
+      change x ∈ Quot.mk (Sym2.Rel (Point F C)) a.1.out
+      simpa only [Quot.out_eq] using hx
+    rcases (Sym2.mem_iff.mp hx') with h | h
+    · simpa only [h] using hspec.1
+    · simpa only [h] using hspec.2
+  · intro hx
+    have hnodesNe : (Sum.inl a.1.out.1.1 : V ⊕ E) ≠
+        Sum.inl a.1.out.2.1 := by
+      intro h
+      apply houtNe
+      apply Subtype.ext
+      exact Sum.inl.inj h
+    have hpairSubset :
+        ({Sum.inl a.1.out.1.1, Sum.inl a.1.out.2.1} : Finset (V ⊕ E)) ⊆
+          (packagingCore F).neighborFinset
+            (Sum.inr (graphEdgeWitness F hlinear (C := C) a).1) := by
+      intro z hz
+      simp only [Finset.mem_insert, Finset.mem_singleton] at hz
+      rcases hz with rfl | rfl
+      · exact ((packagingCore F).mem_neighborFinset _ _).mpr hspec.1.symm
+      · exact ((packagingCore F).mem_neighborFinset _ _).mpr hspec.2.symm
+    have hneighborCard :
+        ((packagingCore F).neighborFinset
+          (Sum.inr (graphEdgeWitness F hlinear (C := C) a).1)).card = 2 := by
+      rw [_root_.SimpleGraph.card_neighborFinset_eq_degree]
+      exact (graphEdgeWitness F hlinear (C := C) a).2.2
+    have hpairCard :
+        ({Sum.inl a.1.out.1.1, Sum.inl a.1.out.2.1} :
+          Finset (V ⊕ E)).card = 2 := by
+      simp [hnodesNe]
+    have hpairEq :
+        ({Sum.inl a.1.out.1.1, Sum.inl a.1.out.2.1} : Finset (V ⊕ E)) =
+          (packagingCore F).neighborFinset
+            (Sum.inr (graphEdgeWitness F hlinear (C := C) a).1) := by
+      apply Finset.eq_of_subset_of_card_le hpairSubset
+      omega
+    have hxMem : (Sum.inl x.1 : V ⊕ E) ∈
+        ({Sum.inl a.1.out.1.1, Sum.inl a.1.out.2.1} : Finset (V ⊕ E)) := by
+      rw [hpairEq]
+      exact ((packagingCore F).mem_neighborFinset _ _).mpr hx.symm
+    have hxCases : x = a.1.out.1 ∨ x = a.1.out.2 := by
+      simpa only [Finset.mem_insert, Finset.mem_singleton, Sum.inl.injEq,
+        Subtype.ext_iff] using hxMem
+    rcases hxCases with h | h
+    · rw [h]
+      exact Sym2.out_fst_mem a.1
+    · rw [h]
+      exact Sym2.out_snd_mem a.1
+
+/-- The contracted graph of any bridge-free component embeds back into the
+original triple system through its canonical private-vertex expansion. -/
+noncomputable def componentExpansionEmbedding
+    (hlinear : F.Linear) (C : Component F) :
+    (privateVertexExpansion (contractedGraph F C)).Embedding F := by
+  let G := contractedGraph F C
+  let witness : G.edgeSet → ContractibleEdge F C :=
+    graphEdgeWitness F hlinear (C := C)
+  let vertexMap : PrivateVertexExpansion.Point G → V
+    | .inl x => x.1
+    | .inr a => privatePoint F (witness a)
+  have hvertexMap : Function.Injective vertexMap := by
+    intro p q hpq
+    rcases p with x | a <;> rcases q with y | b
+    · change x.1 = y.1 at hpq
+      exact congrArg Sum.inl (Subtype.ext hpq)
+    · exfalso
+      change x.1 = privatePoint F (witness b) at hpq
+      apply privatePoint_not_mem_component F (witness b)
+      rw [← hpq]
+      exact x.2
+    · exfalso
+      change privatePoint F (witness a) = y.1 at hpq
+      apply privatePoint_not_mem_component F (witness a)
+      rw [hpq]
+      exact y.2
+    · change privatePoint F (witness a) = privatePoint F (witness b) at hpq
+      have hab : a = b := (graphEdgeWitness_bijective F hlinear C).1
+        (privatePoint_injective F C hpq)
+      exact congrArg Sum.inr hab
+  let vertexEmbedding : PrivateVertexExpansion.Point G ↪ V :=
+    { toFun := vertexMap
+      inj' := hvertexMap }
+  exact
+    { vertex := vertexEmbedding
+      edge := fun a => (witness a).1
+      map_edge := by
+        intro a
+        ext z
+        constructor
+        · rintro ⟨p, hp, rfl⟩
+          change (privateVertexExpansion G).Inc p a at hp
+          rcases p with x | b
+          · change x ∈ (a.1 : Sym2 (Point F C)) at hp
+            apply (inc_iff_bridgeFree_or_privatePoint F (witness a) x.1).mpr
+            left
+            exact (mem_graphEdge_iff_bridgeFree_adj_graphEdgeWitness
+              F hlinear a x).mp hp
+          · change b = a at hp
+            subst b
+            exact (privatePoint_spec F (witness a)).1
+        · intro hz
+          change F.Inc z (witness a).1 at hz
+          rcases (inc_iff_bridgeFree_or_privatePoint F (witness a) z).mp hz with
+            hcore | hprivate
+          · have hzC : Sum.inl z ∈ C.supp :=
+              C.mem_supp_of_adj_mem_supp (witness a).2.1 hcore.symm
+            let x : Point F C := ⟨z, hzC⟩
+            refine ⟨Sum.inl x, ?_, ?_⟩
+            · change x ∈ (a.1 : Sym2 (Point F C))
+              exact (mem_graphEdge_iff_bridgeFree_adj_graphEdgeWitness
+                F hlinear a x).mpr hcore
+            · rfl
+          · refine ⟨Sum.inr a, ?_, ?_⟩
+            · rfl
+            · exact hprivate.symm }
+
+/-- The full reverse package carried by an active bridge-free component:
+its graph edges cover exactly all component hyperedges, and its canonical
+private-vertex expansion embeds into the original triple system. -/
+structure ActiveComponentExpansionPackage (C : Component F) where
+  edgeEquiv : (contractedGraph F C).edgeSet ≃ Hyperedge F C
+  embedding : (privateVertexExpansion (contractedGraph F C)).Embedding F
+
+/-- Assemble the active-component edge coverage and expansion embedding. -/
+noncomputable def activeComponentExpansionPackage
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {C : Component F} (hC : HasIncidence F C) :
+    ActiveComponentExpansionPackage F C where
+  edgeEquiv := graphEdgeEquivHyperedge F hlinear hbridge hC
+  embedding := componentExpansionEmbedding F hlinear C
+
+/-- Every active bridge-free block is represented by an embedded
+private-vertex expansion of its contracted two-colourable graph. -/
+-- ARISTOTLE_REVERSE_TARGET P4
+noncomputable def activeComponentExpansionEmbedding
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {C : Component F} (hC : HasIncidence F C) :
+    (privateVertexExpansion (contractedGraph F C)).Embedding F :=
+  (activeComponentExpansionPackage F hlinear hbridge hC).embedding
+
+end
+end BridgeBlock
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_BridgeBlockPackaging
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.BridgeBlockPackaging
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.DisjointUnion
 Source: Erdos593/TripleSystem/DisjointUnion.lean
 Normalized SHA-256: 7d75bab9b19c11f1ed4e0678ad42569a17c0521679d3c981a8a6f3e52c2fe62a
@@ -1910,6 +2264,919 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_DisjointUnion
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.DisjointUnion
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.Isomorph
+Source: Erdos593/TripleSystem/Isomorph.lean
+Normalized SHA-256: 2dc9fd1b84ca7299fff7d6d8c786429f5eb5e1fc7b3899a7dfe90e720599e3cd
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_Isomorph
+
+/-!
+# Triple-system isomorphisms
+
+An isomorphism of edge-indexed triple systems relabels both the vertices and
+the edge indices by equivalences, and preserves incidence in both directions.
+Relabelling only the vertices would not be sufficient: the edge indices are
+part of the representation used by the Levi graph.
+-/
+
+namespace Erdos593
+
+universe u v u' v' u'' v''
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v}
+variable {V' : Type u'} {E' : Type v'}
+variable {V'' : Type u''} {E'' : Type v''}
+
+/-- An incidence-preserving relabelling of both vertices and edge indices. -/
+structure Iso (F : TripleSystem V E) (F' : TripleSystem V' E') where
+  /-- The bijective relabelling of vertices. -/
+  vertexEquiv : V ≃ V'
+  /-- The bijective relabelling of edge indices. -/
+  edgeEquiv : E ≃ E'
+  /-- Incidence is preserved and reflected by the two relabellings. -/
+  map_inc_iff : ∀ x e,
+    F.Inc x e ↔ F'.Inc (vertexEquiv x) (edgeEquiv e)
+
+namespace Iso
+
+variable {F : TripleSystem V E}
+variable {F' : TripleSystem V' E'}
+variable {F'' : TripleSystem V'' E''}
+
+/-- The identity relabelling. -/
+def refl (F : TripleSystem V E) : Iso F F where
+  vertexEquiv := Equiv.refl V
+  edgeEquiv := Equiv.refl E
+  map_inc_iff := fun _ _ => Iff.rfl
+
+/-- Reverse an isomorphism by using the inverse vertex and edge relabellings. -/
+def symm (f : Iso F F') : Iso F' F where
+  vertexEquiv := f.vertexEquiv.symm
+  edgeEquiv := f.edgeEquiv.symm
+  map_inc_iff := by
+    intro x e
+    simpa using
+      (f.map_inc_iff (f.vertexEquiv.symm x) (f.edgeEquiv.symm e)).symm
+
+/-- Compose two incidence-preserving relabellings. -/
+def trans (f : Iso F F') (g : Iso F' F'') : Iso F F'' where
+  vertexEquiv := f.vertexEquiv.trans g.vertexEquiv
+  edgeEquiv := f.edgeEquiv.trans g.edgeEquiv
+  map_inc_iff := by
+    intro x e
+    exact (f.map_inc_iff x e).trans
+      (g.map_inc_iff (f.vertexEquiv x) (f.edgeEquiv e))
+
+end Iso
+
+/-- Two edge-indexed triple systems are isomorphic when some simultaneous
+vertex-and-edge relabelling preserves incidence. -/
+def Isomorphic (F : TripleSystem V E) (F' : TripleSystem V' E') : Prop :=
+  Nonempty (Iso F F')
+
+/-- Every triple system is isomorphic to itself. -/
+@[refl]
+theorem isomorphic_refl (F : TripleSystem V E) : Isomorphic F F :=
+  ⟨Iso.refl F⟩
+
+/-- Triple-system isomorphism is symmetric. -/
+theorem Isomorphic.symm {F : TripleSystem V E} {F' : TripleSystem V' E'}
+    (h : Isomorphic F F') : Isomorphic F' F :=
+  h.map Iso.symm
+
+/-- Triple-system isomorphism is transitive, including across different
+vertex and edge-index types. -/
+theorem Isomorphic.trans
+    {F : TripleSystem V E} {F' : TripleSystem V' E'}
+    {F'' : TripleSystem V'' E''}
+    (h : Isomorphic F F') (h' : Isomorphic F' F'') : Isomorphic F F'' := by
+  rcases h with ⟨f⟩
+  rcases h' with ⟨g⟩
+  exact ⟨f.trans g⟩
+
+/-- Reversing both sides does not change whether two systems are isomorphic. -/
+theorem isomorphic_comm {F : TripleSystem V E} {F' : TripleSystem V' E'} :
+    Isomorphic F F' ↔ Isomorphic F' F :=
+  ⟨Isomorphic.symm, Isomorphic.symm⟩
+
+/-- On systems with fixed vertex and edge-index types, isomorphism is an
+equivalence relation. -/
+theorem isomorphic_equivalence :
+    Equivalence (@Isomorphic V E V E) :=
+  ⟨isomorphic_refl, Isomorphic.symm, Isomorphic.trans⟩
+
+/-- The setoid of triple systems modulo simultaneous vertex-and-edge
+relabelling.  This is intentionally a named definition rather than a global
+instance. -/
+def isomorphicSetoid : Setoid (TripleSystem V E) where
+  r := Isomorphic
+  iseqv := isomorphic_equivalence
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_Isomorph
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.Isomorph
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.OnePointAmalgamation
+Source: Erdos593/TripleSystem/OnePointAmalgamation.lean
+Normalized SHA-256: fb9c09d0f0f5cb33604f1d1f8eb17f4c3c24d8a61d16579c33531f947935891b
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_OnePointAmalgamation
+
+/-!
+# One-point amalgamations
+
+The vertex type is the quotient of a tagged disjoint union that identifies
+exactly the two selected roots. Edge indices retain their factor tags, and
+incidence is defined by the image of each factor edge under its quotient
+inclusion. The final universal-property lemmas support reconstruction up to
+triple-system isomorphism.
+-/
+
+namespace Erdos593
+
+universe u₀ v₀ u₁ v₁
+
+namespace TripleSystem.OnePointAmalgamation
+
+variable {V₀ : Type u₀} {E₀ : Type v₀}
+variable {V₁ : Type u₁} {E₁ : Type v₁}
+
+/-- The equivalence relation on the tagged disjoint union which identifies only
+the two selected roots. -/
+def Rel (r₀ : V₀) (r₁ : V₁) : Sum V₀ V₁ → Sum V₀ V₁ → Prop
+  | .inl x, .inl y => x = y
+  | .inr x, .inr y => x = y
+  | .inl x, .inr y => x = r₀ ∧ y = r₁
+  | .inr y, .inl x => y = r₁ ∧ x = r₀
+
+private theorem rel_refl (r₀ : V₀) (r₁ : V₁) (x : Sum V₀ V₁) :
+    Rel r₀ r₁ x x := by
+  cases x <;> simp [Rel]
+
+private theorem rel_symm (r₀ : V₀) (r₁ : V₁) {x y : Sum V₀ V₁}
+    (h : Rel r₀ r₁ x y) : Rel r₀ r₁ y x := by
+  cases x <;> cases y <;> simp_all [Rel]
+
+private theorem rel_trans (r₀ : V₀) (r₁ : V₁) {x y z : Sum V₀ V₁}
+    (hxy : Rel r₀ r₁ x y) (hyz : Rel r₀ r₁ y z) : Rel r₀ r₁ x z := by
+  cases x <;> cases y <;> cases z <;> simp_all [Rel]
+
+/-- The setoid identifying the two selected roots and nothing else. -/
+def vertexSetoid (r₀ : V₀) (r₁ : V₁) : Setoid (Sum V₀ V₁) where
+  r := Rel r₀ r₁
+  iseqv := ⟨
+    fun x => rel_refl r₀ r₁ x,
+    fun h => rel_symm r₀ r₁ h,
+    fun hxy hyz => rel_trans r₀ r₁ hxy hyz⟩
+
+/-- Vertex type of the binary one-point amalgamation. -/
+abbrev Vertex (r₀ : V₀) (r₁ : V₁) := Quotient (vertexSetoid r₀ r₁)
+
+/-- Inclusion of the left factor. -/
+def left (r₀ : V₀) (r₁ : V₁) (x : V₀) : Vertex r₀ r₁ :=
+  Quotient.mk (vertexSetoid r₀ r₁) (.inl x)
+
+/-- Inclusion of the right factor. -/
+def right (r₀ : V₀) (r₁ : V₁) (y : V₁) : Vertex r₀ r₁ :=
+  Quotient.mk (vertexSetoid r₀ r₁) (.inr y)
+
+@[simp]
+theorem left_eq_left_iff (r₀ : V₀) (r₁ : V₁) (x y : V₀) :
+    left r₀ r₁ x = left r₀ r₁ y ↔ x = y := by
+  constructor
+  · intro h
+    exact Quotient.exact h
+  · rintro rfl
+    rfl
+
+@[simp]
+theorem right_eq_right_iff (r₀ : V₀) (r₁ : V₁) (x y : V₁) :
+    right r₀ r₁ x = right r₀ r₁ y ↔ x = y := by
+  constructor
+  · intro h
+    exact Quotient.exact h
+  · rintro rfl
+    rfl
+
+@[simp]
+theorem left_eq_right_iff (r₀ : V₀) (r₁ : V₁) (x : V₀) (y : V₁) :
+    left r₀ r₁ x = right r₀ r₁ y ↔ x = r₀ ∧ y = r₁ := by
+  constructor
+  · intro h
+    exact Quotient.exact h
+  · rintro ⟨rfl, rfl⟩
+    apply Quotient.sound
+    exact ⟨rfl, rfl⟩
+
+@[simp]
+theorem right_eq_left_iff (r₀ : V₀) (r₁ : V₁) (y : V₁) (x : V₀) :
+    right r₀ r₁ y = left r₀ r₁ x ↔ y = r₁ ∧ x = r₀ := by
+  rw [eq_comm, left_eq_right_iff, and_comm]
+
+theorem root_eq (r₀ : V₀) (r₁ : V₁) :
+    left r₀ r₁ r₀ = right r₀ r₁ r₁ := by
+  simp
+
+theorem left_injective (r₀ : V₀) (r₁ : V₁) :
+    Function.Injective (left r₀ r₁) := by
+  intro x y h
+  exact (left_eq_left_iff r₀ r₁ x y).mp h
+
+theorem right_injective (r₀ : V₀) (r₁ : V₁) :
+    Function.Injective (right r₀ r₁) := by
+  intro x y h
+  exact (right_eq_right_iff r₀ r₁ x y).mp h
+
+/-- Recursor out of the amalgamated vertex type.  The only compatibility
+condition is agreement at the selected roots. -/
+def lift {X : Type*} (r₀ : V₀) (r₁ : V₁)
+    (f₀ : V₀ → X) (f₁ : V₁ → X) (hroot : f₀ r₀ = f₁ r₁) :
+    Vertex r₀ r₁ → X :=
+  Quotient.lift (Sum.elim f₀ f₁) (by
+    intro a b hab
+    change Rel r₀ r₁ a b at hab
+    cases a <;> cases b <;> simp_all [Rel])
+
+@[simp]
+theorem lift_left {X : Type*} (r₀ : V₀) (r₁ : V₁)
+    (f₀ : V₀ → X) (f₁ : V₁ → X) (hroot : f₀ r₀ = f₁ r₁) (x : V₀) :
+    lift r₀ r₁ f₀ f₁ hroot (left r₀ r₁ x) = f₀ x := rfl
+
+@[simp]
+theorem lift_right {X : Type*} (r₀ : V₀) (r₁ : V₁)
+    (f₀ : V₀ → X) (f₁ : V₁ → X) (hroot : f₀ r₀ = f₁ r₁) (y : V₁) :
+    lift r₀ r₁ f₀ f₁ hroot (right r₀ r₁ y) = f₁ y := rfl
+
+/-- The universal map is injective when the two input maps are injective and
+have exactly the selected root as their cross-factor collision. -/
+theorem lift_injective {X : Type*} (r₀ : V₀) (r₁ : V₁)
+    (f₀ : V₀ → X) (f₁ : V₁ → X) (hroot : f₀ r₀ = f₁ r₁)
+    (h₀ : Function.Injective f₀) (h₁ : Function.Injective f₁)
+    (hcross : ∀ x y, f₀ x = f₁ y ↔ x = r₀ ∧ y = r₁) :
+    Function.Injective (lift r₀ r₁ f₀ f₁ hroot) := by
+  intro q q' h
+  induction q using Quotient.inductionOn with
+  | _ a =>
+      induction q' using Quotient.inductionOn with
+      | _ b =>
+          cases a with
+          | inl x =>
+              cases b with
+              | inl y =>
+                  apply Quotient.sound
+                  exact h₀ h
+              | inr y =>
+                  apply Quotient.sound
+                  exact (hcross x y).mp h
+          | inr x =>
+              cases b with
+              | inl y =>
+                  apply Quotient.sound
+                  have hyx := (hcross y x).mp h.symm
+                  exact ⟨hyx.2, hyx.1⟩
+              | inr y =>
+                  apply Quotient.sound
+                  exact h₁ h
+
+/-- Every amalgamated vertex comes from at least one factor. -/
+theorem exists_left_or_right (r₀ : V₀) (r₁ : V₁) (q : Vertex r₀ r₁) :
+    (∃ x, left r₀ r₁ x = q) ∨ (∃ y, right r₀ r₁ y = q) := by
+  induction q using Quotient.inductionOn with
+  | _ s =>
+      cases s with
+      | inl x => exact Or.inl ⟨x, rfl⟩
+      | inr y => exact Or.inr ⟨y, rfl⟩
+
+/-- Reconstruction-facing universal property: two injections whose images
+cover the target and meet exactly at the selected roots induce an equivalence
+from the canonical amalgamated vertex type. -/
+noncomputable def vertexEquivOfMaps {W : Type*}
+    (r₀ : V₀) (r₁ : V₁) (f₀ : V₀ → W) (f₁ : V₁ → W)
+    (hroot : f₀ r₀ = f₁ r₁)
+    (h₀ : Function.Injective f₀) (h₁ : Function.Injective f₁)
+    (hcross : ∀ x y, f₀ x = f₁ y ↔ x = r₀ ∧ y = r₁)
+    (hcover : ∀ w, (∃ x, f₀ x = w) ∨ (∃ y, f₁ y = w)) :
+    Vertex r₀ r₁ ≃ W :=
+  Equiv.ofBijective (lift r₀ r₁ f₀ f₁ hroot) ⟨
+    lift_injective r₀ r₁ f₀ f₁ hroot h₀ h₁ hcross,
+    by
+      intro w
+      rcases hcover w with ⟨x, rfl⟩ | ⟨y, rfl⟩
+      · exact ⟨left r₀ r₁ x, rfl⟩
+      · exact ⟨right r₀ r₁ y, rfl⟩⟩
+
+/-- Images of arbitrary subsets from opposite factors intersect in at most the
+single amalgamation root. -/
+theorem cross_image_inter_subsingleton (r₀ : V₀) (r₁ : V₁)
+    (s : Set V₀) (t : Set V₁) :
+    (left r₀ r₁ '' s ∩ right r₀ r₁ '' t).Subsingleton := by
+  intro q hq q' hq'
+  rcases hq.1 with ⟨x, hx, hxq⟩
+  rcases hq.2 with ⟨y, hy, hyq⟩
+  rcases hq'.1 with ⟨x', hx', hxq'⟩
+  rcases hq'.2 with ⟨y', hy', hyq'⟩
+  have hxy := (left_eq_right_iff r₀ r₁ x y).mp (hxq.trans hyq.symm)
+  have hxy' := (left_eq_right_iff r₀ r₁ x' y').mp (hxq'.trans hyq'.symm)
+  exact hxq.symm.trans ((congrArg (left r₀ r₁) (hxy.1.trans hxy'.1.symm)).trans hxq')
+
+/-- Edge indices retain their factor tag. -/
+abbrev Edge (E₀ : Type v₀) (E₁ : Type v₁) := E₀ ⊕ E₁
+
+/-- Incidence in the amalgam is exactly the image of incidence in the relevant
+factor; no new edge is introduced. -/
+def Inc (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+    (r₀ : V₀) (r₁ : V₁) : Vertex r₀ r₁ → Edge E₀ E₁ → Prop
+  | q, .inl e => q ∈ left r₀ r₁ '' F₀.edgeSet e
+  | q, .inr e => q ∈ right r₀ r₁ '' F₁.edgeSet e
+
+@[simp]
+theorem incidenceSet_left (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) (e : E₀) :
+    {q | Inc F₀ F₁ r₀ r₁ q (.inl e)} =
+      left r₀ r₁ '' F₀.edgeSet e := rfl
+
+@[simp]
+theorem incidenceSet_right (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) (e : E₁) :
+    {q | Inc F₀ F₁ r₀ r₁ q (.inr e)} =
+      right r₀ r₁ '' F₁.edgeSet e := rfl
+
+@[simp]
+theorem inc_left_left_iff (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁)
+    (x : V₀) (e : E₀) :
+    Inc F₀ F₁ r₀ r₁ (left r₀ r₁ x) (.inl e) ↔ F₀.Inc x e := by
+  simp [Inc]
+
+@[simp]
+theorem inc_right_right_iff (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁)
+    (y : V₁) (e : E₁) :
+    Inc F₀ F₁ r₀ r₁ (right r₀ r₁ y) (.inr e) ↔ F₁.Inc y e := by
+  simp [Inc]
+
+/-- A left-factor point is incident with a right-factor edge exactly when it is
+the amalgamation root and the selected right root lies on that edge. -/
+@[simp]
+theorem inc_left_right_iff (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁)
+    (x : V₀) (e : E₁) :
+    Inc F₀ F₁ r₀ r₁ (left r₀ r₁ x) (.inr e) ↔
+      x = r₀ ∧ F₁.Inc r₁ e := by
+  simp [Inc, and_comm]
+
+/-- A right-factor point is incident with a left-factor edge exactly when it is
+the amalgamation root and the selected left root lies on that edge. -/
+@[simp]
+theorem inc_right_left_iff (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁)
+    (y : V₁) (e : E₀) :
+    Inc F₀ F₁ r₀ r₁ (right r₀ r₁ y) (.inl e) ↔
+      y = r₁ ∧ F₀.Inc r₀ e := by
+  simp [Inc, and_comm]
+
+theorem incidenceSet_ncard (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) :
+    ∀ e : Edge E₀ E₁,
+      Set.ncard {q | Inc F₀ F₁ r₀ r₁ q e} = 3 := by
+  rintro (e | e)
+  · rw [incidenceSet_left,
+      Set.ncard_image_of_injective _ (left_injective r₀ r₁)]
+    exact F₀.edgeSet_ncard e
+  · rw [incidenceSet_right,
+      Set.ncard_image_of_injective _ (right_injective r₀ r₁)]
+    exact F₁.edgeSet_ncard e
+
+theorem cross_edgeSets_ne (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁)
+    (e : E₀) (f : E₁) :
+    left r₀ r₁ '' F₀.edgeSet e ≠ right r₀ r₁ '' F₁.edgeSet f := by
+  intro hsets
+  have hsub : F₀.edgeSet e ⊆ ({r₀} : Set V₀) := by
+    intro x hx
+    have hx' : left r₀ r₁ x ∈ left r₀ r₁ '' F₀.edgeSet e :=
+      ⟨x, hx, rfl⟩
+    rw [hsets] at hx'
+    rcases hx' with ⟨y, hy, hyx⟩
+    exact (left_eq_right_iff r₀ r₁ x y).mp hyx.symm |>.1
+  have hcard := Set.ncard_le_ncard hsub (Set.finite_singleton r₀)
+  rw [F₀.edgeSet_ncard, Set.ncard_singleton] at hcard
+  omega
+
+theorem incidenceSet_injective (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) :
+    Function.Injective (fun e : Edge E₀ E₁ =>
+      {q | Inc F₀ F₁ r₀ r₁ q e}) := by
+  intro e f h
+  cases e with
+  | inl e =>
+      cases f with
+      | inl f =>
+          congr 1
+          apply F₀.edgeSet_injective
+          apply (Set.image_eq_image (left_injective r₀ r₁)).mp
+          exact h
+      | inr f =>
+          exact False.elim (cross_edgeSets_ne F₀ F₁ r₀ r₁ e f h)
+  | inr e =>
+      cases f with
+      | inl f =>
+          exact False.elim (cross_edgeSets_ne F₀ F₁ r₀ r₁ f e h.symm)
+      | inr f =>
+          congr 1
+          apply F₁.edgeSet_injective
+          apply (Set.image_eq_image (right_injective r₀ r₁)).mp
+          exact h
+
+/-- Canonical edge-indexed one-point amalgamation. -/
+def amalgam (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+    (r₀ : V₀) (r₁ : V₁) : TripleSystem (Vertex r₀ r₁) (Edge E₀ E₁) where
+  Inc := Inc F₀ F₁ r₀ r₁
+  edge_ncard := incidenceSet_ncard F₀ F₁ r₀ r₁
+  simple := incidenceSet_injective F₀ F₁ r₀ r₁
+
+/-- Canonical non-induced embedding of the left factor into the amalgam. -/
+def leftFactorEmbedding (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) :
+    F₀.Embedding (amalgam F₀ F₁ r₀ r₁) where
+  vertex := ⟨left r₀ r₁, left_injective r₀ r₁⟩
+  edge := Sum.inl
+  map_edge := by
+    intro e
+    rfl
+
+/-- Canonical non-induced embedding of the right factor into the amalgam. -/
+def rightFactorEmbedding (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) :
+    F₁.Embedding (amalgam F₀ F₁ r₀ r₁) where
+  vertex := ⟨right r₀ r₁, right_injective r₀ r₁⟩
+  edge := Sum.inr
+  map_edge := by
+    intro e
+    rfl
+
+/-- If a target is covered by two pieces meeting only at their selected roots,
+and its edge indices are exactly the tagged union with the expected edge-set
+images, then it is isomorphic to the canonical one-point amalgamation. -/
+noncomputable def isoOfMaps {W : Type*} {D : Type*}
+    (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+    (K : TripleSystem W D) (r₀ : V₀) (r₁ : V₁)
+    (f₀ : V₀ → W) (f₁ : V₁ → W)
+    (hroot : f₀ r₀ = f₁ r₁)
+    (h₀ : Function.Injective f₀) (h₁ : Function.Injective f₁)
+    (hcross : ∀ x y, f₀ x = f₁ y ↔ x = r₀ ∧ y = r₁)
+    (hcover : ∀ w, (∃ x, f₀ x = w) ∨ (∃ y, f₁ y = w))
+    (edgeEquiv : Edge E₀ E₁ ≃ D)
+    (hmap₀ : ∀ e, f₀ '' F₀.edgeSet e = K.edgeSet (edgeEquiv (.inl e)))
+    (hmap₁ : ∀ e, f₁ '' F₁.edgeSet e = K.edgeSet (edgeEquiv (.inr e))) :
+    Iso (amalgam F₀ F₁ r₀ r₁) K where
+  vertexEquiv := vertexEquivOfMaps r₀ r₁ f₀ f₁ hroot h₀ h₁ hcross hcover
+  edgeEquiv := edgeEquiv
+  map_inc_iff := by
+    intro q e
+    let ve := vertexEquivOfMaps r₀ r₁ f₀ f₁ hroot h₀ h₁ hcross hcover
+    have hve_injective : Function.Injective ve := ve.injective
+    have himage : ve '' (amalgam F₀ F₁ r₀ r₁).edgeSet e =
+        K.edgeSet (edgeEquiv e) := by
+      cases e with
+      | inl e =>
+          change ve '' (left r₀ r₁ '' F₀.edgeSet e) = _
+          rw [Set.image_image]
+          change f₀ '' F₀.edgeSet e = _
+          exact hmap₀ e
+      | inr e =>
+          change ve '' (right r₀ r₁ '' F₁.edgeSet e) = _
+          rw [Set.image_image]
+          change f₁ '' F₁.edgeSet e = _
+          exact hmap₁ e
+    change q ∈ (amalgam F₀ F₁ r₀ r₁).edgeSet e ↔
+      ve q ∈ K.edgeSet (edgeEquiv e)
+    rw [← himage]
+    constructor
+    · intro hq
+      exact ⟨q, hq, rfl⟩
+    · rintro ⟨q', hq', hqq'⟩
+      exact hqq' |> hve_injective |> fun h => h ▸ hq'
+
+/-- A finite input pair gives a finite amalgamated vertex type; package this as
+a named definition so callers can opt into the noncomputable `Fintype`. -/
+@[reducible]
+noncomputable def vertexFintype (r₀ : V₀) (r₁ : V₁)
+    [Fintype V₀] [Fintype V₁] : Fintype (Vertex r₀ r₁) :=
+  Fintype.ofFinite _
+
+end TripleSystem.OnePointAmalgamation
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_OnePointAmalgamation
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.OnePointAmalgamation
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.Constructive
+Source: Erdos593/TripleSystem/Constructive.lean
+Normalized SHA-256: 0ea120054992eaf91d39327764896821aae3c4c197085f7cb061b31aa9dd4af3
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_Constructive
+
+/-!
+# The finite constructive class
+
+This file defines the class generated by finite edgeless triple systems and
+private-vertex expansions of finite two-colourable graphs, with closure under
+binary disjoint unions, one-point amalgamations, and isomorphism.  Binary
+constructors suffice because every construction term is finite.
+-/
+
+namespace Erdos593
+
+universe w
+
+namespace TripleSystem
+
+/-- A universe-polymorphic empty edge-index type. -/
+abbrev EdgelessEdge : Type w := ULift.{w} Empty
+
+/-- The canonical triple system with vertex type `V` and no hyperedges. -/
+def edgeless (V : Type w) : TripleSystem V EdgelessEdge where
+  Inc _ e := nomatch e.down
+  edge_ncard e := nomatch e.down
+  simple e := nomatch e.down
+
+/-- The constructive class generated by finite edgeless systems and
+private-vertex expansions of finite two-colourable graphs, and closed under
+binary disjoint unions, one-point amalgamations, and isomorphism. -/
+inductive Constructible : {V E : Type w} → TripleSystem V E → Prop
+  | ofEdgeless (V : Type w) [Fintype V] : Constructible (edgeless V)
+  | ofExpansion {V : Type w} [Fintype V] (G : _root_.SimpleGraph V)
+      (hG : G.Colorable 2) : Constructible (privateVertexExpansion G)
+  | disjointUnion {V E W D : Type w}
+      {F : TripleSystem V E} {G : TripleSystem W D}
+      (hF : Constructible F) (hG : Constructible G) :
+      Constructible (F.disjointUnion G)
+  | amalgam {V₀ E₀ V₁ E₁ : Type w}
+      {F₀ : TripleSystem V₀ E₀} {F₁ : TripleSystem V₁ E₁}
+      (h₀ : Constructible F₀) (h₁ : Constructible F₁)
+      (r₀ : V₀) (r₁ : V₁) :
+      Constructible (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)
+  | ofIso {V E V' E' : Type w}
+      {F : TripleSystem V E} {F' : TripleSystem V' E'}
+      (hF : Constructible F) (f : Iso F F') : Constructible F'
+
+/-- Finite edgeless systems satisfy all three intrinsic conditions
+vacuously. -/
+theorem edgeless_intrinsic (V : Type w) : (edgeless V).Intrinsic := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro e
+    exact Empty.elim e.down
+  · intro e
+    exact Empty.elim e.down
+  · intro z c hc
+    cases c with
+    | nil => simp at hc
+    | @cons u v w h p =>
+        cases z with
+        | inl x =>
+            cases v with
+            | inl y => exact ((edgeless V).not_levi_adj_point_point h).elim
+            | inr e => exact Empty.elim e.down
+        | inr e => exact Empty.elim e.down
+
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_Constructive
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.Constructive
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.EdgeRestriction
+Source: Erdos593/TripleSystem/EdgeRestriction.lean
+Normalized SHA-256: 611d4a4e03a36b58e2fb32a602bc4118a01ea269f98e60da3d4657842ee45046
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_EdgeRestriction
+
+/-!
+# Edge restrictions
+
+For reconstruction, a set of source hyperedges determines an exact subsystem
+on the union of their incident vertices.  The canonical embedding records this
+subsystem as a non-induced copy in the ambient triple system.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+
+/-- The set of points lying on at least one edge whose index belongs to `S`. -/
+def edgeSupportSet (S : Set E) : Set V :=
+  {x | ∃ e : E, e ∈ S ∧ F.Inc x e}
+
+/-- The type of points supported by an edge-index set. -/
+abbrev EdgeSupport (S : Set E) := F.edgeSupportSet S
+
+/-- Restrict to the edges indexed by `S`, retaining exactly their incident
+points. -/
+def edgeRestriction (S : Set E) : TripleSystem (F.EdgeSupport S) S where
+  Inc x e := F.Inc x.1 e.1
+  edge_ncard := by
+    intro e
+    change Set.ncard {x : F.EdgeSupport S |
+      (x : V) ∈ {y : V | F.Inc y e.1}} = 3
+    rw [Set.ncard_subtype]
+    have hsubset : {x : V | F.Inc x e.1} ⊆
+        F.edgeSupportSet S := by
+      intro x hx
+      exact ⟨e.1, e.2, hx⟩
+    change Set.ncard ({x : V | F.Inc x e.1} ∩ F.edgeSupportSet S) = 3
+    rw [Set.inter_eq_left.mpr hsubset]
+    exact F.edge_ncard e.1
+  simple := by
+    intro e d h
+    apply Subtype.ext
+    apply F.simple
+    ext x
+    constructor
+    · intro hxe
+      let x' : F.EdgeSupport S := ⟨x, e.1, e.2, hxe⟩
+      have hx := Set.ext_iff.mp h x'
+      exact hx.mp hxe
+    · intro hxd
+      let x' : F.EdgeSupport S := ⟨x, d.1, d.2, hxd⟩
+      have hx := Set.ext_iff.mp h x'
+      exact hx.mpr hxd
+
+@[simp]
+theorem edgeRestriction_inc (S : Set E) (x : F.EdgeSupport S) (e : S) :
+    (F.edgeRestriction S).Inc x e ↔ F.Inc x.1 e.1 :=
+  Iff.rfl
+
+/-- The canonical embedding of an edge restriction into the ambient system. -/
+def edgeRestrictionEmbedding (S : Set E) :
+    (F.edgeRestriction S).Embedding F where
+  vertex := ⟨Subtype.val, Subtype.val_injective⟩
+  edge := Subtype.val
+  map_edge := by
+    intro e
+    ext x
+    constructor
+    · rintro ⟨y, hy, rfl⟩
+      exact hy
+    · intro hx
+      exact ⟨⟨x, e.1, e.2, hx⟩, hx, rfl⟩
+
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_EdgeRestriction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.EdgeRestriction
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.BridgeBlockRestriction
+Source: Erdos593/TripleSystem/BridgeBlockRestriction.lean
+Normalized SHA-256: 15b0937010587d9a0d5742a06e0c8351266f3e7bb339f165b45f4ae801a8a8ad
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_BridgeBlockRestriction
+
+/-!
+# Exact restrictions represented by active bridge-free blocks
+
+An active bridge-free Levi component represents not merely an embedded
+private-vertex expansion, but the exact restriction of the original triple
+system to the hyperedges whose Levi nodes lie in that component.  The main
+point is vertex surjectivity: the support of those hyperedges consists exactly
+of the component's point-nodes together with the unique private point of each
+component hyperedge.
+-/
+
+namespace Erdos593
+
+open scoped Sym2
+
+universe u v w
+
+namespace TripleSystem
+namespace BridgeBlock
+
+noncomputable section
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+  [DecidableRel F.levi.Adj]
+
+private noncomputable abbrev restrictionCore :=
+  Erdos593.SimpleGraph.bridgeFree F.levi
+
+/-- The original hyperedges whose Levi nodes belong to a bridge-free
+component. -/
+def componentHyperedgeSet (C : Component F) : Set E :=
+  {e | Sum.inr e ∈ C.supp}
+
+@[simp]
+theorem mem_componentHyperedgeSet_iff {C : Component F} {e : E} :
+    e ∈ componentHyperedgeSet F C ↔ Sum.inr e ∈ C.supp :=
+  Iff.rfl
+
+/-- Every point-node of an active component lies on a hyperedge belonging to
+that component. -/
+theorem point_mem_componentHyperedgeSupport {C : Component F}
+    (hC : HasIncidence F C) (x : Point F C) :
+    x.1 ∈ F.edgeSupportSet (componentHyperedgeSet F C) := by
+  rcases hC with ⟨u, e, huC, heC, hue⟩
+  have hreach : (restrictionCore F).Reachable (Sum.inl x.1) (Sum.inr e) :=
+    C.reachable_of_mem_supp x.2 heC
+  have hne : (Sum.inl x.1 : V ⊕ E) ≠ Sum.inr e := by simp
+  obtain ⟨z, hxz⟩ := hreach.nonempty_neighborSet_left hne
+  rcases z with y | f
+  · exact (F.not_levi_adj_point_point
+      ((show restrictionCore F ≤ F.levi by
+        dsimp only [restrictionCore, Erdos593.SimpleGraph.bridgeFree]
+        exact F.levi.deleteEdges_le _) hxz)).elim
+  · have hfC : Sum.inr f ∈ C.supp :=
+      C.mem_supp_of_adj_mem_supp x.2 hxz
+    refine ⟨f, hfC, ?_⟩
+    apply F.levi_adj_point_edge.mp
+    exact (show restrictionCore F ≤ F.levi by
+      dsimp only [restrictionCore, Erdos593.SimpleGraph.bridgeFree]
+      exact F.levi.deleteEdges_le _) hxz
+
+/-- The vertex map of the component expansion, with codomain restricted to
+the exact support of the component hyperedges. -/
+noncomputable def componentExpansionSupportMap
+    (hlinear : F.Linear) {C : Component F} (hC : HasIncidence F C) :
+    PrivateVertexExpansion.Point (contractedGraph F C) →
+      F.EdgeSupport (componentHyperedgeSet F C)
+  | .inl x =>
+      ⟨x.1, point_mem_componentHyperedgeSupport F hC x⟩
+  | .inr a =>
+      ⟨privatePoint F (graphEdgeWitness F hlinear (C := C) a),
+        ⟨(graphEdgeWitness F hlinear (C := C) a).1,
+          (graphEdgeWitness F hlinear (C := C) a).2.1,
+          (privatePoint_spec F
+            (graphEdgeWitness F hlinear (C := C) a)).1⟩⟩
+
+theorem componentExpansionSupportMap_injective
+    (hlinear : F.Linear) {C : Component F} (hC : HasIncidence F C) :
+    Function.Injective (componentExpansionSupportMap F hlinear hC) := by
+  intro p q hpq
+  apply (componentExpansionEmbedding F hlinear C).vertex.injective
+  have hpqVal := congrArg Subtype.val hpq
+  rcases p with x | a <;> rcases q with y | b <;>
+    exact hpqVal
+
+theorem componentExpansionSupportMap_surjective
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {C : Component F} (hC : HasIncidence F C) :
+    Function.Surjective (componentExpansionSupportMap F hlinear hC) := by
+  intro z
+  rcases z.2 with ⟨e, heC, hze⟩
+  let eC : Hyperedge F C := ⟨e, heC⟩
+  let edgeEquiv := graphEdgeEquivHyperedge F hlinear hbridge hC
+  let a : (contractedGraph F C).edgeSet := edgeEquiv.symm eC
+  have ha : edgeEquiv a = eC := edgeEquiv.apply_symm_apply eC
+  have hwitness :
+      (graphEdgeWitness F hlinear (C := C) a).1 = e := by
+    have hval := congrArg Subtype.val ha
+    simpa [edgeEquiv, graphEdgeEquivHyperedge,
+      graphEdgeEquivContractibleEdge, contractibleEdgeEquivHyperedge] using hval
+  have hzWitness :
+      F.Inc z.1 (graphEdgeWitness F hlinear (C := C) a).1 := by
+    rw [hwitness]
+    exact hze
+  rcases (inc_iff_bridgeFree_or_privatePoint F
+      (graphEdgeWitness F hlinear (C := C) a) z.1).mp hzWitness with
+    hcore | hprivate
+  · have hzC : Sum.inl z.1 ∈ C.supp :=
+      C.mem_supp_of_adj_mem_supp
+        (graphEdgeWitness F hlinear (C := C) a).2.1 hcore.symm
+    let x : Point F C := ⟨z.1, hzC⟩
+    refine ⟨Sum.inl x, ?_⟩
+    apply Subtype.ext
+    rfl
+  · refine ⟨Sum.inr a, ?_⟩
+    apply Subtype.ext
+    exact hprivate.symm
+
+/-- The exact vertex equivalence between an active component expansion and
+the support of the corresponding original hyperedges. -/
+noncomputable def componentExpansionVertexEquiv
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {C : Component F} (hC : HasIncidence F C) :
+    PrivateVertexExpansion.Point (contractedGraph F C) ≃
+      F.EdgeSupport (componentHyperedgeSet F C) :=
+  Equiv.ofBijective (componentExpansionSupportMap F hlinear hC)
+    ⟨componentExpansionSupportMap_injective F hlinear hC,
+      componentExpansionSupportMap_surjective F hlinear hbridge hC⟩
+
+/-- The canonical equivalence from contracted graph edges to the exact
+component-hyperedge subtype used by `edgeRestriction`. -/
+noncomputable def componentExpansionEdgeEquiv
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {C : Component F} (hC : HasIncidence F C) :
+    (contractedGraph F C).edgeSet ≃ componentHyperedgeSet F C := by
+  change (contractedGraph F C).edgeSet ≃ Hyperedge F C
+  exact graphEdgeEquivHyperedge F hlinear hbridge hC
+
+@[simp]
+theorem componentExpansionEdgeEquiv_val
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {C : Component F} (hC : HasIncidence F C)
+    (a : (contractedGraph F C).edgeSet) :
+    (componentExpansionEdgeEquiv F hlinear hbridge hC a).1 =
+      (graphEdgeWitness F hlinear (C := C) a).1 :=
+  rfl
+
+@[simp]
+theorem componentExpansionSupportMap_val
+    (hlinear : F.Linear) {C : Component F} (hC : HasIncidence F C)
+    (p : PrivateVertexExpansion.Point (contractedGraph F C)) :
+    (componentExpansionSupportMap F hlinear hC p).1 =
+      (componentExpansionEmbedding F hlinear C).vertex p := by
+  rcases p with x | a <;> rfl
+
+/-- An active bridge-free component is exactly the restriction to its own
+hyperedges, not merely an embedded copy of their private-vertex expansion. -/
+noncomputable def activeComponentExpansionRestrictionIso
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {C : Component F} (hC : HasIncidence F C) :
+    Iso (privateVertexExpansion (contractedGraph F C))
+      (F.edgeRestriction (componentHyperedgeSet F C)) where
+  vertexEquiv := componentExpansionVertexEquiv F hlinear hbridge hC
+  edgeEquiv := componentExpansionEdgeEquiv F hlinear hbridge hC
+  map_inc_iff := by
+    intro p a
+    let emb := componentExpansionEmbedding F hlinear C
+    have hset := Set.ext_iff.mp (emb.map_edge a) (emb.vertex p)
+    change (privateVertexExpansion (contractedGraph F C)).Inc p a ↔
+      F.Inc
+        (componentExpansionSupportMap F hlinear hC p).1
+        (componentExpansionEdgeEquiv F hlinear hbridge hC a).1
+    rw [componentExpansionSupportMap_val, componentExpansionEdgeEquiv_val]
+    change _ ↔ F.Inc
+      ((componentExpansionEmbedding F hlinear C).vertex p)
+      ((componentExpansionEmbedding F hlinear C).edge a)
+    constructor
+    · intro hp
+      apply hset.mp
+      exact ⟨p, hp, rfl⟩
+    · intro hp
+      rcases hset.mpr hp with ⟨q, hqa, hqp⟩
+      have hq : q = p := emb.vertex.injective hqp
+      subst q
+      exact hqa
+
+section Constructible
+
+variable {V₀ E₀ : Type w} (K : TripleSystem V₀ E₀)
+variable [Fintype V₀] [Fintype E₀] [DecidableEq V₀] [DecidableEq E₀]
+  [DecidableRel K.levi.Adj]
+
+/-- If the ambient finite system has the intrinsic hypotheses needed to
+two-colour the contracted graph, then its exact active-component restriction
+is a member of the constructive class. -/
+theorem activeComponentRestriction_constructible
+    (hlinear : K.Linear) (hbridge : K.BridgeAtEveryEdge)
+    (hberge : K.EvenBergeCycles) {C : Component K}
+    (hC : HasIncidence K C) :
+    Constructible (K.edgeRestriction (componentHyperedgeSet K C)) := by
+  letI : Fintype (Point K C) := Fintype.ofFinite (Point K C)
+  have hExpansion :
+      Constructible (privateVertexExpansion (contractedGraph K C)) :=
+    Constructible.ofExpansion (contractedGraph K C)
+      (contractedGraph_colorable_two K hlinear hberge C)
+  exact Constructible.ofIso hExpansion
+    (activeComponentExpansionRestrictionIso K hlinear hbridge hC)
+
+end Constructible
+
+end
+end BridgeBlock
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_BridgeBlockRestriction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.BridgeBlockRestriction
 ========================================================================== -/
 
 /- ==========================================================================
@@ -2241,7 +3508,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ExpansionIntrinsic
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ForwardExpansion
 Source: Erdos593/TripleSystem/ForwardExpansion.lean
-Normalized SHA-256: c02222248b1e8eaa67724d648695cad2f8eaa6733a584685384edb7dfcc433c2
+Normalized SHA-256: f2d0e538c25698185822d5ece04308f194ab07900ea2e29fae09a385f779d1a2
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ForwardExpansion
 
@@ -2270,6 +3537,166 @@ theorem privateVertexExpansion_linear {V : Type u}
     simp_all +decide [PrivateVertexExpansion.Inc]
   all_goals grind +suggestions
 
+/-- A private point of an expanded edge cannot occur on a cycle in the Levi
+graph. -/
+-- ARISTOTLE_TARGET F3A
+theorem privateVertex_not_mem_cycle_support {V : Type u}
+    (G : _root_.SimpleGraph V)
+    {z : PrivateVertexExpansion.Point G ⊕ PrivateVertexExpansion.Edge G}
+    (c : (privateVertexExpansion G).levi.Walk z z) (hc : c.IsCycle)
+    (e : PrivateVertexExpansion.Edge G) :
+    Sum.inl (PrivateVertexExpansion.privateVertex G e) ∉ c.support := by
+  let x := PrivateVertexExpansion.privateVertex G e
+  let v : PrivateVertexExpansion.Point G ⊕
+      PrivateVertexExpansion.Edge G := Sum.inl x
+  have hAdj : (privateVertexExpansion G).levi.Adj v (.inr e) := by
+    simp [v, x]
+  have hbridge :
+      (privateVertexExpansion G).levi.IsBridge s(v, Sum.inr e) := by
+    rw [show s(v, Sum.inr e) = s(Sum.inr e, v) from Sym2.eq_swap]
+    apply Erdos593.SimpleGraph.isBridge_of_adj_of_unique_neighbor _ hAdj.symm
+    intro w hw
+    rcases w with y | f
+    · exact (not_levi_adj_point_point (privateVertexExpansion G) hw).elim
+    · congr 1
+      exact (by simpa [v, x] using hw : e = f).symm
+  intro hx
+  obtain ⟨a, ha, hxa⟩ :=
+    (c.mem_support_iff_exists_mem_edges_of_not_nil hc.not_nil).mp hx
+  obtain ⟨w, rfl⟩ := Sym2.mem_iff_exists.mp hxa
+  have haw : (privateVertexExpansion G).levi.Adj v w :=
+    c.edges_subset_edgeSet ha
+  rcases w with y | f
+  · exact (not_levi_adj_point_point (privateVertexExpansion G) haw).elim
+  · have hef : e = f := by simpa [v, x] using haw
+    subst f
+    exact hbridge.notMem_edges_of_isCycle hc ha
+
+/-- A private-free core-to-core trail in an expansion Levi graph contracts to
+a graph walk of exactly half its length. -/
+-- ARISTOTLE_TARGET F3B
+theorem exists_graph_walk_of_privateVertexExpansion_walk {V : Type u}
+    (G : _root_.SimpleGraph V) {x y : V}
+    (p : (privateVertexExpansion G).levi.Walk
+      (Sum.inl (PrivateVertexExpansion.core G x))
+      (Sum.inl (PrivateVertexExpansion.core G y)))
+    (hp : p.IsTrail)
+    (hprivate : ∀ e : PrivateVertexExpansion.Edge G,
+      Sum.inl (PrivateVertexExpansion.privateVertex G e) ∉ p.support) :
+    ∃ q : G.Walk x y, p.length = 2 * q.length := by
+  induction hn : p.length using Nat.strongRec generalizing x y with
+  | ind n ih =>
+      cases p with
+      | nil =>
+          exact ⟨.nil, by simpa using hn.symm⟩
+      | @cons _ w _ hxw p =>
+          rcases w with w | e
+          · exact (not_levi_adj_point_point
+              (privateVertexExpansion G) hxw).elim
+          · obtain ⟨w, hew, r, rfl⟩ := p.exists_eq_cons_of_ne (by simp)
+            rcases w with w | f
+            · rcases w with x' | f
+              · have hxe : x ∈ (e : Sym2 V) := by simpa using hxw
+                have hx'Inc : (privateVertexExpansion G).Inc
+                    (PrivateVertexExpansion.core G x') e := by
+                  simpa [PrivateVertexExpansion.core] using hew
+                have hx'e : x' ∈ (e : Sym2 V) :=
+                  (privateVertexExpansion_inc_core G x' e).mp hx'Inc
+                have hxx' : x ≠ x' := by
+                  intro h
+                  subst x'
+                  have hnot :=
+                    (_root_.SimpleGraph.Walk.isTrail_cons hxw
+                      (_root_.SimpleGraph.Walk.cons hew r)).mp hp |>.2
+                  apply hnot
+                  simp [PrivateVertexExpansion.core, Sym2.eq_swap]
+                have heq : (e : Sym2 V) = s(x, x') :=
+                  (Sym2.mem_and_mem_iff hxx').mp ⟨hxe, hx'e⟩
+                have hxx'Edge : s(x, x') ∈ G.edgeSet := by
+                  rw [← heq]
+                  exact e.property
+                have hxx'Adj : G.Adj x x' := by
+                  simpa using hxx'Edge
+                have hrtrail : r.IsTrail :=
+                  (_root_.SimpleGraph.Walk.isTrail_cons hew r).mp
+                    ((_root_.SimpleGraph.Walk.isTrail_cons hxw
+                      (_root_.SimpleGraph.Walk.cons hew r)).mp hp).1 |>.1
+                have hrprivate : ∀ d : PrivateVertexExpansion.Edge G,
+                    Sum.inl (PrivateVertexExpansion.privateVertex G d) ∉
+                      r.support := by
+                  intro d hd
+                  exact hprivate d (by simp [hd])
+                have hr_lt : r.length <
+                    (_root_.SimpleGraph.Walk.cons hxw
+                      (_root_.SimpleGraph.Walk.cons hew r)).length := by
+                  simp
+                obtain ⟨q, hq⟩ :=
+                  ih r.length (by simpa only [hn] using hr_lt)
+                    r hrtrail hrprivate rfl
+                refine ⟨q.cons hxx'Adj, ?_⟩
+                simp only [_root_.SimpleGraph.Walk.length_cons] at hn ⊢
+                omega
+              · have hfmem :
+                    Sum.inl (PrivateVertexExpansion.privateVertex G f) ∈
+                      (_root_.SimpleGraph.Walk.cons hxw
+                        (_root_.SimpleGraph.Walk.cons hew r)).support := by
+                  simp only [_root_.SimpleGraph.Walk.support_cons, List.mem_cons]
+                  exact Or.inr (Or.inr r.start_mem_support)
+                exact (hprivate f hfmem).elim
+            · exact (not_levi_adj_edge_edge
+                (privateVertexExpansion G) hew).elim
+
+/-- The private-vertex expansion of a two-colourable graph has only even
+Berge cycles. No finiteness assumption is needed. -/
+-- ARISTOTLE_TARGET F3
+theorem privateVertexExpansion_evenBergeCycles {V : Type u}
+    (G : _root_.SimpleGraph V) (hG : G.Colorable 2) :
+    (privateVertexExpansion G).EvenBergeCycles := by
+  classical
+  intro z c hc
+  obtain ⟨x, hx⟩ : ∃ x : V,
+      Sum.inl (PrivateVertexExpansion.core G x) ∈ c.support := by
+    rcases z with (x | e) | e
+    · exact ⟨x, c.start_mem_support⟩
+    · exact (privateVertex_not_mem_cycle_support G c hc e
+        c.start_mem_support).elim
+    · obtain ⟨w, hw, hew⟩ :=
+        _root_.SimpleGraph.adj_of_mem_walk_support c hc.not_nil
+          c.start_mem_support
+      rcases w with (x | f) | f
+      · exact ⟨x, hw⟩
+      · exact (privateVertex_not_mem_cycle_support G c hc f hw).elim
+      · exact (not_levi_adj_edge_edge (privateVertexExpansion G) hew).elim
+  let d := c.rotate (Sum.inl (PrivateVertexExpansion.core G x)) hx
+  have hdcycle : d.IsCycle := by
+    exact hc.rotate hx
+  have hdprivate : ∀ e : PrivateVertexExpansion.Edge G,
+      Sum.inl (PrivateVertexExpansion.privateVertex G e) ∉ d.support := by
+    intro e he
+    apply privateVertex_not_mem_cycle_support G c hc e
+    exact (c.mem_support_rotate_iff
+      (Sum.inl (PrivateVertexExpansion.core G x)) hx).mp he
+  obtain ⟨q, hq⟩ :=
+    exists_graph_walk_of_privateVertexExpansion_walk G d hdcycle.isTrail
+      hdprivate
+  have hqeven : Even q.length :=
+    (_root_.SimpleGraph.two_colorable_iff_forall_loop_even.mp hG) x q
+  obtain ⟨k, hk⟩ := hqeven
+  use k
+  dsimp only [d] at hq
+  simp only [_root_.SimpleGraph.Walk.length_rotate] at hq
+  omega
+
+/-- The private-vertex expansion of a two-colourable graph satisfies all three
+intrinsic conditions. No finiteness assumption is needed. -/
+-- ARISTOTLE_TARGET F4
+theorem privateVertexExpansion_intrinsic {V : Type u}
+    (G : _root_.SimpleGraph V) (hG : G.Colorable 2) :
+    (privateVertexExpansion G).Intrinsic := by
+  exact ⟨privateVertexExpansion_linear G,
+    privateVertexExpansion_bridgeAtEveryEdge G,
+    privateVertexExpansion_evenBergeCycles G hG⟩
+
 end TripleSystem
 
 end Erdos593
@@ -2277,6 +3704,1029 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_ForwardExpansion
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.ForwardExpansion
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.IsomorphIntrinsic
+Source: Erdos593/TripleSystem/IsomorphIntrinsic.lean
+Normalized SHA-256: caaff78364a977f09204b8854bbdb65f21c35a9e511d4479c78fc690c784f4fa
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_IsomorphIntrinsic
+
+/-!
+# Isomorphism invariance of the intrinsic conditions
+
+The finite reconstruction is naturally obtained only up to simultaneous
+vertex and edge relabelling.  This file packages the corresponding Levi-graph
+isomorphism and proves that each intrinsic condition is invariant.
+-/
+
+namespace Erdos593
+
+universe u v u' v'
+
+namespace TripleSystem
+namespace Iso
+
+variable {V : Type u} {E : Type v}
+variable {V' : Type u'} {E' : Type v'}
+variable {F : TripleSystem V E} {F' : TripleSystem V' E'}
+
+/-- A triple-system isomorphism induces the canonical isomorphism of Levi
+graphs, with point-nodes sent to point-nodes and edge-nodes to edge-nodes. -/
+-- ARISTOTLE_ISO_TARGET I1
+def leviIso (f : Iso F F') : F.levi ≃g F'.levi where
+  toEquiv := Equiv.sumCongr f.vertexEquiv f.edgeEquiv
+  map_rel_iff' := by
+    rintro (x | e) (y | d) <;> simp [f.map_inc_iff]
+
+/-- Linearity is invariant under simultaneous vertex and edge relabelling. -/
+-- ARISTOTLE_ISO_TARGET I2
+theorem linear_iff (f : Iso F F') : F.Linear ↔ F'.Linear := by
+  constructor
+  · intro h e' d' x' y' hed hx_e hx_d hy_e hy_d
+    let e := f.edgeEquiv.symm e'
+    let d := f.edgeEquiv.symm d'
+    let x := f.vertexEquiv.symm x'
+    let y := f.vertexEquiv.symm y'
+    have hed' : e ≠ d := by
+      intro heq
+      apply hed
+      simpa [e, d] using congrArg f.edgeEquiv heq
+    have hxy : x = y := h hed'
+      ((f.map_inc_iff x e).mpr (by simpa [x, e] using hx_e))
+      ((f.map_inc_iff x d).mpr (by simpa [x, d] using hx_d))
+      ((f.map_inc_iff y e).mpr (by simpa [y, e] using hy_e))
+      ((f.map_inc_iff y d).mpr (by simpa [y, d] using hy_d))
+    simpa [x, y] using congrArg f.vertexEquiv hxy
+  · intro h e d x y hed hx_e hx_d hy_e hy_d
+    have hed' : f.edgeEquiv e ≠ f.edgeEquiv d := f.edgeEquiv.injective.ne hed
+    exact f.vertexEquiv.injective <| h hed'
+      ((f.map_inc_iff x e).mp hx_e) ((f.map_inc_iff x d).mp hx_d)
+      ((f.map_inc_iff y e).mp hy_e) ((f.map_inc_iff y d).mp hy_d)
+
+private theorem isBridge_iff_of_iso {A B : Type*}
+    {P : _root_.SimpleGraph A} {Q : _root_.SimpleGraph B}
+    (g : P ≃g Q) (a b : A) :
+    P.IsBridge s(a, b) ↔ Q.IsBridge s(g a, g b) := by
+  let gd : P.deleteEdges {s(a, b)} ≃g
+      Q.deleteEdges {s(g a, g b)} :=
+    { toEquiv := g.toEquiv
+      map_rel_iff' := by
+        intro x y
+        simp [g.map_adj_iff] }
+  change (¬(P.deleteEdges {s(a, b)}).Reachable a b) ↔
+    ¬(Q.deleteEdges {s(g a, g b)}).Reachable (g a) (g b)
+  exact not_congr gd.reachable_iff.symm
+
+/-- The incident-Levi-bridge condition is invariant under isomorphism. -/
+-- ARISTOTLE_ISO_TARGET I3
+theorem bridgeAtEveryEdge_iff (f : Iso F F') :
+    F.BridgeAtEveryEdge ↔ F'.BridgeAtEveryEdge := by
+  let g := leviIso f
+  constructor
+  · intro h e'
+    obtain ⟨x, hx⟩ := h (f.edgeEquiv.symm e')
+    refine ⟨f.vertexEquiv x, ?_⟩
+    rcases hx with ⟨hadj, hbridge⟩
+    constructor
+    · simpa [g, leviIso] using g.map_mem_edgeSet_iff.mpr hadj
+    · simpa [g, leviIso] using
+        (isBridge_iff_of_iso g (Sum.inl x)
+          (Sum.inr (f.edgeEquiv.symm e'))).mp hbridge
+  · intro h e
+    obtain ⟨x', hx⟩ := h (f.edgeEquiv e)
+    refine ⟨f.vertexEquiv.symm x', ?_⟩
+    rcases hx with ⟨hadj, hbridge⟩
+    constructor
+    · have hm := g.symm.map_mem_edgeSet_iff.mpr hadj
+      simpa [g, leviIso] using hm
+    · have hb := (isBridge_iff_of_iso g.symm (Sum.inl x')
+          (Sum.inr (f.edgeEquiv e))).mp hbridge
+      simpa [g, leviIso] using hb
+
+/-- Divisibility by four of all Levi-cycle lengths is invariant under
+isomorphism. -/
+-- ARISTOTLE_ISO_TARGET I4
+theorem evenBergeCycles_iff (f : Iso F F') :
+    F.EvenBergeCycles ↔ F'.EvenBergeCycles := by
+  let g := leviIso f
+  constructor
+  · intro h z c hc
+    let d := c.map g.symm.toHom
+    have hd : d.IsCycle := hc.map g.symm.injective
+    have hdiv := h d hd
+    simpa [d, _root_.SimpleGraph.Walk.length_map] using hdiv
+  · intro h z c hc
+    let d := c.map g.toHom
+    have hd : d.IsCycle := hc.map g.injective
+    have hdiv := h d hd
+    simpa [d, _root_.SimpleGraph.Walk.length_map] using hdiv
+
+/-- The full intrinsic predicate is invariant under triple-system
+isomorphism. -/
+-- ARISTOTLE_ISO_TARGET I5
+theorem intrinsic_iff (f : Iso F F') : F.Intrinsic ↔ F'.Intrinsic := by
+  simp only [Intrinsic, linear_iff f, bridgeAtEveryEdge_iff f,
+    evenBergeCycles_iff f]
+
+end Iso
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_IsomorphIntrinsic
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.IsomorphIntrinsic
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.OnePointAmalgamationIntrinsic
+Source: Erdos593/TripleSystem/OnePointAmalgamationIntrinsic.lean
+Normalized SHA-256: 652e683dee0f8d0abe3f4c2ec7b2302c6139ee322b427b7459bb93d6d4cc4c23
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_OnePointAmalgamationIntrinsic
+
+/-!
+# Intrinsic conditions under one-point amalgamation
+
+The canonical one-point amalgamation identifies exactly the two selected roots.
+This file proves that the intrinsic structural conditions are preserved by that
+operation.
+-/
+
+namespace Erdos593
+
+universe u₀ v₀ u₁ v₁
+
+namespace TripleSystem.OnePointAmalgamation
+
+variable {V₀ : Type u₀} {E₀ : Type v₀}
+variable {V₁ : Type u₁} {E₁ : Type v₁}
+
+private theorem walk_support_in_side_of_start
+    {X : Type*} (G : SimpleGraph X) (A B : Set X) (root : X)
+    (hinter : A ∩ B ⊆ {root})
+    (hadj : ∀ ⦃x y⦄, G.Adj x y →
+      (x ∈ A ∧ y ∈ A) ∨ (x ∈ B ∧ y ∈ B))
+    {u v : X} (p : G.Walk u v) (hroot : root ∉ p.support)
+    (hu : u ∈ A) : ∀ x ∈ p.support, x ∈ A := by
+  induction p <;> simp_all +decide [Set.subset_def]
+  grind
+
+private theorem rooted_cycle_support_in_one_of_two_sets
+    {X : Type*} (G : SimpleGraph X) (A B : Set X) (root : X)
+    (hrootA : root ∈ A) (hrootB : root ∈ B)
+    (hinter : A ∩ B ⊆ {root})
+    (hadj : ∀ ⦃x y⦄, G.Adj x y →
+      (x ∈ A ∧ y ∈ A) ∨ (x ∈ B ∧ y ∈ B))
+    (c : G.Walk root root) (hc : c.IsCycle) :
+    (∀ x ∈ c.support, x ∈ A) ∨ (∀ x ∈ c.support, x ∈ B) := by
+  cases c with
+  | nil => exact (hc.not_nil (by simp)).elim
+  | cons h p =>
+      have hpPath : p.IsPath := (SimpleGraph.Walk.cons_isCycle_iff p h).mp hc |>.1
+      have hpNonNil : ¬ p.Nil := by
+        intro hp
+        exact h.ne hp.eq.symm
+      have hdecomp : p.dropLast.support ++ [root] = p.support :=
+        p.support_dropLast_concat hpNonNil
+      have hrootNot : root ∉ p.dropLast.support := by
+        intro hr
+        have hn := hpPath.support_nodup
+        rw [← hdecomp, List.nodup_append] at hn
+        exact (hn.2.2 root hr root (by simp)) rfl
+      rcases hadj h with hA | hB
+      · left
+        intro x hx
+        simp only [SimpleGraph.Walk.support_cons, List.mem_cons] at hx
+        rcases hx with rfl | hx
+        · exact hrootA
+        · rw [← hdecomp] at hx
+          simp only [List.mem_append, List.mem_singleton] at hx
+          rcases hx with hx | rfl
+          · exact walk_support_in_side_of_start G A B root hinter hadj
+              p.dropLast hrootNot hA.2 x hx
+          · exact hrootA
+      · right
+        intro x hx
+        simp only [SimpleGraph.Walk.support_cons, List.mem_cons] at hx
+        rcases hx with rfl | hx
+        · exact hrootB
+        · rw [← hdecomp] at hx
+          simp only [List.mem_append, List.mem_singleton] at hx
+          rcases hx with hx | rfl
+          · exact walk_support_in_side_of_start G B A root
+              (by intro x hx; exact hinter ⟨hx.2, hx.1⟩)
+              (by intro x y hxy; exact (hadj hxy).symm)
+              p.dropLast hrootNot hB.2 x hx
+          · exact hrootB
+
+private theorem cycle_support_in_one_of_two_sets
+    {X : Type*} (G : SimpleGraph X) (A B : Set X) (root : X)
+    (hrootA : root ∈ A) (hrootB : root ∈ B)
+    (hinter : A ∩ B ⊆ {root})
+    (hadj : ∀ ⦃x y⦄, G.Adj x y →
+      (x ∈ A ∧ y ∈ A) ∨ (x ∈ B ∧ y ∈ B))
+    {z : X} (c : G.Walk z z) (hc : c.IsCycle) :
+    (∀ x ∈ c.support, x ∈ A) ∨ (∀ x ∈ c.support, x ∈ B) := by
+  classical
+  by_cases hr : root ∈ c.support
+  · let d := c.rotate root hr
+    have hd : d.IsCycle := hc.rotate hr
+    rcases rooted_cycle_support_in_one_of_two_sets G A B root
+        hrootA hrootB hinter hadj d hd with hA | hB
+    · left
+      intro x hx
+      exact hA x ((c.mem_support_rotate_iff root hr).2 hx)
+    · right
+      intro x hx
+      exact hB x ((c.mem_support_rotate_iff root hr).2 hx)
+  · cases c with
+    | nil => exact (hc.not_nil (by simp)).elim
+    | cons h p =>
+        rcases hadj h with hA | hB
+        · exact Or.inl
+            (walk_support_in_side_of_start G A B root hinter hadj
+              (.cons h p) hr hA.1)
+        · exact Or.inr
+            (walk_support_in_side_of_start G B A root
+              (by intro x hx; exact hinter ⟨hx.2, hx.1⟩)
+              (by intro x y hxy; exact (hadj hxy).symm)
+              (.cons h p) hr hB.1)
+
+private theorem cycle_lifts_through_embedding
+    {X Y : Type*} {G : SimpleGraph X} {H : SimpleGraph Y}
+    (f : G ↪g H) {z : Y} (c : H.Walk z z) (hc : c.IsCycle)
+    (hsupp : ∀ y ∈ c.support, y ∈ Set.range f) :
+    ∃ (x : X) (d : G.Walk x x), d.IsCycle ∧ c.length = d.length := by
+  classical
+  let ci := c.induce (Set.range f) hsupp
+  let g := f.isoInduceRange
+  let d := ci.map g.symm.toHom
+  refine ⟨g.symm ⟨z, hsupp z c.start_mem_support⟩, d, ?_, ?_⟩
+  · have hmap_ci :
+        ci.map (SimpleGraph.Embedding.induce
+          (G := H) (Set.range f)).toHom = c := by
+      simp [ci]
+    have hci : ci.IsCycle := by
+      apply SimpleGraph.Walk.IsCycle.of_map
+      rw [hmap_ci]
+      exact hc
+    exact hci.map g.symm.injective
+  · have hmap_ci :
+        ci.map (SimpleGraph.Embedding.induce
+          (G := H) (Set.range f)).toHom = c := by
+      simp [ci]
+    have hci_len : ci.length = c.length := by
+      calc
+        ci.length =
+            (ci.map (SimpleGraph.Embedding.induce
+              (G := H) (Set.range f)).toHom).length := by
+          symm
+          apply SimpleGraph.Walk.length_map
+        _ = c.length := congrArg
+          (fun w : H.Walk z z => w.length) hmap_ci
+    have hd_len : d.length = ci.length := by simp [d]
+    exact hci_len.symm.trans hd_len.symm
+
+/-- The canonical embedding of the left factor's Levi graph into the
+amalgamated Levi graph. -/
+def leftLeviEmbedding
+    (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+    (r₀ : V₀) (r₁ : V₁) :
+    F₀.levi ↪g (amalgam F₀ F₁ r₀ r₁).levi where
+  toFun
+    | .inl x => .inl (left r₀ r₁ x)
+    | .inr e => .inr (.inl e)
+  inj' := by
+    rintro (x | e) (y | f) h <;> simp_all
+  map_rel_iff' := by
+    rintro (x | e) (y | f) <;> simp [amalgam]
+
+/-- The canonical embedding of the right factor's Levi graph into the
+amalgamated Levi graph. -/
+def rightLeviEmbedding
+    (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+    (r₀ : V₀) (r₁ : V₁) :
+    F₁.levi ↪g (amalgam F₀ F₁ r₀ r₁).levi where
+  toFun
+    | .inl y => .inl (right r₀ r₁ y)
+    | .inr e => .inr (.inr e)
+  inj' := by
+    rintro (x | e) (y | f) h <;> simp_all
+  map_rel_iff' := by
+    rintro (x | e) (y | f) <;> simp [amalgam]
+
+/-- One-point amalgamation preserves linearity. -/
+theorem amalgam_linear
+    (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+    (r₀ : V₀) (r₁ : V₁) (h₀ : F₀.Linear) (h₁ : F₁.Linear) :
+    (amalgam F₀ F₁ r₀ r₁).Linear := by
+  rw [TripleSystem.linear_iff_pairwise_inter_subsingleton]
+  intro e f hef
+  cases e with
+  | inl e =>
+      cases f with
+      | inl f =>
+          intro q hq q' hq'
+          rcases hq.1 with ⟨x, hxe, hxq⟩
+          rcases hq.2 with ⟨y, hyf, hyq⟩
+          rcases hq'.1 with ⟨x', hx'e, hx'q⟩
+          rcases hq'.2 with ⟨y', hy'f, hy'q⟩
+          have hxy : x = y :=
+            left_injective r₀ r₁ (hxq.trans hyq.symm)
+          have hxy' : x' = y' :=
+            left_injective r₀ r₁ (hx'q.trans hy'q.symm)
+          subst y
+          subst y'
+          have he_ne_f : e ≠ f := by
+            intro h
+            exact hef (congrArg Sum.inl h)
+          have hxx' : x = x' := h₀ he_ne_f hxe hyf hx'e hy'f
+          exact hxq.symm.trans ((congrArg (left r₀ r₁) hxx').trans hx'q)
+      | inr f =>
+          exact cross_image_inter_subsingleton r₀ r₁
+            (F₀.edgeSet e) (F₁.edgeSet f)
+  | inr e =>
+      cases f with
+      | inl f =>
+          intro q hq q' hq'
+          exact cross_image_inter_subsingleton r₀ r₁
+            (F₀.edgeSet f) (F₁.edgeSet e) ⟨hq.2, hq.1⟩ ⟨hq'.2, hq'.1⟩
+      | inr f =>
+          intro q hq q' hq'
+          rcases hq.1 with ⟨x, hxe, hxq⟩
+          rcases hq.2 with ⟨y, hyf, hyq⟩
+          rcases hq'.1 with ⟨x', hx'e, hx'q⟩
+          rcases hq'.2 with ⟨y', hy'f, hy'q⟩
+          have hxy : x = y :=
+            right_injective r₀ r₁ (hxq.trans hyq.symm)
+          have hxy' : x' = y' :=
+            right_injective r₀ r₁ (hx'q.trans hy'q.symm)
+          subst y
+          subst y'
+          have he_ne_f : e ≠ f := by
+            intro h
+            exact hef (congrArg Sum.inr h)
+          have hxx' : x = x' := h₁ he_ne_f hxe hyf hx'e hy'f
+          exact hxq.symm.trans ((congrArg (right r₀ r₁) hxx').trans hx'q)
+
+/-- An actual bridge from the left Levi factor remains an actual bridge after
+attaching the right factor at one point. -/
+theorem left_bridge_mem_amalgam
+    (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+    (r₀ : V₀) (r₁ : V₁) {x : V₀} {e : E₀}
+    (h : s(Sum.inl x, Sum.inr e) ∈ SimpleGraph.bridgeEdges F₀.levi) :
+    s(Sum.inl (left r₀ r₁ x), Sum.inr (Sum.inl e)) ∈
+      SimpleGraph.bridgeEdges (amalgam F₀ F₁ r₀ r₁).levi := by
+  let pp : Vertex r₀ r₁ → V₀ := lift r₀ r₁ id (fun _ => r₀) rfl
+  let p : (Vertex r₀ r₁ ⊕ Edge E₀ E₁) → (V₀ ⊕ E₀)
+    | .inl q => .inl (pp q)
+    | .inr (.inl f) => .inr f
+    | .inr (.inr _) => .inl r₀
+  have hp_left (y : V₀) : p (.inl (left r₀ r₁ y)) = .inl y := by
+    rfl
+  have hp_right (y : V₁) : p (.inl (right r₀ r₁ y)) = .inl r₀ := by
+    rfl
+  have hpoint_left (q : Vertex r₀ r₁) (f : E₀)
+      (hqf : ((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges
+        {s(Sum.inl (left r₀ r₁ x), Sum.inr (Sum.inl e))}).Adj
+          (.inl q) (.inr (.inl f))) :
+      (F₀.levi.deleteEdges {s(Sum.inl x, Sum.inr e)}).Adj
+          (p (.inl q)) (p (.inr (.inl f))) := by
+    rw [_root_.SimpleGraph.deleteEdges_adj] at hqf ⊢
+    rw [TripleSystem.levi_adj_point_edge] at hqf ⊢
+    have hi := hqf.1
+    change q ∈ left r₀ r₁ '' F₀.edgeSet f at hi
+    rcases hi with ⟨y, hy, rfl⟩
+    refine ⟨hy, ?_⟩
+    intro heq
+    apply hqf.2
+    simpa [p, pp, Sym2.eq_iff] using heq
+  have hpoint_right (q : Vertex r₀ r₁) (f : E₁)
+      (hqf : ((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges
+        {s(Sum.inl (left r₀ r₁ x), Sum.inr (Sum.inl e))}).Adj
+          (.inl q) (.inr (.inr f))) :
+      p (.inl q) = p (.inr (.inr f)) := by
+    rw [_root_.SimpleGraph.deleteEdges_adj,
+      TripleSystem.levi_adj_point_edge] at hqf
+    have hi := hqf.1
+    change q ∈ right r₀ r₁ '' F₁.edgeSet f at hi
+    rcases hi with ⟨y, hy, rfl⟩
+    rfl
+  have hstep : ∀ {a b},
+      ((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges
+        {s(Sum.inl (left r₀ r₁ x), Sum.inr (Sum.inl e))}).Adj a b →
+      (F₀.levi.deleteEdges {s(Sum.inl x, Sum.inr e)}).Adj (p a) (p b) ∨
+        p a = p b := by
+    intro a b hab
+    rcases a with q | (f | f) <;> rcases b with q' | (g | g)
+    · exact False.elim (TripleSystem.not_levi_adj_point_point
+        (F := amalgam F₀ F₁ r₀ r₁)
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges_le _) hab))
+    · exact Or.inl (hpoint_left q g hab)
+    · exact Or.inr (hpoint_right q g hab)
+    · have hr := hpoint_left q' f
+          (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges _).adj_comm _ _ |>.mp hab)
+      exact Or.inl ((F₀.levi.deleteEdges _).adj_comm _ _ |>.mp hr)
+    · exact False.elim (TripleSystem.not_levi_adj_edge_edge
+        (F := amalgam F₀ F₁ r₀ r₁)
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges_le _) hab))
+    · exact False.elim (TripleSystem.not_levi_adj_edge_edge
+        (F := amalgam F₀ F₁ r₀ r₁)
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges_le _) hab))
+    · exact Or.inr (hpoint_right q' f
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges _).adj_comm _ _ |>.mp hab)).symm
+    · exact False.elim (TripleSystem.not_levi_adj_edge_edge
+        (F := amalgam F₀ F₁ r₀ r₁)
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges_le _) hab))
+    · exact False.elim (TripleSystem.not_levi_adj_edge_edge
+        (F := amalgam F₀ F₁ r₀ r₁)
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges_le _) hab))
+  change F₀.levi.Adj (.inl x) (.inr e) ∧
+    F₀.levi.IsBridge s(Sum.inl x, Sum.inr e) at h
+  change (amalgam F₀ F₁ r₀ r₁).levi.Adj
+      (.inl (left r₀ r₁ x)) (.inr (.inl e)) ∧
+    (amalgam F₀ F₁ r₀ r₁).levi.IsBridge
+      s(Sum.inl (left r₀ r₁ x), Sum.inr (Sum.inl e))
+  constructor
+  · rw [TripleSystem.levi_adj_point_edge] at h ⊢
+    exact (inc_left_left_iff F₀ F₁ r₀ r₁ x e).mpr h.1
+  · rw [_root_.SimpleGraph.isBridge_iff] at h ⊢
+    intro hab
+    apply h.2
+    rw [_root_.SimpleGraph.reachable_eq_reflTransGen] at hab ⊢
+    have hmap : ∀ {a b}, Relation.ReflTransGen
+        ((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges
+          {s(Sum.inl (left r₀ r₁ x), Sum.inr (Sum.inl e))}).Adj a b →
+        Relation.ReflTransGen (F₀.levi.deleteEdges
+          {s(Sum.inl x, Sum.inr e)}).Adj (p a) (p b) := by
+      intro a b hr
+      induction hr with
+      | refl => exact .refl
+      | tail hr hadj ih =>
+          rcases hstep hadj with hs | heq
+          · exact ih.tail hs
+          · simpa [heq] using ih
+    simpa [hp_left, p] using hmap hab
+
+/-- An actual bridge from the right Levi factor remains an actual bridge after
+attaching the left factor at one point. -/
+theorem right_bridge_mem_amalgam
+    (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+    (r₀ : V₀) (r₁ : V₁) {y : V₁} {e : E₁}
+    (h : s(Sum.inl y, Sum.inr e) ∈ SimpleGraph.bridgeEdges F₁.levi) :
+    s(Sum.inl (right r₀ r₁ y), Sum.inr (Sum.inr e)) ∈
+      SimpleGraph.bridgeEdges (amalgam F₀ F₁ r₀ r₁).levi := by
+  let pp : Vertex r₀ r₁ → V₁ := lift r₀ r₁ (fun _ => r₁) id rfl
+  let p : (Vertex r₀ r₁ ⊕ Edge E₀ E₁) → (V₁ ⊕ E₁)
+    | .inl q => .inl (pp q)
+    | .inr (.inl _) => .inl r₁
+    | .inr (.inr f) => .inr f
+  have hp_left (x : V₀) : p (.inl (left r₀ r₁ x)) = .inl r₁ := by
+    rfl
+  have hp_right (x : V₁) : p (.inl (right r₀ r₁ x)) = .inl x := by
+    rfl
+  have hpoint_right (q : Vertex r₀ r₁) (f : E₁)
+      (hqf : ((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges
+        {s(Sum.inl (right r₀ r₁ y), Sum.inr (Sum.inr e))}).Adj
+          (.inl q) (.inr (.inr f))) :
+      (F₁.levi.deleteEdges {s(Sum.inl y, Sum.inr e)}).Adj
+          (p (.inl q)) (p (.inr (.inr f))) := by
+    rw [_root_.SimpleGraph.deleteEdges_adj] at hqf ⊢
+    rw [TripleSystem.levi_adj_point_edge] at hqf ⊢
+    have hi := hqf.1
+    change q ∈ right r₀ r₁ '' F₁.edgeSet f at hi
+    rcases hi with ⟨x, hx, rfl⟩
+    refine ⟨hx, ?_⟩
+    intro heq
+    apply hqf.2
+    simpa [p, pp, Sym2.eq_iff] using heq
+  have hpoint_left (q : Vertex r₀ r₁) (f : E₀)
+      (hqf : ((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges
+        {s(Sum.inl (right r₀ r₁ y), Sum.inr (Sum.inr e))}).Adj
+          (.inl q) (.inr (.inl f))) :
+      p (.inl q) = p (.inr (.inl f)) := by
+    rw [_root_.SimpleGraph.deleteEdges_adj,
+      TripleSystem.levi_adj_point_edge] at hqf
+    have hi := hqf.1
+    change q ∈ left r₀ r₁ '' F₀.edgeSet f at hi
+    rcases hi with ⟨x, hx, rfl⟩
+    rfl
+  have hstep : ∀ {a b},
+      ((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges
+        {s(Sum.inl (right r₀ r₁ y), Sum.inr (Sum.inr e))}).Adj a b →
+      (F₁.levi.deleteEdges {s(Sum.inl y, Sum.inr e)}).Adj (p a) (p b) ∨
+        p a = p b := by
+    intro a b hab
+    rcases a with q | (f | f) <;> rcases b with q' | (g | g)
+    · exact False.elim (TripleSystem.not_levi_adj_point_point
+        (F := amalgam F₀ F₁ r₀ r₁)
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges_le _) hab))
+    · exact Or.inr (hpoint_left q g hab)
+    · exact Or.inl (hpoint_right q g hab)
+    · exact Or.inr (hpoint_left q' f
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges _).adj_comm _ _ |>.mp hab)).symm
+    · exact False.elim (TripleSystem.not_levi_adj_edge_edge
+        (F := amalgam F₀ F₁ r₀ r₁)
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges_le _) hab))
+    · exact False.elim (TripleSystem.not_levi_adj_edge_edge
+        (F := amalgam F₀ F₁ r₀ r₁)
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges_le _) hab))
+    · have hr := hpoint_right q' f
+          (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges _).adj_comm _ _ |>.mp hab)
+      exact Or.inl ((F₁.levi.deleteEdges _).adj_comm _ _ |>.mp hr)
+    · exact False.elim (TripleSystem.not_levi_adj_edge_edge
+        (F := amalgam F₀ F₁ r₀ r₁)
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges_le _) hab))
+    · exact False.elim (TripleSystem.not_levi_adj_edge_edge
+        (F := amalgam F₀ F₁ r₀ r₁)
+        (((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges_le _) hab))
+  change F₁.levi.Adj (.inl y) (.inr e) ∧
+    F₁.levi.IsBridge s(Sum.inl y, Sum.inr e) at h
+  change (amalgam F₀ F₁ r₀ r₁).levi.Adj
+      (.inl (right r₀ r₁ y)) (.inr (.inr e)) ∧
+    (amalgam F₀ F₁ r₀ r₁).levi.IsBridge
+      s(Sum.inl (right r₀ r₁ y), Sum.inr (Sum.inr e))
+  constructor
+  · rw [TripleSystem.levi_adj_point_edge] at h ⊢
+    exact (inc_right_right_iff F₀ F₁ r₀ r₁ y e).mpr h.1
+  · rw [_root_.SimpleGraph.isBridge_iff] at h ⊢
+    intro hab
+    apply h.2
+    rw [_root_.SimpleGraph.reachable_eq_reflTransGen] at hab ⊢
+    have hmap : ∀ {a b}, Relation.ReflTransGen
+        ((amalgam F₀ F₁ r₀ r₁).levi.deleteEdges
+          {s(Sum.inl (right r₀ r₁ y), Sum.inr (Sum.inr e))}).Adj a b →
+        Relation.ReflTransGen (F₁.levi.deleteEdges
+          {s(Sum.inl y, Sum.inr e)}).Adj (p a) (p b) := by
+      intro a b hr
+      induction hr with
+      | refl => exact .refl
+      | tail hr hadj ih =>
+          rcases hstep hadj with hs | heq
+          · exact ih.tail hs
+          · simpa [heq] using ih
+    simpa [hp_right, p] using hmap hab
+
+/-- The intrinsic bridge condition is preserved by one-point amalgamation. -/
+theorem amalgam_bridgeAtEveryEdge
+    (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+    (r₀ : V₀) (r₁ : V₁)
+    (h₀ : F₀.BridgeAtEveryEdge) (h₁ : F₁.BridgeAtEveryEdge) :
+    (amalgam F₀ F₁ r₀ r₁).BridgeAtEveryEdge := by
+  intro e
+  cases e with
+  | inl e =>
+      rcases h₀ e with ⟨x, hx⟩
+      exact ⟨left r₀ r₁ x, left_bridge_mem_amalgam F₀ F₁ r₀ r₁ hx⟩
+  | inr e =>
+      rcases h₁ e with ⟨y, hy⟩
+      exact ⟨right r₀ r₁ y, right_bridge_mem_amalgam F₀ F₁ r₀ r₁ hy⟩
+
+/-- Divisibility by four of every Levi-cycle length is preserved by one-point
+amalgamation. -/
+theorem amalgam_evenBergeCycles
+    (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+    (r₀ : V₀) (r₁ : V₁)
+    (h₀ : F₀.EvenBergeCycles) (h₁ : F₁.EvenBergeCycles) :
+    (amalgam F₀ F₁ r₀ r₁).EvenBergeCycles := by
+  intro z c hc
+  let f₀ := leftLeviEmbedding F₀ F₁ r₀ r₁
+  let f₁ := rightLeviEmbedding F₀ F₁ r₀ r₁
+  let A : Set (Vertex r₀ r₁ ⊕ Edge E₀ E₁) := Set.range f₀
+  let B : Set (Vertex r₀ r₁ ⊕ Edge E₀ E₁) := Set.range f₁
+  let root : Vertex r₀ r₁ ⊕ Edge E₀ E₁ := .inl (left r₀ r₁ r₀)
+  have hrootA : root ∈ A := by
+    exact ⟨.inl r₀, rfl⟩
+  have hrootB : root ∈ B := by
+    refine ⟨.inl r₁, ?_⟩
+    exact congrArg Sum.inl (root_eq r₀ r₁).symm
+  have hinter : A ∩ B ⊆ {root} := by
+    rintro w ⟨⟨a, rfl⟩, ⟨b, hb⟩⟩
+    rcases a with x | e <;> rcases b with y | f
+    all_goals
+      simp [f₀, f₁, root, leftLeviEmbedding,
+        rightLeviEmbedding] at hb ⊢ <;> aesop
+  have hadj : ∀ ⦃a b⦄, (amalgam F₀ F₁ r₀ r₁).levi.Adj a b →
+      (a ∈ A ∧ b ∈ A) ∨ (a ∈ B ∧ b ∈ B) := by
+    intro a b hab
+    rcases a with q | (e | e)
+    · rcases b with q' | (f | f)
+      · exact ((amalgam F₀ F₁ r₀ r₁).not_levi_adj_point_point hab).elim
+      · have hi := (amalgam F₀ F₁ r₀ r₁).levi_adj_point_edge.mp hab
+        change q ∈ left r₀ r₁ '' F₀.edgeSet f at hi
+        rcases hi with ⟨x, hx, rfl⟩
+        exact Or.inl ⟨⟨.inl x, rfl⟩, ⟨.inr f, rfl⟩⟩
+      · have hi := (amalgam F₀ F₁ r₀ r₁).levi_adj_point_edge.mp hab
+        change q ∈ right r₀ r₁ '' F₁.edgeSet f at hi
+        rcases hi with ⟨y, hy, rfl⟩
+        exact Or.inr ⟨⟨.inl y, rfl⟩, ⟨.inr f, rfl⟩⟩
+    · rcases b with q' | (f | f)
+      · have hi := (amalgam F₀ F₁ r₀ r₁).levi_adj_edge_point.mp hab
+        change q' ∈ left r₀ r₁ '' F₀.edgeSet e at hi
+        rcases hi with ⟨x, hx, rfl⟩
+        exact Or.inl ⟨⟨.inr e, rfl⟩, ⟨.inl x, rfl⟩⟩
+      · exact ((amalgam F₀ F₁ r₀ r₁).not_levi_adj_edge_edge hab).elim
+      · exact ((amalgam F₀ F₁ r₀ r₁).not_levi_adj_edge_edge hab).elim
+    · rcases b with q' | (f | f)
+      · have hi := (amalgam F₀ F₁ r₀ r₁).levi_adj_edge_point.mp hab
+        change q' ∈ right r₀ r₁ '' F₁.edgeSet e at hi
+        rcases hi with ⟨y, hy, rfl⟩
+        exact Or.inr ⟨⟨.inr e, rfl⟩, ⟨.inl y, rfl⟩⟩
+      · exact ((amalgam F₀ F₁ r₀ r₁).not_levi_adj_edge_edge hab).elim
+      · exact ((amalgam F₀ F₁ r₀ r₁).not_levi_adj_edge_edge hab).elim
+  rcases cycle_support_in_one_of_two_sets
+      (amalgam F₀ F₁ r₀ r₁).levi A B root
+      hrootA hrootB hinter hadj c hc with hsupp | hsupp
+  · rcases cycle_lifts_through_embedding f₀ c hc hsupp with ⟨x, d, hd, hlen⟩
+    rw [hlen]
+    exact h₀ d hd
+  · rcases cycle_lifts_through_embedding f₁ c hc hsupp with ⟨y, d, hd, hlen⟩
+    rw [hlen]
+    exact h₁ d hd
+
+/-- All three intrinsic conditions are preserved by one-point amalgamation. -/
+theorem amalgam_intrinsic
+    (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+    (r₀ : V₀) (r₁ : V₁) (h₀ : F₀.Intrinsic) (h₁ : F₁.Intrinsic) :
+    (amalgam F₀ F₁ r₀ r₁).Intrinsic := by
+  exact ⟨amalgam_linear F₀ F₁ r₀ r₁ h₀.1 h₁.1,
+    amalgam_bridgeAtEveryEdge F₀ F₁ r₀ r₁ h₀.2.1 h₁.2.1,
+    amalgam_evenBergeCycles F₀ F₁ r₀ r₁ h₀.2.2 h₁.2.2⟩
+
+end TripleSystem.OnePointAmalgamation
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_OnePointAmalgamationIntrinsic
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.OnePointAmalgamationIntrinsic
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ConstructiveForward
+Source: Erdos593/TripleSystem/ConstructiveForward.lean
+Normalized SHA-256: 9302572ebd04b80b17a4de2b3091a25a519047a9a7db6a565d16088273d8d409
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ConstructiveForward
+
+/-!
+# Constructive systems satisfy the intrinsic conditions
+
+This is the structural-induction endpoint for the forward half of the finite
+classification.
+-/
+
+namespace Erdos593
+
+universe w
+
+namespace TripleSystem
+
+/-- Every system in the finite constructive class is linear, has an incident
+Levi bridge at every hyperedge-node, and has only even Berge cycles. -/
+theorem Constructible.intrinsic {V E : Type w}
+    {F : TripleSystem V E} (h : Constructible F) : F.Intrinsic := by
+  induction h with
+  | ofEdgeless V =>
+      exact edgeless_intrinsic V
+  | ofExpansion G hG =>
+      exact privateVertexExpansion_intrinsic G hG
+  | disjointUnion hF hG ihF ihG =>
+      exact disjointUnion_intrinsic _ _ ihF ihG
+  | amalgam h₀ h₁ r₀ r₁ ih₀ ih₁ =>
+      exact OnePointAmalgamation.amalgam_intrinsic _ _ r₀ r₁ ih₀ ih₁
+  | ofIso hF f ihF =>
+      exact (f.intrinsic_iff).mp ihF
+
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ConstructiveForward
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ConstructiveForward
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SingleEdgePiece
+Source: Erdos593/TripleSystem/SingleEdgePiece.lean
+Normalized SHA-256: 1c39e02f57d345bc718f73cfbc754ecac5c86d976cd75c3234e6dbf85b85ee8e
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SingleEdgePiece
+
+/-!
+# Canonical one-edge pieces
+
+Hyperedge-nodes isolated after bridge deletion still contribute a one-edge
+piece.  This module packages the edge as a triple system on its three incident
+points and embeds that piece back into the ambient system.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+
+/-- A universe-polymorphic singleton edge-index type.  Keeping this in the
+vertex universe lets a one-edge piece participate in the universe-uniform
+constructive class. -/
+abbrev SingleEdgeIndex : Type u := ULift.{u} Unit
+
+/-- The one-edge subsystem carried by a selected hyperedge. -/
+def singleEdgePiece (e : E) :
+    TripleSystem (F.edgeSet e) SingleEdgeIndex where
+  Inc _ _ := True
+  edge_ncard := by
+    intro d
+    rw [show {x : F.edgeSet e | True} =
+        {x : F.edgeSet e | (x.1 : V) ∈ (Set.univ : Set V)} by simp]
+    rw [Set.ncard_subtype]
+    simpa using F.edge_ncard e
+  simple := by
+    intro a b _
+    exact Subsingleton.elim a b
+
+/-- The canonical embedding of a one-edge subsystem into its ambient triple
+system. -/
+def singleEdgePieceEmbedding (e : E) : (F.singleEdgePiece e).Embedding F where
+  vertex := ⟨Subtype.val, Subtype.val_injective⟩
+  edge _ := e
+  map_edge := by
+    intro d
+    cases d
+    ext x
+    constructor
+    · rintro ⟨y, hy, rfl⟩
+      exact y.property
+    · intro hx
+      exact ⟨⟨x, hx⟩, trivial, rfl⟩
+
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SingleEdgePiece
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SingleEdgePiece
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SingleEdgePieceConstructible
+Source: Erdos593/TripleSystem/SingleEdgePieceConstructible.lean
+Normalized SHA-256: f574e1077d0339bb93a697e85533681949c53c3b3dc5820257294e0761156dd8
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SingleEdgePieceConstructible
+
+/-!
+# Constructibility of canonical one-edge pieces
+
+An isolated hyperedge-node left by deleting all Levi bridges contributes one
+triple, even though it contributes no edge to the contracted ordinary graph.
+This file identifies that triple with the private-vertex expansion of the
+canonical graph `K₂`, and identifies it with the exact one-edge restriction
+of the ambient triple system.
+-/
+
+namespace Erdos593
+
+open scoped Sym2
+
+universe u w
+
+namespace TripleSystem
+
+/-- A universe-polymorphic two-element vertex type. -/
+abbrev OneEdgeVertex : Type w := ULift.{w} (Fin 2)
+
+/-- The canonical graph `K₂`, used to generate a single triple. -/
+abbrev oneEdgeGraph : _root_.SimpleGraph (OneEdgeVertex.{w}) :=
+  _root_.SimpleGraph.completeGraph OneEdgeVertex
+
+/-- The unique edge of `oneEdgeGraph`. -/
+def oneEdgeGraphEdge : oneEdgeGraph.{w}.edgeSet :=
+  ⟨s(ULift.up 0, ULift.up 1), by simp [oneEdgeGraph]⟩
+
+/-- Every edge of `oneEdgeGraph` is its displayed edge. -/
+theorem oneEdgeGraph_edge_eq (a : oneEdgeGraph.{w}.edgeSet) :
+    a = oneEdgeGraphEdge.{w} := by
+  apply Subtype.ext
+  rcases a with ⟨a, ha⟩
+  induction a using Sym2.inductionOn with
+  | _ x y =>
+      change x ≠ y at ha
+      rcases x with ⟨x⟩
+      rcases y with ⟨y⟩
+      fin_cases x <;> fin_cases y
+      · exact (ha rfl).elim
+      · rfl
+      · simp [oneEdgeGraphEdge]
+      · exact (ha rfl).elim
+
+/-- Every point of the expansion of `K₂` is incident with its unique
+expanded edge. -/
+theorem oneEdgeExpansion_inc
+    (p : PrivateVertexExpansion.Point oneEdgeGraph.{w})
+    (a : PrivateVertexExpansion.Edge oneEdgeGraph.{w}) :
+    (privateVertexExpansion oneEdgeGraph.{w}).Inc p a := by
+  have ha : a = oneEdgeGraphEdge.{w} := oneEdgeGraph_edge_eq a
+  subst a
+  rcases p with x | b
+  · change x ∈ (s(ULift.up 0, ULift.up 1) : Sym2 OneEdgeVertex)
+    rcases x with ⟨x⟩
+    fin_cases x <;> simp
+  · change b = oneEdgeGraphEdge.{w}
+    exact oneEdgeGraph_edge_eq b
+
+/-- The canonical two-colouring of `K₂`. -/
+theorem oneEdgeGraph_colorable_two : oneEdgeGraph.{w}.Colorable 2 := by
+  refine ⟨_root_.SimpleGraph.Coloring.mk (fun x => x.down) ?_⟩
+  intro x y hxy h
+  apply hxy
+  apply ULift.ext
+  exact h
+
+/-- The expansion of `K₂` has three points. -/
+theorem oneEdgeExpansion_vertex_card :
+    Fintype.card (PrivateVertexExpansion.Point oneEdgeGraph.{w}) = 3 := by
+  have hedge : Fintype.card oneEdgeGraph.{w}.edgeSet = 1 := by
+    letI : Unique oneEdgeGraph.{w}.edgeSet :=
+      { default := oneEdgeGraphEdge.{w}
+        uniq := oneEdgeGraph_edge_eq }
+    exact Fintype.card_unique
+  simp only [PrivateVertexExpansion.Point, PrivateVertexExpansion.CoreVertex,
+    PrivateVertexExpansion.PrivateVertex, Fintype.card_sum, Fintype.card_fin,
+    Fintype.card_ulift, hedge]
+
+/-- The expansion of `K₂` has one edge. -/
+theorem oneEdgeExpansion_edge_card :
+    Fintype.card (PrivateVertexExpansion.Edge oneEdgeGraph.{w}) = 1 := by
+  letI : Unique oneEdgeGraph.{w}.edgeSet :=
+    { default := oneEdgeGraphEdge.{w}
+      uniq := oneEdgeGraph_edge_eq }
+  exact Fintype.card_unique
+
+noncomputable section
+
+variable {V : Type u} {E : Type u} (F : TripleSystem V E)
+
+/-- An arbitrary bijection is incidence-preserving here because both systems
+have one edge and every point lies on it. -/
+noncomputable def oneEdgeExpansionSingleEdgePieceIso [Fintype V] (e : E) :
+    Iso (privateVertexExpansion oneEdgeGraph.{u}) (F.singleEdgePiece e) := by
+  letI : Fintype (F.edgeSet e) := Fintype.ofFinite _
+  exact
+    { vertexEquiv := Fintype.equivOfCardEq (by
+        rw [oneEdgeExpansion_vertex_card, Set.fintypeCard_eq_ncard]
+        exact (F.edge_ncard e).symm)
+      edgeEquiv := Fintype.equivOfCardEq (by
+        rw [oneEdgeExpansion_edge_card]
+        simp [SingleEdgeIndex])
+      map_inc_iff := by
+        intro p a
+        constructor
+        · intro _
+          trivial
+        · intro _
+          exact oneEdgeExpansion_inc p a }
+
+/-- Every canonical one-edge piece belongs to the constructive class. -/
+theorem singleEdgePiece_constructible [Fintype V] (e : E) :
+    Constructible (F.singleEdgePiece e) := by
+  have hExpansion : Constructible
+      (privateVertexExpansion oneEdgeGraph.{u}) :=
+    Constructible.ofExpansion oneEdgeGraph.{u} oneEdgeGraph_colorable_two
+  exact Constructible.ofIso hExpansion
+    (oneEdgeExpansionSingleEdgePieceIso F e)
+
+/-- The points on the selected edge are exactly the support of the singleton
+edge-index set. -/
+def singleEdgePieceRestrictionVertexEquiv (e : E) :
+    F.edgeSet e ≃ F.EdgeSupport ({e} : Set E) where
+  toFun x := ⟨x.1, e, Set.mem_singleton e, x.2⟩
+  invFun x := ⟨x.1, by
+    rcases x.2 with ⟨f, hf, hxf⟩
+    have hfe : f = e := Set.mem_singleton_iff.mp hf
+    subst f
+    exact hxf⟩
+  left_inv x := by
+    apply Subtype.ext
+    rfl
+  right_inv x := by
+    apply Subtype.ext
+    rfl
+
+/-- The unique edge index of a one-edge piece corresponds to the selected
+ambient edge. -/
+def singleEdgePieceRestrictionEdgeEquiv (e : E) :
+    SingleEdgeIndex.{u} ≃ ({e} : Set E) where
+  toFun _ := ⟨e, Set.mem_singleton e⟩
+  invFun _ := ULift.up ()
+  left_inv x := Subsingleton.elim _ _
+  right_inv x := by
+    apply Subtype.ext
+    exact (Set.mem_singleton_iff.mp x.2).symm
+
+/-- The canonical one-edge piece is exactly the ambient restriction to that
+single edge. -/
+def singleEdgePieceRestrictionIso (e : E) :
+    Iso (F.singleEdgePiece e) (F.edgeRestriction ({e} : Set E)) where
+  vertexEquiv := singleEdgePieceRestrictionVertexEquiv F e
+  edgeEquiv := singleEdgePieceRestrictionEdgeEquiv e
+  map_inc_iff := by
+    intro x d
+    constructor
+    · intro _
+      exact x.2
+    · intro _
+      trivial
+
+/-- Every exact singleton-edge restriction belongs to the constructive
+class. -/
+theorem singletonEdgeRestriction_constructible [Fintype V] (e : E) :
+    Constructible (F.edgeRestriction ({e} : Set E)) :=
+  Constructible.ofIso (singleEdgePiece_constructible F e)
+    (singleEdgePieceRestrictionIso F e)
+
+end
+
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SingleEdgePieceConstructible
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SingleEdgePieceConstructible
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.DegenerateBridgeBlock
+Source: Erdos593/TripleSystem/DegenerateBridgeBlock.lean
+Normalized SHA-256: ad403556d9dacdcd008722754013f665da4fdf8fc72d333b114245b88389a728
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_DegenerateBridgeBlock
+
+/-!
+# Degenerate bridge-free blocks
+
+A bridge-free Levi component containing a hyperedge-node of degree zero cannot
+contain any other hyperedge-node.  Its exact ambient edge restriction is
+therefore the constructible singleton-edge restriction.
+-/
+
+namespace Erdos593
+
+universe w
+
+namespace TripleSystem
+namespace BridgeBlock
+
+variable {V E : Type w} (F : TripleSystem V E)
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+  [DecidableRel F.levi.Adj]
+
+/-- A bridge-free component containing a degree-zero hyperedge-node contains
+no other hyperedge-node. -/
+theorem componentHyperedgeSet_eq_singleton_of_edge_degree_zero
+    {C : Component F} {e : E} (heC : Sum.inr e ∈ C.supp)
+    (hzero : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0) :
+    componentHyperedgeSet F C = {e} := by
+  ext f
+  constructor
+  · intro hfC
+    have hre : (Erdos593.SimpleGraph.bridgeFree F.levi).Reachable
+        (Sum.inr e) (Sum.inr f) :=
+      C.reachable_of_mem_supp heC hfC
+    by_contra hef
+    have hnodes : (Sum.inr e : V ⊕ E) ≠ Sum.inr f := by
+      intro h
+      apply hef
+      exact (Sum.inr.inj h).symm
+    have hpos : 0 <
+        (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) :=
+      hre.degree_pos_left hnodes
+    omega
+  · intro hf
+    have hfe : f = e := Set.mem_singleton_iff.mp hf
+    subst f
+    exact heC
+
+/-- The exact edge restriction represented by a degree-zero hyperedge
+component belongs to the constructive class. -/
+theorem degreeZeroComponentRestriction_constructible
+    {C : Component F} {e : E} (heC : Sum.inr e ∈ C.supp)
+    (hzero : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0) :
+    Constructible (F.edgeRestriction (componentHyperedgeSet F C)) := by
+  rw [componentHyperedgeSet_eq_singleton_of_edge_degree_zero F heC hzero]
+  exact singletonEdgeRestriction_constructible F e
+
+end BridgeBlock
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_DegenerateBridgeBlock
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.DegenerateBridgeBlock
 ========================================================================== -/
 
 /- ==========================================================================
@@ -2381,508 +4831,1897 @@ END SOURCE MODULE: Erdos593.TripleSystem.Isolated
 ========================================================================== -/
 
 /- ==========================================================================
-BEGIN SOURCE MODULE: Erdos593.TripleSystem.Isomorph
-Source: Erdos593/TripleSystem/Isomorph.lean
-Normalized SHA-256: 2dc9fd1b84ca7299fff7d6d8c786429f5eb5e1fc7b3899a7dfe90e720599e3cd
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.EdgeRestrictionFull
+Source: Erdos593/TripleSystem/EdgeRestrictionFull.lean
+Normalized SHA-256: 12eb2f2a0df092135d8944c6dfc5be9f258b8decc516d11dfbc5a48ed0f92e99
 ========================================================================== -/
-section Erdos593SelfContained_Module_Erdos593_TripleSystem_Isomorph
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_EdgeRestrictionFull
 
 /-!
-# Triple-system isomorphisms
+# The full edge restriction
 
-An isomorphism of edge-indexed triple systems relabels both the vertices and
-the edge indices by equivalences, and preserves incidence in both directions.
-Relabelling only the vertices would not be sufficient: the edge indices are
-part of the representation used by the Levi graph.
+If every vertex is incident with an edge, restricting to the full edge-index
+set changes only the representation: its supported-vertex and edge subtypes are
+canonically equivalent to the original types.
 -/
 
 namespace Erdos593
 
-universe u v u' v' u'' v''
+universe u v
 
 namespace TripleSystem
 
-variable {V : Type u} {E : Type v}
-variable {V' : Type u'} {E' : Type v'}
-variable {V'' : Type u''} {E'' : Type v''}
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
 
-/-- An incidence-preserving relabelling of both vertices and edge indices. -/
-structure Iso (F : TripleSystem V E) (F' : TripleSystem V' E') where
-  /-- The bijective relabelling of vertices. -/
-  vertexEquiv : V ≃ V'
-  /-- The bijective relabelling of edge indices. -/
-  edgeEquiv : E ≃ E'
-  /-- Incidence is preserved and reflected by the two relabellings. -/
-  map_inc_iff : ∀ x e,
-    F.Inc x e ↔ F'.Inc (vertexEquiv x) (edgeEquiv e)
+/-- Under the no-isolated-points hypothesis, every vertex belongs to the
+support of the full edge-index set. -/
+theorem mem_edgeSupportSet_univ (hF : F.HasNoIsolatedPoints) (x : V) :
+    x ∈ F.edgeSupportSet Set.univ := by
+  rcases F.not_isolated_iff_exists_inc.mp (hF x) with ⟨e, hxe⟩
+  exact ⟨e, Set.mem_univ e, hxe⟩
 
-namespace Iso
-
-variable {F : TripleSystem V E}
-variable {F' : TripleSystem V' E'}
-variable {F'' : TripleSystem V'' E''}
-
-/-- The identity relabelling. -/
-def refl (F : TripleSystem V E) : Iso F F where
-  vertexEquiv := Equiv.refl V
-  edgeEquiv := Equiv.refl E
+/-- The exact restriction to every edge is isomorphic to the original system
+when the latter has no isolated vertices. -/
+def edgeRestrictionUnivIso (hF : F.HasNoIsolatedPoints) :
+    Iso (F.edgeRestriction Set.univ) F where
+  vertexEquiv :=
+    { toFun := Subtype.val
+      invFun := fun x => ⟨x, F.mem_edgeSupportSet_univ hF x⟩
+      left_inv := fun _ => Subtype.ext rfl
+      right_inv := fun _ => rfl }
+  edgeEquiv :=
+    { toFun := Subtype.val
+      invFun := fun e => ⟨e, Set.mem_univ e⟩
+      left_inv := fun _ => Subtype.ext rfl
+      right_inv := fun _ => rfl }
   map_inc_iff := fun _ _ => Iff.rfl
 
-/-- Reverse an isomorphism by using the inverse vertex and edge relabellings. -/
-def symm (f : Iso F F') : Iso F' F where
-  vertexEquiv := f.vertexEquiv.symm
-  edgeEquiv := f.edgeEquiv.symm
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_EdgeRestrictionFull
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.EdgeRestrictionFull
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.EdgeRestrictionReconstruction
+Source: Erdos593/TripleSystem/EdgeRestrictionReconstruction.lean
+Normalized SHA-256: 9eb6c092c33f1ae1fd5bf172bf37062eb2e4257bcea793e82097d64c8e4d1daf
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_EdgeRestrictionReconstruction
+
+/-!
+# Reconstructing exact edge restrictions
+
+This file identifies an edge restriction assembled from two edge-disjoint
+pieces.  Disjoint vertex supports give a disjoint union, while a singleton
+support intersection gives the canonical one-point amalgamation.  A finite
+running-union theorem then packages repeated use of these identifications.
+-/
+
+namespace Erdos593
+
+universe u v w
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+
+/-- Edge support commutes with binary union of edge-index sets. -/
+theorem edgeSupportSet_union (S T : Set E) :
+    F.edgeSupportSet (S ∪ T) = F.edgeSupportSet S ∪ F.edgeSupportSet T := by
+  ext x
+  simp only [edgeSupportSet, Set.mem_setOf_eq, Set.mem_union]
+  constructor
+  · rintro ⟨e, heS | heT, hxe⟩
+    · exact Or.inl ⟨e, heS, hxe⟩
+    · exact Or.inr ⟨e, heT, hxe⟩
+  · rintro (⟨e, heS, hxe⟩ | ⟨e, heT, hxe⟩)
+    · exact ⟨e, Or.inl heS, hxe⟩
+    · exact ⟨e, Or.inr heT, hxe⟩
+
+/-- For edge-disjoint index sets, their tagged sum is canonically equivalent
+to their union. -/
+noncomputable def edgeUnionEquiv {S T : Set E} (hST : Disjoint S T) :
+    S ⊕ T ≃ (S ∪ T : Set E) := by
+  classical
+  exact (Equiv.Set.union hST).symm
+
+/-- For edge sets with disjoint supports, the tagged sum of the two support
+types is canonically equivalent to the support of their union. -/
+noncomputable def edgeSupportUnionEquiv {S T : Set E}
+    (hST : Disjoint (F.edgeSupportSet S) (F.edgeSupportSet T)) :
+    F.EdgeSupport S ⊕ F.EdgeSupport T ≃ F.EdgeSupport (S ∪ T) := by
+  classical
+  exact (Equiv.Set.union hST).symm |>.trans
+    (Equiv.setCongr (F.edgeSupportSet_union S T).symm)
+
+/-- If two source edge sets and their vertex supports are disjoint, the exact
+restriction to their union is the disjoint union of the two exact
+restrictions. -/
+noncomputable def edgeRestrictionUnionIsoDisjointUnion {S T : Set E}
+    (hEdges : Disjoint S T)
+    (hSupports : Disjoint (F.edgeSupportSet S) (F.edgeSupportSet T)) :
+    Iso ((F.edgeRestriction S).disjointUnion (F.edgeRestriction T))
+      (F.edgeRestriction (S ∪ T)) where
+  vertexEquiv := F.edgeSupportUnionEquiv hSupports
+  edgeEquiv := edgeUnionEquiv hEdges
   map_inc_iff := by
     intro x e
-    simpa using
-      (f.map_inc_iff (f.vertexEquiv.symm x) (f.edgeEquiv.symm e)).symm
+    cases x with
+    | inl x =>
+        cases e with
+        | inl e =>
+            change F.Inc x.1 e.1 ↔ F.Inc _ _
+            simp [edgeSupportUnionEquiv, edgeUnionEquiv]
+        | inr e =>
+            change False ↔ F.Inc _ _
+            simp only [edgeSupportUnionEquiv, edgeUnionEquiv,
+              Equiv.trans_apply, Equiv.Set.union_symm_apply_left,
+              Equiv.Set.union_symm_apply_right, Equiv.setCongr_apply]
+            exact (iff_false_intro fun hxe =>
+              Set.disjoint_left.mp hSupports x.2 ⟨e.1, e.2, hxe⟩).symm
+    | inr x =>
+        cases e with
+        | inl e =>
+            change False ↔ F.Inc _ _
+            simp only [edgeSupportUnionEquiv, edgeUnionEquiv,
+              Equiv.trans_apply, Equiv.Set.union_symm_apply_left,
+              Equiv.Set.union_symm_apply_right, Equiv.setCongr_apply]
+            exact (iff_false_intro fun hxe =>
+              Set.disjoint_left.mp hSupports ⟨e.1, e.2, hxe⟩ x.2).symm
+        | inr e =>
+            change F.Inc x.1 e.1 ↔ F.Inc _ _
+            simp [edgeSupportUnionEquiv, edgeUnionEquiv]
 
-/-- Compose two incidence-preserving relabellings. -/
-def trans (f : Iso F F') (g : Iso F' F'') : Iso F F'' where
-  vertexEquiv := f.vertexEquiv.trans g.vertexEquiv
-  edgeEquiv := f.edgeEquiv.trans g.edgeEquiv
+/-- Include the support of the left edge set into the support of a union. -/
+def edgeSupportUnionLeft (S T : Set E) :
+    F.EdgeSupport S → F.EdgeSupport (S ∪ T) :=
+  fun x => ⟨x.1, by
+    change x.1 ∈ F.edgeSupportSet (S ∪ T)
+    rw [F.edgeSupportSet_union S T]
+    exact Or.inl x.2⟩
+
+/-- Include the support of the right edge set into the support of a union. -/
+def edgeSupportUnionRight (S T : Set E) :
+    F.EdgeSupport T → F.EdgeSupport (S ∪ T) :=
+  fun x => ⟨x.1, by
+    change x.1 ∈ F.edgeSupportSet (S ∪ T)
+    rw [F.edgeSupportSet_union S T]
+    exact Or.inr x.2⟩
+
+@[simp]
+theorem edgeSupportUnionLeft_val (S T : Set E) (x : F.EdgeSupport S) :
+    (F.edgeSupportUnionLeft S T x).1 = x.1 :=
+  rfl
+
+@[simp]
+theorem edgeSupportUnionRight_val (S T : Set E) (x : F.EdgeSupport T) :
+    (F.edgeSupportUnionRight S T x).1 = x.1 :=
+  rfl
+
+/-- The left copy of the unique point in a singleton support intersection. -/
+def edgeSupportLeftRoot {S T : Set E} {r : V}
+    (h : F.edgeSupportSet S ∩ F.edgeSupportSet T = {r}) :
+    F.EdgeSupport S := by
+  refine ⟨r, ?_⟩
+  have hr : r ∈ F.edgeSupportSet S ∩ F.edgeSupportSet T := by
+    rw [h]
+    simp
+  exact hr.1
+
+/-- The right copy of the unique point in a singleton support intersection. -/
+def edgeSupportRightRoot {S T : Set E} {r : V}
+    (h : F.edgeSupportSet S ∩ F.edgeSupportSet T = {r}) :
+    F.EdgeSupport T := by
+  refine ⟨r, ?_⟩
+  have hr : r ∈ F.edgeSupportSet S ∩ F.edgeSupportSet T := by
+    rw [h]
+    simp
+  exact hr.2
+
+@[simp]
+theorem edgeSupportLeftRoot_val {S T : Set E} {r : V}
+    (h : F.edgeSupportSet S ∩ F.edgeSupportSet T = {r}) :
+    (F.edgeSupportLeftRoot h).1 = r :=
+  rfl
+
+@[simp]
+theorem edgeSupportRightRoot_val {S T : Set E} {r : V}
+    (h : F.edgeSupportSet S ∩ F.edgeSupportSet T = {r}) :
+    (F.edgeSupportRightRoot h).1 = r :=
+  rfl
+
+/-- If two edge-disjoint restrictions meet in exactly one ambient point, the
+exact restriction to their union is their canonical one-point amalgamation at
+the two copies of that point. -/
+noncomputable def edgeRestrictionUnionIsoOnePointAmalgamation
+    {S T : Set E} (hEdges : Disjoint S T) {r : V}
+    (hSupport : F.edgeSupportSet S ∩ F.edgeSupportSet T = {r}) :
+    Iso
+      (OnePointAmalgamation.amalgam
+        (F.edgeRestriction S) (F.edgeRestriction T)
+        (F.edgeSupportLeftRoot hSupport) (F.edgeSupportRightRoot hSupport))
+      (F.edgeRestriction (S ∪ T)) := by
+  let f₀ : F.EdgeSupport S → F.EdgeSupport (S ∪ T) :=
+    F.edgeSupportUnionLeft S T
+  let f₁ : F.EdgeSupport T → F.EdgeSupport (S ∪ T) :=
+    F.edgeSupportUnionRight S T
+  let eEquiv : S ⊕ T ≃ (S ∪ T : Set E) := edgeUnionEquiv hEdges
+  apply OnePointAmalgamation.isoOfMaps
+    (F.edgeRestriction S) (F.edgeRestriction T)
+    (F.edgeRestriction (S ∪ T))
+    (F.edgeSupportLeftRoot hSupport) (F.edgeSupportRightRoot hSupport)
+    f₀ f₁ (edgeEquiv := eEquiv)
+  · apply Subtype.ext
+    rfl
+  · intro x y hxy
+    apply Subtype.ext
+    exact congrArg (fun z : F.EdgeSupport (S ∪ T) => z.1) hxy
+  · intro x y hxy
+    apply Subtype.ext
+    exact congrArg (fun z : F.EdgeSupport (S ∪ T) => z.1) hxy
+  · intro x y
+    constructor
+    · intro hxy
+      have hval : x.1 = y.1 := congrArg Subtype.val hxy
+      have hxInter : x.1 ∈ F.edgeSupportSet S ∩ F.edgeSupportSet T :=
+        ⟨x.2, hval ▸ y.2⟩
+      have hxr : x.1 = r := by
+        have : x.1 ∈ ({r} : Set V) := hSupport ▸ hxInter
+        simpa using this
+      constructor
+      · apply Subtype.ext
+        exact hxr
+      · apply Subtype.ext
+        exact hval.symm.trans hxr
+    · rintro ⟨rfl, rfl⟩
+      apply Subtype.ext
+      rfl
+  · intro z
+    have hz : z.1 ∈ F.edgeSupportSet S ∪ F.edgeSupportSet T :=
+      (F.edgeSupportSet_union S T) ▸ z.2
+    rcases hz with hzS | hzT
+    · exact Or.inl ⟨⟨z.1, hzS⟩, Subtype.ext rfl⟩
+    · exact Or.inr ⟨⟨z.1, hzT⟩, Subtype.ext rfl⟩
+  · intro e
+    ext z
+    constructor
+    · rintro ⟨x, hx, rfl⟩
+      exact hx
+    · intro hz
+      refine ⟨⟨z.1, ⟨e.1, e.2, hz⟩⟩, hz, ?_⟩
+      apply Subtype.ext
+      rfl
+  · intro e
+    ext z
+    constructor
+    · rintro ⟨x, hx, rfl⟩
+      exact hx
+    · intro hz
+      refine ⟨⟨z.1, ⟨e.1, e.2, hz⟩⟩, hz, ?_⟩
+      apply Subtype.ext
+      rfl
+
+/-- The edgeless system on the (empty) support of the empty edge set is
+isomorphic to the exact empty edge restriction. -/
+noncomputable def edgelessIsoEdgeRestrictionEmpty
+    (F : TripleSystem (V := V) (E := E)) :
+    Iso (edgeless (F.EdgeSupport ∅)) (F.edgeRestriction ∅) where
+  vertexEquiv := Equiv.refl _
+  edgeEquiv := Equiv.equivOfIsEmpty _ _
   map_inc_iff := by
     intro x e
-    exact (f.map_inc_iff x e).trans
-      (g.map_inc_iff (f.vertexEquiv x) (f.edgeEquiv e))
+    exact isEmptyElim e
 
-end Iso
+section ConstructibleReconstruction
 
-/-- Two edge-indexed triple systems are isomorphic when some simultaneous
-vertex-and-edge relabelling preserves incidence. -/
-def Isomorphic (F : TripleSystem V E) (F' : TripleSystem V' E') : Prop :=
-  Nonempty (Iso F F')
+variable {X I : Type w} (K : TripleSystem X I)
 
-/-- Every triple system is isomorphic to itself. -/
-@[refl]
-theorem isomorphic_refl (F : TripleSystem V E) : Isomorphic F F :=
-  ⟨Iso.refl F⟩
+/-- Exact union of an ordered finite list of edge pieces.  The list is stored
+newest piece first, so the tail is precisely the previously assembled union. -/
+def edgePieceUnion : List (Set I) → Set I
+  | [] => ∅
+  | S :: pieces => edgePieceUnion pieces ∪ S
 
-/-- Triple-system isomorphism is symmetric. -/
-theorem Isomorphic.symm {F : TripleSystem V E} {F' : TripleSystem V' E'}
-    (h : Isomorphic F F') : Isomorphic F' F :=
-  h.map Iso.symm
+/-- Auditable running-intersection data for a finite reconstruction.  At each
+step the new piece is edge-disjoint from the exact previous union, is itself
+constructible, and its vertex support meets the previous support either in no
+point or in exactly one named point. -/
+def RunningEdgeAssembly : List (Set I) → Prop
+  | [] => True
+  | S :: pieces =>
+      RunningEdgeAssembly pieces ∧
+      Constructible (K.edgeRestriction S) ∧
+      Disjoint (edgePieceUnion pieces) S ∧
+      (Disjoint
+          (K.edgeSupportSet (edgePieceUnion pieces))
+          (K.edgeSupportSet S) ∨
+        ∃ r : X,
+          K.edgeSupportSet (edgePieceUnion pieces) ∩
+            K.edgeSupportSet S = {r})
 
-/-- Triple-system isomorphism is transitive, including across different
-vertex and edge-index types. -/
-theorem Isomorphic.trans
-    {F : TripleSystem V E} {F' : TripleSystem V' E'}
-    {F'' : TripleSystem V'' E''}
-    (h : Isomorphic F F') (h' : Isomorphic F' F'') : Isomorphic F F'' := by
-  rcases h with ⟨f⟩
-  rcases h' with ⟨g⟩
+/-- The empty exact restriction belongs to the constructive class. -/
+theorem edgeRestriction_empty_constructible :
+    Constructible (K.edgeRestriction ∅) := by
+  letI : IsEmpty (K.EdgeSupport ∅) := ⟨by
+    intro x
+    rcases x.2 with ⟨e, he, hxe⟩
+    exact he⟩
+  letI : Fintype (K.EdgeSupport ∅) := Fintype.ofFinite _
+  exact Constructible.ofIso
+    (Constructible.ofEdgeless (K.EdgeSupport ∅))
+    (edgelessIsoEdgeRestrictionEmpty K)
+
+/-- A finite running family of constructible exact pieces reconstructs the
+exact restriction to their total edge union.  Both permitted gluing cases are
+realized by the corresponding constructor, and the conclusion retains the
+literal source edge set `edgePieceUnion pieces`. -/
+theorem runningEdgeAssembly_constructible (pieces : List (Set I))
+    (hpieces : K.RunningEdgeAssembly pieces) :
+    Constructible (K.edgeRestriction (edgePieceUnion pieces)) := by
+  induction pieces with
+  | nil =>
+      exact K.edgeRestriction_empty_constructible
+  | cons S pieces ih =>
+      rcases hpieces with ⟨hprevious, hS, hEdges, hSupports⟩
+      have hPrev :
+          Constructible (K.edgeRestriction (edgePieceUnion pieces)) :=
+        ih hprevious
+      rcases hSupports with hDisjoint | ⟨r, hRoot⟩
+      · exact Constructible.ofIso
+          (Constructible.disjointUnion hPrev hS)
+          (K.edgeRestrictionUnionIsoDisjointUnion hEdges hDisjoint)
+      · exact Constructible.ofIso
+          (Constructible.amalgam hPrev hS
+            (K.edgeSupportLeftRoot hRoot)
+            (K.edgeSupportRightRoot hRoot))
+          (K.edgeRestrictionUnionIsoOnePointAmalgamation hEdges hRoot)
+
+end ConstructibleReconstruction
+
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_EdgeRestrictionReconstruction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.EdgeRestrictionReconstruction
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.BridgeBlockRunningIntersection
+Source: Erdos593/TripleSystem/BridgeBlockRunningIntersection.lean
+Normalized SHA-256: 69950a69e53f6e268b55da4bea2e57ad359647fd13152f183b9fef85f3d498bf
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_BridgeBlockRunningIntersection
+
+/-!
+# Running intersection for bridge-free Levi blocks
+
+Every hyperedge belongs to the unique bridge-free Levi component containing
+its Levi hyperedge-node.  This file packages those components, including the
+degree-zero hyperedge components, and proves the exact edge partition and
+non-isolated-point coverage used in the reverse reconstruction.
+
+The quotient forest is rooted independently in each connected component.
+Hyperedge-containing blocks are then listed component-by-component and in
+nonincreasing depth order.  Since `RunningEdgeAssembly` stores the newest
+piece first, its recursive assembly order is the reverse order: roots first,
+with nondecreasing depth.
+-/
+
+namespace Erdos593
+
+universe u v w
+
+namespace TripleSystem
+namespace BridgeBlock
+
+noncomputable section
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+  [DecidableRel F.levi.Adj]
+
+private noncomputable abbrev core :=
+  Erdos593.SimpleGraph.bridgeFree F.levi
+
+private noncomputable abbrev quotientForest :=
+  Erdos593.SimpleGraph.bridgeQuotient F.levi
+
+/-- A bridge-free Levi component containing at least one hyperedge-node.
+This includes singleton components coming from degree-zero hyperedge-nodes. -/
+abbrev HyperedgeComponent :=
+  {C : Component F // (componentHyperedgeSet F C).Nonempty}
+
+/-- The unique hyperedge-containing bridge-free component assigned to an
+original hyperedge. -/
+noncomputable def hyperedgeComponentOf (e : E) : HyperedgeComponent F :=
+  ⟨(core F).connectedComponentMk (Sum.inr e),
+    e, _root_.SimpleGraph.ConnectedComponent.connectedComponentMk_mem⟩
+
+@[simp]
+theorem hyperedgeComponentOf_val (e : E) :
+    (hyperedgeComponentOf F e : Component F) =
+      (core F).connectedComponentMk (Sum.inr e) :=
+  rfl
+
+@[simp]
+theorem mem_hyperedgeComponentOf_set (e : E) :
+    e ∈ componentHyperedgeSet F (hyperedgeComponentOf F e) :=
+  _root_.SimpleGraph.ConnectedComponent.connectedComponentMk_mem
+
+/-- Distinct hyperedge-containing bridge-free components carry disjoint
+original edge sets. -/
+theorem componentHyperedgeSet_disjoint
+    {C D : HyperedgeComponent F} (hCD : C ≠ D) :
+    Disjoint (componentHyperedgeSet F C) (componentHyperedgeSet F D) := by
+  rw [Set.disjoint_left]
+  intro e heC heD
+  apply hCD
+  apply Subtype.ext
+  change Sum.inr e ∈ (C : Component F).supp at heC
+  change Sum.inr e ∈ (D : Component F).supp at heD
+  change (core F).connectedComponentMk (Sum.inr e) = (C : Component F) at heC
+  change (core F).connectedComponentMk (Sum.inr e) = (D : Component F) at heD
+  have hC := heC
+  have hD := heD
+  exact hC.symm.trans hD
+
+/-- The component edge sets are an exact partition of all original edges. -/
+theorem iUnion_componentHyperedgeSet :
+    (⋃ C : HyperedgeComponent F, componentHyperedgeSet F C) = Set.univ := by
+  apply Set.eq_univ_of_forall
+  intro e
+  rw [Set.mem_iUnion]
+  exact ⟨hyperedgeComponentOf F e, mem_hyperedgeComponentOf_set F e⟩
+
+/-- The supports of all component pieces cover exactly the non-isolated
+vertices of the original triple system. -/
+theorem iUnion_componentHyperedgeSupport :
+    (⋃ C : HyperedgeComponent F,
+        F.edgeSupportSet (componentHyperedgeSet F C)) =
+      {x : V | ¬ F.IsIsolated x} := by
+  ext x
+  constructor
+  · intro hx
+    rw [Set.mem_iUnion] at hx
+    rcases hx with ⟨C, e, heC, hxe⟩
+    exact F.not_isolated_of_inc hxe
+  · intro hx
+    rcases F.not_isolated_iff_exists_inc.mp hx with ⟨e, hxe⟩
+    rw [Set.mem_iUnion]
+    exact ⟨hyperedgeComponentOf F e, e,
+      mem_hyperedgeComponentOf_set F e, hxe⟩
+
+/-- Hypergraph-facing closed-star statement for the exact component pieces:
+if the piece of `C` contains `x`, then `C` is either the bridge-free component
+of the point-node `x`, or is adjacent to that component in the quotient
+forest. -/
+theorem hyperedgeComponent_mem_closedStar
+    (C : HyperedgeComponent F) {x : V}
+    (hx : x ∈ F.edgeSupportSet (componentHyperedgeSet F C)) :
+    (C : Component F) = (core F).connectedComponentMk (Sum.inl x) ∨
+      (quotientForest F).Adj C
+        ((core F).connectedComponentMk (Sum.inl x)) := by
+  rcases hx with ⟨e, heC, hxe⟩
+  exact component_eq_or_leviBridgeQuotient_adj_of_inc F heC hxe
+
+/-- A connected component of the quotient forest.  Each such component will
+be rooted independently. -/
+abbrev QuotientTreeComponent :=
+  (quotientForest F).ConnectedComponent
+
+/-- The quotient-tree component containing a bridge-free Levi component. -/
+def quotientTreeComponent (C : Component F) : QuotientTreeComponent F :=
+  (quotientForest F).connectedComponentMk C
+
+/-- A fixed root in each connected component of the quotient forest. -/
+noncomputable def quotientTreeRoot (T : QuotientTreeComponent F) : Component F :=
+  Classical.choose T.nonempty_supp
+
+theorem quotientTreeRoot_mem (T : QuotientTreeComponent F) :
+    quotientTreeRoot F T ∈ T.supp :=
+  Classical.choose_spec T.nonempty_supp
+
+/-- The root as a vertex of its connected-component graph. -/
+noncomputable def quotientTreeRootVertex (T : QuotientTreeComponent F) : T.supp :=
+  ⟨quotientTreeRoot F T, quotientTreeRoot_mem F T⟩
+
+/-- A quotient vertex as a vertex of its own connected-component graph. -/
+def quotientTreeVertex (C : Component F) : (quotientTreeComponent F C).supp :=
+  ⟨C, _root_.SimpleGraph.ConnectedComponent.connectedComponentMk_mem⟩
+
+/-- Rooted depth of a bridge-free block inside its quotient-tree component. -/
+noncomputable def componentDepth (C : Component F) : ℕ :=
+  (quotientForest F).dist
+    (quotientTreeRoot F (quotientTreeComponent F C)) C
+
+noncomputable local instance componentFintype : Fintype (Component F) :=
+  Fintype.ofFinite _
+
+noncomputable local instance quotientTreeComponentFintype :
+    Fintype (QuotientTreeComponent F) :=
+  Fintype.ofFinite _
+
+noncomputable local instance hyperedgeComponentFintype :
+    Fintype (HyperedgeComponent F) :=
+  Fintype.ofFinite _
+
+/-- A lexicographic key: quotient-tree component first, rooted depth second,
+and a finite tie-breaker last.  The last coordinate makes the key injective. -/
+noncomputable def componentOrderKey (C : HyperedgeComponent F) :
+    Fin (Fintype.card (QuotientTreeComponent F)) ×ₗ
+      (ℕ ×ₗ Fin (Fintype.card (HyperedgeComponent F))) :=
+  toLex
+    ((Fintype.equivFin (QuotientTreeComponent F))
+        (quotientTreeComponent F C),
+      toLex (componentDepth F C,
+        (Fintype.equivFin (HyperedgeComponent F)) C))
+
+theorem componentOrderKey_injective :
+    Function.Injective (componentOrderKey F) := by
+  intro C D hCD
+  have hlast := congrArg
+    (fun z : Fin (Fintype.card (QuotientTreeComponent F)) ×ₗ
+        (ℕ ×ₗ Fin (Fintype.card (HyperedgeComponent F))) =>
+      (ofLex (ofLex z).2).2) hCD
+  exact (Fintype.equivFin (HyperedgeComponent F)).injective hlast
+
+/-- The linear order used only to enumerate the finite component family. -/
+@[reducible] noncomputable def hyperedgeComponentLinearOrder :
+    LinearOrder (HyperedgeComponent F) :=
+  LinearOrder.lift' (componentOrderKey F) (componentOrderKey_injective F)
+
+/-- All hyperedge-containing components, with deeper components placed first.
+Consequently the recursive assembly order (tail before head) is rooted and
+nondecreasing in depth inside each quotient-tree component. -/
+noncomputable def rootedHyperedgeComponentList : List (HyperedgeComponent F) := by
+  letI := hyperedgeComponentLinearOrder F
+  exact Finset.univ.sort (fun C D => D ≤ C)
+
+@[simp]
+theorem mem_rootedHyperedgeComponentList (C : HyperedgeComponent F) :
+    C ∈ rootedHyperedgeComponentList F := by
+  classical
+  letI := hyperedgeComponentLinearOrder F
+  simp [rootedHyperedgeComponentList]
+
+theorem rootedHyperedgeComponentList_nodup :
+    (rootedHyperedgeComponentList F).Nodup := by
+  classical
+  letI := hyperedgeComponentLinearOrder F
+  simp [rootedHyperedgeComponentList]
+
+/-- Earlier recursive pieces have no greater rooted depth than the new head
+whenever both blocks belong to the same quotient tree. -/
+theorem rootedHyperedgeComponentList_pairwise_depth :
+    (rootedHyperedgeComponentList F).Pairwise
+      (fun C D : HyperedgeComponent F =>
+        quotientTreeComponent F D = quotientTreeComponent F C →
+          componentDepth F D ≤ componentDepth F C) := by
+  classical
+  letI := hyperedgeComponentLinearOrder F
+  have hsorted :
+      (Finset.univ.sort (fun C D : HyperedgeComponent F => D ≤ C)).Pairwise
+        (fun C D => D ≤ C) :=
+    Finset.pairwise_sort _ _
+  rw [rootedHyperedgeComponentList]
+  refine hsorted.imp ?_
+  intro C D hDC htree
+  change componentOrderKey F D ≤ componentOrderKey F C at hDC
+  unfold componentOrderKey at hDC
+  rw [Prod.Lex.toLex_le_toLex] at hDC
+  have hq :
+      (Fintype.equivFin (QuotientTreeComponent F))
+          (quotientTreeComponent F D) =
+        (Fintype.equivFin (QuotientTreeComponent F))
+          (quotientTreeComponent F C) :=
+    congrArg (Fintype.equivFin (QuotientTreeComponent F)) htree
+  rcases hDC with hless | ⟨heq, hrest⟩
+  · exact (lt_irrefl _ (hq ▸ hless)).elim
+  · rw [Prod.Lex.toLex_le_toLex] at hrest
+    rcases hrest with hdepth | ⟨hdepth, _⟩
+    · exact hdepth.le
+    · exact hdepth.le
+
+/-- Pieces sharing an ambient point lie in the same connected component of
+the quotient forest. -/
+theorem quotientTreeComponent_eq_of_common_support
+    {C D : HyperedgeComponent F} {x : V}
+    (hxC : x ∈ F.edgeSupportSet (componentHyperedgeSet F C))
+    (hxD : x ∈ F.edgeSupportSet (componentHyperedgeSet F D)) :
+    quotientTreeComponent F C = quotientTreeComponent F D := by
+  let X : Component F := (core F).connectedComponentMk (Sum.inl x)
+  have hC := hyperedgeComponent_mem_closedStar F C hxC
+  have hD := hyperedgeComponent_mem_closedStar F D hxD
+  have hCX :
+      (quotientForest F).connectedComponentMk (C : Component F) =
+        (quotientForest F).connectedComponentMk X := by
+    rcases hC with hCX | hCX
+    · exact congrArg (quotientForest F).connectedComponentMk hCX
+    · exact
+        _root_.SimpleGraph.ConnectedComponent.connectedComponentMk_eq_of_adj hCX
+  have hDX :
+      (quotientForest F).connectedComponentMk (D : Component F) =
+        (quotientForest F).connectedComponentMk X := by
+    rcases hD with hDX | hDX
+    · exact congrArg (quotientForest F).connectedComponentMk hDX
+    · exact
+        _root_.SimpleGraph.ConnectedComponent.connectedComponentMk_eq_of_adj hDX
+  exact hCX.trans hDX.symm
+
+private theorem eq_of_adj_of_dist_add_one_in_forest
+    {W : Type*} {G : _root_.SimpleGraph W} (hG : G.IsAcyclic)
+    (root : W) {C D X : W}
+    (hCX : G.Adj C X) (hDX : G.Adj D X)
+    (hrootC : G.Reachable root C) (hrootD : G.Reachable root D)
+    (hCdepth : G.dist root C + 1 = G.dist root X)
+    (hDdepth : G.dist root D + 1 = G.dist root X) :
+    C = D := by
+  classical
+  obtain ⟨pC, hpC, hpCdist⟩ := hrootC.exists_path_of_dist
+  obtain ⟨pD, hpD, hpDdist⟩ := hrootD.exists_path_of_dist
+  have hXnotC : X ∉ pC.support := by
+    intro hX
+    have hdist := G.dist_le (pC.takeUntil X hX)
+    have htake := pC.length_takeUntil_le_length hX
+    omega
+  have hXnotD : X ∉ pD.support := by
+    intro hX
+    have hdist := G.dist_le (pD.takeUntil X hX)
+    have htake := pD.length_takeUntil_le_length hX
+    omega
+  have hpCX : (pC.concat hCX).IsPath := hpC.concat hXnotC hCX
+  have hpDX : (pD.concat hDX).IsPath := hpD.concat hXnotD hDX
+  have hpaths : pC.concat hCX = pD.concat hDX := by
+    exact Subtype.mk.inj (hG.path_unique ⟨_, hpCX⟩ ⟨_, hpDX⟩)
+  have hpenultimate := congrArg (fun p => p.penultimate) hpaths
+  simpa using hpenultimate
+
+/-- Forest version of the rooted closed-star direction lemma.  Connectivity
+is required only from the chosen root to the two compared vertices. -/
+private theorem closedStar_earlier_direction_in_forest
+    {W : Type*} {G : _root_.SimpleGraph W} (hG : G.IsAcyclic)
+    (root C D X : W)
+    (hCD : C ≠ D)
+    (hC : C = X ∨ G.Adj C X)
+    (hD : D = X ∨ G.Adj D X)
+    (hdepth : G.dist root D ≤ G.dist root C)
+    (hrootC : G.Reachable root C) (hrootD : G.Reachable root D) :
+    (X = C ∧ G.Adj D C ∧ G.dist root D + 1 = G.dist root C) ∨
+      (X ≠ C ∧ G.Adj C X ∧ G.dist root X + 1 = G.dist root C) := by
+  rcases hC with (rfl | hCX)
+  · left
+    have hDC : G.Adj D C := by
+      rcases hD with (rfl | hDC)
+      · exact (hCD rfl).elim
+      · exact hDC
+    refine ⟨rfl, hDC, ?_⟩
+    rcases hG.dist_eq_dist_add_one_of_adj_of_reachable root hDC hrootD with h | h
+    · omega
+    · exact h.symm
+  · right
+    refine ⟨hCX.ne', hCX, ?_⟩
+    rcases hG.dist_eq_dist_add_one_of_adj_of_reachable root hCX hrootC with
+      hCXup | hXup
+    · exact hCXup.symm
+    · exfalso
+      have hDX : G.Adj D X := by
+        rcases hD with (rfl | hDX)
+        · omega
+        · exact hDX
+      rcases hG.dist_eq_dist_add_one_of_adj_of_reachable root hDX hrootD with
+        hDup | hXupD
+      · omega
+      · have hDC : D = C :=
+          eq_of_adj_of_dist_add_one_in_forest hG root hDX hCX
+            hrootD hrootC hXupD.symm hXup.symm
+        exact hCD hDC.symm
+
+/-- The unique parent bridge through which an already assembled, no-deeper
+piece can meet a new piece.  `inside` and `outside` orient the original Levi
+edge from the new component to its parent, while `edge_eq_incidence` records
+the underlying point--hyperedge incidence without orientation. -/
+structure ParentBridgeWitness (C : HyperedgeComponent F) (x : V) where
+  parent : Component F
+  edge : E
+  inside : V ⊕ E
+  outside : V ⊕ E
+  quotientAdj :
+    (quotientForest F).Adj parent (C : Component F)
+  parentDepth :
+    (quotientForest F).dist
+        (quotientTreeRoot F (quotientTreeComponent F C)) parent + 1 =
+      componentDepth F C
+  leviAdj : F.levi.Adj inside outside
+  inside_mem : inside ∈ (C : Component F).supp
+  outside_mem : outside ∈ parent.supp
+  incidence : F.Inc x edge
+  edge_eq_incidence : s(inside, outside) = s(Sum.inl x, Sum.inr edge)
+
+/-- A common point between a new block and a distinct no-deeper block
+determines an oriented Levi bridge over the parent edge of the new block. -/
+theorem parentBridgeWitnessOfCommonPoint_nonempty
+    {C D : HyperedgeComponent F} (hCD : C ≠ D) {x : V}
+    (hxC : x ∈ F.edgeSupportSet (componentHyperedgeSet F C))
+    (hxD : x ∈ F.edgeSupportSet (componentHyperedgeSet F D))
+    (hdepth : componentDepth F D ≤ componentDepth F C) :
+    Nonempty (ParentBridgeWitness F C x) := by
+  let T : QuotientTreeComponent F := quotientTreeComponent F C
+  let X : Component F := (core F).connectedComponentMk (Sum.inl x)
+  have htreeDC : quotientTreeComponent F D = T :=
+    quotientTreeComponent_eq_of_common_support F hxD hxC
+  have hCstar := hyperedgeComponent_mem_closedStar F C hxC
+  have hDstar := hyperedgeComponent_mem_closedStar F D hxD
+  have hCDval : (C : Component F) ≠ (D : Component F) := by
+    intro h
+    exact hCD (Subtype.ext h)
+  have hrootC : (quotientForest F).Reachable
+      (quotientTreeRoot F T) (C : Component F) :=
+    T.reachable_of_mem_supp (quotientTreeRoot_mem F T)
+      _root_.SimpleGraph.ConnectedComponent.connectedComponentMk_mem
+  have hrootD : (quotientForest F).Reachable
+      (quotientTreeRoot F T) (D : Component F) :=
+    T.reachable_of_mem_supp (quotientTreeRoot_mem F T)
+      ((_root_.SimpleGraph.ConnectedComponent.mem_supp_iff T D).mpr htreeDC)
+  have hdepth' :
+      (quotientForest F).dist (quotientTreeRoot F T) (D : Component F) ≤
+        (quotientForest F).dist (quotientTreeRoot F T) (C : Component F) := by
+    simpa [componentDepth, T, htreeDC] using hdepth
+  have hAcyclic := Erdos593.SimpleGraph.bridgeQuotient_isAcyclic F.levi
+  rcases closedStar_earlier_direction_in_forest hAcyclic
+      (quotientTreeRoot F T) (C : Component F) (D : Component F) X
+      hCDval hCstar hDstar hdepth' hrootC hrootD with hparent | hparent
+  · rcases hparent with ⟨hXC, hDCadj, hDdepth⟩
+    rcases hxD with ⟨e, heD, hxe⟩
+    refine ⟨
+      { parent := D
+        edge := e
+        inside := Sum.inl x
+        outside := Sum.inr e
+        quotientAdj := hDCadj
+        parentDepth := hDdepth
+        leviAdj := F.levi_adj_point_edge.mpr hxe
+        inside_mem := ?_
+        outside_mem := heD
+        incidence := hxe
+        edge_eq_incidence := rfl }⟩
+    simp [X, hXC]
+  · rcases hparent with ⟨_, hCXadj, hXdepth⟩
+    rcases hxC with ⟨e, heC, hxe⟩
+    refine ⟨
+      { parent := X
+        edge := e
+        inside := Sum.inr e
+        outside := Sum.inl x
+        quotientAdj := hCXadj.symm
+        parentDepth := hXdepth
+        leviAdj := (F.levi_adj_point_edge.mpr hxe).symm
+        inside_mem := heC
+        outside_mem := by
+          simp [X]
+        incidence := hxe
+        edge_eq_incidence := Sym2.eq_swap }⟩
+
+/-- A chosen parent-bridge witness supplied by
+`parentBridgeWitnessOfCommonPoint_nonempty`. -/
+noncomputable def parentBridgeWitnessOfCommonPoint
+    {C D : HyperedgeComponent F} (hCD : C ≠ D) {x : V}
+    (hxC : x ∈ F.edgeSupportSet (componentHyperedgeSet F C))
+    (hxD : x ∈ F.edgeSupportSet (componentHyperedgeSet F D))
+    (hdepth : componentDepth F D ≤ componentDepth F C) :
+    ParentBridgeWitness F C x :=
+  Classical.choice
+    (parentBridgeWitnessOfCommonPoint_nonempty F hCD hxC hxD hdepth)
+
+/-- Two parent-bridge witnesses for the same new component have the same
+parent quotient vertex. -/
+theorem ParentBridgeWitness.parent_unique
+    {C : HyperedgeComponent F} {x y : V}
+    (hx : ParentBridgeWitness F C x)
+    (hy : ParentBridgeWitness F C y) :
+    hx.parent = hy.parent := by
+  let T := quotientTreeComponent F C
+  have hrootC : (quotientForest F).Reachable
+      (quotientTreeRoot F T) (C : Component F) :=
+    T.reachable_of_mem_supp (quotientTreeRoot_mem F T)
+      _root_.SimpleGraph.ConnectedComponent.connectedComponentMk_mem
+  have hrootX : (quotientForest F).Reachable
+      (quotientTreeRoot F T) hx.parent :=
+    hrootC.trans hx.quotientAdj.symm.reachable
+  have hrootY : (quotientForest F).Reachable
+      (quotientTreeRoot F T) hy.parent :=
+    hrootC.trans hy.quotientAdj.symm.reachable
+  apply eq_of_adj_of_dist_add_one_in_forest
+    (Erdos593.SimpleGraph.bridgeQuotient_isAcyclic F.levi)
+    (quotientTreeRoot F T) hx.quotientAdj hy.quotientAdj hrootX hrootY
+  · simpa [componentDepth, T] using hx.parentDepth
+  · simpa [componentDepth, T] using hy.parentDepth
+
+/-- The parent bridge has only one point endpoint, so two earlier pieces can
+meet a new block only at the same ambient point. -/
+theorem eq_of_common_support_of_depth_le
+    {C D A : HyperedgeComponent F}
+    (hCD : C ≠ D) (hCA : C ≠ A) {x y : V}
+    (hxC : x ∈ F.edgeSupportSet (componentHyperedgeSet F C))
+    (hxD : x ∈ F.edgeSupportSet (componentHyperedgeSet F D))
+    (hyC : y ∈ F.edgeSupportSet (componentHyperedgeSet F C))
+    (hyA : y ∈ F.edgeSupportSet (componentHyperedgeSet F A))
+    (hdepthD : componentDepth F D ≤ componentDepth F C)
+    (hdepthA : componentDepth F A ≤ componentDepth F C) :
+    x = y := by
+  let wx := parentBridgeWitnessOfCommonPoint F hCD hxC hxD hdepthD
+  let wy := parentBridgeWitnessOfCommonPoint F hCA hyC hyA hdepthA
+  have hparent : wx.parent = wy.parent :=
+    ParentBridgeWitness.parent_unique F wx wy
+  have hCparent : (C : Component F) ≠ wx.parent := by
+    intro h
+    apply wx.quotientAdj.ne
+    exact h.symm
+  have hedge : s(wy.inside, wy.outside) = s(wx.inside, wx.outside) := by
+    apply Erdos593.SimpleGraph.bridgeQuotient_originalEdge_unique F.levi hCparent
+      wx.leviAdj wx.inside_mem wx.outside_mem wy.leviAdj wy.inside_mem
+    simpa [hparent] using wy.outside_mem
+  have hincidence :
+      s(Sum.inl y, Sum.inr wy.edge) = s(Sum.inl x, Sum.inr wx.edge) :=
+    wy.edge_eq_incidence.symm.trans (hedge.trans wx.edge_eq_incidence)
+  rcases Sym2.eq_iff.mp hincidence with h | h
+  · exact Sum.inl.inj h.1 |>.symm
+  · exact (Sum.inl_ne_inr h.1).elim
+
+/-- The exact edge set attached to a hyperedge-containing component, with a
+domain-specific wrapper that prevents accidental coercion of component lists
+to lists of their underlying bridge-free components. -/
+def componentPieceEdgeSet (C : HyperedgeComponent F) : Set E :=
+  componentHyperedgeSet F (C : Component F)
+
+/-- The edge sets of the rooted hyperedge-component list. -/
+noncomputable def rootedComponentPieceList : List (Set E) :=
+  (rootedHyperedgeComponentList F).map (componentPieceEdgeSet F)
+
+/-- Membership in the exact union of the edge sets attached to a component
+list. -/
+theorem mem_edgePieceUnion_componentList
+    (components : List (HyperedgeComponent F)) {e : E} :
+    e ∈ edgePieceUnion
+        (components.map (componentPieceEdgeSet F)) ↔
+      ∃ C : HyperedgeComponent F,
+        C ∈ components ∧ e ∈ componentPieceEdgeSet F C := by
+  induction components with
+  | nil => simp [edgePieceUnion]
+  | cons C components ih =>
+      change
+        (e ∈ edgePieceUnion
+            (components.map (componentPieceEdgeSet F)) ∨
+          e ∈ componentPieceEdgeSet F C) ↔ _
+      rw [ih]
+      constructor
+      · rintro (⟨D, hD, heD⟩ | heC)
+        · exact ⟨D, List.mem_cons.mpr (Or.inr hD), heD⟩
+        · exact ⟨C, List.mem_cons.mpr (Or.inl rfl), heC⟩
+      · rintro ⟨D, hD, heD⟩
+        rcases List.mem_cons.mp hD with rfl | hD
+        · exact Or.inr heD
+        · exact Or.inl ⟨D, hD, heD⟩
+
+/-- The total exact edge union of the rooted component pieces is all `E`. -/
+theorem edgePieceUnion_rootedComponentPieceList :
+    edgePieceUnion (rootedComponentPieceList F) = Set.univ := by
+  apply Set.eq_univ_of_forall
+  intro e
+  rw [rootedComponentPieceList,
+    mem_edgePieceUnion_componentList]
+  exact ⟨hyperedgeComponentOf F e,
+    mem_rootedHyperedgeComponentList F _,
+    mem_hyperedgeComponentOf_set F e⟩
+
+/-- The geometric portion of `RunningEdgeAssembly`: exact recursive
+edge-disjointness and empty-or-singleton support overlap, without yet asking
+that the individual restrictions be constructible. -/
+def RunningEdgeAssemblyGeometry (pieces : List (Set E)) : Prop :=
+  match pieces with
+  | [] => True
+  | S :: pieces =>
+      RunningEdgeAssemblyGeometry pieces ∧
+      Disjoint (edgePieceUnion pieces) S ∧
+      (Disjoint
+          (F.edgeSupportSet (edgePieceUnion pieces))
+          (F.edgeSupportSet S) ∨
+        ∃ r : V,
+          F.edgeSupportSet (edgePieceUnion pieces) ∩
+            F.edgeSupportSet S = {r})
+
+/-- Any noduplicated component list in parent-after-child order has the exact
+edge-disjointness and running-intersection geometry. -/
+theorem componentList_runningEdgeAssemblyGeometry
+    (components : List (HyperedgeComponent F))
+    (hnodup : components.Nodup)
+    (hdepth : components.Pairwise
+      (fun C D : HyperedgeComponent F =>
+        quotientTreeComponent F D = quotientTreeComponent F C →
+          componentDepth F D ≤ componentDepth F C)) :
+    RunningEdgeAssemblyGeometry F
+      (components.map (componentPieceEdgeSet F)) := by
+  induction components with
+  | nil => trivial
+  | cons C components ih =>
+      rw [List.nodup_cons] at hnodup
+      rw [List.pairwise_cons] at hdepth
+      refine ⟨ih hnodup.2 hdepth.2, ?_, ?_⟩
+      · rw [Set.disjoint_left]
+        intro e hePrevious heC
+        rcases (mem_edgePieceUnion_componentList F components).mp hePrevious with
+          ⟨D, hD, heD⟩
+        have hDC : D ≠ C := by
+          intro h
+          apply hnodup.1
+          exact h ▸ hD
+        exact (Set.disjoint_left.mp
+          (componentHyperedgeSet_disjoint F hDC)) heD heC
+      · by_cases hdisjoint : Disjoint
+            (F.edgeSupportSet
+              (edgePieceUnion (components.map (componentPieceEdgeSet F))))
+            (F.edgeSupportSet (componentPieceEdgeSet F C))
+        · exact Or.inl hdisjoint
+        · right
+          rcases Set.not_disjoint_iff.mp hdisjoint with
+            ⟨r, hrPrevious, hrC⟩
+          refine ⟨r, Set.Subset.antisymm ?_ ?_⟩
+          · intro x hx
+            rcases hx.1 with ⟨e, hePrevious, hxe⟩
+            rcases (mem_edgePieceUnion_componentList F components).mp
+                hePrevious with ⟨D, hD, heD⟩
+            have hxD :
+                x ∈ F.edgeSupportSet (componentPieceEdgeSet F D) :=
+              ⟨e, heD, hxe⟩
+            rcases hrPrevious with ⟨f, hfPrevious, hrf⟩
+            rcases (mem_edgePieceUnion_componentList F components).mp
+                hfPrevious with ⟨A, hA, hfA⟩
+            have hrA :
+                r ∈ F.edgeSupportSet (componentPieceEdgeSet F A) :=
+              ⟨f, hfA, hrf⟩
+            have hCD : C ≠ D := by
+              intro h
+              apply hnodup.1
+              exact h.symm ▸ hD
+            have hCA : C ≠ A := by
+              intro h
+              apply hnodup.1
+              exact h.symm ▸ hA
+            have hdepthD : componentDepth F D ≤ componentDepth F C :=
+              hdepth.1 D hD
+                (quotientTreeComponent_eq_of_common_support F hxD hx.2)
+            have hdepthA : componentDepth F A ≤ componentDepth F C :=
+              hdepth.1 A hA
+                (quotientTreeComponent_eq_of_common_support F hrA hrC)
+            have hxr : x = r :=
+              eq_of_common_support_of_depth_le F hCD hCA
+                hx.2 hxD hrC hrA hdepthD hdepthA
+            simp [hxr]
+          · intro x hx
+            have hxr : x = r := Set.mem_singleton_iff.mp hx
+            simpa [hxr] using And.intro hrPrevious hrC
+
+/-- The canonical rooted piece list has the exact geometric hypotheses of a
+running edge assembly. -/
+theorem rootedComponentPieceList_runningEdgeAssemblyGeometry :
+    RunningEdgeAssemblyGeometry F (rootedComponentPieceList F) := by
+  apply componentList_runningEdgeAssemblyGeometry F
+  · exact rootedHyperedgeComponentList_nodup F
+  · exact rootedHyperedgeComponentList_pairwise_depth F
+
+/-- Geometry plus constructibility of every listed exact restriction gives
+the literal `RunningEdgeAssembly` predicate used by reconstruction.  The
+current reconstruction API places vertices and edges in one universe, so this
+interface follows that convention. -/
+theorem RunningEdgeAssemblyGeometry.toRunningEdgeAssembly
+    {X I : Type w} (K : TripleSystem X I)
+    (pieces : List (Set I))
+    (hgeometry : RunningEdgeAssemblyGeometry K pieces)
+    (hconstructible : ∀ S ∈ pieces,
+      Constructible (K.edgeRestriction S)) :
+    K.RunningEdgeAssembly pieces := by
+  induction pieces with
+  | nil => trivial
+  | cons S pieces ih =>
+      rcases hgeometry with ⟨hprevious, hEdges, hSupports⟩
+      refine ⟨ih hprevious ?_, hconstructible S (by simp), hEdges, hSupports⟩
+      intro T hT
+      exact hconstructible T (by simp [hT])
+
+/-- Once every exact component restriction is supplied as constructible, the
+canonical rooted list is a full `RunningEdgeAssembly`.  This is the interface
+used to combine the active-block and degree-zero-block packaging theorems. -/
+theorem rootedComponentPieceList_runningEdgeAssembly
+    {X I : Type w} (K : TripleSystem X I)
+    [Fintype X] [Fintype I] [DecidableEq X] [DecidableEq I]
+    [DecidableRel K.levi.Adj]
+    (hconstructible : ∀ C : HyperedgeComponent K,
+      Constructible
+        (K.edgeRestriction (componentPieceEdgeSet K C))) :
+    K.RunningEdgeAssembly (rootedComponentPieceList K) := by
+  apply (rootedComponentPieceList_runningEdgeAssemblyGeometry K).toRunningEdgeAssembly K
+  intro S hS
+  rw [rootedComponentPieceList, List.mem_map] at hS
+  rcases hS with ⟨C, _, rfl⟩
+  exact hconstructible C
+
+/-- Every hyperedge-containing bridge-free component gives a constructible
+exact restriction: degree zero is the singleton-edge case, while degree two
+supplies a genuine active component. -/
+theorem hyperedgeComponentRestriction_constructible
+    {X I : Type w} (K : TripleSystem X I)
+    [Fintype X] [Fintype I] [DecidableEq X] [DecidableEq I]
+    [DecidableRel K.levi.Adj]
+    (hlinear : K.Linear) (hbridge : K.BridgeAtEveryEdge)
+    (hberge : K.EvenBergeCycles) (C : HyperedgeComponent K) :
+    Constructible (K.edgeRestriction (componentPieceEdgeSet K C)) := by
+  rcases C.2 with ⟨e, heC⟩
+  change Sum.inr e ∈ (C : Component K).supp at heC
+  rcases K.levi_bridgeFree_edge_degree_eq_zero_or_two hbridge e with
+    hzero | htwo
+  · change Constructible
+      (K.edgeRestriction (componentHyperedgeSet K (C : Component K)))
+    exact degreeZeroComponentRestriction_constructible K heC hzero
+  · have hpositive : 0 <
+        (Erdos593.SimpleGraph.bridgeFree K.levi).degree (Sum.inr e) := by
+      omega
+    rcases ((Erdos593.SimpleGraph.bridgeFree K.levi).degree_pos_iff_exists_adj
+        (Sum.inr e)).mp hpositive with ⟨z, hez⟩
+    have hC : HasIncidence K C := by
+      rcases z with x | f
+      · refine ⟨x, e, ?_, heC, hez.symm⟩
+        exact (C : Component K).mem_supp_of_adj_mem_supp heC hez
+      · have hle : Erdos593.SimpleGraph.bridgeFree K.levi ≤ K.levi := by
+          dsimp only [Erdos593.SimpleGraph.bridgeFree]
+          exact K.levi.deleteEdges_le _
+        exact (K.not_levi_adj_edge_edge (hle hez)).elim
+    change Constructible
+      (K.edgeRestriction (componentHyperedgeSet K (C : Component K)))
+    exact activeComponentRestriction_constructible K
+      hlinear hbridge hberge hC
+
+/-- The intrinsic finite hypotheses make the canonical component ordering a
+full running edge assembly. -/
+theorem intrinsic_rootedComponentPieceList_runningEdgeAssembly
+    {X I : Type w} (K : TripleSystem X I)
+    [Fintype X] [Fintype I] [DecidableEq X] [DecidableEq I]
+    [DecidableRel K.levi.Adj]
+    (hlinear : K.Linear) (hbridge : K.BridgeAtEveryEdge)
+    (hberge : K.EvenBergeCycles) :
+    K.RunningEdgeAssembly (rootedComponentPieceList K) := by
+  exact rootedComponentPieceList_runningEdgeAssembly K
+    (hyperedgeComponentRestriction_constructible K hlinear hbridge hberge)
+
+/-- Exact finite reverse structural theorem after isolated vertices are
+removed: the intrinsic Levi conditions reconstruct the original system from
+the rooted bridge-block running assembly. -/
+theorem constructible_of_intrinsic_of_hasNoIsolatedPoints
+    {X I : Type w} (K : TripleSystem X I)
+    [Fintype X] [Fintype I] [DecidableEq X] [DecidableEq I]
+    [DecidableRel K.levi.Adj]
+    (hintrinsic : K.Intrinsic) (hnoisolated : K.HasNoIsolatedPoints) :
+    Constructible K := by
+  rcases hintrinsic with ⟨hlinear, hbridge, hberge⟩
+  have hrunning : K.RunningEdgeAssembly (rootedComponentPieceList K) :=
+    intrinsic_rootedComponentPieceList_runningEdgeAssembly K
+      hlinear hbridge hberge
+  have hrestriction : Constructible
+      (K.edgeRestriction (edgePieceUnion (rootedComponentPieceList K))) :=
+    K.runningEdgeAssembly_constructible (rootedComponentPieceList K) hrunning
+  rw [edgePieceUnion_rootedComponentPieceList K] at hrestriction
+  exact Constructible.ofIso hrestriction
+    (K.edgeRestrictionUnivIso hnoisolated)
+
+/-- Finite structural classification on systems with no isolated points. -/
+theorem constructible_iff_intrinsic_of_hasNoIsolatedPoints
+    {X I : Type w} (K : TripleSystem X I)
+    [Fintype X] [Fintype I] [DecidableEq X] [DecidableEq I]
+    [DecidableRel K.levi.Adj]
+    (hnoisolated : K.HasNoIsolatedPoints) :
+    Constructible K ↔ K.Intrinsic := by
+  constructor
+  · exact Constructible.intrinsic
+  · intro hintrinsic
+    exact constructible_of_intrinsic_of_hasNoIsolatedPoints K
+      hintrinsic hnoisolated
+
+/-- Clean isolated-reduction form of the finite structural classification. -/
+theorem isolatedReduction_constructible_iff_intrinsic
+    {X I : Type w} (K : TripleSystem X I)
+    [Fintype X] [Fintype I] [DecidableEq X] [DecidableEq I] :
+    Constructible K.isolatedReduction ↔ K.isolatedReduction.Intrinsic := by
+  classical
+  letI : Fintype K.NonIsolatedPoint := Fintype.ofFinite _
+  letI : DecidableRel K.isolatedReduction.levi.Adj := Classical.decRel _
+  exact constructible_iff_intrinsic_of_hasNoIsolatedPoints
+    K.isolatedReduction K.isolatedReduction_hasNoIsolatedPoints
+
+end
+end BridgeBlock
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_BridgeBlockRunningIntersection
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.BridgeBlockRunningIntersection
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.BridgeSelector
+Source: Erdos593/TripleSystem/BridgeSelector.lean
+Normalized SHA-256: 7b917cb0cca037dcbb045f369e2f3f86926496b0f84bb8ee048f82d377315d4b
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_BridgeSelector
+
+/-!
+# Bridge selectors
+
+This optional interface records one incident Levi bridge at every hyperedge
+node.  It is equivalent to `BridgeAtEveryEdge` and allows the all-bridges
+decomposition used by the core formalization to interoperate with the
+selected-incidence formulation in Eric Li's contemporaneous proof
+(`arXiv:2606.24882`, Sections 3--5).  No result from that paper is assumed here.
+-/
+
+namespace Erdos593
+
+open scoped Sym2
+
+universe u v
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+
+/-- A choice of one point on every hyperedge whose corresponding Levi
+incidence is an actual bridge. -/
+structure BridgeSelector where
+  point : E → V
+  inc : ∀ e, F.Inc (point e) e
+  isBridge : ∀ e, F.levi.IsBridge s(Sum.inl (point e), Sum.inr e)
+
+/-- The intrinsic bridge condition supplies a bridge selector. -/
+noncomputable def bridgeSelectorOfBridgeAtEveryEdge
+    (h : F.BridgeAtEveryEdge) : F.BridgeSelector where
+  point e := Classical.choose (h e)
+  inc e := by
+    have hs := Classical.choose_spec (h e)
+    change F.levi.Adj (Sum.inl (Classical.choose (h e))) (Sum.inr e) ∧
+      F.levi.IsBridge
+        s(Sum.inl (Classical.choose (h e)), Sum.inr e) at hs
+    exact F.levi_adj_point_edge.mp hs.1
+  isBridge e := by
+    have hs := Classical.choose_spec (h e)
+    change F.levi.Adj (Sum.inl (Classical.choose (h e))) (Sum.inr e) ∧
+      F.levi.IsBridge
+        s(Sum.inl (Classical.choose (h e)), Sum.inr e) at hs
+    exact hs.2
+
+/-- Selecting one incident bridge at every hyperedge-node is exactly the
+intrinsic bridge-at-every-edge condition. -/
+theorem nonempty_bridgeSelector_iff :
+    Nonempty F.BridgeSelector ↔ F.BridgeAtEveryEdge := by
+  constructor
+  · rintro ⟨p⟩ e
+    refine ⟨p.point e, ?_⟩
+    change F.levi.Adj (Sum.inl (p.point e)) (Sum.inr e) ∧
+      F.levi.IsBridge s(Sum.inl (p.point e), Sum.inr e)
+    exact ⟨F.levi_adj_point_edge.mpr (p.inc e), p.isBridge e⟩
+  · intro h
+    exact ⟨F.bridgeSelectorOfBridgeAtEveryEdge h⟩
+
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_BridgeSelector
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.BridgeSelector
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.Obligatory
+Source: Erdos593/TripleSystem/Obligatory.lean
+Normalized SHA-256: b42f62ffe884c9c2b969184303e65675c7a5839df93ff72d25efbf87deee7229
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_Obligatory
+
+/-!
+# Colourings, appearance, and obligatoriness
+
+This is the infinitary-facing vocabulary for Erdős Problem 593.  It is kept
+compatible with the corresponding definitions in DeepMind's
+`FormalConjecturesForMathlib/Combinatorics/Hypergraph/ThreeUniform.lean`, while
+using this project's edge-indexed triple systems and non-induced embeddings.
+No statement or implementation from that external Apache-2.0 project is
+imported.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal
+
+universe u v w
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+
+/-- A vertex colouring is proper when every hyperedge contains two vertices
+of different colours. -/
+def IsProperColoring {C : Type w} (c : V → C) : Prop :=
+  ∀ e : E, ∃ x : V, F.Inc x e ∧ ∃ y : V, F.Inc y e ∧ c x ≠ c y
+
+/-- The least cardinality of a colour type admitting a proper colouring. -/
+noncomputable def chromaticCardinal : Cardinal.{u} :=
+  sInf {k : Cardinal.{u} | ∃ C : Type u, #C = k ∧
+    ∃ c : V → C, F.IsProperColoring c}
+
+/-- `F` appears in `H` when it has a non-induced triple-system embedding. -/
+def Appears {W : Type u} {D : Type v}
+    (F : TripleSystem V E) (H : TripleSystem W D) : Prop :=
+  Nonempty (F.Embedding H)
+
+/-- Property B for a triple system. -/
+def IsTwoColorable : Prop :=
+  ∃ c : V → Fin 2, F.IsProperColoring c
+
+/-- A finite source is obligatory when it appears in every triple system of
+uncountable chromatic cardinality in the ambient universes. -/
+def IsObligatory : Prop :=
+  ∀ (W : Type u) (D : Type v) [DecidableEq W]
+    (H : TripleSystem W D), ℵ₀ < H.chromaticCardinal → F.Appears H
+
+theorem appears_refl : F.Appears F :=
+  ⟨Embedding.refl F⟩
+
+theorem Appears.trans {W : Type u} {D : Type v} {X : Type u} {A : Type v}
+    {H : TripleSystem W D} {K : TripleSystem X A}
+    (hFH : F.Appears H) (hHK : H.Appears K) : F.Appears K := by
+  rcases hFH with ⟨f⟩
+  rcases hHK with ⟨g⟩
   exact ⟨f.trans g⟩
 
-/-- Reversing both sides does not change whether two systems are isomorphic. -/
-theorem isomorphic_comm {F : TripleSystem V E} {F' : TripleSystem V' E'} :
-    Isomorphic F F' ↔ Isomorphic F' F :=
-  ⟨Isomorphic.symm, Isomorphic.symm⟩
+end TripleSystem
+end Erdos593
 
-/-- On systems with fixed vertex and edge-index types, isomorphism is an
-equivalence relation. -/
-theorem isomorphic_equivalence :
-    Equivalence (@Isomorphic V E V E) :=
-  ⟨isomorphic_refl, Isomorphic.symm, Isomorphic.trans⟩
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_Obligatory
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.Obligatory
+========================================================================== -/
 
-/-- The setoid of triple systems modulo simultaneous vertex-and-edge
-relabelling.  This is intentionally a named definition rather than a global
-instance. -/
-def isomorphicSetoid : Setoid (TripleSystem V E) where
-  r := Isomorphic
-  iseqv := isomorphic_equivalence
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ObligatoryDisjointUnion
+Source: Erdos593/TripleSystem/ObligatoryDisjointUnion.lean
+Normalized SHA-256: 4dbb6df0efe3dd17cdb5f470e381fdd4daa77be19dd31a9dc2de7ad9ce7788b2
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryDisjointUnion
+
+/-!
+# Finite deletion and disjoint-union closure for obligatory triple systems
+
+This file starts the infinitary-facing positive theory.  Restriction to a
+vertex set retains precisely those host hyperedges contained in that set.  A
+proper colouring after deleting finitely many vertices extends by assigning a
+private colour to every deleted vertex; consequently finite deletion preserves
+uncountable chromatic cardinality.  This lets two finite obligatory systems be
+embedded successively with disjoint images.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal
+
+universe u v
+
+namespace TripleSystem
+
+variable {V W X : Type u} {E D A : Type v}
+
+section Restriction
+
+variable (H : TripleSystem W D) (S : Set W)
+
+/-- The edge indices retained by restriction to `S`: exactly the host edges
+whose three vertices all lie in `S`. -/
+abbrev RestrictedEdge := {d : D // H.edgeSet d ⊆ S}
+
+/-- Restrict a triple system to a set of vertices, retaining precisely the
+hyperedges wholly contained in that set. -/
+def vertexRestriction : TripleSystem S (H.RestrictedEdge S) where
+  Inc x d := H.Inc x.1 d.1
+  edge_ncard := by
+    intro d
+    have himage :
+        ((fun x : S => (x : W)) ''
+            {x : S | H.Inc x.1 d.1}) = H.edgeSet d.1 := by
+      ext x
+      constructor
+      · rintro ⟨y, hy, rfl⟩
+        exact hy
+      · intro hx
+        exact ⟨⟨x, d.2 hx⟩, hx, rfl⟩
+    calc
+      Set.ncard {x : S | H.Inc x.1 d.1} =
+          Set.ncard ((fun x : S => (x : W)) ''
+            {x : S | H.Inc x.1 d.1}) :=
+        (Set.ncard_image_of_injective _ Subtype.val_injective).symm
+      _ = Set.ncard (H.edgeSet d.1) := congrArg Set.ncard himage
+      _ = 3 := H.edgeSet_ncard d.1
+  simple := by
+    intro d₁ d₂ hedge
+    apply Subtype.ext
+    apply H.edgeSet_injective
+    ext x
+    constructor
+    · intro hx
+      have hxS : x ∈ S := d₁.2 hx
+      have := Set.ext_iff.mp hedge ⟨x, hxS⟩
+      exact this.mp hx
+    · intro hx
+      have hxS : x ∈ S := d₂.2 hx
+      have := Set.ext_iff.mp hedge ⟨x, hxS⟩
+      exact this.mpr hx
+
+@[simp]
+theorem vertexRestriction_inc (x : S) (d : H.RestrictedEdge S) :
+    (H.vertexRestriction S).Inc x d ↔ H.Inc x.1 d.1 :=
+  Iff.rfl
+
+/-- The canonical non-induced embedding of a vertex restriction into its host.
+It is in fact induced on the retained edge indices, but only the weaker project
+embedding interface is needed. -/
+def vertexRestrictionEmbedding : (H.vertexRestriction S).Embedding H where
+  vertex := ⟨Subtype.val, Subtype.val_injective⟩
+  edge := Subtype.val
+  map_edge := by
+    intro d
+    ext x
+    constructor
+    · rintro ⟨y, hy, rfl⟩
+      exact hy
+    · intro hx
+      exact ⟨⟨x, d.2 hx⟩, hx, rfl⟩
+
+/-- Delete `R` from the vertex set and retain exactly the edges avoiding `R`. -/
+abbrev deleteVertices (R : Set W) :
+    TripleSystem (Rᶜ : Set W) (H.RestrictedEdge (Rᶜ : Set W)) :=
+  H.vertexRestriction (Rᶜ : Set W)
+
+/-- The canonical embedding of a finite or infinite vertex deletion back into
+the original host. -/
+abbrev deleteVerticesEmbedding (R : Set W) :
+    (H.deleteVertices R).Embedding H :=
+  H.vertexRestrictionEmbedding (Rᶜ : Set W)
+
+end Restriction
+
+section ChromaticCardinal
+
+variable (H : TripleSystem W D)
+
+/-- Every edge contains another vertex distinct from any prescribed incident
+vertex.  This elementary consequence of 3-uniformity is used when a deleted
+vertex supplies one of the two colours witnessing properness. -/
+theorem exists_other_incident (e : D) {x : W} (_hx : H.Inc x e) :
+    ∃ y : W, H.Inc y e ∧ y ≠ x := by
+  have hone : 1 < (H.edgeSet e).ncard := by
+    rw [H.edgeSet_ncard]
+    decide
+  exact Set.exists_ne_of_one_lt_ncard hone x
+
+/-- The set of cardinalities of proper colour types is nonempty. -/
+private theorem coloringCardinals_nonempty :
+    {k : Cardinal.{u} | ∃ C : Type u, #C = k ∧
+      ∃ c : W → C, H.IsProperColoring c}.Nonempty := by
+  refine ⟨#W, W, rfl, id, ?_⟩
+  intro e
+  have hne : (H.edgeSet e).ncard ≠ 0 := by
+    rw [H.edgeSet_ncard]
+    decide
+  obtain ⟨x, hx⟩ := Set.nonempty_of_ncard_ne_zero hne
+  obtain ⟨y, hy, hyx⟩ := H.exists_other_incident e hx
+  exact ⟨x, hx, y, hy, hyx.symm⟩
+
+/-- The `sInf` defining the chromatic cardinal is attained by an actual colour
+type and proper colouring. -/
+theorem exists_properColoring_mk_eq_chromaticCardinal :
+    ∃ C : Type u, #C = H.chromaticCardinal ∧
+      ∃ c : W → C, H.IsProperColoring c := by
+  unfold chromaticCardinal
+  exact csInf_mem (H.coloringCardinals_nonempty)
+
+/-- Exact usable characterization of the chromatic cardinal: it is at most
+`#C` exactly when a proper `C`-colouring exists. -/
+theorem chromaticCardinal_le_mk_iff {C : Type u} :
+    H.chromaticCardinal ≤ #C ↔ ∃ c : W → C, H.IsProperColoring c := by
+  constructor
+  · intro hle
+    obtain ⟨C₀, hC₀, c₀, hc₀⟩ :=
+      H.exists_properColoring_mk_eq_chromaticCardinal
+    have hcard : #C₀ ≤ #C := hC₀.trans_le hle
+    obtain ⟨i⟩ : Nonempty (C₀ ↪ C) := by
+      exact (Cardinal.lift_mk_le'.mp (by simpa using hcard))
+    exact ⟨fun x => i (c₀ x), fun e => by
+      obtain ⟨x, hx, y, hy, hxy⟩ := hc₀ e
+      exact ⟨x, hx, y, hy, i.injective.ne hxy⟩⟩
+  · rintro ⟨c, hc⟩
+    unfold chromaticCardinal
+    exact csInf_le' ⟨C, rfl, c, hc⟩
+
+/-- Extend a proper colouring from the deletion of `R` to the whole host by
+giving every deleted vertex its own private colour. -/
+theorem exists_properColoring_sum_deleted
+    (R : Set W) {C : Type u} (c : (Rᶜ : Set W) → C)
+    (hc : (H.deleteVertices R).IsProperColoring c) :
+    ∃ c' : W → (C ⊕ R), H.IsProperColoring c' := by
+  classical
+  let c' : W → (C ⊕ R) := fun x =>
+    if hx : x ∈ R then Sum.inr ⟨x, hx⟩ else Sum.inl (c ⟨x, hx⟩)
+  refine ⟨c', ?_⟩
+  intro e
+  by_cases hhit : ∃ x : W, H.Inc x e ∧ x ∈ R
+  · obtain ⟨x, hxe, hxR⟩ := hhit
+    obtain ⟨y, hye, hyx⟩ := H.exists_other_incident e hxe
+    refine ⟨x, hxe, y, hye, ?_⟩
+    by_cases hyR : y ∈ R
+    · rw [show c' x = Sum.inr ⟨x, hxR⟩ by simp [c', hxR],
+          show c' y = Sum.inr ⟨y, hyR⟩ by simp [c', hyR]]
+      intro heq
+      exact hyx (congrArg (fun z : C ⊕ R => Sum.elim (fun _ => y) Subtype.val z) heq).symm
+    · simp [c', hxR, hyR]
+  · push Not at hhit
+    let d : H.RestrictedEdge Rᶜ :=
+      ⟨e, fun _ hx => hhit _ hx⟩
+    obtain ⟨x, hx, y, hy, hxy⟩ := hc d
+    refine ⟨x.1, hx, y.1, hy, ?_⟩
+    have hxR : x.1 ∉ R := x.2
+    have hyR : y.1 ∉ R := y.2
+    rw [show c' x.1 = Sum.inl (c x) by simp [c', hxR],
+        show c' y.1 = Sum.inl (c y) by simp [c', hyR]]
+    exact Sum.inl_injective.ne hxy
+
+/-- Deleting finitely many vertices from an uncountably chromatic host leaves
+an uncountably chromatic restriction. -/
+theorem aleph0_lt_chromaticCardinal_deleteVertices
+    (R : Set W) (hR : R.Finite)
+    (hH : ℵ₀ < H.chromaticCardinal) :
+    ℵ₀ < (H.deleteVertices R).chromaticCardinal := by
+  by_contra hnot
+  have hdel : (H.deleteVertices R).chromaticCardinal ≤ ℵ₀ :=
+    le_of_not_gt hnot
+  obtain ⟨C, hC, c, hc⟩ :=
+    (H.deleteVertices R).exists_properColoring_mk_eq_chromaticCardinal
+  obtain ⟨c', hc'⟩ := H.exists_properColoring_sum_deleted R c hc
+  have hHsum : H.chromaticCardinal ≤ #(C ⊕ R) :=
+    (H.chromaticCardinal_le_mk_iff).2 ⟨c', hc'⟩
+  have hCcount : #C ≤ ℵ₀ := hC.trans_le hdel
+  letI : Fintype R := hR.fintype
+  have hRcount : #R ≤ ℵ₀ :=
+    (Cardinal.lt_aleph0_of_finite R).le
+  have hsum : #(C ⊕ R) ≤ ℵ₀ := by
+    rw [Cardinal.mk_sum, Cardinal.lift_id, Cardinal.lift_id]
+    exact Cardinal.add_le_aleph0.2 ⟨hCcount, hRcount⟩
+  exact hH.2 (hHsum.trans hsum)
+
+end ChromaticCardinal
+
+section DisjointEmbedding
+
+variable {F : TripleSystem V E} {G : TripleSystem X A}
+variable {H : TripleSystem W D}
+
+/-- Embeddings with disjoint vertex images combine to an embedding of the
+tagged disjoint union. -/
+def Embedding.disjointUnionOfDisjoint
+    (f : F.Embedding H) (g : G.Embedding H)
+    (hdisj : ∀ x y, f.vertex x ≠ g.vertex y) :
+    (F.disjointUnion G).Embedding H where
+  vertex :=
+    { toFun := Sum.elim f.vertex g.vertex
+      inj' := by
+        intro p q hpq
+        cases p with
+        | inl x =>
+            cases q with
+            | inl y => exact congrArg Sum.inl (f.vertex.injective hpq)
+            | inr y => exact False.elim (hdisj x y hpq)
+        | inr x =>
+            cases q with
+            | inl y => exact False.elim (hdisj y x hpq.symm)
+            | inr y => exact congrArg Sum.inr (g.vertex.injective hpq) }
+  edge := Sum.elim f.edge g.edge
+  map_edge := by
+    intro e
+    cases e with
+    | inl e =>
+        rw [disjointUnion_edgeSet_inl]
+        rw [Set.image_image]
+        change f.vertex '' F.edgeSet e = H.edgeSet (f.edge e)
+        exact f.map_edge e
+    | inr d =>
+        rw [disjointUnion_edgeSet_inr]
+        rw [Set.image_image]
+        change g.vertex '' G.edgeSet d = H.edgeSet (g.edge d)
+        exact g.map_edge d
+
+end DisjointEmbedding
+
+section ObligatoryClosure
+
+variable (F : TripleSystem V E) (G : TripleSystem X A)
+
+/-- The class of finite obligatory triple systems is closed under tagged
+disjoint union. -/
+theorem IsObligatory.disjointUnion
+    [Fintype V] [Fintype E] [Fintype X] [Fintype A]
+    (hF : F.IsObligatory) (hG : G.IsObligatory) :
+    (F.disjointUnion G).IsObligatory := by
+  intro Y B _ H hH
+  obtain ⟨f⟩ := hF Y B H hH
+  let R : Set Y := Set.range f.vertex
+  have hR : R.Finite := Set.finite_range f.vertex
+  have hdelete : ℵ₀ < (H.deleteVertices R).chromaticCardinal :=
+    H.aleph0_lt_chromaticCardinal_deleteVertices R hR hH
+  obtain ⟨g₀⟩ := hG (Rᶜ : Set Y) (H.RestrictedEdge (Rᶜ : Set Y))
+    (H.deleteVertices R) hdelete
+  let g : G.Embedding H := g₀.trans (H.deleteVerticesEmbedding R)
+  have hdisj : ∀ x y, f.vertex x ≠ g.vertex y := by
+    intro x y heq
+    have hy : (g.vertex y : Y) ∉ R := (g₀.vertex y).2
+    exact hy ⟨x, heq⟩
+  exact ⟨f.disjointUnionOfDisjoint g hdisj⟩
+
+end ObligatoryClosure
+
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryDisjointUnion
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ObligatoryDisjointUnion
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ObligatoryIsolatedReduction
+Source: Erdos593/TripleSystem/ObligatoryIsolatedReduction.lean
+Normalized SHA-256: b45ab8f9921a5adb58898f377a2cd102f3357e9feb4db7840f76415a1fa3d2ed
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryIsolatedReduction
+
+/-!
+# Isolated vertices do not affect obligatoriness
+
+Deleting isolated vertices preserves all source edges.  The easy implication is
+therefore just downward closure of appearance under a source embedding.  For
+the converse, an embedding of the isolated reduction into an infinite host is
+extended by sending the finitely many isolated vertices injectively into the
+complement of its finite vertex image.  Since our embeddings are non-induced,
+no condition on host edges involving these new vertices is required.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal
+
+universe u v
+
+namespace TripleSystem
+
+variable {V W X : Type u} {E D A : Type v}
+variable {F : TripleSystem V E} {G : TripleSystem X A}
+variable {H : TripleSystem W D}
+
+/-- The canonical embedding of the isolated-point reduction into the original
+triple system. -/
+def isolatedReductionEmbedding (F : TripleSystem V E) :
+    F.isolatedReduction.Embedding F where
+  vertex := ⟨Subtype.val, Subtype.val_injective⟩
+  edge := id
+  map_edge := by
+    intro e
+    ext x
+    constructor
+    · rintro ⟨y, hy, rfl⟩
+      exact hy
+    · intro hx
+      exact ⟨⟨x, F.not_isolated_of_inc hx⟩, hx, rfl⟩
+
+/-- Appearance is downward closed under embeddings of the source. -/
+theorem Appears.of_sourceEmbedding (i : G.Embedding F) (hF : F.Appears H) :
+    G.Appears H := by
+  rcases hF with ⟨f⟩
+  exact ⟨i.trans f⟩
+
+/-- Obligatory systems are downward closed under embeddings of the source. -/
+theorem IsObligatory.of_sourceEmbedding (i : G.Embedding F)
+    (hF : F.IsObligatory) : G.IsObligatory := by
+  intro Y B _ K hK
+  exact (hF Y B K hK).of_sourceEmbedding i
+
+/-- Deleting isolated vertices preserves obligatoriness in the easy
+direction, with no finiteness assumption. -/
+theorem IsObligatory.isolatedReduction (hF : F.IsObligatory) :
+    F.isolatedReduction.IsObligatory :=
+  hF.of_sourceEmbedding (isolatedReductionEmbedding F)
+
+/-- The identity vertex map is a proper colouring. -/
+theorem identity_isProperColoring (H : TripleSystem W D) :
+    H.IsProperColoring id := by
+  intro e
+  have hne : (H.edgeSet e).ncard ≠ 0 := by
+    rw [H.edgeSet_ncard]
+    decide
+  obtain ⟨x, hx⟩ := Set.nonempty_of_ncard_ne_zero hne
+  obtain ⟨y, hy, hyx⟩ := H.exists_other_incident e hx
+  exact ⟨x, hx, y, hy, hyx.symm⟩
+
+/-- The chromatic cardinal is bounded by the cardinality of the vertex type. -/
+theorem chromaticCardinal_le_mk_vertices (H : TripleSystem W D) :
+    H.chromaticCardinal ≤ #W :=
+  (H.chromaticCardinal_le_mk_iff).2 ⟨id, H.identity_isProperColoring⟩
+
+/-- An embedding of the isolated reduction of a finite triple system into an
+infinite host extends to the whole source.  The new isolated vertices are sent
+injectively into the complement of the old (finite) image. -/
+noncomputable def Embedding.extendIsolatedReduction [Fintype V] [Infinite W]
+    (f : F.isolatedReduction.Embedding H) : F.Embedding H := by
+  classical
+  let R : Set W := Set.range f.vertex
+  have hR : R.Finite := Set.finite_range f.vertex
+  letI : Infinite (Rᶜ : Set W) := hR.infinite_compl.to_subtype
+  let toNat : {x : V // F.IsIsolated x} ↪ ℕ :=
+    Classical.choice (nonempty_embedding_nat {x : V // F.IsIsolated x})
+  let unused : {x : V // F.IsIsolated x} ↪ (Rᶜ : Set W) :=
+    toNat.trans (Infinite.natEmbedding (Rᶜ : Set W))
+  let vertexMap : V → W := fun x ↦
+    if hx : F.IsIsolated x then (unused ⟨x, hx⟩ : W)
+    else f.vertex ⟨x, hx⟩
+  have vertexMap_injective : Function.Injective vertexMap := by
+    intro x y hxy
+    by_cases hx : F.IsIsolated x
+    · by_cases hy : F.IsIsolated y
+      · have hu : unused ⟨x, hx⟩ = unused ⟨y, hy⟩ := by
+          apply Subtype.ext
+          simpa [vertexMap, hx, hy] using hxy
+        exact congrArg Subtype.val (unused.injective hu)
+      · have hbad : (unused ⟨x, hx⟩ : W) ∈ R := by
+          refine ⟨⟨y, hy⟩, ?_⟩
+          simpa [vertexMap, hx, hy] using hxy.symm
+        exact False.elim ((unused ⟨x, hx⟩).property hbad)
+    · by_cases hy : F.IsIsolated y
+      · have hbad : (unused ⟨y, hy⟩ : W) ∈ R := by
+          refine ⟨⟨x, hx⟩, ?_⟩
+          simpa [vertexMap, hx, hy] using hxy
+        exact False.elim ((unused ⟨y, hy⟩).property hbad)
+      · have hf : f.vertex ⟨x, hx⟩ = f.vertex ⟨y, hy⟩ := by
+          simpa [vertexMap, hx, hy] using hxy
+        exact congrArg Subtype.val (f.vertex.injective hf)
+  refine
+    { vertex := ⟨vertexMap, vertexMap_injective⟩
+      edge := f.edge
+      map_edge := ?_ }
+  intro e
+  calc
+    vertexMap '' F.edgeSet e =
+        f.vertex '' F.isolatedReduction.edgeSet e := by
+      ext w
+      constructor
+      · rintro ⟨x, hxe, rfl⟩
+        have hx : ¬F.IsIsolated x := F.not_isolated_of_inc hxe
+        refine ⟨⟨x, hx⟩, hxe, ?_⟩
+        simp [vertexMap, hx]
+      · rintro ⟨x, hxe, rfl⟩
+        refine ⟨x.1, hxe, ?_⟩
+        simp [vertexMap, x.2]
+    _ = H.edgeSet (f.edge e) := f.map_edge e
+
+/-- The hard direction: if the isolated reduction of a finite triple system is
+obligatory, then so is the original system. -/
+theorem IsObligatory.of_isolatedReduction [Fintype V]
+    (hF : F.isolatedReduction.IsObligatory) : F.IsObligatory := by
+  intro Y B _ K hK
+  obtain ⟨f⟩ := hF Y B K hK
+  have hvertices : ℵ₀ ≤ #Y :=
+    hK.le.trans K.chromaticCardinal_le_mk_vertices
+  letI : Infinite Y := Cardinal.aleph0_le_mk_iff.mp hvertices
+  exact ⟨f.extendIsolatedReduction⟩
+
+/-- For a finite triple system, deleting isolated vertices preserves and
+reflects obligatoriness. -/
+theorem isObligatory_iff_isolatedReduction [Fintype V] :
+    F.IsObligatory ↔ F.isolatedReduction.IsObligatory := by
+  constructor
+  · exact IsObligatory.isolatedReduction
+  · exact IsObligatory.of_isolatedReduction
 
 end TripleSystem
 
 end Erdos593
 
-end Erdos593SelfContained_Module_Erdos593_TripleSystem_Isomorph
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryIsolatedReduction
 /- ==========================================================================
-END SOURCE MODULE: Erdos593.TripleSystem.Isomorph
+END SOURCE MODULE: Erdos593.TripleSystem.ObligatoryIsolatedReduction
 ========================================================================== -/
 
 /- ==========================================================================
-BEGIN SOURCE MODULE: Erdos593.TripleSystem.OnePointAmalgamation
-Source: Erdos593/TripleSystem/OnePointAmalgamation.lean
-Normalized SHA-256: 1ea89474d885c3216a16164c15c2cdc8260a99f0f40b7c51391912bb5472c4a9
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ObligatoryBipartiteReduction
+Source: Erdos593/TripleSystem/ObligatoryBipartiteReduction.lean
+Normalized SHA-256: 1b5462d11ca6d85581ce91aeb2b8e1a6479c1b99f9d8d1fdc7ed53ce58d7704e
 ========================================================================== -/
-section Erdos593SelfContained_Module_Erdos593_TripleSystem_OnePointAmalgamation
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryBipartiteReduction
 
 /-!
-# One-point amalgamations
+# Finite bipartite reduction for private-vertex expansions
 
-The vertex type is the quotient of a tagged disjoint union that identifies
-exactly the two selected roots. Edge indices retain their factor tags, and
-incidence is defined by the image of each factor edge under its quotient
-inclusion. The final universal-property lemmas support reconstruction up to
-triple-system isomorphism.
+This file formalizes the finite reduction in Corollary 3.3 of the manuscript.
+Every finite two-colourable graph maps injectively and adjacency-preservingly
+into a balanced finite complete bipartite graph.  Such a graph copy lifts to a
+triple-system embedding of private-vertex expansions.  Consequently, the
+obligatoriness of all finite `K_{n,n}^+` atoms implies the obligatoriness of
+the expansion of every finite two-colourable graph.
+
+The two finite parts are universe-lifted.  This is mathematically immaterial,
+but it keeps the atom in the same vertex and edge universes as the source, as
+required by the universe-indexed definition of `IsObligatory`.
 -/
 
 namespace Erdos593
 
-universe u₀ v₀ u₁ v₁
+universe u
 
-namespace TripleSystem.OnePointAmalgamation
+namespace TripleSystem
 
-variable {V₀ : Type u₀} {E₀ : Type v₀}
-variable {V₁ : Type u₁} {E₁ : Type v₁}
+/-- A universe-compatible finite part of cardinality `n`. -/
+abbrev FiniteBipartitePart (n : ℕ) := ULift.{u} (Fin n)
 
-/-- The equivalence relation on the tagged disjoint union which identifies only
-the two selected roots. -/
-def Rel (r₀ : V₀) (r₁ : V₁) : Sum V₀ V₁ → Sum V₀ V₁ → Prop
-  | .inl x, .inl y => x = y
-  | .inr x, .inr y => x = y
-  | .inl x, .inr y => x = r₀ ∧ y = r₁
-  | .inr y, .inl x => y = r₁ ∧ x = r₀
+/-- The balanced complete bipartite graph `K_{n,n}`, with both finite parts
+placed in universe `u`. -/
+abbrev completeBipartiteNN (n : ℕ) :
+    _root_.SimpleGraph
+      (FiniteBipartitePart.{u} n ⊕ FiniteBipartitePart.{u} n) :=
+  _root_.completeBipartiteGraph
+    (FiniteBipartitePart.{u} n) (FiniteBipartitePart.{u} n)
 
-private theorem rel_refl (r₀ : V₀) (r₁ : V₁) (x : Sum V₀ V₁) :
-    Rel r₀ r₁ x x := by
-  cases x <;> simp [Rel]
+namespace SimpleGraph
 
-private theorem rel_symm (r₀ : V₀) (r₁ : V₁) {x y : Sum V₀ V₁}
-    (h : Rel r₀ r₁ x y) : Rel r₀ r₁ y x := by
-  cases x <;> cases y <;> simp_all [Rel]
+variable {V W : Type u}
+variable (G : _root_.SimpleGraph V) (H : _root_.SimpleGraph W)
 
-private theorem rel_trans (r₀ : V₀) (r₁ : V₁) {x y z : Sum V₀ V₁}
-    (hxy : Rel r₀ r₁ x y) (hyz : Rel r₀ r₁ y z) : Rel r₀ r₁ x z := by
-  cases x <;> cases y <;> cases z <;> simp_all [Rel]
+/-- A finite two-colouring gives an injective adjacency-preserving map into
+the balanced complete bipartite graph whose two sides both have size `|V|`.
+This is a non-induced graph copy, which is the notion needed for expansion
+embeddings. -/
+noncomputable def copyCompleteBipartiteNN [Fintype V]
+    (C : G.Coloring (Fin 2)) :
+    _root_.SimpleGraph.Copy G
+      (completeBipartiteNN.{u} (Fintype.card V)) := by
+  classical
+  let e : V ≃ Fin (Fintype.card V) := Fintype.equivFin V
+  let vertexMap : V →
+      FiniteBipartitePart.{u} (Fintype.card V) ⊕
+        FiniteBipartitePart.{u} (Fintype.card V) := fun x ↦
+    if C x = 0 then Sum.inl (ULift.up (e x))
+    else Sum.inr (ULift.up (e x))
+  have hinjective : Function.Injective vertexMap := by
+    intro x y hxy
+    have h := congrArg
+      (Sum.elim (fun z ↦ z.down) (fun z ↦ z.down)) hxy
+    have he : e x = e y := by
+      simpa only [vertexMap, apply_ite, Sum.elim_inl, Sum.elim_inr,
+        ULift.down_up, ite_self] using h
+    exact e.injective he
+  refine
+    { toHom :=
+        { toFun := vertexMap
+          map_rel' := ?_ }
+      injective' := hinjective }
+  intro x y hxy
+  have hcolors : C x ≠ C y := C.valid hxy
+  by_cases hx : C x = 0
+  · have hy : C y ≠ 0 := by
+      intro hy
+      exact hcolors (hx.trans hy.symm)
+    simp [vertexMap, hx, hy]
+  · have hcx : C x = 1 := Fin.eq_one_of_ne_zero (C x) hx
+    have hy : C y = 0 := by
+      by_contra hy
+      have hcy : C y = 1 := Fin.eq_one_of_ne_zero (C y) hy
+      exact hcolors (hcx.trans hcy.symm)
+    simp [vertexMap, hx, hy]
 
-/-- The setoid identifying the two selected roots and nothing else. -/
-def vertexSetoid (r₀ : V₀) (r₁ : V₁) : Setoid (Sum V₀ V₁) where
-  r := Rel r₀ r₁
-  iseqv := ⟨
-    fun x => rel_refl r₀ r₁ x,
-    fun h => rel_symm r₀ r₁ h,
-    fun hxy hyz => rel_trans r₀ r₁ hxy hyz⟩
+end SimpleGraph
 
-/-- Vertex type of the binary one-point amalgamation. -/
-abbrev Vertex (r₀ : V₀) (r₁ : V₁) := Quotient (vertexSetoid r₀ r₁)
+variable {V W : Type u}
+variable {G : _root_.SimpleGraph V} {H : _root_.SimpleGraph W}
 
-/-- Inclusion of the left factor. -/
-def left (r₀ : V₀) (r₁ : V₁) (x : V₀) : Vertex r₀ r₁ :=
-  Quotient.mk (vertexSetoid r₀ r₁) (.inl x)
-
-/-- Inclusion of the right factor. -/
-def right (r₀ : V₀) (r₁ : V₁) (y : V₁) : Vertex r₀ r₁ :=
-  Quotient.mk (vertexSetoid r₀ r₁) (.inr y)
-
-@[simp]
-theorem left_eq_left_iff (r₀ : V₀) (r₁ : V₁) (x y : V₀) :
-    left r₀ r₁ x = left r₀ r₁ y ↔ x = y := by
-  constructor
-  · intro h
-    exact Quotient.exact h
-  · rintro rfl
-    rfl
-
-@[simp]
-theorem right_eq_right_iff (r₀ : V₀) (r₁ : V₁) (x y : V₁) :
-    right r₀ r₁ x = right r₀ r₁ y ↔ x = y := by
-  constructor
-  · intro h
-    exact Quotient.exact h
-  · rintro rfl
-    rfl
-
-@[simp]
-theorem left_eq_right_iff (r₀ : V₀) (r₁ : V₁) (x : V₀) (y : V₁) :
-    left r₀ r₁ x = right r₀ r₁ y ↔ x = r₀ ∧ y = r₁ := by
-  constructor
-  · intro h
-    exact Quotient.exact h
-  · rintro ⟨rfl, rfl⟩
-    apply Quotient.sound
-    exact ⟨rfl, rfl⟩
-
-@[simp]
-theorem right_eq_left_iff (r₀ : V₀) (r₁ : V₁) (y : V₁) (x : V₀) :
-    right r₀ r₁ y = left r₀ r₁ x ↔ y = r₁ ∧ x = r₀ := by
-  rw [eq_comm, left_eq_right_iff, and_comm]
-
-theorem root_eq (r₀ : V₀) (r₁ : V₁) :
-    left r₀ r₁ r₀ = right r₀ r₁ r₁ := by
-  simp
-
-theorem left_injective (r₀ : V₀) (r₁ : V₁) :
-    Function.Injective (left r₀ r₁) := by
-  intro x y h
-  exact (left_eq_left_iff r₀ r₁ x y).mp h
-
-theorem right_injective (r₀ : V₀) (r₁ : V₁) :
-    Function.Injective (right r₀ r₁) := by
-  intro x y h
-  exact (right_eq_right_iff r₀ r₁ x y).mp h
-
-/-- Recursor out of the amalgamated vertex type.  The only compatibility
-condition is agreement at the selected roots. -/
-def lift {X : Type*} (r₀ : V₀) (r₁ : V₁)
-    (f₀ : V₀ → X) (f₁ : V₁ → X) (hroot : f₀ r₀ = f₁ r₁) :
-    Vertex r₀ r₁ → X :=
-  Quotient.lift (Sum.elim f₀ f₁) (by
-    intro a b hab
-    change Rel r₀ r₁ a b at hab
-    cases a <;> cases b <;> simp_all [Rel])
-
-@[simp]
-theorem lift_left {X : Type*} (r₀ : V₀) (r₁ : V₁)
-    (f₀ : V₀ → X) (f₁ : V₁ → X) (hroot : f₀ r₀ = f₁ r₁) (x : V₀) :
-    lift r₀ r₁ f₀ f₁ hroot (left r₀ r₁ x) = f₀ x := rfl
-
-@[simp]
-theorem lift_right {X : Type*} (r₀ : V₀) (r₁ : V₁)
-    (f₀ : V₀ → X) (f₁ : V₁ → X) (hroot : f₀ r₀ = f₁ r₁) (y : V₁) :
-    lift r₀ r₁ f₀ f₁ hroot (right r₀ r₁ y) = f₁ y := rfl
-
-/-- The universal map is injective when the two input maps are injective and
-have exactly the selected root as their cross-factor collision. -/
-theorem lift_injective {X : Type*} (r₀ : V₀) (r₁ : V₁)
-    (f₀ : V₀ → X) (f₁ : V₁ → X) (hroot : f₀ r₀ = f₁ r₁)
-    (h₀ : Function.Injective f₀) (h₁ : Function.Injective f₁)
-    (hcross : ∀ x y, f₀ x = f₁ y ↔ x = r₀ ∧ y = r₁) :
-    Function.Injective (lift r₀ r₁ f₀ f₁ hroot) := by
-  intro q q' h
-  induction q using Quotient.inductionOn with
-  | _ a =>
-      induction q' using Quotient.inductionOn with
-      | _ b =>
-          cases a with
-          | inl x =>
-              cases b with
-              | inl y =>
-                  apply Quotient.sound
-                  exact h₀ h
-              | inr y =>
-                  apply Quotient.sound
-                  exact (hcross x y).mp h
-          | inr x =>
-              cases b with
-              | inl y =>
-                  apply Quotient.sound
-                  have hyx := (hcross y x).mp h.symm
-                  exact ⟨hyx.2, hyx.1⟩
-              | inr y =>
-                  apply Quotient.sound
-                  exact h₁ h
-
-/-- Every amalgamated vertex comes from at least one factor. -/
-theorem exists_left_or_right (r₀ : V₀) (r₁ : V₁) (q : Vertex r₀ r₁) :
-    (∃ x, left r₀ r₁ x = q) ∨ (∃ y, right r₀ r₁ y = q) := by
-  induction q using Quotient.inductionOn with
-  | _ s =>
-      cases s with
-      | inl x => exact Or.inl ⟨x, rfl⟩
-      | inr y => exact Or.inr ⟨y, rfl⟩
-
-/-- Reconstruction-facing universal property: two injections whose images
-cover the target and meet exactly at the selected roots induce an equivalence
-from the canonical amalgamated vertex type. -/
-noncomputable def vertexEquivOfMaps {W : Type*}
-    (r₀ : V₀) (r₁ : V₁) (f₀ : V₀ → W) (f₁ : V₁ → W)
-    (hroot : f₀ r₀ = f₁ r₁)
-    (h₀ : Function.Injective f₀) (h₁ : Function.Injective f₁)
-    (hcross : ∀ x y, f₀ x = f₁ y ↔ x = r₀ ∧ y = r₁)
-    (hcover : ∀ w, (∃ x, f₀ x = w) ∨ (∃ y, f₁ y = w)) :
-    Vertex r₀ r₁ ≃ W :=
-  Equiv.ofBijective (lift r₀ r₁ f₀ f₁ hroot) ⟨
-    lift_injective r₀ r₁ f₀ f₁ hroot h₀ h₁ hcross,
-    by
-      intro w
-      rcases hcover w with ⟨x, rfl⟩ | ⟨y, rfl⟩
-      · exact ⟨left r₀ r₁ x, rfl⟩
-      · exact ⟨right r₀ r₁ y, rfl⟩⟩
-
-/-- Images of arbitrary subsets from opposite factors intersect in at most the
-single amalgamation root. -/
-theorem cross_image_inter_subsingleton (r₀ : V₀) (r₁ : V₁)
-    (s : Set V₀) (t : Set V₁) :
-    (left r₀ r₁ '' s ∩ right r₀ r₁ '' t).Subsingleton := by
-  intro q hq q' hq'
-  rcases hq.1 with ⟨x, hx, hxq⟩
-  rcases hq.2 with ⟨y, hy, hyq⟩
-  rcases hq'.1 with ⟨x', hx', hxq'⟩
-  rcases hq'.2 with ⟨y', hy', hyq'⟩
-  have hxy := (left_eq_right_iff r₀ r₁ x y).mp (hxq.trans hyq.symm)
-  have hxy' := (left_eq_right_iff r₀ r₁ x' y').mp (hxq'.trans hyq'.symm)
-  exact hxq.symm.trans ((congrArg (left r₀ r₁) (hxy.1.trans hxy'.1.symm)).trans hxq')
-
-/-- Edge indices retain their factor tag. -/
-abbrev Edge (E₀ : Type v₀) (E₁ : Type v₁) := E₀ ⊕ E₁
-
-/-- Incidence in the amalgam is exactly the image of incidence in the relevant
-factor; no new edge is introduced. -/
-def Inc (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
-    (r₀ : V₀) (r₁ : V₁) : Vertex r₀ r₁ → Edge E₀ E₁ → Prop
-  | q, .inl e => q ∈ left r₀ r₁ '' F₀.edgeSet e
-  | q, .inr e => q ∈ right r₀ r₁ '' F₁.edgeSet e
-
-@[simp]
-theorem incidenceSet_left (F₀ : TripleSystem V₀ E₀)
-    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) (e : E₀) :
-    {q | Inc F₀ F₁ r₀ r₁ q (.inl e)} =
-      left r₀ r₁ '' F₀.edgeSet e := rfl
-
-@[simp]
-theorem incidenceSet_right (F₀ : TripleSystem V₀ E₀)
-    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) (e : E₁) :
-    {q | Inc F₀ F₁ r₀ r₁ q (.inr e)} =
-      right r₀ r₁ '' F₁.edgeSet e := rfl
-
-@[simp]
-theorem inc_left_left_iff (F₀ : TripleSystem V₀ E₀)
-    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁)
-    (x : V₀) (e : E₀) :
-    Inc F₀ F₁ r₀ r₁ (left r₀ r₁ x) (.inl e) ↔ F₀.Inc x e := by
-  simp [Inc]
-
-@[simp]
-theorem inc_right_right_iff (F₀ : TripleSystem V₀ E₀)
-    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁)
-    (y : V₁) (e : E₁) :
-    Inc F₀ F₁ r₀ r₁ (right r₀ r₁ y) (.inr e) ↔ F₁.Inc y e := by
-  simp [Inc]
-
-theorem incidenceSet_ncard (F₀ : TripleSystem V₀ E₀)
-    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) :
-    ∀ e : Edge E₀ E₁,
-      Set.ncard {q | Inc F₀ F₁ r₀ r₁ q e} = 3 := by
-  rintro (e | e)
-  · rw [incidenceSet_left,
-      Set.ncard_image_of_injective _ (left_injective r₀ r₁)]
-    exact F₀.edgeSet_ncard e
-  · rw [incidenceSet_right,
-      Set.ncard_image_of_injective _ (right_injective r₀ r₁)]
-    exact F₁.edgeSet_ncard e
-
-theorem cross_edgeSets_ne (F₀ : TripleSystem V₀ E₀)
-    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁)
-    (e : E₀) (f : E₁) :
-    left r₀ r₁ '' F₀.edgeSet e ≠ right r₀ r₁ '' F₁.edgeSet f := by
-  intro hsets
-  have hsub : F₀.edgeSet e ⊆ ({r₀} : Set V₀) := by
-    intro x hx
-    have hx' : left r₀ r₁ x ∈ left r₀ r₁ '' F₀.edgeSet e :=
-      ⟨x, hx, rfl⟩
-    rw [hsets] at hx'
-    rcases hx' with ⟨y, hy, hyx⟩
-    exact (left_eq_right_iff r₀ r₁ x y).mp hyx.symm |>.1
-  have hcard := Set.ncard_le_ncard hsub (Set.finite_singleton r₀)
-  rw [F₀.edgeSet_ncard, Set.ncard_singleton] at hcard
-  omega
-
-theorem incidenceSet_injective (F₀ : TripleSystem V₀ E₀)
-    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) :
-    Function.Injective (fun e : Edge E₀ E₁ =>
-      {q | Inc F₀ F₁ r₀ r₁ q e}) := by
-  intro e f h
-  cases e with
-  | inl e =>
-      cases f with
-      | inl f =>
-          congr 1
-          apply F₀.edgeSet_injective
-          apply (Set.image_eq_image (left_injective r₀ r₁)).mp
-          exact h
-      | inr f =>
-          exact False.elim (cross_edgeSets_ne F₀ F₁ r₀ r₁ e f h)
-  | inr e =>
-      cases f with
-      | inl f =>
-          exact False.elim (cross_edgeSets_ne F₀ F₁ r₀ r₁ f e h.symm)
-      | inr f =>
-          congr 1
-          apply F₁.edgeSet_injective
-          apply (Set.image_eq_image (right_injective r₀ r₁)).mp
-          exact h
-
-/-- Canonical edge-indexed one-point amalgamation. -/
-def amalgam (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
-    (r₀ : V₀) (r₁ : V₁) : TripleSystem (Vertex r₀ r₁) (Edge E₀ E₁) where
-  Inc := Inc F₀ F₁ r₀ r₁
-  edge_ncard := incidenceSet_ncard F₀ F₁ r₀ r₁
-  simple := incidenceSet_injective F₀ F₁ r₀ r₁
-
-/-- Canonical non-induced embedding of the left factor into the amalgam. -/
-def leftFactorEmbedding (F₀ : TripleSystem V₀ E₀)
-    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) :
-    F₀.Embedding (amalgam F₀ F₁ r₀ r₁) where
-  vertex := ⟨left r₀ r₁, left_injective r₀ r₁⟩
-  edge := Sum.inl
+/-- An injective adjacency-preserving graph map lifts canonically to a
+triple-system embedding of private-vertex expansions.  Core vertices use the
+given vertex injection, while each private edge point is sent to the private
+point of the image edge. -/
+def privateVertexExpansionEmbeddingOfCopy
+    (f : _root_.SimpleGraph.Copy G H) :
+    (privateVertexExpansion G).Embedding (privateVertexExpansion H) where
+  vertex := Function.Embedding.sumMap f.toEmbedding f.mapEdgeSet
+  edge := f.mapEdgeSet
   map_edge := by
     intro e
-    rfl
+    rcases e with ⟨e, he⟩
+    induction e using Sym2.inductionOn with
+    | _ x y =>
+        change
+          f.toEmbedding.sumMap f.mapEdgeSet ''
+              {p | PrivateVertexExpansion.Inc G p ⟨s(x, y), he⟩} =
+            {p | PrivateVertexExpansion.Inc H p
+              (f.mapEdgeSet ⟨s(x, y), he⟩)}
+        rw [PrivateVertexExpansion.incidenceSet_eq G he]
+        ext p
+        rcases p with p | p
+        · simp [Function.Embedding.sumMap, PrivateVertexExpansion.core,
+            PrivateVertexExpansion.Inc,
+            PrivateVertexExpansion.privateVertex,
+            _root_.SimpleGraph.Copy.mapEdgeSet,
+            _root_.SimpleGraph.Hom.mapEdgeSet]
+          constructor
+          · rintro (h | h)
+            · exact Or.inl h.symm
+            · exact Or.inr h.symm
+          · rintro (h | h)
+            · exact Or.inl h.symm
+            · exact Or.inr h.symm
+        · simp [Function.Embedding.sumMap, PrivateVertexExpansion.core,
+            PrivateVertexExpansion.Inc,
+            PrivateVertexExpansion.privateVertex,
+            _root_.SimpleGraph.Copy.mapEdgeSet,
+            _root_.SimpleGraph.Hom.mapEdgeSet]
+          constructor <;> intro h <;> exact h.symm
 
-/-- Canonical non-induced embedding of the right factor into the amalgam. -/
-def rightFactorEmbedding (F₀ : TripleSystem V₀ E₀)
-    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) :
-    F₁.Embedding (amalgam F₀ F₁ r₀ r₁) where
-  vertex := ⟨right r₀ r₁, right_injective r₀ r₁⟩
-  edge := Sum.inr
-  map_edge := by
-    intro e
-    rfl
+/-- The isolated reduction of a finite two-colourable graph expansion embeds
+in the corresponding balanced complete-bipartite expansion.  Passing through
+the isolated reduction makes explicit that isolated graph vertices play no
+role in the edge pattern. -/
+noncomputable def isolatedExpansionEmbeddingCompleteBipartiteNN
+    [Fintype V] (C : G.Coloring (Fin 2)) :
+    (privateVertexExpansion G).isolatedReduction.Embedding
+      (privateVertexExpansion
+        (completeBipartiteNN.{u} (Fintype.card V))) :=
+  (isolatedReductionEmbedding (privateVertexExpansion G)).trans
+    (privateVertexExpansionEmbeddingOfCopy
+      (SimpleGraph.copyCompleteBipartiteNN G C))
 
-/-- If a target is covered by two pieces meeting only at their selected roots,
-and its edge indices are exactly the tagged union with the expected edge-set
-images, then it is isomorphic to the canonical one-point amalgamation. -/
-noncomputable def isoOfMaps {W : Type*} {D : Type*}
-    (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
-    (K : TripleSystem W D) (r₀ : V₀) (r₁ : V₁)
-    (f₀ : V₀ → W) (f₁ : V₁ → W)
-    (hroot : f₀ r₀ = f₁ r₁)
-    (h₀ : Function.Injective f₀) (h₁ : Function.Injective f₁)
-    (hcross : ∀ x y, f₀ x = f₁ y ↔ x = r₀ ∧ y = r₁)
-    (hcover : ∀ w, (∃ x, f₀ x = w) ∨ (∃ y, f₁ y = w))
-    (edgeEquiv : Edge E₀ E₁ ≃ D)
-    (hmap₀ : ∀ e, f₀ '' F₀.edgeSet e = K.edgeSet (edgeEquiv (.inl e)))
-    (hmap₁ : ∀ e, f₁ '' F₁.edgeSet e = K.edgeSet (edgeEquiv (.inr e))) :
-    Iso (amalgam F₀ F₁ r₀ r₁) K where
-  vertexEquiv := vertexEquivOfMaps r₀ r₁ f₀ f₁ hroot h₀ h₁ hcross hcover
-  edgeEquiv := edgeEquiv
-  map_inc_iff := by
-    intro q e
-    let ve := vertexEquivOfMaps r₀ r₁ f₀ f₁ hroot h₀ h₁ hcross hcover
-    have hve_injective : Function.Injective ve := ve.injective
-    have himage : ve '' (amalgam F₀ F₁ r₀ r₁).edgeSet e =
-        K.edgeSet (edgeEquiv e) := by
-      cases e with
-      | inl e =>
-          change ve '' (left r₀ r₁ '' F₀.edgeSet e) = _
-          rw [Set.image_image]
-          change f₀ '' F₀.edgeSet e = _
-          exact hmap₀ e
-      | inr e =>
-          change ve '' (right r₀ r₁ '' F₁.edgeSet e) = _
-          rw [Set.image_image]
-          change f₁ '' F₁.edgeSet e = _
-          exact hmap₁ e
-    change q ∈ (amalgam F₀ F₁ r₀ r₁).edgeSet e ↔
-      ve q ∈ K.edgeSet (edgeEquiv e)
-    rw [← himage]
-    constructor
-    · intro hq
-      exact ⟨q, hq, rfl⟩
-    · rintro ⟨q', hq', hqq'⟩
-      exact hqq' |> hve_injective |> fun h => h ▸ hq'
+/-- **Finite bipartite reduction (manuscript Corollary 3.3).**
 
-/-- A finite input pair gives a finite amalgamated vertex type; package this as
-a named definition so callers can opt into the noncomputable `Fintype`. -/
-@[reducible]
-noncomputable def vertexFintype (r₀ : V₀) (r₁ : V₁)
-    [Fintype V₀] [Fintype V₁] : Fintype (Vertex r₀ r₁) :=
-  Fintype.ofFinite _
+If every finite balanced complete-bipartite expansion `K_{n,n}^+` is
+obligatory, then the private-vertex expansion of every finite two-colourable
+graph is obligatory.  This theorem contains only the finite reduction; it
+does not assert the infinitary theorem that the atoms themselves are
+obligatory. -/
+theorem privateVertexExpansion_isObligatory_of_completeBipartiteNN
+    [Fintype V] (hG : G.Colorable 2)
+    (hAtoms : ∀ n : ℕ,
+      (privateVertexExpansion (completeBipartiteNN.{u} n)).IsObligatory) :
+    (privateVertexExpansion G).IsObligatory := by
+  classical
+  obtain ⟨C⟩ := hG
+  apply IsObligatory.of_isolatedReduction
+  exact (hAtoms (Fintype.card V)).of_sourceEmbedding
+    (isolatedExpansionEmbeddingCompleteBipartiteNN C)
 
-end TripleSystem.OnePointAmalgamation
+end TripleSystem
 
 end Erdos593
 
-end Erdos593SelfContained_Module_Erdos593_TripleSystem_OnePointAmalgamation
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryBipartiteReduction
 /- ==========================================================================
-END SOURCE MODULE: Erdos593.TripleSystem.OnePointAmalgamation
+END SOURCE MODULE: Erdos593.TripleSystem.ObligatoryBipartiteReduction
 ========================================================================== -/
 
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 65d483492f57f1e95b9d3fda5d69cb61f04cd02613231a13c2e6f20c4130df9b
+Normalized SHA-256: 4dcb6744f656405f1b5b646c8696d6ec8b04304fb53ea527cecaa802106f1986
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

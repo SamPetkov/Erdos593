@@ -234,6 +234,26 @@ theorem inc_right_right_iff (F₀ : TripleSystem V₀ E₀)
     Inc F₀ F₁ r₀ r₁ (right r₀ r₁ y) (.inr e) ↔ F₁.Inc y e := by
   simp [Inc]
 
+/-- A left-factor point is incident with a right-factor edge exactly when it is
+the amalgamation root and the selected right root lies on that edge. -/
+@[simp]
+theorem inc_left_right_iff (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁)
+    (x : V₀) (e : E₁) :
+    Inc F₀ F₁ r₀ r₁ (left r₀ r₁ x) (.inr e) ↔
+      x = r₀ ∧ F₁.Inc r₁ e := by
+  simp [Inc, and_comm]
+
+/-- A right-factor point is incident with a left-factor edge exactly when it is
+the amalgamation root and the selected left root lies on that edge. -/
+@[simp]
+theorem inc_right_left_iff (F₀ : TripleSystem V₀ E₀)
+    (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁)
+    (y : V₁) (e : E₀) :
+    Inc F₀ F₁ r₀ r₁ (right r₀ r₁ y) (.inl e) ↔
+      y = r₁ ∧ F₀.Inc r₀ e := by
+  simp [Inc, and_comm]
+
 theorem incidenceSet_ncard (F₀ : TripleSystem V₀ E₀)
     (F₁ : TripleSystem V₁ E₁) (r₀ : V₀) (r₁ : V₁) :
     ∀ e : Edge E₀ E₁,

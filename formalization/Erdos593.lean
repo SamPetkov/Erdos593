@@ -9,14 +9,32 @@ import Erdos593.TripleSystem.BridgeBlocks
 import Erdos593.TripleSystem.BridgeBlockContraction
 import Erdos593.TripleSystem.BridgeBlockCycleLift
 import Erdos593.TripleSystem.BridgeBlockExpansion
+import Erdos593.TripleSystem.BridgeBlockPackaging
+import Erdos593.TripleSystem.BridgeBlockRestriction
+import Erdos593.TripleSystem.BridgeBlockRunningIntersection
+import Erdos593.TripleSystem.DegenerateBridgeBlock
+import Erdos593.TripleSystem.BridgeSelector
+import Erdos593.TripleSystem.Constructive
+import Erdos593.TripleSystem.ConstructiveForward
 import Erdos593.TripleSystem.DisjointUnion
 import Erdos593.TripleSystem.DisjointUnionForward
+import Erdos593.TripleSystem.EdgeRestriction
+import Erdos593.TripleSystem.EdgeRestrictionFull
+import Erdos593.TripleSystem.EdgeRestrictionReconstruction
 import Erdos593.TripleSystem.ExpansionIntrinsic
 import Erdos593.TripleSystem.ForwardExpansion
 import Erdos593.TripleSystem.Intrinsic
 import Erdos593.TripleSystem.Isolated
 import Erdos593.TripleSystem.Isomorph
+import Erdos593.TripleSystem.IsomorphIntrinsic
 import Erdos593.TripleSystem.OnePointAmalgamation
+import Erdos593.TripleSystem.OnePointAmalgamationIntrinsic
+import Erdos593.TripleSystem.Obligatory
+import Erdos593.TripleSystem.ObligatoryDisjointUnion
+import Erdos593.TripleSystem.ObligatoryIsolatedReduction
+import Erdos593.TripleSystem.ObligatoryBipartiteReduction
+import Erdos593.TripleSystem.SingleEdgePiece
+import Erdos593.TripleSystem.SingleEdgePieceConstructible
 
 /-!
 # Erdős Problem 593

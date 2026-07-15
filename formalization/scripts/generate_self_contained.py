@@ -121,14 +121,16 @@ dependency order. Its only imports are from the Mathlib version pinned by this
 project's lake-manifest.json and lean-toolchain.
 
 This file is NOT a full formal proof of Erdős Problem 593. The verified content
-includes the finite incidence/Levi-graph kernel, bridge-block contraction and
-cycle lifting, the exact bridge-component quotient forest and
-closed-star/rooted-depth kernels, active-component private-point expansion
-data, complete disjoint-union preservation, and one-point-amalgamation
-infrastructure. Major missing layers
-are the even-cycle theorem for bipartite expansion generators, preservation
-under one-point amalgamation, packaging and final reconstruction, and the
-obligatoriness, infinite, and avoidance parts of the manuscript.
+now includes the complete finite structural classification: the exact
+constructive class, all generator and closure preservation theorems, the
+bridge-block quotient forest, active and degree-zero expansion pieces, the
+rooted running-intersection reconstruction, and the equivalence between
+constructibility and the intrinsic Levi conditions after isolated vertices are
+removed. It also includes the chromatic-cardinal interface, finite-deletion and
+obligatory disjoint-union closure, and the exact isolated-vertex reduction for
+obligatoriness. Major missing layers are the complete-bipartite expansion atom,
+rooted-abundance/obligatory one-point-amalgamation theorem, the remaining
+infinitary positive argument, and the sequence-lift avoidance direction.
 
 Generated deterministically from Erdos593.lean and its exact transitive local
 import closure. Each source boundary records its relative path and normalized

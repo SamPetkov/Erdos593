@@ -6,16 +6,18 @@ the local source bodies appear in dependency order, while the external Mathlib
 imports remain at the top. Every source boundary records a repository-relative
 path and the SHA-256 of the normalized UTF-8 source.
 
-The generated file is the current verified **partial formalization**, not a
-full formal proof of Erdős Problem 593. It covers the finite incidence and
-Levi-graph interfaces, bridge-block contraction and cycle lifting, the exact
-bridge-component quotient forest and closed-star/rooted-depth graph kernels,
-active-component private-point expansion data, complete disjoint-union
-preservation, and one-point-amalgamation infrastructure. Still missing are the
-even-cycle theorem
-for bipartite expansion generators, preservation under one-point amalgamation,
-packaging and final reconstruction, and the obligatoriness, infinite, and
-avoidance parts of the manuscript.
+The generated file is the current verified **partial formalization**, not yet a
+full formal proof of Erdős Problem 593. It contains the complete finite
+structural classification: generator and operation preservation, exact active
+and degree-zero bridge blocks, the rooted quotient-forest running intersection,
+the reverse reconstruction, and
+`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`. It also
+contains the chromatic-cardinal interface, finite-deletion and obligatory
+disjoint-union closure, the exact isolated-vertex reduction for obligatoriness,
+and the finite reduction of bipartite expansions to `Kₙ,ₙ⁺`. Still missing
+are the complete-bipartite expansion atom, rooted-abundance/obligatory
+one-point-amalgamation theorem, and the remaining infinitary positive and
+avoidance layers.
 
 ## Reproduction and exactness check
 
@@ -35,16 +37,16 @@ against the Lean and Mathlib versions pinned by `lean-toolchain` and
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 22 source modules, five external
-  Mathlib imports, 2,898 physical lines, 2,495 nonblank lines, 110,716 UTF-8
+- Deterministic regeneration check: passed for 40 source modules, 14 external
+  Mathlib imports, 6,737 physical lines, 5,952 nonblank lines, 267,188 UTF-8
   bytes, and SHA-256
-  `72a9a3d84e1955b5164a84460a23493a2d407e08d382c6501cc16ce88025bb90`.
-- Canonical modular build: `lake build Erdos593` passed all 1,223 jobs under
-  the pinned Lean/mathlib `v4.32.0` toolchain in 58.539 seconds.
-- One-file build: `lake env lean Erdos593SelfContained.lean` passed with one
-  Lean thread in 21.006 seconds and emitted no diagnostics.
-- Source audit: all 23 Lean files (the 22 modular files and the generated
-  artifact) are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
+  `cbef23c0dafbd18aac36f627ffd72926050bf5eeb09d5285307d1eb81684a15b`.
+- Canonical modular build: `lake build Erdos593` passed all 1,244 jobs under
+  the pinned Lean/mathlib `v4.32.0` toolchain and emitted no diagnostics.
+- One-file build: `lake env lean Erdos593SelfContained.lean` passed and emitted
+  no diagnostics.
+- Source audit: all 40 modules in the imported closure and the generated
+  artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
 - Axiom audit: every new or touched public declaration, together with the
   representative central declarations below, reports only `propext`,
@@ -70,6 +72,11 @@ import Erdos593
 #print axioms Erdos593.TripleSystem.BridgeBlock.activeComponent_privateVertexExpansionData
 #print axioms Erdos593.TripleSystem.disjointUnion_intrinsic
 #print axioms Erdos593.SimpleGraph.closedStar_earlier_direction
+#print axioms Erdos593.TripleSystem.OnePointAmalgamation.amalgam_intrinsic
+#print axioms Erdos593.TripleSystem.Constructible.intrinsic
+#print axioms Erdos593.TripleSystem.BridgeBlock.isolatedReduction_constructible_iff_intrinsic
+#print axioms Erdos593.TripleSystem.IsObligatory.disjointUnion
+#print axioms Erdos593.TripleSystem.isObligatory_iff_isolatedReduction
 ```
 
 In addition to this declaration-level check, scan every source in the local

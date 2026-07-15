@@ -25,9 +25,10 @@ The author reports developing the proof independently, without consulting Eric L
 - `SOURCE_LEDGER.md` — source and proof-dependency record.
 - `REVISION_NOTES.md` — record of the final editorial revision.
 - `MANIFEST.txt` and `SHA256SUMS` — package inventory and checksums.
-- `formalization/` — gap-free Lean 4 scaffold for the finite structural
-  kernel, with an explicit obligation map and Aristotle provenance log. The
-  final classification theorem is not yet fully formalized.
+- `formalization/` — gap-free Lean 4 development containing the complete
+  finite constructive/intrinsic classification, the first exact obligatoriness
+  lemmas, an explicit obligation map, and an Aristotle provenance log. The
+  full infinitary obligatoriness/avoidance classification is not yet formalized.
 - `formalization/Erdos593SelfContained.lean` — deterministic one-file copy of
   the current Lean source closure, with no project-local imports.
 
@@ -50,23 +51,26 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The modular Lean project currently contains 2,650 physical source lines, of
-which 2,297 are nonblank and 1,979 are code, across 22 source modules, with 106
-`theorem`/`lemma` declarations. A reproducible syntactic `:= by` region count
-places approximately 988 code lines in proof bodies. The generated one-file
-checkpoint contains 2,898 physical lines and five external Mathlib imports;
-its additional lines record generation status, module boundaries, and source
-hashes. See
+The exact imported Lean closure currently contains 6,338 physical source lines
+(5,639 nonblank) across 40 source modules, with 187 `theorem`/`lemma`
+declarations. The generated one-file checkpoint contains 6,737 physical lines
+and 14 external Mathlib imports; its additional lines record generation status,
+module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
 
-This is a substantial but partial formalization of the finite structural
-machinery. It now includes complete intrinsic preservation by disjoint union,
-the bridge-component quotient-forest theorem, exact active bridge-block
-expansion data, and generic closed-star and rooted-depth separation kernels.
-Intrinsic preservation under one-point amalgamation, packaging those kernels
-for active pieces, the finite reconstruction induction, and the manuscript's
-obligatoriness, infinite, and avoidance arguments are not yet machine-checked.
+The finite structural theorem is now complete: private-vertex expansion
+generators, disjoint union, one-point amalgamation, and isomorphism preserve the
+intrinsic conditions; every intrinsic bridge block is reconstructed exactly as
+an active or degree-zero constructible restriction; and the rooted quotient
+forest gives the full running-intersection induction. The checked headline is
+`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`.
+
+The development also proves the chromatic-cardinal characterization, finite
+vertex-deletion lemma, obligatory disjoint-union closure, and exact
+isolated-vertex reduction for obligatoriness. The complete-bipartite expansion
+atom, rooted-abundance/obligatory one-point-amalgamation theorem, and the
+remaining infinitary positive and avoidance arguments are still in progress.
 
 ## AI-use disclosure
 

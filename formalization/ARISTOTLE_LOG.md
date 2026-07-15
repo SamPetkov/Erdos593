@@ -613,6 +613,141 @@ Selected staged SHA-256 values:
 8AEED896866C46BC9D5967A27546B4E2F96BF24D011840D41C7ECA605CF59715  TASK.md
 ```
 
+## F3/F4: parity and intrinsic conditions for private-vertex expansions
+
+- Direct submission (UTC): 2026-07-15 06:53.
+- Aristotle CLI: `aristotlelib 2.1.0`.
+- Direct project: `ee5b3a7f-d208-4fdc-8a37-24021eb85edb`.
+- Direct task: `f6ea8655-070f-4323-aa77-57bd5492ad75`.
+- Direct prompt: `Follow TASK.md exactly. Prove the exact F3 forward-parity
+  theorem directly, preserve F4 and every completed declaration, and run all
+  required checks.`
+- Exact direct target: for arbitrary `V` and `G : SimpleGraph V`, prove
+  `G.Colorable 2 → (privateVertexExpansion G).EvenBergeCycles`; F4 then
+  packages F1, F2, and F3 as `(privateVertexExpansion G).Intrinsic`. No
+  finiteness hypothesis is needed.
+- Direct staging: a fresh sanitized Lean/mathlib `v4.32.0` source directory
+  outside the Git worktree, containing thirteen files (the target and its exact
+  custom import closure, project configuration, root import, and `TASK.md`).
+  It contained exactly one intended `sorry`; the sensitive-pattern scan was
+  clear. The API key was read only from the Windows User environment and was
+  neither printed nor persisted.
+- Service warning: Aristotle recommends Lean 4.28 and noted that the source-only
+  upload excluded `.lake`. Canonical 4.32 verification is mandatory.
+- Independent split submissions (UTC): 2026-07-15 07:02. The two genuine proof
+  boundaries were submitted concurrently, each in a separate sanitized
+  twelve-file 4.32 source stage with exactly one intended `sorry` and a clear
+  sensitive-pattern scan:
+  - F3A, `privateVertex_not_mem_cycle_support`: project
+    `681388d0-b970-49a7-9b87-8e2f29ad55bf`, task
+    `aa0f2736-f046-48d7-9331-ca0100cd4e2d`.
+  - F3B, `exists_graph_walk_of_privateVertexExpansion_walk`: project
+    `f1e54809-71d7-43f2-b67e-093cc0977399`, task
+    `1e0ef4cd-056c-4d87-93cc-c98e0feb0fc9`.
+- Independent local proof: F3A shows that the unique Levi edge at a private
+  point is a bridge and invokes the bridge/cycle characterization. F3B consumes
+  a private-free core-to-core Levi trail two steps at a time, uses trailness to
+  distinguish the two core endpoints of each graph edge, and constructs a graph
+  walk of exactly half the length. F3 rotates a Levi cycle to a core node,
+  applies F3B, and transfers parity from the supplied two-colouring.
+- Canonical verification: direct elaboration of
+  `Erdos593/TripleSystem/ForwardExpansion.lean` succeeded without warnings;
+  `lake build Erdos593.TripleSystem.ForwardExpansion` succeeded (1208 jobs).
+  The complete Lean source gap scan, sensitive-pattern scan, and
+  `git diff --check` were clear. Axiom audits of F1, F3A, F3B, F3, and F4 each
+  reported exactly `propext`, `Classical.choice`, and `Quot.sound`.
+- Aggregate-build note: a concurrent `lake build Erdos593` reached 1223/1225
+  jobs and then failed at the root entry point because a separately added,
+  untracked imported module `IsomorphIntrinsic` had no object file. The focused
+  forward-expansion module itself had already built successfully; this transient
+  shared-worktree failure is outside F3/F4. After that concurrent module landed,
+  the aggregate canonical build passed all 1227 jobs on 2026-07-15.
+- Accepted canonical file SHA-256:
+  `F2D0E538C25698185822D5ECE04308F194AB07900EA2E29FAE09A385F779D1A2`.
+- Remote status at local acceptance: all three tasks were `IN_PROGRESS`. Their
+  eventual returns remain independent comparisons and require archive, source
+  diff, gap, API, and unchanged canonical 4.32 audits before consideration.
+- Direct and F3A completion audit (UTC 2026-07-15 07:26): both tasks reported
+  `COMPLETE`; F3B remained `IN_PROGRESS` and was no longer on the critical path.
+  The direct archive has fifteen safe relative regular-file entries, SHA-256
+  `EF5F89552225475BDBFD03735739412E64598366AD790C0F181923B58EBFC995`;
+  its returned target SHA-256 is
+  `5CDBE970C2A61F1E26683B12DDBBB9686934BB68EBC8F98E527A9940F2EE1677`.
+  The F3A archive has fourteen safe relative regular-file entries, SHA-256
+  `9DFC954D9FC17026D88B9B0B9E719CF9EB1AD956A6DE740A703CC8C092FFBBAD`;
+  its returned target SHA-256 is
+  `2E8CD7C230E381E9505350E45F82B1D6331D2C56503B623FD323C16A1E650532`.
+  Neither archive contains traversal paths, links, special files, credentials,
+  sensitive patterns, or unfinished-proof markers. In each return, exactly the
+  requested target differs among submitted files.
+- Canonical return compatibility: both exact returned target files elaborated
+  unchanged against the repository's Lean/mathlib `v4.32.0` dependencies. The
+  direct return independently found the same rotation, private-point exclusion,
+  two-step contraction, and parity argument; its helpers are private and its
+  proof is not materially stronger than the accepted public-helper API. The
+  split F3A return relies primarily on generated `grind` calls and is less
+  explicit than the accepted bridge/cycle proof.
+- Disposition: the exact, gap-free canonical local proofs are accepted; no
+  remote source was merged. The direct and F3A returns independently confirm
+  the result but provide no needed improvement. The redundant F3B task was
+  cancelled on 2026-07-15 to release an Aristotle concurrency slot for an open
+  classification obligation.
+
+Selected staged SHA-256 values:
+
+```text
+9CC3FB97FAAE5175B743E85F1166E002AE192D24A3DBF7FE33E47C2520FC4D0F  direct ForwardExpansion.lean
+F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
+5EB13E3AF981AE332C60737234A9DAC1EADE44C484D0B100D4FB198B29FCF90A  F3A target
+1750C08DA75B27C8A2740202758A51A5F8FD6444C84CE397CD262D9AC6293281  F3A TASK.md
+4204F133D36A866F9A68ED7A14ADB2AE0DF384996B4676653EB157C2CFAC6F92  F3B target
+80ED204BA2ABE869DA4229C670876CABE3762103F6BB141391AE70D06EFAE51C  F3B TASK.md
+```
+
+## O2/R7--R11: closing the finite structural classification
+
+- One-point-amalgamation bridge submission: project
+  `f03f7ba6-1fc4-49a5-87e4-f47fc646e6f6`, task
+  `2030dd2b-c3f9-430b-befd-e01b82bc99e7`.
+- Generic cut-vertex cycle helper: project
+  `803e1f95-516b-4c16-8fa4-5eaf4c240dd7`, task
+  `e3ad8b64-7c62-427b-b8ce-e8b17f17808c`. The returned helper was complete,
+  independently recompiled under the canonical Lean/mathlib `v4.32.0`
+  environment, and used only after source, gap, API, and axiom audits.
+- Redundant direct-cycle and factor-cycle submissions were cancelled after the
+  exact local theorem and the generic cut-vertex helper closed the obligation:
+  task `97c22c61-1793-46f4-8ec6-314dd37ae1ed` and task
+  `88a0bcb4-2d86-46ba-9d8d-5c3e4d0a4e89`.
+- Reverse-packaging combined submission: project
+  `31bcb7ae-1fd4-4351-a73c-99e7f97fba37`, task
+  `32af8114-f2e9-427d-944c-8554b085d92c`.
+- P1 edge-packaging submission: project
+  `44cb0239-47f0-44bb-9c3d-eca7762425fc`, task
+  `37e08147-d500-4edb-b4a2-13f8d4bf5903`.
+- P3 restriction-isomorphism submission: project
+  `aa29c52e-469b-4cf2-8c6c-a9d2d144e320`, task
+  `ac3107ac-dc4d-461e-bfba-a372f33a2d63`. The P1 and P3 returns completed and
+  were independently recompiled. The accepted repository implementation uses
+  the stronger local packaging API needed by the running-intersection consumer.
+- Degree-zero component submission: project
+  `355c5ea2-1037-43b3-97c5-824a6513a2c7`, task
+  `b181d69c-0fe9-4f89-92eb-7e290a8e031d`. It was still queued when the local
+  exact singleton-edge restriction proof was completed and audited, so no
+  unverified remote source was needed.
+- A temporary bridge-selector probe compiled at 418 physical lines, SHA-256
+  `5e25e96dafa084c38a6bae748e32416b9965561819d265dbbd535eb2cd0acb79`.
+  Its result is retained only as the small `BridgeSelector` compatibility
+  interface; the exact all-bridges decomposition remains the main reverse proof.
+- Canonical completion: `lake build Erdos593` passed all 1,244 jobs. The exact
+  imported closure contains 40 modules, and the regenerated self-contained file
+  contains 6,737 physical lines. Gap and secret scans were clear. Audited public
+  endpoints report only `propext`, `Classical.choice`, and `Quot.sound`.
+- Disposition: the finite theorem is now closed exactly as
+  `Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`. Remote
+  results were treated as candidate proofs rather than trusted artifacts, and
+  only canonically recompiled, independently audited material influenced the
+  accepted source.
+
 ## Record format
 
 For every submission, record:
