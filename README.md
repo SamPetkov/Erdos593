@@ -52,9 +52,12 @@ The author reports developing the proof independently, without consulting Eric L
   and identifies an embedded source fibre with its exact source-edge index
   subtype. Its index layer turns that identification into exact extended
   fibre and base-letter-image cardinality statements for the selected subtype,
-  with a finite-source cardinal corollary.
-  This is only a local bridge, not a global finite-trace
-  decomposition; a dependency map records its place.
+  with a finite-source cardinal corollary. A support layer additionally shows
+  that canonical base fibres are pairwise disjoint and recover any selected
+  edge family when indexed by its active base nodes; finite selected families
+  have finite active support. This is set-theoretic only: it supplies neither
+  a fibre-cardinality sum nor a global finite-trace decomposition; a dependency
+  map records its place.
   Reconstruction across isolated vertices,
   the remaining finite-trace decomposition, and the infinitary avoidance
   direction remain open.
@@ -80,9 +83,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 88 source modules. The
-generated one-file checkpoint contains 13,672 physical lines, 43 external
-Mathlib imports, and 427 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 89 source modules. The
+generated one-file checkpoint contains 13,781 physical lines, 43 external
+Mathlib imports, and 435 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -118,7 +121,10 @@ then has the same `Set.ncard`, so a finite linear no-isolated embedded source
 has exactly one key per edge. The base-fibre API additionally gives local
 base-letter injectivity and `encard` transfer within a selected canonical base
 node, together with an exact source-edge indexing statement for embedded
-fibres. This does not yet supply a global finite-trace decomposition.
+fibres. The support API proves only that these fibres form a disjoint
+set-theoretic partition over their active base nodes, with finite active
+support for a finite selected family. It does not yet supply a cardinality
+sum or a global finite-trace decomposition.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

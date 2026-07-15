@@ -43,8 +43,11 @@ linearity, and identifies an embedded source fibre with its exact source-edge
 index subtype. Its source-index layer proves that the fibre, and under
 linearity its base-letter image, have the full `ENat.card` of that exact
 subtype; it also provides `Nat.card` and, for a finite source, the
-corresponding explicit finite cardinal.
-These are local finite-trace interfaces only: a global
+corresponding explicit finite cardinal. The support layer proves separately
+that canonical base fibres are pairwise disjoint and set-theoretically recover
+a selected family over exactly its active base nodes, with finite active
+support for finite selected families.
+These are local finite-trace interfaces only: no fibre-cardinality sum or global
 finite-trace decomposition is still missing, alongside reconstruction across
 isolated vertices and the remaining infinitary avoidance direction.
 
@@ -68,10 +71,10 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 88 source modules, 43 external
-  Mathlib imports, 13,672 physical lines, 12,004 nonblank lines, 555,413 UTF-8
+- Deterministic regeneration check: passed for 89 source modules, 43 external
+  Mathlib imports, 13,781 physical lines, 12,094 nonblank lines, 559,419 UTF-8
   bytes, and SHA-256
-  `ab3eb40bfef51c0264677d8afc831d3840951d487c8378813ae3309d990d2f3a`.
+  `40bc79fc961eebffb71b6ee792899e29f3b616f00eff9bb078ce193fd15c2bfa`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
@@ -82,11 +85,14 @@ module checks recorded below.
   `Erdos593.TripleSystem.SequenceLiftFiniteTrace` (1,224 Lake jobs), and
   `Erdos593.TripleSystem.SequenceLiftBaseFiber` (1,225 Lake jobs), and
   `Erdos593.TripleSystem.SequenceLiftBaseFiberIndex` (1,226 Lake jobs),
+  and `Erdos593.TripleSystem.SequenceLiftBaseFiberPartition` (1,227 Lake
+  jobs),
   passed under the pinned Lean/mathlib `v4.32.0` toolchain.
 - Source audit: the complete imported closure, including
   `SequenceLiftBaseNode`, `SequenceLiftBaseNormalForm`, and
   `SequenceLiftBaseLetter`, `SequenceLiftFiniteTrace`, and
-  `SequenceLiftBaseFiber`, `SequenceLiftBaseFiberIndex`, and the generated
+  `SequenceLiftBaseFiber`, `SequenceLiftBaseFiberIndex`,
+  `SequenceLiftBaseFiberPartition`, and the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
 - Axiom audit: the representative central declarations and the new public
