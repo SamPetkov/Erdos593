@@ -23,9 +23,11 @@ intrinsic-isolated-reduction obligatoriness corollary, exact `Kₙ,ₙ` edge
 coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
 interface, rooted abundance and obligatory one-point-amalgamation closure, and
 the one-apex sequence lift with its countable-colouring obstruction and local
-linear-trace uniqueness lemma. Still missing are reconstruction across
-isolated vertices, the finite-trace structural theorem beyond that local step,
-and the remaining infinitary avoidance direction.
+linear-trace rigidity package: extension-letter determinacy, apex-to-edge-letter
+collision, and lifted-edge uniqueness up to base-edge orientation. Still
+missing are reconstruction across isolated vertices, the finite-trace
+structural theorem beyond that local step, and the remaining infinitary
+avoidance direction.
 
 ## Reproduction and exactness check
 
@@ -48,9 +50,9 @@ module checks recorded below.
 ## Recorded verification (15 July 2026)
 
 - Deterministic regeneration check: passed for 82 source modules, 43 external
-  Mathlib imports, 12,832 physical lines, 11,281 nonblank lines, 521,765 UTF-8
+  Mathlib imports, 12,899 physical lines, 11,343 nonblank lines, 524,387 UTF-8
   bytes, and SHA-256
-  `8dc9c1942a7a063d40cf7ceb56eb6ad131a12685fa17abb9bc813d81725ce3df`.
+  `ae3e321e24b5bf9d85229c038a2b13b7418810989c20bb1af6d29b495467f6ae`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
@@ -100,7 +102,10 @@ import Erdos593
 #print axioms Erdos593.TripleSystem.completeBipartiteExpansionAtom_isObligatory
 #print axioms Erdos593.TripleSystem.Constructible.isObligatory
 #print axioms Erdos593.TripleSystem.intrinsic_isolatedReduction_isObligatory
+#print axioms Erdos593.SequenceLift.Node.letter_eq_of_extendsBy_same_target
+#print axioms Erdos593.SequenceLift.edgeLetter_eq_of_apex_eq
 #print axioms Erdos593.SequenceLift.mkEdge_eq_of_same_basePair_of_linearTrace
+#print axioms Erdos593.SequenceLift.mkEdge_eq_of_same_edgeLetter_of_linearTrace
 ```
 
 In addition to this declaration-level check, scan every source in the local

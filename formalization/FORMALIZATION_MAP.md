@@ -67,7 +67,7 @@ adversarial audit exposes a false or over-strong formulation.
 | O8 | `SequenceLift.system`, `not_isProperColoring_nat`, `aleph0_lt_chromaticCardinal` | the one-apex sequence lift and its chromatic lower bound are proved: a proper countable colouring would recursively generate an `ω₁`-long branch with pairwise distinct colours |
 | O9 | `SimpleGraph.NonInducedFactor`, `CompleteBipartiteEdges.coords_edge`, `Constructible.isObligatory_of_completeBipartiteNN` | non-induced graph-factor API, exact balanced-bipartite edge coordinates, and a focused-compiled conditional closure package: the atom hypothesis implies obligatoriness of every constructible system |
 | O10 | `completeBipartiteExpansionAtom_positive_isObligatory`, `completeBipartiteExpansionAtom_isObligatory`, `Constructible.isObligatory`, `intrinsic_isolatedReduction_isObligatory` | a classical cardinal-minimal low-pair-closure argument proves every positive balanced `K_{n,n}⁺` expansion atom obligatory; together with the zero atom it proves the all-parameter atom theorem, discharges O5/O9, yields obligatoriness of every constructible triple system, and yields the finite isolated-reduction-intrinsic corollary |
-| O11 | `SequenceLift.mkEdge_eq_of_same_basePair_of_linearTrace` | local finite-trace rigidity proved: in a linear restriction, two lifted edges with the same base trace and adjacent base pair coincide |
+| O11 | `SequenceLift.Node.letter_eq_of_extendsBy_same_target`, `SequenceLift.edgeLetter_eq_of_apex_eq`, `SequenceLift.mkEdge_eq_of_same_basePair_of_linearTrace`, `SequenceLift.mkEdge_eq_of_same_edgeLetter_of_linearTrace` | local finite-trace rigidity advanced: a fixed source/target extension determines its appended letter; coincident apexes over a common base trace determine the underlying graph-edge letter; and, in a linear restriction, the common trace and unordered base edge determine the lifted edge |
 
 The representation layer now also contains compiled, gap-free definitions of
 non-induced embeddings, triple-system isomorphisms, isolated-point reduction,
@@ -84,7 +84,7 @@ restrictions, and the rooted bridge-forest ordering supplies the full
 `isolatedReduction_constructible_iff_intrinsic` is proved.  The positive
 complete-bipartite atom and constructible-to-obligatory directions are now
 proved as well.  The sequence-lift layer now also has its local
-linear-trace uniqueness lemma.  The remaining project work lies in
+linear-trace rigidity package.  The remaining project work lies in
 reconstruction of a constructible system across isolated vertices, the
 finite-trace decomposition beyond that local rigidity step, and the
 infinitary avoidance direction; it is not a gap in the verified

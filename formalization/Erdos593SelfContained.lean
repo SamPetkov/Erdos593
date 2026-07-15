@@ -68,9 +68,10 @@ complete-bipartite expansion atom is obligatory, the resulting theorem that
 every constructible triple system is obligatory, exact `K_{n,n}` edge
 coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
 interface, rooted abundance and obligatory one-point amalgamation, and the
-one-apex sequence lift with its countable-colouring obstruction. Major missing
-layers are reconstruction across isolated vertices, the finite-trace structural
-theorem, and the remaining infinitary avoidance direction.
+one-apex sequence lift with its countable-colouring obstruction and local
+linear-trace rigidity lemmas. Major missing layers are reconstruction across
+isolated vertices, the finite-trace structural theorem, and the remaining
+infinitary avoidance direction.
 
 Generated deterministically from Erdos593.lean and its exact transitive local
 import closure. Each source boundary records its relative path and normalized
@@ -12742,7 +12743,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftChromatic
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTrace
 Source: Erdos593/TripleSystem/SequenceLiftTrace.lean
-Normalized SHA-256: a91e21345ee688171cc4d512bd81b6e1f119a2719557225ce6284cb0770e0d0c
+Normalized SHA-256: 6fa3d866d8b245a61a5e11e4480068dc7c48285338dbbb171fd0d12da7dfd5cc
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftTrace
 
@@ -12763,6 +12764,37 @@ universe u
 namespace SequenceLift
 
 variable {V : Type u} {G : _root_.SimpleGraph V}
+
+namespace Node
+
+/-- The letter appended by a node extension is determined by its source and
+target nodes. -/
+theorem letter_eq_of_extendsBy_same_target
+    {q t : Node G} {a b : Alphabet G}
+    (ha : q.ExtendsBy a t) (hb : q.ExtendsBy b t) : a = b := by
+  rcases ha with ⟨haLength, _, haLetter⟩
+  rcases hb with ⟨hbLength, _, hbLetter⟩
+  have hIndex : (⟨q.length, haLength⟩ : Set.Iio t.length) =
+      ⟨q.length, hbLength⟩ := Subtype.ext (by rfl)
+  calc
+    a = t.entry ⟨q.length, haLength⟩ := haLetter.symm
+    _ = t.entry ⟨q.length, hbLength⟩ := congrArg t.entry hIndex
+    _ = b := hbLetter
+
+end Node
+
+/-- If two lifted-edge apexes agree over a common base trace, then the
+underlying graph-edge letters agree. -/
+theorem edgeLetter_eq_of_apex_eq
+    {q t1 t2 : Node G} {x1 y1 x2 y2 z1 z2 : V}
+    {hxy1 : G.Adj x1 y1} {hxy2 : G.Adj x2 y2}
+    {hext1 : q.ExtendsBy (edgeLetter hxy1) t1}
+    {hext2 : q.ExtendsBy (edgeLetter hxy2) t2}
+    (hapex : (t1, z1) = (t2, z2)) :
+    edgeLetter hxy1 = edgeLetter hxy2 := by
+  have ht : t1 = t2 := congrArg Prod.fst hapex
+  subst t2
+  exact Node.letter_eq_of_extendsBy_same_target hext1 hext2
 
 /-- In a linear restriction, two lifted edges extending the same trace by the
 same base edge cannot differ. -/
@@ -12803,6 +12835,41 @@ theorem mkEdge_eq_of_same_basePair_of_linearTrace
     apply hxy.ne
     exact congrArg Prod.snd (congrArg Subtype.val hp)
   simpa only [e₁, e₂] using congrArg Subtype.val heq
+
+/-- In a linear restriction, a lifted edge is determined by its base trace,
+its unordered base graph edge, and membership in the restriction. -/
+theorem mkEdge_eq_of_same_edgeLetter_of_linearTrace
+    {S : Set (Edge G)}
+    (hlin : ((system G).edgeRestriction S).Linear)
+    {q t1 t2 : Node G} {x1 y1 x2 y2 z1 z2 : V}
+    {hxy1 : G.Adj x1 y1} {hxy2 : G.Adj x2 y2}
+    {hext1 : q.ExtendsBy (edgeLetter hxy1) t1}
+    {hext2 : q.ExtendsBy (edgeLetter hxy2) t2}
+    (hletter : edgeLetter hxy1 = edgeLetter hxy2)
+    (hmem1 : mkEdge q t1 x1 y1 z1 hxy1 hext1 ∈ S)
+    (hmem2 : mkEdge q t2 x2 y2 z2 hxy2 hext2 ∈ S) :
+    mkEdge q t1 x1 y1 z1 hxy1 hext1 =
+      mkEdge q t2 x2 y2 z2 hxy2 hext2 := by
+  have hpairs : s(x1, y1) = s(x2, y2) := congrArg Subtype.val hletter
+  rcases Sym2.eq_iff.mp hpairs with h | h
+  · rcases h with ⟨rfl, rfl⟩
+    exact mkEdge_eq_of_same_basePair_of_linearTrace hlin hmem1 hmem2
+  · rcases h with ⟨hxy, hyx⟩
+    subst y2
+    subst x2
+    have hext2' : q.ExtendsBy (edgeLetter hxy1) t2 := by
+      rwa [hletter]
+    have hswap :
+        mkEdge q t2 y1 x1 z2 hxy2 hext2 =
+          mkEdge q t2 x1 y1 z2 hxy1 hext2' := by
+      apply Subtype.ext
+      ext p
+      simp [mkEdge, or_left_comm]
+    have hmem2' : mkEdge q t2 x1 y1 z2 hxy1 hext2' ∈ S := by
+      rw [← hswap]
+      exact hmem2
+    exact (mkEdge_eq_of_same_basePair_of_linearTrace hlin hmem1 hmem2').trans
+      hswap.symm
 
 end SequenceLift
 
