@@ -85,12 +85,13 @@ and the finite corollary `intrinsic_isolatedReduction_isObligatory`.
 The development also proves the chromatic-cardinal characterization, finite
 vertex-deletion lemma, obligatory disjoint-union closure, exact isolated-vertex
 reduction, the finite rainbow-bipartite lemma, rooted abundance and obligatory
-one-point-amalgamation closure, and the countable-colouring obstruction for the
-one-apex sequence lift.  The balanced complete-bipartite expansion atom is
-now obligatory for every natural parameter, which yields obligatoriness of all
-constructible systems and the finite intrinsic-isolated-reduction corollary.
-Reconstruction across isolated vertices, finite-trace decomposition, and the
-remaining infinitary avoidance direction are still in progress.
+one-point-amalgamation closure, the countable-colouring obstruction for the
+one-apex sequence lift, and its local linear-trace uniqueness lemma. The
+balanced complete-bipartite expansion atom is now obligatory for every natural
+parameter, which yields obligatoriness of all constructible systems and the
+finite intrinsic-isolated-reduction corollary. Reconstruction across isolated
+vertices, the remaining finite-trace decomposition, and the infinitary
+avoidance direction are still in progress.
 
 ## AI-use disclosure
 

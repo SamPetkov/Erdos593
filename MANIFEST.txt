@@ -94,6 +94,7 @@ formalization/Erdos593/TripleSystem/RainbowLocalBound.lean
 formalization/Erdos593/TripleSystem/SameRankColoring.lean
 formalization/Erdos593/TripleSystem/SequenceLift.lean
 formalization/Erdos593/TripleSystem/SequenceLiftChromatic.lean
+formalization/Erdos593/TripleSystem/SequenceLiftTrace.lean
 formalization/Erdos593/TripleSystem/SingleEdgePiece.lean
 formalization/Erdos593/TripleSystem/SingleEdgePieceConstructible.lean
 formalization/Erdos593SelfContained.lean

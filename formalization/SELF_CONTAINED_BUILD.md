@@ -22,9 +22,10 @@ theorem that every constructible triple system is obligatory, the finite
 intrinsic-isolated-reduction obligatoriness corollary, exact `Kₙ,ₙ` edge
 coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
 interface, rooted abundance and obligatory one-point-amalgamation closure, and
-the one-apex sequence lift with its countable-colouring obstruction. Still
-missing are reconstruction across isolated vertices, the finite-trace
-structural theorem, and the remaining infinitary avoidance direction.
+the one-apex sequence lift with its countable-colouring obstruction and local
+linear-trace uniqueness lemma. Still missing are reconstruction across
+isolated vertices, the finite-trace structural theorem beyond that local step,
+and the remaining infinitary avoidance direction.
 
 ## Reproduction and exactness check
 
@@ -46,15 +47,16 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 81 source modules, 43 external
-  Mathlib imports, 12,758 physical lines, 11,219 nonblank lines, 518,604 UTF-8
+- Deterministic regeneration check: passed for 82 source modules, 43 external
+  Mathlib imports, 12,832 physical lines, 11,281 nonblank lines, 521,765 UTF-8
   bytes, and SHA-256
-  `de40a23e1c9a7fd1ab918402c7dd5eac8321e85b10c71fa94453ea43155d5806`.
+  `8dc9c1942a7a063d40cf7ceb56eb6ad131a12685fa17abb9bc813d81725ce3df`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
-  jobs) passed under the pinned Lean/mathlib `v4.32.0` toolchain.
-- Source audit: all 81 modules in the imported closure and the generated
+  jobs), plus `Erdos593.TripleSystem.SequenceLiftTrace` (976 Lake jobs),
+  passed under the pinned Lean/mathlib `v4.32.0` toolchain.
+- Source audit: all 82 modules in the imported closure and the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
 - Axiom audit: the representative central declarations and the new public
@@ -98,6 +100,7 @@ import Erdos593
 #print axioms Erdos593.TripleSystem.completeBipartiteExpansionAtom_isObligatory
 #print axioms Erdos593.TripleSystem.Constructible.isObligatory
 #print axioms Erdos593.TripleSystem.intrinsic_isolatedReduction_isObligatory
+#print axioms Erdos593.SequenceLift.mkEdge_eq_of_same_basePair_of_linearTrace
 ```
 
 In addition to this declaration-level check, scan every source in the local

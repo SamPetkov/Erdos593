@@ -16,8 +16,10 @@ not yet assert `Constructible F ↔ F.Intrinsic` for arbitrary `F`, nor a full
 obligatoriness classification. The all-parameter balanced complete-bipartite
 expansion atom is now obligatory, yielding obligatoriness of every
 constructible triple system and the finite intrinsic-isolated-reduction
-corollary. The finite-trace theorem, isolated-vertex reconstruction bridge,
-and remaining avoidance arguments form the next milestone.
+corollary. The sequence-lift layer also has its local linear-trace uniqueness
+lemma. The finite-trace theorem beyond that step, isolated-vertex
+reconstruction bridge, and remaining avoidance arguments form the next
+milestone.
 
 ## Current status
 
@@ -44,10 +46,11 @@ intrinsic-isolated-reduction obligatoriness corollary. It also includes a
 finite union-bound rainbow-bipartite lemma, rooted abundance and obligatory
 one-point-amalgamation closure, a non-induced graph-factor interface, exact
 complete-bipartite edge coordinates, and a one-apex sequence lift with a
-formal proof that it has no proper countable colouring. It is not yet a
-complete machine-checked proof of Erdős Problem 593: the finite-trace theorem,
-isolated-vertex reconstruction bridge, and the remaining infinitary avoidance
-direction are open. Their dependency order is recorded in
+formal proof that it has no proper countable colouring and a local
+linear-trace uniqueness theorem. It is not yet a complete machine-checked
+proof of Erdős Problem 593: the full finite-trace theorem, isolated-vertex
+reconstruction bridge, and the remaining infinitary avoidance direction are
+open. Their dependency order is recorded in
 `FORMALIZATION_MAP.md`.
 
 ## Build
@@ -59,9 +62,10 @@ lake build
 ## Continuous integration
 
 GitHub Actions runs strict source checks and targeted builds for the current
-public obligatory endpoints on every pull request and push to `main`. The
-workflow deliberately avoids the aggregate default target; the focused checks
-are recorded in [`SELF_CONTAINED_BUILD.md`](SELF_CONTAINED_BUILD.md).
+public obligatory endpoints and sequence-trace rigidity lemma on every pull
+request and push to `main`. The workflow deliberately avoids the aggregate
+default target; the focused checks are recorded in
+[`SELF_CONTAINED_BUILD.md`](SELF_CONTAINED_BUILD.md).
 
 ## One-file checkpoint
 
