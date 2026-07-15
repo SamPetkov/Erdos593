@@ -49,10 +49,12 @@ a selected family over exactly its active base nodes, with finite active
 support for finite selected families. The complementary apex layer identifies
 the unique point of every lifted edge away from its canonical base and proves
 that, inside a linear canonical base fibre, it is private to its edge and
-apex-injective.
-These are local finite-trace interfaces only: no fibre-cardinality sum or global
-finite-trace decomposition is still missing, alongside reconstruction across
-isolated vertices and the remaining infinitary avoidance direction.
+apex-injective. The support-index layer reindexes this partition by the exact
+active-base subtype and, for a finite embedded source, supplies a source-edge
+surjection and the corresponding active-index cardinal upper bounds.
+These are local finite-trace interfaces only: a fibre-cardinality sum and a
+global finite-trace decomposition remain unproved, alongside reconstruction
+across isolated vertices and the remaining infinitary avoidance direction.
 
 ## Reproduction and exactness check
 
@@ -74,10 +76,10 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 90 source modules, 43 external
-  Mathlib imports, 13,940 physical lines, 12,233 nonblank lines, 565,689 UTF-8
+- Deterministic regeneration check: passed for 91 source modules, 43 external
+  Mathlib imports, 14,065 physical lines, 12,338 nonblank lines, 570,754 UTF-8
   bytes, and SHA-256
-  `1a3e2e59069cdefb8eee0ffdb3e74e2182d37ab3967bd2697911ccfea0666c3b`.
+  `b1eb1f4dbdc7b42abe7afdb21bc1c261e6d6e130cadc52434787d9df1f8d1143`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
@@ -90,12 +92,15 @@ module checks recorded below.
   `Erdos593.TripleSystem.SequenceLiftBaseFiberIndex` (1,226 Lake jobs),
   and `Erdos593.TripleSystem.SequenceLiftBaseFiberPartition` (1,227 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseApex` (1,226 Lake jobs),
+  and `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake
+  jobs),
   passed under the pinned Lean/mathlib `v4.32.0` toolchain.
 - Source audit: the complete imported closure, including
   `SequenceLiftBaseNode`, `SequenceLiftBaseNormalForm`, and
   `SequenceLiftBaseLetter`, `SequenceLiftFiniteTrace`, and
   `SequenceLiftBaseFiber`, `SequenceLiftBaseFiberIndex`,
-  `SequenceLiftBaseFiberPartition`, `SequenceLiftBaseApex`, and the generated
+  `SequenceLiftBaseFiberPartition`, `SequenceLiftBaseApex`,
+  `SequenceLiftBaseFiberSupportIndex`, and the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
 - Axiom audit: the representative central declarations and the new public
@@ -176,6 +181,11 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.baseApex_mkEdge
 #print axioms Erdos593.SequenceLift.baseApex_inc_iff_eq_of_linear
 #print axioms Erdos593.SequenceLift.baseApex_injOn_baseFiber_of_linear
+#print axioms Erdos593.SequenceLift.finite_activeBaseNodeIndex
+#print axioms Erdos593.SequenceLift.iUnion_baseFiber_activeBaseNodeIndex
+#print axioms Erdos593.SequenceLift.surjective_baseNodeIndexMap
+#print axioms Erdos593.SequenceLift.activeBaseNodeIndex_natCard_le_edge_card
+#print axioms Erdos593.SequenceLift.activeBaseNodeIndex_card_le_edge_card
 ```
 
 In addition to this declaration-level check, scan every source in the local

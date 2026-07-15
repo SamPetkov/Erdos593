@@ -58,9 +58,11 @@ The author reports developing the proof independently, without consulting Eric L
   have finite active support. A complementary apex layer gives every lifted
   edge a unique point away from its canonical base and shows that, within a
   linear canonical-base fibre, this apex is private to its own edge and hence
-  apex-injective. These are factor-local and set-theoretic only: they supply
-  neither a fibre-cardinality sum nor a global finite-trace decomposition; a
-  dependency map records their place.
+  apex-injective. A finite-support index reindexes the partition over the
+  subtype of active base nodes; a source-edge map is surjective onto this
+  index, yielding its finite-cardinality bound. These are factor-local and
+  set-theoretic only: they supply neither a fibre-cardinality sum nor a global
+  finite-trace decomposition; a dependency map records their place.
   Reconstruction across isolated vertices,
   the remaining finite-trace decomposition, and the infinitary avoidance
   direction remain open.
@@ -86,9 +88,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 90 source modules. The
-generated one-file checkpoint contains 13,940 physical lines, 43 external
-Mathlib imports, and 444 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 91 source modules. The
+generated one-file checkpoint contains 14,065 physical lines, 43 external
+Mathlib imports, and 451 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -129,8 +131,9 @@ set-theoretic partition over their active base nodes, with finite active
 support for a finite selected family. The complementary apex API identifies
 the unique non-base point of every lift edge; inside a linear canonical base
 fibre, it is private to that edge and yields an apex-injective map. These
-factor-local interfaces do not yet supply a cardinality sum or a global
-finite-trace decomposition.
+factor-local interfaces are now reindexed by the finite subtype of active base
+nodes, with a source-edge surjection and cardinal bound. They do not yet
+supply a fibre-cardinality sum or a global finite-trace decomposition.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

@@ -81,6 +81,7 @@ import Erdos593.TripleSystem.SequenceLiftBaseFiber
 import Erdos593.TripleSystem.SequenceLiftBaseFiberIndex
 import Erdos593.TripleSystem.SequenceLiftBaseFiberPartition
 import Erdos593.TripleSystem.SequenceLiftBaseApex
+import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex
 import Erdos593.TripleSystem.SingleEdgePiece
 import Erdos593.TripleSystem.SingleEdgePieceConstructible
 
