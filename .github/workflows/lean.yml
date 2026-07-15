@@ -25,11 +25,11 @@ jobs:
           lake-package-directory: formalization
           auto-config: false
           use-mathlib-cache: true
-      - name: Strict wrapper source checks
-        run: |
-          lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
-          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean
       - name: Targeted wrapper builds
         run: |
           lake build Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
           lake build Erdos593.TripleSystem.ConstructiblePositiveObligatory
+      - name: Strict wrapper source checks
+        run: |
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean
