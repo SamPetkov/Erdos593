@@ -11,6 +11,7 @@ import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
 import Mathlib.Combinatorics.SimpleGraph.Copy
 import Mathlib.Combinatorics.SimpleGraph.Finite
 import Mathlib.Combinatorics.SimpleGraph.Sum
+import Mathlib.Combinatorics.SimpleGraph.Walk.Maps
 import Mathlib.Data.Countable.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Finset.Sort
@@ -47,19 +48,21 @@ it imports no Erdos593 project module and instead includes every declaration in
 dependency order. Its only imports are from the Mathlib version pinned by this
 project's lake-manifest.json and lean-toolchain.
 
-This file is NOT a full formal proof of Erdős Problem 593. The verified content
-now includes the complete finite structural classification: the exact
-constructive class, all generator and closure preservation theorems, the
-bridge-block quotient forest, active and degree-zero expansion pieces, the
-rooted running-intersection reconstruction, and the equivalence between
-constructibility and the intrinsic Levi conditions after isolated vertices are
-removed. It also includes the chromatic-cardinal interface, finite-deletion and
-obligatory disjoint-union closure, the exact isolated-vertex reduction, the
-finite rainbow-bipartite lemma, rooted abundance and obligatory one-point
-amalgamation, and the one-apex sequence lift with its countable-colouring
-obstruction. Major missing layers are the complete-bipartite expansion atom,
-the finite-trace structural theorem, and the remaining infinitary positive and
-avoidance directions.
+This file is NOT a full formal proof of Erdős Problem 593. The checked finite
+structural endpoint is exactly
+`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`: it
+includes the constructive class, intrinsic-preservation theorems, the
+bridge-block quotient forest, active and degree-zero expansion pieces, and the
+rooted running-intersection reconstruction after isolated vertices are removed.
+It also includes the chromatic-cardinal interface, finite-deletion and
+obligatory closure facts, a conditional transfer from the balanced
+complete-bipartite atoms to constructible systems, exact `K_{n,n}` edge
+coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
+interface, rooted abundance and obligatory one-point amalgamation, and the
+one-apex sequence lift with its countable-colouring obstruction. Major missing
+layers are the complete-bipartite expansion atom, reconstruction across
+isolated vertices, the finite-trace structural theorem, and the remaining
+infinitary positive and avoidance directions.
 
 Generated deterministically from Erdos593.lean and its exact transitive local
 import closure. Each source boundary records its relative path and normalized
@@ -669,6 +672,106 @@ END SOURCE MODULE: Erdos593.Graph.CompleteBipartiteCopy
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.CompleteBipartiteEdges
+Source: Erdos593/Graph/CompleteBipartiteEdges.lean
+Normalized SHA-256: c10bafbfc2300a3b97838c02319266f02829dfcb6a7c70acb6b5e0f016b861d3
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_CompleteBipartiteEdges
+
+/-!
+# Coordinates of edges in a balanced complete bipartite graph
+
+Every edge of `K_{n,n}` has a unique ordered pair of endpoints, one from each
+distinguished part.  This module makes that representation explicit for the
+universe-compatible atom used by the formalization.  It is the graph-level
+API needed when a rainbow matrix is packaged as an embedding of a
+private-vertex expansion.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace CompleteBipartiteEdges
+
+/-- The left or right finite part of the universe-compatible `K_{n,n}`. -/
+abbrev Part (n : Nat) := FiniteBipartitePart.{u} n
+
+/-- The balanced graph whose edge coordinates are considered here. -/
+abbrev Graph (n : Nat) := completeBipartiteNN.{u} n
+
+/-- The canonical edge joining a left-part point to a right-part point. -/
+def edge (n : Nat) (a b : Part n) : (Graph n).edgeSet :=
+  ⟨s(Sum.inl a, Sum.inr b), by simp [Graph, completeBipartiteNN]⟩
+
+/-- Extract the unique ordered left/right coordinates of an edge of
+`K_{n,n}`. -/
+noncomputable def coords (n : Nat) (e : (Graph n).edgeSet) : Part n × Part n := by
+  classical
+  let eVal : Sym2 (Part n ⊕ Part n) := e.1
+  have he : eVal ∈ (_root_.completeBipartiteGraph (Part n) (Part n)).edgeSet := by
+    exact e.2
+  rw [SimpleGraph.edgeSet_completeBipartiteGraph] at he
+  exact Classical.choose he
+
+/-- The extracted coordinates reconstruct the underlying unordered edge. -/
+theorem coords_spec (n : Nat) (e : (Graph n).edgeSet) :
+    s(Sum.inl (coords n e).1, Sum.inr (coords n e).2) = e.1 := by
+  classical
+  let eVal : Sym2 (Part n ⊕ Part n) := e.1
+  have he : eVal ∈ Set.range
+      (fun x : Part n × Part n => s(Sum.inl x.1, Sum.inr x.2)) := by
+    have he' : eVal ∈ (_root_.completeBipartiteGraph (Part n) (Part n)).edgeSet := by
+      exact e.2
+    rw [SimpleGraph.edgeSet_completeBipartiteGraph] at he'
+    exact he'
+  change s(Sum.inl (coords n e).1, Sum.inr (coords n e).2) = eVal
+  unfold coords
+  exact Classical.choose_spec he
+
+/-- Rebuilding an edge from its extracted coordinates is the identity. -/
+theorem edge_coords (n : Nat) (e : (Graph n).edgeSet) :
+    edge n (coords n e).1 (coords n e).2 = e := by
+  apply Subtype.ext
+  exact coords_spec n e
+
+/-- Coordinate extraction is injective on the edges of `K_{n,n}`. -/
+theorem coords_injective (n : Nat) : Function.Injective (coords n) := by
+  intro e f hef
+  apply Subtype.ext
+  calc
+    e.1 = s(Sum.inl (coords n e).1, Sum.inr (coords n e).2) :=
+      (coords_spec n e).symm
+    _ = s(Sum.inl (coords n f).1, Sum.inr (coords n f).2) := by rw [hef]
+    _ = f.1 := coords_spec n f
+
+/-- The canonical left/right edge constructor is injective. -/
+theorem edge_injective (n : Nat) :
+    Function.Injective (fun ab : Part n × Part n => edge n ab.1 ab.2) := by
+  rintro ⟨a, b⟩ ⟨c, d⟩ h
+  have h' := congrArg Subtype.val h
+  rcases Sym2.eq_iff.mp h' with h' | h'
+  · exact Prod.ext (Sum.inl.inj h'.1) (Sum.inr.inj h'.2)
+  · simp at h'
+
+/-- Extracting coordinates from a canonical cross edge returns the original
+ordered pair. -/
+theorem coords_edge (n : Nat) (a b : Part n) :
+    coords n (edge n a b) = (a, b) := by
+  apply edge_injective n
+  change edge n (coords n (edge n a b)).1 (coords n (edge n a b)).2 =
+    edge n a b
+  exact edge_coords n (edge n a b)
+
+end CompleteBipartiteEdges
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_CompleteBipartiteEdges
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.CompleteBipartiteEdges
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.Graph.FiniteOutdegreeColoring
 Source: Erdos593/Graph/FiniteOutdegreeColoring.lean
 Normalized SHA-256: 757731c27aa486fb75fc04d1bd5e8390ac9d11fa9dca4374faad2b9de6081477
@@ -1046,6 +1149,127 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_Graph_CountableColoring
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.Graph.CountableColoring
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.NonInducedFactor
+Source: Erdos593/Graph/NonInducedFactor.lean
+Normalized SHA-256: ef491e20207e432910c6c38d55e1275c00b444594680dbf8266edfa162ab7a6f
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_NonInducedFactor
+
+/-!
+# Non-induced graph factors
+
+The finite-trace reconstruction only needs a graph `J` to occur inside an
+ambient graph `G` through an injective vertex map that preserves edges.  It
+does *not* need the map to reflect adjacency: `G` may have additional edges
+between vertices of the image.  This file makes that distinction explicit,
+instead of using `J ↪g G`, whose induced-embedding condition is too strong.
+
+Mathlib calls the same notion a `SimpleGraph.Copy`; the wrapper below keeps
+the two proof obligations visible at finite-trace interfaces and provides the
+standard conversion to the library API when an isomorphic image subgraph is
+needed.
+-/
+
+namespace Erdos593
+
+universe u v w
+
+namespace SimpleGraph
+
+variable {X : Type u} {V : Type v} {W : Type w}
+variable {J : _root_.SimpleGraph X} {G : _root_.SimpleGraph V}
+variable {H : _root_.SimpleGraph W}
+
+/-- A non-induced factor map from `J` into `G`: vertices are injected and
+source edges are preserved.  No adjacency-reflection condition is imposed. -/
+structure NonInducedFactor (J : _root_.SimpleGraph X) (G : _root_.SimpleGraph V) where
+  /-- The injective vertex map. -/
+  vertex : X ↪ V
+  /-- Every source edge maps to a host edge. -/
+  map_adj : ∀ {x y : X}, J.Adj x y → G.Adj (vertex x) (vertex y)
+
+namespace NonInducedFactor
+
+/-- Regard a non-induced factor as an adjacency-preserving graph homomorphism. -/
+def toHom (f : NonInducedFactor J G) : J →g G where
+  toFun := f.vertex
+  map_rel' := f.map_adj
+
+@[simp]
+theorem toHom_apply (f : NonInducedFactor J G) (x : X) : f.toHom x = f.vertex x := rfl
+
+/-- Convert to Mathlib's non-induced copy interface. -/
+def toCopy (f : NonInducedFactor J G) : _root_.SimpleGraph.Copy J G where
+  toHom := f.toHom
+  injective' := f.vertex.injective
+
+@[simp]
+theorem toCopy_apply (f : NonInducedFactor J G) (x : X) : f.toCopy x = f.vertex x := rfl
+
+/-- Build a non-induced factor from Mathlib's non-induced copy interface. -/
+def ofCopy (f : _root_.SimpleGraph.Copy J G) : NonInducedFactor J G where
+  vertex := f.toEmbedding
+  map_adj := f.toHom.map_adj
+
+@[simp]
+theorem ofCopy_vertex (f : _root_.SimpleGraph.Copy J G) (x : X) :
+    (ofCopy f).vertex x = f x := rfl
+
+/-- The identity non-induced factor. -/
+def refl (G : _root_.SimpleGraph V) : NonInducedFactor G G where
+  vertex := Function.Embedding.refl V
+  map_adj := fun hxy => hxy
+
+@[simp]
+theorem refl_vertex (G : _root_.SimpleGraph V) (x : V) : (refl G).vertex x = x := rfl
+
+/-- Compose non-induced factor maps. -/
+def trans (f : NonInducedFactor J G) (g : NonInducedFactor G H) :
+    NonInducedFactor J H where
+  vertex := f.vertex.trans g.vertex
+  map_adj := fun hxy => g.map_adj (f.map_adj hxy)
+
+@[simp]
+theorem trans_vertex (f : NonInducedFactor J G) (g : NonInducedFactor G H) (x : X) :
+    (f.trans g).vertex x = g.vertex (f.vertex x) := rfl
+
+/-- Edge-set transport under a non-induced factor map. -/
+theorem map_mem_edgeSet (f : NonInducedFactor J G) {e : Sym2 X}
+    (he : e ∈ J.edgeSet) : e.map f.vertex ∈ G.edgeSet :=
+  f.toHom.map_mem_edgeSet he
+
+/-- Transport a walk along a non-induced factor map. -/
+def mapWalk (f : NonInducedFactor J G) {x y : X} (w : J.Walk x y) :
+    G.Walk (f.vertex x) (f.vertex y) :=
+  w.map f.toHom
+
+@[simp]
+theorem mapWalk_length (f : NonInducedFactor J G) {x y : X} (w : J.Walk x y) :
+    (f.mapWalk w).length = w.length := by
+  exact _root_.SimpleGraph.Walk.length_map f.toHom w
+
+/-- The (possibly non-induced) image subgraph selected by a factor map.  It
+contains exactly the transported source edges; it is not the induced subgraph
+of `G` on the vertex image. -/
+abbrev imageSubgraph (f : NonInducedFactor J G) : G.Subgraph := f.toCopy.toSubgraph
+
+/-- A factor map identifies its source with its selected image subgraph. -/
+noncomputable def isoToImageSubgraph (f : NonInducedFactor J G) :
+    J ≃g f.imageSubgraph.coe :=
+  f.toCopy.isoToSubgraph
+
+end NonInducedFactor
+
+end SimpleGraph
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_NonInducedFactor
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.NonInducedFactor
 ========================================================================== -/
 
 /- ==========================================================================
@@ -8307,6 +8531,177 @@ END SOURCE MODULE: Erdos593.TripleSystem.ObligatoryOnePointAmalgamation
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ObligatoryConstructible
+Source: Erdos593/TripleSystem/ObligatoryConstructible.lean
+Normalized SHA-256: d54aad68b13f5455239f702b4a616095b47311a5679b9ba6125633777e5bc696
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryConstructible
+
+/-!
+# Obligatory closure of the constructive class
+
+This file packages the positive closure argument.  The infinitary content is
+isolated in the hypothesis that the finite two-colourable expansion atoms are
+obligatory; all remaining steps are the verified finite constructors.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal
+
+universe w
+
+namespace TripleSystem
+
+namespace Iso
+
+variable {V E V' E' : Type w}
+variable {F : TripleSystem V E} {F' : TripleSystem V' E'}
+
+/-- An incidence isomorphism gives a non-induced embedding in its forward
+direction. -/
+def toEmbedding (f : Iso F F') : F.Embedding F' where
+  vertex := f.vertexEquiv.toEmbedding
+  edge := f.edgeEquiv
+  map_edge := by
+    intro e
+    ext y
+    constructor
+    · rintro ⟨x, hx, rfl⟩
+      exact (f.map_inc_iff x e).mp hx
+    · intro hy
+      refine ⟨f.vertexEquiv.symm y, ?_, f.vertexEquiv.apply_symm_apply y⟩
+      exact (f.map_inc_iff _ e).mpr (by simpa using hy)
+
+end Iso
+
+/-- Obligatory status is invariant under simultaneous relabelling of vertices
+and edge indices. -/
+theorem IsObligatory.ofIso {V E V' E' : Type w}
+    {F : TripleSystem V E} {F' : TripleSystem V' E'}
+    (hF : F.IsObligatory) (f : Iso F F') : F'.IsObligatory :=
+  hF.of_sourceEmbedding f.symm.toEmbedding
+
+/-- Every construction term carries finite vertex and edge-index types, even
+though closure constructors do not expose those instances as parameters. -/
+theorem Constructible.finiteTypes {V E : Type w} {F : TripleSystem V E}
+    (hF : Constructible F) : Finite V ∧ Finite E := by
+  induction hF with
+  | ofEdgeless V =>
+      exact ⟨inferInstance, inferInstance⟩
+  | ofExpansion G hG =>
+      classical
+      letI : Finite G.edgeSet :=
+        Finite.of_injective Subtype.val Subtype.val_injective
+      letI : Fintype G.edgeSet := Fintype.ofFinite G.edgeSet
+      exact ⟨inferInstance, inferInstance⟩
+  | @disjointUnion V E W D F G hF hG ihF ihG =>
+      classical
+      letI : Finite V := ihF.1
+      letI : Finite E := ihF.2
+      letI : Finite W := ihG.1
+      letI : Finite D := ihG.2
+      letI : Fintype V := Fintype.ofFinite V
+      letI : Fintype E := Fintype.ofFinite E
+      letI : Fintype W := Fintype.ofFinite W
+      letI : Fintype D := Fintype.ofFinite D
+      exact ⟨inferInstance, inferInstance⟩
+  | @amalgam V₀ E₀ V₁ E₁ F₀ F₁ h₀ h₁ r₀ r₁ ih₀ ih₁ =>
+      classical
+      letI : Finite V₀ := ih₀.1
+      letI : Finite E₀ := ih₀.2
+      letI : Finite V₁ := ih₁.1
+      letI : Finite E₁ := ih₁.2
+      letI : Fintype V₀ := Fintype.ofFinite V₀
+      letI : Fintype E₀ := Fintype.ofFinite E₀
+      letI : Fintype V₁ := Fintype.ofFinite V₁
+      letI : Fintype E₁ := Fintype.ofFinite E₁
+      letI : Fintype (OnePointAmalgamation.Vertex r₀ r₁) :=
+        OnePointAmalgamation.vertexFintype r₀ r₁
+      exact ⟨inferInstance, inferInstance⟩
+  | @ofIso V E V' E' F F' hF f ihF =>
+      letI : Finite V := ihF.1
+      letI : Finite E := ihF.2
+      exact ⟨Finite.of_equiv V f.vertexEquiv,
+        Finite.of_equiv E f.edgeEquiv⟩
+
+/-- Every finite edgeless triple system is obligatory. -/
+theorem edgeless_isObligatory (V : Type w) [Fintype V] :
+    (edgeless V).IsObligatory := by
+  classical
+  intro W D _ H hH
+  have hvertices : ℵ₀ ≤ #W :=
+    hH.le.trans H.chromaticCardinal_le_mk_vertices
+  letI : Infinite W := Cardinal.aleph0_le_mk_iff.mp hvertices
+  let vertexEmbedding : V ↪ W :=
+    (Fintype.equivFin V).toEmbedding.trans
+      (Fin.valEmbedding.trans (Infinite.natEmbedding W))
+  refine ⟨{ vertex := vertexEmbedding, edge := ?_, map_edge := ?_ }⟩
+  · intro e
+    exact Empty.elim e.down
+  · intro e
+    exact Empty.elim e.down
+
+/-- If every private-vertex expansion of a finite two-colourable graph is
+obligatory, then every member of the finite constructive class is obligatory.
+-/
+theorem Constructible.isObligatory_of_expansions
+    (hExpansion : ∀ {X : Type w} [Fintype X] (G : _root_.SimpleGraph X),
+      G.Colorable 2 → (privateVertexExpansion G).IsObligatory)
+    {V E : Type w} {F : TripleSystem V E} (hF : Constructible F) :
+    F.IsObligatory := by
+  induction hF with
+  | ofEdgeless V =>
+      exact edgeless_isObligatory V
+  | ofExpansion G hG =>
+      exact hExpansion G hG
+  | @disjointUnion V E W D F G hF hG ihF ihG =>
+      classical
+      letI : Finite V := hF.finiteTypes.1
+      letI : Finite E := hF.finiteTypes.2
+      letI : Finite W := hG.finiteTypes.1
+      letI : Finite D := hG.finiteTypes.2
+      letI : Fintype V := Fintype.ofFinite V
+      letI : Fintype E := Fintype.ofFinite E
+      letI : Fintype W := Fintype.ofFinite W
+      letI : Fintype D := Fintype.ofFinite D
+      exact IsObligatory.disjointUnion F G ihF ihG
+  | @amalgam V₀ E₀ V₁ E₁ F₀ F₁ h₀ h₁ r₀ r₁ ih₀ ih₁ =>
+      classical
+      letI : Finite V₀ := h₀.finiteTypes.1
+      letI : Finite E₀ := h₀.finiteTypes.2
+      letI : Finite V₁ := h₁.finiteTypes.1
+      letI : Finite E₁ := h₁.finiteTypes.2
+      letI : Fintype V₀ := Fintype.ofFinite V₀
+      letI : Fintype E₀ := Fintype.ofFinite E₀
+      letI : Fintype V₁ := Fintype.ofFinite V₁
+      letI : Fintype E₁ := Fintype.ofFinite E₁
+      exact IsObligatory.onePointAmalgamation ih₀ ih₁ r₀ r₁
+  | ofIso hF f ihF =>
+      exact ihF.ofIso f
+
+/-- It is enough to establish obligatoriness for every balanced atom
+`K_{n,n}⁺`: the finite bipartite reduction supplies the expansion hypothesis
+needed by `Constructible.isObligatory_of_expansions`. -/
+theorem Constructible.isObligatory_of_completeBipartiteNN
+    (hAtoms : ∀ n : ℕ,
+      (privateVertexExpansion (completeBipartiteNN.{w} n)).IsObligatory)
+    {V E : Type w} {F : TripleSystem V E} (hF : Constructible F) :
+    F.IsObligatory := by
+  apply hF.isObligatory_of_expansions
+  intro X _ G hG
+  exact privateVertexExpansion_isObligatory_of_completeBipartiteNN hG hAtoms
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryConstructible
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ObligatoryConstructible
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLift
 Source: Erdos593/TripleSystem/SequenceLift.lean
 Normalized SHA-256: 49e3f06462566bd06f47f867d206f185f0efe96c555ccb40b340be1fbce3da95
@@ -8591,7 +8986,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftChromatic
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 725c6e82f19bce93a334c6260d782347a2238f017e50fed0ffdb6047d356a847
+Normalized SHA-256: 687a64bec5fc1d996c85bdb1c646a52200c8ec0a57874b825bc2d33e8bcefe0f
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

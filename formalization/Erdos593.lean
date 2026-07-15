@@ -2,8 +2,10 @@ import Erdos593.Graph.Bridge
 import Erdos593.Graph.BridgeFree
 import Erdos593.Graph.BridgeQuotient
 import Erdos593.Graph.CompleteBipartiteCopy
+import Erdos593.Graph.CompleteBipartiteEdges
 import Erdos593.Graph.CountableColoring
 import Erdos593.Graph.FiniteOutdegreeColoring
+import Erdos593.Graph.NonInducedFactor
 import Erdos593.Graph.Parity
 import Erdos593.Graph.RainbowBipartite
 import Erdos593.Graph.RootedTree
@@ -37,6 +39,7 @@ import Erdos593.TripleSystem.Obligatory
 import Erdos593.TripleSystem.ObligatoryDisjointUnion
 import Erdos593.TripleSystem.ObligatoryIsolatedReduction
 import Erdos593.TripleSystem.ObligatoryBipartiteReduction
+import Erdos593.TripleSystem.ObligatoryConstructible
 import Erdos593.TripleSystem.ObligatoryOnePointAmalgamation
 import Erdos593.TripleSystem.SequenceLiftChromatic
 import Erdos593.TripleSystem.SingleEdgePiece

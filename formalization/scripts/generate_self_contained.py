@@ -120,19 +120,21 @@ it imports no Erdos593 project module and instead includes every declaration in
 dependency order. Its only imports are from the Mathlib version pinned by this
 project's lake-manifest.json and lean-toolchain.
 
-This file is NOT a full formal proof of Erdős Problem 593. The verified content
-now includes the complete finite structural classification: the exact
-constructive class, all generator and closure preservation theorems, the
-bridge-block quotient forest, active and degree-zero expansion pieces, the
-rooted running-intersection reconstruction, and the equivalence between
-constructibility and the intrinsic Levi conditions after isolated vertices are
-removed. It also includes the chromatic-cardinal interface, finite-deletion and
-obligatory disjoint-union closure, the exact isolated-vertex reduction, the
-finite rainbow-bipartite lemma, rooted abundance and obligatory one-point
-amalgamation, and the one-apex sequence lift with its countable-colouring
-obstruction. Major missing layers are the complete-bipartite expansion atom,
-the finite-trace structural theorem, and the remaining infinitary positive and
-avoidance directions.
+This file is NOT a full formal proof of Erdős Problem 593. The checked finite
+structural endpoint is exactly
+`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`: it
+includes the constructive class, intrinsic-preservation theorems, the
+bridge-block quotient forest, active and degree-zero expansion pieces, and the
+rooted running-intersection reconstruction after isolated vertices are removed.
+It also includes the chromatic-cardinal interface, finite-deletion and
+obligatory closure facts, a conditional transfer from the balanced
+complete-bipartite atoms to constructible systems, exact `K_{n,n}` edge
+coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
+interface, rooted abundance and obligatory one-point amalgamation, and the
+one-apex sequence lift with its countable-colouring obstruction. Major missing
+layers are the complete-bipartite expansion atom, reconstruction across
+isolated vertices, the finite-trace structural theorem, and the remaining
+infinitary positive and avoidance directions.
 
 Generated deterministically from Erdos593.lean and its exact transitive local
 import closure. Each source boundary records its relative path and normalized

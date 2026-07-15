@@ -20,8 +20,10 @@ formalization/Erdos593/Graph/BridgeFree.lean
 formalization/Erdos593/Graph/BridgeQuotient.lean
 formalization/Erdos593/Graph/CompleteBipartite.lean
 formalization/Erdos593/Graph/CompleteBipartiteCopy.lean
+formalization/Erdos593/Graph/CompleteBipartiteEdges.lean
 formalization/Erdos593/Graph/CountableColoring.lean
 formalization/Erdos593/Graph/FiniteOutdegreeColoring.lean
+formalization/Erdos593/Graph/NonInducedFactor.lean
 formalization/Erdos593/Graph/Parity.lean
 formalization/Erdos593/Graph/RainbowBipartite.lean
 formalization/Erdos593/Graph/RootedTree.lean
@@ -53,6 +55,7 @@ formalization/Erdos593/TripleSystem/IsomorphIntrinsic.lean
 formalization/Erdos593/TripleSystem/Levi.lean
 formalization/Erdos593/TripleSystem/Obligatory.lean
 formalization/Erdos593/TripleSystem/ObligatoryBipartiteReduction.lean
+formalization/Erdos593/TripleSystem/ObligatoryConstructible.lean
 formalization/Erdos593/TripleSystem/ObligatoryDisjointUnion.lean
 formalization/Erdos593/TripleSystem/ObligatoryIsolatedReduction.lean
 formalization/Erdos593/TripleSystem/ObligatoryOnePointAmalgamation.lean
