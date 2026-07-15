@@ -11,6 +11,7 @@ import Erdos593.Graph.FiniteClosureLayeringConstruction
 import Erdos593.Graph.FiniteOutdegreeColoring
 import Erdos593.Graph.MinimalBadCore
 import Erdos593.Graph.NonInducedFactor
+import Erdos593.Graph.FiniteEdgeFactor
 import Erdos593.Graph.Parity
 import Erdos593.Graph.RainbowBipartite
 import Erdos593.Graph.RainbowPositiveSize

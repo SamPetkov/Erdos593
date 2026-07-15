@@ -1076,6 +1076,32 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
 - Disposition: local canonical declarations accepted; remote work retained
   only as an independent pending validation.
 
+## O31: finite linear base-fibre expansion proof attempt
+
+- Submitted (UTC): 2026-07-15 22:44. The authenticated Aristotle dashboard
+  request is `7c9f5ec5-0c4b-4066-9c24-9401e6e81444`.
+- Exact task boundary: attempt only the planned local theorem
+  `SequenceLift.exists_baseFiberExpansionIso_of_finite_linear`, from public
+  `main` at `cf6af2473b05e0919926c8ad5a9cc084236d6c63`. The requested
+  claim is that one finite linear canonical base fibre is isomorphic to the
+  private-vertex expansion of a finite `SimpleGraph.NonInducedFactor` of
+  `G`; it must preserve triple incidence and may not strengthen the factor
+  to an induced one.
+- Submitted files: none. Aristotle received only the public repository
+  reference and the bounded candidate statement; no local tree, attachment,
+  credential, secret, or private project content was uploaded.
+- Required outcome: either a focused, compile-checked patch in a disposable
+  clone or the exact current-API obstruction plus a smallest checked front
+  lemma. The prompt prohibits commits, pushes, merges, global fibre claims,
+  trace/avoidance/atom/constructibility conclusions, `sorry`, `admit`,
+  project axioms, `unsafe`, `native_decide`, `implemented_by`, and
+  resource-limit overrides.
+- Remote status: `QUEUED`. No returned source has been merged; any result
+  remains subject to exact-statement, source-gap, and canonical Lean 4.32
+  compilation audit before comparison or adoption.
+- Disposition: the N1 theorem remains planned and unproved locally; remote
+  work is a bounded proof attempt rather than evidence for any broader claim.
+
 ## Record format
 
 For every submission, record:

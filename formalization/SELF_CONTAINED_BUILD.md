@@ -21,7 +21,8 @@ every balanced complete-bipartite expansion atom is obligatory, the resulting
 theorem that every constructible triple system is obligatory, the finite
 intrinsic-isolated-reduction obligatoriness corollary, exact `Kₙ,ₙ` edge
 coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
-interface, rooted abundance and obligatory one-point-amalgamation closure, and
+interface, a finite selected-edge endpoint/factor construction, rooted abundance
+and obligatory one-point-amalgamation closure, and
 the one-apex sequence lift with its countable-colouring obstruction and local
 linear-trace rigidity package: extension-letter determinacy, apex-to-edge-letter
 collision, and lifted-edge uniqueness up to base-edge orientation. It also
