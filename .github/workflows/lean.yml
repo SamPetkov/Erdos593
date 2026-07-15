@@ -27,6 +27,7 @@ jobs:
           use-mathlib-cache: true
       - name: Targeted wrapper builds
         run: |
+          lake build Erdos593.Graph.FiniteEdgeFactor
           lake build Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
           lake build Erdos593.TripleSystem.ConstructiblePositiveObligatory
           lake build Erdos593.TripleSystem.SequenceLiftTrace
@@ -38,6 +39,9 @@ jobs:
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberIndex
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberPartition
           lake build Erdos593.TripleSystem.SequenceLiftBaseApex
+          lake build Erdos593.TripleSystem.SequenceLiftBaseIncidence
+          lake build Erdos593.TripleSystem.SequenceLiftBaseLetterSubgraph
+          lake build Erdos593.TripleSystem.SequenceLiftBaseFiberFactor
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum
@@ -50,6 +54,7 @@ jobs:
           lake build Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
       - name: Strict wrapper source checks
         run: |
+          lake env lean -DwarningAsError=true Erdos593/Graph/FiniteEdgeFactor.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTrace.lean
@@ -61,6 +66,9 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberIndex.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberPartition.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseApex.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseIncidence.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseLetterSubgraph.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberFactor.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIndex.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberCardinality.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberTraceSum.lean

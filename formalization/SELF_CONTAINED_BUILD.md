@@ -72,6 +72,16 @@ atom claim. The global finite-trace decomposition remains open alongside
 reconstruction across isolated vertices and the remaining infinitary avoidance
 direction.
 
+The local factor spine also records the exact base-pair-or-apex incidence
+normal form of every lift edge. A selected canonical base-letter set now
+defines a host subgraph with exactly those selected edges, finite endpoint
+support when the selection is finite, and a canonical edge equivalence. This
+specializes to each finite base fibre as a finite carrier with an explicit
+non-induced factor into the host (also packaged with a `Fintype` carrier);
+under linearity its graph edges are equivalent to that exact fibre. It does
+not yet prove the desired
+private-vertex-expansion isomorphism for a base fibre.
+
 ## Reproduction and exactness check
 
 From the `formalization` directory:
@@ -92,11 +102,11 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 100 source modules, 44 external
-  Mathlib imports, 14,654 physical lines, 12,818 nonblank lines, 595,663 UTF-8
-  bytes, and SHA-256
-  `c346a32719d085cad0d09251272dddaada6bae241a33940f531e30e461c06bed`.
+- Deterministic regeneration check: passed for 104 source modules, 44 external
+  Mathlib imports, 14,999 physical lines, and SHA-256
+  `628f74992016ec994db781cb91f004b3ad63f8f56eb0e7af955cd50c64ef06ec`.
 - Canonical focused checks: strict source checks and targeted builds for
+  `Erdos593.Graph.FiniteEdgeFactor`,
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
   jobs), plus `Erdos593.TripleSystem.SequenceLiftTrace` (976 Lake jobs),
@@ -108,7 +118,10 @@ module checks recorded below.
   `Erdos593.TripleSystem.SequenceLiftBaseFiberIndex` (1,226 Lake jobs),
   and `Erdos593.TripleSystem.SequenceLiftBaseFiberPartition` (1,227 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseApex` (1,226 Lake jobs),
-  and `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake
+  and `Erdos593.TripleSystem.SequenceLiftBaseIncidence` (1,227 Lake jobs),
+  and `Erdos593.TripleSystem.SequenceLiftBaseLetterSubgraph` (1,227 Lake
+  jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberFactor` (1,230 Lake
+  jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality` (1,289
   Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum` (1,290
   Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv` (1,226
@@ -123,10 +136,12 @@ module checks recorded below.
   Lake jobs),
   passed under the pinned Lean/mathlib `v4.32.0` toolchain.
 - Source audit: the complete imported closure, including
-  `SequenceLiftBaseNode`, `SequenceLiftBaseNormalForm`, and
+  `FiniteEdgeFactor`, `SequenceLiftBaseNode`, `SequenceLiftBaseNormalForm`, and
   `SequenceLiftBaseLetter`, `SequenceLiftFiniteTrace`, and
   `SequenceLiftBaseFiber`, `SequenceLiftBaseFiberIndex`,
   `SequenceLiftBaseFiberPartition`, `SequenceLiftBaseApex`,
+  `SequenceLiftBaseIncidence`, `SequenceLiftBaseLetterSubgraph`,
+  `SequenceLiftBaseFiberFactor`,
   `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberCardinality`,
   `SequenceLiftBaseFiberTraceSum`, `SequenceLiftBaseFiberEquiv`,
   `SequenceLiftTaggedBaseLetterEquiv`,
@@ -214,6 +229,16 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.baseApex_mkEdge
 #print axioms Erdos593.SequenceLift.baseApex_inc_iff_eq_of_linear
 #print axioms Erdos593.SequenceLift.baseApex_injOn_baseFiber_of_linear
+#print axioms Erdos593.finiteEdgeFactor
+#print axioms Erdos593.SequenceLift.inc_iff_baseNode_baseLetter_or_baseApex
+#print axioms Erdos593.SequenceLift.baseLetterSubgraph
+#print axioms Erdos593.SequenceLift.baseLetterSubgraph_edgeSet
+#print axioms Erdos593.SequenceLift.baseLetterSubgraph_finite_verts
+#print axioms Erdos593.SequenceLift.baseLetterSubgraphEdgeEquiv
+#print axioms Erdos593.SequenceLift.baseFiberLetterSubgraph_finite
+#print axioms Erdos593.SequenceLift.baseFiberLetterSubgraphFactor
+#print axioms Erdos593.SequenceLift.baseFiberLetterSubgraphEdgeEquiv_of_linear
+#print axioms Erdos593.SequenceLift.exists_fintype_baseFiberLetterSubgraphFactor
 #print axioms Erdos593.SequenceLift.finite_activeBaseNodeIndex
 #print axioms Erdos593.SequenceLift.iUnion_baseFiber_activeBaseNodeIndex
 #print axioms Erdos593.SequenceLift.surjective_baseNodeIndexMap

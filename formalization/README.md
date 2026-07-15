@@ -123,6 +123,16 @@ identification, cardinality statement, trace decomposition, or atom claim.
 and identifies only that source-indexed base fibre with its own
 canonical-apex image; it introduces no cross-fibre identification, global
 union, cardinality statement, trace decomposition, or atom claim.
+`SequenceLiftBaseIncidence` gives the exact base-pair-or-apex incidence normal
+form of one arbitrary lift edge. `SequenceLiftBaseLetterSubgraph` turns any
+selected canonical base-letter set into a host subgraph with exactly those
+edges, finite endpoint support for a finite selection, and a canonical edge
+equivalence. `SequenceLiftBaseFiberFactor` specializes this to one finite
+selected base fibre, giving its selected graph a finite carrier and explicit
+non-induced factor into the host, including an existential `Fintype` factor
+prefix; under linearity its graph edges are equivalent to that precise fibre.
+These are local factor spines only: they do not yet prove a
+private-vertex-expansion isomorphism.
 Their dependency order is
 recorded in
 `FORMALIZATION_MAP.md`.
@@ -137,10 +147,13 @@ lake build
 
 GitHub Actions runs strict source checks and targeted builds for the current
 public obligatory endpoints, sequence-trace rigidity lemmas, and the
+`Graph.FiniteEdgeFactor` /
 `SequenceLiftBaseNode` / `SequenceLiftBaseNormalForm` /
 `SequenceLiftBaseLetter` / `SequenceLiftFiniteTrace` /
 `SequenceLiftBaseFiber` / `SequenceLiftBaseFiberIndex` /
 `SequenceLiftBaseFiberPartition` / `SequenceLiftBaseApex` /
+`SequenceLiftBaseIncidence` / `SequenceLiftBaseLetterSubgraph` /
+`SequenceLiftBaseFiberFactor` /
 `SequenceLiftBaseFiberSupportIndex` / `SequenceLiftBaseFiberCardinality` /
 `SequenceLiftBaseFiberTraceSum` / `SequenceLiftBaseFiberEquiv` /
 `SequenceLiftTaggedBaseLetterEquiv` /
