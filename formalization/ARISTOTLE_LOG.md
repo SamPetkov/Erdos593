@@ -950,13 +950,17 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   was independently written and accepted before the remote job left its
   queue. Its strict source check and focused canonical build (1,231 Lake jobs)
   pass under Lean/mathlib `v4.32.0`.
-- Remote status at the first successful dashboard poll: `QUEUED`. A later
-  dashboard poll found the independent task `RUNNING` after it cloned/read the
-  public repository. No remote source has been merged; any return remains
-  subject to exact-statement, source-gap, and canonical Lean 4.32 compilation
-  and axiom audits.
-- Disposition: local canonical proof accepted; remote task retained as an
-  independent pending comparison.
+- Remote status: `FINISHED` successfully. In a fresh clone of the public
+  repository's `main` at `7a553ad487d71740fd38835237f535ae362dc464`,
+  Aristotle independently accepted the exact supplied O25 module with the
+  strict warnings-as-errors check and printed only `propext`,
+  `Classical.choice`, and `Quot.sound`. Its module scan found no `sorry`,
+  `admit`, project `axiom`, `unsafe`, `native_decide`, or resource-limit
+  override. It did not modify or push the clone. The remote result is an
+  independent validation of the pre-merge source, not a replacement for the
+  local canonical build and source-gap audits.
+- Disposition: local canonical proof accepted; Aristotle independently
+  validated the pre-merge source, and no remote source was merged.
 
 ## Record format
 

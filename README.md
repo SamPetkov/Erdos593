@@ -155,6 +155,9 @@ decomposition.
 identification back to the original source-edge type for an embedding with a
 linear selected image; it likewise makes no untagged union, cross-fibre
 identification, finite-cardinality, or trace claim.
+`SequenceLiftBaseApexEquiv` separately identifies one linear canonical base
+fibre with its own canonical-apex image; it makes no cross-fibre
+identification, global union, cardinality, or trace claim.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

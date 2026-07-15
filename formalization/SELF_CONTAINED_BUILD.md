@@ -49,7 +49,10 @@ a selected family over exactly its active base nodes, with finite active
 support for finite selected families. The complementary apex layer identifies
 the unique point of every lifted edge away from its canonical base and proves
 that, inside a linear canonical base fibre, it is private to its edge and
-apex-injective. The support-index layer reindexes this partition by the exact
+apex-injective. Its fibre-local equivalence layer identifies that same fibre
+with its own canonical-apex image, without identifying apexes across fibres
+or asserting a global union, cardinality, or trace theorem. The support-index
+layer reindexes this partition by the exact
 active-base subtype and, for a finite embedded source, supplies a source-edge
 surjection and the corresponding active-index cardinal upper bounds. The
 finite fibre-cardinality layer proves the exact selected-edge and source-index
@@ -83,10 +86,10 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-+ Deterministic regeneration check: passed for 96 source modules, 44 external
-  Mathlib imports, 14,453 physical lines, 12,662 nonblank lines, 587,558 UTF-8
++ Deterministic regeneration check: passed for 97 source modules, 44 external
+  Mathlib imports, 14,510 physical lines, 12,708 nonblank lines, 589,664 UTF-8
   bytes, and SHA-256
-  `10881e718c04b02d88caf8a43b20ac785ec3587c5020085317aed76d4e6f0509`.
+  `00ad146f1108f57d52a05a5f3d4f102b69c1dd855e001279b8a790c07c38e015`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
@@ -107,6 +110,7 @@ module checks recorded below.
   `Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterEquiv` (1,230 Lake
   jobs), and
   `Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv` (1,231
+  Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseApexEquiv` (1,227
   Lake jobs),
   passed under the pinned Lean/mathlib `v4.32.0` toolchain.
 - Source audit: the complete imported closure, including
@@ -117,7 +121,7 @@ module checks recorded below.
   `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberCardinality`,
   `SequenceLiftBaseFiberTraceSum`, `SequenceLiftBaseFiberEquiv`,
   `SequenceLiftTaggedBaseLetterEquiv`,
-  `SequenceLiftTaggedBaseLetterSourceEquiv`, and
+  `SequenceLiftTaggedBaseLetterSourceEquiv`, `SequenceLiftBaseApexEquiv`, and
   the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
@@ -245,6 +249,14 @@ The embedded-source O25 tagged equivalence can also be audited directly:
 import Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv
 
 #print axioms Erdos593.SequenceLift.edgeIndexEquiv_sigmaBaseLetterImage_of_linear
+```
+
+The local O26 apex-image equivalence can also be audited directly:
+
+```lean
+import Erdos593.TripleSystem.SequenceLiftBaseApexEquiv
+
+#print axioms Erdos593.SequenceLift.baseFiberEquivBaseApexImage_of_linear
 ```
 
 In addition to this declaration-level check, scan every source in the local

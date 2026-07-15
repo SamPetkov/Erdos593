@@ -14435,9 +14435,66 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseApexEquiv
+Source: Erdos593/TripleSystem/SequenceLiftBaseApexEquiv.lean
+Normalized SHA-256: fcc5e8b4994e24d9d2312704892bb7a53a83cbcb36f5ec86ad127dfa644744e5
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseApexEquiv
+
+/-!
+# Fibre-local apex equivalence for sequence lifts
+
+Under a linear restriction, the canonical apex map gives an explicit
+equivalence from one selected base fibre to its own apex image. This remains
+fibre-local: it makes no identification between images from different base
+fibres and asserts no global union, cardinality, or trace decomposition.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- Under a linear restriction, the canonical apex map identifies one
+canonical base fibre with its own apex image. -/
+noncomputable def baseFiberEquivBaseApexImage_of_linear
+    {S : Set (Edge G)} (q : Node G)
+    (hlinear : ((system G).edgeRestriction S).Linear) :
+    Equiv (baseFiber S q) (baseApex '' baseFiber S q) :=
+  Equiv.ofBijective
+    (fun e =>
+      Subtype.mk (baseApex e.val)
+        (by
+          exact Exists.intro e.val (And.intro e.property rfl)))
+    (by
+      exact And.intro
+        (by
+          intro e1 e2 h
+          apply Subtype.ext
+          exact baseApex_injOn_baseFiber_of_linear q hlinear e1.property e2.property
+            (congrArg Subtype.val h))
+        (by
+          intro y
+          apply Exists.elim y.property
+          intro e he
+          exact Exists.intro (Subtype.mk e he.left) (Subtype.ext he.right)))
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseApexEquiv
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseApexEquiv
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: dd2ab485e2b7aacc1e321d644e82c3da8793f4c9eaa372a1d6484c9762e626b7
+Normalized SHA-256: ba6d0a482978045512a2ff67e0e0bfa26c326a28c090f04879e40190bf071721
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
