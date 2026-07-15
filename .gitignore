@@ -17,3 +17,6 @@
 *~
 *.swp
 *.swo
+
+# Lean/Lake build artifacts
+formalization/.lake/

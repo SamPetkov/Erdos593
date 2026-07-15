@@ -21,6 +21,9 @@ The author reports developing the proof independently, without consulting Eric L
 - `SOURCE_LEDGER.md` — source and proof-dependency record.
 - `REVISION_NOTES.md` — record of the final editorial revision.
 - `MANIFEST.txt` and `SHA256SUMS` — package inventory and checksums.
+- `formalization/` — gap-free Lean 4 scaffold for the finite structural
+  kernel, with an explicit obligation map and Aristotle provenance log. The
+  final classification theorem is not yet fully formalized.
 
 ## Build
 
@@ -31,6 +34,13 @@ A TeX Live installation containing LuaLaTeX, Biber, `amsart`, `newtx`, `biblatex
 ```
 
 The build fixes the PDF creation and modification timestamp at 11 July 2026, 12:00 UTC through `SOURCE_DATE_EPOCH`.
+
+The Lean scaffold is built separately:
+
+```bash
+cd formalization
+lake build
+```
 
 ## AI-use disclosure
 
