@@ -1,4 +1,5 @@
 import Erdos593.TripleSystem.Constructive
+import Erdos593.TripleSystem.ObligatoryAtoms
 import Erdos593.TripleSystem.ObligatoryBipartiteReduction
 import Erdos593.TripleSystem.ObligatoryDisjointUnion
 import Erdos593.TripleSystem.ObligatoryOnePointAmalgamation
@@ -169,6 +170,19 @@ theorem Constructible.isObligatory_of_completeBipartiteNN
   apply hF.isObligatory_of_expansions
   intro X _ G hG
   exact privateVertexExpansion_isObligatory_of_completeBipartiteNN hG hAtoms
+
+/-- For the constructive closure theorem, the zero balanced atom is already
+settled; it remains only to prove the positive balanced atoms obligatory. -/
+theorem Constructible.isObligatory_of_positive_completeBipartiteNN
+    (hAtoms : ∀ n : Nat, 0 < n →
+      (privateVertexExpansion (completeBipartiteNN.{w} n)).IsObligatory)
+    {V E : Type w} {F : TripleSystem V E} (hF : Constructible F) :
+    F.IsObligatory := by
+  apply hF.isObligatory_of_completeBipartiteNN
+  intro n
+  rcases Nat.eq_zero_or_pos n with rfl | hn
+  · exact completeBipartiteExpansionAtom_zero_isObligatory
+  · exact hAtoms n hn
 
 end TripleSystem
 
