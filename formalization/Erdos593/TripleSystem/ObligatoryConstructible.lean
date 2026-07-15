@@ -108,6 +108,18 @@ theorem edgeless_isObligatory (V : Type w) [Fintype V] :
   · intro e
     exact Empty.elim e.down
 
+/-- A finite triple system with no edge indices is obligatory. -/
+theorem isObligatory_of_isEmptyEdgeIndices
+    {V E : Type w} [Fintype V] [IsEmpty E]
+    (F : TripleSystem V E) : F.IsObligatory := by
+  apply (edgeless_isObligatory V).ofIso
+  refine
+    { vertexEquiv := Equiv.refl V
+      edgeEquiv := Equiv.equivOfIsEmpty _ _
+      map_inc_iff := ?_ }
+  intro x e
+  exact isEmptyElim e
+
 /-- If every private-vertex expansion of a finite two-colourable graph is
 obligatory, then every member of the finite constructive class is obligatory.
 -/
