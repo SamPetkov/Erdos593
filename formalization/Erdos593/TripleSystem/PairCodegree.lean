@@ -70,6 +70,14 @@ def swap {z : W} (p : ThirdVertexWitness H x y z) :
   edge := p.edge
   edgeSet_eq := p.edgeSet_eq.trans (Set.insert_comm x y {z})
 
+/-- Reinterpret a completion witness with one endpoint and its completion
+vertex interchanged. -/
+def rotate {z : W} (p : ThirdVertexWitness H x y z) :
+    ThirdVertexWitness H x z y where
+  edge := p.edge
+  edgeSet_eq := p.edgeSet_eq.trans
+    (congrArg (Set.insert x) (Set.pair_comm y z))
+
 theorem left_ne_right {z : W} (p : ThirdVertexWitness H x y z) : x ≠ y :=
   (pairwise_ne_of_edgeSet_eq_triple p.edgeSet_eq).1
 
@@ -106,11 +114,28 @@ def thirdWitness (p : PairCodegreeWitness H x y t) (k : Fin t) :
   edge := p.edge k
   edgeSet_eq := p.edgeSet_eq k
 
+/-- Assemble a pair-codegree witness from distinct third vertices and one
+completion witness for each of them. -/
+def ofThirdVertexWitnesses (third : Fin t ↪ W)
+    (witness : ∀ k, ThirdVertexWitness H x y (third k)) :
+    PairCodegreeWitness H x y t where
+  third := third
+  edge := fun k => (witness k).edge
+  edgeSet_eq := fun k => (witness k).edgeSet_eq
+
 /-- Reorder the two distinguished endpoints of every completion witness. -/
 def swap (p : PairCodegreeWitness H x y t) : PairCodegreeWitness H y x t where
   third := p.third
   edge := p.edge
   edgeSet_eq k := (p.edgeSet_eq k).trans (Set.insert_comm x y {p.third k})
+
+/-- Restrict a codegree witness to any smaller finite family of third
+vertices. -/
+def restrict (p : PairCodegreeWitness H x y t) {s : Nat} (hst : s ≤ t) :
+    PairCodegreeWitness H x y s where
+  third := Function.Embedding.trans (Fin.castLEEmb hst) p.third
+  edge := fun k => p.edge (Fin.castLE hst k)
+  edgeSet_eq := fun k => p.edgeSet_eq (Fin.castLE hst k)
 
 theorem left_ne_right (p : PairCodegreeWitness H x y t) (ht : 0 < t) : x ≠ y :=
   ThirdVertexWitness.left_ne_right (thirdWitness p ⟨0, ht⟩)
@@ -124,6 +149,15 @@ theorem third_ne_right (p : PairCodegreeWitness H x y t) (k : Fin t) :
   ThirdVertexWitness.third_ne_right (thirdWitness p k)
 
 end PairCodegreeWitness
+
+/-- Pair-codegree lower bounds are monotone in the requested number of
+distinct completions. -/
+theorem hasPairCodegreeAtLeast_mono {W : Type u} {D : Type v}
+    {H : TripleSystem W D} {x y : W} {s t : Nat}
+    (h : HasPairCodegreeAtLeast H x y t) (hst : s ≤ t) :
+    HasPairCodegreeAtLeast H x y s := by
+  rcases h with ⟨p⟩
+  exact ⟨p.restrict hst⟩
 
 /-- Pair-codegree is symmetric in its two distinguished endpoints. -/
 theorem hasPairCodegreeAtLeast_comm {W : Type u} {D : Type v}

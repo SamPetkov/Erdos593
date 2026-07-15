@@ -31,6 +31,13 @@ theorem highPairGraph_adj {W : Type u} {D : Type v}
     (highPairGraph H t).Adj x y ↔ HighPair H t x y :=
   Iff.rfl
 
+/-- High-pair thresholds are monotone: a pair high at a larger threshold is
+also high at every smaller threshold. -/
+theorem highPair_mono {W : Type u} {D : Type v}
+    {H : TripleSystem W D} {x y : W} {s t : Nat}
+    (h : HighPair H t x y) (hst : s ≤ t) : HighPair H s x y :=
+  ⟨h.1, hasPairCodegreeAtLeast_mono h.2 hst⟩
+
 /-- A positive-size codegree witness determines a high pair. -/
 theorem highPair_of_witness {W : Type u} {D : Type v}
     {H : TripleSystem W D} {x y : W} {t : Nat}

@@ -143,6 +143,38 @@ theorem commonNeighborSet_toFinset_card_lt_of_no_completeBipartiteNNCopy
       (finIncl.trans (cardEquiv.toEmbedding.trans finsetToSet))
   exact hno.false right
 
+/-- A non-induced `K_{q,q}` copy supplies injected finite left and right
+sides, with all cross adjacencies and no cross-side collisions. -/
+theorem exists_finEmbeddings_of_completeBipartiteNNCopy {q : Nat}
+    (f : _root_.SimpleGraph.Copy (completeBipartiteNN.{u} q) G) :
+    ∃ left right : Fin q ↪ V,
+      (∀ i j, left i ≠ right j) ∧ ∀ i j, G.Adj (left i) (right j) := by
+  let left : Fin q ↪ V :=
+    { toFun := fun i => f (Sum.inl (ULift.up i))
+      inj' := by
+        intro i j hij
+        have h := f.injective hij
+        simpa using h }
+  let right : Fin q ↪ V :=
+    { toFun := fun j => f (Sum.inr (ULift.up j))
+      inj' := by
+        intro i j hij
+        have h := f.injective hij
+        simpa using h }
+  refine ⟨left, right, ?_, ?_⟩
+  · intro i j h
+    have hsrc : (completeBipartiteNN.{u} q).Adj
+        (Sum.inl (ULift.up i)) (Sum.inr (ULift.up j)) := by
+      simp [completeBipartiteNN]
+    have htgt : G.Adj (left i) (right j) := by
+      simpa [left, right] using f.toHom.map_adj hsrc
+    exact G.loopless.irrefl (left i) (h ▸ htgt)
+  · intro i j
+    have hsrc : (completeBipartiteNN.{u} q).Adj
+        (Sum.inl (ULift.up i)) (Sum.inr (ULift.up j)) := by
+      simp [completeBipartiteNN]
+    simpa [left, right] using f.toHom.map_adj hsrc
+
 end SimpleGraph
 
 end Erdos593

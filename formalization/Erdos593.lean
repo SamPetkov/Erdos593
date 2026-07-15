@@ -13,6 +13,7 @@ import Erdos593.Graph.MinimalBadCore
 import Erdos593.Graph.NonInducedFactor
 import Erdos593.Graph.Parity
 import Erdos593.Graph.RainbowBipartite
+import Erdos593.Graph.RainbowPositiveSize
 import Erdos593.Graph.RootedTree
 import Erdos593.TripleSystem.Embedding
 import Erdos593.TripleSystem.Expansion
@@ -38,6 +39,7 @@ import Erdos593.TripleSystem.ExpansionIntrinsic
 import Erdos593.TripleSystem.ForwardExpansion
 import Erdos593.TripleSystem.HighPairGraph
 import Erdos593.TripleSystem.HighPairAtomBridge
+import Erdos593.TripleSystem.HighPairEdgeColoring
 import Erdos593.TripleSystem.HighPairMatrix
 import Erdos593.TripleSystem.HighPairObligatory
 import Erdos593.TripleSystem.HighPairSelection
@@ -56,6 +58,15 @@ import Erdos593.TripleSystem.ObligatoryConstructible
 import Erdos593.TripleSystem.ObligatoryOnePointAmalgamation
 import Erdos593.TripleSystem.PairCodegree
 import Erdos593.TripleSystem.RainbowExpansionEmbedding
+import Erdos593.TripleSystem.RainbowLocalBound
+import Erdos593.TripleSystem.PredicateColoring
+import Erdos593.TripleSystem.MinimalBadCore
+import Erdos593.TripleSystem.LowCodegreeClosure
+import Erdos593.TripleSystem.LowCodegreeLayering
+import Erdos593.TripleSystem.SameRankColoring
+import Erdos593.TripleSystem.LowCrossingAtomBridge
+import Erdos593.TripleSystem.LowCrossingColoring
+import Erdos593.TripleSystem.LowEdgeRankClassification
 import Erdos593.TripleSystem.SequenceLiftChromatic
 import Erdos593.TripleSystem.SingleEdgePiece
 import Erdos593.TripleSystem.SingleEdgePieceConstructible
