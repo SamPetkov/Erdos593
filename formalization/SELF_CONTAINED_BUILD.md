@@ -91,10 +91,10 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 99 source modules, 44 external
-  Mathlib imports, 14,599 physical lines, 12,775 nonblank lines, 593,360 UTF-8
+- Deterministic regeneration check: passed for 100 source modules, 44 external
+  Mathlib imports, 14,654 physical lines, 12,818 nonblank lines, 595,663 UTF-8
   bytes, and SHA-256
-  `34717540a7a9e9f0544035ee1245adf392dd4e2d038f75b2f942d719d12c7fe4`.
+  `c346a32719d085cad0d09251272dddaada6bae241a33940f531e30e461c06bed`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
