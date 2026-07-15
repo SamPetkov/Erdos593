@@ -114,6 +114,10 @@ statement, trace decomposition, or atom claim.
 apex-image equivalence through an embedding back to the source-edge type
 under a linear image; it introduces no untagged union, cross-fibre
 identification, cardinality statement, trace decomposition, or atom claim.
+`SequenceLiftBaseFiberIndexApexEquiv` keeps a single chosen base node fixed
+and identifies only that source-indexed base fibre with its own
+canonical-apex image; it introduces no cross-fibre identification, global
+union, cardinality statement, trace decomposition, or atom claim.
 Their dependency order is
 recorded in
 `FORMALIZATION_MAP.md`.
@@ -136,6 +140,7 @@ public obligatory endpoints, sequence-trace rigidity lemmas, and the
 `SequenceLiftBaseFiberTraceSum` / `SequenceLiftBaseFiberEquiv` /
 `SequenceLiftTaggedBaseLetterEquiv` /
 `SequenceLiftTaggedBaseLetterSourceEquiv` / `SequenceLiftBaseApexEquiv` /
+`SequenceLiftBaseFiberIndexApexEquiv` /
 `SequenceLiftTaggedBaseApexEquiv` /
 `SequenceLiftTaggedBaseApexSourceEquiv`
 canonical trace-key and fibre modules on

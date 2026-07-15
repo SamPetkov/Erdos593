@@ -45,6 +45,7 @@ jobs:
           lake build Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterEquiv
           lake build Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv
           lake build Erdos593.TripleSystem.SequenceLiftBaseApexEquiv
+          lake build Erdos593.TripleSystem.SequenceLiftBaseFiberIndexApexEquiv
           lake build Erdos593.TripleSystem.SequenceLiftTaggedBaseApexEquiv
           lake build Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
       - name: Strict wrapper source checks
@@ -67,5 +68,6 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTaggedBaseLetterEquiv.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTaggedBaseLetterSourceEquiv.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseApexEquiv.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberIndexApexEquiv.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTaggedBaseApexEquiv.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTaggedBaseApexSourceEquiv.lean

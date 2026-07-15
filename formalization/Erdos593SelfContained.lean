@@ -14492,6 +14492,61 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseApexEquiv
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberIndexApexEquiv
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberIndexApexEquiv.lean
+Normalized SHA-256: 30063490cf73c8f2b4b08115990bb1676760d80ce7fa1eb8fb6c36d6a8e0f282
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberIndexApexEquiv
+
+/-!
+# Source-indexed apex equivalence for sequence lifts
+
+For an embedded sequence lift with linear edge image, the source-edge
+indices in one canonical base fibre are equivalent to the canonical-apex
+image of that fibre.
+-/
+
+namespace Erdos593
+
+universe u v w
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- The exact source-edge index subtype at a chosen base node is equivalent
+to the corresponding canonical base fibre of the embedded edge image. -/
+noncomputable def baseFiberIndexEquivBaseFiber
+    {W : Type v} {E : Type w} {F : TripleSystem W E}
+    (f : F.Embedding (system G)) (q : Node G) :
+    Equiv (baseFiberIndex f q) (baseFiber f.edgeImage q) :=
+  (Equiv.ofInjective (fun i : baseFiberIndex f q => f.edge i.1) (by
+    intro i j hij
+    apply Subtype.ext
+    exact f.edge_injective hij)).trans
+    (Equiv.setCongr (baseFiber_edgeImage_eq_range f q).symm)
+
+/-- Under linearity of the embedded edge image, the source-edge indices in
+one canonical base fibre are equivalent to the canonical-apex image of that
+fibre. -/
+noncomputable def baseFiberIndexEquivBaseApexImage_of_linear
+    {W : Type v} {E : Type w} {F : TripleSystem W E}
+    (f : F.Embedding (system G)) (q : Node G)
+    (hlinear : ((system G).edgeRestriction f.edgeImage).Linear) :
+    Equiv (baseFiberIndex f q) (baseApex '' baseFiber f.edgeImage q) :=
+  (baseFiberIndexEquivBaseFiber f q).trans
+    (baseFiberEquivBaseApexImage_of_linear q hlinear)
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberIndexApexEquiv
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberIndexApexEquiv
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexEquiv
 Source: Erdos593/TripleSystem/SequenceLiftTaggedBaseApexEquiv.lean
 Normalized SHA-256: 2f5f5a9d1ce5b93779e386a2411858d5dd65adb182ce1e83558dc9e98451de32
@@ -14583,7 +14638,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: a7d580c516a409a37fe4c23e03e66489449318fb169a92494448035c3a1a9705
+Normalized SHA-256: 455bb8f0dd6eea9ed258c376978b70ed9acd406f427fb63b9070fd7763c7b5ba
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
