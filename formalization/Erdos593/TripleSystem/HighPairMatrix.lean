@@ -144,6 +144,62 @@ theorem exists_witnessedBipartiteMatrix_of_quadratic_highPair
   · intro ij
     exact Classical.choice (hhigh ij.1 ij.2).2
 
+/-- The quadratic Hall threshold can select the apex of every grid cell
+globally injectively.  This strengthens the local `2`-boundedness supplied by
+`exists_witnessedBipartiteMatrix_of_quadratic_highPair`, and is useful when a
+single high-pair grid is itself intended to be a rainbow submatrix. -/
+theorem exists_injectiveWitnessedBipartiteMatrix_of_quadratic_highPair
+    {W : Type u} {D : Type v} [DecidableEq W]
+    {H : TripleSystem W D} {n : Nat}
+    (left right : Fin n ↪ W)
+    (hhigh : ∀ i j,
+      HighPair H (2 * n + n * n) (left i) (right j)) :
+    ∃ M : WitnessedBipartiteMatrix H n 2,
+      M.left = left ∧ M.right = right ∧
+        Function.Injective (fun ij : Fin n × Fin n => M.apex ij.1 ij.2) := by
+  classical
+  let core : Finset W := Finset.univ.map left ∪ Finset.univ.map right
+  have hcap : core.card + Fintype.card (Fin n × Fin n) ≤ 2 * n + n * n := by
+    have hcore : core.card ≤ 2 * n := by
+      calc
+        core.card ≤ (Finset.univ.map left).card + (Finset.univ.map right).card :=
+          Finset.card_union_le _ _
+        _ = 2 * n := by simp [two_mul]
+    simpa using Nat.add_le_add_right hcore (n * n)
+  let completion : ∀ ij : Fin n × Fin n,
+      PairCodegreeWitness H (left ij.1) (right ij.2) (2 * n + n * n) :=
+    fun ij => Classical.choice (hhigh ij.1 ij.2).2
+  obtain ⟨choose, hchoose_inj, hchoose_avoid⟩ :=
+    exists_injective_choice_of_fintype_card_add_le
+      (ι := Fin n × Fin n) (W := W) core
+      (fun ij => (completion ij).third) hcap
+  let apex : Fin n → Fin n → W :=
+    fun i j => (completion (i, j)).third (choose (i, j))
+  have hapex_inj : Function.Injective
+      (fun ij : Fin n × Fin n => apex ij.1 ij.2) := by
+    intro ij kl h
+    apply hchoose_inj
+    simpa [apex] using h
+  have hapex_avoid : ∀ i j, apex i j ∉ core := by
+    intro i j
+    simpa [apex] using hchoose_avoid (i, j)
+  refine ⟨{
+    left := left
+    right := right
+    apex := apex
+    edge := fun i j => (completion (i, j)).edge (choose (i, j))
+    core_disjoint := fun i j => (hhigh i j).1
+    apex_ne_left := fun i j k h =>
+      hapex_avoid i j (h.symm ▸ Finset.mem_union_left _
+        (Finset.mem_map.mpr ⟨k, Finset.mem_univ _, rfl⟩))
+    apex_ne_right := fun i j k h =>
+      hapex_avoid i j (h.symm ▸ Finset.mem_union_right _
+        (Finset.mem_map.mpr ⟨k, Finset.mem_univ _, rfl⟩))
+    edgeSet_eq := fun i j => by
+      simpa [apex] using (completion (i, j)).edgeSet_eq (choose (i, j))
+    locallyBounded := locallyBounded_two_of_injective apex hapex_inj
+  }, rfl, rfl, hapex_inj⟩
+
 end TripleSystem
 
 end Erdos593

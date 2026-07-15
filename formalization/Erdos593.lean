@@ -37,6 +37,7 @@ import Erdos593.TripleSystem.EdgeRestrictionReconstruction
 import Erdos593.TripleSystem.ExpansionIntrinsic
 import Erdos593.TripleSystem.ForwardExpansion
 import Erdos593.TripleSystem.HighPairGraph
+import Erdos593.TripleSystem.HighPairAtomBridge
 import Erdos593.TripleSystem.HighPairMatrix
 import Erdos593.TripleSystem.HighPairObligatory
 import Erdos593.TripleSystem.HighPairSelection
