@@ -55,9 +55,12 @@ The author reports developing the proof independently, without consulting Eric L
   with a finite-source cardinal corollary. A support layer additionally shows
   that canonical base fibres are pairwise disjoint and recover any selected
   edge family when indexed by its active base nodes; finite selected families
-  have finite active support. This is set-theoretic only: it supplies neither
-  a fibre-cardinality sum nor a global finite-trace decomposition; a dependency
-  map records its place.
+  have finite active support. A complementary apex layer gives every lifted
+  edge a unique point away from its canonical base and shows that, within a
+  linear canonical-base fibre, this apex is private to its own edge and hence
+  apex-injective. These are factor-local and set-theoretic only: they supply
+  neither a fibre-cardinality sum nor a global finite-trace decomposition; a
+  dependency map records their place.
   Reconstruction across isolated vertices,
   the remaining finite-trace decomposition, and the infinitary avoidance
   direction remain open.
@@ -83,9 +86,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 89 source modules. The
-generated one-file checkpoint contains 13,781 physical lines, 43 external
-Mathlib imports, and 435 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 90 source modules. The
+generated one-file checkpoint contains 13,940 physical lines, 43 external
+Mathlib imports, and 444 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -123,8 +126,11 @@ base-letter injectivity and `encard` transfer within a selected canonical base
 node, together with an exact source-edge indexing statement for embedded
 fibres. The support API proves only that these fibres form a disjoint
 set-theoretic partition over their active base nodes, with finite active
-support for a finite selected family. It does not yet supply a cardinality
-sum or a global finite-trace decomposition.
+support for a finite selected family. The complementary apex API identifies
+the unique non-base point of every lift edge; inside a linear canonical base
+fibre, it is private to that edge and yields an apex-injective map. These
+factor-local interfaces do not yet supply a cardinality sum or a global
+finite-trace decomposition.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

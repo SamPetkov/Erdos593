@@ -75,6 +75,7 @@ adversarial audit exposes a false or over-strong formulation.
 | O16 | `SequenceLift.baseFiber`, `SequenceLift.baseLetter_injOn_baseFiber_of_linear`, `SequenceLift.baseLetter_image_encard_eq_on_baseFiber_of_linear`, `SequenceLift.baseFiber_edgeImage_eq_range` | each selected canonical base fibre is a local subfamily; within a linear restriction its base letter is injective and preserves `Set.encard`, with finite-`ncard` corollaries; an embedded source fibre is indexed exactly by source edges mapping to that base. This is fibre-local, not a global finite-trace decomposition |
 | O17 | `SequenceLift.baseFiberIndex`, `SequenceLift.encard_baseFiber_edgeImage_eq_baseFiberIndex`, `SequenceLift.encard_baseLetter_image_eq_baseFiberIndex_of_linear`, `SequenceLift.finiteLinear_baseLetter_image_ncard_eq_baseFiberIndex_card` | the exact source-edge subtype at one selected canonical base indexes the embedded fibre; its full `ENat.card`, and for a finite source its explicit finite cardinal, agrees with the fibre and with its linear base-letter image. This is a local indexing interface, not a global fibre sum or trace decomposition |
 | O18 | `SequenceLift.activeBaseNodes`, `SequenceLift.pairwiseDisjoint_baseFiber`, `SequenceLift.iUnion_baseFiber_activeBaseNodes`, `SequenceLift.finite_activeBaseNodes_edgeImage` | canonical base fibres are pairwise disjoint and set-theoretically recover a selected family over precisely its active base nodes; a finite selected family, hence a finite embedded source image, has finite active support. This intentionally asserts no fibre-cardinality sum or finite-trace decomposition |
+| O19 | `SequenceLift.IsBaseApex`, `SequenceLift.baseApex`, `SequenceLift.baseApex_inc_iff_eq_of_linear`, `SequenceLift.baseApex_injOn_baseFiber_of_linear` | every lifted edge has exactly one point away from its canonical base node; inside a linear canonical base fibre that apex is private to its own edge and consequently apex-injective. This is factor-local private-vertex geometry, not a global trace decomposition or fibre-cardinality sum |
 
 The representation layer now also contains compiled, gap-free definitions of
 non-induced embeddings, triple-system isomorphisms, isolated-point reduction,
@@ -97,12 +98,16 @@ each displayed `mkEdge` base, its base fibre is exactly one graph pair, and
 every other fibre has at most one point. Its canonical trace key is now also
 injective on each linear edge restriction and preserves extended natural
 cardinality there, with finite and exact-natural-cardinality corollaries for finite
-restrictions. The next local refinements isolate an arbitrary canonical base
-fibre, prove its base-letter injectivity and cardinality transfer under
-linearity, and index that fibre by its exact source-edge subtype; they do not
-yet assemble those fibres into a global trace decomposition. The remaining project work lies in
-reconstruction of a constructible system across isolated vertices, the global
-finite-trace decomposition beyond the local rigidity, grouping, and key steps,
+restrictions. The local refinement layers now isolate arbitrary canonical base
+fibres, prove their base-letter injectivity and cardinality transfer under
+linearity, index each embedded fibre by its exact source-edge subtype, and
+partition a selected family over finite active support. The complementary apex
+layer identifies the unique non-base point of every lifted edge and proves it
+private within a linear canonical base fibre. These interfaces do not yet
+assemble the fibres into a global trace decomposition. The remaining project
+work lies in reconstruction of a constructible system across isolated vertices,
+the global finite-trace decomposition beyond the local rigidity, grouping, and
+key steps,
 and the infinitary avoidance direction; it is not a gap in the verified
 bridge-block reconstruction or one-point closure.
 

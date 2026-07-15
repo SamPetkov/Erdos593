@@ -46,7 +46,10 @@ subtype; it also provides `Nat.card` and, for a finite source, the
 corresponding explicit finite cardinal. The support layer proves separately
 that canonical base fibres are pairwise disjoint and set-theoretically recover
 a selected family over exactly its active base nodes, with finite active
-support for finite selected families.
+support for finite selected families. The complementary apex layer identifies
+the unique point of every lifted edge away from its canonical base and proves
+that, inside a linear canonical base fibre, it is private to its edge and
+apex-injective.
 These are local finite-trace interfaces only: no fibre-cardinality sum or global
 finite-trace decomposition is still missing, alongside reconstruction across
 isolated vertices and the remaining infinitary avoidance direction.
@@ -71,10 +74,10 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 89 source modules, 43 external
-  Mathlib imports, 13,781 physical lines, 12,094 nonblank lines, 559,419 UTF-8
+- Deterministic regeneration check: passed for 90 source modules, 43 external
+  Mathlib imports, 13,940 physical lines, 12,233 nonblank lines, 565,689 UTF-8
   bytes, and SHA-256
-  `40bc79fc961eebffb71b6ee792899e29f3b616f00eff9bb078ce193fd15c2bfa`.
+  `1a3e2e59069cdefb8eee0ffdb3e74e2182d37ab3967bd2697911ccfea0666c3b`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
@@ -86,13 +89,13 @@ module checks recorded below.
   `Erdos593.TripleSystem.SequenceLiftBaseFiber` (1,225 Lake jobs), and
   `Erdos593.TripleSystem.SequenceLiftBaseFiberIndex` (1,226 Lake jobs),
   and `Erdos593.TripleSystem.SequenceLiftBaseFiberPartition` (1,227 Lake
-  jobs),
+  jobs), and `Erdos593.TripleSystem.SequenceLiftBaseApex` (1,226 Lake jobs),
   passed under the pinned Lean/mathlib `v4.32.0` toolchain.
 - Source audit: the complete imported closure, including
   `SequenceLiftBaseNode`, `SequenceLiftBaseNormalForm`, and
   `SequenceLiftBaseLetter`, `SequenceLiftFiniteTrace`, and
   `SequenceLiftBaseFiber`, `SequenceLiftBaseFiberIndex`,
-  `SequenceLiftBaseFiberPartition`, and the generated
+  `SequenceLiftBaseFiberPartition`, `SequenceLiftBaseApex`, and the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
 - Axiom audit: the representative central declarations and the new public
@@ -166,6 +169,13 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.encard_baseLetter_image_eq_baseFiberIndex_of_linear
 #print axioms Erdos593.SequenceLift.baseFiber_edgeImage_ncard_eq_baseFiberIndex_card
 #print axioms Erdos593.SequenceLift.finiteLinear_baseLetter_image_ncard_eq_baseFiberIndex_card
+#print axioms Erdos593.SequenceLift.existsUnique_isBaseApex
+#print axioms Erdos593.SequenceLift.baseApex
+#print axioms Erdos593.SequenceLift.inc_baseApex
+#print axioms Erdos593.SequenceLift.isBaseApex_iff_eq_baseApex
+#print axioms Erdos593.SequenceLift.baseApex_mkEdge
+#print axioms Erdos593.SequenceLift.baseApex_inc_iff_eq_of_linear
+#print axioms Erdos593.SequenceLift.baseApex_injOn_baseFiber_of_linear
 ```
 
 In addition to this declaration-level check, scan every source in the local
