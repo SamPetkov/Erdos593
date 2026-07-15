@@ -78,6 +78,7 @@ import Erdos593.TripleSystem.SequenceLiftBaseNormalForm
 import Erdos593.TripleSystem.SequenceLiftBaseLetter
 import Erdos593.TripleSystem.SequenceLiftFiniteTrace
 import Erdos593.TripleSystem.SequenceLiftBaseFiber
+import Erdos593.TripleSystem.SequenceLiftBaseFiberIndex
 import Erdos593.TripleSystem.SingleEdgePiece
 import Erdos593.TripleSystem.SingleEdgePieceConstructible
 

@@ -35,6 +35,7 @@ jobs:
           lake build Erdos593.TripleSystem.SequenceLiftBaseLetter
           lake build Erdos593.TripleSystem.SequenceLiftFiniteTrace
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiber
+          lake build Erdos593.TripleSystem.SequenceLiftBaseFiberIndex
       - name: Strict wrapper source checks
         run: |
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
@@ -45,3 +46,4 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseLetter.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftFiniteTrace.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiber.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberIndex.lean
