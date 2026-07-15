@@ -1,3 +1,4 @@
+import Erdos593.Graph.BridgeQuotient
 import Erdos593.TripleSystem.BridgeBlocks
 
 /-!
@@ -26,6 +27,20 @@ variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
 /-- A connected component after all Levi bridges have been deleted. -/
 abbrev Component :=
   (Erdos593.SimpleGraph.bridgeFree F.levi).ConnectedComponent
+
+/-- Every bridge-free Levi component containing an edge incident with `x`
+lies in the closed star of the component containing the point-node `x` in the
+bridge quotient.  This is the hypergraph-facing running-intersection kernel. -/
+theorem component_eq_or_leviBridgeQuotient_adj_of_inc
+    {C : Component F} {x : V} {e : E}
+    (heC : Sum.inr e ∈ C.supp) (hxe : F.Inc x e) :
+    C = (Erdos593.SimpleGraph.bridgeFree F.levi).connectedComponentMk
+          (Sum.inl x) ∨
+      (Erdos593.SimpleGraph.bridgeQuotient F.levi).Adj C
+        ((Erdos593.SimpleGraph.bridgeFree F.levi).connectedComponentMk
+          (Sum.inl x)) := by
+  exact Erdos593.SimpleGraph.eq_or_bridgeQuotient_adj_of_adj_mem_supp
+    F.levi (F.levi_adj_point_edge.mpr hxe) heC
 
 /-- The point-nodes lying in a bridge-free Levi component. -/
 abbrev Point (C : Component F) :=

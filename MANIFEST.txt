@@ -17,11 +17,13 @@ formalization/ARISTOTLE_LOG.md
 formalization/Erdos593.lean
 formalization/Erdos593/Graph/Bridge.lean
 formalization/Erdos593/Graph/BridgeFree.lean
+formalization/Erdos593/Graph/BridgeQuotient.lean
 formalization/Erdos593/Graph/Parity.lean
 formalization/Erdos593/Graph/RootedTree.lean
 formalization/Erdos593/TripleSystem/Basic.lean
 formalization/Erdos593/TripleSystem/BridgeBlockContraction.lean
 formalization/Erdos593/TripleSystem/BridgeBlockCycleLift.lean
+formalization/Erdos593/TripleSystem/BridgeBlockExpansion.lean
 formalization/Erdos593/TripleSystem/BridgeBlocks.lean
 formalization/Erdos593/TripleSystem/DisjointUnion.lean
 formalization/Erdos593/TripleSystem/DisjointUnionForward.lean

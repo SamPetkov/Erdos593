@@ -16,4 +16,4 @@
 11. Narrowed the ethics statement to proof development, adversarial checking, and analysis of Li's arguments.
 12. Made the Erdős Problem 593 identification explicit in the title and opening sentence of the abstract, introduced fifteen descriptive subsections, and moved the ethics and AI-assistance statement before the references.
 13. Licensed original repository material under CC BY 4.0, with a separate scope and attribution notice and updated citation metadata.
-14. Added a deterministic 2,223-line one-file Lean checkpoint, its generator and build record, and verified both the modular project and the combined file under the pinned Lean/mathlib 4.32 toolchain.
+14. Added a deterministic 2,898-line one-file Lean checkpoint, its generator and build record, and verified both the modular project and the combined file under the pinned Lean/mathlib 4.32 toolchain.

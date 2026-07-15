@@ -350,6 +350,271 @@ D494CE502DD7429B10D8B34B0F6BE65F898FE0D4F2DE1BEE267CDBC014AD9124  lake-manifest.
 FE7093F688E7A2953DA5465F7E1C22DAC42BE287252EA82F1E9B8D16C9F933D7  TASK.md
 ```
 
+## DU1--DU4: intrinsic preservation under disjoint union
+
+- Submitted (UTC): 2026-07-15 05:42.
+- Aristotle CLI: `aristotlelib 2.1.0`.
+- Aristotle project: `8397c771-3a1f-48d3-8cd7-08710ac675e9`.
+- Aristotle task: `f03b9b1d-4f9b-427a-b83b-ce45d9bda353`.
+- Prompt: `Follow TASK.md exactly. Prove all four marked disjoint-union
+  preservation declarations directly, and do not change their statements or
+  surrounding API.`
+- Exact scope: `disjointUnionLeviIso`,
+  `disjointUnion_bridgeAtEveryEdge`, `disjointUnion_evenBergeCycles`, and
+  `disjointUnion_intrinsic`, with their fixed public statements in
+  `Erdos593/TripleSystem/DisjointUnionForward.lean`.
+- Submitted directory: an eleven-file sanitized Lean/mathlib `v4.32.0` source
+  staging directory outside the Git worktree; build caches were excluded.
+- Upload size: 19,916 bytes. Deterministic sorted-tree SHA-256:
+  `C7D5317FEAFF86DECF2E366F0A5B39B1502D5C5B9303EAEA050706FC82E6AC82`.
+- Sensitive-pattern scan: clear. No manuscript, personal metadata,
+  credentials, Git history, absolute paths, or local build products were
+  submitted.
+- Pre-submission validation: the target built under canonical Lean/mathlib
+  `v4.32.0`; its only diagnostics were the four expected marked `sorry`
+  placeholders.
+- Remote status at the 2026-07-15 06:05 UTC handoff: `IN_PROGRESS`. The task is
+  retained only as an independent comparison because the exact obligations
+  were completed locally while it ran.
+- Local fallback: the canonical reassociation isomorphism identifies the Levi
+  graph with a graph disjoint sum; reachability and bridge transfer are proved
+  summandwise; a cycle is induced on its unique summand and mapped back with
+  length and `IsCycle` preserved. The final theorem combines those results with
+  `disjointUnion_linear`.
+- Canonical-pinned verification: `lake build
+  Erdos593.TripleSystem.DisjointUnionForward` succeeded without warnings (1193
+  jobs). The source gap and secret scans and `git diff --check` were clear.
+  `#print axioms` on all four public declarations reported exactly `propext`,
+  `Classical.choice`, and `Quot.sound`.
+- Accepted canonical file SHA-256:
+  `332FC9A6691E955F32A8DBC3C0EFE029492C9F526A5254B6330BE6DC52226945`.
+- Disposition: accepted from the independently audited local fallback; the
+  still-running Aristotle result may only replace it after an unchanged 4.32
+  build and API/diff audit.
+
+Submitted SHA-256 values:
+
+```text
+2D2576A0B6C7C478F87C90AADDB48E04197A757FFE3232F3812B3E4D46014E2A  Erdos593/Graph/Bridge.lean
+69F255A9B613D90E7173F15B1499875AB374653FBA971265E47EE9E0318AED11  Erdos593/TripleSystem/Basic.lean
+7D75BAB9B19C11F1ED4E0678AD42569A17C0521679D3C981A8A6F3E52C2FE62A  Erdos593/TripleSystem/DisjointUnion.lean
+F16F73B6930E28C127DA0A12C2B7AA5B5EB3B16EAC956602FA790FD522338C59  Erdos593/TripleSystem/DisjointUnionForward.lean
+3D57CCC88A3AF6A696BFA59CC77B5B28FCC5046A867730D912B2F7A947CF7285  Erdos593/TripleSystem/Embedding.lean
+764CF4D904AA0F59607E4D5BFE1EAA3710240051BE5446D6E5F6776B54C29356  Erdos593/TripleSystem/Intrinsic.lean
+A666B40F90C05232F5CE5E80148ADFBAF3583E70157254CFD0E198CEE3E1DD7B  Erdos593/TripleSystem/Levi.lean
+331CC56C040B395D5DD5C57988C96B90B2F9AE688687FDBD096C9AA9A5CEF416  lakefile.toml
+D494CE502DD7429B10D8B34B0F6BE65F898FE0D4F2DE1BEE267CDBC014AD9124  lake-manifest.json
+2773C517AA90B66EA8A2C52BDDDDF84393157797F8341BE0DF45294FFF7FD32E  lean-toolchain
+B03C65685435E1C152F880F6404A8A52E6888766CE79AA994D9F7F7893F56DAE  TASK.md
+```
+
+## DU3S: isolated cycle-length transfer for a graph disjoint sum
+
+- Submitted (UTC): 2026-07-15 05:59.
+- Aristotle project: `eb5ce114-54a4-4951-90bf-191272c55292`.
+- Aristotle task: `ce8d085c-7d50-411b-8423-f62ef07d8e04`.
+- Prompt: `Follow TASK.md exactly. Prove the single generic cycle-length
+  divisibility theorem for graph disjoint sums directly.`
+- Scope: the exact generic theorem `cycle_length_dvd_sum` in `CycleSum.lean`:
+  if every cycle length in each factor is divisible by `n`, then every cycle
+  length in their graph disjoint sum is divisible by `n`.
+- Submitted directory: five sanitized source/configuration files outside the
+  Git worktree, 4,613 bytes. Deterministic sorted-tree SHA-256:
+  `213790BC5F839EAE7C83DBA08D2AEBDB9C0293141206EA149F6A6DFD15F69A65`.
+- Pre-submission canonical check: `lake env lean CycleSum.lean` succeeded with
+  exactly the single marked placeholder warning; the sensitive-pattern scan
+  was clear.
+- Remote status at the 2026-07-15 06:05 UTC handoff: `IN_PROGRESS`.
+- Local result: the helper obligation was independently discharged inside the
+  accepted canonical DU3 proof before the split task returned.
+- Disposition: independent comparison only; no returned code has been merged.
+
+Submitted SHA-256 values:
+
+```text
+66C3C892DD18844E1C6777EDB12762C6213A3BAE3FC95AED8AD651172CC6849F  CycleSum.lean
+331CC56C040B395D5DD5C57988C96B90B2F9AE688687FDBD096C9AA9A5CEF416  lakefile.toml
+D494CE502DD7429B10D8B34B0F6BE65F898FE0D4F2DE1BEE267CDBC014AD9124  lake-manifest.json
+2773C517AA90B66EA8A2C52BDDDDF84393157797F8341BE0DF45294FFF7FD32E  lean-toolchain
+36EA0F1079E4A3C88838BEEA56A5CF4D6D763DF934A230B97C85816CA5801007  TASK.md
+```
+
+## R5/R6: private points and active bridge-block expansion data
+
+- Submitted (UTC): 2026-07-15 05:44:16.
+- Aristotle CLI: `aristotlelib 2.1.0`.
+- Aristotle project: `1ea7c247-a8f6-4ddb-813b-cddfe4cc4f06`.
+- Aristotle task: `dfcd218e-ca86-4829-b0f5-b339676e8eb3`.
+- Prompt: `Follow TASK.md exactly. Prove all six fixed reverse bridge-block
+  expansion declarations directly; preserve every statement and the public
+  API.`
+- Scope: prove exactly the six marked declarations
+  `contractibleEdge_existsUnique_privatePoint`, `privatePoint_isBridge`,
+  `privatePoint_not_mem_component`, `privatePoint_injective`,
+  `inc_iff_bridgeFree_or_privatePoint`, and
+  `activeComponent_privateVertexExpansionData` in
+  `Erdos593/TripleSystem/BridgeBlockExpansion.lean`.
+- Submitted directory: a fresh sanitized Lean/mathlib `v4.32.0` source staging
+  directory outside the Git worktree. Upload manifest: 25 files, 78,419 bytes.
+- Sensitive-pattern scan: clear. No manuscript, personal metadata,
+  credentials, Git history, build cache, or local path was submitted.
+- Pre-submission validation: all six fixed statements elaborated under the
+  canonical toolchain; the only warnings were their six intentional marked
+  `sorry` terms.
+- Service warning: Aristotle recommends Lean 4.28 and reported that the
+  source-only staging directory had no `.lake` dependency cache. Canonical
+  4.32 compilation remains the acceptance condition.
+- Independent fallback: while the direct task ran, all six declarations were
+  proved locally in dependency order. The proof counts the unique deleted
+  neighbour, recovers its bridge membership, excludes it from the component,
+  applies bridge-edge uniqueness to obtain private-point injectivity, and then
+  packages the exact surviving-core-or-private incidence dichotomy for every
+  hyperedge of an active component.
+- Canonical verification of fallback: `lake build
+  Erdos593.TripleSystem.BridgeBlockExpansion` succeeded (1210 jobs); the full
+  Lean source gap scan and `git diff --check` were clear; all six theorem axiom
+  audits reported exactly `propext`, `Classical.choice`, and `Quot.sound`.
+- Local handoff file SHA-256:
+  `F67AB7A941764AE0B4660707151182779291F107DC0D96FE6E6F1452DA1E928D`.
+- Final packaging repair: the module-private abbreviation `B` was renamed to
+  `expansionCore` to avoid a private-name collision when all source modules are
+  concatenated. No public declaration, theorem statement, or proof changed.
+  The focused module check and the 2,898-line one-file check both passed.
+- Final accepted canonical file SHA-256:
+  `71CC3AFF8A6262D199C09F62B0B52BE5B076379BD728D2ECD388CE3158E298C7`.
+- Remote status at local acceptance: `IN_PROGRESS`. The eventual Aristotle
+  return remains an independent comparison and must undergo the same archive,
+  API, gap, and canonical-build audit before any returned proof is considered.
+- Disposition: the gap-free canonical local proofs are accepted; no remote
+  source has been merged.
+
+Selected staged SHA-256 values:
+
+```text
+35B758C5503F562F1E7E48A1D7C84CABA46381D19834E39BAF8C52F9ADFAE614  Erdos593/TripleSystem/BridgeBlockExpansion.lean
+331CC56C040B395D5DD5C57988C96B90B2F9AE688687FDBD096C9AA9A5CEF416  lakefile.toml
+D494CE502DD7429B10D8B34B0F6BE65F898FE0D4F2DE1BEE267CDBC014AD9124  lake-manifest.json
+2773C517AA90B66EA8A2C52BDDDDF84393157797F8341BE0DF45294FFF7FD32E  lean-toolchain
+F9FE7E4D80BD5211C0A1646022C0E4672B9643FBBB752F44334F439096736E02  TASK.md
+```
+
+## G7: bridge-component quotient is a forest
+
+- Submitted (UTC): 2026-07-15 05:44:16.
+- Aristotle CLI: `aristotlelib 2.1.0`.
+- Aristotle project: `d2fe6b3f-ae95-4930-8001-ac71cdad7b83`.
+- Aristotle task: `b1b6acfc-0003-4d27-87cb-684732220709`.
+- Prompt: `Follow TASK.md exactly. Prove the direct quotient-walk lifting lemma
+  and the quotient-forest theorem without changing their statements or any
+  completed source.`
+- Scope: fill only `reachable_delete_of_bridgeQuotient_walk` and
+  `bridgeQuotient_isAcyclic` in the staged
+  `Erdos593/Graph/BridgeQuotient.lean`. The quotient definition, adjacency
+  characterization, cross-component bridge theorem, and original-edge
+  uniqueness theorem were supplied already proved.
+- Submitted directory: a fresh sanitized Lean/mathlib `v4.32.0` staging
+  directory outside the Git worktree. It contained two Lean source files,
+  `lakefile.toml`, `lake-manifest.json`, `lean-toolchain`, and `TASK.md`.
+- Sensitive-pattern scan: clear. No manuscript, personal metadata,
+  credentials, Git history, or local paths were submitted.
+- Pre-submission validation: the exact target file elaborated under canonical
+  Lean/mathlib `v4.32.0` with only the two intended marked `sorry` terms.
+- Service warning: Aristotle recommends Lean 4.28 and noted that build caches
+  were excluded. Canonical 4.32 acceptance is therefore mandatory.
+- Independent fallback: while the remote task was in progress, both proofs
+  were completed locally. A quotient walk avoiding one quotient edge is lifted
+  component by component to an original walk avoiding the unique bridge over
+  that edge. Consequently every quotient adjacency is a bridge, so the
+  quotient is acyclic.
+- Canonical verification: `lake build Erdos593.Graph.BridgeQuotient` succeeded
+  (1188 jobs), followed by the full `lake build Erdos593` (1222 jobs). Gap and
+  sensitive-pattern scans were clear. `#print axioms` for all five core
+  declarations reported exactly `propext`, `Classical.choice`, and `Quot.sound`.
+- Accepted canonical file SHA-256 after the accompanying G8 helper:
+  `3D4E7BFAB70EF7DCB4ACFA58D65782A5971DF0568FFC437C5264C6DF9BDF9F63`.
+- Remote completion audit (UTC 2026-07-15 06:30): `COMPLETE`.
+- Returned archive: 5,235-byte gzip-compressed tar archive, SHA-256
+  `A4744CB1A2FCAA500BB04370EDA61F0619993DA87E041F6057FAE574B99B0889`.
+  Its eight entries are relative regular files (17,631 uncompressed bytes),
+  with no traversal, links, special files, credentials, or proof gaps.
+- Returned target SHA-256:
+  `E82FFE0F4FF86B0C6CF540DC527812D69FF14267779E065CAB309692B4CCE7C2`.
+  The source/API diff changes exactly the two requested proof bodies; every
+  other submitted source and configuration file is byte-identical.
+- Canonical compatibility audit: every returned Lean source elaborated
+  unchanged under the repository's Lean/mathlib `v4.32.0` dependencies. The
+  returned summary reports exactly `propext`, `Classical.choice`, and
+  `Quot.sound` for the target proofs.
+- Adversarial comparison: Aristotle found the same component-by-component walk
+  lift and bridge contradiction as the accepted local proof. Its variant is not
+  materially stronger or clearer and supplies no additional API.
+- Disposition: independently confirmed and rejected for merge in favour of the
+  already audited canonical local proof.
+
+Selected staged SHA-256 values:
+
+```text
+EFFBB41801DF5802C5D4DC5887BF589DC8E03A48E3F664946E4BCB9184051A5F  Erdos593/Graph/BridgeQuotient.lean
+384F5A5A0FF8DE39362DAA2B1E737D1A5F2C05A4F690FF0BD2190D2760E35B52  Erdos593/Graph/BridgeFree.lean
+D494CE502DD7429B10D8B34B0F6BE65F898FE0D4F2DE1BEE267CDBC014AD9124  lake-manifest.json
+331CC56C040B395D5DD5C57988C96B90B2F9AE688687FDBD096C9AA9A5CEF416  lakefile.toml
+2773C517AA90B66EA8A2C52BDDDDF84393157797F8341BE0DF45294FFF7FD32E  lean-toolchain
+ED4C10E6F9F69C07B75A2FB59DF201C5BDDFE2A0D5E56CD8E2D581A28E4F1C6B  TASK.md
+```
+
+## G8/G9: closed-star and rooted-depth running-intersection helpers
+
+- Submitted (UTC): 2026-07-15 05:51:42.
+- Aristotle CLI: `aristotlelib 2.1.0`.
+- Aristotle project: `f2d04d4c-6080-4ef7-a81f-d07216e4f9ec`.
+- Aristotle task: `561047af-85a4-47e6-9c65-73b30e0e00ab`.
+- Prompt: `Follow TASK.md exactly. Prove the two direct closed-star and
+  rooted-depth helper theorems without changing any statement or completed
+  source.`
+- Scope: prove only `eq_or_bridgeQuotient_adj_of_adj_mem_supp` and the existing
+  `closedStar_earlier_direction`, with their canonical statements unchanged.
+- Submitted directory: a fresh sanitized Lean/mathlib `v4.32.0` staging
+  directory outside the Git worktree. Sensitive-pattern scan: clear.
+- Canonical status before submission: both theorem statements and their local
+  proofs elaborated under 4.32. The first has also been specialized as
+  `component_eq_or_leviBridgeQuotient_adj_of_inc`, the exact Levi-incidence
+  closed-star kernel needed by the later active-piece packaging.
+- Canonical verification: the changed contraction module elaborated cleanly;
+  the full `Erdos593` target built without warnings. The graph declarations use
+  only `propext`, `Classical.choice`, and `Quot.sound`.
+- Remote completion audit (UTC 2026-07-15 06:30): `COMPLETE`.
+- Returned archive: 5,957-byte gzip-compressed tar archive, SHA-256
+  `925DF872FFAB97DFC8C4D6DFF0A5BAA98C4933161126EB7D39DBE26EE4B9218A`.
+  Its nine entries are relative regular files (20,588 uncompressed bytes), with
+  no traversal, links, special files, credentials, or proof gaps.
+- Returned target SHA-256 values:
+  `9F9517E643CB9ED0CD38D654AFAD781F1DF55D5E13F219FCD4C3872B4D84B8F3`
+  for `BridgeQuotient.lean` and
+  `A958EC47FE46AF044450AED3C241FC4FB9DA2E8D6652F5253FDEA3D9457FB33C`
+  for `RootedTree.lean`.
+- Source/API diff: exactly the two requested proof bodies changed; all theorem
+  statements, imports, namespaces, documentation, completed proofs, and other
+  submitted files are byte-identical.
+- Canonical compatibility audit: all three returned Lean source files
+  elaborated unchanged under the repository's Lean/mathlib `v4.32.0`
+  dependencies. The returned summary reports only the permitted standard
+  axioms.
+- Adversarial comparison: the returned closed-star proof is equivalent to the
+  accepted local proof, while the returned rooted-depth proof is only
+  `grind +suggestions`; the canonical explicit geometric proof is more
+  auditable and API-stable.
+- Disposition: independently confirmed; no returned code merged.
+
+Selected staged SHA-256 values:
+
+```text
+929AEDD365DE130FB673A10687668BCB90865443773CAF5093FACBC3F21CB14F  Erdos593/Graph/BridgeQuotient.lean
+4EBE46432BAD5817CCBAAB7CAC1C7FE3071C65EACADC2097ADF365BA249C077A  Erdos593/Graph/RootedTree.lean
+8AEED896866C46BC9D5967A27546B4E2F96BF24D011840D41C7ECA605CF59715  TASK.md
+```
+
+## Record format
+
 For every submission, record:
 
 - UTC timestamp and Aristotle project/task identifier;

@@ -1,4 +1,4 @@
-# Self-contained Lean checkpoint
+# Self-Contained Lean Checkpoint
 
 `Erdos593SelfContained.lean` is generated from the exact transitive closure of
 the local modules imported by `Erdos593.lean`. It has no project-local imports:
@@ -7,12 +7,15 @@ imports remain at the top. Every source boundary records a repository-relative
 path and the SHA-256 of the normalized UTF-8 source.
 
 The generated file is the current verified **partial formalization**, not a
-full formal proof of Erdős Problem 593. It covers the finite structural kernel,
-including the incidence and Levi-graph interfaces, bridge-block/cycle-lifting
-results, forward construction lemmas, and one-point amalgamation machinery.
-Still missing are preservation under all classification operations; the
-quotient-forest, running-intersection, and reconstruction layers; and the
-obligatoriness, infinite, and avoidance parts of the manuscript.
+full formal proof of Erdős Problem 593. It covers the finite incidence and
+Levi-graph interfaces, bridge-block contraction and cycle lifting, the exact
+bridge-component quotient forest and closed-star/rooted-depth graph kernels,
+active-component private-point expansion data, complete disjoint-union
+preservation, and one-point-amalgamation infrastructure. Still missing are the
+even-cycle theorem
+for bipartite expansion generators, preservation under one-point amalgamation,
+packaging and final reconstruction, and the obligatoriness, infinite, and
+avoidance parts of the manuscript.
 
 ## Reproduction and exactness check
 
@@ -32,18 +35,20 @@ against the Lean and Mathlib versions pinned by `lean-toolchain` and
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 20 source modules, four external
-  Mathlib imports, 2,223 physical lines, and SHA-256
-  `06bbdb9bbcbe8cbcb198e5a3899eb20b20bb6dd6441515839241d3f9d33274be`.
-- Canonical modular build: `lake build` passed all 1,221 jobs under the pinned
-  Lean/mathlib `v4.32.0` toolchain in 128.066 seconds.
+- Deterministic regeneration check: passed for 22 source modules, five external
+  Mathlib imports, 2,898 physical lines, 2,495 nonblank lines, 110,716 UTF-8
+  bytes, and SHA-256
+  `72a9a3d84e1955b5164a84460a23493a2d407e08d382c6501cc16ce88025bb90`.
+- Canonical modular build: `lake build Erdos593` passed all 1,223 jobs under
+  the pinned Lean/mathlib `v4.32.0` toolchain in 58.539 seconds.
 - One-file build: `lake env lean Erdos593SelfContained.lean` passed with one
-  Lean thread in 19.298 seconds and emitted no diagnostics.
-- Source audit: all 21 Lean files (the 20 modular files and the generated
+  Lean thread in 21.006 seconds and emitted no diagnostics.
+- Source audit: all 23 Lean files (the 22 modular files and the generated
   artifact) are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
-- Representative axiom audit: seven central declarations report only
-  `propext`, `Classical.choice`, and `Quot.sound`.
+- Axiom audit: every new or touched public declaration, together with the
+  representative central declarations below, reports only `propext`,
+  `Classical.choice`, and `Quot.sound`.
 
 ## Separate axiom audit
 
@@ -61,6 +66,10 @@ import Erdos593
 #print axioms Erdos593.TripleSystem.OnePointAmalgamation.amalgam
 #print axioms Erdos593.TripleSystem.OnePointAmalgamation.isoOfMaps
 #print axioms Erdos593.TripleSystem.BridgeBlock.contractedGraph_colorable_two
+#print axioms Erdos593.SimpleGraph.bridgeQuotient_isAcyclic
+#print axioms Erdos593.TripleSystem.BridgeBlock.activeComponent_privateVertexExpansionData
+#print axioms Erdos593.TripleSystem.disjointUnion_intrinsic
+#print axioms Erdos593.SimpleGraph.closedStar_earlier_direction
 ```
 
 In addition to this declaration-level check, scan every source in the local

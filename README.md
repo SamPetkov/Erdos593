@@ -1,4 +1,4 @@
-# Erdos593
+# Obligatory Triple Systems: A Self-Contained Proof of Erdős Problem 593
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
@@ -50,31 +50,43 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The modular Lean project currently contains 1,995 physical source lines, of
-which 1,420 are code, and 83 `theorem`/`lemma` declarations. A syntactic
-`:= by` count places approximately 622 code lines in proof bodies. The generated
-one-file checkpoint contains 2,223 physical lines; its additional lines record
-imports, generation status, module boundaries, and source hashes. See
+The modular Lean project currently contains 2,650 physical source lines, of
+which 2,297 are nonblank and 1,979 are code, across 22 source modules, with 106
+`theorem`/`lemma` declarations. A reproducible syntactic `:= by` region count
+places approximately 988 code lines in proof bodies. The generated one-file
+checkpoint contains 2,898 physical lines and five external Mathlib imports;
+its additional lines record generation status, module boundaries, and source
+hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
 
 This is a substantial but partial formalization of the finite structural
-machinery, not yet a machine-checked proof of the paper's main classification
-theorem or its infinitary obligatoriness and avoidance arguments.
+machinery. It now includes complete intrinsic preservation by disjoint union,
+the bridge-component quotient-forest theorem, exact active bridge-block
+expansion data, and generic closed-star and rooted-depth separation kernels.
+Intrinsic preservation under one-point amalgamation, packaging those kernels
+for active pieces, the finite reconstruction induction, and the manuscript's
+obligatoriness, infinite, and avoidance arguments are not yet machine-checked.
 
 ## AI-use disclosure
 
 The manuscript was completed with assistance from OpenAI’s ChatGPT-5.6 Pro. It contains a full ethics and AI-assistance statement. Samuil Petkov is the sole named author and accepts responsibility for the mathematical content, citations, and conclusions.
 
-## Creating the private GitHub repository
+## GitHub repository
 
-From this directory, with GitHub CLI authenticated:
+The maintained repository is public at
+[github.com/SamPetkov/Erdos593](https://github.com/SamPetkov/Erdos593).
+
+For a fresh conservative bootstrap, with GitHub CLI authenticated:
 
 ```bash
 ./create-private-repo.sh
 ```
 
-The script creates a private repository named `Erdos593`, sets `origin`, and pushes the current branch. It refuses to overwrite an existing remote repository.
+The script initially creates a private repository named `Erdos593`, sets
+`origin`, and pushes the current branch. It refuses to overwrite an existing
+remote repository; changing that new repository to public is a separate,
+deliberate action.
 
 ## Citation and license
 
