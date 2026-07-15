@@ -1,6 +1,7 @@
 import Erdos593.Graph.CompleteBipartite
 import Erdos593.TripleSystem.Expansion
 import Erdos593.TripleSystem.Obligatory
+import Erdos593.TripleSystem.RainbowExpansionEmbedding
 
 /-!
 # Obligatory private-vertex-expansion atoms
@@ -12,6 +13,8 @@ used by those downstream results without a dependency cycle.
 -/
 
 namespace Erdos593
+
+open scoped Cardinal
 
 universe u
 
@@ -34,6 +37,30 @@ theorem completeBipartiteExpansionAtom_zero_isObligatory :
           inj' := fun x => isEmptyElim x }
       edge := fun e => isEmptyElim e
       map_edge := fun e => isEmptyElim e }
+
+/-- A witnessed locally bounded bipartite matrix in a host contains the
+corresponding positive balanced expansion atom once its finite rainbow
+submatrix has been extracted. -/
+theorem completeBipartiteExpansionAtom_appears_of_witnessedMatrices
+    {W D : Type u} (H : TripleSystem W D) (n t : Nat)
+    (hn : 0 < n) (ht : 0 < t)
+    (hmat : ∀ q : Nat, Nonempty (WitnessedBipartiteMatrix H q t)) :
+    (completeBipartiteExpansionAtom.{u} n).Appears H := by
+  change Nonempty ((privateVertexExpansion
+    (completeBipartiteNN.{u} n)).Embedding H)
+  exact exists_rainbowEmbedding_of_witnessedMatrices H n t hn ht hmat
+
+/-- The finite rainbow bridge reduces a positive atom theorem to the explicit
+host-extraction obligation of producing witnessed matrices of every size. -/
+theorem completeBipartiteExpansionAtom_isObligatory_of_witnessedMatrices
+    (n t : Nat) (hn : 0 < n) (ht : 0 < t)
+    (hmat : ∀ (W D : Type u) [DecidableEq W] (H : TripleSystem W D),
+      ℵ₀ < H.chromaticCardinal →
+        ∀ q : Nat, Nonempty (WitnessedBipartiteMatrix H q t)) :
+    (completeBipartiteExpansionAtom.{u} n).IsObligatory := by
+  intro W D _ H hH
+  exact completeBipartiteExpansionAtom_appears_of_witnessedMatrices
+    H n t hn ht (hmat W D H hH)
 
 end TripleSystem
 
