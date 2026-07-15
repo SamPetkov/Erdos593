@@ -76,10 +76,10 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 91 source modules, 43 external
-  Mathlib imports, 14,065 physical lines, 12,338 nonblank lines, 570,754 UTF-8
+- Deterministic regeneration check: passed for 92 source modules, 44 external
+  Mathlib imports, 14,186 physical lines, 12,444 nonblank lines, 576,057 UTF-8
   bytes, and SHA-256
-  `b1eb1f4dbdc7b42abe7afdb21bc1c261e6d6e130cadc52434787d9df1f8d1143`.
+  `1fdbe1aec04a18e5739faa1dc9c5c69f143c3f88fc1fe35be7807086a0937c52`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
@@ -93,14 +93,16 @@ module checks recorded below.
   and `Erdos593.TripleSystem.SequenceLiftBaseFiberPartition` (1,227 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseApex` (1,226 Lake jobs),
   and `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake
-  jobs),
+  jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality` (1,289
+  Lake jobs),
   passed under the pinned Lean/mathlib `v4.32.0` toolchain.
 - Source audit: the complete imported closure, including
   `SequenceLiftBaseNode`, `SequenceLiftBaseNormalForm`, and
   `SequenceLiftBaseLetter`, `SequenceLiftFiniteTrace`, and
   `SequenceLiftBaseFiber`, `SequenceLiftBaseFiberIndex`,
   `SequenceLiftBaseFiberPartition`, `SequenceLiftBaseApex`,
-  `SequenceLiftBaseFiberSupportIndex`, and the generated
+  `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberCardinality`, and
+  the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
 - Axiom audit: the representative central declarations and the new public
@@ -186,6 +188,10 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.surjective_baseNodeIndexMap
 #print axioms Erdos593.SequenceLift.activeBaseNodeIndex_natCard_le_edge_card
 #print axioms Erdos593.SequenceLift.activeBaseNodeIndex_card_le_edge_card
+#print axioms Erdos593.SequenceLift.ncard_eq_sum_baseFiber_activeBaseNodeIndex
+#print axioms Erdos593.SequenceLift.edgeIndexEquiv_sigmaBaseFiberIndex
+#print axioms Erdos593.SequenceLift.edgeImage_ncard_eq_sum_baseFiberIndex
+#print axioms Erdos593.SequenceLift.edge_card_eq_sum_baseFiberIndex_card
 ```
 
 In addition to this declaration-level check, scan every source in the local

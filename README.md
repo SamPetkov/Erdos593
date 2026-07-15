@@ -88,9 +88,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 91 source modules. The
-generated one-file checkpoint contains 14,065 physical lines, 43 external
-Mathlib imports, and 451 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 92 source modules. The
+generated one-file checkpoint contains 14,186 physical lines, 44 external
+Mathlib imports, and 454 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -133,7 +133,10 @@ the unique non-base point of every lift edge; inside a linear canonical base
 fibre, it is private to that edge and yields an apex-injective map. These
 factor-local interfaces are now reindexed by the finite subtype of active base
 nodes, with a source-edge surjection and cardinal bound. They do not yet
-supply a fibre-cardinality sum or a global finite-trace decomposition.
+supply a fibre-cardinality sum or a global finite-trace decomposition. The
+finite `SequenceLiftBaseFiberCardinality` layer now supplies that exact
+selected-edge fibre sum and the matching source-index sigma/cardinality
+identities, but it does not sum global base-letter images or traces.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across
