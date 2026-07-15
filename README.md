@@ -46,9 +46,12 @@ The author reports developing the proof independently, without consulting Eric L
   injective on every linear edge restriction. On each specified such
   restriction its key image preserves `encard`, is finite exactly when the
   restriction is finite, and has the same `Set.ncard` there; a finite linear
-  no-isolated embedded source therefore has exactly one key per edge. This is
-  only a local bridge, not a global finite-trace decomposition; a dependency
-  map records its place.
+  no-isolated embedded source therefore has exactly one key per edge. A
+  further local base-fibre API proves that within any selected canonical-base
+  fibre the base letter is injective and has the same `encard` under linearity,
+  and identifies an embedded source fibre with its exact source-edge index
+  subtype. This is only a local bridge, not a global finite-trace
+  decomposition; a dependency map records its place.
   Reconstruction across isolated vertices,
   the remaining finite-trace decomposition, and the infinitary avoidance
   direction remain open.
@@ -74,9 +77,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 86 source modules. The
-generated one-file checkpoint contains 13,418 physical lines, 43 external
-Mathlib imports, and 414 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 87 source modules. The
+generated one-file checkpoint contains 13,541 physical lines, 43 external
+Mathlib imports, and 422 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -109,8 +112,10 @@ base letter and packages `(baseNode, baseLetter)` as a key injective on each
 linear edge restriction. On every specified linear restriction its image
 preserves `encard`; it is finite exactly when the restriction is finite and
 then has the same `Set.ncard`, so a finite linear no-isolated embedded source
-has exactly one key per edge. This does not yet supply a global finite-trace
-decomposition.
+has exactly one key per edge. The base-fibre API additionally gives local
+base-letter injectivity and `encard` transfer within a selected canonical base
+node, together with an exact source-edge indexing statement for embedded
+fibres. This does not yet supply a global finite-trace decomposition.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across
