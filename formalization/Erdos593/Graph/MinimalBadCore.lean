@@ -1,14 +1,14 @@
 import Erdos593.Graph.CompleteBipartiteCopy
 import Erdos593.Graph.CompleteBipartiteLayering
 import Erdos593.Graph.CountableColoring
+import Erdos593.Graph.FiniteClosureLayeringConstruction
 import Mathlib.SetTheory.Cardinal.Order
 
 /-!
 # Minimal bad cores for the complete-bipartite graph lemma
 
-This module packages the cardinal-minimal-counterexample reduction used before
-the finite-closure layering construction.  It deliberately does not construct
-any closure chain: that is the separate singular-cardinal-sensitive step.
+This module packages the cardinal-minimal-counterexample reduction and closes
+it using the singular-cardinal-safe finite-closure layering construction.
 -/
 
 namespace Erdos593
@@ -104,6 +104,52 @@ theorem countablyColorable_of_commonNeighborLayering_of_localSmall
   apply countablyColorable_of_commonNeighborLayering G hfree L
   intro i
   exact hsmall {x : V | L.rank x = i} (L.fiber_lt i)
+
+/-- A cardinal-minimal non-countably-colourable `K_{n,n}`-free graph admits
+no finite common-neighbour closure layering with small rank fibres.  Thus the
+remaining positive-atom task is exactly the singular-cardinal-safe
+construction of such a layering. -/
+theorem false_of_commonNeighborLayering_of_minimalBad
+    {n : Nat} {kappa : Cardinal.{u}} (G : _root_.SimpleGraph V)
+    (hcard : Cardinal.mk V = kappa)
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G))
+    (hbad : ¬ CountablyColorable G)
+    (hmin : (kappa' : Cardinal.{u}) -> kappa' < kappa -> ¬ KNNBadCard n kappa')
+    {I : Type u} [LinearOrder I]
+    (L : FiniteClosureLayering n (commonNeighborClosure G hfree) I) : False := by
+  apply hbad
+  apply countablyColorable_of_commonNeighborLayering_of_localSmall G hfree L
+  exact locallyCountablyColorableBelow_of_minimalBad G hcard hfree hmin
+
+/-- Every `K_{n,n}`-free graph is countably colourable when `n` is positive.
+
+The proof minimizes a hypothetical bad cardinal, builds the finite common
+neighbour closure layering at that cardinal without a regularity assumption,
+and colours each strictly smaller rank fibre by cardinal minimality. -/
+theorem countablyColorable_of_no_completeBipartiteNNCopy
+    {n : Nat} (G : _root_.SimpleGraph V) (hn : 0 < n)
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G)) :
+    CountablyColorable G := by
+  classical
+  by_contra hbad
+  obtain ⟨κ, hκbad, hmin⟩ :=
+    exists_minimalKNNBadCard (n := n)
+      ⟨Cardinal.mk V, ⟨V, G, rfl, hbad, hfree⟩⟩
+  rcases hκbad with ⟨W, H, hcard, hHbad, hHfree⟩
+  let L : FiniteClosureLayering n (commonNeighborClosure H hHfree)
+      (Cardinal.mk W).ord.ToType :=
+    (FiniteClosureLayeringConstruction.exists_finiteClosureLayering_of_uncountable
+      (commonNeighborClosure H hHfree)
+      (aleph0_lt_mk_of_not_countablyColorable H hHbad) hn).some
+  exact false_of_commonNeighborLayering_of_minimalBad H hcard hHfree hHbad hmin L
+
+/-- There is no bad cardinal witness for any positive balanced complete
+bipartite graph. -/
+theorem not_KNNBadCard_of_pos
+    (n : Nat) (hn : 0 < n) (κ : Cardinal.{u}) :
+    ¬ KNNBadCard n κ := by
+  rintro ⟨W, H, hcard, hbad, hfree⟩
+  exact hbad (countablyColorable_of_no_completeBipartiteNNCopy H hn hfree)
 
 end SimpleGraph
 

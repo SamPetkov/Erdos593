@@ -5,7 +5,9 @@ import Erdos593.Graph.CompleteBipartiteCopy
 import Erdos593.Graph.CompleteBipartiteEdges
 import Erdos593.Graph.CompleteBipartiteLayering
 import Erdos593.Graph.CountableColoring
+import Erdos593.Graph.FiniteClosureCardinality
 import Erdos593.Graph.FiniteClosureLayering
+import Erdos593.Graph.FiniteClosureLayeringConstruction
 import Erdos593.Graph.FiniteOutdegreeColoring
 import Erdos593.Graph.MinimalBadCore
 import Erdos593.Graph.NonInducedFactor
