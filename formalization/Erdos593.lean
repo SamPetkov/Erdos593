@@ -27,6 +27,7 @@ import Erdos593.TripleSystem.ConstructiveForward
 import Erdos593.TripleSystem.DisjointUnion
 import Erdos593.TripleSystem.DisjointUnionForward
 import Erdos593.TripleSystem.EdgeRestriction
+import Erdos593.TripleSystem.EmbeddingEdgeRestriction
 import Erdos593.TripleSystem.EdgeRestrictionFull
 import Erdos593.TripleSystem.EdgeRestrictionReconstruction
 import Erdos593.TripleSystem.ExpansionIntrinsic
