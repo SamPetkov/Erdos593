@@ -71,6 +71,7 @@ adversarial audit exposes a false or over-strong formulation.
 | O12 | `SequenceLift.BasedAt`, `SequenceLift.basedAt_unique`, `SequenceLift.baseNode`, `SequenceLift.baseNode_mkEdge` | every sequence-lift edge has a unique node carrying two distinct edge points; the classically selected canonical base node is characterized by `BasedAt` and recovers the displayed base node of every `mkEdge`, giving the finite-trace program a stable edge-grouping index |
 | O13 | `SequenceLift.exists_mkEdge_at_baseNode`, `SequenceLift.exists_basePair_at_baseNode`, `SequenceLift.point_eq_of_inc_of_ne_baseNode` | every lift edge admits a representation at its canonical base; there its fibre is exactly the endpoints of one base graph edge, while every non-base fibre is singleton-or-empty, preparing a canonical finite-trace key and arbitrary-edge use of the O11 rigidity package |
 | O14 | `SequenceLift.baseLetter`, `SequenceLift.traceKey`, `SequenceLift.traceKey_injOn_of_linear` | each lift edge has one canonical unordered graph-edge letter at its selected base node; the resulting `(baseNode, baseLetter)` key is injective on every linear edge restriction, giving a verified local bridge to later finite-trace cardinality arguments without claiming a global finite-trace decomposition |
+| O15 | `SequenceLift.traceKey_image_finite_iff_of_linear`, `SequenceLift.traceKey_image_encard_eq_of_linear`, `SequenceLift.ncard_traceKey_image_eq_of_linear`, `SequenceLift.finiteLinear_traceKey_image` | on a specified linear edge restriction, the canonical trace-key image preserves `Set.encard`, is finite exactly when the restriction is finite, and has the same `Set.ncard` there; a finite linear source with no isolated points contributes exactly one key per edge under an embedding into the sequence lift. These are local transfer facts, not a global finite-trace decomposition |
 
 The representation layer now also contains compiled, gap-free definitions of
 non-induced embeddings, triple-system isomorphisms, isolated-point reduction,
@@ -91,7 +92,9 @@ rigidity package and canonical base-node normal forms: an edge has exactly one
 node carrying two distinct edge points, the classical selector agrees with
 each displayed `mkEdge` base, its base fibre is exactly one graph pair, and
 every other fibre has at most one point. Its canonical trace key is now also
-injective on each linear edge restriction. The remaining project work lies in
+injective on each linear edge restriction and preserves extended natural
+cardinality there, with finite and exact-natural-cardinality corollaries for finite
+restrictions. The remaining project work lies in
 reconstruction of a constructible system across isolated vertices, the global
 finite-trace decomposition beyond the local rigidity, grouping, and key steps,
 and the infinitary avoidance direction; it is not a gap in the verified

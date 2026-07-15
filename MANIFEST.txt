@@ -97,6 +97,7 @@ formalization/Erdos593/TripleSystem/SequenceLiftBaseLetter.lean
 formalization/Erdos593/TripleSystem/SequenceLiftBaseNode.lean
 formalization/Erdos593/TripleSystem/SequenceLiftBaseNormalForm.lean
 formalization/Erdos593/TripleSystem/SequenceLiftChromatic.lean
+formalization/Erdos593/TripleSystem/SequenceLiftFiniteTrace.lean
 formalization/Erdos593/TripleSystem/SequenceLiftTrace.lean
 formalization/Erdos593/TripleSystem/SingleEdgePiece.lean
 formalization/Erdos593/TripleSystem/SingleEdgePieceConstructible.lean

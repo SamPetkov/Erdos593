@@ -33,10 +33,13 @@ normalizes an arbitrary lift edge at that selector, identifies its exact
 two-point graph-base fibre, and proves every non-base fibre is
 singleton-or-empty. The canonical base-letter bridge now selects the unique
 unordered graph-edge letter at that base and packages `(baseNode, baseLetter)`
-as a key injective on every linear edge restriction. This is a local
-finite-trace interface only: a global finite-trace decomposition is still
-missing, alongside reconstruction across isolated vertices and the remaining
-infinitary avoidance direction.
+as a key injective on every linear edge restriction. On every specified such
+restriction, the key image preserves `encard`, is finite exactly when the
+restriction is finite, and then has the same `Set.ncard`; a finite linear
+no-isolated embedded source consequently has exactly one key per edge. This is
+a local finite-trace interface only: a global finite-trace decomposition is
+still missing, alongside reconstruction across isolated vertices and the
+remaining infinitary avoidance direction.
 
 ## Reproduction and exactness check
 
@@ -58,23 +61,24 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 85 source modules, 43 external
-  Mathlib imports, 13,330 physical lines, 11,716 nonblank lines, 541,169 UTF-8
+- Deterministic regeneration check: passed for 86 source modules, 43 external
+  Mathlib imports, 13,418 physical lines, 11,788 nonblank lines, 544,734 UTF-8
   bytes, and SHA-256
-  `b3751f0658b56a423abfa63e3d5587044d4c5b455bbb066d1b6dacd771605e48`.
+  `dcadc6eaca2728547621f4964282a419c79b68ee541797355d21e1a8cce401a9`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
   jobs), plus `Erdos593.TripleSystem.SequenceLiftTrace` (976 Lake jobs),
   `Erdos593.TripleSystem.SequenceLiftBaseNode` (975 Lake jobs),
   `Erdos593.TripleSystem.SequenceLiftBaseNormalForm` (976 Lake jobs), and
-  `Erdos593.TripleSystem.SequenceLiftBaseLetter` (979 Lake jobs), passed under
-  the pinned Lean/mathlib `v4.32.0` toolchain.
+  `Erdos593.TripleSystem.SequenceLiftBaseLetter` (979 Lake jobs), and
+  `Erdos593.TripleSystem.SequenceLiftFiniteTrace` (1,224 Lake jobs), passed
+  under the pinned Lean/mathlib `v4.32.0` toolchain.
 - Source audit: the complete imported closure, including
   `SequenceLiftBaseNode`, `SequenceLiftBaseNormalForm`, and
-  `SequenceLiftBaseLetter`, and the generated artifact are clear of `sorry`,
-  `admit`, project `axiom`, `unsafe`, and `sorryAx`; the repository secret scan
-  is also clear.
+  `SequenceLiftBaseLetter`, and `SequenceLiftFiniteTrace`, and the generated
+  artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
+  `sorryAx`; the repository secret scan is also clear.
 - Axiom audit: the representative central declarations and the new public
   endpoint declarations listed below report only `propext`, `Classical.choice`,
   and `Quot.sound`.
@@ -133,6 +137,10 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.baseLetter_mkEdge
 #print axioms Erdos593.SequenceLift.eq_of_traceKey_eq_of_mem_of_linear
 #print axioms Erdos593.SequenceLift.traceKey_injOn_of_linear
+#print axioms Erdos593.SequenceLift.traceKey_image_finite_iff_of_linear
+#print axioms Erdos593.SequenceLift.traceKey_image_encard_eq_of_linear
+#print axioms Erdos593.SequenceLift.ncard_traceKey_image_eq_of_linear
+#print axioms Erdos593.SequenceLift.finiteLinear_traceKey_image
 ```
 
 In addition to this declaration-level check, scan every source in the local
