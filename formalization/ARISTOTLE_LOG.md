@@ -318,8 +318,27 @@ C858C021E2818D5506A7ECD3E7195EBF3035A9B966AA7CC1C4719A653ABF4C9F  TASK.md
   `Classical.choice`, and `Quot.sound`.
 - Accepted canonical file SHA-256:
   `B271376BB03C29A6E3AB2ED238BC0AF3020E296A3576063703FB260F1E864FD0`.
-- Disposition: canonical local fallback accepted; Aristotle result retained as
-  an adversarial comparison and still pending.
+- Remote status at final audit: `COMPLETE`.
+- Returned archive: 19,991-byte gzip-compressed tar archive (despite the
+  requested `.zip` suffix), SHA-256
+  `A4D44569DC5FEA102FC13F03EFC7B4589E20D5C4932054B2AEF99F7D28C928B0`.
+- Archive audit: 26 relative regular-file/directory entries, 75,041
+  uncompressed bytes; no path traversal, links, special files, credentials,
+  private keys, or unfinished-proof markers.
+- Returned target SHA-256:
+  `F53AD43111FDF198BFD6384DDB8374E2D4A2CF3678B021A06EF4EACCF928B4E1`.
+  The target differs by 73 insertions and 87 deletions. Aristotle supplied
+  sound alternative proofs for both marked helpers, but also removed the
+  canonical module documentation and wrapped the public API in an extra
+  `CycleLiftCheck` namespace.
+- Canonical compatibility audit: the exact returned project built unchanged
+  under Lean/mathlib `v4.32.0` (1209 jobs). Both helper theorems and the public
+  cycle-lift theorem reported exactly `propext`, `Classical.choice`, and
+  `Quot.sound`.
+- Disposition: Aristotle independently confirmed both obligations, but the
+  returned file was rejected in favour of the already accepted canonical local
+  proofs because the alternatives provide no needed improvement and its
+  namespace/header changes would regress the module API.
 
 Selected staged SHA-256 values:
 

@@ -1,6 +1,8 @@
 cff-version: 1.2.0
-message: "Please cite this manuscript using the metadata below."
-title: "Obligatory Triple Systems: A self-contained proof of Erdős Problem 593"
+message: >-
+  If you use material from this repository, please cite Samuil Petkov using
+  the metadata below and follow the CC BY 4.0 attribution requirements.
+title: "Obligatory Triple Systems: A Self-Contained Proof of Erdős Problem 593"
 type: article
 authors:
   - family-names: Petkov
@@ -9,3 +11,6 @@ authors:
     email: "samuil.petkov@ens.psl.eu"
 version: 1.0.0
 date-released: 2026-07-11
+url: "https://github.com/SamPetkov/Erdos593"
+repository-code: "https://github.com/SamPetkov/Erdos593"
+license: CC-BY-4.0

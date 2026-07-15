@@ -1,5 +1,8 @@
+.gitattributes
 .gitignore
 CITATION.cff
+LICENSE
+LICENSE_SCOPE.md
 MANIFEST.txt
 README.md
 REVISION_NOTES.md
@@ -31,9 +34,12 @@ formalization/Erdos593/TripleSystem/Isolated.lean
 formalization/Erdos593/TripleSystem/Isomorph.lean
 formalization/Erdos593/TripleSystem/Levi.lean
 formalization/Erdos593/TripleSystem/OnePointAmalgamation.lean
+formalization/Erdos593SelfContained.lean
 formalization/FORMALIZATION_MAP.md
 formalization/lakefile.toml
 formalization/lake-manifest.json
 formalization/lean-toolchain
 formalization/README.md
+formalization/SELF_CONTAINED_BUILD.md
+formalization/scripts/generate_self_contained.py
 references.bib

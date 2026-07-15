@@ -1,0 +1,9 @@
+# Keep checksum-referenced publication and source text byte-stable.
+* text=auto eol=lf
+
+# Never apply text conversions to publication binaries.
+*.pdf binary
+*.png binary
+*.zip binary
+*.gif binary
+*.mp4 binary

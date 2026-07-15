@@ -39,12 +39,45 @@ in `FORMALIZATION_MAP.md`.
 lake build
 ```
 
+## One-file checkpoint
+
+[`Erdos593SelfContained.lean`](Erdos593SelfContained.lean) is generated from
+the exact transitive closure of the local modules imported by `Erdos593.lean`.
+It contains 2,223 physical lines, 20 source modules, and only four external
+Mathlib imports. It is a portable checkpoint of the current partial
+formalization; it does not enlarge the verified mathematical scope described
+above.
+
+Regenerate or byte-check it with:
+
+```bash
+python scripts/generate_self_contained.py
+python scripts/generate_self_contained.py --check
+```
+
+The generation format, source provenance, and separate axiom-audit procedure
+are documented in [`SELF_CONTAINED_BUILD.md`](SELF_CONTAINED_BUILD.md).
+
 ## Verification policy
 
 - `lake build` must succeed.
 - No `sorry`, `admit`, `axiom`, `unsafe`, or `sorryAx` is accepted in a
   completed milestone.
 - Generated proofs are compiled locally and their axioms are audited.
-- Aristotle receives only this sanitized project directory, not manuscript
-  metadata or personal information.
+- Aristotle is used through the CLI as a proxy for bounded, fixed-statement
+  theorem or lemma jobs. If a job does not close, its obligation is decomposed
+  into smaller lemmas and resubmitted; independent obligations may run in
+  parallel.
+- Aristotle receives only a minimal sanitized project directory, not manuscript
+  metadata or personal information. A returned proof is accepted only after it
+  builds in the canonical pinned Lean/mathlib project and passes the source-gap,
+  secret, and axiom audits.
 - Each remote task and its disposition is recorded in `ARISTOTLE_LOG.md`.
+
+## Citation and license
+
+The original repository material is licensed under
+[CC BY 4.0](../LICENSE). When the license requires attribution, credit
+**Samuil Petkov** and follow the repository-level
+[scope and attribution notice](../LICENSE_SCOPE.md). Scholarly citation
+metadata are provided in [`CITATION.cff`](../CITATION.cff).

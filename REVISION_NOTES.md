@@ -14,3 +14,6 @@
 9. Added the author's ENS--PSL affiliation and institutional email directly beneath the author name, and corrected the de Bruijn--Erdos page range to 371--373.
 10. Repaired the scope of Lemma 1.4, supplied the missing formal definitions, completed the quotient-forest and finite-trace bookkeeping, and made the auxiliary colouring and odd-girth arguments explicit.
 11. Narrowed the ethics statement to proof development, adversarial checking, and analysis of Li's arguments.
+12. Made the Erdős Problem 593 identification explicit in the title and opening sentence of the abstract, introduced fifteen descriptive subsections, and moved the ethics and AI-assistance statement before the references.
+13. Licensed original repository material under CC BY 4.0, with a separate scope and attribution notice and updated citation metadata.
+14. Added a deterministic 2,223-line one-file Lean checkpoint, its generator and build record, and verified both the modular project and the combined file under the pinned Lean/mathlib 4.32 toolchain.
