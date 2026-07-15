@@ -133,8 +133,10 @@ every constructible triple system is obligatory, exact `K_{n,n}` edge
 coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
 interface, rooted abundance and obligatory one-point amalgamation, and the
 one-apex sequence lift with its countable-colouring obstruction, canonical
-unique base-node selector for every lifted edge, and local linear-trace
-rigidity lemmas. Major missing layers are reconstruction across
+unique base-node selector and normal forms for every lifted edge, and local
+linear-trace rigidity lemmas.  The normal forms display each edge at its
+selected source, identify its exact graph-endpoint base fibre, and bound every
+other fibre by one point. Major missing layers are reconstruction across
 isolated vertices, the finite-trace structural theorem, and the remaining
 infinitary avoidance direction.
 

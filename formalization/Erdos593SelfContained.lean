@@ -69,8 +69,10 @@ every constructible triple system is obligatory, exact `K_{n,n}` edge
 coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
 interface, rooted abundance and obligatory one-point amalgamation, and the
 one-apex sequence lift with its countable-colouring obstruction, canonical
-unique base-node selector for every lifted edge, and local linear-trace
-rigidity lemmas. Major missing layers are reconstruction across
+unique base-node selector and normal forms for every lifted edge, and local
+linear-trace rigidity lemmas.  The normal forms display each edge at its
+selected source, identify its exact graph-endpoint base fibre, and bound every
+other fibre by one point. Major missing layers are reconstruction across
 isolated vertices, the finite-trace structural theorem, and the remaining
 infinitary avoidance direction.
 
@@ -13010,9 +13012,108 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseNode
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseNormalForm
+Source: Erdos593/TripleSystem/SequenceLiftBaseNormalForm.lean
+Normalized SHA-256: bee6830053e21b5a90c1daa4be6ba06417dae4a7994324c7adc3ff7e21738cd4
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseNormalForm
+
+/-!
+# Canonical normal forms for sequence-lift edges
+
+The canonical base-node selector lets every lift edge be displayed using its
+own selected base node.  At that node the edge has exactly its two graph-base
+points; at every other node it has at most one point.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal Ordinal
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- Every sequence-lift edge has a displayed representation whose source is
+its canonical base node. -/
+theorem exists_mkEdge_at_baseNode (e : Edge G) :
+    ∃ (t : Node G) (x y z : V) (hxy : G.Adj x y)
+      (hext : (baseNode e).ExtendsBy (edgeLetter hxy) t),
+      e = mkEdge (baseNode e) t x y z hxy hext := by
+  rcases e.2 with ⟨q, t, x, y, z, hxy, hext, hset⟩
+  have he : e = mkEdge q t x y z hxy hext := by
+    apply Subtype.ext
+    simpa only [mkEdge] using hset
+  have hq : q = baseNode e := by
+    apply basedAt_unique (e := e)
+    · rw [he]
+      exact mkEdge_basedAt
+    · exact baseNode_basedAt e
+  subst q
+  exact ⟨t, x, y, z, hxy, hext, he⟩
+
+/-- Pointwise form of the canonical-base-node characterization. -/
+theorem eq_baseNode_iff_exists_distinct_incident
+    (q : Node G) (e : Edge G) :
+    q = baseNode e ↔
+      ∃ x y : V, x ≠ y ∧
+        (system G).Inc (q, x) e ∧ (system G).Inc (q, y) e := by
+  simpa only [BasedAt] using (basedAt_iff_baseNode_eq q e).symm
+
+/-- Away from its canonical base node, a sequence-lift edge has at most one
+incident point over any fixed node. -/
+theorem point_eq_of_inc_of_ne_baseNode
+    {q : Node G} {e : Edge G} {x y : V}
+    (hq : q ≠ baseNode e)
+    (hx : (system G).Inc (q, x) e)
+    (hy : (system G).Inc (q, y) e) :
+    x = y := by
+  by_contra hxy
+  apply hq
+  exact (basedAt_iff_baseNode_eq q e).mp ⟨x, y, hxy, hx, hy⟩
+
+/-- The fibre of a sequence-lift edge at its canonical base node is exactly
+the pair of endpoints of one graph edge. -/
+theorem exists_basePair_at_baseNode (e : Edge G) :
+    ∃ x y : V, G.Adj x y ∧
+      ∀ w : V,
+        (system G).Inc (baseNode e, w) e ↔ w = x ∨ w = y := by
+  rcases e.2 with ⟨q, t, x, y, z, hxy, hext, hset⟩
+  have he : e = mkEdge q t x y z hxy hext := by
+    apply Subtype.ext
+    simpa only [mkEdge] using hset
+  rw [he]
+  refine ⟨x, y, hxy, ?_⟩
+  intro w
+  rw [baseNode_mkEdge, inc_mkEdge_iff]
+  constructor
+  · intro hw
+    rcases hw with hw | hw
+    · exact Or.inl (congrArg Prod.snd hw)
+    rcases hw with hw | hw
+    · exact Or.inr (congrArg Prod.snd hw)
+    · exact (Node.ne_of_extendsBy hext (congrArg Prod.fst hw)).elim
+  · intro hw
+    rcases hw with hw | hw
+    · subst w
+      exact Or.inl rfl
+    · subst w
+      exact Or.inr (Or.inl rfl)
+
+end SequenceLift
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseNormalForm
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseNormalForm
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: f6d5b7641d1ab42b5285580d0d4a635821ee234f2da46166b46249123b129a17
+Normalized SHA-256: d4e4cd38f210a0d18dc2834cf092dc526d0caf2160b385c3612cf162f597c5ac
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

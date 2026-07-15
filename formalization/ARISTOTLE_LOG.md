@@ -878,6 +878,31 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
 - Disposition: local canonical proof accepted; remote proof retained as an
   independent pending comparison.
 
+## O13: canonical normal forms for sequence-lift edges
+
+- Submitted (UTC): 2026-07-15 17:32:54. Aristotle web-dashboard request
+  `9cabd786-979e-4bbe-b678-245d50a4065a`; the authenticated dashboard did not
+  expose a separate project identifier for this text-only request.
+- Exact task boundary: return only the complete new module
+  `Erdos593/TripleSystem/SequenceLiftBaseNormalForm.lean`, with the supplied
+  import, theorem signatures, and proof route for canonical displayed
+  representations, the pointwise base-node characterization, non-base fibre
+  uniqueness, and the exact canonical-base fibre. It requires `lake env lean
+  -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseNormalForm.lean`
+  and forbids `sorry`, `admit`, `axiom`, `unsafe`, and new global assumptions.
+- Submitted files: none. The dashboard received only the explicit theorem
+  prompt and local API context; no repository tree, attachment, credential, or
+  secret was uploaded.
+- Local independent implementation: the same exact module was developed and
+  strictly accepted before the remote job began. The release audit is retained
+  locally; no remote source has been considered for merging.
+- Remote status at the first successful dashboard poll: `RUNNING`. No returned
+  source has been merged; any result remains subject to exact-statement,
+  source-gap, and canonical Lean 4.32 compilation audits before comparison or
+  adoption.
+- Disposition: local proof pending release validation; remote proof retained as
+  an independent running comparison.
+
 ## Record format
 
 For every submission, record:

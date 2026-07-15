@@ -39,9 +39,10 @@ The author reports developing the proof independently, without consulting Eric L
   balanced complete-bipartite atom theorem and its constructible-to-obligatory
   consequence, exact `K_{n,n}` edge coordinates, a finite rainbow lemma, a
   non-induced graph-factor interface, a one-apex sequence lift with a
-  chromatic obstruction, local linear-trace rigidity, and a canonical
-  base-node interface for grouping lifted edges by their unique two-point
-  source node, and a dependency map. Reconstruction across isolated vertices,
+  chromatic obstruction, local linear-trace rigidity, and canonical base-node
+  normal forms: every lift edge is displayed at its selected two-point source,
+  its base fibre is exactly one graph pair, and every other fibre has at most
+  one point, together with a dependency map. Reconstruction across isolated vertices,
   the remaining finite-trace decomposition, and the infinitary avoidance
   direction remain open.
 - `formalization/Erdos593SelfContained.lean` — deterministic one-file copy of
@@ -66,9 +67,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 83 source modules. The
-generated one-file checkpoint contains 13,028 physical lines, 43 external
-Mathlib imports, and 395 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 84 source modules. The
+generated one-file checkpoint contains 13,129 physical lines, 43 external
+Mathlib imports, and 399 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -94,6 +95,9 @@ canonical base-node API. For every lift edge, `BasedAt q e` identifies the
 unique node containing two distinct edge points; `basedAt_unique` and the
 classically selected `baseNode e` make that index canonical, while
 `baseNode_mkEdge` recovers the displayed source node of an explicit lift edge.
+The normal-form API then gives `exists_mkEdge_at_baseNode`, identifies the
+exact graph-endpoint pair in the base fibre, and proves every non-base fibre
+is singleton-or-empty.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across
