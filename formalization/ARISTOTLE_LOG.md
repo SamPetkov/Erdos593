@@ -1047,6 +1047,35 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
 - Disposition: local canonical endpoint remains accepted within its stated
   scope; remote work is retained only as an independent pending validation.
 
+## O30: source-indexed canonical-apex fibre equivalence
+
+- Submitted (UTC): 2026-07-15 22:23. The authenticated Aristotle dashboard
+  request is `61850afc-f848-45a1-82fe-2dbd1b60c118`.
+- Exact task boundary: independently validate only
+  `SequenceLift.baseFiberIndexEquivBaseFiber` and
+  `SequenceLift.baseFiberIndexEquivBaseApexImage_of_linear` in
+  `Erdos593/TripleSystem/SequenceLiftBaseFiberIndexApexEquiv.lean`, from
+  public `main` at `6914430848931c76b48a3b0a55eeff535743f347`. The prompt
+  requires audit of the range-equality orientation, `f.edge_injective`,
+  the fixed base-node tag, and universe discipline; it explicitly forbids
+  every global apex-union, cross-fibre, cardinality, trace, atom, or
+  classification claim.
+- Submitted files: none. The dashboard received only the public repository
+  reference and bounded declaration prompt; no local tree, attachment,
+  credential, secret, or private project content was uploaded.
+- Local independent verification: the exact source check with
+  warnings-as-errors passes, as does its focused canonical build (1,229
+  Lake jobs) under Lean/mathlib `v4.32.0`. The generated one-file
+  checkpoint is current (100 source modules), and both declaration axiom
+  audits report only `propext`, `Classical.choice`, and `Quot.sound`; the
+  applicable project source scan finds no `sorry`, `admit`, project `axiom`,
+  `unsafe`, `native_decide`, or resource-limit override.
+- Remote status: `QUEUED`. No returned source has been merged; any result
+  remains subject to exact-statement, source-gap, and canonical Lean 4.32
+  compilation audit before comparison or adoption.
+- Disposition: local canonical declarations accepted; remote work retained
+  only as an independent pending validation.
+
 ## Record format
 
 For every submission, record:
