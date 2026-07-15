@@ -64,9 +64,14 @@ The author reports developing the proof independently, without consulting Eric L
   layer proves the exact selected-edge sum, while the local-letter-sum layer
   rewrites it as a sum of distinct base-letter images in separate fibres and,
   for a finite linear no-isolated embedded source, as the trace-key image
-  cardinality. It deliberately retains multiplicity
-  across base fibres and proves no global base-letter union or finite-trace
-  decomposition; a dependency map records their place.
+  cardinality. Separately, the local factor spine identifies a chosen linear
+  base fibre exactly with the private-vertex expansion of its canonical
+  base-letter subgraph; for a finite selected family it packages that
+  subgraph's finite carrier and canonical non-induced factor into the host.
+  It deliberately retains multiplicity across base fibres and proves no
+  global base-letter union or finite-trace decomposition; it makes no
+  cross-fibre, bipartite, constructibility, or atom claim. A dependency map
+  records the scope.
   Reconstruction across isolated vertices,
   the remaining finite-trace decomposition, and the infinitary avoidance
   direction remain open.
@@ -92,9 +97,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 92 source modules. The
-generated one-file checkpoint contains 14,186 physical lines, 44 external
-Mathlib imports, and 454 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 105 source modules. The
+generated one-file checkpoint contains 15,211 physical lines, 44 external
+Mathlib imports, and 466 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -166,6 +171,11 @@ cardinality, trace, or atom claim.
 apex-image equivalence through an embedding back to the source-edge type
 under a linear image; it likewise asserts no untagged union, cross-fibre
 identification, cardinality, trace, or atom claim.
+`SequenceLiftBaseFiberExpansion` then proves the exact local
+private-vertex-expansion isomorphism for a linear base fibre and supplies the
+finite carrier/factor packaging. It does not compare separate fibres or prove
+a global trace decomposition, bipartiteness, constructibility, or an atom
+classification.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

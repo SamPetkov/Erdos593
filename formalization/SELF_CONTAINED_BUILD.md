@@ -78,9 +78,13 @@ defines a host subgraph with exactly those selected edges, finite endpoint
 support when the selection is finite, and a canonical edge equivalence. This
 specializes to each finite base fibre as a finite carrier with an explicit
 non-induced factor into the host (also packaged with a `Fintype` carrier);
-under linearity its graph edges are equivalent to that exact fibre. It does
-not yet prove the desired
-private-vertex-expansion isomorphism for a base fibre.
+under linearity its graph edges are equivalent to that exact fibre. The direct
+local theorem now identifies that fibre with the private-vertex expansion of
+this same base-letter subgraph; the finite wrapper packages the unchanged
+finite carrier, the canonical non-induced graph factor, and the isomorphism.
+This is local to one chosen fibre and neither compares fibres nor yields a
+global trace decomposition, bipartiteness, constructibility, or atom
+classification.
 
 ## Reproduction and exactness check
 
@@ -102,9 +106,9 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 104 source modules, 44 external
-  Mathlib imports, 14,999 physical lines, and SHA-256
-  `628f74992016ec994db781cb91f004b3ad63f8f56eb0e7af955cd50c64ef06ec`.
+- Deterministic regeneration check: passed for 105 source modules, 44 external
+  Mathlib imports, 15,211 physical lines, and SHA-256
+  `91254175760eed51cb7c721ab20baf8d25422cc12a5e58e5f59bec9104c8887c`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.Graph.FiniteEdgeFactor`,
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
@@ -121,7 +125,8 @@ module checks recorded below.
   and `Erdos593.TripleSystem.SequenceLiftBaseIncidence` (1,227 Lake jobs),
   and `Erdos593.TripleSystem.SequenceLiftBaseLetterSubgraph` (1,227 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberFactor` (1,230 Lake
-  jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake
+  jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberExpansion` (1,233
+  Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality` (1,289
   Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum` (1,290
   Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv` (1,226
@@ -141,7 +146,7 @@ module checks recorded below.
   `SequenceLiftBaseFiber`, `SequenceLiftBaseFiberIndex`,
   `SequenceLiftBaseFiberPartition`, `SequenceLiftBaseApex`,
   `SequenceLiftBaseIncidence`, `SequenceLiftBaseLetterSubgraph`,
-  `SequenceLiftBaseFiberFactor`,
+  `SequenceLiftBaseFiberFactor`, `SequenceLiftBaseFiberExpansion`,
   `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberCardinality`,
   `SequenceLiftBaseFiberTraceSum`, `SequenceLiftBaseFiberEquiv`,
   `SequenceLiftTaggedBaseLetterEquiv`,
@@ -239,6 +244,8 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.baseFiberLetterSubgraphFactor
 #print axioms Erdos593.SequenceLift.baseFiberLetterSubgraphEdgeEquiv_of_linear
 #print axioms Erdos593.SequenceLift.exists_fintype_baseFiberLetterSubgraphFactor
+#print axioms Erdos593.SequenceLift.baseFiber_privateVertexExpansionIso_of_linear
+#print axioms Erdos593.SequenceLift.exists_fintype_baseFiberLetterSubgraphFactorExpansionIso_of_linear
 #print axioms Erdos593.SequenceLift.finite_activeBaseNodeIndex
 #print axioms Erdos593.SequenceLift.iUnion_baseFiber_activeBaseNodeIndex
 #print axioms Erdos593.SequenceLift.surjective_baseNodeIndexMap

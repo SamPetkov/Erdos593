@@ -89,7 +89,7 @@ adversarial audit exposes a false or over-strong formulation.
 | O32 | `finiteEdgeEndpointFinset`, `finiteEdgeFactorGraph`, `finiteEdgeFactor`, `exists_finiteEdgeFactor` | every finite selected host-edge set has an explicit finite endpoint type and a canonical `fromEdgeSet` graph admitting a non-induced factor into the host. This records only the factor direction; it does not yet prove exact selected-edge recovery or a private-vertex-expansion isomorphism. |
 | O33 | `SequenceLift.inc_iff_baseNode_baseLetter_or_baseApex`, `SequenceLift.baseLetterSubgraph`, `SequenceLift.baseLetterSubgraph_edgeSet`, `SequenceLift.baseLetterSubgraph_finite_verts`, `SequenceLift.baseLetterSubgraphEdgeEquiv` | every lift edge has its exact base-pair-or-apex incidence normal form, and any selected canonical base letters define a host subgraph with exactly those edges, finite endpoint support for a finite selection, and a canonical edge equivalence. This is the local graph-side spine for N1 only; it does not yet construct a non-induced-factor wrapper or prove a private-vertex-expansion isomorphism. |
 | O34 | `SequenceLift.baseFiberLetterSubgraph_finite`, `SequenceLift.baseFiberLetterSubgraphFactor`, `SequenceLift.baseFiberLetterSubgraphEdgeEquiv_of_linear`, `SequenceLift.exists_fintype_baseFiberLetterSubgraphFactor` | for a finite selected family and one chosen base node, the graph selected by that base fibre's canonical letters has a finite vertex carrier and an explicit non-induced factor into the host; its factor prefix is also existentially packaged with a `Fintype` carrier. Under linearity, its edges are equivalent to precisely that base fibre. This is still factor-local and does not yet prove the triple-system private-vertex-expansion isomorphism. |
-| N1 (planned) | `SequenceLift.exists_baseFiberExpansionIso_of_finite_linear` | proposed, not yet formalized: classify one finite linear base fibre as exactly the private-vertex expansion of a finite non-induced graph factor of `G`. This must prove the local triple-system isomorphism, but must not compare fibres, infer bipartiteness or constructibility, assert a global trace decomposition, or make an atom claim. |
+| N1 | `SequenceLift.baseFiber_privateVertexExpansionIso_of_linear`, `SequenceLift.exists_fintype_baseFiberLetterSubgraphFactorExpansionIso_of_linear` | a linear selected base fibre is exactly isomorphic to the private-vertex expansion of the host subgraph selected by its canonical base letters. For finite `S`, the same fixed carrier is packaged with a `Fintype` instance and its canonical non-induced factor into `G`. This is fibre-local: it neither compares distinct fibres nor infers bipartiteness/constructibility, a global trace decomposition, or an atom claim. |
 
 The representation layer now also contains compiled, gap-free definitions of
 non-induced embeddings, triple-system isomorphisms, isolated-point reduction,
@@ -121,8 +121,11 @@ private within a linear canonical base fibre. The finite fibre-cardinality sum
 is now proved, and for a finite linear no-isolated source it is also the sum
 of the separate local base-letter images and of the trace-key image. Each
 individual fibre's local base-letter map is now also packaged as an explicit
-equivalence. These interfaces still do not identify base letters across
-distinct base fibres or assemble them into a global trace decomposition. The
+equivalence. The local factor spine now also identifies each linear chosen
+base fibre with the private-vertex expansion of its canonical base-letter
+subgraph, with finite factor packaging when the selected family is finite.
+These interfaces still do not identify base letters across distinct base
+fibres or assemble them into a global trace decomposition. The
 remaining project work lies in reconstruction of a constructible system across
 isolated vertices, the global finite-trace decomposition beyond the local
 rigidity, grouping, and key steps,

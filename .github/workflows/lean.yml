@@ -42,6 +42,7 @@ jobs:
           lake build Erdos593.TripleSystem.SequenceLiftBaseIncidence
           lake build Erdos593.TripleSystem.SequenceLiftBaseLetterSubgraph
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberFactor
+          lake build Erdos593.TripleSystem.SequenceLiftBaseFiberExpansion
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum
@@ -69,6 +70,7 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseIncidence.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseLetterSubgraph.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberFactor.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberExpansion.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIndex.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberCardinality.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberTraceSum.lean
