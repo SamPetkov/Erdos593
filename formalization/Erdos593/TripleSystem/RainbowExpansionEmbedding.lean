@@ -1,5 +1,6 @@
 import Erdos593.TripleSystem.Embedding
 import Erdos593.TripleSystem.Expansion
+import Erdos593.TripleSystem.PairCodegree
 import Erdos593.Graph.CompleteBipartiteEdges
 import Erdos593.Graph.RainbowBipartite
 
@@ -21,6 +22,29 @@ structure WitnessedBipartiteMatrix {W : Type u} {D : Type v}
   edgeSet_eq : ∀ i j,
     H.edgeSet (edge i j) = {left i, right j, apex i j}
   locallyBounded : RainbowBipartite.LocallyBounded t apex
+
+/-- Package independently selected cell witnesses into the matrix consumed by
+the finite rainbow extraction. The global core-avoidance and local-bound
+conditions remain explicit hypotheses: pair codegree alone does not supply
+them. -/
+def WitnessedBipartiteMatrix.ofThirdVertexWitnesses
+    {W : Type u} {D : Type v} {H : TripleSystem W D} {q t : Nat}
+    (left right : Fin q ↪ W) (apex : Fin q → Fin q → W)
+    (cell : ∀ i j, ThirdVertexWitness H (left i) (right j) (apex i j))
+    (core_disjoint : ∀ i j, left i ≠ right j)
+    (apex_ne_left : ∀ i j k, apex i j ≠ left k)
+    (apex_ne_right : ∀ i j k, apex i j ≠ right k)
+    (locallyBounded : RainbowBipartite.LocallyBounded t apex) :
+    WitnessedBipartiteMatrix H q t where
+  left := left
+  right := right
+  apex := apex
+  edge := fun i j => (cell i j).edge
+  core_disjoint := core_disjoint
+  apex_ne_left := apex_ne_left
+  apex_ne_right := apex_ne_right
+  edgeSet_eq := fun i j => (cell i j).edgeSet_eq
+  locallyBounded := locallyBounded
 
 noncomputable def WitnessedBipartiteMatrix.rainbowEmbedding
     {W : Type u} {D : Type v} {H : TripleSystem W D} {n q t : Nat}
@@ -143,5 +167,4 @@ theorem exists_rainbowEmbedding_of_witnessedMatrices
 
 end TripleSystem
 end Erdos593
-
 
