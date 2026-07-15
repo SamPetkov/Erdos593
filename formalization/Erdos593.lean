@@ -5,12 +5,16 @@ import Erdos593.Graph.RootedTree
 import Erdos593.TripleSystem.Embedding
 import Erdos593.TripleSystem.Expansion
 import Erdos593.TripleSystem.BridgeBlocks
+import Erdos593.TripleSystem.BridgeBlockContraction
+import Erdos593.TripleSystem.BridgeBlockCycleLift
 import Erdos593.TripleSystem.DisjointUnion
+import Erdos593.TripleSystem.DisjointUnionForward
 import Erdos593.TripleSystem.ExpansionIntrinsic
 import Erdos593.TripleSystem.ForwardExpansion
 import Erdos593.TripleSystem.Intrinsic
 import Erdos593.TripleSystem.Isolated
 import Erdos593.TripleSystem.Isomorph
+import Erdos593.TripleSystem.OnePointAmalgamation
 
 /-!
 # Erdős Problem 593

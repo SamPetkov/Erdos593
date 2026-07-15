@@ -112,10 +112,24 @@ DB7BB24B756D745BBDE83FE92718B51BD3625DAE3701BA0F598D0EEDCD3F3028  lean-toolchain
   `Classical.choice`, and `Quot.sound`.
 - Accepted canonical file SHA-256:
   `2146915B6213E1949A659F4A7C18245A534A271F8C0DCD371C708386C5E40995`.
-- Remote status at local acceptance: still `IN_PROGRESS` at 18 percent after
-  about one hour. The remote result is retained only for adversarial comparison
-  and is no longer on the canonical proof's critical path.
-- Disposition: canonical fallback accepted; Aristotle comparison pending.
+- Remote status at local acceptance: still `IN_PROGRESS` after about one hour;
+  the result was therefore removed from the canonical proof's critical path.
+- Remote completion (UTC): 2026-07-15 00:56:11, reported `COMPLETE` at 100
+  percent by the Aristotle CLI/SDK.
+- Returned archive SHA-256:
+  `BF5397D211CDA37CA98C2AF29357575360C1C6A3CAD696AF93B3196597B87C91`.
+- Archive path audit: eight relative paths; no absolute or parent-traversal
+  path.
+- Aristotle's returned summary reports a successful 4.28 build and exactly the
+  standard permitted axioms.  The proof uses a separate minimal-counterexample
+  construction, explicit walk splitting, well-founded descent, and generated
+  `grind` invocations.
+- Adversarial comparison: the returned proof is materially longer and more
+  API-sensitive than the already accepted direct strong-induction proof.  A
+  bounded canonical 4.32 elaboration check did not complete within 64 seconds;
+  because this proof is not being accepted, no portability adaptation was made.
+- Disposition: Aristotle comparison reviewed and rejected in favor of the
+  shorter canonical fallback; no returned source was merged.
 
 Staged SHA-256 values:
 
@@ -266,6 +280,55 @@ A666B40F90C05232F5CE5E80148ADFBAF3583E70157254CFD0E198CEE3E1DD7B  Erdos593/Tripl
 FF4F3A82C7E128849DCA9AA705AEC93CB139B78F4E3770AB7AB77C1A45A014D5  lake-manifest.json
 DB7BB24B756D745BBDE83FE92718B51BD3625DAE3701BA0F598D0EEDCD3F3028  lean-toolchain
 C858C021E2818D5506A7ECD3E7195EBF3035A9B966AA7CC1C4719A653ABF4C9F  TASK.md
+```
+
+## CL1/CL2: contracted-cycle lift helpers
+
+- Submitted (UTC): 2026-07-15 01:16
+- Aristotle CLI: `aristotlelib 2.1.0`
+- Aristotle project: `e2a0b94f-4397-4d00-aded-7d56c7d1acbb`
+- Aristotle task: `1be990a9-1160-42a2-83f3-aaa0e7cf8e89`
+- Initial status: `QUEUED`; first poll: `IN_PROGRESS`.
+- Prompt: `Follow TASK.md exactly. Fill only the two marked cycle-lift helper
+  proofs and run every required check.`
+- Scope: prove only `contracted_edge_eq_of_edgeWitness_eq` and
+  `edgeWitness_not_mem_liftWalk_support` in the staged
+  `Erdos593/TripleSystem/BridgeBlockCycleLift.lean`.
+- Submitted directory: a sanitized Lean/mathlib `v4.32.0` source staging
+  directory outside the Git worktree; build caches were excluded.
+- Upload manifest: 25 files, 71,079 bytes. Deterministic sorted-tree SHA-256:
+  `6305ED73FD0E33CED0C6237A754DE398B4662320721E1417A56ACB6790F21CC2`.
+- Sensitive-pattern scan: clear. No manuscript, personal metadata,
+  credentials, Git history, or local paths were submitted.
+- Pre-submission validation: the exact target file elaborated under canonical
+  Lean/mathlib `v4.32.0`; its only warnings were the two expected marked
+  `sorry` terms.
+- Service compatibility warning: Aristotle currently recommends Lean 4.28.
+  The task intentionally retains the canonical 4.32 statements and APIs;
+  returned source is accepted only after an unchanged canonical build, source
+  gap scan, and axiom audit.
+- Independent fallback: while the remote task was in progress, the two helper
+  proofs were completed locally.  Degree two identifies the unordered endpoint
+  pair of an equal witness; an induction on the tail walk then excludes a
+  forbidden witness from the lifted support.
+- Canonical verification of fallback: `lake build
+  Erdos593.TripleSystem.BridgeBlockCycleLift` succeeded (1209 jobs); the source
+  gap scan and `git diff --check` were clear; axiom audits of both helpers and
+  the public cycle-lift/parity theorems reported exactly `propext`,
+  `Classical.choice`, and `Quot.sound`.
+- Accepted canonical file SHA-256:
+  `B271376BB03C29A6E3AB2ED238BC0AF3020E296A3576063703FB260F1E864FD0`.
+- Disposition: canonical local fallback accepted; Aristotle result retained as
+  an adversarial comparison and still pending.
+
+Selected staged SHA-256 values:
+
+```text
+C001670EA85E8120E468BC5619136C16B87D5951DB8FD70A9BC39A66701616ED  Erdos593/TripleSystem/BridgeBlockCycleLift.lean
+331CC56C040B395D5DD5C57988C96B90B2F9AE688687FDBD096C9AA9A5CEF416  lakefile.toml
+D494CE502DD7429B10D8B34B0F6BE65F898FE0D4F2DE1BEE267CDBC014AD9124  lake-manifest.json
+2773C517AA90B66EA8A2C52BDDDDF84393157797F8341BE0DF45294FFF7FD32E  lean-toolchain
+FE7093F688E7A2953DA5465F7E1C22DAC42BE287252EA82F1E9B8D16C9F933D7  TASK.md
 ```
 
 For every submission, record:

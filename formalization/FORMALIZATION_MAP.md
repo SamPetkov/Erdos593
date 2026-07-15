@@ -39,12 +39,16 @@ fixed before submission.
 | R1 | `levi_bridgeFree_edge_degree_eq_zero_or_two` | proved locally from B2 and the generic bridge-free degree theorem; compiled under canonical 4.32 |
 | F1 | `privateVertexExpansion_linear` | Aristotle proof accepted after a non-logical 4.32 linter repair |
 | F2 | `privateVertexExpansion_bridgeAtEveryEdge` | Aristotle proof accepted unchanged under canonical 4.32 |
+| O1 | `OnePointAmalgamation.amalgam`, `OnePointAmalgamation.isoOfMaps` | explicit quotient construction, factor embeddings, universal map, and reconstruction isomorphism proved locally |
+| D1 | `Embedding.disjointUnionInl`, `Embedding.disjointUnionInr`, `disjointUnion_linear` | canonical factor embeddings and preservation of linearity proved locally |
+| R2 | `BridgeBlock.contractedGraph`, `BridgeBlock.contractedGraph_existsUnique_edge` | component contraction and unique tagged-edge witness proved locally |
+| R3/R4 | `BridgeBlock.exists_levi_cycle_of_contractedGraph_cycle`, `BridgeBlock.contractedGraph_colorable_two` | doubled-length Levi-cycle lift and parity transfer proved locally; bounded Aristotle comparison in progress |
 
 The representation layer now also contains compiled, gap-free definitions of
 non-induced embeddings, triple-system isomorphisms, isolated-point reduction,
-the canonical private-vertex expansion, and binary disjoint union. These
-declarations are scaffold, not yet a proof of the forward or reverse
-classification.
+the canonical private-vertex expansion, binary disjoint union, and explicit
+one-point amalgamation. These declarations are scaffold, not yet a proof of the
+forward or reverse classification.
 
 The canonical project uses Lean/mathlib `v4.32.0`.  Aristotle currently works
 best with `v4.28.0`; therefore results produced in a 4.28 staging project are
@@ -73,6 +77,8 @@ the following bounded obligations:
 10. A finite induction reconstructs the original system by disjoint unions and
     one-point amalgamations.
 
-The quotient-forest theorem and the final reconstruction induction are kept as
-separate tasks: combining them would hide the largest graph-theoretic proof
-obligation inside the hypergraph construction.
+The contraction object, its unique-edge incidence theorem, the cycle lift, and
+the bipartiteness transfer are now compiled.  Here Berge length is preserved
+while Levi length doubles.  The quotient-forest theorem and the final
+reconstruction induction are kept as separate tasks: combining them would hide
+the largest graph-theoretic proof obligation inside the hypergraph construction.

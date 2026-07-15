@@ -17,8 +17,11 @@ formalization/Erdos593/Graph/BridgeFree.lean
 formalization/Erdos593/Graph/Parity.lean
 formalization/Erdos593/Graph/RootedTree.lean
 formalization/Erdos593/TripleSystem/Basic.lean
+formalization/Erdos593/TripleSystem/BridgeBlockContraction.lean
+formalization/Erdos593/TripleSystem/BridgeBlockCycleLift.lean
 formalization/Erdos593/TripleSystem/BridgeBlocks.lean
 formalization/Erdos593/TripleSystem/DisjointUnion.lean
+formalization/Erdos593/TripleSystem/DisjointUnionForward.lean
 formalization/Erdos593/TripleSystem/Embedding.lean
 formalization/Erdos593/TripleSystem/Expansion.lean
 formalization/Erdos593/TripleSystem/ExpansionIntrinsic.lean
@@ -27,6 +30,7 @@ formalization/Erdos593/TripleSystem/Intrinsic.lean
 formalization/Erdos593/TripleSystem/Isolated.lean
 formalization/Erdos593/TripleSystem/Isomorph.lean
 formalization/Erdos593/TripleSystem/Levi.lean
+formalization/Erdos593/TripleSystem/OnePointAmalgamation.lean
 formalization/FORMALIZATION_MAP.md
 formalization/lakefile.toml
 formalization/lake-manifest.json

@@ -20,14 +20,18 @@ first milestone.
 The current scaffold builds under Lean/mathlib `v4.32.0` and contains no
 `sorry`, `admit`, `axiom`, `unsafe`, or `sorryAx`. It includes the triple-system
 representation, isolated-point reduction, embeddings and isomorphisms, Levi
-graphs, private-vertex expansions, binary disjoint unions, bridge deletion,
-cycle parity, and the first bridge-block degree and quotient-edge lemmas.
+graphs, private-vertex expansions, binary disjoint unions, one-point
+amalgamations, bridge deletion, cycle parity, and the first bridge-block
+contraction and quotient-edge lemmas.  Contracted cycles lift to Levi cycles
+with doubled Levi length, so the even-Berge-cycle condition makes each
+contracted block two-colourable.  The project also proves that the canonical
+summands embed in a disjoint union and that disjoint unions preserve linearity.
 
 This is not yet a machine-checked proof of the classification theorem. The
-one-point amalgamation API, component contraction, quotient-forest theorem,
-running-intersection argument, and final reconstruction induction remain open
-formalization layers. Their dependency order is recorded in
-`FORMALIZATION_MAP.md`.
+preservation of all intrinsic conditions by the two operations, the
+quotient-forest theorem, running-intersection argument, and final reconstruction
+induction remain open formalization layers. Their dependency order is recorded
+in `FORMALIZATION_MAP.md`.
 
 ## Build
 
