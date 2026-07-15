@@ -18,7 +18,12 @@ formalization/Erdos593.lean
 formalization/Erdos593/Graph/Bridge.lean
 formalization/Erdos593/Graph/BridgeFree.lean
 formalization/Erdos593/Graph/BridgeQuotient.lean
+formalization/Erdos593/Graph/CompleteBipartite.lean
+formalization/Erdos593/Graph/CompleteBipartiteCopy.lean
+formalization/Erdos593/Graph/CountableColoring.lean
+formalization/Erdos593/Graph/FiniteOutdegreeColoring.lean
 formalization/Erdos593/Graph/Parity.lean
+formalization/Erdos593/Graph/RainbowBipartite.lean
 formalization/Erdos593/Graph/RootedTree.lean
 formalization/Erdos593/TripleSystem/Basic.lean
 formalization/Erdos593/TripleSystem/BridgeBlockContraction.lean
@@ -50,8 +55,11 @@ formalization/Erdos593/TripleSystem/Obligatory.lean
 formalization/Erdos593/TripleSystem/ObligatoryBipartiteReduction.lean
 formalization/Erdos593/TripleSystem/ObligatoryDisjointUnion.lean
 formalization/Erdos593/TripleSystem/ObligatoryIsolatedReduction.lean
+formalization/Erdos593/TripleSystem/ObligatoryOnePointAmalgamation.lean
 formalization/Erdos593/TripleSystem/OnePointAmalgamation.lean
 formalization/Erdos593/TripleSystem/OnePointAmalgamationIntrinsic.lean
+formalization/Erdos593/TripleSystem/SequenceLift.lean
+formalization/Erdos593/TripleSystem/SequenceLiftChromatic.lean
 formalization/Erdos593/TripleSystem/SingleEdgePiece.lean
 formalization/Erdos593/TripleSystem/SingleEdgePieceConstructible.lean
 formalization/Erdos593SelfContained.lean

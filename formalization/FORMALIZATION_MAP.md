@@ -22,8 +22,9 @@ of `F`.
    intersection property, and reconstruct by disjoint unions and one-point
    amalgamations.
 
-Each item will be split into theorem-sized Aristotle tasks whose statements are
-fixed before submission.
+Each item is first posed to Aristotle as a fixed complete theorem-sized task.
+It is split into smaller obligations only after a concrete failure or an
+adversarial audit exposes a false or over-strong formulation.
 
 ## Current kernel status
 
@@ -61,6 +62,9 @@ fixed before submission.
 | O3 | `chromaticCardinal_le_mk_iff`, `aleph0_lt_chromaticCardinal_deleteVertices`, `Embedding.disjointUnionOfDisjoint`, `IsObligatory.disjointUnion` | exact finite-deletion lemma and closure of finite obligatory systems under disjoint union proved |
 | O4 | `Embedding.extendIsolatedReduction`, `isObligatory_iff_isolatedReduction` | exact isolated-vertex reduction for finite obligatoriness proved, including extension over finitely many isolated source vertices in an infinite host |
 | O5 | `SimpleGraph.copyCompleteBipartiteNN`, `privateVertexExpansionEmbeddingOfCopy`, `privateVertexExpansion_isObligatory_of_completeBipartiteNN` | exact finite Corollary 3.3 reduction proved: every finite two-colourable graph expansion reduces, through isolated-point deletion and restoration, to the universe-compatible family of balanced complete-bipartite expansion atoms |
+| O6 | `RainbowBipartite.LocallyBounded`, `RainbowBipartite.IsRainbow`, `exists_rainbow_bipartite_submatrix` | exact manuscript Lemma 3.1 proved by a finite union bound with replacement: for arbitrary colours and positive `n,t`, an explicit finite `q` yields injective `n`-row and `n`-column selections whose `n²` colours are pairwise distinct; compiled under canonical 4.32 |
+| O7 | `FiniteOutdegreeColoring.exists_coloring`, `IsObligatory.rootedAbundance`, `IsObligatory.onePointAmalgamation` | exact Section 4 rooted-abundance argument and obligatory closure under one-point amalgamation, including singleton factors, proved under canonical 4.32; an audited full-theorem Aristotle return supplies an independent proof body for the final endpoint |
+| O8 | `SequenceLift.system`, `not_isProperColoring_nat`, `aleph0_lt_chromaticCardinal` | the one-apex sequence lift and its chromatic lower bound are proved: a proper countable colouring would recursively generate an `ω₁`-long branch with pairwise distinct colours |
 
 The representation layer now also contains compiled, gap-free definitions of
 non-induced embeddings, triple-system isomorphisms, isolated-point reduction,
@@ -73,10 +77,11 @@ the full forward theorem `Constructible.intrinsic` is now proved.  In the
 reverse direction, every active bridge-free component is an exact constructible
 edge restriction, degree-zero components are exact constructible one-edge
 restrictions, and the rooted bridge-forest ordering supplies the full
-`RunningEdgeAssembly`.  Consequently the exact finite structural theorem
-`isolatedReduction_constructible_iff_intrinsic` is proved.  The remaining
-project work lies in the positive obligatoriness atoms/one-point closure and
-the infinitary avoidance direction, not in the finite reconstruction.
+`RunningEdgeAssembly`. Consequently the exact finite structural theorem
+`isolatedReduction_constructible_iff_intrinsic` is proved. The remaining
+project work lies in the complete-bipartite positive atom, the finite-trace
+decomposition, and the infinitary avoidance direction, not in the finite
+reconstruction or the one-point closure.
 
 The canonical project uses Lean/mathlib `v4.32.0`.  Aristotle currently works
 best with `v4.28.0`; therefore results produced in a 4.28 staging project are

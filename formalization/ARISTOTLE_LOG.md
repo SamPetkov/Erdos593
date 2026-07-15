@@ -748,6 +748,108 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   only canonically recompiled, independently audited material influenced the
   accepted source.
 
+## O6: rainbow bipartite submatrices (manuscript Lemma 3.1)
+
+- Local acceptance date: 2026-07-15.
+- Aristotle CLI: `aristotlelib 2.1.0`.
+- Exact full-theorem submission: project
+  `77506440-18a5-4813-b4b0-e492d2a22e13`, task
+  `822fe881-1688-4695-bbe1-d67c3fb7df4f`.
+- Independent counting-helper submission: project
+  `e36b8617-f2f1-4b2a-b97a-ef5e2202174b`, task
+  `09c5efd1-251f-4e55-834c-a2284a18e5b8`.
+- Exact boundary: for every positive `n,t`, and every colour type, a colouring
+  `Fin q → Fin q → Γ` in which every colour fiber at every left and
+  right vertex has cardinality below `t` contains injective selections
+  `Fin n ↪ Fin q` on both sides whose `n²` selected colours are pairwise
+  distinct.
+- Accepted proof: sample the `2n` row/column coordinates with replacement.
+  The finite bad-index type contains ordered row collisions, ordered column
+  collisions, and ordered pairs of edge positions with equal colour.  Every
+  event has at most `t * q^(2n-1)` assignments: after all other coordinates
+  are fixed, one coordinate has at most one choice for a vertex collision and
+  fewer than `t` choices for a colour collision.  Taking
+  `q = Fintype.card (BadIndex n) * t + 1` makes the union bound strict.
+- Reusable local helpers: `Counting.exists_avoiding_of_event_card_le` and
+  `Counting.card_function_event_le_of_fiber_le`.
+- Canonical audit: the final repository module compiled directly and through
+  `lake build Erdos593.Graph.RainbowBipartite` under Lean/mathlib `v4.32.0`;
+  the focused Lake build passed all 994 jobs. Gap and credential scans were
+  clear. The accepted source SHA-256 is
+  `FDE7EBD29E5337707C3F953A01F612B5E7B8219F2E1F20580C93248E49C19820`.
+  The two helpers and the exact endpoint depend only on `propext`,
+  `Classical.choice`, and `Quot.sound`.
+- Remote status at local acceptance: the full-theorem task remained
+  `IN_PROGRESS`. The counting-helper task later reported `COMPLETE`. Its
+  downloaded gzip-compressed tar archive has six safe relative regular-file
+  entries, archive SHA-256
+  `D97AABBEFB525B2AEC3DB69AAE087A70DA7D4AF9E2D3C5A307585759A2D0D06D`,
+  and returned `CountingHelpers.lean` SHA-256
+  `3D5DF682122E0E0CE9F0B69C5DB6A8875416AA148618800ADB0F669F63E55C9D`.
+  The returned logical statements match the fixed helper boundaries; source,
+  traversal, special-file, gap, `implemented_by`, and credential scans were
+  clear, and the unchanged returned source compiled under canonical 4.32.
+  Its direct finite-sum-bijection proof is substantially more automation-heavy
+  than the accepted explicit sigma/fiber proof, so it was retained only as an
+  independent confirmation and not merged. Any eventual full-theorem return
+  likewise remains an independent comparison until its archive, source,
+  statement, gap, and canonical 4.32 compatibility are audited.
+
+## O7: rooted abundance and obligatory one-point amalgamation
+
+- Local acceptance date: 2026-07-15.
+- Exact full-theorem submission: project
+  `025413b9-851c-4d1b-95df-54cf05ea3fbc`, task
+  `c59a9c71-7cb9-4803-8650-2e5f913428b5`.
+- Sanitized staging audit: 52 files, 317,525 bytes, exactly one intended
+  placeholder at the target theorem, and no credential matches.
+- Returned archive SHA-256:
+  `749455997B571002D62039C36A8C38C0D6219F8134464BAAA582A40D865DEBAF`.
+  It contained 54 regular relative files, with no traversal, absolute path, or
+  symlink entry. Relative to the submitted stage, only the target Lean theorem
+  changed; the added summary files and all unchanged configuration/dependency
+  files were rejected from the canonical tree.
+- Canonical audit: the returned proof body was transplanted only into
+  `IsObligatory.onePointAmalgamation`, retaining the repository's surrounding
+  documentation and linter wrapper. It is byte-for-byte identical to the
+  audited returned body after newline normalization. `lake build
+  Erdos593.TripleSystem.ObligatoryOnePointAmalgamation` passed all 1,116 focused
+  jobs under Lean/mathlib `v4.32.0`.
+- Source-gap, secret, and trailing-whitespace scans were clear. The exact final
+  endpoint and its rooted-abundance helper report only `propext`,
+  `Classical.choice`, and `Quot.sound`.
+- Accepted canonical file SHA-256:
+  `C0F8C2C4C2CC955308526B741C06998A2F9646D3702B8A4C731DA293F9E151C6`.
+- Disposition: accepted; only the verified theorem body was merged.
+
+## O8: one-apex sequence-lift chromatic obstruction
+
+- Local acceptance date: 2026-07-15.
+- Exact full-theorem comparison submission: project
+  `ab708cd7-75ec-477b-a008-03af21ca51e4`, task
+  `ce44d44d-9972-48a4-b3b3-eccef16b3815`.
+- Sanitized staging audit: 11 files, 32,857 bytes, tree SHA-256
+  `80c3d2c442f8ece093c584eae3ec3aba6986e55dd6dec0ef50fff2ee54a360b2`,
+  one intended target placeholder, and no credential matches.
+- Local proof: `not_isProperColoring_nat` recursively builds an `ω₁`-branch
+  from a hypothetical proper countable colouring, and
+  `aleph0_lt_chromaticCardinal` derives the cardinal lower bound. The focused
+  canonical `SequenceLiftChromatic` build passed under Lean/mathlib `v4.32.0`.
+- Remote status at the last successful poll: `IN_PROGRESS`. No remote source
+  has been merged; any return remains subject to archive, exact-statement,
+  source-gap, secret, and canonical 4.32 axiom audits.
+
+## U1: complete-bipartite expansion atom
+
+- Exact full-theorem comparison submission: project
+  `4e668b7a-f140-4148-8e5a-d701f38cade7`, task
+  `4fa61ce3-bb25-47b3-8022-7f33ac514648`.
+- Boundary: a non-countably-colourable graph contains a balanced finite
+  complete-bipartite copy, supplying the remaining positive expansion atom.
+- Remote status at the last successful poll: `IN_PROGRESS`. No remote archive
+  or proof body has been accepted; the local graph infrastructure is retained
+  as a separate, gap-free foundation.
+
 ## Record format
 
 For every submission, record:

@@ -14,10 +14,12 @@ the reverse reconstruction, and
 `Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`. It also
 contains the chromatic-cardinal interface, finite-deletion and obligatory
 disjoint-union closure, the exact isolated-vertex reduction for obligatoriness,
-and the finite reduction of bipartite expansions to `Kₙ,ₙ⁺`. Still missing
-are the complete-bipartite expansion atom, rooted-abundance/obligatory
-one-point-amalgamation theorem, and the remaining infinitary positive and
-avoidance layers.
+and the finite reduction of bipartite expansions to `Kₙ,ₙ⁺`. It further
+contains the finite rainbow-bipartite lemma, rooted abundance and obligatory
+one-point-amalgamation closure, and the one-apex sequence lift with its
+countable-colouring obstruction. Still missing are the complete-bipartite
+expansion atom, the finite-trace structural theorem, and the remaining
+infinitary positive and avoidance layers.
 
 ## Reproduction and exactness check
 
@@ -37,15 +39,16 @@ against the Lean and Mathlib versions pinned by `lean-toolchain` and
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 40 source modules, 14 external
-  Mathlib imports, 6,737 physical lines, 5,952 nonblank lines, 267,188 UTF-8
+- Deterministic regeneration check: passed for 48 source modules, 34 external
+  Mathlib imports, 8,607 physical lines, 7,622 nonblank lines, 346,099 UTF-8
   bytes, and SHA-256
-  `cbef23c0dafbd18aac36f627ffd72926050bf5eeb09d5285307d1eb81684a15b`.
-- Canonical modular build: `lake build Erdos593` passed all 1,244 jobs under
-  the pinned Lean/mathlib `v4.32.0` toolchain and emitted no diagnostics.
-- One-file build: `lake env lean Erdos593SelfContained.lean` passed and emitted
-  no diagnostics.
-- Source audit: all 40 modules in the imported closure and the generated
+  `b7f4fb19b49ad0964dff99f517057476200abf721fa01c6b3acfcea31cb4e0d7`.
+- Canonical focused builds: `Erdos593.Graph.RainbowBipartite`,
+  `Erdos593.TripleSystem.ObligatoryOnePointAmalgamation`, and
+  `Erdos593.TripleSystem.SequenceLiftChromatic` all passed under the pinned
+  Lean/mathlib `v4.32.0` toolchain. The one-point-amalgamation module passed
+  all 1,116 focused Lake jobs after its audited Aristotle proof transplant.
+- Source audit: all 48 modules in the imported closure and the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
 - Axiom audit: every new or touched public declaration, together with the
@@ -77,6 +80,11 @@ import Erdos593
 #print axioms Erdos593.TripleSystem.BridgeBlock.isolatedReduction_constructible_iff_intrinsic
 #print axioms Erdos593.TripleSystem.IsObligatory.disjointUnion
 #print axioms Erdos593.TripleSystem.isObligatory_iff_isolatedReduction
+#print axioms Erdos593.RainbowBipartite.exists_rainbow_bipartite_submatrix
+#print axioms Erdos593.TripleSystem.IsObligatory.rootedAbundance
+#print axioms Erdos593.TripleSystem.IsObligatory.onePointAmalgamation
+#print axioms Erdos593.SequenceLift.not_isProperColoring_nat
+#print axioms Erdos593.SequenceLift.aleph0_lt_chromaticCardinal
 ```
 
 In addition to this declaration-level check, scan every source in the local

@@ -127,10 +127,12 @@ bridge-block quotient forest, active and degree-zero expansion pieces, the
 rooted running-intersection reconstruction, and the equivalence between
 constructibility and the intrinsic Levi conditions after isolated vertices are
 removed. It also includes the chromatic-cardinal interface, finite-deletion and
-obligatory disjoint-union closure, and the exact isolated-vertex reduction for
-obligatoriness. Major missing layers are the complete-bipartite expansion atom,
-rooted-abundance/obligatory one-point-amalgamation theorem, the remaining
-infinitary positive argument, and the sequence-lift avoidance direction.
+obligatory disjoint-union closure, the exact isolated-vertex reduction, the
+finite rainbow-bipartite lemma, rooted abundance and obligatory one-point
+amalgamation, and the one-apex sequence lift with its countable-colouring
+obstruction. Major missing layers are the complete-bipartite expansion atom,
+the finite-trace structural theorem, and the remaining infinitary positive and
+avoidance directions.
 
 Generated deterministically from Erdos593.lean and its exact transitive local
 import closure. Each source boundary records its relative path and normalized

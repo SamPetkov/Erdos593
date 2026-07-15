@@ -26,9 +26,11 @@ The author reports developing the proof independently, without consulting Eric L
 - `REVISION_NOTES.md` — record of the final editorial revision.
 - `MANIFEST.txt` and `SHA256SUMS` — package inventory and checksums.
 - `formalization/` — gap-free Lean 4 development containing the complete
-  finite constructive/intrinsic classification, the first exact obligatoriness
-  lemmas, an explicit obligation map, and an Aristotle provenance log. The
-  full infinitary obligatoriness/avoidance classification is not yet formalized.
+  finite constructive/intrinsic classification, exact obligatoriness closure
+  lemmas (including one-point amalgamation), a finite rainbow lemma, a
+  one-apex sequence-lift chromatic obstruction, an explicit obligation map,
+  and an Aristotle provenance log. The full infinitary
+  obligatoriness/avoidance classification is not yet formalized.
 - `formalization/Erdos593SelfContained.lean` — deterministic one-file copy of
   the current Lean source closure, with no project-local imports.
 
@@ -51,10 +53,10 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 6,338 physical source lines
-(5,639 nonblank) across 40 source modules, with 187 `theorem`/`lemma`
-declarations. The generated one-file checkpoint contains 6,737 physical lines
-and 14 external Mathlib imports; its additional lines record generation status,
+The exact imported Lean closure currently contains 8,133 physical source lines
+(7,250 nonblank) across 48 source modules, with 226 `theorem`/`lemma`
+declarations. The generated one-file checkpoint contains 8,607 physical lines
+and 34 external Mathlib imports; its additional lines record generation status,
 module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -67,10 +69,12 @@ forest gives the full running-intersection induction. The checked headline is
 `Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`.
 
 The development also proves the chromatic-cardinal characterization, finite
-vertex-deletion lemma, obligatory disjoint-union closure, and exact
-isolated-vertex reduction for obligatoriness. The complete-bipartite expansion
-atom, rooted-abundance/obligatory one-point-amalgamation theorem, and the
-remaining infinitary positive and avoidance arguments are still in progress.
+vertex-deletion lemma, obligatory disjoint-union closure, exact isolated-vertex
+reduction, the finite rainbow-bipartite lemma, rooted abundance and obligatory
+one-point-amalgamation closure, and the countable-colouring obstruction for the
+one-apex sequence lift. The complete-bipartite expansion atom, finite-trace
+decomposition, and remaining infinitary positive and avoidance arguments are
+still in progress.
 
 ## AI-use disclosure
 

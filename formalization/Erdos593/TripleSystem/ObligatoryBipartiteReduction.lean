@@ -1,5 +1,6 @@
 import Erdos593.TripleSystem.Expansion
 import Erdos593.TripleSystem.ObligatoryIsolatedReduction
+import Erdos593.Graph.CompleteBipartite
 import Mathlib.Combinatorics.SimpleGraph.Copy
 import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
 
@@ -24,16 +25,13 @@ universe u
 
 namespace TripleSystem
 
-/-- A universe-compatible finite part of cardinality `n`. -/
-abbrev FiniteBipartitePart (n : ℕ) := ULift.{u} (Fin n)
+/-- Backwards-compatible triple-system-layer name for the graph-level finite
+part. -/
+abbrev FiniteBipartitePart (n : ℕ) := Erdos593.FiniteBipartitePart.{u} n
 
-/-- The balanced complete bipartite graph `K_{n,n}`, with both finite parts
-placed in universe `u`. -/
-abbrev completeBipartiteNN (n : ℕ) :
-    _root_.SimpleGraph
-      (FiniteBipartitePart.{u} n ⊕ FiniteBipartitePart.{u} n) :=
-  _root_.completeBipartiteGraph
-    (FiniteBipartitePart.{u} n) (FiniteBipartitePart.{u} n)
+/-- Backwards-compatible triple-system-layer name for the graph-level
+balanced complete bipartite graph. -/
+abbrev completeBipartiteNN (n : ℕ) := Erdos593.completeBipartiteNN.{u} n
 
 namespace SimpleGraph
 

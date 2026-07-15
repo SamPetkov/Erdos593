@@ -33,6 +33,7 @@ Checked on 15 July 2026. The two black-box proof dependencies and Li's compariso
 | Erdős--Rado (1956) | [Full original scan](https://users.renyi.hu/~p_erdos/1956-02.pdf). Theorem 4(i), formula (95), printed p. 471, gives the instance used in Proposition 8.1. |
 | Erdős (1995) | [Full text at EUDML](https://eudml.org/doc/257967). |
 | Erdős Problem 593 | [Current catalogue entry](https://www.erdosproblems.com/593). |
+| DeepMind Formal Conjectures, Problem 593 | [Machine-readable Lean statement](https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/ErdosProblems/593.lean). It is used only to align the statement and is neither imported nor a proof dependency. |
 | Komjáth (2001) | Bibliographic metadata and reviews were located, but no reliable openly readable full text was found. Upload the article if a full background-source audit is desired. It is not a proof dependency here. |
 | Hajnal--Komjáth (2008) | [Indexed full PDF at CiteSeerX](https://citeseerx.ist.psu.edu/document?doi=c2aff75a718ad95379c5e0d74c54bb54ab647abe&repid=rep1&type=pdf); direct access may be intermittent. |
 | Erdős--Hajnal--Rothschild (1973) | [Full original scan](https://users.renyi.hu/~p_erdos/1973-13.pdf). |
