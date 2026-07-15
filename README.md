@@ -71,7 +71,10 @@ The author reports developing the proof independently, without consulting Eric L
   It deliberately retains multiplicity across base fibres and proves no
   global base-letter union or finite-trace decomposition; it makes no
   cross-fibre, bipartite, constructibility, or atom claim. A dependency map
-  records the scope.
+  records the scope. At the selected-family level, the finite linear case is
+  now packaged as a finite active-base-fibre partition with that local
+  factor/isomorphism data at each index; it does not glue those factors or
+  identify the selected system with a disjoint union.
   Reconstruction across isolated vertices,
   the remaining finite-trace decomposition, and the infinitary avoidance
   direction remain open.
@@ -97,9 +100,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 105 source modules. The
-generated one-file checkpoint contains 15,211 physical lines, 44 external
-Mathlib imports, and 466 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 106 source modules. The
+generated one-file checkpoint contains 15,282 physical lines, 44 external
+Mathlib imports, and 467 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -176,6 +179,11 @@ private-vertex-expansion isomorphism for a linear base fibre and supplies the
 finite carrier/factor packaging. It does not compare separate fibres or prove
 a global trace decomposition, bipartiteness, constructibility, or an atom
 classification.
+`SequenceLiftBaseFiberGlobalSpine` packages the finite active-base-index
+partition of a finite linear selected family and N1's local package at every
+index. It does not glue graph factors or private-vertex expansions, identify
+the selected system with a disjoint union, or assert a global trace, bipartite,
+constructibility, or atom result.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

@@ -86,6 +86,13 @@ This is local to one chosen fibre and neither compares fibres nor yields a
 global trace decomposition, bipartiteness, constructibility, or atom
 classification.
 
+For a finite linear selected family, the next spine packages its finite
+active-base index, the exact union of its pairwise edge-disjoint nonempty
+canonical fibres, and this finite local factor/isomorphism package at every
+index. It deliberately does not glue the local graph factors or expansions,
+identify the selected system with a disjoint union, or compare vertex supports
+or base-letter images across fibres.
+
 ## Reproduction and exactness check
 
 From the `formalization` directory:
@@ -106,9 +113,9 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 105 source modules, 44 external
-  Mathlib imports, 15,211 physical lines, and SHA-256
-  `91254175760eed51cb7c721ab20baf8d25422cc12a5e58e5f59bec9104c8887c`.
+- Deterministic regeneration check: passed for 106 source modules, 44 external
+  Mathlib imports, 15,282 physical lines, and SHA-256
+  `430ac6b88d688d590a21dcf38c0ca25726773a7789505a02f0035a4a7fbb4f72`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.Graph.FiniteEdgeFactor`,
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
@@ -126,7 +133,9 @@ module checks recorded below.
   and `Erdos593.TripleSystem.SequenceLiftBaseLetterSubgraph` (1,227 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberFactor` (1,230 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberExpansion` (1,233
-  Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake
+  Lake jobs), and
+  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake jobs),
+  and `Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine` (1,237 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality` (1,289
   Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum` (1,290
   Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv` (1,226
@@ -147,7 +156,8 @@ module checks recorded below.
   `SequenceLiftBaseFiberPartition`, `SequenceLiftBaseApex`,
   `SequenceLiftBaseIncidence`, `SequenceLiftBaseLetterSubgraph`,
   `SequenceLiftBaseFiberFactor`, `SequenceLiftBaseFiberExpansion`,
-  `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberCardinality`,
+  `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberGlobalSpine`,
+  `SequenceLiftBaseFiberCardinality`,
   `SequenceLiftBaseFiberTraceSum`, `SequenceLiftBaseFiberEquiv`,
   `SequenceLiftTaggedBaseLetterEquiv`,
   `SequenceLiftTaggedBaseLetterSourceEquiv`, `SequenceLiftBaseApexEquiv`,
@@ -246,6 +256,7 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.exists_fintype_baseFiberLetterSubgraphFactor
 #print axioms Erdos593.SequenceLift.baseFiber_privateVertexExpansionIso_of_linear
 #print axioms Erdos593.SequenceLift.exists_fintype_baseFiberLetterSubgraphFactorExpansionIso_of_linear
+#print axioms Erdos593.SequenceLift.finite_baseFiberExpansionFactorSpine_of_linear
 #print axioms Erdos593.SequenceLift.finite_activeBaseNodeIndex
 #print axioms Erdos593.SequenceLift.iUnion_baseFiber_activeBaseNodeIndex
 #print axioms Erdos593.SequenceLift.surjective_baseNodeIndexMap

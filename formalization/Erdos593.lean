@@ -87,6 +87,7 @@ import Erdos593.TripleSystem.SequenceLiftBaseLetterSubgraph
 import Erdos593.TripleSystem.SequenceLiftBaseFiberFactor
 import Erdos593.TripleSystem.SequenceLiftBaseFiberExpansion
 import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex
+import Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine
 import Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality
 import Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum
 import Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv
