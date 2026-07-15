@@ -30,8 +30,10 @@ jobs:
           lake build Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
           lake build Erdos593.TripleSystem.ConstructiblePositiveObligatory
           lake build Erdos593.TripleSystem.SequenceLiftTrace
+          lake build Erdos593.TripleSystem.SequenceLiftBaseNode
       - name: Strict wrapper source checks
         run: |
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTrace.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseNode.lean

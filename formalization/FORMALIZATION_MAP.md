@@ -68,6 +68,7 @@ adversarial audit exposes a false or over-strong formulation.
 | O9 | `SimpleGraph.NonInducedFactor`, `CompleteBipartiteEdges.coords_edge`, `Constructible.isObligatory_of_completeBipartiteNN` | non-induced graph-factor API, exact balanced-bipartite edge coordinates, and a focused-compiled conditional closure package: the atom hypothesis implies obligatoriness of every constructible system |
 | O10 | `completeBipartiteExpansionAtom_positive_isObligatory`, `completeBipartiteExpansionAtom_isObligatory`, `Constructible.isObligatory`, `intrinsic_isolatedReduction_isObligatory` | a classical cardinal-minimal low-pair-closure argument proves every positive balanced `K_{n,n}⁺` expansion atom obligatory; together with the zero atom it proves the all-parameter atom theorem, discharges O5/O9, yields obligatoriness of every constructible triple system, and yields the finite isolated-reduction-intrinsic corollary |
 | O11 | `SequenceLift.Node.letter_eq_of_extendsBy_same_target`, `SequenceLift.edgeLetter_eq_of_apex_eq`, `SequenceLift.mkEdge_eq_of_same_basePair_of_linearTrace`, `SequenceLift.mkEdge_eq_of_same_edgeLetter_of_linearTrace` | local finite-trace rigidity advanced: a fixed source/target extension determines its appended letter; coincident apexes over a common base trace determine the underlying graph-edge letter; and, in a linear restriction, the common trace and unordered base edge determine the lifted edge |
+| O12 | `SequenceLift.BasedAt`, `SequenceLift.basedAt_unique`, `SequenceLift.baseNode`, `SequenceLift.baseNode_mkEdge` | every sequence-lift edge has a unique node carrying two distinct edge points; the classically selected canonical base node is characterized by `BasedAt` and recovers the displayed base node of every `mkEdge`, giving the finite-trace program a stable edge-grouping index |
 
 The representation layer now also contains compiled, gap-free definitions of
 non-induced embeddings, triple-system isomorphisms, isolated-point reduction,
@@ -83,11 +84,13 @@ restrictions, and the rooted bridge-forest ordering supplies the full
 `RunningEdgeAssembly`. Consequently the exact finite structural theorem
 `isolatedReduction_constructible_iff_intrinsic` is proved.  The positive
 complete-bipartite atom and constructible-to-obligatory directions are now
-proved as well.  The sequence-lift layer now also has its local
-linear-trace rigidity package.  The remaining project work lies in
-reconstruction of a constructible system across isolated vertices, the
-finite-trace decomposition beyond that local rigidity step, and the
-infinitary avoidance direction; it is not a gap in the verified
+proved as well. The sequence-lift layer now also has its local linear-trace
+rigidity package and a canonical base-node grouping interface: an edge has
+exactly one node carrying two distinct edge points, with a classical selector
+that agrees with each displayed `mkEdge` base. The remaining project work lies
+in reconstruction of a constructible system across isolated vertices, the
+finite-trace decomposition beyond those local rigidity and grouping steps, and
+the infinitary avoidance direction; it is not a gap in the verified
 bridge-block reconstruction or one-point closure.
 
 The underlying O9 transfer remains a reusable conditional API, but

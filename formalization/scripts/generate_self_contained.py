@@ -132,8 +132,9 @@ complete-bipartite expansion atom is obligatory, the resulting theorem that
 every constructible triple system is obligatory, exact `K_{n,n}` edge
 coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
 interface, rooted abundance and obligatory one-point amalgamation, and the
-one-apex sequence lift with its countable-colouring obstruction and local
-linear-trace rigidity lemmas. Major missing layers are reconstruction across
+one-apex sequence lift with its countable-colouring obstruction, canonical
+unique base-node selector for every lifted edge, and local linear-trace
+rigidity lemmas. Major missing layers are reconstruction across
 isolated vertices, the finite-trace structural theorem, and the remaining
 infinitary avoidance direction.
 

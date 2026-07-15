@@ -73,6 +73,7 @@ import Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
 import Erdos593.TripleSystem.ConstructiblePositiveObligatory
 import Erdos593.TripleSystem.SequenceLiftChromatic
 import Erdos593.TripleSystem.SequenceLiftTrace
+import Erdos593.TripleSystem.SequenceLiftBaseNode
 import Erdos593.TripleSystem.SingleEdgePiece
 import Erdos593.TripleSystem.SingleEdgePieceConstructible
 

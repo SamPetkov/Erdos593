@@ -850,6 +850,34 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   or proof body has been accepted; the local graph infrastructure is retained
   as a separate, gap-free foundation.
 
+## O12: canonical base node for sequence-lift edges
+
+- Submitted (UTC): 2026-07-15 16:58. Aristotle web-dashboard request
+  `fe3dd927-3856-440f-9add-2f3548d39cd7`; the authenticated dashboard did not
+  expose a separate project identifier for this text-only request.
+- Exact task boundary: return only the complete new module
+  `Erdos593/TripleSystem/SequenceLiftBaseNode.lean`, with the supplied import,
+  definitions, theorem signatures, and proof route for `BasedAt`, displayed
+  base-node uniqueness, `Classical.choose` selection, and `baseNode_mkEdge`.
+  It requires `lake env lean -DwarningAsError=true
+  Erdos593/TripleSystem/SequenceLiftBaseNode.lean` and forbids `sorry`,
+  `admit`, `axiom`, `unsafe`, and new global assumptions.
+- Submitted files: none. The dashboard received only the explicit theorem
+  prompt and local API context; no repository tree, attachment, credential, or
+  secret was uploaded.
+- Local independent implementation: the same exact module was developed and
+  accepted before the remote job left its queue. Canonical targeted checks pass:
+  `lake build Erdos593.TripleSystem.SequenceLiftBaseNode` (975 focused jobs)
+  and the strict source command above under Lean/mathlib `v4.32.0`.
+- Local source audit: the module is clear of `sorry`, `admit`, project `axiom`,
+  `unsafe`, and `sorryAx`; its only choice principle is the explicitly scoped
+  `Classical.choose` in `baseNode`.
+- Remote status at the last poll: `QUEUED`. No returned source has been merged;
+  any result remains subject to exact-statement, source-gap, and canonical 4.32
+  compilation audit before comparison or adoption.
+- Disposition: local canonical proof accepted; remote proof retained as an
+  independent pending comparison.
+
 ## Record format
 
 For every submission, record:

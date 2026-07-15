@@ -39,9 +39,11 @@ The author reports developing the proof independently, without consulting Eric L
   balanced complete-bipartite atom theorem and its constructible-to-obligatory
   consequence, exact `K_{n,n}` edge coordinates, a finite rainbow lemma, a
   non-induced graph-factor interface, a one-apex sequence lift with a
-  chromatic obstruction and local linear-trace rigidity package, and a
-  dependency map. Reconstruction across isolated vertices, finite traces, and
-  the infinitary avoidance direction remain open.
+  chromatic obstruction, local linear-trace rigidity, and a canonical
+  base-node interface for grouping lifted edges by their unique two-point
+  source node, and a dependency map. Reconstruction across isolated vertices,
+  the remaining finite-trace decomposition, and the infinitary avoidance
+  direction remain open.
 - `formalization/Erdos593SelfContained.lean` — deterministic one-file copy of
   the current Lean source closure, with no project-local imports.
 
@@ -64,9 +66,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 82 source modules. The
-generated one-file checkpoint contains 12,899 physical lines, 43 external
-Mathlib imports, and 387 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 83 source modules. The
+generated one-file checkpoint contains 13,028 physical lines, 43 external
+Mathlib imports, and 395 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -87,12 +89,16 @@ The development also proves the chromatic-cardinal characterization, finite
 vertex-deletion lemma, obligatory disjoint-union closure, exact isolated-vertex
 reduction, the finite rainbow-bipartite lemma, rooted abundance and obligatory
 one-point-amalgamation closure, the countable-colouring obstruction for the
-one-apex sequence lift, and its local linear-trace rigidity package. The
-balanced complete-bipartite expansion atom is now obligatory for every natural
-parameter, which yields obligatoriness of all constructible systems and the
-finite intrinsic-isolated-reduction corollary. Reconstruction across isolated
-vertices, the remaining finite-trace decomposition, and the infinitary
-avoidance direction are still in progress.
+one-apex sequence lift, its local linear-trace rigidity package, and a
+canonical base-node API. For every lift edge, `BasedAt q e` identifies the
+unique node containing two distinct edge points; `basedAt_unique` and the
+classically selected `baseNode e` make that index canonical, while
+`baseNode_mkEdge` recovers the displayed source node of an explicit lift edge.
+The balanced complete-bipartite expansion atom is now obligatory for every
+natural parameter, which yields obligatoriness of all constructible systems
+and the finite intrinsic-isolated-reduction corollary. Reconstruction across
+isolated vertices, the remaining finite-trace decomposition, and the
+infinitary avoidance direction are still in progress.
 
 ## AI-use disclosure
 
