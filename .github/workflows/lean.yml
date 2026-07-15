@@ -46,6 +46,7 @@ jobs:
           lake build Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv
           lake build Erdos593.TripleSystem.SequenceLiftBaseApexEquiv
           lake build Erdos593.TripleSystem.SequenceLiftTaggedBaseApexEquiv
+          lake build Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
       - name: Strict wrapper source checks
         run: |
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
@@ -67,3 +68,4 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTaggedBaseLetterSourceEquiv.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseApexEquiv.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTaggedBaseApexEquiv.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTaggedBaseApexSourceEquiv.lean

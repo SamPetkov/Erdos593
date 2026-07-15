@@ -162,6 +162,10 @@ identification, global union, cardinality, or trace claim.
 equivalence with those local apex-image maps, retaining the active base-node
 tag; it makes no untagged apex union, cross-fibre identification,
 cardinality, trace, or atom claim.
+`SequenceLiftTaggedBaseApexSourceEquiv` transports that same tagged
+apex-image equivalence through an embedding back to the source-edge type
+under a linear image; it likewise asserts no untagged union, cross-fibre
+identification, cardinality, trace, or atom claim.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

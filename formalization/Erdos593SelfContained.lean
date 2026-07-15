@@ -14537,9 +14537,53 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexEquiv
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
+Source: Erdos593/TripleSystem/SequenceLiftTaggedBaseApexSourceEquiv.lean
+Normalized SHA-256: 01246c1f56022819a4da8164520e0d69b20dabfd70e0ff41777b58a4ac930a18
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftTaggedBaseApexSourceEquiv
+
+/-!
+# Tagged apex-image equivalence for embedded sequence lifts
+
+For an embedding into a sequence lift, linearity of the embedded edge image
+identifies the source edge type with the sigma of the canonical-apex images
+of its separate canonical base fibres. The active base-node tag is retained.
+-/
+
+namespace Erdos593
+
+universe u v w
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- Under linearity of an embedded edge image, the source edge type is
+equivalent to the sigma of the canonical-apex images of its separate
+canonical base fibres, retaining the active base-node tag. -/
+noncomputable def edgeIndexEquiv_sigmaBaseApexImage_of_linear
+    {W : Type v} {E : Type w} {F : TripleSystem W E}
+    (f : F.Embedding (system G))
+    (hlinear : ((system G).edgeRestriction f.edgeImage).Linear) :
+    Equiv E (Sigma (fun q : activeBaseNodeIndex f.edgeImage =>
+      baseApex '' baseFiber f.edgeImage q.1)) :=
+  (f.edgeImageEdgeEquiv).trans
+    (selectedEdgeEquiv_sigmaBaseApexImage_of_linear hlinear)
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftTaggedBaseApexSourceEquiv
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: df587f419407aa6e4fefd04d61211eecd2899afdf2ff187ffc5dff9fd8f8e491
+Normalized SHA-256: a7d580c516a409a37fe4c23e03e66489449318fb169a92494448035c3a1a9705
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

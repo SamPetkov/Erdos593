@@ -89,6 +89,7 @@ import Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterEquiv
 import Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv
 import Erdos593.TripleSystem.SequenceLiftBaseApexEquiv
 import Erdos593.TripleSystem.SequenceLiftTaggedBaseApexEquiv
+import Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 import Erdos593.TripleSystem.SingleEdgePiece
 import Erdos593.TripleSystem.SingleEdgePieceConstructible
 
