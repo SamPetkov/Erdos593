@@ -3,6 +3,7 @@ import Erdos593.Graph.BridgeFree
 import Erdos593.Graph.BridgeQuotient
 import Erdos593.Graph.CompleteBipartiteCopy
 import Erdos593.Graph.CompleteBipartiteEdges
+import Erdos593.Graph.CompleteBipartiteLayering
 import Erdos593.Graph.CountableColoring
 import Erdos593.Graph.FiniteClosureLayering
 import Erdos593.Graph.FiniteOutdegreeColoring
