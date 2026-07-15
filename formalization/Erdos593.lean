@@ -85,6 +85,7 @@ import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex
 import Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality
 import Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum
 import Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv
+import Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterEquiv
 import Erdos593.TripleSystem.SingleEdgePiece
 import Erdos593.TripleSystem.SingleEdgePieceConstructible
 

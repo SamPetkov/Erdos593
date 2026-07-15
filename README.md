@@ -147,6 +147,10 @@ base letters across distinct fibres or asserting a global trace decomposition.
 `SequenceLiftBaseFiberEquiv` packages the within-fibre correspondence as an
 explicit equivalence with that fibre's own base-letter image; it neither joins
 images from distinct fibres nor produces a global trace equivalence.
+`SequenceLiftTaggedBaseLetterEquiv` then identifies the selected edges with
+the sigma of those separate fibre images while retaining the active base-node
+tag.  It does not form an untagged global base-letter image or a trace
+decomposition.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across
