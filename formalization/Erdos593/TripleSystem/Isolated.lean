@@ -79,6 +79,13 @@ theorem isolatedReduction_simple :
     Function.Injective (fun e => {x | F.isolatedReduction.Inc x e}) :=
   F.isolatedReduction.simple
 
+/-- Deleting isolated points preserves linearity. -/
+theorem isolatedReduction_linear (hlinear : F.Linear) :
+    F.isolatedReduction.Linear := by
+  intro e f x y hef hxe hxf hye hyf
+  apply Subtype.ext
+  exact hlinear hef hxe hxf hye hyf
+
 /-- The isolated-point reduction has no isolated points. -/
 theorem isolatedReduction_hasNoIsolatedPoints :
     F.isolatedReduction.HasNoIsolatedPoints := by

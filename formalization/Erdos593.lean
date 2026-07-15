@@ -7,6 +7,7 @@ import Erdos593.Graph.CompleteBipartiteLayering
 import Erdos593.Graph.CountableColoring
 import Erdos593.Graph.FiniteClosureLayering
 import Erdos593.Graph.FiniteOutdegreeColoring
+import Erdos593.Graph.MinimalBadCore
 import Erdos593.Graph.NonInducedFactor
 import Erdos593.Graph.Parity
 import Erdos593.Graph.RainbowBipartite
@@ -28,11 +29,14 @@ import Erdos593.TripleSystem.DisjointUnion
 import Erdos593.TripleSystem.DisjointUnionForward
 import Erdos593.TripleSystem.EdgeRestriction
 import Erdos593.TripleSystem.EmbeddingEdgeRestriction
+import Erdos593.TripleSystem.FiniteLinearImageTrace
 import Erdos593.TripleSystem.EdgeRestrictionFull
 import Erdos593.TripleSystem.EdgeRestrictionReconstruction
 import Erdos593.TripleSystem.ExpansionIntrinsic
 import Erdos593.TripleSystem.ForwardExpansion
 import Erdos593.TripleSystem.HighPairGraph
+import Erdos593.TripleSystem.HighPairMatrix
+import Erdos593.TripleSystem.HighPairObligatory
 import Erdos593.TripleSystem.HighPairSelection
 import Erdos593.TripleSystem.Intrinsic
 import Erdos593.TripleSystem.Isolated
