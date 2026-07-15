@@ -12,10 +12,11 @@ This repository contains the manuscript source package and a Lean development of
 the finite structural kernel.  It does not claim a complete machine-checked
 proof of the full obligatoriness/avoidance classification.  The checked
 structural endpoint is
-`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`; the
-positive closure package transfers obligatoriness from the balanced
-complete-bipartite atoms to constructible systems conditionally on those atom
-theorems.
+`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`.  The
+development also proves that every balanced complete-bipartite
+private-vertex-expansion atom is obligatory, hence that every constructible
+triple system is obligatory; for finite `F`, it proves the corollary
+`F.isolatedReduction.Intrinsic → F.IsObligatory`.
 
 The typesetting is monochrome and Annals-inspired, using `amsart` with New TX text and mathematics. It is an original presentation and is not the official *Annals of Mathematics* class or submission template.
 
@@ -34,11 +35,12 @@ The author reports developing the proof independently, without consulting Eric L
 - `MANIFEST.txt` and `SHA256SUMS` — package inventory and checksums.
 - `formalization/` — gap-free Lean 4 development of the finite structural
   kernel: the isolated-reduction constructive/intrinsic theorem, obligatory
-  closure lemmas (including one-point amalgamation), a conditional
-  atom-to-constructible transfer, exact `K_{n,n}` edge coordinates, a finite
-  rainbow lemma, a non-induced graph-factor interface, a one-apex sequence
-  lift with a chromatic obstruction, and a dependency map. The positive atom,
-  finite-trace, and infinitary avoidance layers are not yet formalized.
+  closure lemmas (including one-point amalgamation), the all-parameter
+  balanced complete-bipartite atom theorem and its constructible-to-obligatory
+  consequence, exact `K_{n,n}` edge coordinates, a finite rainbow lemma, a
+  non-induced graph-factor interface, a one-apex sequence lift with a
+  chromatic obstruction, and a dependency map. Reconstruction across isolated
+  vertices, finite traces, and the infinitary avoidance direction remain open.
 - `formalization/Erdos593SelfContained.lean` — deterministic one-file copy of
   the current Lean source closure, with no project-local imports.
 
@@ -61,9 +63,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 51 source modules. The
-generated one-file checkpoint contains 9,002 physical lines, 35 external
-Mathlib imports, and 243 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 81 source modules. The
+generated one-file checkpoint contains 12,758 physical lines, 43 external
+Mathlib imports, and 384 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -76,15 +78,19 @@ and the rooted quotient forest gives the full running-intersection induction.
 The checked headline is
 `Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`. This is
 not yet a theorem that `Constructible F` and `F.Intrinsic` are equivalent for
-arbitrary `F`, nor an obligatoriness classification.
+arbitrary `F`, nor a full obligatoriness classification.  It does now include
+`completeBipartiteExpansionAtom_isObligatory`, `Constructible.isObligatory`,
+and the finite corollary `intrinsic_isolatedReduction_isObligatory`.
 
 The development also proves the chromatic-cardinal characterization, finite
 vertex-deletion lemma, obligatory disjoint-union closure, exact isolated-vertex
 reduction, the finite rainbow-bipartite lemma, rooted abundance and obligatory
 one-point-amalgamation closure, and the countable-colouring obstruction for the
-one-apex sequence lift. The complete-bipartite expansion atom, finite-trace
-decomposition, reconstruction across isolated vertices, and the remaining
-infinitary positive and avoidance arguments are still in progress.
+one-apex sequence lift.  The balanced complete-bipartite expansion atom is
+now obligatory for every natural parameter, which yields obligatoriness of all
+constructible systems and the finite intrinsic-isolated-reduction corollary.
+Reconstruction across isolated vertices, finite-trace decomposition, and the
+remaining infinitary avoidance direction are still in progress.
 
 ## AI-use disclosure
 

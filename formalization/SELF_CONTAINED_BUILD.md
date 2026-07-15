@@ -13,17 +13,18 @@ exactly
 and intrinsic-operation preservation, exact active and degree-zero bridge
 blocks, the rooted quotient-forest running intersection, and reverse
 reconstruction after isolated vertices are removed. It does not yet prove
-`Constructible F ↔ F.Intrinsic` for arbitrary `F`, nor an obligatoriness
-classification. It also contains the chromatic-cardinal interface,
-finite-deletion and obligatory closure facts, the exact isolated-vertex
-reduction for obligatoriness, the finite reduction of bipartite expansions to
-`Kₙ,ₙ⁺`, a conditional transfer from those atoms to constructible systems,
-exact `Kₙ,ₙ` edge coordinates, a finite rainbow-bipartite lemma, a non-induced
-graph-factor interface, rooted abundance and obligatory one-point-amalgamation
-closure, and the one-apex sequence lift with its countable-colouring
-obstruction. Still missing are the complete-bipartite expansion atom,
-reconstruction across isolated vertices, the finite-trace structural theorem,
-and the remaining infinitary positive and avoidance layers.
+`Constructible F ↔ F.Intrinsic` for arbitrary `F`, nor a full
+obligatoriness classification. It also contains the chromatic-cardinal
+interface, finite-deletion and obligatory closure facts, the exact
+isolated-vertex reduction for obligatoriness, the all-parameter theorem that
+every balanced complete-bipartite expansion atom is obligatory, the resulting
+theorem that every constructible triple system is obligatory, the finite
+intrinsic-isolated-reduction obligatoriness corollary, exact `Kₙ,ₙ` edge
+coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
+interface, rooted abundance and obligatory one-point-amalgamation closure, and
+the one-apex sequence lift with its countable-colouring obstruction. Still
+missing are reconstruction across isolated vertices, the finite-trace
+structural theorem, and the remaining infinitary avoidance direction.
 
 ## Reproduction and exactness check
 
@@ -39,20 +40,21 @@ The first command is the only supported way to update the generated file. The
 second command exits unsuccessfully if the checked-in artifact differs by even
 one byte from deterministic regeneration. The third checks the combined source
 against the Lean and Mathlib versions pinned by `lean-toolchain` and
-`lake-manifest.json`; run that aggregate command in a sufficiently provisioned
-pinned environment.
+`lake-manifest.json`; run that aggregate command only in a sufficiently
+provisioned pinned environment. Routine release validation uses the focused
+module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 51 source modules, 35 external
-  Mathlib imports, 9,002 physical lines, 7,952 nonblank lines, 361,580 UTF-8
+- Deterministic regeneration check: passed for 81 source modules, 43 external
+  Mathlib imports, 12,758 physical lines, 11,219 nonblank lines, 518,604 UTF-8
   bytes, and SHA-256
-  `e74220181466c8f54e9aa8c0a19549288495ab556bab30290de6a4ce2975269f`.
-- Canonical focused builds: `Erdos593.Graph.NonInducedFactor`,
-  `Erdos593.Graph.CompleteBipartiteEdges`, and
-  `Erdos593.TripleSystem.ObligatoryConstructible` passed together under the
-  pinned Lean/mathlib `v4.32.0` toolchain (1,350 Lake jobs).
-- Source audit: all 51 modules in the imported closure and the generated
+  `de40a23e1c9a7fd1ab918402c7dd5eac8321e85b10c71fa94453ea43155d5806`.
+- Canonical focused checks: strict source checks and targeted builds for
+  `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
+  and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
+  jobs) passed under the pinned Lean/mathlib `v4.32.0` toolchain.
+- Source audit: all 81 modules in the imported closure and the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
 - Axiom audit: the representative central declarations and the new public
@@ -92,6 +94,10 @@ import Erdos593
 #print axioms Erdos593.SimpleGraph.NonInducedFactor.trans
 #print axioms Erdos593.CompleteBipartiteEdges.coords_edge
 #print axioms Erdos593.TripleSystem.Constructible.isObligatory_of_completeBipartiteNN
+#print axioms Erdos593.TripleSystem.completeBipartiteExpansionAtom_positive_isObligatory
+#print axioms Erdos593.TripleSystem.completeBipartiteExpansionAtom_isObligatory
+#print axioms Erdos593.TripleSystem.Constructible.isObligatory
+#print axioms Erdos593.TripleSystem.intrinsic_isolatedReduction_isObligatory
 ```
 
 In addition to this declaration-level check, scan every source in the local

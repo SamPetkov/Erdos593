@@ -1,0 +1,35 @@
+name: Lean focused checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: formalization
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Lean and fetch Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formalization
+          auto-config: false
+          use-mathlib-cache: true
+      - name: Strict wrapper source checks
+        run: |
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean
+      - name: Targeted wrapper builds
+        run: |
+          lake build Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
+          lake build Erdos593.TripleSystem.ConstructiblePositiveObligatory

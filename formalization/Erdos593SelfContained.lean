@@ -3,6 +3,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
 import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Combinatorics.Compactness
+import Mathlib.Combinatorics.Hall.Basic
 import Mathlib.Combinatorics.SimpleGraph.Acyclic
 import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Combinatorics.SimpleGraph.Bipartite
@@ -13,7 +14,11 @@ import Mathlib.Combinatorics.SimpleGraph.Finite
 import Mathlib.Combinatorics.SimpleGraph.Sum
 import Mathlib.Combinatorics.SimpleGraph.Walk.Maps
 import Mathlib.Data.Countable.Basic
+import Mathlib.Data.Fin.Embedding
+import Mathlib.Data.Fin.Tuple.Embedding
 import Mathlib.Data.Finset.Card
+import Mathlib.Data.Finset.Image
+import Mathlib.Data.Finset.Max
 import Mathlib.Data.Finset.Sort
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Fintype.EquivFin
@@ -24,10 +29,13 @@ import Mathlib.Data.Set.Card
 import Mathlib.Data.Set.Finite.Range
 import Mathlib.Logic.Embedding.Basic
 import Mathlib.Logic.Equiv.Fin.Basic
+import Mathlib.Order.WellFounded
 import Mathlib.SetTheory.Cardinal.Aleph
+import Mathlib.SetTheory.Cardinal.Arithmetic
 import Mathlib.SetTheory.Cardinal.Basic
 import Mathlib.SetTheory.Cardinal.Finite
 import Mathlib.SetTheory.Cardinal.Order
+import Mathlib.SetTheory.Cardinal.Ordinal
 import Mathlib.Tactic.GCongr
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Order
@@ -55,14 +63,14 @@ includes the constructive class, intrinsic-preservation theorems, the
 bridge-block quotient forest, active and degree-zero expansion pieces, and the
 rooted running-intersection reconstruction after isolated vertices are removed.
 It also includes the chromatic-cardinal interface, finite-deletion and
-obligatory closure facts, a conditional transfer from the balanced
-complete-bipartite atoms to constructible systems, exact `K_{n,n}` edge
+obligatory closure facts, the all-parameter theorem that every balanced
+complete-bipartite expansion atom is obligatory, the resulting theorem that
+every constructible triple system is obligatory, exact `K_{n,n}` edge
 coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
 interface, rooted abundance and obligatory one-point amalgamation, and the
 one-apex sequence lift with its countable-colouring obstruction. Major missing
-layers are the complete-bipartite expansion atom, reconstruction across
-isolated vertices, the finite-trace structural theorem, and the remaining
-infinitary positive and avoidance directions.
+layers are reconstruction across isolated vertices, the finite-trace structural
+theorem, and the remaining infinitary avoidance direction.
 
 Generated deterministically from Erdos593.lean and its exact transitive local
 import closure. Each source boundary records its relative path and normalized
@@ -517,7 +525,7 @@ END SOURCE MODULE: Erdos593.Graph.CompleteBipartite
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.Graph.CompleteBipartiteCopy
 Source: Erdos593/Graph/CompleteBipartiteCopy.lean
-Normalized SHA-256: 6a8a3b01d2978d6606ced9a6dba98646de801c99d5aa13c46729a576a1da0b3b
+Normalized SHA-256: 0537f28e241dd08181471dae06d0724ddea4ca5aec4edd3a8d48d6c20252bbd4
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_Graph_CompleteBipartiteCopy
 
@@ -661,6 +669,38 @@ theorem commonNeighborSet_toFinset_card_lt_of_no_completeBipartiteNNCopy
     (Equiv.ulift.{u, 0}.toEmbedding).trans
       (finIncl.trans (cardEquiv.toEmbedding.trans finsetToSet))
   exact hno.false right
+
+/-- A non-induced `K_{q,q}` copy supplies injected finite left and right
+sides, with all cross adjacencies and no cross-side collisions. -/
+theorem exists_finEmbeddings_of_completeBipartiteNNCopy {q : Nat}
+    (f : _root_.SimpleGraph.Copy (completeBipartiteNN.{u} q) G) :
+    ∃ left right : Fin q ↪ V,
+      (∀ i j, left i ≠ right j) ∧ ∀ i j, G.Adj (left i) (right j) := by
+  let left : Fin q ↪ V :=
+    { toFun := fun i => f (Sum.inl (ULift.up i))
+      inj' := by
+        intro i j hij
+        have h := f.injective hij
+        simpa using h }
+  let right : Fin q ↪ V :=
+    { toFun := fun j => f (Sum.inr (ULift.up j))
+      inj' := by
+        intro i j hij
+        have h := f.injective hij
+        simpa using h }
+  refine ⟨left, right, ?_, ?_⟩
+  · intro i j h
+    have hsrc : (completeBipartiteNN.{u} q).Adj
+        (Sum.inl (ULift.up i)) (Sum.inr (ULift.up j)) := by
+      simp [completeBipartiteNN]
+    have htgt : G.Adj (left i) (right j) := by
+      simpa [left, right] using f.toHom.map_adj hsrc
+    exact G.loopless.irrefl (left i) (h ▸ htgt)
+  · intro i j
+    have hsrc : (completeBipartiteNN.{u} q).Adj
+        (Sum.inl (ULift.up i)) (Sum.inr (ULift.up j)) := by
+      simp [completeBipartiteNN]
+    simpa [left, right] using f.toHom.map_adj hsrc
 
 end SimpleGraph
 
@@ -1149,6 +1189,919 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_Graph_CountableColoring
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.Graph.CountableColoring
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.FiniteClosureLayering
+Source: Erdos593/Graph/FiniteClosureLayering.lean
+Normalized SHA-256: d9a827e9fc58ee92fb76ec7e7a346d1598eb6e568577319a53a8f5abf65faacb
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_FiniteClosureLayering
+
+/-!
+# Finite closure layerings
+
+This interface records the part of the closure construction needed by the
+uncountable complete-bipartite forcing argument.  Its implementation will be
+kept separate: in particular, the eventual construction must use
+singular-cardinal-safe bounds for its countable closure stages.
+-/
+
+namespace Erdos593
+
+universe u
+
+/-- A rank decomposition closed under a finite closure operator on `r`-sets.
+
+The fibres are required to be smaller than the ambient carrier.  The closure
+condition says that whenever every member of an `r`-set is earlier than `v`,
+then every output of the closure operator on that set is earlier than `v` as
+well. -/
+structure FiniteClosureLayering {V : Type u} (r : ℕ)
+    (Φ : {s : Finset V // s.card = r} → Finset V)
+    (I : Type u) [LinearOrder I] where
+  rank : V → I
+  fiber_lt : ∀ i, Cardinal.mk {x : V // rank x = i} < Cardinal.mk V
+  earlier_closed : ∀ (v : V) (s : Finset V) (hs : s.card = r),
+    (∀ x ∈ s, rank x < rank v) →
+    ∀ y ∈ Φ ⟨s, hs⟩, rank y < rank v
+
+namespace FiniteClosureLayering
+
+variable {V : Type u} {r : ℕ}
+variable {Φ : {s : Finset V // s.card = r} → Finset V}
+variable {I : Type u} [LinearOrder I]
+
+/-- A point cannot occur in the closure of an `r`-set all of whose points are
+strictly earlier than it. -/
+theorem not_mem_of_all_rank_lt
+    (L : FiniteClosureLayering r Φ I) (v : V) (s : Finset V)
+    (hs : s.card = r) (hsmaller : ∀ x ∈ s, L.rank x < L.rank v) :
+    v ∉ Φ ⟨s, hs⟩ := by
+  intro hv
+  exact (lt_irrefl _ (L.earlier_closed v s hs hsmaller v hv))
+
+end FiniteClosureLayering
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_FiniteClosureLayering
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.FiniteClosureLayering
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.CompleteBipartiteLayering
+Source: Erdos593/Graph/CompleteBipartiteLayering.lean
+Normalized SHA-256: cb14bbbecd65c9c4b4707c132a419b5576d52283a9e336253109b24707d9d140
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_CompleteBipartiteLayering
+
+/-!
+# Closure layerings and complete-bipartite forcing
+
+This file supplies the local graph-theoretic half of the positive-atom
+strategy.  In a `K_{n,n}`-free graph, a rank layering closed under finite
+common-neighbour sets has fewer than `n` backward neighbours at every
+vertex.  Thus, once its fibres are countably colourable, the whole graph is
+countably colourable.
+
+Constructing such a layering with small fibres is deliberately separate: it
+is the singular-cardinal-sensitive infinitary part of the argument.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SimpleGraph
+
+variable {V : Type u} (G : _root_.SimpleGraph V)
+
+/-- If a set admits no injected `n`-element bipartite part, then it is finite. -/
+theorem finite_of_no_finiteBipartitePart_embedding {n : Nat} (S : Set V)
+    (hno : IsEmpty (FiniteBipartitePart.{u} n ↪ S)) :
+    Set.Finite S := by
+  classical
+  by_contra hfinite
+  letI : Infinite S := Set.infinite_coe_iff.mpr hfinite
+  let finToNat : FiniteBipartitePart.{u} n ↪ Nat :=
+    (Equiv.ulift.{u, 0}.toEmbedding).trans Fin.valEmbedding
+  let right : FiniteBipartitePart.{u} n ↪ S :=
+    finToNat.trans (Infinite.natEmbedding S)
+  exact hno.false right
+
+/-- The finite set above has cardinality strictly smaller than `n`. -/
+theorem toFinset_card_lt_of_no_finiteBipartitePart_embedding {n : Nat}
+    (S : Set V) (hno : IsEmpty (FiniteBipartitePart.{u} n ↪ S)) :
+    (finite_of_no_finiteBipartitePart_embedding S hno).toFinset.card < n := by
+  classical
+  let hS : Set.Finite S := finite_of_no_finiteBipartitePart_embedding S hno
+  by_contra hlt
+  have hle : n ≤ hS.toFinset.card := Nat.le_of_not_gt hlt
+  let finIncl : Fin n ↪ Fin hS.toFinset.card :=
+    { toFun := fun i ↦ ⟨i, i.isLt.trans_le hle⟩
+      inj' := fun _ _ h ↦
+        Fin.ext (congrArg (fun z : Fin hS.toFinset.card ↦ z.val) h) }
+  let cardEquiv : Fin hS.toFinset.card ≃ hS.toFinset :=
+    (finCongr (Fintype.card_coe hS.toFinset).symm).trans
+      (Fintype.equivFin hS.toFinset).symm
+  let finsetToSet : hS.toFinset ↪ S :=
+    { toFun := fun x ↦
+        ⟨x, by simpa only [Set.Finite.mem_toFinset] using x.property⟩
+      inj' := by
+        intro x y h
+        apply Subtype.ext
+        exact congrArg (fun z : S ↦ z.val) h }
+  let right : FiniteBipartitePart.{u} n ↪ S :=
+    (Equiv.ulift.{u, 0}.toEmbedding).trans
+      (finIncl.trans (cardEquiv.toEmbedding.trans finsetToSet))
+  exact hno.false right
+
+/-- The finite common-neighbour closure of an `n`-set in a `K_{n,n}`-free
+graph. -/
+noncomputable def commonNeighborClosure {n : Nat}
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G)) :
+    {s : Finset V // s.card = n} → Finset V :=
+  fun s ↦
+    (commonNeighborSet_finite_of_no_completeBipartiteNNCopy G hfree
+      (finiteBipartitePartEmbeddingFinset s.1 s.2)).toFinset
+
+/-- Membership in the common-neighbour closure is exactly adjacency to every
+element of its input finite set. -/
+theorem mem_commonNeighborClosure_iff {n : Nat}
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G))
+    (s : {s : Finset V // s.card = n}) (v : V) :
+    v ∈ commonNeighborClosure G hfree s ↔ ∀ x ∈ s.1, G.Adj x v := by
+  classical
+  constructor
+  · intro hv x hx
+    have hv' : v ∈ commonNeighborSet G
+        (finiteBipartitePartEmbeddingFinset s.1 s.2) := by
+      simpa only [commonNeighborClosure, Set.Finite.mem_toFinset] using hv
+    let i : FiniteBipartitePart.{u} n :=
+      (finiteBipartitePartEquivFinset s.1 s.2).symm ⟨x, hx⟩
+    have hi : finiteBipartitePartEmbeddingFinset s.1 s.2 i = x := by
+      change ((finiteBipartitePartEquivFinset s.1 s.2 i : s.1) : V) = x
+      exact congrArg Subtype.val
+        ((finiteBipartitePartEquivFinset s.1 s.2).apply_symm_apply ⟨x, hx⟩)
+    rw [← hi]
+    exact hv' i
+  · intro hv
+    simp only [commonNeighborClosure, Set.Finite.mem_toFinset, commonNeighborSet,
+      Set.mem_setOf_eq]
+    intro i
+    exact hv _ (finiteBipartitePartEmbeddingFinset_mem s.1 s.2 i)
+
+/-- A common-neighbour-closed layering prohibits an injected `n`-element
+family of backward neighbours at any vertex. -/
+theorem no_embedding_backNeighbors_of_commonNeighborLayering
+    {n : Nat} {I : Type u} [LinearOrder I]
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G))
+    (L : FiniteClosureLayering n (commonNeighborClosure G hfree) I) (v : V) :
+    IsEmpty (FiniteBipartitePart.{u} n ↪
+      {x : V | G.Adj v x ∧ L.rank x < L.rank v}) := by
+  classical
+  refine ⟨?_⟩
+  intro e
+  let eV : FiniteBipartitePart.{u} n ↪ V :=
+    e.trans (Function.Embedding.subtype _)
+  let s : Finset V := Finset.univ.image eV
+  have hs : s.card = n := by
+    dsimp [s]
+    rw [Finset.card_image_iff.mpr ?_]
+    · simp
+    · intro a _ b _ hab
+      exact eV.injective hab
+  have hsmaller : ∀ x ∈ s, L.rank x < L.rank v := by
+    intro x hx
+    rcases Finset.mem_image.mp hx with ⟨i, -, hix⟩
+    subst x
+    change L.rank (e i).val < L.rank v
+    exact (e i).property.2
+  have hv : v ∈ commonNeighborClosure G hfree ⟨s, hs⟩ := by
+    apply (mem_commonNeighborClosure_iff G hfree ⟨s, hs⟩ v).2
+    intro x hx
+    rcases Finset.mem_image.mp hx with ⟨i, -, hix⟩
+    subst x
+    change G.Adj (e i).val v
+    exact (e i).property.1.symm
+  exact lt_irrefl _ (L.earlier_closed v s hs hsmaller v hv)
+
+/-- Every backward-neighbour set of a common-neighbour-closed layering is
+finite. -/
+theorem finite_backNeighbors_of_commonNeighborLayering
+    {n : Nat} {I : Type u} [LinearOrder I]
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G))
+    (L : FiniteClosureLayering n (commonNeighborClosure G hfree) I) (v : V) :
+    Set.Finite {x : V | G.Adj v x ∧ L.rank x < L.rank v} :=
+  finite_of_no_finiteBipartitePart_embedding _
+    (no_embedding_backNeighbors_of_commonNeighborLayering G hfree L v)
+
+/-- Quantitatively, every backward-neighbour set has cardinality below `n`. -/
+theorem backNeighbors_toFinset_card_lt_of_commonNeighborLayering
+    {n : Nat} {I : Type u} [LinearOrder I]
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G))
+    (L : FiniteClosureLayering n (commonNeighborClosure G hfree) I) (v : V) :
+    (finite_backNeighbors_of_commonNeighborLayering G hfree L v).toFinset.card < n :=
+  toFinset_card_lt_of_no_finiteBipartitePart_embedding _
+    (no_embedding_backNeighbors_of_commonNeighborLayering G hfree L v)
+
+/-- A finite common-neighbour closure layering turns `K_{n,n}`-freeness into
+countable colourability as soon as every rank fibre is countably colourable. -/
+theorem countablyColorable_of_commonNeighborLayering
+    {n : Nat} {I : Type u} [LinearOrder I]
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G))
+    (L : FiniteClosureLayering n (commonNeighborClosure G hfree) I)
+    (hfiber : ∀ i : I,
+      CountablyColorable (G.induce {x : V | L.rank x = i})) :
+    CountablyColorable G := by
+  refine countablyColorable_of_finite_back_neighbors G L.rank (n - 1) ?_ ?_ hfiber
+  · intro v
+    exact finite_backNeighbors_of_commonNeighborLayering G hfree L v
+  · intro v
+    exact Nat.le_pred_of_lt
+      (backNeighbors_toFinset_card_lt_of_commonNeighborLayering G hfree L v)
+
+end SimpleGraph
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_CompleteBipartiteLayering
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.CompleteBipartiteLayering
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.FiniteClosureCardinality
+Source: Erdos593/Graph/FiniteClosureCardinality.lean
+Normalized SHA-256: a751194cd6dbb8b0122e4827104a52cefbb3ffd7c675b0ebb585a9e448ed3e75
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_FiniteClosureCardinality
+
+/-!
+# Cardinal bounds for finite closures
+
+This module proves the cardinality component of the finite-closure layering
+construction.  A closure step adds the finite outputs attached to all
+admissible `r`-element subsets of a set.  Its countable iteration remains
+strictly below an uncountable cardinal whenever the initial set does.
+
+The proof deliberately uses an explicit bound
+`max ℵ₀ #S`, rather than a regular-cardinal argument.  It is therefore valid
+at singular cardinals as well.
+-/
+
+namespace Erdos593
+
+namespace FiniteClosureCardinality
+
+open Set
+
+universe u
+
+variable {V : Type u}
+
+/-- The union of all finite iterates of a set operator. -/
+def iterUnion (f : Set V → Set V) (S : Set V) : Set V :=
+  ⋃ n : Nat, (f^[n]) S
+
+/-- The `r`-element finite subsets of `S`. -/
+def admissible (r : Nat) (S : Set V) : Type u :=
+  {s : Finset V // s.card = r ∧ ∀ x ∈ s, x ∈ S}
+
+/-- The set underlying the finite output assigned to an admissible input. -/
+def output (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V)
+    {S : Set V} (s : admissible r S) : Set V :=
+  ((Φ ⟨s.1, s.2.1⟩ : Finset V) : Set V)
+
+/-- One finite-closure step. -/
+def closureStep (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V)
+    (S : Set V) : Set V :=
+  S ∪ ⋃ s : admissible r S, output r Φ s
+
+theorem mem_closureStep_iff
+    (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V)
+    (S : Set V) (x : V) :
+    x ∈ closureStep r Φ S ↔ x ∈ S ∨
+      ∃ s : {s : Finset V // s.card = r},
+        (∀ z ∈ s.1, z ∈ S) ∧ x ∈ Φ s := by
+  simp only [closureStep, Set.mem_union, Set.mem_iUnion]
+  constructor
+  · rintro (hx | ⟨⟨a, ha, hinside⟩, hx⟩)
+    · exact Or.inl hx
+    · refine Or.inr ⟨⟨a, ha⟩, hinside, ?_⟩
+      simpa [output] using hx
+  · rintro (hx | ⟨s, hinside, hx⟩)
+    · exact Or.inl hx
+    · refine Or.inr ⟨⟨s.1, s.2, hinside⟩, ?_⟩
+      simpa [output] using hx
+
+/-- Finite closure steps are monotone in their input set. -/
+theorem closureStep_mono
+    (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V) :
+    Monotone (closureStep r Φ) := by
+  intro S T hST x hx
+  rw [mem_closureStep_iff] at hx
+  rw [mem_closureStep_iff]
+  rcases hx with hx | ⟨s, hinside, hx⟩
+  · exact Or.inl (hST hx)
+  · exact Or.inr ⟨s, fun z hz => hST (hinside z hz), hx⟩
+
+theorem mk_admissible_le_finset (r : Nat) (S : Set V) :
+    Cardinal.mk (admissible r S) ≤ Cardinal.mk (Finset S) := by
+  classical
+  calc
+    Cardinal.mk (admissible r S) ≤
+        Cardinal.mk {s : Finset V // ∀ x ∈ s, x ∈ S} :=
+      Cardinal.mk_subtype_le_of_subset fun _ hs => hs.2
+    _ = Cardinal.mk (Finset S) :=
+      (Cardinal.mk_congr (Equiv.finsetSubtypeComm fun x : V => x ∈ S)).symm
+
+theorem mk_admissible_le
+    (r : Nat) (S : Set V) (c : Cardinal.{u})
+    (hc : Cardinal.aleph0 ≤ c) (hS : Cardinal.mk S ≤ c) :
+    Cardinal.mk (admissible r S) ≤ c := by
+  classical
+  calc
+    Cardinal.mk (admissible r S) ≤ Cardinal.mk (Finset S) :=
+      mk_admissible_le_finset r S
+    _ ≤ Cardinal.mk (List S) :=
+      Cardinal.mk_le_of_surjective List.toFinset_surjective
+    _ ≤ max Cardinal.aleph0 (Cardinal.mk S) := Cardinal.mk_list_le_max S
+    _ ≤ c := max_le hc hS
+
+/-- A single finite-closure step preserves every infinite cardinal bound. -/
+theorem mk_closureStep_le
+    (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V)
+    (S : Set V) (c : Cardinal.{u})
+    (hc : Cardinal.aleph0 ≤ c) (hS : Cardinal.mk S ≤ c) :
+    Cardinal.mk (closureStep r Φ S) ≤ c := by
+  classical
+  have houtputOne (s : admissible r S) : Cardinal.mk (output r Φ s) ≤ c := by
+    change Cardinal.mk ((Φ ⟨s.1, s.2.1⟩ : Finset V) : Set V) ≤ c
+    exact (Cardinal.finset_card_lt_aleph0 (Φ ⟨s.1, s.2.1⟩)).le.trans hc
+  have houtput :
+      Cardinal.mk (⋃ s : admissible r S, output r Φ s) ≤ c := by
+    calc
+      Cardinal.mk (⋃ s : admissible r S, output r Φ s) ≤
+          Cardinal.mk (admissible r S) *
+            ⨆ s : admissible r S,
+              Cardinal.mk (output r Φ s) := by
+        exact Cardinal.mk_iUnion_le (output r Φ)
+      _ ≤ c * c := by
+        exact mul_le_mul' (mk_admissible_le r S c hc hS) (ciSup_le' houtputOne)
+      _ = c := Cardinal.mul_eq_self hc
+  calc
+    Cardinal.mk (closureStep r Φ S) ≤
+        Cardinal.mk S + Cardinal.mk (⋃ s : admissible r S, output r Φ s) :=
+      Cardinal.mk_union_le _ _
+    _ ≤ c + c := add_le_add hS houtput
+    _ = c := Cardinal.add_eq_self hc
+
+/-- The countable closure generated by finite closure steps. -/
+def closure (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V)
+    (S : Set V) : Set V :=
+  iterUnion (closureStep r Φ) S
+
+/-- A finite-closure step contains its input set. -/
+theorem extensive_closureStep
+    (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V) (S : Set V) :
+    S ⊆ closureStep r Φ S := fun _ hx => Or.inl hx
+
+theorem iterUnion_mem_iff
+    (f : Set V → Set V) (S : Set V) (x : V) :
+    x ∈ iterUnion f S ↔ ∃ n : Nat, x ∈ (f^[n]) S := by
+  simp [iterUnion]
+
+theorem iterate_stage_succ_subset
+    (f : Set V → Set V) (hExt : ∀ T : Set V, T ⊆ f T)
+    (S : Set V) (n : Nat) :
+    (f^[n]) S ⊆ (f^[n + 1]) S := by
+  simpa [Function.iterate_succ_apply'] using hExt ((f^[n]) S)
+
+theorem iterate_stage_mono
+    (f : Set V → Set V) (hExt : ∀ T : Set V, T ⊆ f T)
+    (S : Set V) {n m : Nat} (hnm : n ≤ m) :
+    (f^[n]) S ⊆ (f^[m]) S := by
+  obtain ⟨d, rfl⟩ := Nat.le.dest hnm
+  induction d with
+  | zero => simp
+  | succ d ih =>
+      exact (ih (Nat.le_add_right _ _)).trans (by
+        simpa [Nat.add_assoc] using iterate_stage_succ_subset f hExt S (n + d))
+
+/-- A finite set in an increasing union of iterates already occurs at one
+finite stage. -/
+theorem finset_subset_iterate_stage
+    (f : Set V → Set V) (hExt : ∀ T : Set V, T ⊆ f T)
+    (S : Set V) (s : Finset V) :
+    (∀ x ∈ s, x ∈ iterUnion f S) →
+      ∃ n : Nat, ∀ x ∈ s, x ∈ (f^[n]) S := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      intro _
+      exact ⟨0, by simp⟩
+  | @insert a s ha ih =>
+      intro hs
+      have haUnion : a ∈ iterUnion f S := hs a (by simp)
+      rcases (iterUnion_mem_iff f S a).mp haUnion with ⟨na, hna⟩
+      have hsUnion : ∀ x ∈ s, x ∈ iterUnion f S := by
+        intro x hx
+        exact hs x (by simp [hx])
+      rcases ih hsUnion with ⟨ns, hns⟩
+      refine ⟨max na ns, ?_⟩
+      intro x hx
+      rcases Finset.mem_insert.mp hx with rfl | hx
+      · exact iterate_stage_mono f hExt S (Nat.le_max_left _ _) hna
+      · exact iterate_stage_mono f hExt S (Nat.le_max_right _ _) (hns x hx)
+
+/-- The seed set is contained in its finite closure. -/
+theorem subset_closure
+    (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V)
+    (S : Set V) :
+    S ⊆ closure r Φ S := by
+  intro x hx
+  apply (iterUnion_mem_iff (closureStep r Φ) S x).mpr
+  exact ⟨0, by simpa using hx⟩
+
+/-- The countable finite closure is closed under one further finite-output
+step. -/
+theorem closureStep_closure_subset
+    (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V)
+    (S : Set V) :
+    closureStep r Φ (closure r Φ S) ⊆ closure r Φ S := by
+  intro x hx
+  rw [mem_closureStep_iff] at hx
+  rcases hx with hx | ⟨s, hinside, hxout⟩
+  · exact hx
+  · have hExt : ∀ T : Set V, T ⊆ closureStep r Φ T :=
+      extensive_closureStep r Φ
+    obtain ⟨n, hn⟩ :=
+      finset_subset_iterate_stage (closureStep r Φ) hExt S s.1 hinside
+    apply (iterUnion_mem_iff (closureStep r Φ) S x).mpr
+    refine ⟨n + 1, ?_⟩
+    have hnext : x ∈ closureStep r Φ ((closureStep r Φ)^[n] S) := by
+      rw [mem_closureStep_iff]
+      exact Or.inr ⟨s, hn, hxout⟩
+    simpa [Function.iterate_succ_apply'] using hnext
+
+/-- A finite closure is a fixed point of its closure step. -/
+theorem closureStep_closure_eq
+    (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V)
+    (S : Set V) :
+    closureStep r Φ (closure r Φ S) = closure r Φ S := by
+  apply Set.Subset.antisymm (closureStep_closure_subset r Φ S)
+  exact extensive_closureStep r Φ _
+
+/-- The finite closure is contained in every closed superset of its seed. -/
+theorem closure_min
+    (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V)
+    {S T : Set V} (hST : S ⊆ T)
+    (hTclosed : closureStep r Φ T ⊆ T) :
+    closure r Φ S ⊆ T := by
+  intro x hx
+  rcases (iterUnion_mem_iff (closureStep r Φ) S x).mp hx with ⟨n, hx⟩
+  have hstage : ∀ n : Nat, (closureStep r Φ)^[n] S ⊆ T := by
+    intro n
+    induction n with
+    | zero => simpa using hST
+    | succ n ih =>
+        have hnext : closureStep r Φ ((closureStep r Φ)^[n] S) ⊆
+            closureStep r Φ T :=
+          (closureStep_mono r Φ) ih
+        simpa [Function.iterate_succ_apply'] using hnext.trans hTclosed
+  exact hstage n hx
+
+/-- Finite closures are monotone in their seed sets. -/
+theorem closure_mono
+    (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V) :
+    Monotone (closure r Φ) := by
+  intro S T hST x hx
+  simp only [closure, iterUnion, Set.mem_iUnion] at hx ⊢
+  rcases hx with ⟨n, hx⟩
+  have hiter : Monotone ((closureStep r Φ)^[n]) :=
+    (closureStep_mono r Φ).iterate n
+  exact ⟨n, hiter hST hx⟩
+
+/-- A countable union of iterates preserves every infinite cardinal bound
+preserved by the step function. -/
+theorem mk_iterUnion_le
+    (f : Set V → Set V) (S : Set V) (c : Cardinal.{u})
+    (hc : Cardinal.aleph0 ≤ c)
+    (hstep : ∀ T : Set V, Cardinal.mk T ≤ c → Cardinal.mk (f T) ≤ c)
+    (hS : Cardinal.mk S ≤ c) :
+    Cardinal.mk (iterUnion f S) ≤ c := by
+  have hiter : ∀ n : Nat, Cardinal.mk ((f^[n]) S) ≤ c := by
+    intro n
+    induction n with
+    | zero => simpa using hS
+    | succ n ih =>
+        simpa [Function.iterate_succ_apply'] using hstep ((f^[n]) S) ih
+  calc
+    Cardinal.mk (iterUnion f S) ≤
+        Cardinal.lift.{u} (Cardinal.mk Nat) *
+          ⨆ n : Nat, Cardinal.lift.{0} (Cardinal.mk ((f^[n]) S)) := by
+      simpa [iterUnion] using
+        (Cardinal.mk_iUnion_le_lift (fun n : Nat => (f^[n]) S))
+    _ ≤ c * c := by
+      exact mul_le_mul' (by simpa using hc) (ciSup_le fun n => by simpa using hiter n)
+    _ = c := Cardinal.mul_eq_self hc
+
+theorem mk_iterUnion_lt_of_bound
+    (f : Set V → Set V) (S : Set V) (c κ : Cardinal.{u})
+    (hc : Cardinal.aleph0 ≤ c)
+    (hcκ : c < κ)
+    (hstep : ∀ T : Set V, Cardinal.mk T ≤ c → Cardinal.mk (f T) ≤ c)
+    (hS : Cardinal.mk S ≤ c) :
+    Cardinal.mk (iterUnion f S) < κ :=
+  (mk_iterUnion_le f S c hc hstep hS).trans_lt hcκ
+
+/-- A finite closure of a set below an infinite cardinal stays below that
+same cardinal. -/
+theorem mk_closure_le
+    (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V)
+    (S : Set V) (c : Cardinal.{u})
+    (hc : Cardinal.aleph0 ≤ c) (hS : Cardinal.mk S ≤ c) :
+    Cardinal.mk (closure r Φ S) ≤ c := by
+  apply mk_iterUnion_le (closureStep r Φ) S c hc
+  · intro T hT
+    exact mk_closureStep_le r Φ T c hc hT
+  · exact hS
+
+/-- A finite closure of a set of cardinality below an uncountable cardinal
+again has cardinality below that cardinal.  No regularity assumption on `κ`
+is used. -/
+theorem mk_closure_lt
+    (r : Nat) (Φ : {s : Finset V // s.card = r} → Finset V)
+    (S : Set V) (κ : Cardinal.{u})
+    (hκ : Cardinal.aleph0 < κ) (hS : Cardinal.mk S < κ) :
+    Cardinal.mk (closure r Φ S) < κ := by
+  let c : Cardinal.{u} := max Cardinal.aleph0 (Cardinal.mk S)
+  have hc : Cardinal.aleph0 ≤ c := le_max_left _ _
+  have hSc : Cardinal.mk S ≤ c := le_max_right _ _
+  have hcκ : c < κ := max_lt hκ hS
+  exact (mk_closure_le r Φ S c hc hSc).trans_lt hcκ
+
+/-- The image of a proper initial segment of the canonical well-order of a
+cardinal has strictly smaller cardinality. -/
+theorem mk_ordInitialImage_lt
+    (κ : Cardinal.{u}) (e : κ.ord.ToType → V) (i : κ.ord.ToType) :
+    Cardinal.mk (e '' Set.Iio i) < κ := by
+  have hIio : Cardinal.mk (Set.Iio i) < Cardinal.mk κ.ord.ToType := by
+    simpa using Cardinal.mk_Iio_lt i
+  exact ((Cardinal.mk_image_le (f := e) (s := Set.Iio i)).trans_lt hIio).trans_eq
+    (Cardinal.mk_ord_toType κ)
+
+/-- The image of a closed initial segment of the canonical well-order of an
+uncountable cardinal has strictly smaller cardinality. -/
+theorem mk_ordClosedInitialImage_lt
+    (κ : Cardinal.{u}) (e : κ.ord.ToType → V) (i : κ.ord.ToType)
+    (hκ : Cardinal.aleph0 < κ) :
+    Cardinal.mk (e '' Set.Iic i) < κ := by
+  have hIic : Cardinal.mk (Set.Iic i) < Cardinal.mk κ.ord.ToType := by
+    simpa using Cardinal.mk_Iic_lt i (by simp) (by simpa using hκ.le)
+  exact ((Cardinal.mk_image_le (f := e) (s := Set.Iic i)).trans_lt hIic).trans_eq
+    (Cardinal.mk_ord_toType κ)
+
+end FiniteClosureCardinality
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_FiniteClosureCardinality
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.FiniteClosureCardinality
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.FiniteClosureLayeringConstruction
+Source: Erdos593/Graph/FiniteClosureLayeringConstruction.lean
+Normalized SHA-256: 746928bbd59a0d687c2013f81c0b09ac3ef919e25b9b33b96e412e77b158acdf
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_FiniteClosureLayeringConstruction
+
+/-!
+# Constructing finite closure layerings from closed covers
+
+This module isolates the order-theoretic part of the positive-atom strategy.
+Given a monotone cover by small sets which are closed under a finite-output
+operator, it assigns each vertex its first cover index.  That first-entry
+rank is a `FiniteClosureLayering`.
+
+The ordinal wrapper below converts any monotone, locally small finite-output
+hull into such a cover. Together with `FiniteClosureCardinality`, this also
+gives the singular-cardinal-safe construction for countable finite closures.
+-/
+
+namespace Erdos593
+
+namespace FiniteClosureLayeringConstruction
+
+open Set
+open scoped Ordinal
+
+universe u
+
+variable {V I : Type u}
+
+/-- The least index of a member of a well-founded cover containing `x`. -/
+noncomputable def firstRank [LinearOrder I] [WellFoundedLT I]
+    (C : I → Set V) (hcover : ∀ x : V, ∃ i : I, x ∈ C i) (x : V) : I :=
+  wellFounded_lt.min {i | x ∈ C i} (by
+    rcases hcover x with ⟨i, hi⟩
+    exact ⟨i, hi⟩)
+
+theorem firstRank_mem [LinearOrder I] [WellFoundedLT I]
+    (C : I → Set V) (hcover : ∀ x : V, ∃ i : I, x ∈ C i) (x : V) :
+    x ∈ C (firstRank C hcover x) := by
+  unfold firstRank
+  exact wellFounded_lt.min_mem {i : I | x ∈ C i} _
+
+theorem firstRank_le_of_mem [LinearOrder I] [WellFoundedLT I]
+    (C : I → Set V) (hcover : ∀ x : V, ∃ i : I, x ∈ C i)
+    {x : V} {i : I} (hx : x ∈ C i) :
+    firstRank C hcover x ≤ i := by
+  apply le_of_not_gt
+  unfold firstRank
+  exact wellFounded_lt.not_lt_min {j : I | x ∈ C j} hx
+
+/--
+A monotone, small, `Φ`-closed cover produces a finite closure layering.
+
+The condition `0 < r` is essential: when `r = 0`, the defining closure
+condition would impose a constraint on the output on the empty input below
+every rank, which generally cannot hold for an ordinal-style rank order.
+-/
+theorem exists_finiteClosureLayering_of_closed_cover
+    [LinearOrder I] [WellFoundedLT I]
+    {r : Nat} (Φ : {s : Finset V // s.card = r} → Finset V)
+    (C : I → Set V)
+    (hcover : ∀ x : V, ∃ i : I, x ∈ C i)
+    (hmono : Monotone C)
+    (hsmall : ∀ i : I, Cardinal.mk (C i) < Cardinal.mk V)
+    (hclosed : ∀ (i : I) (s : Finset V) (hs : s.card = r),
+      (∀ x ∈ s, x ∈ C i) → ∀ y ∈ Φ ⟨s, hs⟩, y ∈ C i)
+    (hr : 0 < r) :
+    ∃ L : FiniteClosureLayering r Φ I, L.rank = firstRank C hcover := by
+  classical
+  refine ⟨{ rank := firstRank C hcover
+            fiber_lt := ?_
+            earlier_closed := ?_ }, rfl⟩
+  · intro i
+    apply (Cardinal.mk_subtype_le_of_subset ?_).trans_lt (hsmall i)
+    intro x hx
+    change firstRank C hcover x = i at hx
+    rw [← hx]
+    exact firstRank_mem C hcover x
+  · intro v s hs hlt
+    have hspos : 0 < s.card := by
+      simpa only [hs] using hr
+    obtain ⟨m, hm, hmax⟩ :=
+      Finset.exists_max_image s (firstRank C hcover) (Finset.card_pos.mp hspos)
+    intro y hy
+    have hsC : ∀ x ∈ s, x ∈ C (firstRank C hcover m) := by
+      intro x hx
+      exact hmono (hmax x hx) (firstRank_mem C hcover x)
+    have hyC : y ∈ C (firstRank C hcover m) :=
+      hclosed _ s hs hsC y hy
+    exact (firstRank_le_of_mem C hcover hyC).trans_lt (hlt m hm)
+
+/--
+An ordinal-indexed small-hull construction of a finite closure layering.
+
+Only individual initial segments of the canonical well-order of `κ` are used,
+so this is valid at singular cardinals. The positive arity condition is needed
+solely for the maximum-rank argument in the resulting layering.
+-/
+theorem exists_finiteClosureLayering_of_small_hull
+    {κ : Cardinal.{u}}
+    {r : Nat} (Φ : {s : Finset V // s.card = r} → Finset V)
+    (hκ : Cardinal.aleph0 ≤ κ) (hV : Cardinal.mk V = κ)
+    (Hull : Set V → Set V)
+    (hHull_mono : Monotone Hull)
+    (hHull_contains : ∀ S : Set V, S ⊆ Hull S)
+    (hHull_small : ∀ S : Set V, Cardinal.mk S < κ → Cardinal.mk (Hull S) < κ)
+    (hHull_closed : ∀ (S : Set V) (s : Finset V) (hs : s.card = r),
+      (∀ x ∈ s, x ∈ Hull S) → ∀ y ∈ Φ ⟨s, hs⟩, y ∈ Hull S)
+    (hr : 0 < r) :
+    Nonempty (FiniteClosureLayering r Φ κ.ord.ToType) := by
+  classical
+  have hκtype : Cardinal.mk κ.ord.ToType = κ := by
+    simp
+  let e : V ≃ κ.ord.ToType :=
+    Classical.choice (Cardinal.eq.mp (hV.trans hκtype.symm))
+  refine ⟨(exists_finiteClosureLayering_of_closed_cover Φ
+      (fun i : κ.ord.ToType => Hull (e.symm '' Set.Iic i)) ?_ ?_ ?_ ?_ hr).choose⟩
+  · intro x
+    refine ⟨e x, hHull_contains _ ?_⟩
+    refine ⟨e x, ?_, e.symm_apply_apply x⟩
+    change e x ≤ e x
+    exact le_rfl
+  · intro i j hij
+    apply hHull_mono
+    rintro x ⟨a, ha, rfl⟩
+    exact ⟨a, ha.trans hij, rfl⟩
+  · intro i
+    rw [hV]
+    apply hHull_small
+    rw [Cardinal.mk_image_eq e.symm.injective]
+    have horder : Cardinal.ord (Cardinal.mk κ.ord.ToType) = typeLT κ.ord.ToType := by
+      rw [hκtype]
+      exact (Ordinal.type_toType κ.ord).symm
+    have htype : Cardinal.aleph0 ≤ Cardinal.mk κ.ord.ToType := by
+      rwa [hκtype]
+    exact (Cardinal.mk_Iic_lt i horder htype).trans_eq hκtype
+  · intro i s hs hsC y hy
+    exact hHull_closed _ s hs hsC y hy
+
+/-- Every finite-output operation of positive arity on an uncountable type
+has a singular-cardinal-safe finite closure layering. -/
+theorem exists_finiteClosureLayering_of_uncountable
+    {r : Nat} (Φ : {s : Finset V // s.card = r} → Finset V)
+    (hV : Cardinal.aleph0 < Cardinal.mk V) (hr : 0 < r) :
+    Nonempty (FiniteClosureLayering r Φ (Cardinal.mk V).ord.ToType) := by
+  refine exists_finiteClosureLayering_of_small_hull Φ hV.le rfl
+    (FiniteClosureCardinality.closure r Φ) ?_ ?_ ?_ ?_ hr
+  · exact FiniteClosureCardinality.closure_mono r Φ
+  · exact FiniteClosureCardinality.subset_closure r Φ
+  · intro S hS
+    exact FiniteClosureCardinality.mk_closure_lt r Φ S (Cardinal.mk V) hV hS
+  · intro S s hs hinside y hy
+    apply FiniteClosureCardinality.closureStep_closure_subset r Φ S
+    rw [FiniteClosureCardinality.mem_closureStep_iff]
+    exact Or.inr ⟨⟨s, hs⟩, hinside, hy⟩
+
+end FiniteClosureLayeringConstruction
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_FiniteClosureLayeringConstruction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.FiniteClosureLayeringConstruction
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.MinimalBadCore
+Source: Erdos593/Graph/MinimalBadCore.lean
+Normalized SHA-256: c63566c8c53f10205dbc16af2b1705d94580886b0ea201bd40911e562269acad
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_MinimalBadCore
+
+/-!
+# Minimal bad cores for the complete-bipartite graph lemma
+
+This module packages the cardinal-minimal-counterexample reduction and closes
+it using the singular-cardinal-safe finite-closure layering construction.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SimpleGraph
+
+variable {V : Type u}
+
+/-- `KNNBadCard n κ` says that some graph of vertex cardinality `κ` is not
+countably colourable and contains no (non-induced) copy of `K_{n,n}`.  The
+witness carrier stays in the fixed universe, so cardinal minimisation below is
+universe-local. -/
+def KNNBadCard (n : Nat) (kappa : Cardinal.{u}) : Prop :=
+  Exists fun (W : Type u) => Exists fun (H : _root_.SimpleGraph W) =>
+    Cardinal.mk W = kappa ∧
+      ¬ CountablyColorable H ∧
+        IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) H)
+
+/-- Select the least vertex cardinality of a `K_{n,n}`-free graph that is not
+countably colourable.  This is cardinal minimisation, not minimisation under
+induced-subgraph inclusion. -/
+theorem exists_minimalKNNBadCard {n : Nat}
+    (h : Exists fun kappa : Cardinal.{u} => KNNBadCard n kappa) :
+    Exists fun kappa : Cardinal.{u} =>
+      KNNBadCard n kappa ∧
+        ((kappa' : Cardinal.{u}) -> kappa' < kappa -> ¬ KNNBadCard n kappa') := by
+  rcases h with ⟨kappa0, hkappa0⟩
+  let B : Set Cardinal.{u} := fun kappa => KNNBadCard n kappa
+  have hB : B.Nonempty := ⟨kappa0, hkappa0⟩
+  let kappa := Cardinal.lt_wf.min B hB
+  refine ⟨kappa, Cardinal.lt_wf.min_mem B hB, ?_⟩
+  intro kappa' hkappa' hbad
+  exact (Cardinal.lt_wf.not_lt_min B hbad) hkappa'
+
+/-- `K_{n,n}`-freeness is inherited by induced subgraphs. -/
+theorem kNNFree_induce {n : Nat} (G : _root_.SimpleGraph V)
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G))
+    (s : Set V) :
+    IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) (G.induce s)) := by
+  constructor
+  intro f
+  exact (isEmpty_iff.mp hfree) ((_root_.SimpleGraph.Copy.induce G s).comp f)
+
+/-- Every induced subgraph on a strictly smaller carrier is countably
+colourable.  This is the precise local consequence extracted from a
+cardinal-minimal bad counterexample. -/
+def LocallyCountablyColorableBelow (G : _root_.SimpleGraph V) : Prop :=
+  (s : Set V) -> Cardinal.mk s < Cardinal.mk V -> CountablyColorable (G.induce s)
+
+/-- Cardinal minimality of a bad graph makes every strictly smaller induced
+subgraph countably colourable. -/
+theorem locallyCountablyColorableBelow_of_minimalBad
+    {n : Nat} {kappa : Cardinal.{u}} (G : _root_.SimpleGraph V)
+    (hcard : Cardinal.mk V = kappa)
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G))
+    (hmin : (kappa' : Cardinal.{u}) -> kappa' < kappa -> ¬ KNNBadCard n kappa') :
+    LocallyCountablyColorableBelow G := by
+  classical
+  intro s hs
+  by_contra hscolor
+  apply hmin (Cardinal.mk s) (by simpa [hcard] using hs)
+  exact ⟨s, G.induce s, rfl, hscolor, kNNFree_induce G hfree s⟩
+
+/-- A graph on a countable carrier has a proper colouring by natural numbers. -/
+theorem countablyColorable_of_countable (G : _root_.SimpleGraph V) [Countable V] :
+    CountablyColorable G := by
+  letI : Encodable V := Encodable.ofCountable V
+  apply Nonempty.intro
+  apply _root_.SimpleGraph.Coloring.mk Encodable.encode
+  intro x y hxy heq
+  exact G.ne_of_adj hxy (Encodable.encode_injective heq)
+
+/-- A non-countably-colourable graph has an uncountable vertex carrier. -/
+theorem aleph0_lt_mk_of_not_countablyColorable
+    (G : _root_.SimpleGraph V) (hG : ¬ CountablyColorable G) :
+    Cardinal.aleph0 < Cardinal.mk V := by
+  apply lt_of_not_ge
+  intro hle
+  have hcount : Countable V := Cardinal.mk_le_aleph0_iff.mp hle
+  exact hG (countablyColorable_of_countable G)
+
+/-- A finite common-neighbour closure layering becomes a global countable
+colouring as soon as its individual rank fibres are strictly smaller than the
+ambient carrier and hence locally countably colourable. -/
+theorem countablyColorable_of_commonNeighborLayering_of_localSmall
+    (G : _root_.SimpleGraph V) {n : Nat} {I : Type u} [LinearOrder I]
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G))
+    (L : FiniteClosureLayering n (commonNeighborClosure G hfree) I)
+    (hsmall : LocallyCountablyColorableBelow G) :
+    CountablyColorable G := by
+  apply countablyColorable_of_commonNeighborLayering G hfree L
+  intro i
+  exact hsmall {x : V | L.rank x = i} (L.fiber_lt i)
+
+/-- A cardinal-minimal non-countably-colourable `K_{n,n}`-free graph admits
+no finite common-neighbour closure layering with small rank fibres.  Thus the
+remaining positive-atom task is exactly the singular-cardinal-safe
+construction of such a layering. -/
+theorem false_of_commonNeighborLayering_of_minimalBad
+    {n : Nat} {kappa : Cardinal.{u}} (G : _root_.SimpleGraph V)
+    (hcard : Cardinal.mk V = kappa)
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G))
+    (hbad : ¬ CountablyColorable G)
+    (hmin : (kappa' : Cardinal.{u}) -> kappa' < kappa -> ¬ KNNBadCard n kappa')
+    {I : Type u} [LinearOrder I]
+    (L : FiniteClosureLayering n (commonNeighborClosure G hfree) I) : False := by
+  apply hbad
+  apply countablyColorable_of_commonNeighborLayering_of_localSmall G hfree L
+  exact locallyCountablyColorableBelow_of_minimalBad G hcard hfree hmin
+
+/-- Every `K_{n,n}`-free graph is countably colourable when `n` is positive.
+
+The proof minimizes a hypothetical bad cardinal, builds the finite common
+neighbour closure layering at that cardinal without a regularity assumption,
+and colours each strictly smaller rank fibre by cardinal minimality. -/
+theorem countablyColorable_of_no_completeBipartiteNNCopy
+    {n : Nat} (G : _root_.SimpleGraph V) (hn : 0 < n)
+    (hfree : IsEmpty (_root_.SimpleGraph.Copy (completeBipartiteNN.{u} n) G)) :
+    CountablyColorable G := by
+  classical
+  by_contra hbad
+  obtain ⟨κ, hκbad, hmin⟩ :=
+    exists_minimalKNNBadCard (n := n)
+      ⟨Cardinal.mk V, ⟨V, G, rfl, hbad, hfree⟩⟩
+  rcases hκbad with ⟨W, H, hcard, hHbad, hHfree⟩
+  let L : FiniteClosureLayering n (commonNeighborClosure H hHfree)
+      (Cardinal.mk W).ord.ToType :=
+    (FiniteClosureLayeringConstruction.exists_finiteClosureLayering_of_uncountable
+      (commonNeighborClosure H hHfree)
+      (aleph0_lt_mk_of_not_countablyColorable H hHbad) hn).some
+  exact false_of_commonNeighborLayering_of_minimalBad H hcard hHfree hHbad hmin L
+
+/-- There is no bad cardinal witness for any positive balanced complete
+bipartite graph. -/
+theorem not_KNNBadCard_of_pos
+    (n : Nat) (hn : 0 < n) (κ : Cardinal.{u}) :
+    ¬ KNNBadCard n κ := by
+  rintro ⟨W, H, hcard, hbad, hfree⟩
+  exact hbad (countablyColorable_of_no_completeBipartiteNNCopy H hn hfree)
+
+end SimpleGraph
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_MinimalBadCore
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.MinimalBadCore
 ========================================================================== -/
 
 /- ==========================================================================
@@ -1715,6 +2668,54 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_Graph_RainbowBipartite
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.Graph.RainbowBipartite
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.RainbowPositiveSize
+Source: Erdos593/Graph/RainbowPositiveSize.lean
+Normalized SHA-256: 07e593da56c2b252c40e3969a52630ae859be0b18314507d9295c1764551a835
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_RainbowPositiveSize
+
+/-!
+# Positive-size rainbow bipartite submatrices
+
+This small wrapper records that the finite host size supplied by the rainbow
+bipartite submatrix lemma is nonzero whenever the requested submatrix has
+positive size.  The proof deliberately uses only the public extraction
+property, rather than the particular construction of the host size.
+-/
+
+namespace Erdos593
+namespace RainbowBipartite
+
+universe u
+
+/-- For positive `n` and `t`, the rainbow bipartite submatrix lemma can be
+instantiated with a positive finite host size. -/
+theorem exists_pos_rainbow_bipartite_submatrix (n t : Nat) (hn : 0 < n) (ht : 0 < t) :
+    ∃ q : Nat, 0 < q ∧
+      ∀ (Gamma : Type u) (color : Fin q → Fin q → Gamma),
+        LocallyBounded t color →
+          ∃ (left : Fin n ↪ Fin q) (right : Fin n ↪ Fin q),
+            IsRainbow color left right := by
+  obtain ⟨q, hextract⟩ := exists_rainbow_bipartite_submatrix n t hn ht
+  refine ⟨q, ?_, hextract⟩
+  by_contra hq
+  have hqzero : q = 0 := Nat.eq_zero_of_not_pos hq
+  subst q
+  let color : Fin 0 → Fin 0 → PUnit := fun x _ => Fin.elim0 x
+  have hlocal : LocallyBounded t color := by
+    constructor <;> intro x <;> exact Fin.elim0 x
+  obtain ⟨left, _, _⟩ := hextract PUnit color hlocal
+  exact Fin.elim0 (left ⟨0, hn⟩)
+
+end RainbowBipartite
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_RainbowPositiveSize
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.RainbowPositiveSize
 ========================================================================== -/
 
 /- ==========================================================================
@@ -5904,7 +6905,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.DegenerateBridgeBlock
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.Isolated
 Source: Erdos593/TripleSystem/Isolated.lean
-Normalized SHA-256: 79cf4262b6400df795ec5647c0388dd126cb41248cf2f8ec24bc7e2acc007eff
+Normalized SHA-256: b6b14641cb9cf0951ff7564cbacc6ed641fbe550ef9279d8189885d2dfd3cae2
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_Isolated
 
@@ -5986,6 +6987,13 @@ theorem isolatedReduction_edge_ncard (e : E) :
 theorem isolatedReduction_simple :
     Function.Injective (fun e => {x | F.isolatedReduction.Inc x e}) :=
   F.isolatedReduction.simple
+
+/-- Deleting isolated points preserves linearity. -/
+theorem isolatedReduction_linear (hlinear : F.Linear) :
+    F.isolatedReduction.Linear := by
+  intro e f x y hef hxe hxf hye hyf
+  apply Subtype.ext
+  exact hlinear hef hxe hxf hye hyf
 
 /-- The isolated-point reduction has no isolated points. -/
 theorem isolatedReduction_hasNoIsolatedPoints :
@@ -7194,6 +8202,105 @@ END SOURCE MODULE: Erdos593.TripleSystem.BridgeSelector
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.EmbeddingEdgeRestriction
+Source: Erdos593/TripleSystem/EmbeddingEdgeRestriction.lean
+Normalized SHA-256: 803f764f5c2c6fd4598be6095ed8db2295e06f34c1c1e81f1956afa65b4d2049
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_EmbeddingEdgeRestriction
+
+/-!
+# Exact edge restrictions of embeddings
+
+An embedding need not be induced, but it is an isomorphism onto the
+restriction formed by the host-edge indices it explicitly selects, provided
+the source has no isolated vertices.  This is the first exact bridge from a
+finite linear source to a finite linear host-edge restriction.
+-/
+
+namespace Erdos593
+
+universe u v w x
+
+namespace TripleSystem
+
+namespace Embedding
+
+variable {V : Type u} {E : Type v} {W : Type w} {D : Type x}
+variable {F : TripleSystem V E} {H : TripleSystem W D}
+
+/-- The host edge indices selected by an embedding. -/
+def edgeImage (f : F.Embedding H) : Set D := Set.range f.edge
+
+/-- The embedding identifies the source edge-index type with its image. -/
+noncomputable def edgeImageEdgeEquiv (f : F.Embedding H) : E ≃ f.edgeImage :=
+  Equiv.ofBijective (fun e => ⟨f.edge e, ⟨e, rfl⟩⟩) (by
+    constructor
+    · intro e e' h
+      exact f.edge_injective (congrArg Subtype.val h)
+    · intro d
+      rcases d.property with ⟨e, he⟩
+      refine ⟨e, ?_⟩
+      exact Subtype.ext he)
+
+/-- If the source has no isolated points, its vertices identify with the
+support of the selected host edges. -/
+noncomputable def edgeImageVertexEquiv (f : F.Embedding H)
+    (hF : F.HasNoIsolatedPoints) : V ≃ H.EdgeSupport f.edgeImage := by
+  let phi : V → H.EdgeSupport f.edgeImage := fun x =>
+    ⟨f.vertex x, by
+      rcases F.not_isolated_iff_exists_inc.mp (hF x) with ⟨e, hxe⟩
+      change ∃ d : D, d ∈ f.edgeImage ∧ H.Inc (f.vertex x) d
+      refine ⟨f.edge e, ⟨e, rfl⟩, ?_⟩
+      have hset := Set.ext_iff.mp (f.map_edge e) (f.vertex x)
+      exact hset.mp ⟨x, hxe, rfl⟩⟩
+  apply Equiv.ofBijective phi
+  constructor
+  · intro x y hxy
+    exact f.vertex.injective (congrArg Subtype.val hxy)
+  · intro y
+    rcases y.property with ⟨d, ⟨e, rfl⟩, hye⟩
+    have hset := Set.ext_iff.mp (f.map_edge e) y.1
+    rcases hset.mpr hye with ⟨x, hxe, hxy⟩
+    refine ⟨x, ?_⟩
+    exact Subtype.ext hxy
+
+/-- An embedding is an isomorphism onto the exact restriction to its selected
+host edges, once isolated source vertices have been removed. -/
+noncomputable def imageEdgeRestrictionIso (f : F.Embedding H)
+    (hF : F.HasNoIsolatedPoints) :
+    Iso F (H.edgeRestriction f.edgeImage) where
+  vertexEquiv := f.edgeImageVertexEquiv hF
+  edgeEquiv := f.edgeImageEdgeEquiv
+  map_inc_iff := by
+    intro x e
+    change F.Inc x e ↔ H.Inc (f.vertex x) (f.edge e)
+    have hset := Set.ext_iff.mp (f.map_edge e) (f.vertex x)
+    constructor
+    · intro hxe
+      exact hset.mp ⟨x, hxe, rfl⟩
+    · intro hxe
+      rcases hset.mpr hxe with ⟨y, hye, hyx⟩
+      have hyx' : y = x := f.vertex.injective hyx
+      simpa [hyx'] using hye
+
+/-- Exact edge restrictions preserve linearity along embeddings. -/
+theorem imageEdgeRestriction_linear (f : F.Embedding H)
+    (hF : F.HasNoIsolatedPoints) (hlinear : F.Linear) :
+    (H.edgeRestriction f.edgeImage).Linear :=
+  (f.imageEdgeRestrictionIso hF).linear_iff.mp hlinear
+
+end Embedding
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_EmbeddingEdgeRestriction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.EmbeddingEdgeRestriction
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.Obligatory
 Source: Erdos593/TripleSystem/Obligatory.lean
 Normalized SHA-256: b42f62ffe884c9c2b969184303e65675c7a5839df93ff72d25efbf87deee7229
@@ -7716,6 +8823,1315 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryIsolatedReduction
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.ObligatoryIsolatedReduction
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.FiniteLinearImageTrace
+Source: Erdos593/TripleSystem/FiniteLinearImageTrace.lean
+Normalized SHA-256: c94982d54d1376dddb52e6cd8fdea68c19192bf6320ee090768406388d56c421
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_FiniteLinearImageTrace
+
+/-!
+# Finite linear image traces
+
+An embedding is generally not induced, but its selected host-edge indices form
+an exact edge restriction.  For a finite linear source this restriction is
+finite, linear, and isomorphic to the source after isolated vertices have
+been removed.
+-/
+
+namespace Erdos593
+
+universe u v w x
+
+namespace TripleSystem
+
+namespace Embedding
+
+variable {V : Type u} {E : Type v} {W : Type w} {D : Type x}
+variable {F : TripleSystem V E} {H : TripleSystem W D}
+
+/-- A finite linear source with no isolated vertices determines a finite
+linear exact host-edge trace, isomorphic to the source. -/
+theorem finiteLinear_imageTrace [Fintype E]
+    (f : F.Embedding H) (hF : F.HasNoIsolatedPoints) (hlinear : F.Linear) :
+    f.edgeImage.Finite ∧
+      (H.edgeRestriction f.edgeImage).Linear ∧
+      Nonempty (Iso F (H.edgeRestriction f.edgeImage)) := by
+  refine ⟨Set.finite_range f.edge, f.imageEdgeRestriction_linear hF hlinear,
+    ⟨f.imageEdgeRestrictionIso hF⟩⟩
+
+/-- Removing isolated source vertices yields the same finite linear exact
+trace for an arbitrary finite linear source. -/
+theorem finiteLinear_isolatedReduction_imageTrace [Fintype E]
+    (f : F.Embedding H) (hlinear : F.Linear) :
+    let f' := (isolatedReductionEmbedding F).trans f
+    f'.edgeImage.Finite ∧
+      (H.edgeRestriction f'.edgeImage).Linear ∧
+      Nonempty (Iso F.isolatedReduction (H.edgeRestriction f'.edgeImage)) := by
+  dsimp
+  have hlinear' : F.isolatedReduction.Linear :=
+    F.isolatedReduction_linear hlinear
+  refine ⟨Set.finite_range _, ?_, ?_⟩
+  · exact ((isolatedReductionEmbedding F).trans f).imageEdgeRestriction_linear
+      F.isolatedReduction_hasNoIsolatedPoints hlinear'
+  · exact ⟨((isolatedReductionEmbedding F).trans f).imageEdgeRestrictionIso
+      F.isolatedReduction_hasNoIsolatedPoints⟩
+
+end Embedding
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_FiniteLinearImageTrace
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.FiniteLinearImageTrace
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.PairCodegree
+Source: Erdos593/TripleSystem/PairCodegree.lean
+Normalized SHA-256: 9a926daeb31f1173d4086201c56f9519fb7023ad72064f7c5be811eef648973e
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_PairCodegree
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+/-- A specified host edge completing `x` and `y` by `z`. Since a host edge
+has cardinality three, the equality below forces the displayed points to be
+pairwise distinct. -/
+structure ThirdVertexWitness {W : Type u} {D : Type v}
+    (H : TripleSystem W D) (x y z : W) where
+  edge : D
+  edgeSet_eq : H.edgeSet edge = {x, y, z}
+
+private theorem ncard_triple_lt_three_of_duplicate
+    {W : Type u} {x y z : W} (hdup : x = y ∨ x = z ∨ y = z) :
+    ({x, y, z} : Set W).ncard < 3 := by
+  rcases hdup with hxy | hxz | hyz
+  · subst y
+    have hle : ({x, x, z} : Set W).ncard ≤ 2 := by
+      calc
+        ({x, x, z} : Set W).ncard = ({x, z} : Set W).ncard := by simp
+        _ ≤ ({z} : Set W).ncard + 1 := Set.ncard_insert_le x {z}
+        _ = 2 := by simp
+    exact Nat.lt_succ_iff.mpr hle
+  · subst z
+    have hle : ({x, y, x} : Set W).ncard ≤ 2 := by
+      calc
+        ({x, y, x} : Set W).ncard = ({y, x} : Set W).ncard := by simp
+        _ = ({x, y} : Set W).ncard := by rw [Set.pair_comm y x]
+        _ ≤ ({y} : Set W).ncard + 1 := Set.ncard_insert_le x {y}
+        _ = 2 := by simp
+    exact Nat.lt_succ_iff.mpr hle
+  · subst z
+    have hle : ({x, y, y} : Set W).ncard ≤ 2 := by
+      calc
+        ({x, y, y} : Set W).ncard = ({x, y} : Set W).ncard := by simp
+        _ ≤ ({y} : Set W).ncard + 1 := Set.ncard_insert_le x {y}
+        _ = 2 := by simp
+    exact Nat.lt_succ_iff.mpr hle
+
+/-- A three-element host edge cannot be displayed using duplicate vertices. -/
+theorem pairwise_ne_of_edgeSet_eq_triple
+    {W : Type u} {D : Type v} {H : TripleSystem W D} {e : D} {x y z : W}
+    (he : H.edgeSet e = {x, y, z}) : x ≠ y ∧ x ≠ z ∧ y ≠ z := by
+  have hcard : ({x, y, z} : Set W).ncard = 3 := by
+    rw [← he]
+    exact H.edgeSet_ncard e
+  constructor
+  · intro hxy
+    exact (Nat.ne_of_lt
+      (ncard_triple_lt_three_of_duplicate (Or.inl hxy))) hcard
+  constructor
+  · intro hxz
+    exact (Nat.ne_of_lt
+      (ncard_triple_lt_three_of_duplicate (Or.inr (Or.inl hxz)))) hcard
+  · intro hyz
+    exact (Nat.ne_of_lt
+      (ncard_triple_lt_three_of_duplicate (Or.inr (Or.inr hyz)))) hcard
+
+namespace ThirdVertexWitness
+
+variable {W : Type u} {D : Type v} {H : TripleSystem W D} {x y : W}
+
+/-- Reorder the two distinguished endpoints of a completion witness. -/
+def swap {z : W} (p : ThirdVertexWitness H x y z) :
+    ThirdVertexWitness H y x z where
+  edge := p.edge
+  edgeSet_eq := p.edgeSet_eq.trans (Set.insert_comm x y {z})
+
+/-- Reinterpret a completion witness with one endpoint and its completion
+vertex interchanged. -/
+def rotate {z : W} (p : ThirdVertexWitness H x y z) :
+    ThirdVertexWitness H x z y where
+  edge := p.edge
+  edgeSet_eq := p.edgeSet_eq.trans
+    (congrArg (Set.insert x) (Set.pair_comm y z))
+
+theorem left_ne_right {z : W} (p : ThirdVertexWitness H x y z) : x ≠ y :=
+  (pairwise_ne_of_edgeSet_eq_triple p.edgeSet_eq).1
+
+theorem third_ne_left {z : W} (p : ThirdVertexWitness H x y z) : z ≠ x :=
+  (pairwise_ne_of_edgeSet_eq_triple p.edgeSet_eq).2.1.symm
+
+theorem third_ne_right {z : W} (p : ThirdVertexWitness H x y z) : z ≠ y :=
+  (pairwise_ne_of_edgeSet_eq_triple p.edgeSet_eq).2.2.symm
+
+end ThirdVertexWitness
+
+/-- Explicit, distinct third vertices together with their host-edge witnesses.
+`Nonempty (PairCodegreeWitness H x y t)` is the formal codegree-at-least-`t`
+assertion used by the positive-atom construction. -/
+structure PairCodegreeWitness {W : Type u} {D : Type v}
+    (H : TripleSystem W D) (x y : W) (t : Nat) where
+  third : Fin t ↪ W
+  edge : Fin t → D
+  edgeSet_eq : ∀ k, H.edgeSet (edge k) = {x, y, third k}
+
+/-- The pair `(x, y)` has at least `t` distinct, explicitly witnessed
+third-vertex completions. -/
+def HasPairCodegreeAtLeast (H : TripleSystem W D) (x y : W) (t : Nat) : Prop :=
+  Nonempty (PairCodegreeWitness H x y t)
+
+namespace PairCodegreeWitness
+
+variable {W : Type u} {D : Type v} {H : TripleSystem W D}
+  {x y : W} {t : Nat}
+
+/-- Extract the one-cell witness at a given completion index. -/
+def thirdWitness (p : PairCodegreeWitness H x y t) (k : Fin t) :
+    ThirdVertexWitness H x y (p.third k) where
+  edge := p.edge k
+  edgeSet_eq := p.edgeSet_eq k
+
+/-- Assemble a pair-codegree witness from distinct third vertices and one
+completion witness for each of them. -/
+def ofThirdVertexWitnesses (third : Fin t ↪ W)
+    (witness : ∀ k, ThirdVertexWitness H x y (third k)) :
+    PairCodegreeWitness H x y t where
+  third := third
+  edge := fun k => (witness k).edge
+  edgeSet_eq := fun k => (witness k).edgeSet_eq
+
+/-- Reorder the two distinguished endpoints of every completion witness. -/
+def swap (p : PairCodegreeWitness H x y t) : PairCodegreeWitness H y x t where
+  third := p.third
+  edge := p.edge
+  edgeSet_eq k := (p.edgeSet_eq k).trans (Set.insert_comm x y {p.third k})
+
+/-- Restrict a codegree witness to any smaller finite family of third
+vertices. -/
+def restrict (p : PairCodegreeWitness H x y t) {s : Nat} (hst : s ≤ t) :
+    PairCodegreeWitness H x y s where
+  third := Function.Embedding.trans (Fin.castLEEmb hst) p.third
+  edge := fun k => p.edge (Fin.castLE hst k)
+  edgeSet_eq := fun k => p.edgeSet_eq (Fin.castLE hst k)
+
+theorem left_ne_right (p : PairCodegreeWitness H x y t) (ht : 0 < t) : x ≠ y :=
+  ThirdVertexWitness.left_ne_right (thirdWitness p ⟨0, ht⟩)
+
+theorem third_ne_left (p : PairCodegreeWitness H x y t) (k : Fin t) :
+    p.third k ≠ x :=
+  ThirdVertexWitness.third_ne_left (thirdWitness p k)
+
+theorem third_ne_right (p : PairCodegreeWitness H x y t) (k : Fin t) :
+    p.third k ≠ y :=
+  ThirdVertexWitness.third_ne_right (thirdWitness p k)
+
+end PairCodegreeWitness
+
+/-- Pair-codegree lower bounds are monotone in the requested number of
+distinct completions. -/
+theorem hasPairCodegreeAtLeast_mono {W : Type u} {D : Type v}
+    {H : TripleSystem W D} {x y : W} {s t : Nat}
+    (h : HasPairCodegreeAtLeast H x y t) (hst : s ≤ t) :
+    HasPairCodegreeAtLeast H x y s := by
+  rcases h with ⟨p⟩
+  exact ⟨p.restrict hst⟩
+
+/-- Pair-codegree is symmetric in its two distinguished endpoints. -/
+theorem hasPairCodegreeAtLeast_comm {W : Type u} {D : Type v}
+    (H : TripleSystem W D) (x y : W) (t : Nat) :
+    HasPairCodegreeAtLeast H x y t ↔ HasPairCodegreeAtLeast H y x t := by
+  constructor
+  · rintro ⟨p⟩
+    exact ⟨p.swap⟩
+  · rintro ⟨p⟩
+    exact ⟨p.swap⟩
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_PairCodegree
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.PairCodegree
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.HighPairGraph
+Source: Erdos593/TripleSystem/HighPairGraph.lean
+Normalized SHA-256: 7ef8ce893808c5b86b728d848cac6fec2092c16c4e411e40f16f3640d9178a20
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairGraph
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+/-- A distinct pair equipped with at least `t` explicitly witnessed third
+vertex completions. The explicit disequality keeps the high-pair relation
+irreflexive even when `t = 0`. -/
+def HighPair {W : Type u} {D : Type v}
+    (H : TripleSystem W D) (t : Nat) (x y : W) : Prop :=
+  x ≠ y ∧ HasPairCodegreeAtLeast H x y t
+
+/-- The graph whose edges are distinct high-codegree pairs in a triple system. -/
+def highPairGraph {W : Type u} {D : Type v}
+    (H : TripleSystem W D) (t : Nat) : _root_.SimpleGraph W where
+  Adj x y := HighPair H t x y
+  symm := ⟨by
+    rintro x y ⟨hxy, hcodeg⟩
+    exact ⟨hxy.symm, (hasPairCodegreeAtLeast_comm H x y t).mp hcodeg⟩⟩
+  loopless := ⟨by
+    intro x hx
+    exact hx.1 rfl⟩
+
+@[simp]
+theorem highPairGraph_adj {W : Type u} {D : Type v}
+    (H : TripleSystem W D) (t : Nat) (x y : W) :
+    (highPairGraph H t).Adj x y ↔ HighPair H t x y :=
+  Iff.rfl
+
+/-- High-pair thresholds are monotone: a pair high at a larger threshold is
+also high at every smaller threshold. -/
+theorem highPair_mono {W : Type u} {D : Type v}
+    {H : TripleSystem W D} {x y : W} {s t : Nat}
+    (h : HighPair H t x y) (hst : s ≤ t) : HighPair H s x y :=
+  ⟨h.1, hasPairCodegreeAtLeast_mono h.2 hst⟩
+
+/-- A positive-size codegree witness determines a high pair. -/
+theorem highPair_of_witness {W : Type u} {D : Type v}
+    {H : TripleSystem W D} {x y : W} {t : Nat}
+    (p : PairCodegreeWitness H x y t) (ht : 0 < t) : HighPair H t x y :=
+  ⟨PairCodegreeWitness.left_ne_right p ht, ⟨p⟩⟩
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairGraph
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.HighPairGraph
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.HighPairSelection
+Source: Erdos593/TripleSystem/HighPairSelection.lean
+Normalized SHA-256: 8f4118138e39a64a20350a449ef020b08aa8292bef19ad828753806c43a6b4f8
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairSelection
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+/-- Select one point from each finite reservoir, avoiding a fixed finite core,
+while keeping all selected points globally distinct.
+
+The capacity hypothesis is deliberately uniform: each reservoir has `T`
+distinct points, and deleting the core still leaves enough choices for all
+`m` cells. This is the finite selection step used when high-codegree pairs
+are assembled into a witnessed bipartite matrix. -/
+theorem exists_injective_choice_of_card_add_le
+    {W : Type u} [DecidableEq W] {m T : Nat}
+    (C : Finset W) (reservoir : Fin m → Fin T ↪ W)
+    (hcap : C.card + m ≤ T) :
+    ∃ choose : Fin m → Fin T,
+      Function.Injective (fun i => reservoir i (choose i)) ∧
+      ∀ i, reservoir i (choose i) ∉ C := by
+  classical
+  let A : Fin m → Finset W := fun i => Finset.univ.map (reservoir i) \ C
+  have hlarge : ∀ i : Fin m, m ≤ (A i).card := by
+    intro i
+    have hsub : T - C.card ≤ (A i).card := by
+      simpa [A, Finset.card_map] using
+        (Finset.le_card_sdiff C (Finset.univ.map (reservoir i)))
+    exact (Nat.le_sub_of_add_le' hcap).trans hsub
+  have hhall : ∀ s : Finset (Fin m), s.card ≤ (s.biUnion A).card := by
+    intro s
+    rcases s.eq_empty_or_nonempty with rfl | hs
+    · simp
+    · obtain ⟨i, hi⟩ := hs
+      calc
+        s.card ≤ m := by simpa using (Finset.card_le_univ s)
+        _ ≤ (A i).card := hlarge i
+        _ ≤ (s.biUnion A).card := Finset.card_le_card (by
+          intro x hx
+          exact Finset.mem_biUnion.mpr ⟨i, hi, hx⟩)
+  obtain ⟨f, hf_inj, hf_mem⟩ :=
+    (Finset.all_card_le_biUnion_card_iff_exists_injective A).mp hhall
+  choose choose hchoose using fun i =>
+    (Finset.mem_map.mp (Finset.mem_sdiff.mp (hf_mem i)).1)
+  refine ⟨choose, ?_, ?_⟩
+  · intro i j hij
+    apply hf_inj
+    calc
+      f i = reservoir i (choose i) := (hchoose i).2.symm
+      _ = reservoir j (choose j) := hij
+      _ = f j := (hchoose j).2
+  · intro i
+    rw [(hchoose i).2]
+    exact (Finset.mem_sdiff.mp (hf_mem i)).2
+
+/-- The same finite Hall-selection principle indexed by an arbitrary finite
+type. This form is convenient for the cells of a bipartite matrix, whose
+natural index type is `Fin n × Fin n`. -/
+theorem exists_injective_choice_of_fintype_card_add_le
+    {ι : Type v} {W : Type u} [Fintype ι] [DecidableEq W] {T : Nat}
+    (C : Finset W) (reservoir : ι → Fin T ↪ W)
+    (hcap : C.card + Fintype.card ι ≤ T) :
+    ∃ choose : ι → Fin T,
+      Function.Injective (fun i => reservoir i (choose i)) ∧
+      ∀ i, reservoir i (choose i) ∉ C := by
+  classical
+  let A : ι → Finset W := fun i => Finset.univ.map (reservoir i) \ C
+  have hlarge : ∀ i : ι, Fintype.card ι ≤ (A i).card := by
+    intro i
+    have hsub : T - C.card ≤ (A i).card := by
+      simpa [A, Finset.card_map] using
+        (Finset.le_card_sdiff C (Finset.univ.map (reservoir i)))
+    exact (Nat.le_sub_of_add_le' hcap).trans hsub
+  have hhall : ∀ s : Finset ι, s.card ≤ (s.biUnion A).card := by
+    intro s
+    rcases s.eq_empty_or_nonempty with rfl | hs
+    · simp
+    · obtain ⟨i, hi⟩ := hs
+      calc
+        s.card ≤ Fintype.card ι := Finset.card_le_univ s
+        _ ≤ (A i).card := hlarge i
+        _ ≤ (s.biUnion A).card := Finset.card_le_card (by
+          intro x hx
+          exact Finset.mem_biUnion.mpr ⟨i, hi, hx⟩)
+  obtain ⟨f, hf_inj, hf_mem⟩ :=
+    (Finset.all_card_le_biUnion_card_iff_exists_injective A).mp hhall
+  choose choose hchoose using fun i =>
+    (Finset.mem_map.mp (Finset.mem_sdiff.mp (hf_mem i)).1)
+  refine ⟨choose, ?_, ?_⟩
+  · intro i j hij
+    apply hf_inj
+    calc
+      f i = reservoir i (choose i) := (hchoose i).2.symm
+      _ = reservoir j (choose j) := hij
+      _ = f j := (hchoose j).2
+  · intro i
+    rw [(hchoose i).2]
+    exact (Finset.mem_sdiff.mp (hf_mem i)).2
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairSelection
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.HighPairSelection
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.RainbowExpansionEmbedding
+Source: Erdos593/TripleSystem/RainbowExpansionEmbedding.lean
+Normalized SHA-256: d62090180590c353e38ff36dfa032f1b774b7beaf346f7327103a20d89406643
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_RainbowExpansionEmbedding
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+structure WitnessedBipartiteMatrix {W : Type u} {D : Type v}
+    (H : TripleSystem W D) (q t : Nat) where
+  left : Fin q ↪ W
+  right : Fin q ↪ W
+  apex : Fin q → Fin q → W
+  edge : Fin q → Fin q → D
+  core_disjoint : ∀ i j, left i ≠ right j
+  apex_ne_left : ∀ i j k, apex i j ≠ left k
+  apex_ne_right : ∀ i j k, apex i j ≠ right k
+  edgeSet_eq : ∀ i j,
+    H.edgeSet (edge i j) = {left i, right j, apex i j}
+  locallyBounded : RainbowBipartite.LocallyBounded t apex
+
+/-- Package independently selected cell witnesses into the matrix consumed by
+the finite rainbow extraction. The global core-avoidance and local-bound
+conditions remain explicit hypotheses: pair codegree alone does not supply
+them. -/
+def WitnessedBipartiteMatrix.ofThirdVertexWitnesses
+    {W : Type u} {D : Type v} {H : TripleSystem W D} {q t : Nat}
+    (left right : Fin q ↪ W) (apex : Fin q → Fin q → W)
+    (cell : ∀ i j, ThirdVertexWitness H (left i) (right j) (apex i j))
+    (core_disjoint : ∀ i j, left i ≠ right j)
+    (apex_ne_left : ∀ i j k, apex i j ≠ left k)
+    (apex_ne_right : ∀ i j k, apex i j ≠ right k)
+    (locallyBounded : RainbowBipartite.LocallyBounded t apex) :
+    WitnessedBipartiteMatrix H q t where
+  left := left
+  right := right
+  apex := apex
+  edge := fun i j => (cell i j).edge
+  core_disjoint := core_disjoint
+  apex_ne_left := apex_ne_left
+  apex_ne_right := apex_ne_right
+  edgeSet_eq := fun i j => (cell i j).edgeSet_eq
+  locallyBounded := locallyBounded
+
+noncomputable def WitnessedBipartiteMatrix.rainbowEmbedding
+    {W : Type u} {D : Type v} {H : TripleSystem W D} {n q t : Nat}
+    (M : WitnessedBipartiteMatrix H q t)
+    (row column : Fin n ↪ Fin q)
+    (hrainbow : RainbowBipartite.IsRainbow M.apex row column) :
+    (privateVertexExpansion (completeBipartiteNN.{u} n)).Embedding H := by
+  let G := completeBipartiteNN.{u} n
+  let vertexMap : PrivateVertexExpansion.Point G → W
+    | .inl (.inl a) => M.left (row a.down)
+    | .inl (.inr b) => M.right (column b.down)
+    | .inr e => M.apex (row (CompleteBipartiteEdges.coords n e).1.down)
+        (column (CompleteBipartiteEdges.coords n e).2.down)
+  let edgeMap : G.edgeSet → D := fun e =>
+    M.edge (row (CompleteBipartiteEdges.coords n e).1.down)
+      (column (CompleteBipartiteEdges.coords n e).2.down)
+  have hvertexMap : Function.Injective vertexMap := by
+    intro p q hpq
+    rcases p with p | e <;> rcases q with q | f
+    · rcases p with a | b <;> rcases q with c | d
+      · have h : row a.down = row c.down := M.left.injective (by
+          simpa [vertexMap] using hpq)
+        have hac : a.down = c.down := row.injective h
+        have hac' : a = c := ULift.ext a c hac
+        exact congrArg (fun z => Sum.inl (Sum.inl z)) hac'
+      · exfalso
+        exact M.core_disjoint (row a.down) (column d.down) (by
+          simpa [vertexMap] using hpq)
+      · exfalso
+        exact (M.core_disjoint (row c.down) (column b.down)).symm (by
+          simpa [vertexMap] using hpq)
+      · have h : column b.down = column d.down := M.right.injective (by
+          simpa [vertexMap] using hpq)
+        have hbd : b.down = d.down := column.injective h
+        have hbd' : b = d := ULift.ext b d hbd
+        exact congrArg (fun z => Sum.inl (Sum.inr z)) hbd'
+    · rcases p with a | b
+      · exfalso
+        exact M.apex_ne_left
+          (row (CompleteBipartiteEdges.coords n f).1.down)
+          (column (CompleteBipartiteEdges.coords n f).2.down)
+          (row a.down) (by simpa [vertexMap] using hpq.symm)
+      · exfalso
+        exact M.apex_ne_right
+          (row (CompleteBipartiteEdges.coords n f).1.down)
+          (column (CompleteBipartiteEdges.coords n f).2.down)
+          (column b.down) (by simpa [vertexMap] using hpq.symm)
+    · rcases q with a | b
+      · exfalso
+        exact M.apex_ne_left
+          (row (CompleteBipartiteEdges.coords n e).1.down)
+          (column (CompleteBipartiteEdges.coords n e).2.down)
+          (row a.down) (by simpa [vertexMap] using hpq)
+      · exfalso
+        exact M.apex_ne_right
+          (row (CompleteBipartiteEdges.coords n e).1.down)
+          (column (CompleteBipartiteEdges.coords n e).2.down)
+          (column b.down) (by simpa [vertexMap] using hpq)
+    · have hcoord :
+          ((CompleteBipartiteEdges.coords n e).1.down,
+            (CompleteBipartiteEdges.coords n e).2.down) =
+          ((CompleteBipartiteEdges.coords n f).1.down,
+            (CompleteBipartiteEdges.coords n f).2.down) :=
+        hrainbow (by simpa [vertexMap] using hpq)
+      have hcoords : CompleteBipartiteEdges.coords n e =
+          CompleteBipartiteEdges.coords n f := by
+        apply Prod.ext
+        · apply ULift.ext
+          exact congrArg Prod.fst hcoord
+        · apply ULift.ext
+          exact congrArg Prod.snd hcoord
+      exact congrArg Sum.inr (CompleteBipartiteEdges.coords_injective n hcoords)
+  let vertexEmbedding : PrivateVertexExpansion.Point G ↪ W :=
+    { toFun := vertexMap
+      inj' := hvertexMap }
+  exact
+    { vertex := vertexEmbedding
+      edge := edgeMap
+      map_edge := by
+        intro e
+        change vertexMap '' {p | PrivateVertexExpansion.Inc G p e} =
+          H.edgeSet (edgeMap e)
+        rw [← CompleteBipartiteEdges.edge_coords n e]
+        have hInc :
+            {p | PrivateVertexExpansion.Inc G p
+              (CompleteBipartiteEdges.edge n
+                (CompleteBipartiteEdges.coords n e).1
+                (CompleteBipartiteEdges.coords n e).2)} =
+              {PrivateVertexExpansion.core G
+                (Sum.inl (CompleteBipartiteEdges.coords n e).1),
+               PrivateVertexExpansion.core G
+                (Sum.inr (CompleteBipartiteEdges.coords n e).2),
+               PrivateVertexExpansion.privateVertex G
+                (CompleteBipartiteEdges.edge n
+                  (CompleteBipartiteEdges.coords n e).1
+                  (CompleteBipartiteEdges.coords n e).2)} := by
+          change {p | PrivateVertexExpansion.Inc G p
+            (⟨s(Sum.inl (CompleteBipartiteEdges.coords n e).1,
+                Sum.inr (CompleteBipartiteEdges.coords n e).2), by
+                simp [G, completeBipartiteNN]⟩ : G.edgeSet)} = _
+          exact PrivateVertexExpansion.incidenceSet_eq G (by
+            simp [G, completeBipartiteNN])
+        rw [hInc]
+        rw [M.edgeSet_eq]
+        ext z
+        simp [vertexMap, PrivateVertexExpansion.core,
+          PrivateVertexExpansion.privateVertex,
+          CompleteBipartiteEdges.coords_edge, eq_comm] }
+
+theorem exists_rainbowEmbedding_of_witnessedMatrices
+    {W : Type u} {D : Type v} (H : TripleSystem W D) (n t : Nat)
+    (hn : 0 < n) (ht : 0 < t)
+    (hmat : ∀ q : Nat, Nonempty (WitnessedBipartiteMatrix H q t)) :
+    Nonempty ((privateVertexExpansion (completeBipartiteNN.{u} n)).Embedding H) := by
+  obtain ⟨q, hq⟩ :=
+    RainbowBipartite.exists_rainbow_bipartite_submatrix n t hn ht
+  obtain ⟨M⟩ := hmat q
+  obtain ⟨row, column, hrainbow⟩ := hq W M.apex M.locallyBounded
+  exact ⟨M.rainbowEmbedding row column hrainbow⟩
+
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_RainbowExpansionEmbedding
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.RainbowExpansionEmbedding
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.HighPairMatrix
+Source: Erdos593/TripleSystem/HighPairMatrix.lean
+Normalized SHA-256: ba9a08ecabddb0b74838c4e118d7e7ab1940af7f5130a5cab89346684f2c5b77
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairMatrix
+
+/-!
+# Matrix assembly from high-codegree pairs
+
+This module turns independently witnessed large pair-codegrees on a complete
+left/right grid into the locally bounded matrix required by the finite
+rainbow extraction. Hall selection makes all third vertices globally
+distinct, which is stronger than the local multiplicity bound needed below.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+/-- A globally injective matrix of colors is locally `2`-bounded. -/
+theorem locallyBounded_two_of_injective
+    {W : Type u} {q : Nat} (apex : Fin q → Fin q → W)
+    (hinj : Function.Injective
+      (fun ij : Fin q × Fin q => apex ij.1 ij.2)) :
+    RainbowBipartite.LocallyBounded 2 apex := by
+  constructor
+  · intro x a
+    apply Nat.lt_succ_iff.mpr
+    apply Finite.card_le_one_iff_subsingleton.mpr
+    constructor
+    intro y z
+    apply Subtype.ext
+    have hp : (x, y.1) = (x, z.1) := hinj (by
+      change apex x y.1 = apex x z.1
+      exact y.2.trans z.2.symm)
+    exact congrArg Prod.snd hp
+  · intro y a
+    apply Nat.lt_succ_iff.mpr
+    apply Finite.card_le_one_iff_subsingleton.mpr
+    constructor
+    intro x z
+    apply Subtype.ext
+    have hp : (x.1, y) = (z.1, y) := hinj (by
+      change apex x.1 y = apex z.1 y
+      exact x.2.trans z.2.symm)
+    exact congrArg Prod.fst hp
+
+/-- Pair-codegree reservoirs whose total capacity exceeds a finite protected
+core and all grid cells yield a witnessed bipartite matrix. -/
+theorem exists_witnessedBipartiteMatrix_of_pairCodegree
+    {W : Type u} {D : Type v} [DecidableEq W]
+    {H : TripleSystem W D} {n T : Nat}
+    (left right : Fin n ↪ W) (core : Finset W)
+    (hleft : ∀ i, left i ∈ core)
+    (hright : ∀ j, right j ∈ core)
+    (hcore_disjoint : ∀ i j, left i ≠ right j)
+    (completion : ∀ ij : Fin n × Fin n,
+      PairCodegreeWitness H (left ij.1) (right ij.2) T)
+    (hcap : core.card + Fintype.card (Fin n × Fin n) ≤ T) :
+    ∃ M : WitnessedBipartiteMatrix H n 2, M.left = left ∧ M.right = right := by
+  classical
+  obtain ⟨choose, hchoose_inj, hchoose_avoid⟩ :=
+    exists_injective_choice_of_fintype_card_add_le
+      (ι := Fin n × Fin n) (W := W) core
+      (fun ij => (completion ij).third) hcap
+  let apex : Fin n → Fin n → W :=
+    fun i j => (completion (i, j)).third (choose (i, j))
+  have hapex_inj : Function.Injective
+      (fun ij : Fin n × Fin n => apex ij.1 ij.2) := by
+    intro ij kl h
+    apply hchoose_inj
+    simpa [apex] using h
+  have hapex_avoid : ∀ i j, apex i j ∉ core := by
+    intro i j
+    simpa [apex] using hchoose_avoid (i, j)
+  refine ⟨{
+    left := left
+    right := right
+    apex := apex
+    edge := fun i j => (completion (i, j)).edge (choose (i, j))
+    core_disjoint := hcore_disjoint
+    apex_ne_left := fun i j k h => hapex_avoid i j (h.symm ▸ hleft k)
+    apex_ne_right := fun i j k h => hapex_avoid i j (h.symm ▸ hright k)
+    edgeSet_eq := fun i j => by
+      simpa [apex] using (completion (i, j)).edgeSet_eq (choose (i, j))
+    locallyBounded := locallyBounded_two_of_injective apex hapex_inj
+  }, rfl, rfl⟩
+
+/-- The canonical protected core is the union of the chosen left and right
+rows. -/
+theorem exists_witnessedBipartiteMatrix_of_pairCodegree_core_union
+    {W : Type u} {D : Type v} [DecidableEq W]
+    {H : TripleSystem W D} {n T : Nat}
+    (left right : Fin n ↪ W)
+    (hcore_disjoint : ∀ i j, left i ≠ right j)
+    (completion : ∀ ij : Fin n × Fin n,
+      PairCodegreeWitness H (left ij.1) (right ij.2) T)
+    (hcap : (Finset.univ.map left ∪ Finset.univ.map right).card +
+        Fintype.card (Fin n × Fin n) ≤ T) :
+    ∃ M : WitnessedBipartiteMatrix H n 2, M.left = left ∧ M.right = right := by
+  apply exists_witnessedBipartiteMatrix_of_pairCodegree left right
+    (Finset.univ.map left ∪ Finset.univ.map right)
+  · intro i
+    exact Finset.mem_union_left _ (Finset.mem_map.mpr ⟨i, Finset.mem_univ _, rfl⟩)
+  · intro j
+    exact Finset.mem_union_right _ (Finset.mem_map.mpr ⟨j, Finset.mem_univ _, rfl⟩)
+  · exact hcore_disjoint
+  · exact completion
+  · exact hcap
+
+/-- A uniform pair-codegree threshold of `2n + n²` supplies the capacity
+needed to select globally distinct third vertices for an `n × n` matrix. -/
+theorem exists_witnessedBipartiteMatrix_of_quadratic_pairCodegree
+    {W : Type u} {D : Type v} [DecidableEq W]
+    {H : TripleSystem W D} {n : Nat}
+    (left right : Fin n ↪ W)
+    (hcore_disjoint : ∀ i j, left i ≠ right j)
+    (completion : ∀ ij : Fin n × Fin n,
+      PairCodegreeWitness H (left ij.1) (right ij.2) (2 * n + n * n)) :
+    ∃ M : WitnessedBipartiteMatrix H n 2, M.left = left ∧ M.right = right := by
+  apply exists_witnessedBipartiteMatrix_of_pairCodegree_core_union left right
+    hcore_disjoint completion
+  have hcore : (Finset.univ.map left ∪ Finset.univ.map right).card ≤ 2 * n := by
+    calc
+      (Finset.univ.map left ∪ Finset.univ.map right).card ≤
+          (Finset.univ.map left).card + (Finset.univ.map right).card :=
+        Finset.card_union_le _ _
+      _ = 2 * n := by simp [two_mul]
+  simpa using Nat.add_le_add_right hcore (n * n)
+
+/-- A complete finite grid of high pairs at the quadratic threshold supplies
+the pair-codegree witnesses needed for the matrix construction. -/
+theorem exists_witnessedBipartiteMatrix_of_quadratic_highPair
+    {W : Type u} {D : Type v} [DecidableEq W]
+    {H : TripleSystem W D} {n : Nat}
+    (left right : Fin n ↪ W)
+    (hhigh : ∀ i j,
+      HighPair H (2 * n + n * n) (left i) (right j)) :
+    ∃ M : WitnessedBipartiteMatrix H n 2, M.left = left ∧ M.right = right := by
+  apply exists_witnessedBipartiteMatrix_of_quadratic_pairCodegree left right
+  · intro i j
+    exact (hhigh i j).1
+  · intro ij
+    exact Classical.choice (hhigh ij.1 ij.2).2
+
+/-- The quadratic Hall threshold can select the apex of every grid cell
+globally injectively.  This strengthens the local `2`-boundedness supplied by
+`exists_witnessedBipartiteMatrix_of_quadratic_highPair`, and is useful when a
+single high-pair grid is itself intended to be a rainbow submatrix. -/
+theorem exists_injectiveWitnessedBipartiteMatrix_of_quadratic_highPair
+    {W : Type u} {D : Type v} [DecidableEq W]
+    {H : TripleSystem W D} {n : Nat}
+    (left right : Fin n ↪ W)
+    (hhigh : ∀ i j,
+      HighPair H (2 * n + n * n) (left i) (right j)) :
+    ∃ M : WitnessedBipartiteMatrix H n 2,
+      M.left = left ∧ M.right = right ∧
+        Function.Injective (fun ij : Fin n × Fin n => M.apex ij.1 ij.2) := by
+  classical
+  let core : Finset W := Finset.univ.map left ∪ Finset.univ.map right
+  have hcap : core.card + Fintype.card (Fin n × Fin n) ≤ 2 * n + n * n := by
+    have hcore : core.card ≤ 2 * n := by
+      calc
+        core.card ≤ (Finset.univ.map left).card + (Finset.univ.map right).card :=
+          Finset.card_union_le _ _
+        _ = 2 * n := by simp [two_mul]
+    simpa using Nat.add_le_add_right hcore (n * n)
+  let completion : ∀ ij : Fin n × Fin n,
+      PairCodegreeWitness H (left ij.1) (right ij.2) (2 * n + n * n) :=
+    fun ij => Classical.choice (hhigh ij.1 ij.2).2
+  obtain ⟨choose, hchoose_inj, hchoose_avoid⟩ :=
+    exists_injective_choice_of_fintype_card_add_le
+      (ι := Fin n × Fin n) (W := W) core
+      (fun ij => (completion ij).third) hcap
+  let apex : Fin n → Fin n → W :=
+    fun i j => (completion (i, j)).third (choose (i, j))
+  have hapex_inj : Function.Injective
+      (fun ij : Fin n × Fin n => apex ij.1 ij.2) := by
+    intro ij kl h
+    apply hchoose_inj
+    simpa [apex] using h
+  have hapex_avoid : ∀ i j, apex i j ∉ core := by
+    intro i j
+    simpa [apex] using hchoose_avoid (i, j)
+  refine ⟨{
+    left := left
+    right := right
+    apex := apex
+    edge := fun i j => (completion (i, j)).edge (choose (i, j))
+    core_disjoint := fun i j => (hhigh i j).1
+    apex_ne_left := fun i j k h =>
+      hapex_avoid i j (h.symm ▸ Finset.mem_union_left _
+        (Finset.mem_map.mpr ⟨k, Finset.mem_univ _, rfl⟩))
+    apex_ne_right := fun i j k h =>
+      hapex_avoid i j (h.symm ▸ Finset.mem_union_right _
+        (Finset.mem_map.mpr ⟨k, Finset.mem_univ _, rfl⟩))
+    edgeSet_eq := fun i j => by
+      simpa [apex] using (completion (i, j)).edgeSet_eq (choose (i, j))
+    locallyBounded := locallyBounded_two_of_injective apex hapex_inj
+  }, rfl, rfl, hapex_inj⟩
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairMatrix
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.HighPairMatrix
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ObligatoryAtoms
+Source: Erdos593/TripleSystem/ObligatoryAtoms.lean
+Normalized SHA-256: 9d644c7e3bc07aa01856b31c757fedf832d5cff4608f772644dfccf9401a14fa
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryAtoms
+
+/-!
+# Obligatory private-vertex-expansion atoms
+
+This module is the foundational home for the balanced complete-bipartite
+private-vertex-expansion atoms.  It intentionally contains no constructive
+closure or bipartite-reduction imports, so the positive atom theorem can be
+used by those downstream results without a dependency cycle.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal
+
+universe u
+
+namespace TripleSystem
+
+/-- The private-vertex expansion of the balanced complete bipartite graph
+`K_{n,n}` in the ambient universe. -/
+abbrev completeBipartiteExpansionAtom (n : ℕ) :=
+  privateVertexExpansion (completeBipartiteNN.{u} n)
+
+/-- The `K_{0,0}` expansion atom is obligatory because both its points and
+edge indices are empty. -/
+theorem completeBipartiteExpansionAtom_zero_isObligatory :
+    (completeBipartiteExpansionAtom.{u} 0).IsObligatory := by
+  intro W D _ H _
+  apply Nonempty.intro
+  exact
+    { vertex :=
+        { toFun := fun x => isEmptyElim x
+          inj' := fun x => isEmptyElim x }
+      edge := fun e => isEmptyElim e
+      map_edge := fun e => isEmptyElim e }
+
+/-- A witnessed locally bounded bipartite matrix in a host contains the
+corresponding positive balanced expansion atom once its finite rainbow
+submatrix has been extracted. -/
+theorem completeBipartiteExpansionAtom_appears_of_witnessedMatrices
+    {W D : Type u} (H : TripleSystem W D) (n t : Nat)
+    (hn : 0 < n) (ht : 0 < t)
+    (hmat : ∀ q : Nat, Nonempty (WitnessedBipartiteMatrix H q t)) :
+    (completeBipartiteExpansionAtom.{u} n).Appears H := by
+  change Nonempty ((privateVertexExpansion
+    (completeBipartiteNN.{u} n)).Embedding H)
+  exact exists_rainbowEmbedding_of_witnessedMatrices H n t hn ht hmat
+
+/-- The finite rainbow bridge reduces a positive atom theorem to the explicit
+host-extraction obligation of producing witnessed matrices of every size. -/
+theorem completeBipartiteExpansionAtom_isObligatory_of_witnessedMatrices
+    (n t : Nat) (hn : 0 < n) (ht : 0 < t)
+    (hmat : ∀ (W D : Type u) [DecidableEq W] (H : TripleSystem W D),
+      ℵ₀ < H.chromaticCardinal →
+        ∀ q : Nat, Nonempty (WitnessedBipartiteMatrix H q t)) :
+    (completeBipartiteExpansionAtom.{u} n).IsObligatory := by
+  intro W D _ H hH
+  exact completeBipartiteExpansionAtom_appears_of_witnessedMatrices
+    H n t hn ht (hmat W D H hH)
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryAtoms
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ObligatoryAtoms
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.HighPairAtomBridge
+Source: Erdos593/TripleSystem/HighPairAtomBridge.lean
+Normalized SHA-256: 0a76dae64d343806647f5e699337eec2903e7cab1beb9f865d4df3882da28493
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairAtomBridge
+
+/-!
+# The high-pair graph / positive-atom bridge
+
+A complete bipartite copy in the high-pair graph is a finite grid of
+large-codegree pairs.  At the quadratic Hall threshold, the third vertices of
+that grid can be selected globally injectively, so the grid directly embeds
+the corresponding private-vertex-expansion atom.  Consequently, a host
+avoiding that atom has a countably colorable high-pair graph.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+open _root_.SimpleGraph
+
+/-- A non-induced `K_{n,n}` copy in a high-pair graph supplies its two
+injected sides as a complete grid of high pairs. -/
+theorem highPairGrid_of_completeBipartiteNNCopy
+    {W : Type u} {D : Type v} {H : TripleSystem W D} {n t : Nat}
+    (f : Copy (completeBipartiteNN.{u} n) (highPairGraph H t)) :
+    ∃ left right : Fin n ↪ W,
+      (∀ i j, left i ≠ right j) ∧
+        ∀ i j, HighPair H t (left i) (right j) := by
+  let left : Fin n ↪ W :=
+    { toFun := fun i => f (Sum.inl (ULift.up i))
+      inj' := by
+        intro i j hij
+        have h := f.injective hij
+        simpa using h }
+  let right : Fin n ↪ W :=
+    { toFun := fun j => f (Sum.inr (ULift.up j))
+      inj' := by
+        intro i j hij
+        have h := f.injective hij
+        simpa using h }
+  refine ⟨left, right, ?_, ?_⟩
+  · intro i j h
+    have hsrc : (completeBipartiteNN.{u} n).Adj
+        (Sum.inl (ULift.up i)) (Sum.inr (ULift.up j)) := by
+      simp [completeBipartiteNN]
+    have htgt : (highPairGraph H t).Adj (left i) (right j) := by
+      simpa [left, right] using f.toHom.map_adj hsrc
+    exact (highPairGraph_adj H t (left i) (right j)).mp htgt |>.1 h
+  · intro i j
+    have hsrc : (completeBipartiteNN.{u} n).Adj
+        (Sum.inl (ULift.up i)) (Sum.inr (ULift.up j)) := by
+      simp [completeBipartiteNN]
+    have htgt : (highPairGraph H t).Adj (left i) (right j) := by
+      simpa [left, right] using f.toHom.map_adj hsrc
+    exact (highPairGraph_adj H t (left i) (right j)).mp htgt
+
+/-- One complete quadratic high-pair grid has a globally rainbow apex map,
+and therefore embeds the matching positive balanced expansion atom. -/
+theorem nonempty_completeBipartiteExpansionEmbedding_of_quadratic_highPair
+    {W : Type u} {D : Type v} [DecidableEq W]
+    {H : TripleSystem W D} {n : Nat}
+    (left right : Fin n ↪ W)
+    (hhigh : ∀ i j,
+      HighPair H (2 * n + n * n) (left i) (right j)) :
+    Nonempty ((completeBipartiteExpansionAtom.{u} n).Embedding H) := by
+  obtain ⟨M, _, _, hapex_inj⟩ :=
+    exists_injectiveWitnessedBipartiteMatrix_of_quadratic_highPair
+      left right hhigh
+  let row : Fin n ↪ Fin n := Function.Embedding.refl _
+  let column : Fin n ↪ Fin n := Function.Embedding.refl _
+  have hrainbow : RainbowBipartite.IsRainbow M.apex row column := by
+    intro ij kl h
+    apply hapex_inj
+    simpa [row, column] using h
+  exact ⟨M.rainbowEmbedding row column hrainbow⟩
+
+/-- Avoiding the positive `K_{n,n}` expansion rules out a non-induced
+`K_{n,n}` copy in the high-pair graph at the quadratic Hall threshold. -/
+theorem isEmpty_completeBipartiteNNCopy_highPairGraph_of_atomFree
+    {W : Type u} {D : Type u} [DecidableEq W]
+    {H : TripleSystem W D} {n : Nat}
+    (hatomFree : ¬ (completeBipartiteExpansionAtom.{u} n).Appears H) :
+    IsEmpty (Copy (completeBipartiteNN.{u} n)
+      (highPairGraph H (2 * n + n * n))) := by
+  refine ⟨?_⟩
+  intro f
+  obtain ⟨left, right, _, hhigh⟩ :=
+    highPairGrid_of_completeBipartiteNNCopy f
+  exact hatomFree ⟨
+    (nonempty_completeBipartiteExpansionEmbedding_of_quadratic_highPair
+      left right hhigh).some⟩
+
+/-- In an atom-free host, the corresponding quadratic high-pair graph is
+countably colorable.  This combines the finite Hall bridge above with the
+singular-cardinal-safe graph coloring theorem. -/
+theorem countablyColorable_highPairGraph_of_atomFree
+    {W : Type u} {D : Type u} [DecidableEq W]
+    {H : TripleSystem W D} {n : Nat} (hn : 0 < n)
+    (hatomFree : ¬ (completeBipartiteExpansionAtom.{u} n).Appears H) :
+    Erdos593.SimpleGraph.CountablyColorable
+      (highPairGraph H (2 * n + n * n)) :=
+  Erdos593.SimpleGraph.countablyColorable_of_no_completeBipartiteNNCopy
+    (highPairGraph H (2 * n + n * n)) hn
+    (isEmpty_completeBipartiteNNCopy_highPairGraph_of_atomFree hatomFree)
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairAtomBridge
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.HighPairAtomBridge
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.PredicateColoring
+Source: Erdos593/TripleSystem/PredicateColoring.lean
+Normalized SHA-256: f2cc959a46c425a71e1fcb12276ccb5be856457bc6773c7a45f242830b89850a
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_PredicateColoring
+
+/-!
+# Predicate-local colourings of triple systems
+
+This module separates colouring a selected family of host edges from colouring
+the whole triple system.  The selected family is represented by a predicate on
+edge indices, so it remains compatible with the project's edge-indexed model
+and does not require constructing a restricted triple system first.
+
+The graph bridge records the elementary but frequently used observation that a
+proper colouring of a graph colours every hyperedge which contains an edge of
+that graph.
+-/
+
+namespace Erdos593
+
+universe u v w x
+
+namespace TripleSystem
+
+variable {W : Type u} {D : Type v} (H : TripleSystem W D)
+
+/-- A colouring is proper on the edge indices satisfying `P` when each such
+hyperedge contains two vertices of different colours. -/
+def IsProperColoringOn {C : Type w} (P : D → Prop) (c : W → C) : Prop :=
+  ∀ e : D, P e → ∃ x : W, H.Inc x e ∧ ∃ y : W, H.Inc y e ∧ c x ≠ c y
+
+/-- A selected family of edges is countably colourable when it has a proper
+colouring by natural numbers. -/
+def CountablyColorableOn (P : D → Prop) : Prop :=
+  ∃ c : W → ℕ, H.IsProperColoringOn P c
+
+/-- An indexed hyperedge contains an edge of `G`. -/
+def EdgeContainsGraphEdge (G : _root_.SimpleGraph W) : D → Prop := fun e =>
+  ∃ x y : W, H.Inc x e ∧ H.Inc y e ∧ G.Adj x y
+
+theorem IsProperColoringOn.mono {P Q : D → Prop} {C : Type w} {c : W → C}
+    (hc : H.IsProperColoringOn Q c) (hPQ : ∀ e, P e → Q e) :
+    H.IsProperColoringOn P c := by
+  intro e he
+  exact hc e (hPQ e he)
+
+/-- The empty edge family is properly coloured by every colouring. -/
+theorem isProperColoringOn_empty {C : Type w} (c : W → C) :
+    H.IsProperColoringOn (fun _ => False) c := by
+  intro e he
+  exact False.elim he
+
+/-- Combine colourings of two edge families by pairing their colour values. -/
+theorem IsProperColoringOn.union
+    {P Q : D → Prop} {C₁ : Type w} {C₂ : Type x}
+    {c₁ : W → C₁} {c₂ : W → C₂}
+    (hc₁ : H.IsProperColoringOn P c₁)
+    (hc₂ : H.IsProperColoringOn Q c₂) :
+    H.IsProperColoringOn (fun e => P e ∨ Q e) (fun z => (c₁ z, c₂ z)) := by
+  intro e he
+  rcases he with he | he
+  · rcases hc₁ e he with ⟨a, hae, b, hbe, hab⟩
+    refine ⟨a, hae, b, hbe, ?_⟩
+    intro hEq
+    exact hab (congrArg Prod.fst hEq)
+  · rcases hc₂ e he with ⟨a, hae, b, hbe, hab⟩
+    refine ⟨a, hae, b, hbe, ?_⟩
+    intro hEq
+    exact hab (congrArg Prod.snd hEq)
+
+theorem CountablyColorableOn.mono {P Q : D → Prop}
+    (hQ : H.CountablyColorableOn Q) (hPQ : ∀ e, P e → Q e) :
+    H.CountablyColorableOn P := by
+  rcases hQ with ⟨c, hc⟩
+  exact ⟨c, IsProperColoringOn.mono H hc hPQ⟩
+
+/-- Two countably colourable edge families have countably colourable union.
+The natural-number pairing is injective in each coordinate. -/
+theorem CountablyColorableOn.union {P Q : D → Prop}
+    (hP : H.CountablyColorableOn P) (hQ : H.CountablyColorableOn Q) :
+    H.CountablyColorableOn (fun e => P e ∨ Q e) := by
+  rcases hP with ⟨cP, hcP⟩
+  rcases hQ with ⟨cQ, hcQ⟩
+  refine ⟨fun z => Nat.pair (cP z) (cQ z), ?_⟩
+  intro e he
+  rcases he with he | he
+  · rcases hcP e he with ⟨a, hae, b, hbe, hab⟩
+    refine ⟨a, hae, b, hbe, ?_⟩
+    intro hEq
+    exact hab (Nat.pair_eq_pair.mp hEq).1
+  · rcases hcQ e he with ⟨a, hae, b, hbe, hab⟩
+    refine ⟨a, hae, b, hbe, ?_⟩
+    intro hEq
+    exact hab (Nat.pair_eq_pair.mp hEq).2
+
+/-- A proper graph colouring is proper on every host edge containing an edge
+of that graph. -/
+theorem isProperColoringOn_edgeContainsGraphEdge
+    {G : _root_.SimpleGraph W} {C : Type w} (c : G.Coloring C) :
+    H.IsProperColoringOn (H.EdgeContainsGraphEdge G) (fun z => c z) := by
+  intro e he
+  rcases he with ⟨a, b, hae, hbe, hab⟩
+  exact ⟨a, hae, b, hbe, c.valid hab⟩
+
+/-- A countable graph colouring colours the hyperedges containing graph
+edges.  Instantiate this with `highPairGraph H t` for the high-pair part of a
+host. -/
+theorem countablyColorableOn_edgeContainsGraphEdge
+    {G : _root_.SimpleGraph W} (hG : Erdos593.SimpleGraph.CountablyColorable G) :
+    H.CountablyColorableOn (H.EdgeContainsGraphEdge G) := by
+  rcases hG with ⟨c⟩
+  exact ⟨fun z => c z, H.isProperColoringOn_edgeContainsGraphEdge c⟩
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_PredicateColoring
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.PredicateColoring
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.HighPairEdgeColoring
+Source: Erdos593/TripleSystem/HighPairEdgeColoring.lean
+Normalized SHA-256: 7322148c5a5c1e0f8319147078d58fd9d7fca4927b92eba53713aa61ecff62ff
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairEdgeColoring
+
+/-!
+# The high-pair / low-pair edge partition
+
+For a fixed codegree threshold, this module partitions the indexed edges of a
+triple-system host according to whether they contain a high pair.  The
+high-pair part is exactly the family induced by the high-pair graph, so any
+countable colouring of that graph immediately gives a proper colouring of the
+selected hyperedges.  The complementary low-pair family is kept as a
+predicate on the original edge indices; this avoids changing the host vertex
+type before the closure argument is applied.
+-/
+
+namespace Erdos593
+
+universe u v w
+
+namespace TripleSystem
+
+variable {W : Type u} {D : Type v} (H : TripleSystem W D)
+
+/-- The indexed host edges which contain an edge of the threshold-`t`
+high-pair graph. -/
+def highPairEdge (t : Nat) : D → Prop :=
+  H.EdgeContainsGraphEdge (highPairGraph H t)
+
+/-- The complementary indexed host edges: those containing no threshold-`t`
+high pair. -/
+def lowPairEdge (t : Nat) : D → Prop := fun e => ¬ H.highPairEdge t e
+
+/-- Unfold the high-pair edge predicate into an explicit pair of incident
+vertices. -/
+theorem highPairEdge_iff {t : Nat} {e : D} :
+    H.highPairEdge t e ↔
+      ∃ x y : W, H.Inc x e ∧ H.Inc y e ∧ HighPair H t x y :=
+  Iff.rfl
+
+/-- An explicitly exhibited high pair inside an indexed edge puts that edge
+in the high-pair family. -/
+theorem highPairEdge_of_incident_highPair {t : Nat} {e : D} {x y : W}
+    (hxe : H.Inc x e) (hye : H.Inc y e) (hxy : HighPair H t x y) :
+    H.highPairEdge t e :=
+  ⟨x, y, hxe, hye, hxy⟩
+
+/-- Every high-pair edge supplies an explicitly incident high pair. -/
+theorem exists_incident_highPair_of_highPairEdge {t : Nat} {e : D}
+    (he : H.highPairEdge t e) :
+    ∃ x y : W, H.Inc x e ∧ H.Inc y e ∧ HighPair H t x y :=
+  he
+
+/-- A low-pair edge has no high pair among any two of its incident vertices. -/
+theorem not_highPair_of_lowPairEdge {t : Nat} {e : D} {x y : W}
+    (he : H.lowPairEdge t e) (hxe : H.Inc x e) (hye : H.Inc y e) :
+    ¬ HighPair H t x y := by
+  intro hxy
+  exact he (H.highPairEdge_of_incident_highPair hxe hye hxy)
+
+/-- Conversely, an edge is low-pair precisely when none of its incident
+pairs is high at the selected threshold. -/
+theorem lowPairEdge_iff {t : Nat} {e : D} :
+    H.lowPairEdge t e ↔
+      ∀ x y : W, H.Inc x e → H.Inc y e → ¬ HighPair H t x y := by
+  constructor
+  · intro he x y hxe hye
+    exact H.not_highPair_of_lowPairEdge he hxe hye
+  · intro he hhigh
+    rcases hhigh with ⟨x, y, hxe, hye, hxy⟩
+    exact he x y hxe hye hxy
+
+/-- The high-pair and low-pair predicates form an exhaustive partition of
+the original host edge indices. -/
+theorem highPairEdge_or_lowPairEdge (t : Nat) (e : D) :
+    H.highPairEdge t e ∨ H.lowPairEdge t e := by
+  exact Classical.em _
+
+/-- The two parts of the high-pair/low-pair partition are disjoint. -/
+theorem not_highPairEdge_and_lowPairEdge {t : Nat} {e : D} :
+    ¬ (H.highPairEdge t e ∧ H.lowPairEdge t e) := by
+  rintro ⟨hhigh, hlow⟩
+  exact hlow hhigh
+
+/-- Re-express membership in the high-pair family through failure of the
+complementary low-pair predicate. -/
+theorem highPairEdge_iff_not_lowPairEdge {t : Nat} {e : D} :
+    H.highPairEdge t e ↔ ¬ H.lowPairEdge t e := by
+  simp only [lowPairEdge]
+  exact Classical.not_not.symm
+
+/-- Re-express membership in the low-pair family through failure of the
+high-pair predicate. -/
+theorem lowPairEdge_iff_not_highPairEdge {t : Nat} {e : D} :
+    H.lowPairEdge t e ↔ ¬ H.highPairEdge t e :=
+  Iff.rfl
+
+/-- A proper colouring of the high-pair graph is proper on every host edge
+which contains a high pair. -/
+theorem isProperColoringOn_highPairEdge {t : Nat} {C : Type w}
+    (c : (highPairGraph H t).Coloring C) :
+    H.IsProperColoringOn (H.highPairEdge t) (fun z => c z) := by
+  simpa only [highPairEdge] using
+    H.isProperColoringOn_edgeContainsGraphEdge c
+
+/-- A countable colouring of the high-pair graph colours the high-pair part
+of the host edge partition. -/
+theorem countablyColorableOn_highPairEdge {t : Nat}
+    (hG : Erdos593.SimpleGraph.CountablyColorable (highPairGraph H t)) :
+    H.CountablyColorableOn (H.highPairEdge t) := by
+  simpa only [highPairEdge] using
+    H.countablyColorableOn_edgeContainsGraphEdge hG
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairEdgeColoring
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.HighPairEdgeColoring
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.HighPairObligatory
+Source: Erdos593/TripleSystem/HighPairObligatory.lean
+Normalized SHA-256: b1849b119f0526b068b810b1b762ec0713316d4e23a66b2c796cad6982c50cbe
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairObligatory
+
+/-!
+# Positive atoms from quadratic high-pair grids
+
+This is the final finite extraction interface for the positive branch.  Its
+hypothesis deliberately concerns only the host: every uncountably chromatic
+host supplies high-codegree pairs across arbitrarily large finite bipartite
+grids.  The Hall/matrix construction and the finite rainbow extraction are
+reused from the preceding modules.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal
+
+universe u
+
+namespace TripleSystem
+
+/-- If every uncountably chromatic host contains arbitrarily large complete
+left/right grids of pairs with codegree at least `2q + q²`, then every
+nontrivial balanced complete-bipartite private-vertex expansion is
+obligatory. -/
+theorem completeBipartiteExpansionAtom_isObligatory_of_quadratic_highPairs
+    (n : Nat) (hn : 0 < n)
+    (hgrid : ∀ (W D : Type u) [DecidableEq W] (H : TripleSystem W D),
+      ℵ₀ < H.chromaticCardinal →
+        ∀ q : Nat, ∃ left right : Fin q ↪ W,
+          ∀ i j, HighPair H (2 * q + q * q) (left i) (right j)) :
+    (privateVertexExpansion (completeBipartiteNN.{u} n)).IsObligatory := by
+  simpa only [completeBipartiteExpansionAtom] using
+    (completeBipartiteExpansionAtom_isObligatory_of_witnessedMatrices n 2 hn
+      (by decide) (by
+        intro W D _ H hH q
+        obtain ⟨left, right, hhigh⟩ := hgrid W D H hH q
+        obtain ⟨M, _, _⟩ :=
+          exists_witnessedBipartiteMatrix_of_quadratic_highPair left right hhigh
+        exact ⟨M⟩))
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairObligatory
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.HighPairObligatory
 ========================================================================== -/
 
 /- ==========================================================================
@@ -8533,7 +10949,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ObligatoryOnePointAmalgamation
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ObligatoryConstructible
 Source: Erdos593/TripleSystem/ObligatoryConstructible.lean
-Normalized SHA-256: d54aad68b13f5455239f702b4a616095b47311a5679b9ba6125633777e5bc696
+Normalized SHA-256: 5c9545e461c00aa28e3076b2785a6083875b5f202cda8945629275df0e5b0bf5
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryConstructible
 
@@ -8642,6 +11058,18 @@ theorem edgeless_isObligatory (V : Type w) [Fintype V] :
   · intro e
     exact Empty.elim e.down
 
+/-- A finite triple system with no edge indices is obligatory. -/
+theorem isObligatory_of_isEmptyEdgeIndices
+    {V E : Type w} [Fintype V] [IsEmpty E]
+    (F : TripleSystem V E) : F.IsObligatory := by
+  apply (edgeless_isObligatory V).ofIso
+  refine
+    { vertexEquiv := Equiv.refl V
+      edgeEquiv := Equiv.equivOfIsEmpty _ _
+      map_inc_iff := ?_ }
+  intro x e
+  exact isEmptyElim e
+
 /-- If every private-vertex expansion of a finite two-colourable graph is
 obligatory, then every member of the finite constructive class is obligatory.
 -/
@@ -8692,6 +11120,19 @@ theorem Constructible.isObligatory_of_completeBipartiteNN
   intro X _ G hG
   exact privateVertexExpansion_isObligatory_of_completeBipartiteNN hG hAtoms
 
+/-- For the constructive closure theorem, the zero balanced atom is already
+settled; it remains only to prove the positive balanced atoms obligatory. -/
+theorem Constructible.isObligatory_of_positive_completeBipartiteNN
+    (hAtoms : ∀ n : Nat, 0 < n →
+      (privateVertexExpansion (completeBipartiteNN.{w} n)).IsObligatory)
+    {V E : Type w} {F : TripleSystem V E} (hF : Constructible F) :
+    F.IsObligatory := by
+  apply hF.isObligatory_of_completeBipartiteNN
+  intro n
+  rcases Nat.eq_zero_or_pos n with rfl | hn
+  · exact completeBipartiteExpansionAtom_zero_isObligatory
+  · exact hAtoms n hn
+
 end TripleSystem
 
 end Erdos593
@@ -8699,6 +11140,1321 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryConstructible
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.ObligatoryConstructible
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.RainbowLocalBound
+Source: Erdos593/TripleSystem/RainbowLocalBound.lean
+Normalized SHA-256: 72858d62fed4456b3f5418785dd10589755874702393d504837592aa883c22fa
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_RainbowLocalBound
+
+/-!
+# Local rainbow bounds from low codegree
+
+This module packages the finite argument used in the low-codegree crossing
+graph branch.  If a color occurs at least `t` times in one row or column of a
+witnessed bipartite grid, the corresponding base/apex pair has `t` distinct
+third-vertex completions and is therefore a high pair.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+/-- A bipartite array of third-vertex witnesses is locally `t`-bounded when
+no base/apex pair occurring in a row or column is high at threshold `t`.
+
+The strict inequality in `RainbowBipartite.LocallyBounded t` matches the
+usual statement that each color occurs at most `t - 1` times at a fixed
+vertex. -/
+theorem locallyBounded_of_not_highPair_on_cells
+    {W : Type u} {D : Type v} {H : TripleSystem W D}
+    {q t : Nat} (ht : 0 < t)
+    (left right : Fin q ↪ W) (apex : Fin q → Fin q → W)
+    (cell : ∀ i j, ThirdVertexWitness H (left i) (right j) (apex i j))
+    (hleft : ∀ i j, ¬ HighPair H t (left i) (apex i j))
+    (hright : ∀ i j, ¬ HighPair H t (right j) (apex i j)) :
+    RainbowBipartite.LocallyBounded t apex := by
+  classical
+  constructor
+  · intro i a
+    by_contra hlt
+    have hle : t ≤ Nat.card {j : Fin q // apex i j = a} :=
+      Nat.le_of_not_gt hlt
+    let S := {j : Fin q // apex i j = a}
+    letI : Fintype S := Fintype.ofFinite S
+    have hle' : Fintype.card (Fin t) ≤ Fintype.card S := by
+      simpa [S, Nat.card_eq_fintype_card] using hle
+    obtain ⟨select⟩ := Function.Embedding.nonempty_of_card_le hle'
+    let third : Fin t ↪ W :=
+      select.trans ((Function.Embedding.subtype _).trans right)
+    have hcell : ∀ k, ThirdVertexWitness H (left i) a (third k) := by
+      intro k
+      change ThirdVertexWitness H (left i) a (right (select k).1)
+      simpa [(select k).property] using (cell i (select k).1).rotate
+    let p : PairCodegreeWitness H (left i) a t :=
+      PairCodegreeWitness.ofThirdVertexWitnesses third hcell
+    let k0 : Fin t := ⟨0, ht⟩
+    have hhigh : HighPair H t (left i) a := highPair_of_witness p ht
+    exact hleft i (select k0).1 (by
+      simpa [(select k0).property] using hhigh)
+  · intro j a
+    by_contra hlt
+    have hle : t ≤ Nat.card {i : Fin q // apex i j = a} :=
+      Nat.le_of_not_gt hlt
+    let S := {i : Fin q // apex i j = a}
+    letI : Fintype S := Fintype.ofFinite S
+    have hle' : Fintype.card (Fin t) ≤ Fintype.card S := by
+      simpa [S, Nat.card_eq_fintype_card] using hle
+    obtain ⟨select⟩ := Function.Embedding.nonempty_of_card_le hle'
+    let third : Fin t ↪ W :=
+      select.trans ((Function.Embedding.subtype _).trans left)
+    have hcell : ∀ k, ThirdVertexWitness H (right j) a (third k) := by
+      intro k
+      change ThirdVertexWitness H (right j) a (left (select k).1)
+      simpa [(select k).property] using (cell (select k).1 j).swap.rotate
+    let p : PairCodegreeWitness H (right j) a t :=
+      PairCodegreeWitness.ofThirdVertexWitnesses third hcell
+    let k0 : Fin t := ⟨0, ht⟩
+    have hhigh : HighPair H t (right j) a := highPair_of_witness p ht
+    exact hright (select k0).1 j (by
+      simpa [(select k0).property] using hhigh)
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_RainbowLocalBound
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.RainbowLocalBound
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.MinimalBadCore
+Source: Erdos593/TripleSystem/MinimalBadCore.lean
+Normalized SHA-256: a14767c9890b45a27430e6752fb7872139d6d732adcdc969accc93a0fce627b7
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_MinimalBadCore
+
+/-!
+# Cardinal-minimal bad triple-system cores
+
+This module isolates the cardinal-minimal-counterexample consequence needed
+for the positive-atom theorem.  It deliberately does not attempt the global
+colouring or the remaining closure/layering construction.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal
+
+universe u v
+
+namespace TripleSystem
+
+/-- `AtomFreeUncountablyChromaticCard F κ` says that there is a triple system
+on a carrier of cardinality `κ` which is uncountably chromatic and avoids the
+fixed atom `F` as a non-induced subconfiguration.  The witnesses remain in the
+fixed universes, so the cardinal minimisation below is universe-local. -/
+def AtomFreeUncountablyChromaticCard
+    {A : Type u} {E : Type v} (F : TripleSystem A E) (κ : Cardinal.{u}) : Prop :=
+  ∃ (W : Type u) (D : Type v) (H : TripleSystem W D),
+    Cardinal.mk W = κ ∧
+      ℵ₀ < H.chromaticCardinal ∧
+        ¬ F.Appears H
+
+/-- Select the least vertex cardinality of an uncountably chromatic triple
+system which avoids a fixed atom.  This is cardinal minimisation, not
+minimisation under subconfiguration inclusion. -/
+theorem exists_minimalAtomFreeUncountablyChromaticCard
+    {A : Type u} {E : Type v} (F : TripleSystem A E)
+    (h : ∃ κ : Cardinal.{u}, AtomFreeUncountablyChromaticCard F κ) :
+    ∃ κ : Cardinal.{u},
+      AtomFreeUncountablyChromaticCard F κ ∧
+        ∀ κ' : Cardinal.{u}, κ' < κ →
+          ¬ AtomFreeUncountablyChromaticCard F κ' := by
+  rcases h with ⟨κ₀, hκ₀⟩
+  let B : Set Cardinal.{u} := fun κ => AtomFreeUncountablyChromaticCard F κ
+  have hB : B.Nonempty := ⟨κ₀, hκ₀⟩
+  let κ := Cardinal.lt_wf.min B hB
+  refine ⟨κ, Cardinal.lt_wf.min_mem B hB, ?_⟩
+  intro κ' hκ' hbad
+  exact (Cardinal.lt_wf.not_lt_min B hbad) hκ'
+
+/-- A triple system is locally countably chromatic below its vertex cardinal
+when every restriction to a strictly smaller carrier has chromatic cardinal at
+most `ℵ₀`. -/
+def LocallyCountablyChromaticBelow {W : Type u} {D : Type v}
+    (H : TripleSystem W D) : Prop :=
+  ∀ S : Set W, Cardinal.mk S < Cardinal.mk W →
+    (H.vertexRestriction S).chromaticCardinal ≤ ℵ₀
+
+/-- Cardinal minimality of an uncountably chromatic atom-free triple system
+makes every restriction to a strictly smaller carrier countably chromatic. -/
+theorem locallyCountablyChromaticBelow_of_minimalBad
+    {A : Type u} {E : Type v} (F : TripleSystem A E)
+    {W : Type u} {D : Type v} (H : TripleSystem W D)
+    {κ : Cardinal.{u}}
+    (hcard : Cardinal.mk W = κ)
+    (hfree : ¬ F.Appears H)
+    (hmin : ∀ κ' : Cardinal.{u}, κ' < κ →
+      ¬ AtomFreeUncountablyChromaticCard F κ') :
+    LocallyCountablyChromaticBelow H := by
+  intro S hS
+  apply le_of_not_gt
+  intro hunc
+  apply hmin (Cardinal.mk S) (by simpa [hcard] using hS)
+  unfold AtomFreeUncountablyChromaticCard
+  refine ⟨(S : Type u), H.RestrictedEdge S, H.vertexRestriction S, rfl, hunc, ?_⟩
+  intro happ
+  exact hfree (Appears.trans F happ
+    (Nonempty.intro (H.vertexRestrictionEmbedding S)))
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_MinimalBadCore
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.MinimalBadCore
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.LowCodegreeClosure
+Source: Erdos593/TripleSystem/LowCodegreeClosure.lean
+Normalized SHA-256: 98a839a0609a68f6302f4dac69d0b97f46cfedc84c5a32e2ffd4772a4f44b2a4
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_LowCodegreeClosure
+
+/-!
+# Finite completion closures below a pair-codegree threshold
+
+For a fixed ordered pair of vertices, this module packages all third vertices
+which complete that pair to an edge.  If the pair does not have codegree at
+least `t`, its completion set is finite, and its cardinality is strictly below
+`t`.  The resulting finite outputs are the local input required by the
+finite-closure layering construction used in the low-codegree branch of the
+positive-atom strategy.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+variable {W : Type u} {D : Type v}
+
+/-- The vertices which occur as a third vertex in some host edge containing
+the ordered pair `(x, y)`.  The use of `Nonempty` deliberately hides the
+choice of a witnessing host edge while retaining a proposition-valued set. -/
+def thirdVertexSet (H : TripleSystem W D) (x y : W) : Set W :=
+  {z | Nonempty (ThirdVertexWitness H x y z)}
+
+@[simp]
+theorem mem_thirdVertexSet_iff {H : TripleSystem W D} {x y z : W} :
+    z ∈ thirdVertexSet H x y ↔ Nonempty (ThirdVertexWitness H x y z) :=
+  Iff.rfl
+
+/-- A finite family of pair completions, listed without repetitions, gives an
+explicit pair-codegree witness of the same size. -/
+theorem hasPairCodegreeAtLeast_of_finset_subset_thirdVertexSet
+    {H : TripleSystem W D} {x y : W} {s : Finset W} {t : Nat}
+    (hcard : s.card = t)
+    (hsubset : (s : Set W) ⊆ thirdVertexSet H x y) :
+    HasPairCodegreeAtLeast H x y t := by
+  classical
+  let e : (↑s : Type u) ≃ Fin t := s.equivFinOfCardEq hcard
+  let third : Fin t ↪ W :=
+    { toFun := fun k => (e.symm k).1
+      inj' := by
+        intro i j hij
+        apply e.symm.injective
+        apply Subtype.ext
+        exact hij }
+  refine ⟨PairCodegreeWitness.ofThirdVertexWitnesses third ?_⟩
+  intro k
+  change ThirdVertexWitness H x y ((e.symm k).1)
+  exact Classical.choice (hsubset (e.symm k).property)
+
+/-- If a pair has no `t` distinct completions, then all of its completion
+vertices form a finite set. -/
+theorem thirdVertexSet_finite_of_not_hasPairCodegreeAtLeast
+    {H : TripleSystem W D} {x y : W} {t : Nat}
+    (h : ¬ HasPairCodegreeAtLeast H x y t) :
+    (thirdVertexSet H x y).Finite := by
+  by_contra hinfinite
+  have hinfinite' : (thirdVertexSet H x y).Infinite := hinfinite
+  obtain ⟨s, hs, hcard⟩ := hinfinite'.exists_subset_card_eq t
+  exact h (hasPairCodegreeAtLeast_of_finset_subset_thirdVertexSet hcard hs)
+
+/-- The explicit finite list of all completion vertices of a pair known not
+to reach the threshold `t`.  This definition depends on the low-codegree
+proof only to make the finite enumeration available. -/
+noncomputable def thirdVertexFinset
+    {H : TripleSystem W D} {x y : W} {t : Nat}
+    (h : ¬ HasPairCodegreeAtLeast H x y t) : Finset W :=
+  (thirdVertexSet_finite_of_not_hasPairCodegreeAtLeast h).toFinset
+
+theorem mem_thirdVertexFinset_iff
+    {H : TripleSystem W D} {x y z : W} {t : Nat}
+    (h : ¬ HasPairCodegreeAtLeast H x y t) :
+    z ∈ thirdVertexFinset h ↔ Nonempty (ThirdVertexWitness H x y z) := by
+  change z ∈ (thirdVertexSet_finite_of_not_hasPairCodegreeAtLeast h).toFinset ↔ _
+  rw [(thirdVertexSet_finite_of_not_hasPairCodegreeAtLeast h).mem_toFinset]
+  rfl
+
+/-- The finite completion output of a pair below threshold `t` has fewer than
+`t` vertices.  This is a cardinality bound on *distinct* third vertices. -/
+theorem thirdVertexFinset_card_lt
+    {H : TripleSystem W D} {x y : W} {t : Nat}
+    (h : ¬ HasPairCodegreeAtLeast H x y t) :
+    (thirdVertexFinset h).card < t := by
+  by_contra hnot
+  have hle : t ≤ (thirdVertexFinset h).card := Nat.le_of_not_gt hnot
+  apply h
+  apply hasPairCodegreeAtLeast_mono
+    (hasPairCodegreeAtLeast_of_finset_subset_thirdVertexSet rfl ?_) hle
+  intro z hz
+  change Nonempty (ThirdVertexWitness H x y z)
+  exact (mem_thirdVertexFinset_iff h).mp hz
+
+/-- A total finite output for an ordered pair: high pairs contribute no
+low-codegree completion vertices, while every pair below threshold `t`
+contributes all of its completion vertices. -/
+noncomputable def lowCompletionFinset
+    (H : TripleSystem W D) (t : Nat) (x y : W) : Finset W := by
+  classical
+  exact if h : HasPairCodegreeAtLeast H x y t then ∅ else thirdVertexFinset h
+
+theorem lowCompletionFinset_eq_empty_of_hasPairCodegreeAtLeast
+    {H : TripleSystem W D} {x y : W} {t : Nat}
+    (h : HasPairCodegreeAtLeast H x y t) :
+    lowCompletionFinset H t x y = ∅ := by
+  rw [lowCompletionFinset, dif_pos h]
+
+theorem lowCompletionFinset_eq_thirdVertexFinset_of_not_hasPairCodegreeAtLeast
+    {H : TripleSystem W D} {x y : W} {t : Nat}
+    (h : ¬ HasPairCodegreeAtLeast H x y t) :
+    lowCompletionFinset H t x y = thirdVertexFinset h := by
+  rw [lowCompletionFinset, dif_neg h]
+
+theorem mem_lowCompletionFinset_iff_of_not_hasPairCodegreeAtLeast
+    {H : TripleSystem W D} {x y z : W} {t : Nat}
+    (h : ¬ HasPairCodegreeAtLeast H x y t) :
+    z ∈ lowCompletionFinset H t x y ↔ Nonempty (ThirdVertexWitness H x y z) := by
+  rw [lowCompletionFinset_eq_thirdVertexFinset_of_not_hasPairCodegreeAtLeast h]
+  exact mem_thirdVertexFinset_iff h
+
+theorem lowCompletionFinset_card_lt_of_not_hasPairCodegreeAtLeast
+    {H : TripleSystem W D} {x y : W} {t : Nat}
+    (h : ¬ HasPairCodegreeAtLeast H x y t) :
+    (lowCompletionFinset H t x y).card < t := by
+  rw [lowCompletionFinset_eq_thirdVertexFinset_of_not_hasPairCodegreeAtLeast h]
+  exact thirdVertexFinset_card_lt h
+
+/-- A low pair in the high-pair graph is precisely a distinct pair for which
+the finite low-completion output contains every completion. -/
+theorem mem_lowCompletionFinset_of_not_highPair
+    {H : TripleSystem W D} {x y z : W} {t : Nat}
+    (hxy : x ≠ y) (h : ¬ HighPair H t x y)
+    (hz : Nonempty (ThirdVertexWitness H x y z)) :
+    z ∈ lowCompletionFinset H t x y := by
+  have hlow : ¬ HasPairCodegreeAtLeast H x y t := by
+    intro hcodeg
+    exact h ⟨hxy, hcodeg⟩
+  exact (mem_lowCompletionFinset_iff_of_not_hasPairCodegreeAtLeast hlow).mpr hz
+
+theorem lowCompletionFinset_card_lt_of_not_highPair
+    {H : TripleSystem W D} {x y : W} {t : Nat}
+    (hxy : x ≠ y) (h : ¬ HighPair H t x y) :
+    (lowCompletionFinset H t x y).card < t := by
+  have hlow : ¬ HasPairCodegreeAtLeast H x y t := by
+    intro hcodeg
+    exact h ⟨hxy, hcodeg⟩
+  exact lowCompletionFinset_card_lt_of_not_hasPairCodegreeAtLeast hlow
+
+/-- The high-pair relation is symmetric in its two endpoints. -/
+theorem highPair_comm
+    (H : TripleSystem W D) (t : Nat) (x y : W) :
+    HighPair H t x y ↔ HighPair H t y x := by
+  constructor
+  · rintro ⟨hxy, hcodeg⟩
+    exact ⟨hxy.symm, (hasPairCodegreeAtLeast_comm H x y t).mp hcodeg⟩
+  · rintro ⟨hyx, hcodeg⟩
+    exact ⟨hyx.symm, (hasPairCodegreeAtLeast_comm H y x t).mp hcodeg⟩
+
+/-- A chosen ordering of a two-element finite set.  The ordering is arbitrary,
+but its two endpoints are distinct and recover the original unordered pair. -/
+structure PairEndpoints (s : Finset W) where
+  left : W
+  right : W
+  ne : left ≠ right
+  eq_pair : (s : Set W) = {left, right}
+
+/-- Choose an ordering of a two-element finite set. -/
+noncomputable def choosePairEndpoints
+    (s : {s : Finset W // s.card = 2}) : PairEndpoints s.1 :=
+  Classical.choice (by
+  classical
+  obtain ⟨x, y, hxy, hs⟩ := Finset.card_eq_two.mp s.2
+  exact ⟨⟨x, y, hxy, by simp [hs]⟩⟩)
+
+theorem choosePairEndpoints_ne
+    (s : {s : Finset W // s.card = 2}) :
+    (choosePairEndpoints s).left ≠ (choosePairEndpoints s).right :=
+  (choosePairEndpoints s).ne
+
+theorem choosePairEndpoints_eq_pair
+    (s : {s : Finset W // s.card = 2}) :
+    (s.1 : Set W) = {(choosePairEndpoints s).left, (choosePairEndpoints s).right} :=
+  (choosePairEndpoints s).eq_pair
+
+/-- Any displayed ordering of the same two-element set agrees with the chosen
+ordering, either directly or after swapping the two endpoints. -/
+theorem choosePairEndpoints_eq_or_eq_swap
+    (s : {s : Finset W // s.card = 2}) {x y : W}
+    (hs : (s.1 : Set W) = {x, y}) :
+    ((choosePairEndpoints s).left = x ∧ (choosePairEndpoints s).right = y) ∨
+      ((choosePairEndpoints s).left = y ∧ (choosePairEndpoints s).right = x) := by
+  have hpairs : ({x, y} : Set W) =
+      {(choosePairEndpoints s).left, (choosePairEndpoints s).right} :=
+    hs.symm.trans (choosePairEndpoints_eq_pair s)
+  rcases Set.pair_eq_pair_iff.mp hpairs with ⟨hleft, hright⟩ | ⟨hleft, hright⟩
+  · exact Or.inl ⟨hleft.symm, hright.symm⟩
+  · exact Or.inr ⟨hright.symm, hleft.symm⟩
+
+/-- A total arity-two finite-output operator.  Its input type is exactly the
+one required by `FiniteClosureCardinality.closure` and
+`FiniteClosureLayeringConstruction.exists_finiteClosureLayering_of_uncountable`.
+The arbitrary endpoint ordering does not affect the intended low-codegree
+closure because pair-codegree and third-vertex witnesses are symmetric. -/
+noncomputable def lowPairClosureFinset
+    (H : TripleSystem W D) (t : Nat) :
+    {s : Finset W // s.card = 2} → Finset W :=
+  fun s => lowCompletionFinset H t (choosePairEndpoints s).left
+    (choosePairEndpoints s).right
+
+theorem lowPairClosureFinset_apply
+    (H : TripleSystem W D) (t : Nat)
+    (s : {s : Finset W // s.card = 2}) :
+    lowPairClosureFinset H t s =
+      lowCompletionFinset H t (choosePairEndpoints s).left
+        (choosePairEndpoints s).right :=
+  rfl
+
+theorem mem_lowPairClosureFinset_of_not_highPair
+    {H : TripleSystem W D} {t : Nat}
+    (s : {s : Finset W // s.card = 2}) {z : W}
+    (h : ¬ HighPair H t (choosePairEndpoints s).left (choosePairEndpoints s).right)
+    (hz : Nonempty (ThirdVertexWitness H (choosePairEndpoints s).left
+      (choosePairEndpoints s).right z)) :
+    z ∈ lowPairClosureFinset H t s := by
+  change z ∈ lowCompletionFinset H t (choosePairEndpoints s).left
+    (choosePairEndpoints s).right
+  exact mem_lowCompletionFinset_of_not_highPair (choosePairEndpoints_ne s) h hz
+
+theorem lowPairClosureFinset_card_lt_of_not_highPair
+    {H : TripleSystem W D} {t : Nat}
+    (s : {s : Finset W // s.card = 2})
+    (h : ¬ HighPair H t (choosePairEndpoints s).left (choosePairEndpoints s).right) :
+    (lowPairClosureFinset H t s).card < t := by
+  change (lowCompletionFinset H t (choosePairEndpoints s).left
+    (choosePairEndpoints s).right).card < t
+  exact lowCompletionFinset_card_lt_of_not_highPair (choosePairEndpoints_ne s) h
+
+/-- The arity-two closure operator contains every completion of any displayed
+low pair.  This is the order-independent form used when a triple edge supplies
+the pair `{x, y}` only as an unordered finite set. -/
+theorem mem_lowPairClosureFinset_of_not_highPair_of_pair
+    {H : TripleSystem W D} {t : Nat}
+    (s : {s : Finset W // s.card = 2}) {x y z : W}
+    (hs : (s.1 : Set W) = {x, y})
+    (h : ¬ HighPair H t x y)
+    (hz : Nonempty (ThirdVertexWitness H x y z)) :
+    z ∈ lowPairClosureFinset H t s := by
+  rcases choosePairEndpoints_eq_or_eq_swap s hs with hdirect | hswap
+  · apply mem_lowPairClosureFinset_of_not_highPair s
+      (by simpa [hdirect.1, hdirect.2] using h)
+    simpa [hdirect.1, hdirect.2] using hz
+  · have hlowSwap : ¬ HighPair H t y x := by
+      intro hyx
+      exact h ((highPair_comm H t x y).mpr hyx)
+    have hzSwap : Nonempty (ThirdVertexWitness H y x z) := by
+      rcases hz with ⟨p⟩
+      exact ⟨p.swap⟩
+    apply mem_lowPairClosureFinset_of_not_highPair s
+      (by simpa [hswap.1, hswap.2] using hlowSwap)
+    simpa [hswap.1, hswap.2] using hzSwap
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_LowCodegreeClosure
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.LowCodegreeClosure
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.LowCodegreeLayering
+Source: Erdos593/TripleSystem/LowCodegreeLayering.lean
+Normalized SHA-256: 60dc904f69f890fde730f5240399b43d70303c3c05eb8121433602ec4f4f78d8
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_LowCodegreeLayering
+
+/-!
+# Layering the low-codegree completion closure
+
+This module instantiates the finite closure-layering construction with the
+two-point low-codegree completion closure.  Its main local consequence is that
+a completion of a low pair cannot lie strictly after both endpoints.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+variable {W : Type u} {D : Type v}
+
+/-- The finite low-pair completion operator admits a finite closure layering
+on every uncountable host vertex type. -/
+theorem exists_lowPairClosureLayering_of_uncountable
+    (H : TripleSystem W D) (t : Nat)
+    (hW : Cardinal.aleph0 < Cardinal.mk W) :
+    Nonempty (FiniteClosureLayering 2 (lowPairClosureFinset H t)
+      (Cardinal.mk W).ord.ToType) := by
+  exact _root_.Erdos593.FiniteClosureLayeringConstruction.exists_finiteClosureLayering_of_uncountable
+    (lowPairClosureFinset H t) hW (by decide)
+
+/-- In any layering for the low-pair completion closure, a completion vertex
+of a pair that is not high at threshold `t` cannot be strictly later than both
+of its endpoints. -/
+theorem not_both_rank_lt_of_thirdVertexWitness_of_not_highPair
+    {I : Type u} [LinearOrder I]
+    {H : TripleSystem W D} {t : Nat} {x y z : W}
+    (L : FiniteClosureLayering 2 (lowPairClosureFinset H t) I)
+    (p : ThirdVertexWitness H x y z)
+    (hxy : Not (HighPair H t x y)) :
+    Not (And (L.rank x < L.rank z) (L.rank y < L.rank z)) := by
+  classical
+  intro hboth
+  have hxz : L.rank x < L.rank z := hboth.1
+  have hyz : L.rank y < L.rank z := hboth.2
+  let s : {q : Finset W // q.card = 2} := by
+    exact Subtype.mk ({x, y} : Finset W) (Finset.card_pair p.left_ne_right)
+  have hs : (s.1 : Set W) = {x, y} := by
+    dsimp only [s]
+    ext w
+    simp
+  have hz : Membership.mem (lowPairClosureFinset H t s) z :=
+    mem_lowPairClosureFinset_of_not_highPair_of_pair (H := H) (t := t)
+      s hs hxy (Nonempty.intro p)
+  have hnot : Not (Membership.mem (lowPairClosureFinset H t s) z) := by
+    apply FiniteClosureLayering.not_mem_of_all_rank_lt L z s.1 s.2
+    intro w hw
+    have hwset : Membership.mem (s.1 : Set W) w := by
+      exact hw
+    rw [hs] at hwset
+    have hw' : Or (w = x) (w = y) := by
+      simpa using hwset
+    cases hw' with
+    | inl hwx =>
+        subst w
+        exact hxz
+    | inr hwy =>
+        subst w
+        exact hyz
+  exact hnot hz
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_LowCodegreeLayering
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.LowCodegreeLayering
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SameRankColoring
+Source: Erdos593/TripleSystem/SameRankColoring.lean
+Normalized SHA-256: 8574d22c9337e053492aefc2dbdcbf44e21a16b2b5d7e9ca41235fd2015a4ddc
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SameRankColoring
+
+/-!
+# Same-rank edge colourings
+
+This module packages the fibrewise part of the positive-atom colouring
+argument.  A rank map may have arbitrarily many values, but an edge whose
+vertices all have one rank can be coloured using only the chosen colouring of
+that one fibre.  Consequently no rank value needs to be encoded as a colour.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal
+
+universe u v
+
+namespace TripleSystem
+
+variable {W : Type u} {D : Type v}
+
+/-- The edge indices all of whose incident vertices have one common rank. -/
+def sameRankEdge {I : Type u} (H : TripleSystem W D) (rank : W → I) : D → Prop :=
+  fun e => ∃ i : I, ∀ x : W, H.Inc x e → rank x = i
+
+/-- If every rank fibre is strictly smaller than the host, the local
+countable-colourability hypothesis supplies one natural-number colouring for
+all edges that are internal to a single rank fibre. -/
+theorem countablyColorableOn_sameRankEdge_of_locallyCountablyChromaticBelow
+    {I : Type u} (H : TripleSystem W D) (rank : W → I)
+    (hlocal : H.LocallyCountablyChromaticBelow)
+    (hfiber : ∀ i : I,
+      Cardinal.mk {x : W // rank x = i} < Cardinal.mk W) :
+    H.CountablyColorableOn (sameRankEdge H rank) := by
+  classical
+  let fiber : I → Set W := fun i => {x | rank x = i}
+  have fiberEquiv (i : I) : fiber i ≃ {x : W // rank x = i} :=
+    Equiv.subtypeEquivRight fun x => by simp [fiber]
+  have hsmall (i : I) : Cardinal.mk (fiber i) < Cardinal.mk W := by
+    calc
+      Cardinal.mk (fiber i) = Cardinal.mk {x : W // rank x = i} :=
+        Cardinal.mk_congr (fiberEquiv i)
+      _ < Cardinal.mk W := hfiber i
+  have hfiberColor (i : I) :
+      ∃ c : fiber i → CountableColor.{u},
+        (H.vertexRestriction (fiber i)).IsProperColoring c :=
+    (H.vertexRestriction (fiber i)).exists_natColoring_of_chromaticCardinal_le_aleph0
+      (hlocal (fiber i) (hsmall i))
+  let inner : ∀ i : I, fiber i → CountableColor.{u} :=
+    fun i => Classical.choose (hfiberColor i)
+  have hinner (i : I) :
+      (H.vertexRestriction (fiber i)).IsProperColoring (inner i) :=
+    Classical.choose_spec (hfiberColor i)
+  let c : W → ℕ := fun x => (inner (rank x) ⟨x, rfl⟩).down
+  refine ⟨c, ?_⟩
+  intro e he
+  rcases he with ⟨i, hi⟩
+  let d : H.RestrictedEdge (fiber i) := ⟨e, fun x hx => hi x hx⟩
+  obtain ⟨x, hx, y, hy, hxy⟩ := hinner i d
+  refine ⟨x.1, hx, y.1, hy, ?_⟩
+  have hcx : c x.1 = (inner i x).down := by
+    clear hx
+    rcases x with ⟨x, hxmem⟩
+    change rank x = i at hxmem
+    cases hxmem
+    rfl
+  have hcy : c y.1 = (inner i y).down := by
+    clear hy
+    rcases y with ⟨y, hymem⟩
+    change rank y = i at hymem
+    cases hymem
+    rfl
+  rw [hcx, hcy]
+  intro hEq
+  exact hxy (ULift.down_injective hEq)
+
+/-- A finite closure layering automatically provides the strict-small-fibre
+hypothesis needed for same-rank edge colouring. -/
+theorem countablyColorableOn_sameRankEdge_of_finiteClosureLayering
+    {r : ℕ} {Φ : {s : Finset W // s.card = r} → Finset W}
+    {I : Type u} [LinearOrder I] (H : TripleSystem W D)
+    (L : FiniteClosureLayering r Φ I)
+    (hlocal : H.LocallyCountablyChromaticBelow) :
+    H.CountablyColorableOn (sameRankEdge H L.rank) :=
+  countablyColorableOn_sameRankEdge_of_locallyCountablyChromaticBelow H L.rank
+    hlocal L.fiber_lt
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SameRankColoring
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SameRankColoring
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.LowCrossingAtomBridge
+Source: Erdos593/TripleSystem/LowCrossingAtomBridge.lean
+Normalized SHA-256: 3e78b81ff9864e291cdc6276939ff341c4c9039cb912489dc292b86aa51bd140
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_LowCrossingAtomBridge
+
+/-!
+# The low-codegree crossing graph / positive-atom bridge
+
+For a rank map on the vertices, the low crossing graph joins two vertices on
+the same rank when they have a common lower-ranked completion whose host edge
+contains no high pair at the selected threshold.  A complete bipartite copy
+in this graph gives a finite grid of low edges.  The lower-rank condition
+keeps all selected completion vertices away from both core sides, while the
+low-edge condition supplies the local rainbow bound.
+-/
+
+namespace Erdos593
+
+universe u v w
+
+namespace TripleSystem
+
+open _root_.SimpleGraph
+
+/-- The same-rank, lower-completion graph for the low-pair part of a triple
+system.  An adjacency records its completion witness and the fact that its
+host edge contains no threshold-`t` high pair. -/
+def lowCrossingGraph {W : Type u} {D : Type v} {I : Type w}
+    [LinearOrder I] (H : TripleSystem W D) (rank : W → I) (t : Nat) :
+    _root_.SimpleGraph W where
+  Adj x y :=
+    ∃ z : W, rank z < rank x ∧ rank x = rank y ∧
+      ∃ p : ThirdVertexWitness H x y z, H.lowPairEdge t p.edge
+  symm := ⟨by
+    rintro x y ⟨z, hzx, hxy, p, hlow⟩
+    refine ⟨z, ?_, hxy.symm, p.swap, hlow⟩
+    simpa [hxy] using hzx⟩
+  loopless := ⟨by
+    intro x hx
+    rcases hx with ⟨z, _, _, p, _⟩
+    exact p.left_ne_right rfl⟩
+
+@[simp]
+theorem lowCrossingGraph_adj {W : Type u} {D : Type v} {I : Type w}
+    [LinearOrder I] (H : TripleSystem W D) (rank : W → I) (t : Nat)
+    (x y : W) :
+    (lowCrossingGraph H rank t).Adj x y ↔
+      ∃ z : W, rank z < rank x ∧ rank x = rank y ∧
+        ∃ p : ThirdVertexWitness H x y z, H.lowPairEdge t p.edge :=
+  Iff.rfl
+
+/-- A `K_{q,q}` copy in the low crossing graph embeds the positive balanced
+expansion whenever `q` has the finite rainbow-extraction property for the
+threshold `t`.  The rank inequality is used only to prove that every chosen
+apex is disjoint from the two core sides. -/
+theorem nonempty_completeBipartiteExpansionEmbedding_of_lowCrossingCopy
+    {W : Type u} {D : Type v} {I : Type w} [LinearOrder I]
+    {H : TripleSystem W D} {rank : W → I} {n q t : Nat}
+    (ht : 0 < t)
+    (hq : ∀ (Gamma : Type u) (color : Fin q → Fin q → Gamma),
+      RainbowBipartite.LocallyBounded t color →
+        ∃ row column : Fin n ↪ Fin q,
+          RainbowBipartite.IsRainbow color row column)
+    (f : Copy (completeBipartiteNN.{u} q) (lowCrossingGraph H rank t)) :
+    Nonempty ((completeBipartiteExpansionAtom.{u} n).Embedding H) := by
+  classical
+  obtain ⟨left, right, hcore, hadj⟩ :=
+    Erdos593.SimpleGraph.exists_finEmbeddings_of_completeBipartiteNNCopy
+      (lowCrossingGraph H rank t) f
+  have hdata : ∀ i j : Fin q,
+      ∃ z : W, rank z < rank (left i) ∧ rank (left i) = rank (right j) ∧
+        ∃ p : ThirdVertexWitness H (left i) (right j) z,
+          H.lowPairEdge t p.edge := by
+    intro i j
+    exact (lowCrossingGraph_adj H rank t (left i) (right j)).mp (hadj i j)
+  let apex : Fin q → Fin q → W :=
+    fun i j => Classical.choose (hdata i j)
+  have hapex_lt : ∀ i j, rank (apex i j) < rank (left i) := by
+    intro i j
+    simpa [apex] using (Classical.choose_spec (hdata i j)).1
+  have hsame : ∀ i j, rank (left i) = rank (right j) := by
+    intro i j
+    simpa [apex] using (Classical.choose_spec (hdata i j)).2.1
+  let cell : ∀ i j, ThirdVertexWitness H (left i) (right j) (apex i j) :=
+    fun i j => Classical.choose ((Classical.choose_spec (hdata i j)).2.2)
+  have hlow : ∀ i j, H.lowPairEdge t (cell i j).edge := by
+    intro i j
+    exact Classical.choose_spec ((Classical.choose_spec (hdata i j)).2.2)
+  have hleft_inc : ∀ i j, H.Inc (left i) (cell i j).edge := by
+    intro i j
+    change left i ∈ H.edgeSet (cell i j).edge
+    rw [(cell i j).edgeSet_eq]
+    simp
+  have hright_inc : ∀ i j, H.Inc (right j) (cell i j).edge := by
+    intro i j
+    change right j ∈ H.edgeSet (cell i j).edge
+    rw [(cell i j).edgeSet_eq]
+    simp
+  have hapex_inc : ∀ i j, H.Inc (apex i j) (cell i j).edge := by
+    intro i j
+    change apex i j ∈ H.edgeSet (cell i j).edge
+    rw [(cell i j).edgeSet_eq]
+    simp
+  have hnot_high_left : ∀ i j, ¬ HighPair H t (left i) (apex i j) := by
+    intro i j
+    exact H.not_highPair_of_lowPairEdge (hlow i j)
+      (hleft_inc i j) (hapex_inc i j)
+  have hnot_high_right : ∀ i j, ¬ HighPair H t (right j) (apex i j) := by
+    intro i j
+    exact H.not_highPair_of_lowPairEdge (hlow i j)
+      (hright_inc i j) (hapex_inc i j)
+  have hapex_ne_left : ∀ i j k, apex i j ≠ left k := by
+    intro i j k h
+    have hrank : rank (left k) = rank (left i) :=
+      (hsame k j).trans (hsame i j).symm
+    have hlt := hapex_lt i j
+    rw [h, hrank] at hlt
+    exact (lt_irrefl _ hlt)
+  have hapex_ne_right : ∀ i j k, apex i j ≠ right k := by
+    intro i j k h
+    have hrank : rank (right k) = rank (left i) :=
+      (hsame i k).symm
+    have hlt := hapex_lt i j
+    rw [h, hrank] at hlt
+    exact (lt_irrefl _ hlt)
+  let M : WitnessedBipartiteMatrix H q t :=
+    WitnessedBipartiteMatrix.ofThirdVertexWitnesses left right apex cell hcore
+      hapex_ne_left hapex_ne_right
+      (locallyBounded_of_not_highPair_on_cells ht left right apex cell
+        hnot_high_left hnot_high_right)
+  obtain ⟨row, column, hrainbow⟩ := hq W M.apex M.locallyBounded
+  exact ⟨M.rainbowEmbedding row column hrainbow⟩
+
+/-- If every finite balanced complete bipartite graph occurs in the low
+crossing graph, the corresponding positive balanced expansion atom occurs in
+the host. -/
+theorem nonempty_completeBipartiteExpansionEmbedding_of_lowCrossingCopies
+    {W : Type u} {D : Type v} {I : Type w} [LinearOrder I]
+    {H : TripleSystem W D} {rank : W → I} {n t : Nat}
+    (hn : 0 < n) (ht : 0 < t)
+    (hcopy : ∀ q : Nat,
+      Nonempty (Copy (completeBipartiteNN.{u} q) (lowCrossingGraph H rank t))) :
+    Nonempty ((completeBipartiteExpansionAtom.{u} n).Embedding H) := by
+  obtain ⟨q, hq⟩ :=
+    RainbowBipartite.exists_rainbow_bipartite_submatrix n t hn ht
+  obtain ⟨f⟩ := hcopy q
+  exact nonempty_completeBipartiteExpansionEmbedding_of_lowCrossingCopy
+    ht hq f
+
+/-- At any size carrying the finite rainbow-extraction property, an atom-free
+host has no complete bipartite copy in its low crossing graph. -/
+theorem isEmpty_completeBipartiteNNCopy_lowCrossingGraph_of_atomFree
+    {W : Type u} {D : Type u} {I : Type w} [LinearOrder I]
+    {H : TripleSystem W D} {rank : W → I} {n q t : Nat}
+    (ht : 0 < t)
+    (hq : ∀ (Gamma : Type u) (color : Fin q → Fin q → Gamma),
+      RainbowBipartite.LocallyBounded t color →
+        ∃ row column : Fin n ↪ Fin q,
+          RainbowBipartite.IsRainbow color row column)
+    (hatomFree : ¬ (completeBipartiteExpansionAtom.{u} n).Appears H) :
+    IsEmpty (Copy (completeBipartiteNN.{u} q) (lowCrossingGraph H rank t)) := by
+  refine ⟨?_⟩
+  intro f
+  exact hatomFree ⟨
+    (nonempty_completeBipartiteExpansionEmbedding_of_lowCrossingCopy
+      (n := n) ht hq f).some⟩
+
+/-- The rainbow lemma supplies a finite complete-bipartite size excluded from
+the low crossing graph of every atom-free host. -/
+theorem exists_isEmpty_completeBipartiteNNCopy_lowCrossingGraph_of_atomFree
+    {W : Type u} {D : Type u} {I : Type w} [LinearOrder I]
+    {H : TripleSystem W D} {rank : W → I} {n t : Nat}
+    (hn : 0 < n) (ht : 0 < t)
+    (hatomFree : ¬ (completeBipartiteExpansionAtom.{u} n).Appears H) :
+    ∃ q : Nat,
+      IsEmpty (Copy (completeBipartiteNN.{u} q) (lowCrossingGraph H rank t)) := by
+  obtain ⟨q, hq⟩ :=
+    RainbowBipartite.exists_rainbow_bipartite_submatrix n t hn ht
+  exact ⟨q,
+    isEmpty_completeBipartiteNNCopy_lowCrossingGraph_of_atomFree
+      (n := n) ht hq hatomFree⟩
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_LowCrossingAtomBridge
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.LowCrossingAtomBridge
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.LowCrossingColoring
+Source: Erdos593/TripleSystem/LowCrossingColoring.lean
+Normalized SHA-256: 5e36f273827064f08c14105f09a944659ea077a6eeda34507f9ab6925c8b0b88
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_LowCrossingColoring
+
+/-!
+# Countable colouring of the low crossing graph
+
+For a positive expansion size and positive codegree threshold, the rainbow
+extraction supplies a positive finite balanced biclique size.  Atom-freeness
+then rules out a copy of that biclique in the low crossing graph, so the
+finite forbidden-biclique graph theorem gives a colouring by natural numbers.
+
+The host edge type is deliberately in the vertex universe: this is the
+universe restriction of the public `Appears` interface for the expansion atom.
+-/
+
+namespace Erdos593
+
+universe u w
+
+namespace TripleSystem
+
+open _root_.SimpleGraph
+
+/-- An atom-free host has a countable proper colouring of its low crossing
+graph.  The finite forbidden biclique size is chosen by the positive-size
+rainbow extraction theorem, which is exactly what makes the graph-colouring
+theorem applicable. -/
+theorem countablyColorable_lowCrossingGraph_of_atomFree
+    {W : Type u} {D : Type u} {I : Type w} [LinearOrder I]
+    {H : TripleSystem W D} {rank : W -> I} {n t : Nat}
+    (hn : 0 < n) (ht : 0 < t)
+    (hatomFree : ¬ (completeBipartiteExpansionAtom.{u} n).Appears H) :
+    Erdos593.SimpleGraph.CountablyColorable (lowCrossingGraph H rank t) := by
+  obtain ⟨q, hqpos, hqrainbow⟩ :=
+    RainbowBipartite.exists_pos_rainbow_bipartite_submatrix n t hn ht
+  apply Erdos593.SimpleGraph.countablyColorable_of_no_completeBipartiteNNCopy
+    (lowCrossingGraph H rank t) hqpos
+  exact isEmpty_completeBipartiteNNCopy_lowCrossingGraph_of_atomFree
+    (n := n) ht hqrainbow hatomFree
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_LowCrossingColoring
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.LowCrossingColoring
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.LowEdgeRankClassification
+Source: Erdos593/TripleSystem/LowEdgeRankClassification.lean
+Normalized SHA-256: 014959f9ce0adc6aaca67cc6eaa00feb2c9bce30a38c848dd3f49cf10c395796
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_LowEdgeRankClassification
+
+/-!
+# Rank shapes of low-pair hyperedges
+
+The finite low-pair closure layering rules out a unique latest vertex in a
+low-pair triple.  Consequently, every such triple is either contained in one
+rank fibre or has exactly two equal latest vertices and one earlier vertex.
+The latter alternative is recorded as an edge of the low crossing graph.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+/-- A displayed triple lies in one rank fibre. -/
+def AllSameRank {W : Type u} {I : Type u}
+    (rank : W → I) (x y z : W) : Prop :=
+  rank x = rank y ∧ rank y = rank z
+
+/-- A displayed pair has a common rank strictly above the remaining vertex. -/
+def EqualTopRankPair {W : Type u} {I : Type u} [LT I]
+    (rank : W → I) (x y z : W) : Prop :=
+  rank x = rank y ∧ rank z < rank x
+
+/-- A low-pair triple has no unique latest vertex.  More precisely, it is
+either monochromatic with respect to the rank map, or one of its three pairs
+is an equal top-rank pair. -/
+theorem lowPair_rank_shape
+    {W : Type u} {D : Type v} {I : Type u} [LinearOrder I]
+    {H : TripleSystem W D} {t : Nat} {x y z : W}
+    (L : FiniteClosureLayering 2 (lowPairClosureFinset H t) I)
+    (p : ThirdVertexWitness H x y z)
+    (hlow : H.lowPairEdge t p.edge) :
+    AllSameRank L.rank x y z ∨
+      EqualTopRankPair L.rank x y z ∨
+        EqualTopRankPair L.rank x z y ∨
+          EqualTopRankPair L.rank y z x := by
+  have hx : H.Inc x p.edge := by
+    change x ∈ H.edgeSet p.edge
+    rw [p.edgeSet_eq]
+    simp
+  have hy : H.Inc y p.edge := by
+    change y ∈ H.edgeSet p.edge
+    rw [p.edgeSet_eq]
+    simp
+  have hz : H.Inc z p.edge := by
+    change z ∈ H.edgeSet p.edge
+    rw [p.edgeSet_eq]
+    simp
+  have hnot_xy : ¬ HighPair H t x y :=
+    H.not_highPair_of_lowPairEdge hlow hx hy
+  have hnot_xz : ¬ HighPair H t x z :=
+    H.not_highPair_of_lowPairEdge hlow hx hz
+  have hnot_yz : ¬ HighPair H t y z :=
+    H.not_highPair_of_lowPairEdge hlow hy hz
+  have hnot_top_z : ¬ (L.rank x < L.rank z ∧ L.rank y < L.rank z) :=
+    not_both_rank_lt_of_thirdVertexWitness_of_not_highPair L p hnot_xy
+  have hnot_top_y : ¬ (L.rank x < L.rank y ∧ L.rank z < L.rank y) :=
+    not_both_rank_lt_of_thirdVertexWitness_of_not_highPair L p.rotate hnot_xz
+  have hnot_top_x : ¬ (L.rank y < L.rank x ∧ L.rank z < L.rank x) :=
+    not_both_rank_lt_of_thirdVertexWitness_of_not_highPair L p.swap.rotate hnot_yz
+  rcases lt_trichotomy (L.rank x) (L.rank y) with hrxy | hrxy | hryx
+  · rcases lt_trichotomy (L.rank z) (L.rank y) with hrzy | hrzy | hryz
+    · exact False.elim (hnot_top_y ⟨hrxy, hrzy⟩)
+    · exact Or.inr (Or.inr (Or.inr ⟨hrzy.symm, hrxy⟩))
+    · exact False.elim (hnot_top_z ⟨lt_trans hrxy hryz, hryz⟩)
+  · rcases lt_trichotomy (L.rank z) (L.rank x) with hrzx | hrzx | hrxz
+    · exact Or.inr (Or.inl ⟨hrxy, hrzx⟩)
+    · exact Or.inl ⟨hrxy, hrxy.symm.trans hrzx.symm⟩
+    · exact False.elim
+        (hnot_top_z ⟨hrxz, by simpa [hrxy] using hrxz⟩)
+  · rcases lt_trichotomy (L.rank z) (L.rank x) with hrzx | hrzx | hrxz
+    · exact False.elim (hnot_top_x ⟨hryx, hrzx⟩)
+    · exact Or.inr (Or.inr (Or.inl ⟨hrzx.symm, hryx⟩))
+    · exact False.elim (hnot_top_z ⟨hrxz, lt_trans hryx hrxz⟩)
+
+/-- The non-monochromatic alternatives of `lowPair_rank_shape` are precisely
+edges of the low crossing graph, with the equal top-rank pair as endpoints. -/
+theorem lowPair_rank_shape_or_lowCrossingAdj
+    {W : Type u} {D : Type v} {I : Type u} [LinearOrder I]
+    {H : TripleSystem W D} {t : Nat} {x y z : W}
+    (L : FiniteClosureLayering 2 (lowPairClosureFinset H t) I)
+    (p : ThirdVertexWitness H x y z)
+    (hlow : H.lowPairEdge t p.edge) :
+    AllSameRank L.rank x y z ∨
+      (lowCrossingGraph H L.rank t).Adj x y ∨
+        (lowCrossingGraph H L.rank t).Adj x z ∨
+          (lowCrossingGraph H L.rank t).Adj y z := by
+  rcases lowPair_rank_shape L p hlow with hall | hxy | hxz | hyz
+  · exact Or.inl hall
+  · refine Or.inr (Or.inl ?_)
+    exact (lowCrossingGraph_adj H L.rank t x y).mpr
+      ⟨z, hxy.2, hxy.1, p, hlow⟩
+  · refine Or.inr (Or.inr (Or.inl ?_))
+    apply (lowCrossingGraph_adj H L.rank t x z).mpr
+    refine ⟨y, hxz.2, hxz.1, p.rotate, ?_⟩
+    exact hlow
+  · refine Or.inr (Or.inr (Or.inr ?_))
+    apply (lowCrossingGraph_adj H L.rank t y z).mpr
+    refine ⟨x, hyz.2, hyz.1, p.swap.rotate, ?_⟩
+    exact hlow
+
+/-- Every low-pair host edge admits a displayed three-vertex form to which
+the rank classification applies.  Thus it is entirely contained in one rank
+fibre or supplies an edge of the low crossing graph. -/
+theorem exists_lowPair_rank_shape_or_lowCrossingAdj
+    {W : Type u} {D : Type v} {I : Type u} [LinearOrder I]
+    {H : TripleSystem W D} {t : Nat} {e : D}
+    (L : FiniteClosureLayering 2 (lowPairClosureFinset H t) I)
+    (hlow : H.lowPairEdge t e) :
+    ∃ x y z : W, x ≠ y ∧ x ≠ z ∧ y ≠ z ∧
+      H.edgeSet e = {x, y, z} ∧
+        (AllSameRank L.rank x y z ∨
+          (lowCrossingGraph H L.rank t).Adj x y ∨
+            (lowCrossingGraph H L.rank t).Adj x z ∨
+              (lowCrossingGraph H L.rank t).Adj y z) := by
+  obtain ⟨x, y, z, hxy, hxz, hyz, hedge⟩ :=
+    Set.ncard_eq_three.mp (H.edgeSet_ncard e)
+  let p : ThirdVertexWitness H x y z := ⟨e, hedge⟩
+  have hlow' : H.lowPairEdge t p.edge := by
+    simpa [p] using hlow
+  refine ⟨x, y, z, hxy, hxz, hyz, hedge, ?_⟩
+  exact lowPair_rank_shape_or_lowCrossingAdj L p hlow'
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_LowEdgeRankClassification
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.LowEdgeRankClassification
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.PositiveAtomColoringAssembly
+Source: Erdos593/TripleSystem/PositiveAtomColoringAssembly.lean
+Normalized SHA-256: 78315a2e8f7328a8029ce13006efc7f1d94b5543c9b8edb900b094f066001f0f
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_PositiveAtomColoringAssembly
+
+/-!
+# Assembly of the positive-atom colouring argument
+
+At the quadratic Hall threshold, the host edges split into three families:
+those containing a high pair, those contained in one low-codegree closure
+rank fibre, and the remaining low edges, which contain an edge of the low
+crossing graph.  Each family has a countable colouring, and the standard
+natural-number pairing operation combines the three colourings.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace TripleSystem
+
+/-- Every edge of a host with a low-pair closure layering is either a
+high-pair edge, an edge internal to one rank fibre, or contains an edge of
+the corresponding low crossing graph. -/
+theorem highPairEdge_or_sameRankEdge_or_lowCrossingEdge
+    {W : Type u} {D : Type u} {I : Type u} [LinearOrder I]
+    {H : TripleSystem W D} {t : Nat} {e : D}
+    (L : FiniteClosureLayering 2 (lowPairClosureFinset H t) I) :
+    H.highPairEdge t e \/ sameRankEdge H L.rank e \/
+      H.EdgeContainsGraphEdge (lowCrossingGraph H L.rank t) e := by
+  rcases H.highPairEdge_or_lowPairEdge t e with hhigh | hlow
+  · exact Or.inl hhigh
+  · obtain ⟨x, y, z, hxy, hxz, hyz, hedge, hshape⟩ :=
+      exists_lowPair_rank_shape_or_lowCrossingAdj L hlow
+    rcases hshape with hall | hadj | hadj | hadj
+    · refine Or.inr (Or.inl ⟨L.rank x, ?_⟩)
+      intro w hw
+      change w ∈ H.edgeSet e at hw
+      rw [hedge] at hw
+      simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hw
+      rcases hw with rfl | rfl | rfl
+      · rfl
+      · exact hall.1.symm
+      · exact (hall.1.trans hall.2).symm
+    · refine Or.inr (Or.inr ⟨x, y, ?_, ?_, hadj⟩)
+      · change x ∈ H.edgeSet e
+        rw [hedge]
+        simp
+      · change y ∈ H.edgeSet e
+        rw [hedge]
+        simp
+    · refine Or.inr (Or.inr ⟨x, z, ?_, ?_, hadj⟩)
+      · change x ∈ H.edgeSet e
+        rw [hedge]
+        simp
+      · change z ∈ H.edgeSet e
+        rw [hedge]
+        simp
+    · refine Or.inr (Or.inr ⟨y, z, ?_, ?_, hadj⟩)
+      · change y ∈ H.edgeSet e
+        rw [hedge]
+        simp
+      · change z ∈ H.edgeSet e
+        rw [hedge]
+        simp
+
+/-- The three countable colourings furnished by the high-pair, same-rank,
+and low-crossing arguments combine to a countable proper colouring of the
+whole host. -/
+theorem exists_natProperColoring_of_atomFree_of_lowPairClosureLayering
+    {W : Type u} {D : Type u} {I : Type u}
+    [DecidableEq W] [LinearOrder I]
+    {H : TripleSystem W D} {n : Nat}
+    (hn : 0 < n)
+    (hatomFree : ¬ (completeBipartiteExpansionAtom.{u} n).Appears H)
+    (L : FiniteClosureLayering 2
+      (lowPairClosureFinset H (2 * n + n * n)) I)
+    (hlocal : H.LocallyCountablyChromaticBelow) :
+    ∃ c : W → Nat, H.IsProperColoring c := by
+  have ht : 0 < 2 * n + n * n := by
+    omega
+  have hhigh : H.CountablyColorableOn (H.highPairEdge (2 * n + n * n)) :=
+    H.countablyColorableOn_highPairEdge
+      (countablyColorable_highPairGraph_of_atomFree hn hatomFree)
+  have hsame : H.CountablyColorableOn (sameRankEdge H L.rank) :=
+    countablyColorableOn_sameRankEdge_of_finiteClosureLayering H L hlocal
+  have hcrossGraph : Erdos593.SimpleGraph.CountablyColorable
+      (lowCrossingGraph H L.rank (2 * n + n * n)) :=
+    countablyColorable_lowCrossingGraph_of_atomFree
+      (rank := L.rank) hn ht hatomFree
+  have hcross : H.CountablyColorableOn
+      (H.EdgeContainsGraphEdge (lowCrossingGraph H L.rank (2 * n + n * n))) :=
+    H.countablyColorableOn_edgeContainsGraphEdge hcrossGraph
+  have hrest : H.CountablyColorableOn
+      (fun e => sameRankEdge H L.rank e \/
+        H.EdgeContainsGraphEdge (lowCrossingGraph H L.rank (2 * n + n * n)) e) :=
+    CountablyColorableOn.union H hsame hcross
+  have hparts : H.CountablyColorableOn
+      (fun e => H.highPairEdge (2 * n + n * n) e \/
+        sameRankEdge H L.rank e \/
+          H.EdgeContainsGraphEdge
+            (lowCrossingGraph H L.rank (2 * n + n * n)) e) :=
+    CountablyColorableOn.union H hhigh hrest
+  rcases hparts with ⟨c, hc⟩
+  refine ⟨c, ?_⟩
+  intro e
+  exact hc e (highPairEdge_or_sameRankEdge_or_lowCrossingEdge L)
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_PositiveAtomColoringAssembly
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.PositiveAtomColoringAssembly
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.PositiveAtomClassical
+Source: Erdos593/TripleSystem/PositiveAtomClassical.lean
+Normalized SHA-256: 020356fd503c8b332d987d34651fc893a108a5715e096308ff1c7125afdade6d
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_PositiveAtomClassical
+
+/-!
+# The classical positive-atom endpoint
+
+This module closes the cardinal-minimal-counterexample argument once the
+finite low-pair closure colouring assembly is available.  The public theorem
+has the same-universe host convention built into `IsObligatory`: both the
+vertex and edge types of a host for the `u`-universe atom lie in `Type u`.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal
+
+universe u
+
+namespace TripleSystem
+
+/-- Every positive balanced complete-bipartite expansion atom is obligatory.
+
+The proof is the classical cardinal-minimal argument.  If an uncountably
+chromatic atom-free host existed, choose one of least vertex cardinality.  Its
+strictly smaller restrictions are countably chromatic; its uncountable vertex
+carrier admits a finite low-pair closure layering.  The positive-atom
+colouring assembly then supplies a natural-number proper colouring of the
+minimal host, contradicting its uncountable chromatic cardinal. -/
+theorem completeBipartiteExpansionAtom_positive_isObligatory
+    (n : Nat) (hn : 0 < n) :
+    (completeBipartiteExpansionAtom.{u} n).IsObligatory := by
+  intro W D _ H hunc
+  classical
+  by_contra hatomFree
+  have hbad : exists kappa : Cardinal.{u},
+      AtomFreeUncountablyChromaticCard
+        (completeBipartiteExpansionAtom.{u} n) kappa := by
+    refine ⟨Cardinal.mk W, W, D, H, rfl, hunc, hatomFree⟩
+  obtain ⟨kappa, hkappa, hminimal⟩ :=
+    exists_minimalAtomFreeUncountablyChromaticCard
+      (completeBipartiteExpansionAtom.{u} n) hbad
+  rcases hkappa with ⟨W0, D0, H0, hcard, hunc0, hfree0⟩
+  letI : DecidableEq W0 := Classical.decEq W0
+  have hlocal : H0.LocallyCountablyChromaticBelow :=
+    locallyCountablyChromaticBelow_of_minimalBad
+      (completeBipartiteExpansionAtom.{u} n) H0 hcard hfree0 hminimal
+  have hW0 : Cardinal.aleph0 < Cardinal.mk W0 :=
+    lt_of_lt_of_le hunc0 H0.chromaticCardinal_le_mk_vertices
+  obtain ⟨L⟩ := exists_lowPairClosureLayering_of_uncountable H0
+    (2 * n + n * n) hW0
+  obtain ⟨c, hc⟩ :=
+    exists_natProperColoring_of_atomFree_of_lowPairClosureLayering
+      hn hfree0 L hlocal
+  let cCountable : W0 -> CountableColor.{u} := fun x => ULift.up (c x)
+  have hcCountable : H0.IsProperColoring cCountable := by
+    intro e
+    obtain ⟨x, hx, y, hy, hxy⟩ := hc e
+    refine ⟨x, hx, y, hy, ?_⟩
+    intro hEq
+    apply hxy
+    simpa [cCountable] using congrArg ULift.down hEq
+  have hcount : H0.chromaticCardinal <= Cardinal.aleph0 :=
+    H0.chromaticCardinal_le_aleph0_of_natColoring ⟨cCountable, hcCountable⟩
+  exact (not_lt_of_ge hcount) hunc0
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_PositiveAtomClassical
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.PositiveAtomClassical
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
+Source: Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
+Normalized SHA-256: 52c570c6725ef2fbb2834c70e7938d4b9f4a1c411fa8fa31582d7299f1a6d830
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CompleteBipartiteAtomObligatory
+
+/-!
+# The all-parameter balanced expansion atom theorem
+
+This module packages the zero-size atom and the positive-size classical
+endpoint into the single natural-number statement used by downstream results.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace TripleSystem
+
+/-- Every balanced complete-bipartite private-vertex-expansion atom is
+obligatory. -/
+theorem completeBipartiteExpansionAtom_isObligatory (n : Nat) :
+    (completeBipartiteExpansionAtom.{u} n).IsObligatory := by
+  cases n with
+  | zero => exact completeBipartiteExpansionAtom_zero_isObligatory
+  | succ n =>
+      exact completeBipartiteExpansionAtom_positive_isObligatory n.succ n.succ_pos
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CompleteBipartiteAtomObligatory
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ConstructiblePositiveObligatory
+Source: Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean
+Normalized SHA-256: 4e3520205a8ecb6c09e7db096306548a7af227e6a5adb480f7a4f980a0e669e5
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ConstructiblePositiveObligatory
+
+/-!
+# Obligatory constructible triple systems
+
+The all-parameter balanced complete-bipartite expansion atom theorem closes
+the finite constructive closure argument: every constructible triple system
+is obligatory.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace TripleSystem
+
+/-- Every finite constructible triple system is obligatory. -/
+theorem Constructible.isObligatory
+    {V E : Type u} {F : TripleSystem V E} (hF : Constructible F) :
+    F.IsObligatory := by
+  apply hF.isObligatory_of_positive_completeBipartiteNN
+  intro n _
+  simpa only [completeBipartiteExpansionAtom] using
+    (completeBipartiteExpansionAtom_isObligatory.{u} n)
+
+/-- A finite triple system whose isolated reduction is intrinsic is
+obligatory. -/
+theorem intrinsic_isolatedReduction_isObligatory
+    {V E : Type u} (F : TripleSystem V E) [Finite V] [Finite E]
+    (hF : F.isolatedReduction.Intrinsic) : F.IsObligatory := by
+  classical
+  letI : Fintype V := Fintype.ofFinite V
+  letI : Fintype E := Fintype.ofFinite E
+  letI : DecidableEq V := Classical.decEq V
+  letI : DecidableEq E := Classical.decEq E
+  apply IsObligatory.of_isolatedReduction
+  apply Constructible.isObligatory
+  exact (BridgeBlock.isolatedReduction_constructible_iff_intrinsic F).mpr hF
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ConstructiblePositiveObligatory
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ConstructiblePositiveObligatory
 ========================================================================== -/
 
 /- ==========================================================================
@@ -8986,7 +12742,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftChromatic
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 687a64bec5fc1d996c85bdb1c646a52200c8ec0a57874b825bc2d33e8bcefe0f
+Normalized SHA-256: b44ae12d51c0ce242e1c262756cce8a778608ba791cbfafb75fdc6b1ebff5bdb
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

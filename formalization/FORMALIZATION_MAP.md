@@ -61,11 +61,12 @@ adversarial audit exposes a false or over-strong formulation.
 | R11 | `rootedComponentPieceList_runningEdgeAssemblyGeometry`, `hyperedgeComponentRestriction_constructible`, `constructible_of_intrinsic_of_hasNoIsolatedPoints`, `isolatedReduction_constructible_iff_intrinsic` | exact bridge-forest ordering, running intersection, full reverse reconstruction, and finite constructive/intrinsic classification proved |
 | O3 | `chromaticCardinal_le_mk_iff`, `aleph0_lt_chromaticCardinal_deleteVertices`, `Embedding.disjointUnionOfDisjoint`, `IsObligatory.disjointUnion` | exact finite-deletion lemma and closure of finite obligatory systems under disjoint union proved |
 | O4 | `Embedding.extendIsolatedReduction`, `isObligatory_iff_isolatedReduction` | exact isolated-vertex reduction for finite obligatoriness proved, including extension over finitely many isolated source vertices in an infinite host |
-| O5 | `SimpleGraph.copyCompleteBipartiteNN`, `privateVertexExpansionEmbeddingOfCopy`, `privateVertexExpansion_isObligatory_of_completeBipartiteNN` | conditional exact finite Corollary 3.3 reduction proved: assuming every balanced complete-bipartite expansion atom is obligatory, every finite two-colourable graph expansion reduces through isolated-point deletion and restoration to that universe-compatible atom family |
+| O5 | `SimpleGraph.copyCompleteBipartiteNN`, `privateVertexExpansionEmbeddingOfCopy`, `privateVertexExpansion_isObligatory_of_completeBipartiteNN` | conditional exact finite Corollary 3.3 reduction proved: assuming every balanced complete-bipartite expansion atom is obligatory, every finite two-colourable graph expansion reduces through isolated-point deletion and restoration to that universe-compatible atom family; O10 now discharges this atom premise |
 | O6 | `RainbowBipartite.LocallyBounded`, `RainbowBipartite.IsRainbow`, `exists_rainbow_bipartite_submatrix` | exact manuscript Lemma 3.1 proved by a finite union bound with replacement: for arbitrary colours and positive `n,t`, an explicit finite `q` yields injective `n`-row and `n`-column selections whose `n²` colours are pairwise distinct; compiled under canonical 4.32 |
 | O7 | `FiniteOutdegreeColoring.exists_coloring`, `IsObligatory.rootedAbundance`, `IsObligatory.onePointAmalgamation` | exact Section 4 rooted-abundance argument and obligatory closure under one-point amalgamation, including singleton factors, proved under canonical 4.32; an audited full-theorem Aristotle return supplies an independent proof body for the final endpoint |
 | O8 | `SequenceLift.system`, `not_isProperColoring_nat`, `aleph0_lt_chromaticCardinal` | the one-apex sequence lift and its chromatic lower bound are proved: a proper countable colouring would recursively generate an `ω₁`-long branch with pairwise distinct colours |
 | O9 | `SimpleGraph.NonInducedFactor`, `CompleteBipartiteEdges.coords_edge`, `Constructible.isObligatory_of_completeBipartiteNN` | non-induced graph-factor API, exact balanced-bipartite edge coordinates, and a focused-compiled conditional closure package: the atom hypothesis implies obligatoriness of every constructible system |
+| O10 | `completeBipartiteExpansionAtom_positive_isObligatory`, `completeBipartiteExpansionAtom_isObligatory`, `Constructible.isObligatory`, `intrinsic_isolatedReduction_isObligatory` | a classical cardinal-minimal low-pair-closure argument proves every positive balanced `K_{n,n}⁺` expansion atom obligatory; together with the zero atom it proves the all-parameter atom theorem, discharges O5/O9, yields obligatoriness of every constructible triple system, and yields the finite isolated-reduction-intrinsic corollary |
 
 The representation layer now also contains compiled, gap-free definitions of
 non-induced embeddings, triple-system isomorphisms, isolated-point reduction,
@@ -79,14 +80,16 @@ reverse direction, every active bridge-free component is an exact constructible
 edge restriction, degree-zero components are exact constructible one-edge
 restrictions, and the rooted bridge-forest ordering supplies the full
 `RunningEdgeAssembly`. Consequently the exact finite structural theorem
-`isolatedReduction_constructible_iff_intrinsic` is proved. The remaining
-project work lies in the complete-bipartite positive atom, reconstruction of a
+`isolatedReduction_constructible_iff_intrinsic` is proved.  The positive
+complete-bipartite atom and constructible-to-obligatory directions are now
+proved as well.  The remaining project work lies in reconstruction of a
 constructible system across isolated vertices, the finite-trace decomposition,
 and the infinitary avoidance direction; it is not a gap in the verified
 bridge-block reconstruction or one-point closure.
 
-The O9 transfer is deliberately conditional: it packages finite constructors
-and existing obligatory closures but does not prove the `K_{n,n}⁺` atom itself.
+The underlying O9 transfer remains a reusable conditional API, but
+`completeBipartiteExpansionAtom_isObligatory` now discharges its premise;
+`Constructible.isObligatory` records the unconditional consequence.
 
 The canonical project uses Lean/mathlib `v4.32.0`.  Aristotle currently works
 best with `v4.28.0`; therefore results produced in a 4.28 staging project are

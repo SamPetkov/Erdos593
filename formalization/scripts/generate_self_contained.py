@@ -127,14 +127,14 @@ includes the constructive class, intrinsic-preservation theorems, the
 bridge-block quotient forest, active and degree-zero expansion pieces, and the
 rooted running-intersection reconstruction after isolated vertices are removed.
 It also includes the chromatic-cardinal interface, finite-deletion and
-obligatory closure facts, a conditional transfer from the balanced
-complete-bipartite atoms to constructible systems, exact `K_{n,n}` edge
+obligatory closure facts, the all-parameter theorem that every balanced
+complete-bipartite expansion atom is obligatory, the resulting theorem that
+every constructible triple system is obligatory, exact `K_{n,n}` edge
 coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
 interface, rooted abundance and obligatory one-point amalgamation, and the
 one-apex sequence lift with its countable-colouring obstruction. Major missing
-layers are the complete-bipartite expansion atom, reconstruction across
-isolated vertices, the finite-trace structural theorem, and the remaining
-infinitary positive and avoidance directions.
+layers are reconstruction across isolated vertices, the finite-trace structural
+theorem, and the remaining infinitary avoidance direction.
 
 Generated deterministically from Erdos593.lean and its exact transitive local
 import closure. Each source boundary records its relative path and normalized
