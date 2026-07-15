@@ -14277,9 +14277,59 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberEquiv.lean
+Normalized SHA-256: 6fd0506f6efe7d6703fb4cb97dc4d81bbcac481aa054b3e7909cfe81737e6e27
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberEquiv
+
+/-!
+# Fibre-local equivalence for sequence lifts
+
+Under a linear restriction, the canonical base letter is an explicit
+equivalence from each selected base fibre to its own image.  This is a
+fibre-local structural interface; it makes no identification between images
+from different base fibres and asserts no global trace decomposition.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- Under a linear restriction, the canonical base letter identifies one
+canonical base fibre with its own base-letter image. -/
+noncomputable def baseFiberEquivBaseLetterImage_of_linear
+    {S : Set (Edge G)} (q : Node G)
+    (hlinear : ((system G).edgeRestriction S).Linear) :
+    baseFiber S q ≃ (baseLetter '' baseFiber S q) :=
+  Equiv.ofBijective
+    (fun e => ⟨baseLetter e.1, ⟨e.1, e.2, rfl⟩⟩)
+    (by
+      constructor
+      · intro e₁ e₂ h
+        apply Subtype.ext
+        exact baseLetter_injOn_baseFiber_of_linear q hlinear e₁.2 e₂.2
+          (congrArg Subtype.val h)
+      · rintro ⟨letter, e, he, rfl⟩
+        exact ⟨⟨e, he⟩, rfl⟩)
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberEquiv
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 8d253130c4a1073bda924cc85a1ccd0a2a1fce1e20c402465455be26667339e0
+Normalized SHA-256: 55be5dc5fc6a7aa73d98712633d3119ccf5995447839032ba920fda1957c0868
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

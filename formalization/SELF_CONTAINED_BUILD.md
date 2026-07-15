@@ -79,10 +79,10 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 93 source modules, 44 external
-  Mathlib imports, 14,295 physical lines, 12,538 nonblank lines, 581,003 UTF-8
+- Deterministic regeneration check: passed for 94 source modules, 44 external
+  Mathlib imports, 14,345 physical lines, 12,577 nonblank lines, 582,928 UTF-8
   bytes, and SHA-256
-  `66632c3c01cef148af1e692d91ad00833e0b20ebebd0607b94f6cc3f157a9df6`.
+  `d95cf42649c29eede49cbfc32702a78285ae21f60d4b41f9b68cfe50c9d60e8d`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
   and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
@@ -98,6 +98,7 @@ module checks recorded below.
   and `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality` (1,289
   Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum` (1,290
+  Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv` (1,226
   Lake jobs),
   passed under the pinned Lean/mathlib `v4.32.0` toolchain.
 - Source audit: the complete imported closure, including
@@ -106,7 +107,7 @@ module checks recorded below.
   `SequenceLiftBaseFiber`, `SequenceLiftBaseFiberIndex`,
   `SequenceLiftBaseFiberPartition`, `SequenceLiftBaseApex`,
   `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberCardinality`,
-  `SequenceLiftBaseFiberTraceSum`, and
+  `SequenceLiftBaseFiberTraceSum`, `SequenceLiftBaseFiberEquiv`, and
   the generated
   artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
   `sorryAx`; the repository secret scan is also clear.
@@ -209,6 +210,14 @@ import Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum
 #print axioms Erdos593.SequenceLift.edgeImage_ncard_eq_sum_baseLetter_image_ncard
 #print axioms Erdos593.SequenceLift.edge_card_eq_sum_baseLetter_image_ncard
 #print axioms Erdos593.SequenceLift.traceKey_image_ncard_eq_sum_baseLetter_image_ncard
+```
+
+The fibre-local O23 equivalence can likewise be audited directly:
+
+```lean
+import Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv
+
+#print axioms Erdos593.SequenceLift.baseFiberEquivBaseLetterImage_of_linear
 ```
 
 In addition to this declaration-level check, scan every source in the local

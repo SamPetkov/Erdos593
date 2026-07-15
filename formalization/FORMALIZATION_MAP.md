@@ -79,6 +79,7 @@ adversarial audit exposes a false or over-strong formulation.
 | O20 | `SequenceLift.activeBaseNodeIndex`, `SequenceLift.iUnion_baseFiber_activeBaseNodeIndex`, `SequenceLift.baseNodeIndexMap`, `SequenceLift.surjective_baseNodeIndexMap`, `SequenceLift.activeBaseNodeIndex_natCard_le_edge_card` | the active-base subtype reindexes the disjoint fibre partition, with every index labelling a nonempty fibre; for a finite embedded source, source edges map surjectively onto this finite index, yielding `Nat.card` and chosen-`Fintype.card` upper bounds. This is finite support/reindexing only, not a fibre-cardinality sum or global trace decomposition |
 | O21 | `SequenceLift.ncard_eq_sum_baseFiber_activeBaseNodeIndex`, `SequenceLift.edgeIndexEquiv_sigmaBaseFiberIndex`, `SequenceLift.edgeImage_ncard_eq_sum_baseFiberIndex`, `SequenceLift.edge_card_eq_sum_baseFiberIndex_card` | the finite selected-edge partition has its exact fibre-cardinality sum; for an embedded finite source its source-edge type is equivalent to the sigma of the exact fibre-index subtypes, yielding the corresponding finite cardinal sum. This does not sum global base-letter images or traces. |
 | O22 | `SequenceLift.ncard_eq_sum_baseLetter_image_activeBaseNodeIndex_of_linear`, `SequenceLift.edgeImage_ncard_eq_sum_baseLetter_image_ncard`, `SequenceLift.edge_card_eq_sum_baseLetter_image_ncard`, `SequenceLift.traceKey_image_ncard_eq_sum_baseLetter_image_ncard` | for a finite linear selected family, the exact fibre sum is the sum of distinct base-letter images inside separate active base fibres. For a finite linear no-isolated source, the same sum counts its edge image, source-edge type, and trace-key image. This retains multiplicity across base fibres and neither identifies base letters across fibres nor asserts a global base-letter union or full trace decomposition. |
+| O23 | `SequenceLift.baseFiberEquivBaseLetterImage_of_linear` | under a linear restriction, each individual canonical base fibre is explicitly equivalent to its own base-letter image. This packages fibre-local injectivity only: it does not identify equal letters across different fibres, construct a global base-letter union, or assert a trace decomposition. |
 
 The representation layer now also contains compiled, gap-free definitions of
 non-induced embeddings, triple-system isomorphisms, isolated-point reduction,
@@ -108,9 +109,10 @@ partition a selected family over finite active support. The complementary apex
 layer identifies the unique non-base point of every lifted edge and proves it
 private within a linear canonical base fibre. The finite fibre-cardinality sum
 is now proved, and for a finite linear no-isolated source it is also the sum
-of the separate local base-letter images and of the trace-key image. These
-interfaces still do not identify base letters across distinct base fibres or
-assemble them into a global trace decomposition. The
+of the separate local base-letter images and of the trace-key image. Each
+individual fibre's local base-letter map is now also packaged as an explicit
+equivalence. These interfaces still do not identify base letters across
+distinct base fibres or assemble them into a global trace decomposition. The
 remaining project work lies in reconstruction of a constructible system across
 isolated vertices, the global finite-trace decomposition beyond the local
 rigidity, grouping, and key steps,

@@ -144,6 +144,9 @@ identities, but it does not sum global base-letter images or traces.
 `SequenceLiftBaseFiberTraceSum` now expresses the same sum through the
 separate local base-letter images and the trace-key image, without identifying
 base letters across distinct fibres or asserting a global trace decomposition.
+`SequenceLiftBaseFiberEquiv` packages the within-fibre correspondence as an
+explicit equivalence with that fibre's own base-letter image; it neither joins
+images from distinct fibres nor produces a global trace equivalence.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

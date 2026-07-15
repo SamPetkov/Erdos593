@@ -88,7 +88,10 @@ base-letter images or traces. `SequenceLiftBaseFiberTraceSum` expresses that
 same finite sum using the distinct base-letter image within each separate
 active fibre, and therefore also counts the trace-key image. It neither
 identifies base letters across fibres nor supplies a global base-letter union
-or trace decomposition. The project is not yet a
+or trace decomposition. `SequenceLiftBaseFiberEquiv` packages the same
+within-fibre injectivity as an explicit equivalence with that fibre's own
+base-letter image; it still neither joins different fibres nor supplies a
+global trace equivalence. The project is not yet a
 complete machine-checked
 proof of Erdős Problem 593: the full
 finite-trace theorem, isolated-vertex reconstruction bridge, and the remaining
@@ -110,7 +113,7 @@ public obligatory endpoints, sequence-trace rigidity lemmas, and the
 `SequenceLiftBaseFiber` / `SequenceLiftBaseFiberIndex` /
 `SequenceLiftBaseFiberPartition` / `SequenceLiftBaseApex` /
 `SequenceLiftBaseFiberSupportIndex` / `SequenceLiftBaseFiberCardinality` /
-`SequenceLiftBaseFiberTraceSum`
+`SequenceLiftBaseFiberTraceSum` / `SequenceLiftBaseFiberEquiv`
 canonical trace-key and fibre modules on
 every pull request and
 push to `main`. The workflow deliberately
