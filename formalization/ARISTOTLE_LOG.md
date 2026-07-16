@@ -1318,6 +1318,38 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   audit. The source remains subject to local strict builds, axiom checks,
   self-contained consistency checks, and GitHub Actions.
 
+## O39: N24-A pair-transport public-source audit
+
+- Submitted (UTC): 2026-07-16. The authenticated Aristotle project is
+  `8a6e4193-3338-4c42-8539-e91ee9b727ec`; its task is
+  `e72248b0-fceb-4c83-b87f-1439c1fdaf8e`. It audits exact public `main`
+  commit `ceb964283efd809f129f64a8e83365ccbff1d339`.
+- Exact task boundary: independently audit only
+  `Erdos593/TripleSystem/ErdosRado/PairTransport.lean`: pair reindexing,
+  transported colouring, image homogeneity, and same-universe image-cardinal
+  transport. It must not claim an Erdos--Rado theorem or introduce one as an
+  assumption.
+- Submitted files: none. The request directs Aristotle to clone the named
+  public commit; no local tree, credential, secret, or private artifact was
+  uploaded.
+- Required audit: focused warnings-as-errors elaboration and Lake build,
+  endpoint `#print axioms`, and a scan for `sorry`, `admit`, `axiom`,
+  `unsafe`, `native_decide`, `implemented_by`, and resource-limit overrides.
+  The prompt forbids theorem weakening, hidden hypotheses, aggregate imports,
+  upstream edits, commits, and pushes.
+- Remote status (2026-07-16): `IN_PROGRESS`. It is the sole active N24 audit.
+  Three stale continuation projects were released by cancelling their queued
+  re-runs (`416f2f75-2663-43c9-ba5c-08d1d4cde184`,
+  `ebb5aa4b-49eb-4bd6-a069-4b9978abe2f0`, and
+  `58327fa1-fac8-48ad-9beb-6a40fa72b869`); no active stale task remains.
+- GitHub Actions status (2026-07-16): GitHub's API returned HTTP 503 for both
+  Actions-run and commit-check queries for this SHA. This is recorded as an
+  external availability failure, not a failed Lean check; retry before taking
+  any CI disposition.
+- Local disposition: pending. Any Aristotle result remains advisory until the
+  exact source passes local strict build, axiom, banned-construct, and
+  self-contained checks and GitHub Actions become observable.
+
 ## Record format
 
 For every submission, record:

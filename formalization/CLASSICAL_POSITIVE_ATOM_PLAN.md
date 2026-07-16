@@ -742,18 +742,55 @@ Classical.choice is ordinary Lean foundation, but it must not conceal the
 partition theorem or an arbitrary non-canonical trace later counted as
 canonical.
 
-**Proof-design gate before N24-B.** The transport layer and a generic
-least-selector are infrastructure only. Before trace-specific declarations,
-commit a source-backed mathematical specification giving the node/index type,
-eligibility predicate, successor rule, limit-stage invariant, first-failure
-code, fixed-rank injectivity target, and the exact cardinal bound for those
-codes. Work natively on an ordinal carrier or parameterize any chosen
-equivalence; `Classical.choice` does not make an indexing canonical. If this
-specification is absent, stop at the generic selector and report it as the
-precise blocker rather than treating an arbitrary recursion as an
-Erdos--Rado proof.
+**Source-backed trace specification (unblocked 2026-07-16).** The required
+construction is the ramification proof in J. A. Larson and A. Hajnal,
+[“Partition Relations,” Theorem 2.5](https://people.clas.ufl.edu/jal/files/haj-lar.pdf),
+specialized to `kappa = aleph1`, `gamma = omega`, and
+`lambda = 2^(<aleph1) = 2^aleph0`. Hence the native carrier has cardinality
+`lambda^+ = (2^aleph0)^+`; this identity is a ZFC cardinal-arithmetic fact
+and does not use CH.
 
-**Five owner modules.** Each module exports only its local interface; later
+For each ordinal endpoint `alpha < lambda^+` and stage `eta < kappa`, the
+formal trace must define `B^alpha_eta = {beta^alpha_zeta | zeta < eta}` and
+the lower bound `hatBeta^alpha_eta = sup_{zeta < eta}(beta^alpha_zeta + 1)`.
+For a pair colouring `c`, its exact eligible-candidate predicate is:
+
+~~~text
+beta < alpha /\\ hatBeta^alpha_eta <= beta /\\
+forall zeta < eta,
+  c({beta^alpha_zeta, beta}) = c({beta^alpha_zeta, alpha}).
+~~~
+
+When eligible candidates exist, `beta^alpha_eta` is their ordinal minimum.
+At a limit stage the preceding supremum is part of that predicate; do not
+replace it by arbitrary colour-class choices or an unconstrained
+`Classical.choose`. Truncate the trace at `kappa`, writing `phi(alpha) <=
+kappa` for its height. `phi(alpha) < kappa` means its next eligible set is
+empty; `phi(alpha) = kappa` is the success case, not a failure code.
+
+The following source invariants are mandatory Lean obligations:
+
+1. Each trace is strictly increasing and every node is below its endpoint.
+2. `B^alpha_(phi alpha) union {alpha}` is endhomogeneous.
+3. Trace coherence: if `beta` occurs in the trace of `alpha`, then every
+   prefix of the trace of `beta` agrees with the corresponding prefix of the
+   trace of `alpha`.
+4. For the canonical predecessor relation `beta prec alpha` iff `beta`
+   occurs in the trace of `alpha`, its tree rank equals `phi(alpha)`.
+
+At each fixed height `varphi < kappa`, the source's reduced-colour code is
+the function `C_alpha : varphi -> gamma` whose `zeta` coordinate is
+`c({beta^alpha_zeta, alpha})`. The central theorem to formalize explicitly is
+`alpha, beta in T_varphi /\\ C_alpha = C_beta -> alpha = beta`, proved by
+transfinite induction from trace coherence and ordinal-minimal selection.
+It is not an immediate definitional fact. The cardinal bound is then
+`|T_varphi| <= |gamma|^|varphi| <= lambda`, followed by the union bound for
+all heights below `kappa`. Since the carrier has cardinality `lambda^+`, a
+height-`kappa` trace exists. Its endhomogeneous set has order type
+`omega_1 + 1`; a countable unary-colour pigeonhole argument yields the
+required `omega_1`-sized homogeneous set.
+
+**Six owner modules.** Each module exports only its local interface; later
 modules must not reopen or duplicate earlier arguments.
 
 1. `Erdos593/TripleSystem/ErdosRado/PairTransport.lean`
@@ -766,54 +803,47 @@ modules must not reopen or duplicate earlier arguments.
 
 2. `Erdos593/TripleSystem/ErdosRado/CanonicalTrace.lean`
 
-   For a fixed colouring of `Pair ErdosRadoCarrier`, define the canonical
-   trace/tree data and establish its local invariants: extension,
-   comparability, uniqueness of the selected next candidate, and the
-   relation between trace data and pair colours. If a least candidate is
-   required, use the relevant well-founded/minimum construction; an
-   unconstrained `choose` is not enough. This module proves neither the
-   success conclusion nor the global cardinal contradiction.
+   Work on the native ordinal carrier. Define the exact eligible predicate,
+   ordinal-minimum successor, limit lower bound, cutoff height, and local
+   trace invariants (strictness, endpoint bounds, endhomogeneity, and prefix
+   coherence). A generic least-selector is only support infrastructure; this
+   module must connect it to the displayed predicate.
 
-3. `Erdos593/TripleSystem/ErdosRado/SuccessCase.lean`
+3. `Erdos593/TripleSystem/ErdosRado/CanonicalTree.lean`
 
-   Prove the conditional success branch: a sufficiently long canonical trace
-   yields a set of cardinality strictly above `aleph0` on which the original
-   colouring is pair-homogeneous. The countable-colour step must prove that
-   one natural-number colour occurs on an uncountable trace subset, then
-   prove homogeneity for all pairs of that subset, not merely pairs sharing
-   one anchor.
+   Define the canonical predecessor relation induced by traces, prove its
+   well-foundedness, and prove that its rank is the trace height. This avoids
+   hiding rank arguments inside a later cardinality proof.
 
-4. `Erdos593/TripleSystem/ErdosRado/FailureCode.lean`
+4. `Erdos593/TripleSystem/ErdosRado/CanonicalLevelCode.lean`
 
-   Assuming the success branch never occurs, assign every anchor its first
-   failure rank and a canonical lower-rank colour code. Prove the exact
-   fixed-rank injectivity statement into the relevant function/code space.
-   This module establishes the coding map and injectivity, but does not
-   silently invoke the final continuum bound.
+   Define the source-native reduced-colour code on each fixed rank, and prove
+   the exact fixed-rank injectivity theorem by transfinite induction. This
+   replaces the provisional `FailureCode` plan; there is no ad hoc
+   first-failure encoding.
 
-5. `Erdos593/TripleSystem/ErdosRado/CountingAndMain.lean`
+5. `Erdos593/TripleSystem/ErdosRado/CanonicalCounting.lean`
 
-   Prove the cardinal arithmetic and assemble the dichotomy. In particular,
-   prove rather than assume that predecessor segments below the `aleph_one`
-   index are countable; each relevant natural-valued code space and fixed-rank
-   failure fibre has cardinality at most `Cardinal.continuum`; the union of at
-   most `aleph_one` fibres still has cardinality at most the continuum, with
-   universe lifts explicit; and this contradicts
-   `mk_erdosRadoCarrier = Order.succ Cardinal.continuum`. The module then
-   proves `erdosRadoUncountableHomogeneousPairSet`; it must not duplicate the
-   finite three-point extraction or N22 reindexing argument.
+   Prove the level-code cardinal bound, the union bound below `aleph1`, and
+   existence of a height-`aleph1` trace on the successor-continuum carrier,
+   keeping all universe lifts and `2^(<aleph1) = 2^aleph0` explicit.
+
+6. `Erdos593/TripleSystem/ErdosRado/EndhomogeneousLift.lean`
+
+   Convert a height trace to its endhomogeneous set, apply the countable
+   unary-colour pigeonhole step, transport from the native carrier to
+   `ErdosRadoCarrier`, and prove
+   `erdosRadoUncountableHomogeneousPairSet`. It must reuse the existing N22
+   endpoint instead of duplicating finite three-point extraction.
 
 The dependency graph is:
 
 ~~~text
-PairTransport
-    -> CanonicalTrace
-        -> SuccessCase
-        -> FailureCode
-SuccessCase + FailureCode
-    -> CountingAndMain
-    -> checked carrier reduction
-    -> existing TriangleHostRamseyUnconditional endpoint
+CanonicalTrace -> CanonicalTree -> CanonicalLevelCode -> CanonicalCounting
+                                                               -> EndhomogeneousLift
+PairTransport --------------------------------------------------^
+EndhomogeneousLift -> checked carrier reduction
+                    -> existing TriangleHostRamseyUnconditional endpoint
 ~~~
 
 **Per-module gates.** Before beginning the next module, the owner module
@@ -826,12 +856,15 @@ checks.
 each owner module is committed to a public `main` SHA:
 
 - N24-A: audit pair equivalence, image homogeneity, and cardinal transport;
-- N24-B: audit canonical/least trace selection and trace invariants;
-- N24-C: audit the success branch, especially the countable-colour pigeonhole
-  and all-pairs homogeneity conclusion;
-- N24-D: audit first-failure coding and fixed-rank injectivity; and
-- N24-E: audit cardinal arithmetic, universe lifts, the final dichotomy, and
-  the absence of CH or a hidden partition assumption.
+- N24-B: audit the source-native canonical trace: eligible predicate,
+  ordinal minimum, limit lower bound, cutoff, and prefix coherence;
+- N24-C: audit canonical-tree rank and fixed-level reduced-colour-code
+  injectivity by transfinite induction;
+- N24-D: audit level and union cardinal bounds, universe lifts, and the
+  height-`aleph1` existence argument without CH; and
+- N24-E: audit the endhomogeneous lift, countable unary-colour pigeonhole,
+  carrier transport, final dichotomy, and absence of a hidden partition
+  assumption.
 
 Each request uses only the exact public commit and its owner module, requests
 either a compile-checked patch or the smallest precise blocker, and forbids
