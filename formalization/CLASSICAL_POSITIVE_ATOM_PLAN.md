@@ -645,8 +645,12 @@ homogeneous set.
 
 **Exact remaining external obligation.** For the selected base-universe
 carrier `ErdosRadoCarrier` with cardinality the successor of the continuum,
-every `c : TriangleHost.Pair ErdosRadoCarrier -> Nat` must have an infinite
-`H : Set ErdosRadoCarrier` satisfying `TriangleHost.PairHomogeneous c H`.
+every `c : TriangleHost.Pair ErdosRadoCarrier -> Nat` must have a set
+`H : Set ErdosRadoCarrier` with
+`Cardinal.aleph0 < Cardinal.mk H` satisfying
+`TriangleHost.PairHomogeneous c H`. The checked carrier interface reduces
+this stronger uncountable conclusion to the required infinite homogeneous
+set; it does not prove the stronger conclusion.
 
 This is the countably-coloured special case customarily written
 `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`. It is the sole non-finite
@@ -662,13 +666,14 @@ host and transport code.
    only the finite extraction and equivalence bridge above.
 2. `ErdosRadoCarrier.lean` fixes the base-universe carrier
    `Order.succ Cardinal.continuum`, proves its exact cardinality, and
-   packages the required infinite-homogeneous-set premise as
-   `ErdosRadoHomogeneousPairSet`. It is implemented and deliberately makes
-   no partition-calculus assertion.
-3. `ErdosRado.lean` proves `ErdosRadoHomogeneousPairSet` by formalizing the
-   needed specialization of
-   `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`, returns an infinite homogeneous
-   set, and applies the checked finite bridge. It must not replace this with
+   packages both the required infinite-homogeneous-set premise and the
+   stronger uncountable target
+   `ErdosRadoUncountableHomogeneousPairSet`, with a checked reduction from
+   the latter to the former. It deliberately makes no partition-calculus
+   assertion.
+3. `ErdosRado.lean` proves the stronger target by formalizing the needed
+   specialization of `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`, then applies
+   the checked reduction and finite bridge. It must not replace this with
    a finite-colour result.
 4. `TriangleHostRamseyUnconditional.lean` applies N22's existing
    `not_isObligatory_of_not_linear_of_exactTriangleHost` to that witness. It

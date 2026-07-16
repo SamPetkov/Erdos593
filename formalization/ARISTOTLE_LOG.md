@@ -1227,6 +1227,17 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   focused GitHub Actions Lean checks. The running remote audit remains
   advisory and must not overwrite that checked source.
 
+- Status update (2026-07-16): the task subsequently reached `COMPLETE`.
+  Aristotle reported the exact finite host and linearity declarations, strict
+  elaboration and Lake build, a clean prohibited-construct scan, and only
+  `propext`, `Classical.choice`, and `Quot.sound` in its axiom reports.
+  Although its report mentioned a commit/push, local Git provenance confirms
+  that the module was already present in ancestor commit
+  `06eb3c6120f56cb0587e52b14be0f4b11912673a`; no remote divergence or local
+  Git write resulted from the audit. The result is accepted only as an
+  independent advisory audit; the checked source remains the existing
+  independently authored module.
+
 ## O36: N22 exact transport adversarial audit
 
 - Submitted (UTC): 2026-07-16. The authenticated Aristotle project is
@@ -1250,6 +1261,33 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   the strict/Lake checks and expected axioms, and confirmed that the assumed
   `PairRamseyTriangle` does not supply the missing Erdos--Rado theorem.
 - Local disposition (2026-07-16): accepted as a bounded advisory audit only.
+
+## O37: Erdős--Rado carrier public-source audit
+
+- Submitted (UTC): 2026-07-16. The authenticated Aristotle project is
+  `99e11664-be71-49f0-bc9a-a987d282340c`; its task is
+  `870dff93-6f60-44eb-93ea-56087069dafd`.
+- Exact task boundary: audit the public carrier module at commit
+  `eb22d73`, including its exact successor-of-continuum cardinality,
+  classical decidable-equality instance, explicit homogeneous-set premise,
+  and conditional finite-Ramsey composition. It must verify that the module
+  does not assert an Erdős--Rado partition-calculus theorem.
+- Submitted files: none. Aristotle received only the public repository
+  reference and exact module boundary; no local tree, credential, secret, or
+  private artifact was uploaded.
+- Required audit: focused warnings-as-errors elaboration and Lake build,
+  endpoint `#print axioms`, and a scan for `sorry`, `admit`, `axiom`,
+  `unsafe`, `native_decide`, `implemented_by`, and resource-limit
+  overrides.
+- Remote completion (2026-07-16): `COMPLETE_WITH_ERRORS` at the project
+  label, but its terminal report is a substantive pass: it found no Lean
+  error or prohibited construct, reported only `propext`,
+  `Classical.choice`, and `Quot.sound`, and confirmed the public GitHub
+  Actions run for the audited commit. The error label came from an auxiliary
+  command rather than the Lean audit.
+- Local disposition (2026-07-16): accepted only as an independent advisory
+  audit. The carrier and all later extensions remain subject to local strict
+  builds, axiom checks, self-contained consistency checks, and GitHub Actions.
 
 ## Record format
 
