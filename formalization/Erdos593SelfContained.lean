@@ -3062,6 +3062,746 @@ END SOURCE MODULE: Erdos593.TripleSystem.Embedding
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.EdgeRestriction
+Source: Erdos593/TripleSystem/EdgeRestriction.lean
+Normalized SHA-256: 0435e5f79927a45b5ae21b597f2f910d122eac6c58e2fcf928e3e8b9d8f6bd09
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_EdgeRestriction
+
+/-!
+# Edge restrictions
+
+For reconstruction, a set of source hyperedges determines an exact subsystem
+on the union of their incident vertices.  The canonical embedding records this
+subsystem as a non-induced copy in the ambient triple system.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+
+/-- The set of points lying on at least one edge whose index belongs to `S`. -/
+def edgeSupportSet (S : Set E) : Set V :=
+  {x | ∃ e : E, e ∈ S ∧ F.Inc x e}
+
+/-- The point support of a finite family of triple edges is finite. -/
+theorem edgeSupportSet_finite {S : Set E} (hS : S.Finite) :
+    (F.edgeSupportSet S).Finite := by
+  induction S, hS using Set.Finite.induction_on with
+  | empty =>
+      simp [edgeSupportSet]
+  | insert hnotmem hfinite ih =>
+      rename_i e S
+      rw [show F.edgeSupportSet (insert e S) =
+        {x : V | F.Inc x e} ∪ F.edgeSupportSet S by
+          ext x
+          simp [edgeSupportSet]]
+      exact (Set.finite_of_ncard_ne_zero (by
+        rw [F.edge_ncard e]
+        decide)).union ih
+
+/-- The type of points supported by an edge-index set. -/
+abbrev EdgeSupport (S : Set E) := F.edgeSupportSet S
+
+/-- Restrict to the edges indexed by `S`, retaining exactly their incident
+points. -/
+def edgeRestriction (S : Set E) : TripleSystem (F.EdgeSupport S) S where
+  Inc x e := F.Inc x.1 e.1
+  edge_ncard := by
+    intro e
+    change Set.ncard {x : F.EdgeSupport S |
+      (x : V) ∈ {y : V | F.Inc y e.1}} = 3
+    rw [Set.ncard_subtype]
+    have hsubset : {x : V | F.Inc x e.1} ⊆
+        F.edgeSupportSet S := by
+      intro x hx
+      exact ⟨e.1, e.2, hx⟩
+    change Set.ncard ({x : V | F.Inc x e.1} ∩ F.edgeSupportSet S) = 3
+    rw [Set.inter_eq_left.mpr hsubset]
+    exact F.edge_ncard e.1
+  simple := by
+    intro e d h
+    apply Subtype.ext
+    apply F.simple
+    ext x
+    constructor
+    · intro hxe
+      let x' : F.EdgeSupport S := ⟨x, e.1, e.2, hxe⟩
+      have hx := Set.ext_iff.mp h x'
+      exact hx.mp hxe
+    · intro hxd
+      let x' : F.EdgeSupport S := ⟨x, d.1, d.2, hxd⟩
+      have hx := Set.ext_iff.mp h x'
+      exact hx.mpr hxd
+
+@[simp]
+theorem edgeRestriction_inc (S : Set E) (x : F.EdgeSupport S) (e : S) :
+    (F.edgeRestriction S).Inc x e ↔ F.Inc x.1 e.1 :=
+  Iff.rfl
+
+/-- The canonical embedding of an edge restriction into the ambient system. -/
+def edgeRestrictionEmbedding (S : Set E) :
+    (F.edgeRestriction S).Embedding F where
+  vertex := ⟨Subtype.val, Subtype.val_injective⟩
+  edge := Subtype.val
+  map_edge := by
+    intro e
+    ext x
+    constructor
+    · rintro ⟨y, hy, rfl⟩
+      exact hy
+    · intro hx
+      exact ⟨⟨x, e.1, e.2, hx⟩, hx, rfl⟩
+
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_EdgeRestriction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.EdgeRestriction
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.Isolated
+Source: Erdos593/TripleSystem/Isolated.lean
+Normalized SHA-256: b6b14641cb9cf0951ff7564cbacc6ed641fbe550ef9279d8189885d2dfd3cae2
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_Isolated
+
+/-!
+# Isolated-point reduction
+
+The isolated-point reduction keeps the edge-index type unchanged and restricts
+the vertex type to points incident with at least one edge.  Since every point of
+an edge is non-isolated, this restriction preserves every edge, its cardinality,
+and simplicity.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+
+/-- A triple system has no isolated points when every point lies on an edge. -/
+def HasNoIsolatedPoints : Prop :=
+  ∀ x, ¬F.IsIsolated x
+
+/-- Any point incident with an edge is non-isolated. -/
+theorem not_isolated_of_inc {x : V} {e : E} (hxe : F.Inc x e) :
+    ¬F.IsIsolated x := by
+  intro hx
+  exact hx e hxe
+
+/-- Classically, being non-isolated is equivalent to lying on some edge. -/
+theorem not_isolated_iff_exists_inc {x : V} :
+    ¬F.IsIsolated x ↔ ∃ e, F.Inc x e := by
+  classical
+  simp [IsIsolated]
+
+/-- The type of non-isolated points of `F`. -/
+abbrev NonIsolatedPoint :=
+  {x : V // ¬F.IsIsolated x}
+
+/-- Delete all isolated points while retaining the original edge indices. -/
+def isolatedReduction : TripleSystem F.NonIsolatedPoint E where
+  Inc x e := F.Inc x.1 e
+  edge_ncard := by
+    intro e
+    change Set.ncard {x : F.NonIsolatedPoint |
+      (x : V) ∈ {y : V | F.Inc y e}} = 3
+    rw [Set.ncard_subtype]
+    have hsubset : {x : V | F.Inc x e} ⊆ {x : V | ¬F.IsIsolated x} := by
+      intro x hx
+      exact F.not_isolated_of_inc hx
+    rw [Set.inter_eq_left.mpr hsubset]
+    exact F.edge_ncard e
+  simple := by
+    intro e f hef
+    apply F.simple
+    ext x
+    constructor
+    · intro hxe
+      let x' : F.NonIsolatedPoint := ⟨x, F.not_isolated_of_inc hxe⟩
+      have hiff := Set.ext_iff.mp hef x'
+      exact hiff.mp hxe
+    · intro hxf
+      let x' : F.NonIsolatedPoint := ⟨x, F.not_isolated_of_inc hxf⟩
+      have hiff := Set.ext_iff.mp hef x'
+      exact hiff.mpr hxf
+
+@[simp]
+theorem isolatedReduction_inc {x : F.NonIsolatedPoint} {e : E} :
+    F.isolatedReduction.Inc x e ↔ F.Inc x.1 e :=
+  Iff.rfl
+
+/-- Each reduced edge still has exactly three points. -/
+theorem isolatedReduction_edge_ncard (e : E) :
+    Set.ncard {x : F.NonIsolatedPoint | F.isolatedReduction.Inc x e} = 3 :=
+  F.isolatedReduction.edge_ncard e
+
+/-- Distinct edge indices remain distinct after isolated points are deleted. -/
+theorem isolatedReduction_simple :
+    Function.Injective (fun e => {x | F.isolatedReduction.Inc x e}) :=
+  F.isolatedReduction.simple
+
+/-- Deleting isolated points preserves linearity. -/
+theorem isolatedReduction_linear (hlinear : F.Linear) :
+    F.isolatedReduction.Linear := by
+  intro e f x y hef hxe hxf hye hyf
+  apply Subtype.ext
+  exact hlinear hef hxe hxf hye hyf
+
+/-- The isolated-point reduction has no isolated points. -/
+theorem isolatedReduction_hasNoIsolatedPoints :
+    F.isolatedReduction.HasNoIsolatedPoints := by
+  intro x hx
+  exact x.property hx
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_Isolated
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.Isolated
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.Isomorph
+Source: Erdos593/TripleSystem/Isomorph.lean
+Normalized SHA-256: 2dc9fd1b84ca7299fff7d6d8c786429f5eb5e1fc7b3899a7dfe90e720599e3cd
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_Isomorph
+
+/-!
+# Triple-system isomorphisms
+
+An isomorphism of edge-indexed triple systems relabels both the vertices and
+the edge indices by equivalences, and preserves incidence in both directions.
+Relabelling only the vertices would not be sufficient: the edge indices are
+part of the representation used by the Levi graph.
+-/
+
+namespace Erdos593
+
+universe u v u' v' u'' v''
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v}
+variable {V' : Type u'} {E' : Type v'}
+variable {V'' : Type u''} {E'' : Type v''}
+
+/-- An incidence-preserving relabelling of both vertices and edge indices. -/
+structure Iso (F : TripleSystem V E) (F' : TripleSystem V' E') where
+  /-- The bijective relabelling of vertices. -/
+  vertexEquiv : V ≃ V'
+  /-- The bijective relabelling of edge indices. -/
+  edgeEquiv : E ≃ E'
+  /-- Incidence is preserved and reflected by the two relabellings. -/
+  map_inc_iff : ∀ x e,
+    F.Inc x e ↔ F'.Inc (vertexEquiv x) (edgeEquiv e)
+
+namespace Iso
+
+variable {F : TripleSystem V E}
+variable {F' : TripleSystem V' E'}
+variable {F'' : TripleSystem V'' E''}
+
+/-- The identity relabelling. -/
+def refl (F : TripleSystem V E) : Iso F F where
+  vertexEquiv := Equiv.refl V
+  edgeEquiv := Equiv.refl E
+  map_inc_iff := fun _ _ => Iff.rfl
+
+/-- Reverse an isomorphism by using the inverse vertex and edge relabellings. -/
+def symm (f : Iso F F') : Iso F' F where
+  vertexEquiv := f.vertexEquiv.symm
+  edgeEquiv := f.edgeEquiv.symm
+  map_inc_iff := by
+    intro x e
+    simpa using
+      (f.map_inc_iff (f.vertexEquiv.symm x) (f.edgeEquiv.symm e)).symm
+
+/-- Compose two incidence-preserving relabellings. -/
+def trans (f : Iso F F') (g : Iso F' F'') : Iso F F'' where
+  vertexEquiv := f.vertexEquiv.trans g.vertexEquiv
+  edgeEquiv := f.edgeEquiv.trans g.edgeEquiv
+  map_inc_iff := by
+    intro x e
+    exact (f.map_inc_iff x e).trans
+      (g.map_inc_iff (f.vertexEquiv x) (f.edgeEquiv e))
+
+end Iso
+
+/-- Two edge-indexed triple systems are isomorphic when some simultaneous
+vertex-and-edge relabelling preserves incidence. -/
+def Isomorphic (F : TripleSystem V E) (F' : TripleSystem V' E') : Prop :=
+  Nonempty (Iso F F')
+
+/-- Every triple system is isomorphic to itself. -/
+@[refl]
+theorem isomorphic_refl (F : TripleSystem V E) : Isomorphic F F :=
+  ⟨Iso.refl F⟩
+
+/-- Triple-system isomorphism is symmetric. -/
+theorem Isomorphic.symm {F : TripleSystem V E} {F' : TripleSystem V' E'}
+    (h : Isomorphic F F') : Isomorphic F' F :=
+  h.map Iso.symm
+
+/-- Triple-system isomorphism is transitive, including across different
+vertex and edge-index types. -/
+theorem Isomorphic.trans
+    {F : TripleSystem V E} {F' : TripleSystem V' E'}
+    {F'' : TripleSystem V'' E''}
+    (h : Isomorphic F F') (h' : Isomorphic F' F'') : Isomorphic F F'' := by
+  rcases h with ⟨f⟩
+  rcases h' with ⟨g⟩
+  exact ⟨f.trans g⟩
+
+/-- Reversing both sides does not change whether two systems are isomorphic. -/
+theorem isomorphic_comm {F : TripleSystem V E} {F' : TripleSystem V' E'} :
+    Isomorphic F F' ↔ Isomorphic F' F :=
+  ⟨Isomorphic.symm, Isomorphic.symm⟩
+
+/-- On systems with fixed vertex and edge-index types, isomorphism is an
+equivalence relation. -/
+theorem isomorphic_equivalence :
+    Equivalence (@Isomorphic V E V E) :=
+  ⟨isomorphic_refl, Isomorphic.symm, Isomorphic.trans⟩
+
+/-- The setoid of triple systems modulo simultaneous vertex-and-edge
+relabelling.  This is intentionally a named definition rather than a global
+instance. -/
+def isomorphicSetoid : Setoid (TripleSystem V E) where
+  r := Isomorphic
+  iseqv := isomorphic_equivalence
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_Isomorph
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.Isomorph
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.Levi
+Source: Erdos593/TripleSystem/Levi.lean
+Normalized SHA-256: a666b40f90c05232f5ce5e80148adfbaf3583e70157254cfd0e198cee3e1dd7b
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_Levi
+
+/-!
+# Levi graphs
+
+The Levi graph of a triple system has point-nodes on the left and hyperedge-nodes
+on the right, with adjacency given by incidence.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+
+/-- Directed point-to-edge incidence before `SimpleGraph.fromRel` symmetrizes it. -/
+def incidenceRel : V ⊕ E → V ⊕ E → Prop
+  | .inl x, .inr e => F.Inc x e
+  | _, _ => False
+
+/-- The bipartite point-edge incidence graph of a triple system. -/
+def levi : _root_.SimpleGraph (V ⊕ E) :=
+  _root_.SimpleGraph.fromRel F.incidenceRel
+
+@[simp]
+theorem levi_adj_point_edge {x : V} {e : E} :
+    F.levi.Adj (.inl x) (.inr e) ↔ F.Inc x e := by
+  simp [levi, incidenceRel]
+
+@[simp]
+theorem levi_adj_edge_point {x : V} {e : E} :
+    F.levi.Adj (.inr e) (.inl x) ↔ F.Inc x e := by
+  simp [levi, incidenceRel]
+
+@[simp]
+theorem not_levi_adj_point_point {x y : V} :
+    ¬F.levi.Adj (.inl x) (.inl y) := by
+  simp [levi, incidenceRel]
+
+@[simp]
+theorem not_levi_adj_edge_edge {e f : E} :
+    ¬F.levi.Adj (.inr e) (.inr f) := by
+  simp [levi, incidenceRel]
+
+/-- A Levi hyperedge-node has exactly the three point-neighbours incident with
+the corresponding hyperedge. -/
+-- ARISTOTLE_TARGET B2
+theorem levi_edge_neighbor_ncard (e : E) :
+    (F.levi.neighborSet (.inr e)).ncard = 3 := by
+  rw [show F.levi.neighborSet (.inr e) =
+    Set.image (fun x : V => Sum.inl x) {x : V | F.Inc x e} by
+      ext x
+      cases x <;> simp +decide]
+  rw [Set.ncard_image_of_injective _ Sum.inl_injective]
+  exact F.edgeSet_ncard e
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_Levi
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.Levi
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.Intrinsic
+Source: Erdos593/TripleSystem/Intrinsic.lean
+Normalized SHA-256: 764cf4d904aa0f59607e4d5bfe1eaa3710240051be5446d6e5f6776b54c29356
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_Intrinsic
+
+/-!
+# Intrinsic structural conditions
+
+The finite structural kernel characterizes the constructive class by linearity,
+a genuine Levi-graph bridge at each hyperedge-node, and even Berge-cycle length.
+A Berge cycle of length `k` is represented by a Levi cycle of length `2 * k`, so
+even Berge length is encoded by divisibility of the Levi-cycle length by four.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+
+/-- Every Levi hyperedge-node is incident with an actual bridge edge. -/
+def BridgeAtEveryEdge : Prop :=
+  ∀ e : E, ∃ x : V,
+    s(Sum.inl x, Sum.inr e) ∈ SimpleGraph.bridgeEdges F.levi
+
+/-- Every Berge cycle has even length, expressed on the corresponding Levi cycle. -/
+def EvenBergeCycles : Prop :=
+  ∀ ⦃z : V ⊕ E⦄ (c : F.levi.Walk z z), c.IsCycle → 4 ∣ c.length
+
+/-- The three intrinsic conditions appearing in the finite classification. -/
+def Intrinsic : Prop :=
+  F.Linear ∧ F.BridgeAtEveryEdge ∧ F.EvenBergeCycles
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_Intrinsic
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.Intrinsic
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.IsomorphIntrinsic
+Source: Erdos593/TripleSystem/IsomorphIntrinsic.lean
+Normalized SHA-256: caaff78364a977f09204b8854bbdb65f21c35a9e511d4479c78fc690c784f4fa
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_IsomorphIntrinsic
+
+/-!
+# Isomorphism invariance of the intrinsic conditions
+
+The finite reconstruction is naturally obtained only up to simultaneous
+vertex and edge relabelling.  This file packages the corresponding Levi-graph
+isomorphism and proves that each intrinsic condition is invariant.
+-/
+
+namespace Erdos593
+
+universe u v u' v'
+
+namespace TripleSystem
+namespace Iso
+
+variable {V : Type u} {E : Type v}
+variable {V' : Type u'} {E' : Type v'}
+variable {F : TripleSystem V E} {F' : TripleSystem V' E'}
+
+/-- A triple-system isomorphism induces the canonical isomorphism of Levi
+graphs, with point-nodes sent to point-nodes and edge-nodes to edge-nodes. -/
+-- ARISTOTLE_ISO_TARGET I1
+def leviIso (f : Iso F F') : F.levi ≃g F'.levi where
+  toEquiv := Equiv.sumCongr f.vertexEquiv f.edgeEquiv
+  map_rel_iff' := by
+    rintro (x | e) (y | d) <;> simp [f.map_inc_iff]
+
+/-- Linearity is invariant under simultaneous vertex and edge relabelling. -/
+-- ARISTOTLE_ISO_TARGET I2
+theorem linear_iff (f : Iso F F') : F.Linear ↔ F'.Linear := by
+  constructor
+  · intro h e' d' x' y' hed hx_e hx_d hy_e hy_d
+    let e := f.edgeEquiv.symm e'
+    let d := f.edgeEquiv.symm d'
+    let x := f.vertexEquiv.symm x'
+    let y := f.vertexEquiv.symm y'
+    have hed' : e ≠ d := by
+      intro heq
+      apply hed
+      simpa [e, d] using congrArg f.edgeEquiv heq
+    have hxy : x = y := h hed'
+      ((f.map_inc_iff x e).mpr (by simpa [x, e] using hx_e))
+      ((f.map_inc_iff x d).mpr (by simpa [x, d] using hx_d))
+      ((f.map_inc_iff y e).mpr (by simpa [y, e] using hy_e))
+      ((f.map_inc_iff y d).mpr (by simpa [y, d] using hy_d))
+    simpa [x, y] using congrArg f.vertexEquiv hxy
+  · intro h e d x y hed hx_e hx_d hy_e hy_d
+    have hed' : f.edgeEquiv e ≠ f.edgeEquiv d := f.edgeEquiv.injective.ne hed
+    exact f.vertexEquiv.injective <| h hed'
+      ((f.map_inc_iff x e).mp hx_e) ((f.map_inc_iff x d).mp hx_d)
+      ((f.map_inc_iff y e).mp hy_e) ((f.map_inc_iff y d).mp hy_d)
+
+private theorem isBridge_iff_of_iso {A B : Type*}
+    {P : _root_.SimpleGraph A} {Q : _root_.SimpleGraph B}
+    (g : P ≃g Q) (a b : A) :
+    P.IsBridge s(a, b) ↔ Q.IsBridge s(g a, g b) := by
+  let gd : P.deleteEdges {s(a, b)} ≃g
+      Q.deleteEdges {s(g a, g b)} :=
+    { toEquiv := g.toEquiv
+      map_rel_iff' := by
+        intro x y
+        simp [g.map_adj_iff] }
+  change (¬(P.deleteEdges {s(a, b)}).Reachable a b) ↔
+    ¬(Q.deleteEdges {s(g a, g b)}).Reachable (g a) (g b)
+  exact not_congr gd.reachable_iff.symm
+
+/-- The incident-Levi-bridge condition is invariant under isomorphism. -/
+-- ARISTOTLE_ISO_TARGET I3
+theorem bridgeAtEveryEdge_iff (f : Iso F F') :
+    F.BridgeAtEveryEdge ↔ F'.BridgeAtEveryEdge := by
+  let g := leviIso f
+  constructor
+  · intro h e'
+    obtain ⟨x, hx⟩ := h (f.edgeEquiv.symm e')
+    refine ⟨f.vertexEquiv x, ?_⟩
+    rcases hx with ⟨hadj, hbridge⟩
+    constructor
+    · simpa [g, leviIso] using g.map_mem_edgeSet_iff.mpr hadj
+    · simpa [g, leviIso] using
+        (isBridge_iff_of_iso g (Sum.inl x)
+          (Sum.inr (f.edgeEquiv.symm e'))).mp hbridge
+  · intro h e
+    obtain ⟨x', hx⟩ := h (f.edgeEquiv e)
+    refine ⟨f.vertexEquiv.symm x', ?_⟩
+    rcases hx with ⟨hadj, hbridge⟩
+    constructor
+    · have hm := g.symm.map_mem_edgeSet_iff.mpr hadj
+      simpa [g, leviIso] using hm
+    · have hb := (isBridge_iff_of_iso g.symm (Sum.inl x')
+          (Sum.inr (f.edgeEquiv e))).mp hbridge
+      simpa [g, leviIso] using hb
+
+/-- Divisibility by four of all Levi-cycle lengths is invariant under
+isomorphism. -/
+-- ARISTOTLE_ISO_TARGET I4
+theorem evenBergeCycles_iff (f : Iso F F') :
+    F.EvenBergeCycles ↔ F'.EvenBergeCycles := by
+  let g := leviIso f
+  constructor
+  · intro h z c hc
+    let d := c.map g.symm.toHom
+    have hd : d.IsCycle := hc.map g.symm.injective
+    have hdiv := h d hd
+    simpa [d, _root_.SimpleGraph.Walk.length_map] using hdiv
+  · intro h z c hc
+    let d := c.map g.toHom
+    have hd : d.IsCycle := hc.map g.injective
+    have hdiv := h d hd
+    simpa [d, _root_.SimpleGraph.Walk.length_map] using hdiv
+
+/-- The full intrinsic predicate is invariant under triple-system
+isomorphism. -/
+-- ARISTOTLE_ISO_TARGET I5
+theorem intrinsic_iff (f : Iso F F') : F.Intrinsic ↔ F'.Intrinsic := by
+  simp only [Intrinsic, linear_iff f, bridgeAtEveryEdge_iff f,
+    evenBergeCycles_iff f]
+
+end Iso
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_IsomorphIntrinsic
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.IsomorphIntrinsic
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.EmbeddingEdgeRestriction
+Source: Erdos593/TripleSystem/EmbeddingEdgeRestriction.lean
+Normalized SHA-256: 803f764f5c2c6fd4598be6095ed8db2295e06f34c1c1e81f1956afa65b4d2049
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_EmbeddingEdgeRestriction
+
+/-!
+# Exact edge restrictions of embeddings
+
+An embedding need not be induced, but it is an isomorphism onto the
+restriction formed by the host-edge indices it explicitly selects, provided
+the source has no isolated vertices.  This is the first exact bridge from a
+finite linear source to a finite linear host-edge restriction.
+-/
+
+namespace Erdos593
+
+universe u v w x
+
+namespace TripleSystem
+
+namespace Embedding
+
+variable {V : Type u} {E : Type v} {W : Type w} {D : Type x}
+variable {F : TripleSystem V E} {H : TripleSystem W D}
+
+/-- The host edge indices selected by an embedding. -/
+def edgeImage (f : F.Embedding H) : Set D := Set.range f.edge
+
+/-- The embedding identifies the source edge-index type with its image. -/
+noncomputable def edgeImageEdgeEquiv (f : F.Embedding H) : E ≃ f.edgeImage :=
+  Equiv.ofBijective (fun e => ⟨f.edge e, ⟨e, rfl⟩⟩) (by
+    constructor
+    · intro e e' h
+      exact f.edge_injective (congrArg Subtype.val h)
+    · intro d
+      rcases d.property with ⟨e, he⟩
+      refine ⟨e, ?_⟩
+      exact Subtype.ext he)
+
+/-- If the source has no isolated points, its vertices identify with the
+support of the selected host edges. -/
+noncomputable def edgeImageVertexEquiv (f : F.Embedding H)
+    (hF : F.HasNoIsolatedPoints) : V ≃ H.EdgeSupport f.edgeImage := by
+  let phi : V → H.EdgeSupport f.edgeImage := fun x =>
+    ⟨f.vertex x, by
+      rcases F.not_isolated_iff_exists_inc.mp (hF x) with ⟨e, hxe⟩
+      change ∃ d : D, d ∈ f.edgeImage ∧ H.Inc (f.vertex x) d
+      refine ⟨f.edge e, ⟨e, rfl⟩, ?_⟩
+      have hset := Set.ext_iff.mp (f.map_edge e) (f.vertex x)
+      exact hset.mp ⟨x, hxe, rfl⟩⟩
+  apply Equiv.ofBijective phi
+  constructor
+  · intro x y hxy
+    exact f.vertex.injective (congrArg Subtype.val hxy)
+  · intro y
+    rcases y.property with ⟨d, ⟨e, rfl⟩, hye⟩
+    have hset := Set.ext_iff.mp (f.map_edge e) y.1
+    rcases hset.mpr hye with ⟨x, hxe, hxy⟩
+    refine ⟨x, ?_⟩
+    exact Subtype.ext hxy
+
+/-- An embedding is an isomorphism onto the exact restriction to its selected
+host edges, once isolated source vertices have been removed. -/
+noncomputable def imageEdgeRestrictionIso (f : F.Embedding H)
+    (hF : F.HasNoIsolatedPoints) :
+    Iso F (H.edgeRestriction f.edgeImage) where
+  vertexEquiv := f.edgeImageVertexEquiv hF
+  edgeEquiv := f.edgeImageEdgeEquiv
+  map_inc_iff := by
+    intro x e
+    change F.Inc x e ↔ H.Inc (f.vertex x) (f.edge e)
+    have hset := Set.ext_iff.mp (f.map_edge e) (f.vertex x)
+    constructor
+    · intro hxe
+      exact hset.mp ⟨x, hxe, rfl⟩
+    · intro hxe
+      rcases hset.mpr hxe with ⟨y, hye, hyx⟩
+      have hyx' : y = x := f.vertex.injective hyx
+      simpa [hyx'] using hye
+
+/-- Exact edge restrictions preserve linearity along embeddings. -/
+theorem imageEdgeRestriction_linear (f : F.Embedding H)
+    (hF : F.HasNoIsolatedPoints) (hlinear : F.Linear) :
+    (H.edgeRestriction f.edgeImage).Linear :=
+  (f.imageEdgeRestrictionIso hF).linear_iff.mp hlinear
+
+end Embedding
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_EmbeddingEdgeRestriction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.EmbeddingEdgeRestriction
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.EmbeddingLinearity
+Source: Erdos593/TripleSystem/EmbeddingLinearity.lean
+Normalized SHA-256: a0620820d49404bd9c11b776637cd4b0073bd90b4334310522dcb8d80d379858
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_EmbeddingLinearity
+
+/-!
+# Linearity reflected by triple-system embeddings
+
+Although triple-system embeddings are non-induced, they carry each source
+edge exactly onto a selected target edge.  Consequently target linearity
+reflects back to the source.
+-/
+
+namespace Erdos593
+
+universe u v w x
+
+namespace TripleSystem
+
+namespace Embedding
+
+variable {V : Type u} {E : Type v} {W : Type w} {D : Type x}
+variable {F : TripleSystem V E} {H : TripleSystem W D}
+
+/-- A non-induced embedding into a linear target has a linear source. -/
+theorem source_linear_of_target_linear
+    (f : F.Embedding H) (hlinear : H.Linear) : F.Linear := by
+  intro e d x y hed hxe hxd hye hyd
+  apply f.vertex.injective
+  apply hlinear (f.edge_injective.ne hed)
+  · have hset := Set.ext_iff.mp (f.map_edge e) (f.vertex x)
+    exact hset.mp ⟨x, hxe, rfl⟩
+  · have hset := Set.ext_iff.mp (f.map_edge d) (f.vertex x)
+    exact hset.mp ⟨x, hxd, rfl⟩
+  · have hset := Set.ext_iff.mp (f.map_edge e) (f.vertex y)
+    exact hset.mp ⟨y, hye, rfl⟩
+  · have hset := Set.ext_iff.mp (f.map_edge d) (f.vertex y)
+    exact hset.mp ⟨y, hyd, rfl⟩
+
+/-- It is enough for the exact restriction to the selected image edges to be
+linear, provided the source has no isolated vertices. -/
+theorem source_linear_of_imageEdgeRestriction_linear
+    (f : F.Embedding H) (hF : F.HasNoIsolatedPoints)
+    (hlinear : (H.edgeRestriction f.edgeImage).Linear) : F.Linear :=
+  (f.imageEdgeRestrictionIso hF).linear_iff.mpr hlinear
+end Embedding
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_EmbeddingLinearity
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.EmbeddingLinearity
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.Expansion
 Source: Erdos593/TripleSystem/Expansion.lean
 Normalized SHA-256: 8eedb4203064487022b53cda4fcc165cc6919c6aa325ce2e27aaea0737685387
@@ -3185,124 +3925,6 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_Expansion
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.Expansion
-========================================================================== -/
-
-/- ==========================================================================
-BEGIN SOURCE MODULE: Erdos593.TripleSystem.Levi
-Source: Erdos593/TripleSystem/Levi.lean
-Normalized SHA-256: a666b40f90c05232f5ce5e80148adfbaf3583e70157254cfd0e198cee3e1dd7b
-========================================================================== -/
-section Erdos593SelfContained_Module_Erdos593_TripleSystem_Levi
-
-/-!
-# Levi graphs
-
-The Levi graph of a triple system has point-nodes on the left and hyperedge-nodes
-on the right, with adjacency given by incidence.
--/
-
-namespace Erdos593
-
-universe u v
-
-namespace TripleSystem
-
-variable {V : Type u} {E : Type v} (F : TripleSystem V E)
-
-/-- Directed point-to-edge incidence before `SimpleGraph.fromRel` symmetrizes it. -/
-def incidenceRel : V ⊕ E → V ⊕ E → Prop
-  | .inl x, .inr e => F.Inc x e
-  | _, _ => False
-
-/-- The bipartite point-edge incidence graph of a triple system. -/
-def levi : _root_.SimpleGraph (V ⊕ E) :=
-  _root_.SimpleGraph.fromRel F.incidenceRel
-
-@[simp]
-theorem levi_adj_point_edge {x : V} {e : E} :
-    F.levi.Adj (.inl x) (.inr e) ↔ F.Inc x e := by
-  simp [levi, incidenceRel]
-
-@[simp]
-theorem levi_adj_edge_point {x : V} {e : E} :
-    F.levi.Adj (.inr e) (.inl x) ↔ F.Inc x e := by
-  simp [levi, incidenceRel]
-
-@[simp]
-theorem not_levi_adj_point_point {x y : V} :
-    ¬F.levi.Adj (.inl x) (.inl y) := by
-  simp [levi, incidenceRel]
-
-@[simp]
-theorem not_levi_adj_edge_edge {e f : E} :
-    ¬F.levi.Adj (.inr e) (.inr f) := by
-  simp [levi, incidenceRel]
-
-/-- A Levi hyperedge-node has exactly the three point-neighbours incident with
-the corresponding hyperedge. -/
--- ARISTOTLE_TARGET B2
-theorem levi_edge_neighbor_ncard (e : E) :
-    (F.levi.neighborSet (.inr e)).ncard = 3 := by
-  rw [show F.levi.neighborSet (.inr e) =
-    Set.image (fun x : V => Sum.inl x) {x : V | F.Inc x e} by
-      ext x
-      cases x <;> simp +decide]
-  rw [Set.ncard_image_of_injective _ Sum.inl_injective]
-  exact F.edgeSet_ncard e
-
-end TripleSystem
-
-end Erdos593
-
-end Erdos593SelfContained_Module_Erdos593_TripleSystem_Levi
-/- ==========================================================================
-END SOURCE MODULE: Erdos593.TripleSystem.Levi
-========================================================================== -/
-
-/- ==========================================================================
-BEGIN SOURCE MODULE: Erdos593.TripleSystem.Intrinsic
-Source: Erdos593/TripleSystem/Intrinsic.lean
-Normalized SHA-256: 764cf4d904aa0f59607e4d5bfe1eaa3710240051be5446d6e5f6776b54c29356
-========================================================================== -/
-section Erdos593SelfContained_Module_Erdos593_TripleSystem_Intrinsic
-
-/-!
-# Intrinsic structural conditions
-
-The finite structural kernel characterizes the constructive class by linearity,
-a genuine Levi-graph bridge at each hyperedge-node, and even Berge-cycle length.
-A Berge cycle of length `k` is represented by a Levi cycle of length `2 * k`, so
-even Berge length is encoded by divisibility of the Levi-cycle length by four.
--/
-
-namespace Erdos593
-
-universe u v
-
-namespace TripleSystem
-
-variable {V : Type u} {E : Type v} (F : TripleSystem V E)
-
-/-- Every Levi hyperedge-node is incident with an actual bridge edge. -/
-def BridgeAtEveryEdge : Prop :=
-  ∀ e : E, ∃ x : V,
-    s(Sum.inl x, Sum.inr e) ∈ SimpleGraph.bridgeEdges F.levi
-
-/-- Every Berge cycle has even length, expressed on the corresponding Levi cycle. -/
-def EvenBergeCycles : Prop :=
-  ∀ ⦃z : V ⊕ E⦄ (c : F.levi.Walk z z), c.IsCycle → 4 ∣ c.length
-
-/-- The three intrinsic conditions appearing in the finite classification. -/
-def Intrinsic : Prop :=
-  F.Linear ∧ F.BridgeAtEveryEdge ∧ F.EvenBergeCycles
-
-end TripleSystem
-
-end Erdos593
-
-end Erdos593SelfContained_Module_Erdos593_TripleSystem_Intrinsic
-/- ==========================================================================
-END SOURCE MODULE: Erdos593.TripleSystem.Intrinsic
 ========================================================================== -/
 
 /- ==========================================================================
@@ -4535,126 +5157,6 @@ END SOURCE MODULE: Erdos593.TripleSystem.DisjointUnion
 ========================================================================== -/
 
 /- ==========================================================================
-BEGIN SOURCE MODULE: Erdos593.TripleSystem.Isomorph
-Source: Erdos593/TripleSystem/Isomorph.lean
-Normalized SHA-256: 2dc9fd1b84ca7299fff7d6d8c786429f5eb5e1fc7b3899a7dfe90e720599e3cd
-========================================================================== -/
-section Erdos593SelfContained_Module_Erdos593_TripleSystem_Isomorph
-
-/-!
-# Triple-system isomorphisms
-
-An isomorphism of edge-indexed triple systems relabels both the vertices and
-the edge indices by equivalences, and preserves incidence in both directions.
-Relabelling only the vertices would not be sufficient: the edge indices are
-part of the representation used by the Levi graph.
--/
-
-namespace Erdos593
-
-universe u v u' v' u'' v''
-
-namespace TripleSystem
-
-variable {V : Type u} {E : Type v}
-variable {V' : Type u'} {E' : Type v'}
-variable {V'' : Type u''} {E'' : Type v''}
-
-/-- An incidence-preserving relabelling of both vertices and edge indices. -/
-structure Iso (F : TripleSystem V E) (F' : TripleSystem V' E') where
-  /-- The bijective relabelling of vertices. -/
-  vertexEquiv : V ≃ V'
-  /-- The bijective relabelling of edge indices. -/
-  edgeEquiv : E ≃ E'
-  /-- Incidence is preserved and reflected by the two relabellings. -/
-  map_inc_iff : ∀ x e,
-    F.Inc x e ↔ F'.Inc (vertexEquiv x) (edgeEquiv e)
-
-namespace Iso
-
-variable {F : TripleSystem V E}
-variable {F' : TripleSystem V' E'}
-variable {F'' : TripleSystem V'' E''}
-
-/-- The identity relabelling. -/
-def refl (F : TripleSystem V E) : Iso F F where
-  vertexEquiv := Equiv.refl V
-  edgeEquiv := Equiv.refl E
-  map_inc_iff := fun _ _ => Iff.rfl
-
-/-- Reverse an isomorphism by using the inverse vertex and edge relabellings. -/
-def symm (f : Iso F F') : Iso F' F where
-  vertexEquiv := f.vertexEquiv.symm
-  edgeEquiv := f.edgeEquiv.symm
-  map_inc_iff := by
-    intro x e
-    simpa using
-      (f.map_inc_iff (f.vertexEquiv.symm x) (f.edgeEquiv.symm e)).symm
-
-/-- Compose two incidence-preserving relabellings. -/
-def trans (f : Iso F F') (g : Iso F' F'') : Iso F F'' where
-  vertexEquiv := f.vertexEquiv.trans g.vertexEquiv
-  edgeEquiv := f.edgeEquiv.trans g.edgeEquiv
-  map_inc_iff := by
-    intro x e
-    exact (f.map_inc_iff x e).trans
-      (g.map_inc_iff (f.vertexEquiv x) (f.edgeEquiv e))
-
-end Iso
-
-/-- Two edge-indexed triple systems are isomorphic when some simultaneous
-vertex-and-edge relabelling preserves incidence. -/
-def Isomorphic (F : TripleSystem V E) (F' : TripleSystem V' E') : Prop :=
-  Nonempty (Iso F F')
-
-/-- Every triple system is isomorphic to itself. -/
-@[refl]
-theorem isomorphic_refl (F : TripleSystem V E) : Isomorphic F F :=
-  ⟨Iso.refl F⟩
-
-/-- Triple-system isomorphism is symmetric. -/
-theorem Isomorphic.symm {F : TripleSystem V E} {F' : TripleSystem V' E'}
-    (h : Isomorphic F F') : Isomorphic F' F :=
-  h.map Iso.symm
-
-/-- Triple-system isomorphism is transitive, including across different
-vertex and edge-index types. -/
-theorem Isomorphic.trans
-    {F : TripleSystem V E} {F' : TripleSystem V' E'}
-    {F'' : TripleSystem V'' E''}
-    (h : Isomorphic F F') (h' : Isomorphic F' F'') : Isomorphic F F'' := by
-  rcases h with ⟨f⟩
-  rcases h' with ⟨g⟩
-  exact ⟨f.trans g⟩
-
-/-- Reversing both sides does not change whether two systems are isomorphic. -/
-theorem isomorphic_comm {F : TripleSystem V E} {F' : TripleSystem V' E'} :
-    Isomorphic F F' ↔ Isomorphic F' F :=
-  ⟨Isomorphic.symm, Isomorphic.symm⟩
-
-/-- On systems with fixed vertex and edge-index types, isomorphism is an
-equivalence relation. -/
-theorem isomorphic_equivalence :
-    Equivalence (@Isomorphic V E V E) :=
-  ⟨isomorphic_refl, Isomorphic.symm, Isomorphic.trans⟩
-
-/-- The setoid of triple systems modulo simultaneous vertex-and-edge
-relabelling.  This is intentionally a named definition rather than a global
-instance. -/
-def isomorphicSetoid : Setoid (TripleSystem V E) where
-  r := Isomorphic
-  iseqv := isomorphic_equivalence
-
-end TripleSystem
-
-end Erdos593
-
-end Erdos593SelfContained_Module_Erdos593_TripleSystem_Isomorph
-/- ==========================================================================
-END SOURCE MODULE: Erdos593.TripleSystem.Isomorph
-========================================================================== -/
-
-/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.OnePointAmalgamation
 Source: Erdos593/TripleSystem/OnePointAmalgamation.lean
 Normalized SHA-256: fb9c09d0f0f5cb33604f1d1f8eb17f4c3c24d8a61d16579c33531f947935891b
@@ -5129,110 +5631,6 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_Constructive
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.Constructive
-========================================================================== -/
-
-/- ==========================================================================
-BEGIN SOURCE MODULE: Erdos593.TripleSystem.EdgeRestriction
-Source: Erdos593/TripleSystem/EdgeRestriction.lean
-Normalized SHA-256: 0435e5f79927a45b5ae21b597f2f910d122eac6c58e2fcf928e3e8b9d8f6bd09
-========================================================================== -/
-section Erdos593SelfContained_Module_Erdos593_TripleSystem_EdgeRestriction
-
-/-!
-# Edge restrictions
-
-For reconstruction, a set of source hyperedges determines an exact subsystem
-on the union of their incident vertices.  The canonical embedding records this
-subsystem as a non-induced copy in the ambient triple system.
--/
-
-namespace Erdos593
-
-universe u v
-
-namespace TripleSystem
-
-variable {V : Type u} {E : Type v} (F : TripleSystem V E)
-
-/-- The set of points lying on at least one edge whose index belongs to `S`. -/
-def edgeSupportSet (S : Set E) : Set V :=
-  {x | ∃ e : E, e ∈ S ∧ F.Inc x e}
-
-/-- The point support of a finite family of triple edges is finite. -/
-theorem edgeSupportSet_finite {S : Set E} (hS : S.Finite) :
-    (F.edgeSupportSet S).Finite := by
-  induction S, hS using Set.Finite.induction_on with
-  | empty =>
-      simp [edgeSupportSet]
-  | insert hnotmem hfinite ih =>
-      rename_i e S
-      rw [show F.edgeSupportSet (insert e S) =
-        {x : V | F.Inc x e} ∪ F.edgeSupportSet S by
-          ext x
-          simp [edgeSupportSet]]
-      exact (Set.finite_of_ncard_ne_zero (by
-        rw [F.edge_ncard e]
-        decide)).union ih
-
-/-- The type of points supported by an edge-index set. -/
-abbrev EdgeSupport (S : Set E) := F.edgeSupportSet S
-
-/-- Restrict to the edges indexed by `S`, retaining exactly their incident
-points. -/
-def edgeRestriction (S : Set E) : TripleSystem (F.EdgeSupport S) S where
-  Inc x e := F.Inc x.1 e.1
-  edge_ncard := by
-    intro e
-    change Set.ncard {x : F.EdgeSupport S |
-      (x : V) ∈ {y : V | F.Inc y e.1}} = 3
-    rw [Set.ncard_subtype]
-    have hsubset : {x : V | F.Inc x e.1} ⊆
-        F.edgeSupportSet S := by
-      intro x hx
-      exact ⟨e.1, e.2, hx⟩
-    change Set.ncard ({x : V | F.Inc x e.1} ∩ F.edgeSupportSet S) = 3
-    rw [Set.inter_eq_left.mpr hsubset]
-    exact F.edge_ncard e.1
-  simple := by
-    intro e d h
-    apply Subtype.ext
-    apply F.simple
-    ext x
-    constructor
-    · intro hxe
-      let x' : F.EdgeSupport S := ⟨x, e.1, e.2, hxe⟩
-      have hx := Set.ext_iff.mp h x'
-      exact hx.mp hxe
-    · intro hxd
-      let x' : F.EdgeSupport S := ⟨x, d.1, d.2, hxd⟩
-      have hx := Set.ext_iff.mp h x'
-      exact hx.mpr hxd
-
-@[simp]
-theorem edgeRestriction_inc (S : Set E) (x : F.EdgeSupport S) (e : S) :
-    (F.edgeRestriction S).Inc x e ↔ F.Inc x.1 e.1 :=
-  Iff.rfl
-
-/-- The canonical embedding of an edge restriction into the ambient system. -/
-def edgeRestrictionEmbedding (S : Set E) :
-    (F.edgeRestriction S).Embedding F where
-  vertex := ⟨Subtype.val, Subtype.val_injective⟩
-  edge := Subtype.val
-  map_edge := by
-    intro e
-    ext x
-    constructor
-    · rintro ⟨y, hy, rfl⟩
-      exact hy
-    · intro hx
-      exact ⟨⟨x, e.1, e.2, hx⟩, hx, rfl⟩
-
-end TripleSystem
-end Erdos593
-
-end Erdos593SelfContained_Module_Erdos593_TripleSystem_EdgeRestriction
-/- ==========================================================================
-END SOURCE MODULE: Erdos593.TripleSystem.EdgeRestriction
 ========================================================================== -/
 
 /- ==========================================================================
@@ -5988,139 +6386,6 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_ForwardExpansion
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.ForwardExpansion
-========================================================================== -/
-
-/- ==========================================================================
-BEGIN SOURCE MODULE: Erdos593.TripleSystem.IsomorphIntrinsic
-Source: Erdos593/TripleSystem/IsomorphIntrinsic.lean
-Normalized SHA-256: caaff78364a977f09204b8854bbdb65f21c35a9e511d4479c78fc690c784f4fa
-========================================================================== -/
-section Erdos593SelfContained_Module_Erdos593_TripleSystem_IsomorphIntrinsic
-
-/-!
-# Isomorphism invariance of the intrinsic conditions
-
-The finite reconstruction is naturally obtained only up to simultaneous
-vertex and edge relabelling.  This file packages the corresponding Levi-graph
-isomorphism and proves that each intrinsic condition is invariant.
--/
-
-namespace Erdos593
-
-universe u v u' v'
-
-namespace TripleSystem
-namespace Iso
-
-variable {V : Type u} {E : Type v}
-variable {V' : Type u'} {E' : Type v'}
-variable {F : TripleSystem V E} {F' : TripleSystem V' E'}
-
-/-- A triple-system isomorphism induces the canonical isomorphism of Levi
-graphs, with point-nodes sent to point-nodes and edge-nodes to edge-nodes. -/
--- ARISTOTLE_ISO_TARGET I1
-def leviIso (f : Iso F F') : F.levi ≃g F'.levi where
-  toEquiv := Equiv.sumCongr f.vertexEquiv f.edgeEquiv
-  map_rel_iff' := by
-    rintro (x | e) (y | d) <;> simp [f.map_inc_iff]
-
-/-- Linearity is invariant under simultaneous vertex and edge relabelling. -/
--- ARISTOTLE_ISO_TARGET I2
-theorem linear_iff (f : Iso F F') : F.Linear ↔ F'.Linear := by
-  constructor
-  · intro h e' d' x' y' hed hx_e hx_d hy_e hy_d
-    let e := f.edgeEquiv.symm e'
-    let d := f.edgeEquiv.symm d'
-    let x := f.vertexEquiv.symm x'
-    let y := f.vertexEquiv.symm y'
-    have hed' : e ≠ d := by
-      intro heq
-      apply hed
-      simpa [e, d] using congrArg f.edgeEquiv heq
-    have hxy : x = y := h hed'
-      ((f.map_inc_iff x e).mpr (by simpa [x, e] using hx_e))
-      ((f.map_inc_iff x d).mpr (by simpa [x, d] using hx_d))
-      ((f.map_inc_iff y e).mpr (by simpa [y, e] using hy_e))
-      ((f.map_inc_iff y d).mpr (by simpa [y, d] using hy_d))
-    simpa [x, y] using congrArg f.vertexEquiv hxy
-  · intro h e d x y hed hx_e hx_d hy_e hy_d
-    have hed' : f.edgeEquiv e ≠ f.edgeEquiv d := f.edgeEquiv.injective.ne hed
-    exact f.vertexEquiv.injective <| h hed'
-      ((f.map_inc_iff x e).mp hx_e) ((f.map_inc_iff x d).mp hx_d)
-      ((f.map_inc_iff y e).mp hy_e) ((f.map_inc_iff y d).mp hy_d)
-
-private theorem isBridge_iff_of_iso {A B : Type*}
-    {P : _root_.SimpleGraph A} {Q : _root_.SimpleGraph B}
-    (g : P ≃g Q) (a b : A) :
-    P.IsBridge s(a, b) ↔ Q.IsBridge s(g a, g b) := by
-  let gd : P.deleteEdges {s(a, b)} ≃g
-      Q.deleteEdges {s(g a, g b)} :=
-    { toEquiv := g.toEquiv
-      map_rel_iff' := by
-        intro x y
-        simp [g.map_adj_iff] }
-  change (¬(P.deleteEdges {s(a, b)}).Reachable a b) ↔
-    ¬(Q.deleteEdges {s(g a, g b)}).Reachable (g a) (g b)
-  exact not_congr gd.reachable_iff.symm
-
-/-- The incident-Levi-bridge condition is invariant under isomorphism. -/
--- ARISTOTLE_ISO_TARGET I3
-theorem bridgeAtEveryEdge_iff (f : Iso F F') :
-    F.BridgeAtEveryEdge ↔ F'.BridgeAtEveryEdge := by
-  let g := leviIso f
-  constructor
-  · intro h e'
-    obtain ⟨x, hx⟩ := h (f.edgeEquiv.symm e')
-    refine ⟨f.vertexEquiv x, ?_⟩
-    rcases hx with ⟨hadj, hbridge⟩
-    constructor
-    · simpa [g, leviIso] using g.map_mem_edgeSet_iff.mpr hadj
-    · simpa [g, leviIso] using
-        (isBridge_iff_of_iso g (Sum.inl x)
-          (Sum.inr (f.edgeEquiv.symm e'))).mp hbridge
-  · intro h e
-    obtain ⟨x', hx⟩ := h (f.edgeEquiv e)
-    refine ⟨f.vertexEquiv.symm x', ?_⟩
-    rcases hx with ⟨hadj, hbridge⟩
-    constructor
-    · have hm := g.symm.map_mem_edgeSet_iff.mpr hadj
-      simpa [g, leviIso] using hm
-    · have hb := (isBridge_iff_of_iso g.symm (Sum.inl x')
-          (Sum.inr (f.edgeEquiv e))).mp hbridge
-      simpa [g, leviIso] using hb
-
-/-- Divisibility by four of all Levi-cycle lengths is invariant under
-isomorphism. -/
--- ARISTOTLE_ISO_TARGET I4
-theorem evenBergeCycles_iff (f : Iso F F') :
-    F.EvenBergeCycles ↔ F'.EvenBergeCycles := by
-  let g := leviIso f
-  constructor
-  · intro h z c hc
-    let d := c.map g.symm.toHom
-    have hd : d.IsCycle := hc.map g.symm.injective
-    have hdiv := h d hd
-    simpa [d, _root_.SimpleGraph.Walk.length_map] using hdiv
-  · intro h z c hc
-    let d := c.map g.toHom
-    have hd : d.IsCycle := hc.map g.injective
-    have hdiv := h d hd
-    simpa [d, _root_.SimpleGraph.Walk.length_map] using hdiv
-
-/-- The full intrinsic predicate is invariant under triple-system
-isomorphism. -/
--- ARISTOTLE_ISO_TARGET I5
-theorem intrinsic_iff (f : Iso F F') : F.Intrinsic ↔ F'.Intrinsic := by
-  simp only [Intrinsic, linear_iff f, bridgeAtEveryEdge_iff f,
-    evenBergeCycles_iff f]
-
-end Iso
-end TripleSystem
-end Erdos593
-
-end Erdos593SelfContained_Module_Erdos593_TripleSystem_IsomorphIntrinsic
-/- ==========================================================================
-END SOURCE MODULE: Erdos593.TripleSystem.IsomorphIntrinsic
 ========================================================================== -/
 
 /- ==========================================================================
@@ -7011,114 +7276,6 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_DegenerateBridgeBlock
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.DegenerateBridgeBlock
-========================================================================== -/
-
-/- ==========================================================================
-BEGIN SOURCE MODULE: Erdos593.TripleSystem.Isolated
-Source: Erdos593/TripleSystem/Isolated.lean
-Normalized SHA-256: b6b14641cb9cf0951ff7564cbacc6ed641fbe550ef9279d8189885d2dfd3cae2
-========================================================================== -/
-section Erdos593SelfContained_Module_Erdos593_TripleSystem_Isolated
-
-/-!
-# Isolated-point reduction
-
-The isolated-point reduction keeps the edge-index type unchanged and restricts
-the vertex type to points incident with at least one edge.  Since every point of
-an edge is non-isolated, this restriction preserves every edge, its cardinality,
-and simplicity.
--/
-
-namespace Erdos593
-
-universe u v
-
-namespace TripleSystem
-
-variable {V : Type u} {E : Type v} (F : TripleSystem V E)
-
-/-- A triple system has no isolated points when every point lies on an edge. -/
-def HasNoIsolatedPoints : Prop :=
-  ∀ x, ¬F.IsIsolated x
-
-/-- Any point incident with an edge is non-isolated. -/
-theorem not_isolated_of_inc {x : V} {e : E} (hxe : F.Inc x e) :
-    ¬F.IsIsolated x := by
-  intro hx
-  exact hx e hxe
-
-/-- Classically, being non-isolated is equivalent to lying on some edge. -/
-theorem not_isolated_iff_exists_inc {x : V} :
-    ¬F.IsIsolated x ↔ ∃ e, F.Inc x e := by
-  classical
-  simp [IsIsolated]
-
-/-- The type of non-isolated points of `F`. -/
-abbrev NonIsolatedPoint :=
-  {x : V // ¬F.IsIsolated x}
-
-/-- Delete all isolated points while retaining the original edge indices. -/
-def isolatedReduction : TripleSystem F.NonIsolatedPoint E where
-  Inc x e := F.Inc x.1 e
-  edge_ncard := by
-    intro e
-    change Set.ncard {x : F.NonIsolatedPoint |
-      (x : V) ∈ {y : V | F.Inc y e}} = 3
-    rw [Set.ncard_subtype]
-    have hsubset : {x : V | F.Inc x e} ⊆ {x : V | ¬F.IsIsolated x} := by
-      intro x hx
-      exact F.not_isolated_of_inc hx
-    rw [Set.inter_eq_left.mpr hsubset]
-    exact F.edge_ncard e
-  simple := by
-    intro e f hef
-    apply F.simple
-    ext x
-    constructor
-    · intro hxe
-      let x' : F.NonIsolatedPoint := ⟨x, F.not_isolated_of_inc hxe⟩
-      have hiff := Set.ext_iff.mp hef x'
-      exact hiff.mp hxe
-    · intro hxf
-      let x' : F.NonIsolatedPoint := ⟨x, F.not_isolated_of_inc hxf⟩
-      have hiff := Set.ext_iff.mp hef x'
-      exact hiff.mpr hxf
-
-@[simp]
-theorem isolatedReduction_inc {x : F.NonIsolatedPoint} {e : E} :
-    F.isolatedReduction.Inc x e ↔ F.Inc x.1 e :=
-  Iff.rfl
-
-/-- Each reduced edge still has exactly three points. -/
-theorem isolatedReduction_edge_ncard (e : E) :
-    Set.ncard {x : F.NonIsolatedPoint | F.isolatedReduction.Inc x e} = 3 :=
-  F.isolatedReduction.edge_ncard e
-
-/-- Distinct edge indices remain distinct after isolated points are deleted. -/
-theorem isolatedReduction_simple :
-    Function.Injective (fun e => {x | F.isolatedReduction.Inc x e}) :=
-  F.isolatedReduction.simple
-
-/-- Deleting isolated points preserves linearity. -/
-theorem isolatedReduction_linear (hlinear : F.Linear) :
-    F.isolatedReduction.Linear := by
-  intro e f x y hef hxe hxf hye hyf
-  apply Subtype.ext
-  exact hlinear hef hxe hxf hye hyf
-
-/-- The isolated-point reduction has no isolated points. -/
-theorem isolatedReduction_hasNoIsolatedPoints :
-    F.isolatedReduction.HasNoIsolatedPoints := by
-  intro x hx
-  exact x.property hx
-
-end TripleSystem
-
-end Erdos593
-
-end Erdos593SelfContained_Module_Erdos593_TripleSystem_Isolated
-/- ==========================================================================
-END SOURCE MODULE: Erdos593.TripleSystem.Isolated
 ========================================================================== -/
 
 /- ==========================================================================
@@ -8310,105 +8467,6 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_BridgeSelector
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.BridgeSelector
-========================================================================== -/
-
-/- ==========================================================================
-BEGIN SOURCE MODULE: Erdos593.TripleSystem.EmbeddingEdgeRestriction
-Source: Erdos593/TripleSystem/EmbeddingEdgeRestriction.lean
-Normalized SHA-256: 803f764f5c2c6fd4598be6095ed8db2295e06f34c1c1e81f1956afa65b4d2049
-========================================================================== -/
-section Erdos593SelfContained_Module_Erdos593_TripleSystem_EmbeddingEdgeRestriction
-
-/-!
-# Exact edge restrictions of embeddings
-
-An embedding need not be induced, but it is an isomorphism onto the
-restriction formed by the host-edge indices it explicitly selects, provided
-the source has no isolated vertices.  This is the first exact bridge from a
-finite linear source to a finite linear host-edge restriction.
--/
-
-namespace Erdos593
-
-universe u v w x
-
-namespace TripleSystem
-
-namespace Embedding
-
-variable {V : Type u} {E : Type v} {W : Type w} {D : Type x}
-variable {F : TripleSystem V E} {H : TripleSystem W D}
-
-/-- The host edge indices selected by an embedding. -/
-def edgeImage (f : F.Embedding H) : Set D := Set.range f.edge
-
-/-- The embedding identifies the source edge-index type with its image. -/
-noncomputable def edgeImageEdgeEquiv (f : F.Embedding H) : E ≃ f.edgeImage :=
-  Equiv.ofBijective (fun e => ⟨f.edge e, ⟨e, rfl⟩⟩) (by
-    constructor
-    · intro e e' h
-      exact f.edge_injective (congrArg Subtype.val h)
-    · intro d
-      rcases d.property with ⟨e, he⟩
-      refine ⟨e, ?_⟩
-      exact Subtype.ext he)
-
-/-- If the source has no isolated points, its vertices identify with the
-support of the selected host edges. -/
-noncomputable def edgeImageVertexEquiv (f : F.Embedding H)
-    (hF : F.HasNoIsolatedPoints) : V ≃ H.EdgeSupport f.edgeImage := by
-  let phi : V → H.EdgeSupport f.edgeImage := fun x =>
-    ⟨f.vertex x, by
-      rcases F.not_isolated_iff_exists_inc.mp (hF x) with ⟨e, hxe⟩
-      change ∃ d : D, d ∈ f.edgeImage ∧ H.Inc (f.vertex x) d
-      refine ⟨f.edge e, ⟨e, rfl⟩, ?_⟩
-      have hset := Set.ext_iff.mp (f.map_edge e) (f.vertex x)
-      exact hset.mp ⟨x, hxe, rfl⟩⟩
-  apply Equiv.ofBijective phi
-  constructor
-  · intro x y hxy
-    exact f.vertex.injective (congrArg Subtype.val hxy)
-  · intro y
-    rcases y.property with ⟨d, ⟨e, rfl⟩, hye⟩
-    have hset := Set.ext_iff.mp (f.map_edge e) y.1
-    rcases hset.mpr hye with ⟨x, hxe, hxy⟩
-    refine ⟨x, ?_⟩
-    exact Subtype.ext hxy
-
-/-- An embedding is an isomorphism onto the exact restriction to its selected
-host edges, once isolated source vertices have been removed. -/
-noncomputable def imageEdgeRestrictionIso (f : F.Embedding H)
-    (hF : F.HasNoIsolatedPoints) :
-    Iso F (H.edgeRestriction f.edgeImage) where
-  vertexEquiv := f.edgeImageVertexEquiv hF
-  edgeEquiv := f.edgeImageEdgeEquiv
-  map_inc_iff := by
-    intro x e
-    change F.Inc x e ↔ H.Inc (f.vertex x) (f.edge e)
-    have hset := Set.ext_iff.mp (f.map_edge e) (f.vertex x)
-    constructor
-    · intro hxe
-      exact hset.mp ⟨x, hxe, rfl⟩
-    · intro hxe
-      rcases hset.mpr hxe with ⟨y, hye, hyx⟩
-      have hyx' : y = x := f.vertex.injective hyx
-      simpa [hyx'] using hye
-
-/-- Exact edge restrictions preserve linearity along embeddings. -/
-theorem imageEdgeRestriction_linear (f : F.Embedding H)
-    (hF : F.HasNoIsolatedPoints) (hlinear : F.Linear) :
-    (H.edgeRestriction f.edgeImage).Linear :=
-  (f.imageEdgeRestrictionIso hF).linear_iff.mp hlinear
-
-end Embedding
-
-end TripleSystem
-
-end Erdos593
-
-end Erdos593SelfContained_Module_Erdos593_TripleSystem_EmbeddingEdgeRestriction
-/- ==========================================================================
-END SOURCE MODULE: Erdos593.TripleSystem.EmbeddingEdgeRestriction
 ========================================================================== -/
 
 /- ==========================================================================
@@ -10243,6 +10301,50 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_HighPairObligatory
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.HighPairObligatory
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.NonlinearObstruction
+Source: Erdos593/TripleSystem/NonlinearObstruction.lean
+Normalized SHA-256: 5ff8e193a9c0edcca6cf09998c1a717dc3af46dd61f572eba95d22d5ba56657e
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_NonlinearObstruction
+
+/-!
+# Nonlinearity obstruction to obligatoriness
+
+This is a generic negative-host endpoint.  It says that a non-linear source
+cannot be obligatory whenever an uncountably chromatic linear host in the
+ambient universes is available.  Constructing such a host is intentionally a
+separate Erdős--Rado task.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v} {W : Type u} {D : Type v}
+variable {F : TripleSystem V E} {H : TripleSystem W D}
+
+/-- A non-linear source fails to be obligatory in the presence of a linear
+host of uncountable chromatic cardinality. -/
+theorem not_isObligatory_of_not_linear_of_linear_highChromatic
+    [DecidableEq W]
+    (hnotlinear : ¬ F.Linear) (hHlinear : H.Linear)
+    (hchi : Cardinal.aleph0 < H.chromaticCardinal) : ¬ F.IsObligatory := by
+  intro hF
+  rcases hF W D H hchi with ⟨f⟩
+  exact hnotlinear (f.source_linear_of_target_linear hHlinear)
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_NonlinearObstruction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.NonlinearObstruction
 ========================================================================== -/
 
 /- ==========================================================================
@@ -18553,7 +18655,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 46bb50321330c6e367b547edacabc2e87c35230424acccb00e13ea0a617158b0
+Normalized SHA-256: 531276f5cae2513c02626baec34546768998bfef3b433e6a47da839dd0e9dcd0
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

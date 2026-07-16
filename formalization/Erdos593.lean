@@ -17,6 +17,7 @@ import Erdos593.Graph.RainbowBipartite
 import Erdos593.Graph.RainbowPositiveSize
 import Erdos593.Graph.RootedTree
 import Erdos593.TripleSystem.Embedding
+import Erdos593.TripleSystem.EmbeddingLinearity
 import Erdos593.TripleSystem.Expansion
 import Erdos593.TripleSystem.BridgeBlocks
 import Erdos593.TripleSystem.BridgeBlockContraction
@@ -51,6 +52,7 @@ import Erdos593.TripleSystem.IsomorphIntrinsic
 import Erdos593.TripleSystem.OnePointAmalgamation
 import Erdos593.TripleSystem.OnePointAmalgamationIntrinsic
 import Erdos593.TripleSystem.Obligatory
+import Erdos593.TripleSystem.NonlinearObstruction
 import Erdos593.TripleSystem.ObligatoryAtoms
 import Erdos593.TripleSystem.ObligatoryDisjointUnion
 import Erdos593.TripleSystem.ObligatoryIsolatedReduction

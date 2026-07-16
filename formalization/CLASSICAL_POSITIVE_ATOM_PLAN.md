@@ -484,6 +484,62 @@ Berge-cycle/shift-graph host. Keep the Erdos--Rado nonlinearity route separate.
 No negative-host task may be marked complete merely because the conditional
 incidence endpoint exists.
 
+### N18 -- generic nonlinearity endpoint before the Erdős--Rado host campaign
+
+Keep the Erdos--Rado nonlinearity route separate from the sequence-lift
+missing-bridge and odd-Berge routes.  The local reusable package is now:
+
+~~~lean
+Embedding.source_linear_of_target_linear
+    (f : F.Embedding H) (hlinear : H.Linear) : F.Linear
+
+Embedding.source_linear_of_imageEdgeRestriction_linear
+    (f : F.Embedding H) (hF : F.HasNoIsolatedPoints)
+    (hlinear : (H.edgeRestriction f.edgeImage).Linear) : F.Linear
+
+theorem not_isObligatory_of_not_linear_of_linear_highChromatic
+    [DecidableEq W]
+    (hnotlinear : ¬ F.Linear) (hHlinear : H.Linear)
+    (hchi : Cardinal.aleph0 < H.chromaticCardinal) : ¬ F.IsObligatory
+~~~
+
+The first two declarations live in `EmbeddingLinearity.lean`; the third lives
+in `NonlinearObstruction.lean`.  The proof of the endpoint must use only the
+obligatory appearance in the supplied host and reflection of linearity through
+that embedding.
+
+**Hard boundary.** This endpoint is conditional.  It does not claim that the
+sequence lift is linear, and it does not construct an uncountably chromatic
+linear host.  Formalizing that Erdős--Rado host is the next separate campaign;
+only after its exact host theorem is checked may it instantiate this endpoint.
+### N19 -- concrete `TriangleHost κ` campaign (Terra Max handoff)
+
+The intended nonlinearity witness is the documented Erdős--Rado triangle host:
+vertices are 2-subsets of `κ`, edges are 3-subsets of `κ`, and a vertex is
+incident to an edge exactly when it is contained in it.  Terra Max must keep
+this campaign in three separately checked layers.
+
+1. **Host definition and universes.** Define `TriangleHost κ` with an explicit
+   same-universe representation of 2-subsets and 3-subsets (for example,
+   `Finset κ` with the indicated cardinality predicates). Do not silently use
+   a host whose edge type lives in the wrong universe for `IsObligatory`; add a
+   deliberate lifting layer only if it is proved necessary.
+2. **Finite linearity layer.** Prove `triangleHost_linear`. The core finite
+   obligation is: two 3-element finite sets that contain two distinct common
+   2-element finite subsets are equal. This layer also owns the cardinality-3
+   incidence proof and simple-edge injectivity facts.
+3. **Ramsey/chromatic layer.** State the exact Erdős--Rado partition statement
+   needed to turn every countable proper coloring of 2-subsets into a
+   monochromatic triangle, then prove
+   `Cardinal.aleph0 < (TriangleHost κ).chromaticCardinal` using the existing
+   chromatic-cardinal pattern in `SequenceLiftChromatic.lean`. The external
+   partition theorem is a named proof obligation, not an axiom or a claimed
+   consequence of the host definition.
+
+Only after all three layers are checked may the result instantiate
+`not_isObligatory_of_not_linear_of_linear_highChromatic`. No tracked Lean
+Erdős--Rado or partition-calculus theorem currently supplies layer 3; this is
+the principal remaining nonlinearity branch.
 ### Aristotle call schedule for Terra Max
 
 Terra Max should keep local proof search moving while Aristotle runs. It must

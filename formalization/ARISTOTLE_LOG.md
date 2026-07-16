@@ -1185,9 +1185,16 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   build, `#print axioms`, and a prohibited-construct audit. The prompt forbids
   `sorry`, `admit`, new axioms, `unsafe`, `native_decide`, `implemented_by`,
   and resource-limit overrides.
-- Remote status at recording: `IN_PROGRESS`. No remote result has been
-  adopted. A local independently authored version is being compiled and will
-  be accepted only after the normal source, build, axiom, and CI audits.
+- Remote result: `COMPLETE` on 2026-07-16. Aristotle reported creating only
+  the requested module and the exact direct contradiction proof; its focused
+  warnings-as-errors compilation passed, its axiom report contained only
+  `propext`, `Classical.choice`, and `Quot.sound`, and it reported no
+  prohibited construct.
+- Local disposition: no remote source was merged. Public `main` already
+  contained the independently authored module in commit
+  `fa66819efd7439e6226c02c5f9c2e29cb9389fab`, which was compiled, axiom-audited,
+  and passed GitHub Actions. The remote result is therefore accepted only as
+  an independent proof/API audit and must not overwrite the tracked source.
 ## Record format
 
 For every submission, record:
