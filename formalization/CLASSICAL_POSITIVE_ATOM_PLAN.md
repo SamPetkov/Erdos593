@@ -195,9 +195,411 @@ Expected scope is a medium local formalization task: first establish the
 canonical objects and their APIs, then the isomorphism. Its stop condition
 is the focused strict check, focused build, axiom audit, and an explicit
 review that it did not compare distinct fibres. It must not infer
-bipartiteness or constructibility. Cross-fibre intersection geometry and a
-running assembly are later, separately scoped stages; the concise status
-row is recorded in `FORMALIZATION_MAP.md`.
+bipartiteness or constructibility. This paragraph is now historical:
+subsequent modules completed the cross-fibre and running-assembly stages.
+The current execution handoff is recorded below.
+
+## Next execution section: Terra Max incidence-forest trace campaign
+
+### Executor contract
+
+This section is written as an execution brief for Terra Max. It intentionally
+uses small ordered tasks, exact declarations, and hard stop/go gates so that a
+less context-sensitive model can carry out the Lean work without silently
+strengthening the mathematics. Aristotle is a parallel lemma prover and
+adversarial auditor. It is not the owner of the campaign, and its output is
+never merged without local review.
+
+Work from the public baseline commit
+`f77f2e3e5cce3eb94708b9388574d62725061f02`. At that checkpoint:
+
+1. the classical positive-atom theorem and the constructible-to-obligatory
+   closure are complete;
+2. local base-fibre expansion, running assembly, support-overlap forest
+   ordering, `FiniteLiftGenerated`, and the host-colourable endpoints compile;
+3. `SequenceLiftBaseFiberSupportIncidenceForestOrderBridge.lean` turns
+   explicit acyclicity of the dynamic fibre--support incidence graph into a
+   noduplicated coherent and compatible base-fibre order; and
+4. incidence acyclicity itself is still an explicit hypothesis. It is not a
+   consequence of linearity in the checked repository.
+
+Aristotle request `bc362149-d9ba-4378-a0d0-022ef752bdb7` completed on
+2026-07-16. It independently proved the dynamic incidence leaf package and
+reported the recursive-deletion obstruction, but deliberately did not claim
+the full order. The current `main` bridge is stronger and was checked
+independently. Do not apply Aristotle's whole-file patch over it; retain only
+genuinely new lemmas after a diff and dependency audit.
+
+### Campaign deliverable and acceptance criteria
+
+The immediate deliverable is a checked finite-trace package with two layers:
+
+1. unconditional endpoint wrappers under the already verified explicit
+   incidence-acyclic hypothesis; and
+2. a theorem-validity decision for the candidate implication from finite
+   restricted linearity to incidence acyclicity.
+
+The second layer has two acceptable outcomes:
+
+- a Lean proof of the exact candidate theorem, followed by unconditional
+  finite-generation, constructible, and obligatory endpoints; or
+- a smallest precise counterexample or an exact missing hypothesis, followed
+  by an honestly conditional endpoint and a revised decomposition route.
+
+Do not call this phase complete merely because the wrappers compile. Accept
+the phase only when every public theorem passes focused strict compilation,
+the banned-construct scan, `#print axioms`, deterministic self-contained
+generation, and the corresponding focused GitHub Actions checks.
+
+### Explicit non-goals
+
+This campaign must not:
+
+- reprove or modify the classical positive-atom theorem;
+- assert `Linear -> IsAcyclic` from abstract pairwise support-intersection
+  subsingletonness;
+- confuse a common-apex star with a forbidden incidence cycle;
+- hide incidence acyclicity inside a renamed definition or assumption;
+- claim the arbitrary embedded-source trace theorem before source-image
+  transport is proved; or
+- combine the missing-bridge, odd-Berge-cycle, and Erdos--Rado nonlinearity
+  arguments into one Aristotle request.
+
+### N14 -- package the verified incidence bridge
+
+Create exactly one focused module:
+
+`Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints.lean`
+
+Start with only these imports:
+
+~~~lean
+import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrderBridge
+import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportRunningOrderEndpoints
+import Erdos593.TripleSystem.SequenceLiftFiniteLiftGenerated
+~~~
+
+In namespace `Erdos593.SequenceLift`, with
+`variable {V : Type u} {G : _root_.SimpleGraph V}`, prove these exact public
+declarations:
+
+~~~lean
+theorem edgeRestriction_finiteLiftGenerated_of_linear_of_incidenceAcyclic
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hacyclic : (baseFiberSupportIncidenceGraph S).IsAcyclic) :
+    TripleSystem.FiniteLiftGenerated G ((system G).edgeRestriction S)
+
+theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_incidenceAcyclic
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hacyclic : (baseFiberSupportIncidenceGraph S).IsAcyclic) :
+    TripleSystem.Constructible ((system G).edgeRestriction S)
+
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_incidenceAcyclic
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hacyclic : (baseFiberSupportIncidenceGraph S).IsAcyclic) :
+    ((system G).edgeRestriction S).IsObligatory
+~~~
+
+Use the following proof recipe rather than proof search across the repository:
+
+1. For `FiniteLiftGenerated`, obtain `nodes`, noduplication, base-node cover,
+   and compatibility from
+   `exists_baseFiberAssemblyCompatible_order_of_linear_of_incidenceAcyclic`.
+2. Convert the pointwise base-node cover to the exact edge-set equality with
+   `edgePieceUnion_baseFiber_eq_of_baseNode_mem`.
+3. Apply
+   `edgeRestriction_finiteLiftGenerated_of_linear_of_baseFiberAssembly`.
+4. For the constructible and obligatory wrappers, obtain the coherent order
+   from
+   `exists_baseFiberSupportTailOverlapCoherent_order_of_incidenceAcyclic` and
+   feed it respectively to the existing coherent-base-node-cover endpoints.
+
+Do not unfold the incidence graph or reprove the leaf-order theorem in this
+module. If one of the named declarations is unavailable because of an import,
+add the smallest owner import; do not import an aggregate root as a shortcut.
+
+**N14 go gate:** all three declarations compile with warnings as errors and
+their axiom reports contain only ordinary Mathlib foundations. Only then add
+the module to the focused root imports and CI list.
+
+### N15 -- decide the incidence-cycle theorem before relying on it
+
+The candidate structural theorem is:
+
+~~~lean
+theorem baseFiberSupportIncidenceGraph_isAcyclic_of_finite_linear
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear) :
+    (baseFiberSupportIncidenceGraph S).IsAcyclic
+~~~
+
+This statement is a target to prove or refute, not a fact. Begin with a
+theorem-validity audit outside the endpoint module. Test at least:
+
+- `S = empty` and singleton `S`;
+- several fibres meeting at one common apex, which should give a star and must
+  remain allowed;
+- the smallest alternating cycle with three fibre vertices and three distinct
+  support-point vertices;
+- equal-length distinct base nodes sharing a point;
+- restricted linearity versus global linearity of `system G`;
+- repeated point witnesses and distinct base fibres; and
+- any step that assumes the desired running order while trying to construct
+  it.
+
+Preserve two genuinely different routes until this audit decides between
+them.
+
+#### Route A -- minimum-length branch argument
+
+If the candidate survives the counterexample audit, create
+`SequenceLiftBaseFiberSupportBranchGeometry.lean` and prove only the branch
+lemmas needed by the following argument:
+
+1. Assume a simple cycle in the bipartite incidence graph.
+2. Choose a base-node vertex on the cycle of minimum `Node.length`.
+3. Show that its two neighbouring fibre vertices are distinct proper
+   descendants and that the two intervening support points are distinct.
+4. Show that these two points are distinct apices in the minimum fibre and
+   therefore determine distinct first extension letters.
+5. Along the remainder of the cycle, show that consecutive base nodes sharing
+   a point are comparable and remain in one immediate branch below the
+   minimum node.
+6. Conclude that the remainder cannot connect the two distinct first branches.
+
+Candidate helper obligations, each in the smallest owner module, are:
+
+- shared support makes two active base nodes comparable;
+- equal lengths plus shared support force equal base nodes;
+- strict length inequality makes the common point an apex of the shorter
+  fibre;
+- the longer node extends through the shorter fibre's apex base letter;
+- two distinct shared points at the shorter fibre give distinct outgoing
+  letters, using restricted linearity; and
+- comparable proper descendants preserve their first branch below a fixed
+  ancestor.
+
+It is permitted to delete point-side vertices of incidence degree zero or one
+if that simplifies the cycle API, but first prove that this deletion preserves
+acyclicity. Pairwise support-intersection subsingletonness alone is not an
+acceptable replacement for any branch lemma: an abstract linear set family
+can still contain a six-cycle.
+
+**Route A stop gate:** if any helper requires an unproved statement such as
+"distinct point neighbours give distinct letters", isolate that exact lemma
+and stop. Do not add it as a hypothesis to the advertised theorem without
+renaming and restating the endpoint.
+
+#### Route B -- counterexample or cyclic-block decomposition
+
+If the candidate fails, preserve the finite counterexample as a regression
+artifact or document its exact Lean representation. Then choose the weakest
+truthful replacement:
+
+1. retain the explicit incidence-acyclic sufficient condition from N14; or
+2. decompose the incidence graph into articulation points and cyclic blocks,
+   proving the assembly theorem block by block; or
+3. prove that a cyclic incidence block reflects a specific host or Berge-cycle
+   obstruction and route that obstruction to the later negative-host phase.
+
+Do not replace Route B by a statement equivalent to the original theorem
+under a new name. Record the exact obstruction and which downstream endpoint
+remains conditional.
+
+### N16 -- close the finite trace only after N15
+
+If and only if Route A proves the candidate theorem, add the unconditional
+structural endpoint:
+
+~~~lean
+theorem edgeRestriction_finiteLiftGenerated_of_linear
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear) :
+    TripleSystem.FiniteLiftGenerated G ((system G).edgeRestriction S)
+~~~
+
+It should be a short composition of
+`baseFiberSupportIncidenceGraph_isAcyclic_of_finite_linear` and the N14
+finite-generation wrapper. No colourability assumption belongs in this
+theorem.
+
+In a separate positive endpoint module, and only for `hG : G.Colorable 2`,
+prove:
+
+~~~lean
+theorem edgeRestriction_constructible_of_linear_of_hostColorable
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) :
+    TripleSystem.Constructible ((system G).edgeRestriction S)
+
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) :
+    ((system G).edgeRestriction S).IsObligatory
+~~~
+
+The intended dependency chain is exactly:
+
+~~~text
+finite linear restriction
+  -> FiniteLiftGenerated G
+  -> Constructible                    [G is 2-colourable]
+  -> IsObligatory                     [completed classical positive atom]
+~~~
+
+Use `TripleSystem.FiniteLiftGenerated.constructible_of_hostColorable` and
+`TripleSystem.FiniteLiftGenerated.isObligatory_of_hostColorable`. Do not add a
+new atom premise and do not reopen `PositiveAtomClassical.lean`.
+
+If Route B was selected, do not create these unconditional names. Keep the
+N14 conditional theorems and name any strengthened hypothesis explicitly.
+
+### N17 -- source-image transport, then negative hosts
+
+Treat transport from an arbitrary finite embedded source as a separate module
+after N16. First inspect, rather than duplicate, the APIs in
+`EmbeddingEdgeRestriction.lean` and `FiniteLinearImageTrace.lean`. The intended
+objects are the isolated-reduction embedding, its `edgeImage`, the finiteness
+and linearity of the exact image restriction, and
+`imageEdgeRestrictionIso`. Freeze the exact theorem signature only after this
+API check.
+
+The transport stage must distinguish:
+
+- the source from its isolated reduction;
+- an embedded copy from the exact host-edge restriction on the image; and
+- preservation of `Constructible` or `FiniteLiftGenerated` under the exact
+  isomorphism used.
+
+After source transport is checked, connect it to the two negative-host
+campaigns in separate modules: the missing-bridge host and the odd
+Berge-cycle/shift-graph host. Keep the Erdos--Rado nonlinearity route separate.
+No negative-host task may be marked complete merely because the conditional
+incidence endpoint exists.
+
+### Aristotle call schedule for Terra Max
+
+Terra Max should keep local proof search moving while Aristotle runs. It must
+not wait idly for a request and must not submit duplicate jobs.
+
+#### A0 -- retrieve the completed incidence-order audit
+
+- Request ID: `bc362149-d9ba-4378-a0d0-022ef752bdb7`.
+- Disposition: completed bounded fallback; advisory because `main` now has the
+  stronger bridge.
+- Action: save its report and patch for comparison, record accepted/rejected
+  lemmas in `ARISTOTLE_LOG.md`, and do not overwrite current files.
+
+#### A1 -- N14 endpoint package
+
+Submit the three tightly related N14 declarations as one bounded request from
+the exact public commit SHA. Permit one new endpoint file and at most three
+small local helper lemmas. Require Aristotle to use the named bridge and
+existing endpoint APIs, not unfold the graph construction.
+
+#### A2 -- branch-geometry leaves
+
+After Terra freezes each exact helper signature, submit at most two to five
+closely related branch lemmas per request. Ask for either a compile-checked
+patch or the smallest exact obstruction. Do not submit the whole
+classification theorem.
+
+#### A3 -- forest theorem or counterexample
+
+Give Aristotle the exact N15 candidate and the minimum-length route. State
+that exactly two outcomes are acceptable: a checked proof with all hypotheses
+visible, or a checked finite counterexample with the failed step identified.
+Specifically request audits of cycle alternation, minimum selection,
+equal-length fibres, distinct points versus distinct letters, and branch
+constancy.
+
+#### A4 -- independent adversarial audit
+
+Once Terra has a candidate proof, use a fresh Aristotle request to search for
+circular imports, an unused or hidden hypothesis, and a counterexample. The
+auditor may minimize assumptions but may not silently change the public
+statement.
+
+#### A5 -- source-image transport
+
+Submit source transport only after its exact statement and permitted imports
+are frozen locally. It is a separate request from A3 and A4.
+
+Every Aristotle prompt must contain this package:
+
+~~~text
+Repository/commit: <exact public main SHA>
+Target module: <exact new file>
+Permitted imports: <explicit list>
+Namespace and universes: <verbatim>
+Target theorem statement: <verbatim Lean>
+Permitted helper lemmas: at most 2--5, named or tightly scoped
+Forbidden: sorry, admit, axiom, unsafe, native_decide, implemented_by,
+  theorem weakening, unexplained hypotheses, resource-limit overrides,
+  aggregate imports, and unrelated refactoring
+Deliverables:
+1. compilable Lean patch or source;
+2. dependency and assumption summary;
+3. exact explanation of any changed statement or obstruction;
+4. focused verification command and #print axioms output.
+~~~
+
+For every return, Terra must compare quantifiers and conclusions, inspect new
+assumptions and imports, scan for prohibited constructs, check for circular
+dependencies, and compile under the repository's pinned Lean/mathlib toolchain.
+An Aristotle success badge is not a local proof. Log the request ID, timestamp,
+base SHA, returned files, local repairs, verification output, axiom result, and
+accepted/rejected disposition in `ARISTOTLE_LOG.md`.
+
+### Verification and delivery protocol
+
+Run from `formalization/`. For each new module `<Module>`:
+
+~~~text
+lake env lean -DwarningAsError=true Erdos593/TripleSystem/<Module>.lean
+lake build Erdos593.TripleSystem.<Module>
+git diff --check
+~~~
+
+Also run the repository banned-construct scan on every changed Lean file,
+generate a temporary audit module with `#print axioms` for each new public
+theorem, and run:
+
+~~~text
+python scripts/generate_self_contained.py
+python scripts/generate_self_contained.py --check
+~~~
+
+Never run the repository-wide forbidden `lake build`, `lake build Erdos593`,
+or aggregate Lean checks on `Erdos593.lean` or
+`Erdos593SelfContained.lean`.
+
+Each stage is one reviewable commit. Update root imports and the focused CI
+matrix only after its owner module is strict-clean. Push the audited commit to
+`main`, monitor the resulting GitHub Actions run, and repair the exact failing
+focused command before starting the next stage. Preserve unrelated worktree
+changes.
+
+### Cost and handoff point
+
+- N14 wrappers: about 30--60 minutes, including audit.
+- N15 branch API: about 1--3 hours.
+- N15 cycle theorem or counterexample: about 4--12 hours and likely several
+  Aristotle iterations.
+- N16 endpoints: under one hour after N15 succeeds.
+- N17 source transport: medium, statement to be frozen after the API audit.
+
+Terra Max may execute N14 immediately and open A1 in parallel. It must pause
+the unconditional N16 route at the N15 theorem-validity gate. That pause is
+the next point for a human/Terra Ultra review if neither a proof nor a concrete
+counterexample has emerged.
 
 ## External audit record
 

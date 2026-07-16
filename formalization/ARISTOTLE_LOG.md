@@ -1102,6 +1102,38 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
 - Disposition: the N1 theorem remains planned and unproved locally; remote
   work is a bounded proof attempt rather than evidence for any broader claim.
 
+## O32: dynamic base-fibre incidence-forest audit
+
+- Completed: 2026-07-16 07:49 on the authenticated Aristotle dashboard.
+  The request is `bc362149-d9ba-4378-a0d0-022ef752bdb7`.
+- Exact task boundary: provide a bounded, compile-checked dynamic-pruning
+  incidence-forest leaf lemma and an exact `SequenceLift` bridge, without
+  claiming the full coherent ordering theorem.
+- Returned artifacts:
+  `SequenceLiftBaseFiberSupportIncidenceForestOrder.lean`,
+  `SequenceLiftBaseFiberSupportIncidenceForestOrder.patch`, and
+  `PROOF_DESIGN_REPORT.md`.
+- Reported checked declarations: `SimpleGraph.setFamilyIncidenceGraph`,
+  `SimpleGraph.IsAcyclic.exists_left_leaf_of_right_two_neighbors`,
+  `SequenceLift.baseFiberSupportIncidenceGraph`, and
+  `SequenceLift.exists_activeBaseFiber_leaf_in_dynamic_incidence`. The report
+  explicitly permits common-apex stars with high fibre degree.
+- Reported verification: focused compilation completed successfully (1,592
+  Lake jobs), and the principal theorem axiom reports contain only `propext`,
+  `Classical.choice`, and `Quot.sound`; the report identifies no prohibited
+  construct.
+- Exact remaining work reported by Aristotle: recursively assemble the order
+  over `Q.erase q`, then turn leaf-neighbour uniqueness into equality of
+  nonempty support intersections using
+  `baseFiber_support_inter_subsingleton_of_linear`.
+- Local disposition: advisory and superseded as a whole-file patch. Public
+  `main` at `f77f2e3e5cce3eb94708b9388574d62725061f02` already contains the
+  stronger, independently checked
+  `SequenceLiftBaseFiberSupportIncidenceForestOrderBridge.lean`. No returned
+  source was merged, and Terra must not overwrite that bridge. Individual new
+  lemmas may be considered only after an exact diff, dependency, source-gap,
+  banned-construct, focused-build, and axiom audit.
+
 ## Record format
 
 For every submission, record:
