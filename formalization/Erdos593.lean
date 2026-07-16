@@ -56,6 +56,7 @@ import Erdos593.TripleSystem.NonlinearObstruction
 import Erdos593.TripleSystem.TriangleHostLinearity
 import Erdos593.TripleSystem.TriangleHostRamsey
 import Erdos593.TripleSystem.CardinalPairPartition
+import Erdos593.TripleSystem.ErdosRado.PairTransport
 import Erdos593.TripleSystem.ErdosRadoCarrier
 import Erdos593.TripleSystem.TriangleHostRamseyChromatic
 import Erdos593.TripleSystem.TriangleHostRamseyTransport

@@ -10652,6 +10652,78 @@ END SOURCE MODULE: Erdos593.TripleSystem.CardinalPairPartition
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.PairTransport
+Source: Erdos593/TripleSystem/ErdosRado/PairTransport.lean
+Normalized SHA-256: 2a77c0942cd072d30736b9afeb115b8001abcf30e34dd8258dee37bddba72c79
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_PairTransport
+
+/-!
+# Pair-colouring transport for the Erdos--Rado plan
+
+This module isolates the same-universe reindexing facts used to transport
+pair colourings and homogeneous vertex sets across an equivalence. It makes
+no Erdos--Rado assertion.
+-/
+
+namespace Erdos593
+namespace TripleSystem
+namespace TriangleHost
+
+universe u
+
+/-- Equivalences transport the project's two-element pair faces. -/
+def pairEquiv {α β : Type u} (e : α ≃ β) : Pair α ≃ Pair β :=
+  e.finsetCongr.subtypeEquiv (by
+    intro s
+    simp [Equiv.finsetCongr_apply])
+
+@[simp] theorem coe_pairEquiv {α β : Type u} (e : α ≃ β) (p : Pair α) :
+    ((pairEquiv e p).1 : Set β) = e '' (p.1 : Set α) := by
+  change ((Set.powersetCard.map 2 e.toEmbedding p).1 : Set β) = _
+  exact Set.powersetCard.coe_map 2 e.toEmbedding p
+
+/-- Pull a pair colouring forward along an equivalence. -/
+def transportedColor {α β : Type u} (e : α ≃ β) (c : Pair α → ℕ) : Pair β → ℕ :=
+  fun q => c ((pairEquiv e).symm q)
+
+/-- Pair homogeneity is preserved when its vertex set is mapped along an
+equivalence. -/
+theorem pairHomogeneous_image {α β : Type u} (e : α ≃ β) (c : Pair α → ℕ)
+    (H : Set α) (h : PairHomogeneous c H) :
+    PairHomogeneous (transportedColor e c) (e '' H) := by
+  intro p q hp hq
+  change c ((pairEquiv e).symm p) = c ((pairEquiv e).symm q)
+  apply h
+  · change ((pairEquiv e.symm p).1 : Set α) ⊆ H
+    rw [coe_pairEquiv]
+    rintro x ⟨y, hpy, rfl⟩
+    rcases hp hpy with ⟨z, hz, hzy⟩
+    rw [← hzy]
+    simpa using hz
+  · change ((pairEquiv e.symm q).1 : Set α) ⊆ H
+    rw [coe_pairEquiv]
+    rintro x ⟨y, hqy, rfl⟩
+    rcases hq hqy with ⟨z, hz, hzy⟩
+    rw [← hzy]
+    simpa using hz
+
+/-- The image of a set under a same-universe equivalence has the same
+cardinality. Cross-universe uses require explicit cardinal lifts. -/
+theorem mk_image_eq_of_equiv {α β : Type u} (e : α ≃ β) (H : Set α) :
+    Cardinal.mk (e '' H) = Cardinal.mk H :=
+  Cardinal.mk_image_eq e.injective
+
+end TriangleHost
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_PairTransport
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.PairTransport
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRadoCarrier
 Source: Erdos593/TripleSystem/ErdosRadoCarrier.lean
 Normalized SHA-256: ad0d97c7fc8f6ff59a16ce9a7bc140306dae3cad4e9cf963c7bb87dd349acdc6
@@ -19249,7 +19321,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: cd01ea67b45f0853967fa6e992d5b216cafb587cb9c91ab73f073b150f90574d
+Normalized SHA-256: e138a2ec6253aa8887bd0603f39116567da577a46d3cb0f749117d4e32c0186b
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

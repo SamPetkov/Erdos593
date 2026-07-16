@@ -1289,6 +1289,35 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   audit. The carrier and all later extensions remain subject to local strict
   builds, axiom checks, self-contained consistency checks, and GitHub Actions.
 
+## O38: strengthened Erdos--Rado carrier public-source audit
+
+- Submitted (UTC): 2026-07-16. The authenticated Aristotle project is
+  `c6564b06-5408-48ed-a840-72f3acce317b`; its task is
+  `6ff66119`. It audited the exact public `main` commit
+  `96ee1baf9a2dd0f0c242d2681c73d8eddc3e0aa4`.
+- Exact task boundary: audit only the strengthened carrier interface and its
+  reduction in `Erdos593/TripleSystem/ErdosRadoCarrier.lean`. In particular,
+  verify that `ErdosRadoUncountableHomogeneousPairSet` is a documented
+  target, not an asserted partition theorem; that the reduction obtains
+  infinitude from an uncountable homogeneous set; and that the triangle
+  consequence remains conditional on this missing theorem-level input.
+- Submitted files: none. Aristotle received only the exact public commit and
+  module boundary; no local tree, credential, secret, or private artifact was
+  uploaded.
+- Required audit: focused warnings-as-errors elaboration and Lake build,
+  endpoint `#print axioms`, public GitHub Actions confirmation, and a scan for
+  `sorry`, `admit`, `axiom`, `unsafe`, `native_decide`, `implemented_by`, and
+  resource-limit overrides.
+- Remote completion (2026-07-16): project metadata reported
+  `COMPLETE_WITH_ERRORS`, while the terminal report gave a substantive pass.
+  It found the target conditional, the cardinal/universe handling and
+  uncountability-to-infinitude reduction sound, no hidden partition
+  assumption or prohibited construct, and only standard Lean axioms
+  (`propext`, `Classical.choice`, and `Quot.sound`).
+- Local disposition (2026-07-16): accepted only as an independent advisory
+  audit. The source remains subject to local strict builds, axiom checks,
+  self-contained consistency checks, and GitHub Actions.
+
 ## Record format
 
 For every submission, record:
