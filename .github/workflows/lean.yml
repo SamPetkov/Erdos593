@@ -48,6 +48,9 @@ jobs:
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberAssembly
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceGraph
+          lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportBranchGeometry
+          lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAcyclic
+          lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrder
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrderBridge
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints
@@ -84,6 +87,9 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberAssembly.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIndex.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceGraph.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportBranchGeometry.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceAcyclic.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrder.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrderBridge.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints.lean
@@ -97,3 +103,6 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberIndexApexEquiv.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTaggedBaseApexEquiv.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTaggedBaseApexSourceEquiv.lean
+      - name: Generated self-contained consistency
+        run: |
+          python scripts/generate_self_contained.py --check

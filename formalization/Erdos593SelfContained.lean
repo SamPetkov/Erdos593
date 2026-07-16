@@ -14665,7 +14665,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberObligatory
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupport
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupport.lean
-Normalized SHA-256: 0e915ff9b575959008e19b01a3c21efb7eb294b7b88a92c6416b999ec8aa817b
+Normalized SHA-256: 849579a30fc4ce9ab259f392d2c1dbc6c3ebe0acf8e594ba857ce3a06192e658
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupport
 
@@ -14690,7 +14690,9 @@ variable {V : Type u} {G : _root_.SimpleGraph V}
 
 namespace Node
 
-private theorem extendsBy_of_common_target_of_lt
+/-- If two nodes extend to one target and the first starts earlier, the first
+already extends through the second. -/
+theorem extendsBy_of_common_target_of_lt
     {q u t : Node G} {a b : Alphabet G}
     (hqt : q.ExtendsBy a t) (hut : u.ExtendsBy b t)
     (hqu : q.length < u.length) : q.ExtendsBy a u := by
@@ -14710,7 +14712,8 @@ private theorem extendsBy_of_common_target_of_lt
         exact congrArg t.entry (Subtype.ext rfl)
       _ = a := hqt.choose_spec.2
 
-private theorem eq_of_common_target_of_length_eq
+/-- Two nodes of equal length that both extend to one target are equal. -/
+theorem eq_of_common_target_of_length_eq
     {q u t : Node G} {a b : Alphabet G}
     (hqt : q.ExtendsBy a t) (hut : u.ExtendsBy b t)
     (hqu : q.length = u.length) : q = u := by
@@ -14727,7 +14730,9 @@ private theorem eq_of_common_target_of_length_eq
 
 end Node
 
-private theorem common_point_right_of_lt
+/-- A point supported by two base fibres is an apex of the shorter fibre, and
+the longer base node follows the shorter fibre's base letter. -/
+theorem common_point_right_of_lt
     {S : Set (Edge G)} {q u : Node G} (hqlt : q.length < u.length)
     {p : Point G} {e f : Edge G}
     (he : e ∈ baseFiber S q) (hf : f ∈ baseFiber S u)
@@ -14807,7 +14812,9 @@ private theorem common_point_right_of_lt
       rw [hletter]
       exact Node.extendsBy_of_common_target_of_lt hextq hextu' hqlt
 
-private theorem common_base_eq_of_length_eq
+/-- Equal-length base fibres sharing an incident point have the same base
+node. -/
+theorem common_base_eq_of_length_eq
     {S : Set (Edge G)} {q u : Node G} (hqu : q.length = u.length)
     {p : Point G} {e f : Edge G}
     (he : e ∈ baseFiber S q) (hf : f ∈ baseFiber S u)
@@ -16554,6 +16561,502 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceGr
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportBranchGeometry
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportBranchGeometry.lean
+Normalized SHA-256: 28f9007f900640727ea05579d77183cf5a51fafac5a628fa068132279376b3e4
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportBranchGeometry
+
+/-!
+# Branch geometry for sequence-lift base-fibre supports
+
+This module exposes the elementary prefix geometry needed to audit possible
+cycles in the finite base-fibre/support incidence graph.  It deliberately
+contains no graph acyclicity conclusion: those cycle-level obligations remain
+in the dedicated incidence-acyclicity module.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+namespace Node
+
+/-- Extending through two successive nodes preserves the first prescribed
+letter. -/
+theorem ExtendsBy.trans
+    {q u v : Node G} {a b : Alphabet G}
+    (hqu : q.ExtendsBy a u) (huv : u.ExtendsBy b v) :
+    q.ExtendsBy a v := by
+  rcases hqu with ⟨hqu, hqu_entries, hqu_letter⟩
+  rcases huv with ⟨huv, huv_entries, huv_letter⟩
+  refine ⟨hqu.trans huv, ?_, ?_⟩
+  · intro i
+    calc
+      q.entry i = u.entry ⟨i.1, i.2.trans hqu⟩ := hqu_entries i
+      _ = v.entry ⟨i.1, (i.2.trans hqu).trans huv⟩ :=
+        huv_entries ⟨i.1, i.2.trans hqu⟩
+      _ = v.entry ⟨i.1, i.2.trans (hqu.trans huv)⟩ := by
+        exact congrArg v.entry (Subtype.ext rfl)
+  · calc
+      v.entry ⟨q.length, hqu.trans huv⟩ =
+          u.entry ⟨q.length, hqu⟩ :=
+        (huv_entries ⟨q.length, hqu⟩).symm
+      _ = a := hqu_letter
+
+end Node
+
+/-- Unpack a shared supported point of two fibres when the first base node is
+strictly shorter. -/
+theorem exists_baseFiber_edge_of_common_support_of_lt
+    {S : Set (Edge G)} {q u : Node G} (hqu : q.length < u.length)
+    {p : Point G}
+    (hpq : p ∈ (system G).edgeSupportSet (baseFiber S q))
+    (hpu : p ∈ (system G).edgeSupportSet (baseFiber S u)) :
+    ∃ e ∈ baseFiber S q,
+      p = baseApex e ∧ q.ExtendsBy (baseLetter e) u := by
+  rcases hpq with ⟨e, he, hpe⟩
+  rcases hpu with ⟨f, hf, hpf⟩
+  exact ⟨e, he, (common_point_right_of_lt hqu he hf hpe hpf).1,
+    (common_point_right_of_lt hqu he hf hpe hpf).2⟩
+
+/-- Equal-length base fibres sharing a supported point have the same base
+node. -/
+theorem eq_of_common_support_of_length_eq
+    {S : Set (Edge G)} {q u : Node G} (hqu : q.length = u.length)
+    {p : Point G}
+    (hpq : p ∈ (system G).edgeSupportSet (baseFiber S q))
+    (hpu : p ∈ (system G).edgeSupportSet (baseFiber S u)) :
+    q = u := by
+  rcases hpq with ⟨e, he, hpe⟩
+  rcases hpu with ⟨f, hf, hpf⟩
+  exact common_base_eq_of_length_eq hqu he hf hpe hpf
+
+/-- A branch out of `q` propagates across a shared supported point, provided
+`q` is no longer than the new fibre and is not that fibre itself.  This is the
+local induction step used when following the nontrivial arc of an incidence
+cycle. -/
+theorem Node.extendsBy_of_common_support_of_le
+    {S : Set (Edge G)} {q u v : Node G} {a : Alphabet G}
+    (hqu : q.ExtendsBy a u)
+    (hqvle : q.length ≤ v.length) (hqvne : q ≠ v)
+    {p : Point G}
+    (hpu : p ∈ (system G).edgeSupportSet (baseFiber S u))
+    (hpv : p ∈ (system G).edgeSupportSet (baseFiber S v)) :
+    q.ExtendsBy a v := by
+  rcases lt_trichotomy u.length v.length with huv | huv | hvu
+  · rcases exists_baseFiber_edge_of_common_support_of_lt huv hpu hpv with
+      ⟨e, he, hp, huv'⟩
+    exact hqu.trans huv'
+  · have huv' : u = v := eq_of_common_support_of_length_eq huv hpu hpv
+    simpa [huv'] using hqu
+  · rcases exists_baseFiber_edge_of_common_support_of_lt (S := S) (q := v) (u := u)
+      hvu hpv hpu with ⟨e, he, hp, hvu'⟩
+    have hqv : q.length < v.length := by
+      rcases hqvle.eq_or_lt with hqv | hqv
+      · exact (hqvne (Node.eq_of_common_target_of_length_eq hqu hvu' hqv)).elim
+      · exact hqv
+    exact Node.extendsBy_of_common_target_of_lt hqu hvu' hqv
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportBranchGeometry
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportBranchGeometry
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAcyclic
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceAcyclic.lean
+Normalized SHA-256: eab732a8902543b1e14df01b75d412ec483adf4675034596b6d948b68ffbf02e
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceAcyclic
+
+/-!
+# Acyclicity of base-fibre support incidence graphs
+
+The incidence graph has one vertex for each active canonical base fibre and
+one for each point in the selected support.  In a linear restriction, a cycle
+would propagate one initial base letter all the way around its fibre-side
+vertices.  The two boundary support points would consequently arise from the
+same base-fibre edge, contradicting simplicity of the cycle.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+private theorem incidence_cycle_exists_node_support
+    {S : Set (Edge G)}
+    {v : activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S}
+    (c : (baseFiberSupportIncidenceGraph S).Walk v v)
+    (hc : c.IsCycle) :
+    ∃ q : activeBaseNodeIndex S, (.inl q :
+      activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) ∈ c.support := by
+  cases v with
+  | inl q =>
+      refine ⟨q, ?_⟩
+      simpa only [c.getVert_zero] using c.getVert_mem_support 0
+  | inr p =>
+      have hsnd := c.adj_snd hc.not_nil
+      have hlen : 1 ≤ c.length := by
+        have hthree := hc.three_le_length
+        omega
+      cases hs : c.snd with
+      | inl q =>
+          refine ⟨q, ?_⟩
+          apply (c.mem_support_iff_exists_getVert).mpr
+          refine ⟨1, ?_, hlen⟩
+          simp [hs]
+      | inr p' =>
+          rw [hs] at hsnd
+          exact (not_baseFiberSupportIncidenceGraph_adj_inr_inr hsnd).elim
+
+/-- Rotate a cycle at a fibre-side vertex and expose its two endpoint
+fibre--point--fibre segments. -/
+private theorem rotated_incidence_cycle_boundary
+    {S : Set (Edge G)}
+    {v : activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S}
+    {q : activeBaseNodeIndex S}
+    (c : (baseFiberSupportIncidenceGraph S).Walk v v)
+    (hc : c.IsCycle)
+    (hq : (.inl q : activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) ∈
+      c.support) :
+    ∃ r : (baseFiberSupportIncidenceGraph S).Walk (.inl q) (.inl q),
+      r.IsCycle ∧
+      (∀ x : activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S,
+        x ∈ r.support ↔ x ∈ c.support) ∧
+      ∃ pL pR : activeBaseFiberSupportPointIndex S,
+      ∃ uL uR : activeBaseNodeIndex S,
+        r.snd = .inr pL ∧
+        r.getVert 2 = .inl uL ∧
+        r.getVert (r.length - 2) = .inl uR ∧
+        r.penultimate = .inr pR ∧
+        (baseFiberSupportIncidenceGraph S).Adj (.inl q) (.inr pL) ∧
+        (baseFiberSupportIncidenceGraph S).Adj (.inr pL) (.inl uL) ∧
+        (baseFiberSupportIncidenceGraph S).Adj (.inl uR) (.inr pR) ∧
+        (baseFiberSupportIncidenceGraph S).Adj (.inr pR) (.inl q) ∧
+        pL ≠ pR ∧ uL ≠ q ∧ uR ≠ q := by
+  classical
+  let r := c.rotate (.inl q) hq
+  have hr : r.IsCycle := hc.rotate hq
+  have hlen : 3 ≤ r.length := hr.three_le_length
+  have hsnd : (baseFiberSupportIncidenceGraph S).Adj (.inl q) r.snd :=
+    r.adj_snd hr.not_nil
+  have hpen : (baseFiberSupportIncidenceGraph S).Adj r.penultimate (.inl q) :=
+    r.adj_penultimate hr.not_nil
+  cases hs : r.snd with
+  | inl q' =>
+      rw [hs] at hsnd
+      exact (not_baseFiberSupportIncidenceGraph_adj_inl_inl hsnd).elim
+  | inr pL =>
+      cases hp : r.penultimate with
+      | inl q' =>
+          rw [hp] at hpen
+          exact (not_baseFiberSupportIncidenceGraph_adj_inl_inl hpen).elim
+      | inr pR =>
+          have hLadj : (baseFiberSupportIncidenceGraph S).Adj (.inr pL)
+              (r.getVert 2) := by
+            rw [← hs]
+            exact r.adj_getVert_succ (i := 1) (by omega)
+          have hRadj : (baseFiberSupportIncidenceGraph S).Adj
+              (r.getVert (r.length - 2)) (.inr pR) := by
+            rw [← hp]
+            have hindex : r.length - 2 + 1 = r.length - 1 := by omega
+            change (baseFiberSupportIncidenceGraph S).Adj
+              (r.getVert (r.length - 2)) (r.getVert (r.length - 1))
+            rw [← hindex]
+            exact r.adj_getVert_succ (i := r.length - 2) (by omega)
+          cases hL : r.getVert 2 with
+          | inr p =>
+              rw [hL] at hLadj
+              exact (not_baseFiberSupportIncidenceGraph_adj_inr_inr hLadj).elim
+          | inl uL =>
+              cases hR : r.getVert (r.length - 2) with
+              | inr p =>
+                  rw [hR] at hRadj
+                  exact (not_baseFiberSupportIncidenceGraph_adj_inr_inr hRadj).elim
+              | inl uR =>
+                  refine ⟨r, hr, ?_, pL, pR, uL, uR, hs, hL, hR, hp,
+                    ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+                  · intro x
+                    dsimp [r]
+                    exact c.mem_support_rotate_iff (.inl q) hq
+                  · simpa [hs] using hsnd
+                  · simpa [hL] using hLadj
+                  · simpa [hR] using hRadj
+                  · simpa [hp] using hpen
+                  · intro hpLR
+                    apply hr.snd_ne_penultimate
+                    calc
+                      r.snd = .inr pL := hs
+                      _ = .inr pR := congrArg Sum.inr hpLR
+                      _ = r.penultimate := hp.symm
+                  · intro huL
+                    have hEq : r.getVert 2 = (.inl q :
+                        activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) := by
+                      calc
+                        r.getVert 2 = .inl uL := hL
+                        _ = .inl q := congrArg Sum.inl huL
+                    have hEnds := (hr.getVert_endpoint_iff (i := 2) (by omega)).mp hEq
+                    omega
+                  · intro huR
+                    have hEq : r.getVert (r.length - 2) = (.inl q :
+                        activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) := by
+                      calc
+                        r.getVert (r.length - 2) = .inl uR := hR
+                        _ = .inl q := congrArg Sum.inl huR
+                    have hEnds :=
+                      (hr.getVert_endpoint_iff (i := r.length - 2) (by omega)).mp hEq
+                    omega
+
+private theorem incidence_getVert_even_is_node
+    {S : Set (Edge G)} {q : activeBaseNodeIndex S}
+    (r : (baseFiberSupportIncidenceGraph S).Walk (.inl q) (.inl q)) :
+    ∀ k : ℕ, 2 * k ≤ r.length →
+      ∃ u : activeBaseNodeIndex S, r.getVert (2 * k) = .inl u := by
+  intro k
+  induction k with
+  | zero =>
+      intro _
+      exact ⟨q, by simp⟩
+  | succ k ih =>
+      intro hk
+      have hbound : 2 * k + 2 ≤ r.length := by
+        convert hk using 1
+        all_goals omega
+      rcases ih (by omega) with ⟨u, hu⟩
+      have hmid : (baseFiberSupportIncidenceGraph S).Adj
+          (.inl u) (r.getVert (2 * k + 1)) := by
+        have hadj := r.adj_getVert_succ (i := 2 * k) (by omega)
+        simpa [hu] using hadj
+      cases hm : r.getVert (2 * k + 1) with
+      | inl w =>
+          rw [hm] at hmid
+          exact (not_baseFiberSupportIncidenceGraph_adj_inl_inl hmid).elim
+      | inr p =>
+          have hnext : (baseFiberSupportIncidenceGraph S).Adj
+              (.inr p) (r.getVert (2 * (k + 1))) := by
+            rw [← hm]
+            have hsuc : 2 * k + 1 < r.length := by omega
+            have hadj := r.adj_getVert_succ (i := 2 * k + 1) hsuc
+            have hindex : 2 * k + 1 + 1 = 2 * (k + 1) := by omega
+            rw [hindex] at hadj
+            exact hadj
+          cases hn : r.getVert (2 * (k + 1)) with
+          | inl w => exact ⟨w, rfl⟩
+          | inr p' =>
+              rw [hn] at hnext
+              exact (not_baseFiberSupportIncidenceGraph_adj_inr_inr hnext).elim
+
+private theorem incidence_cycle_length_even
+    {S : Set (Edge G)} {q : activeBaseNodeIndex S}
+    (r : (baseFiberSupportIncidenceGraph S).Walk (.inl q) (.inl q)) :
+    ∃ n : ℕ, r.length = 2 * n := by
+  rcases Nat.even_or_odd' r.length with ⟨n, hn | hn⟩
+  · exact ⟨n, hn⟩
+  · have hle : 2 * n ≤ r.length := by omega
+    rcases incidence_getVert_even_is_node r n hle with ⟨u, hu⟩
+    have hadj := r.adj_getVert_succ (i := 2 * n) (by omega)
+    have hend : r.getVert (2 * n + 1) = (.inl q :
+        activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) := by
+      rw [← hn]
+      exact r.getVert_length
+    rw [hu, hend] at hadj
+    exact (not_baseFiberSupportIncidenceGraph_adj_inl_inl hadj).elim
+
+private theorem incidence_cycle_node_ne_start
+    {S : Set (Edge G)} {q : activeBaseNodeIndex S}
+    (r : (baseFiberSupportIncidenceGraph S).Walk (.inl q) (.inl q))
+    (hr : r.IsCycle) {i : ℕ} {u : activeBaseNodeIndex S}
+    (hi : 0 < i) (hil : i < r.length)
+    (hu : r.getVert i = .inl u) :
+    q ≠ u := by
+  intro hqu
+  have hEq : r.getVert i = (.inl q :
+      activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) := by
+    calc
+      r.getVert i = .inl u := hu
+      _ = .inl q := congrArg Sum.inl hqu.symm
+  have hEnds := (hr.getVert_endpoint_iff (i := i) (by omega)).mp hEq
+  omega
+
+/-- Propagate a fixed initial `ExtendsBy` branch along the fibre-side vertices
+of an oriented incidence cycle. -/
+private theorem extendsBy_along_incidence_cycle
+    {S : Set (Edge G)} {q : activeBaseNodeIndex S}
+    (r : (baseFiberSupportIncidenceGraph S).Walk (.inl q) (.inl q))
+    (hr : r.IsCycle) {n : ℕ} (hlen : r.length = 2 * n)
+    (hmin : ∀ u : activeBaseNodeIndex S,
+      (.inl u : activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) ∈
+        r.support → q.1.length ≤ u.1.length)
+    {a : Alphabet G} {u1 : activeBaseNodeIndex S}
+    (hu1 : r.getVert 2 = .inl u1)
+    (hqu1 : q.1.ExtendsBy a u1.1) :
+    ∀ k : ℕ, ∀ u : activeBaseNodeIndex S,
+      1 ≤ k → k < n → r.getVert (2 * k) = .inl u → q.1.ExtendsBy a u.1 := by
+  intro k
+  induction k with
+  | zero =>
+      intro u hk
+      omega
+  | succ k ih =>
+      intro u hk hkn hu
+      cases k with
+      | zero =>
+          have htwo : 2 * Nat.succ 0 = 2 := by omega
+          have hu' : r.getVert 2 = (.inl u :
+              activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) := by
+            rw [← htwo]
+            exact hu
+          have hEq : u = u1 := Sum.inl.inj (hu'.symm.trans hu1)
+          subst u
+          exact hqu1
+      | succ k =>
+          have hprev_le : 2 * Nat.succ k ≤ r.length := by
+            rw [hlen]
+            omega
+          rcases incidence_getVert_even_is_node r (Nat.succ k) hprev_le with
+            ⟨w, hw⟩
+          have hprev : q.1.ExtendsBy a w.1 :=
+            ih w (by omega) (by omega) hw
+          have hmid_raw := r.adj_getVert_succ (i := 2 * Nat.succ k) (by
+            rw [hlen]
+            omega)
+          cases hm : r.getVert (2 * Nat.succ k + 1) with
+          | inl z =>
+              rw [hw, hm] at hmid_raw
+              exact (not_baseFiberSupportIncidenceGraph_adj_inl_inl hmid_raw).elim
+          | inr p =>
+              have hmid : (baseFiberSupportIncidenceGraph S).Adj (.inl w) (.inr p) := by
+                simpa [hw, hm] using hmid_raw
+              have hnext_raw := r.adj_getVert_succ (i := 2 * Nat.succ k + 1) (by
+                rw [hlen]
+                omega)
+              have hindex : 2 * Nat.succ k + 1 + 1 =
+                  2 * Nat.succ (Nat.succ k) := by omega
+              rw [hindex, hm, hu] at hnext_raw
+              have hnext : (baseFiberSupportIncidenceGraph S).Adj (.inr p) (.inl u) :=
+                hnext_raw
+              apply Node.extendsBy_of_common_support_of_le hprev
+              · apply hmin u
+                rw [← hu]
+                exact r.getVert_mem_support _
+              · intro hqu
+                have hne : q ≠ u := incidence_cycle_node_ne_start r hr
+                  (i := 2 * Nat.succ (Nat.succ k)) (u := u)
+                  (by omega) (by rw [hlen]; omega) hu
+                exact hne (Subtype.ext hqu)
+              · exact baseFiberSupportIncidenceGraph_adj_inl_inr_iff.mp hmid
+              · exact baseFiberSupportIncidenceGraph_adj_inr_inl_iff.mp hnext
+
+/-- In a finite linear selected family, the bipartite incidence graph of
+active canonical base fibres and their supported points has no simple cycle. -/
+theorem baseFiberSupportIncidenceGraph_isAcyclic_of_finite_linear
+    {S : Set (Edge G)} (_hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear) :
+    (baseFiberSupportIncidenceGraph S).IsAcyclic := by
+  classical
+  intro v c hc
+  rcases incidence_cycle_exists_node_support c hc with ⟨q0, hq0⟩
+  let Q : Set (activeBaseNodeIndex S) :=
+    {q | (.inl q : activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) ∈
+      c.support}
+  have hQ : Q.Nonempty := by
+    refine ⟨q0, ?_⟩
+    simpa only [Q, Set.mem_setOf_eq] using hq0
+  let q : activeBaseNodeIndex S :=
+    Function.argminOn (fun q : activeBaseNodeIndex S => q.1.length) Q hQ
+  have hq : (.inl q : activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) ∈
+      c.support := by
+    change q ∈ Q
+    exact Function.argminOn_mem _ Q hQ
+  have hmin : ∀ u : activeBaseNodeIndex S,
+      (.inl u : activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) ∈
+        c.support → q.1.length ≤ u.1.length := by
+    intro u hu
+    dsimp only [q]
+    exact Function.argminOn_le
+      (fun q : activeBaseNodeIndex S => q.1.length) Q hu
+  rcases rotated_incidence_cycle_boundary c hc hq with
+    ⟨r, hr, hrsupp, pL, pR, uL, uR, hs, hL, hR, hp,
+      hqL, hpLuL, huRpR, hpRq, hpLR, huLq, huRq⟩
+  have hminR : ∀ u : activeBaseNodeIndex S,
+      (.inl u : activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) ∈
+        r.support → q.1.length ≤ u.1.length := by
+    intro u hu
+    exact hmin u ((hrsupp _).mp hu)
+  have hpLq : pL.1 ∈ (system G).edgeSupportSet (baseFiber S q.1) :=
+    baseFiberSupportIncidenceGraph_adj_inl_inr_iff.mp hqL
+  have hpLuL : pL.1 ∈ (system G).edgeSupportSet (baseFiber S uL.1) :=
+    baseFiberSupportIncidenceGraph_adj_inr_inl_iff.mp hpLuL
+  have huLmem : (.inl uL : activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) ∈
+      r.support := by
+    rw [← hL]
+    exact r.getVert_mem_support 2
+  have hqlt : q.1.length < uL.1.length := by
+    rcases (hminR uL huLmem).eq_or_lt with hEq | hlt
+    · exfalso
+      apply huLq
+      apply Subtype.ext
+      exact (eq_of_common_support_of_length_eq hEq hpLq hpLuL).symm
+    · exact hlt
+  rcases exists_baseFiber_edge_of_common_support_of_lt hqlt hpLq hpLuL with
+    ⟨eL, heL, hpL, hquL⟩
+  rcases incidence_cycle_length_even r with ⟨n, hlen⟩
+  have hn2 : 2 ≤ n := by
+    have hthree := hr.three_le_length
+    rw [hlen] at hthree
+    omega
+  have hbranch := extendsBy_along_incidence_cycle r hr hlen hminR hL hquL
+  have hquR : q.1.ExtendsBy (baseLetter eL) uR.1 := by
+    apply hbranch (n - 1) uR
+    · omega
+    · omega
+    · have hindex : 2 * (n - 1) = r.length - 2 := by
+        rw [hlen]
+        omega
+      calc
+        r.getVert (2 * (n - 1)) = r.getVert (r.length - 2) := by
+          rw [hindex]
+        _ = .inl uR := hR
+  have hpRq' : pR.1 ∈ (system G).edgeSupportSet (baseFiber S q.1) :=
+    baseFiberSupportIncidenceGraph_adj_inr_inl_iff.mp hpRq
+  have hpRuR : pR.1 ∈ (system G).edgeSupportSet (baseFiber S uR.1) :=
+    baseFiberSupportIncidenceGraph_adj_inl_inr_iff.mp huRpR
+  rcases exists_baseFiber_edge_of_common_support_of_lt hquR.choose hpRq' hpRuR with
+    ⟨eR, heR, hpR, hquR'⟩
+  have hletter : baseLetter eL = baseLetter eR :=
+    Node.letter_eq_of_extendsBy_same_target hquR hquR'
+  have heq : eL = eR :=
+    baseLetter_injOn_baseFiber_of_linear q.1 hlinear heL heR hletter
+  apply hpLR
+  apply Subtype.ext
+  calc
+    pL.1 = baseApex eL := hpL
+    _ = baseApex eR := congrArg baseApex heq
+    _ = pR.1 := hpR.symm
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceAcyclic
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAcyclic
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrder
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrder.lean
 Normalized SHA-256: b4dac99c8ae35478542ae7a4803998ed19ec84771cdf4c27fab0df0c317a4206
@@ -17103,6 +17606,69 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints.lean
+Normalized SHA-256: 504463dfaac2cd9fd04d55696ad214661f697d3a07b742f06298aec3362fef41
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints
+
+/-!
+# Unconditional endpoints for finite linear sequence-lift restrictions
+
+The incidence-acyclicity theorem turns the verified conditional incidence
+endpoints into unconditional finite-linear endpoints.  The structural
+finite-generation result has no host-colourability premise; the constructible
+and obligatory consequences retain the explicit two-colourability condition.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- Every finite linear selected restriction is host-relatively finitely
+generated. -/
+theorem edgeRestriction_finiteLiftGenerated_of_linear
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear) :
+    TripleSystem.FiniteLiftGenerated G ((system G).edgeRestriction S) := by
+  exact edgeRestriction_finiteLiftGenerated_of_linear_of_incidenceAcyclic
+    hS hlinear
+    (baseFiberSupportIncidenceGraph_isAcyclic_of_finite_linear hS hlinear)
+
+/-- A finite linear selected restriction in a two-colourable host is
+constructible. -/
+theorem edgeRestriction_constructible_of_linear_of_hostColorable
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) :
+    TripleSystem.Constructible ((system G).edgeRestriction S) := by
+  exact TripleSystem.FiniteLiftGenerated.constructible_of_hostColorable hG
+    (edgeRestriction_finiteLiftGenerated_of_linear hS hlinear)
+
+/-- A finite linear selected restriction in a two-colourable host is
+obligatory by the completed classical positive-atom closure theorem. -/
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) :
+    ((system G).edgeRestriction S).IsObligatory := by
+  exact TripleSystem.FiniteLiftGenerated.isObligatory_of_hostColorable hG
+    (edgeRestriction_finiteLiftGenerated_of_linear hS hlinear)
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints
 ========================================================================== -/
 
 /- ==========================================================================
@@ -17717,7 +18283,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 0e2e65dc3d7958ac1130b87e7a198edcde028aba2383a1901f441ee40efb9537
+Normalized SHA-256: 6a74250121f6bf0842aeb19495ac24a9c96fe323311f4053a83b8010d2342ba2
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

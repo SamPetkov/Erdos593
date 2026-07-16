@@ -21,7 +21,9 @@ variable {V : Type u} {G : _root_.SimpleGraph V}
 
 namespace Node
 
-private theorem extendsBy_of_common_target_of_lt
+/-- If two nodes extend to one target and the first starts earlier, the first
+already extends through the second. -/
+theorem extendsBy_of_common_target_of_lt
     {q u t : Node G} {a b : Alphabet G}
     (hqt : q.ExtendsBy a t) (hut : u.ExtendsBy b t)
     (hqu : q.length < u.length) : q.ExtendsBy a u := by
@@ -41,7 +43,8 @@ private theorem extendsBy_of_common_target_of_lt
         exact congrArg t.entry (Subtype.ext rfl)
       _ = a := hqt.choose_spec.2
 
-private theorem eq_of_common_target_of_length_eq
+/-- Two nodes of equal length that both extend to one target are equal. -/
+theorem eq_of_common_target_of_length_eq
     {q u t : Node G} {a b : Alphabet G}
     (hqt : q.ExtendsBy a t) (hut : u.ExtendsBy b t)
     (hqu : q.length = u.length) : q = u := by
@@ -58,7 +61,9 @@ private theorem eq_of_common_target_of_length_eq
 
 end Node
 
-private theorem common_point_right_of_lt
+/-- A point supported by two base fibres is an apex of the shorter fibre, and
+the longer base node follows the shorter fibre's base letter. -/
+theorem common_point_right_of_lt
     {S : Set (Edge G)} {q u : Node G} (hqlt : q.length < u.length)
     {p : Point G} {e f : Edge G}
     (he : e ∈ baseFiber S q) (hf : f ∈ baseFiber S u)
@@ -138,7 +143,9 @@ private theorem common_point_right_of_lt
       rw [hletter]
       exact Node.extendsBy_of_common_target_of_lt hextq hextu' hqlt
 
-private theorem common_base_eq_of_length_eq
+/-- Equal-length base fibres sharing an incident point have the same base
+node. -/
+theorem common_base_eq_of_length_eq
     {S : Set (Edge G)} {q u : Node G} (hqu : q.length = u.length)
     {p : Point G} {e f : Edge G}
     (he : e ∈ baseFiber S q) (hf : f ∈ baseFiber S u)
