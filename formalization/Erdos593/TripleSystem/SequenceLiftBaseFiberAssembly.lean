@@ -1,5 +1,6 @@
 import Erdos593.TripleSystem.EdgeRestrictionReconstruction
 import Erdos593.TripleSystem.SequenceLiftBaseFiberObligatory
+import Erdos593.TripleSystem.SequenceLiftBaseFiberSupport
 import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex
 
 /-!
@@ -105,6 +106,28 @@ theorem edgePieceUnion_activeBaseNodeList
     (Finset.mem_toList.mpr
       (@Finset.mem_univ (activeBaseNodeIndex S)
         (activeBaseNodeIndexFintype hS) q))
+
+/-- In a linear selected restriction, the canonical finite active-base
+enumeration has singleton-or-empty pairwise support intersections.  This is
+only pairwise geometry and does not by itself supply a running assembly
+order. -/
+theorem activeBaseNodeList_pairwise_support_inter_subsingleton_of_linear
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlin : ((system G).edgeRestriction S).Linear) :
+    (activeBaseNodeList S hS).Pairwise
+      (fun q u =>
+        (((system G).edgeSupportSet (baseFiber S q) ∩
+          (system G).edgeSupportSet (baseFiber S u))).Subsingleton) := by
+  change
+    ((@Finset.univ (activeBaseNodeIndex S)
+      (activeBaseNodeIndexFintype hS)).toList.map Subtype.val).Pairwise _
+  have hnodup :
+      ((@Finset.univ (activeBaseNodeIndex S)
+        (activeBaseNodeIndexFintype hS)).toList.map Subtype.val).Nodup :=
+    (Finset.nodup_toList _).map Subtype.val_injective
+  exact hnodup.pairwise_of_forall_ne (by
+    intro q _ u _ hne
+    exact baseFiber_support_inter_subsingleton_of_linear hlin hne)
 
 /-- Finite linear base fibres over a two-colourable host form a generic
 running edge assembly whenever their supports satisfy
