@@ -36,8 +36,10 @@ partition.  A coherent newest-first support order is now a concrete sufficient
 condition: under linearity, it feeds the same constructible and obligatory
 endpoints in exact-cover, base-node-cover, and canonical-active-list forms.
 An even stronger tail-degree condition, in which each new fibre has at most
-one overlapping tail neighbour, now implies that coherence directly.  Both
-remain explicit hypotheses rather than consequences of linearity.
+one overlapping tail neighbour, now implies that coherence directly and feeds
+the same constructible and obligatory endpoints in exact-cover,
+base-node-cover, and canonical-active-list forms.  Both remain explicit
+ordering hypotheses rather than consequences of linearity.
 
 ## Current status
 

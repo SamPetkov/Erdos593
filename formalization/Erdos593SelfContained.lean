@@ -15627,6 +15627,119 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportTailDegree
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportTailDegreeEndpoints
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportTailDegreeEndpoints.lean
+Normalized SHA-256: f40edd45685e60edde7cb301bf3cdd97d6924eb40e930f15067868a76ac78702
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportTailDegreeEndpoints
+
+/-!
+# Constructible and obligatory endpoints for tail-degree base-fibre orders
+
+This module feeds the stronger tail-degree-one support order directly into the
+existing coherent-order endpoints.  It makes no claim that the required order
+is supplied by linearity or by the canonical active-base enumeration.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- A noduplicated tail-degree-one base-fibre order gives a constructible
+exact sequence-lift restriction once its fibres cover the selected edge set. -/
+theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_tailDegreeBaseFiberAssembly
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) (nodes : List (Node G))
+    (hcover : TripleSystem.edgePieceUnion (nodes.map (baseFiber S)) = S)
+    (hnodup : nodes.Nodup)
+    (hdegree : baseFiberSupportTailAtMostOneNeighbor S nodes) :
+    TripleSystem.Constructible ((system G).edgeRestriction S) :=
+  edgeRestriction_constructible_of_linear_of_hostColorable_of_coherentBaseFiberAssembly
+    hS hlinear hG nodes hcover hnodup
+    (baseFiberSupportTailOverlapCoherent_of_tailAtMostOneNeighbor hdegree)
+
+/-- The base-node-cover form of the tail-degree-one constructibility
+endpoint. -/
+theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_tailDegreeBaseNodeCover
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) (nodes : List (Node G))
+    (hcover : ∀ e, e ∈ S → baseNode e ∈ nodes)
+    (hnodup : nodes.Nodup)
+    (hdegree : baseFiberSupportTailAtMostOneNeighbor S nodes) :
+    TripleSystem.Constructible ((system G).edgeRestriction S) :=
+  edgeRestriction_constructible_of_linear_of_hostColorable_of_coherentBaseNodeCover
+    hS hlinear hG nodes hcover hnodup
+    (baseFiberSupportTailOverlapCoherent_of_tailAtMostOneNeighbor hdegree)
+
+/-- The canonical active-base enumeration gives a constructible exact
+restriction when it satisfies the explicit tail-degree-one premise. -/
+theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_activeBaseNodeSupportTailAtMostOneNeighbor
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hdegree :
+      baseFiberSupportTailAtMostOneNeighbor S (activeBaseNodeList S hS)) :
+    TripleSystem.Constructible ((system G).edgeRestriction S) :=
+  edgeRestriction_constructible_of_linear_of_hostColorable_of_activeBaseNodeSupportTailOverlapCoherent
+    hS hlinear hG
+    (baseFiberSupportTailOverlapCoherent_of_tailAtMostOneNeighbor hdegree)
+
+/-- The exact-cover tail-degree-one endpoint is obligatory by the completed
+classical positive-atom closure theorem. -/
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_tailDegreeBaseFiberAssembly
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) (nodes : List (Node G))
+    (hcover : TripleSystem.edgePieceUnion (nodes.map (baseFiber S)) = S)
+    (hnodup : nodes.Nodup)
+    (hdegree : baseFiberSupportTailAtMostOneNeighbor S nodes) :
+    ((system G).edgeRestriction S).IsObligatory :=
+  edgeRestriction_isObligatory_of_linear_of_hostColorable_of_coherentBaseFiberAssembly
+    hS hlinear hG nodes hcover hnodup
+    (baseFiberSupportTailOverlapCoherent_of_tailAtMostOneNeighbor hdegree)
+
+/-- The base-node-cover tail-degree-one endpoint is obligatory. -/
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_tailDegreeBaseNodeCover
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) (nodes : List (Node G))
+    (hcover : ∀ e, e ∈ S → baseNode e ∈ nodes)
+    (hnodup : nodes.Nodup)
+    (hdegree : baseFiberSupportTailAtMostOneNeighbor S nodes) :
+    ((system G).edgeRestriction S).IsObligatory :=
+  edgeRestriction_isObligatory_of_linear_of_hostColorable_of_coherentBaseNodeCover
+    hS hlinear hG nodes hcover hnodup
+    (baseFiberSupportTailOverlapCoherent_of_tailAtMostOneNeighbor hdegree)
+
+/-- The canonical active-base endpoint is obligatory when the explicit
+tail-degree-one premise holds. -/
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_activeBaseNodeSupportTailAtMostOneNeighbor
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hdegree :
+      baseFiberSupportTailAtMostOneNeighbor S (activeBaseNodeList S hS)) :
+    ((system G).edgeRestriction S).IsObligatory :=
+  edgeRestriction_isObligatory_of_linear_of_hostColorable_of_activeBaseNodeSupportTailOverlapCoherent
+    hS hlinear hG
+    (baseFiberSupportTailOverlapCoherent_of_tailAtMostOneNeighbor hdegree)
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportTailDegreeEndpoints
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportTailDegreeEndpoints
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberGlobalSpine.lean
 Normalized SHA-256: 26312dc76e3e6ca9e5db3e25f1de3c811248426c478b272842740fc83971bb9d
@@ -16238,7 +16351,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 6f12f8c695d7b57be262a0262a7ccd41541007ef5a5193797fb70d66941575d5
+Normalized SHA-256: 6b69d75ac2f0e11cf3ce76af257b210024acd4ea0514d1835951960a22db1827
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

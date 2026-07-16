@@ -215,8 +215,10 @@ The coherent-order endpoint module feeds that same explicit premise into the
 exact-cover, base-node-cover, and canonical-active-list constructible and
 obligatory theorems; it does not make the premise automatic.
 An even stronger tail-degree condition -- each new fibre has at most one
-overlapping tail neighbour -- now implies coherence directly.  It is likewise
-an explicit ordering hypothesis, not a consequence of linearity alone.
+overlapping tail neighbour -- now implies coherence and has matching direct
+exact-cover, base-node-cover, and canonical-active-list endpoints.  It is
+likewise an explicit ordering hypothesis, not a consequence of linearity
+alone.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across
