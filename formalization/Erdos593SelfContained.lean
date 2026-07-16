@@ -16099,6 +16099,277 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrder
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.FiniteLiftGenerated
+Source: Erdos593/TripleSystem/FiniteLiftGenerated.lean
+Normalized SHA-256: 596489d453238e0b462ef15f79c6ecfe0e0740d657198e65a1808bc6242b5884
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_FiniteLiftGenerated
+
+/-!
+# Finite generation relative to a host graph
+
+`FiniteLiftGenerated G` is a deliberately local, host-relative construction
+class.  Its graph atoms are private-vertex expansions of finite graphs that
+carry a non-induced factor map into `G`; no colourability condition is built
+into the definition.  It is closed under the two exact gluing operations used
+by `RunningEdgeAssemblyGeometry` and under relabelling by triple-system
+isomorphism.
+
+This module only records finite generation data.  In particular, it makes no
+claim that a generated system is `Constructible`, intrinsic, or colourable.
+-/
+
+namespace Erdos593
+
+universe u w
+
+namespace TripleSystem
+
+variable {V : Type u} (G : _root_.SimpleGraph V)
+
+/-- Finite triple systems generated relative to a host graph `G`.
+
+The graph-atom constructor remembers an explicit non-induced factor into the
+host.  Thus the predicate is intentionally stronger than merely being a
+private-vertex expansion of some finite graph, while deliberately avoiding any
+host-colourability hypothesis. -/
+inductive FiniteLiftGenerated : {X I : Type w} → TripleSystem X I → Prop
+  | ofEdgeless (X : Type w) [Fintype X] :
+      FiniteLiftGenerated (edgeless X)
+  | ofFactorExpansion {X : Type w} [Fintype X]
+      {J : _root_.SimpleGraph X}
+      (f : Erdos593.SimpleGraph.NonInducedFactor J G) :
+      FiniteLiftGenerated (privateVertexExpansion J)
+  | disjointUnion {X I Y J : Type w}
+      {F : TripleSystem X I} {H : TripleSystem Y J}
+      (hF : FiniteLiftGenerated F) (hH : FiniteLiftGenerated H) :
+      FiniteLiftGenerated (F.disjointUnion H)
+  | amalgam {X I Y J : Type w}
+      {F : TripleSystem X I} {H : TripleSystem Y J}
+      (hF : FiniteLiftGenerated F) (hH : FiniteLiftGenerated H)
+      (x : X) (y : Y) :
+      FiniteLiftGenerated (OnePointAmalgamation.amalgam F H x y)
+  | ofIso {X I Y J : Type w}
+      {F : TripleSystem X I} {H : TripleSystem Y J}
+      (hF : FiniteLiftGenerated F) (f : Iso F H) :
+      FiniteLiftGenerated H
+
+namespace FiniteLiftGenerated
+
+/-- Ergonomic name for the host-factor expansion atom. -/
+theorem ofExpansion {X : Type w} [Fintype X]
+    {J : _root_.SimpleGraph X}
+    (f : Erdos593.SimpleGraph.NonInducedFactor J G) :
+    FiniteLiftGenerated G (privateVertexExpansion J) :=
+  ofFactorExpansion f
+
+/-- Running-intersection geometry assembles locally host-generated exact
+pieces into a host-generated exact restriction of their total edge union.
+
+The geometry supplies only the two permitted gluing cases; the hypothesis on
+the listed pieces supplies their local generation witnesses. -/
+theorem ofRunningEdgeAssemblyGeometry
+    {X I : Type w} (K : TripleSystem X I)
+    (pieces : List (Set I))
+    (hgeometry : BridgeBlock.RunningEdgeAssemblyGeometry K pieces)
+    (hpieces : ∀ S ∈ pieces,
+      FiniteLiftGenerated G (K.edgeRestriction S)) :
+    FiniteLiftGenerated G (K.edgeRestriction (edgePieceUnion pieces)) := by
+  induction pieces with
+  | nil =>
+      letI : IsEmpty (K.EdgeSupport ∅) := ⟨by
+        intro x
+        rcases x.2 with ⟨e, he, _⟩
+        exact he⟩
+      letI : Fintype (K.EdgeSupport ∅) := Fintype.ofFinite _
+      exact FiniteLiftGenerated.ofIso
+        (FiniteLiftGenerated.ofEdgeless (K.EdgeSupport ∅))
+        (edgelessIsoEdgeRestrictionEmpty K)
+  | cons S pieces ih =>
+      rcases hgeometry with ⟨hprevious, hEdges, hSupports⟩
+      have hPrev :
+          FiniteLiftGenerated G
+            (K.edgeRestriction (edgePieceUnion pieces)) :=
+        ih hprevious (fun T hT => hpieces T (by simp [hT]))
+      have hS : FiniteLiftGenerated G (K.edgeRestriction S) :=
+        hpieces S (by simp)
+      rcases hSupports with hDisjoint | ⟨r, hRoot⟩
+      · exact FiniteLiftGenerated.ofIso
+          (FiniteLiftGenerated.disjointUnion hPrev hS)
+          (K.edgeRestrictionUnionIsoDisjointUnion hEdges hDisjoint)
+      · exact FiniteLiftGenerated.ofIso
+          (FiniteLiftGenerated.amalgam hPrev hS
+            (K.edgeSupportLeftRoot hRoot)
+            (K.edgeSupportRightRoot hRoot))
+          (K.edgeRestrictionUnionIsoOnePointAmalgamation hEdges hRoot)
+
+end FiniteLiftGenerated
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_FiniteLiftGenerated
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.FiniteLiftGenerated
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftFiniteLiftGenerated
+Source: Erdos593/TripleSystem/SequenceLiftFiniteLiftGenerated.lean
+Normalized SHA-256: b5423805d97385bf05f8251be17be36077bd2f26fd867731e3575020e6073f7d
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftFiniteLiftGenerated
+
+/-!
+# Host-relative finite generation for linear sequence-lift restrictions
+
+This module transports the exact finite base-fibre assembly machinery to the
+host-relative `FiniteLiftGenerated` class.  Unlike the parallel
+constructibility route, it records the factor map of each fibre's base-letter
+graph into the ambient host and therefore does not require the host graph to
+be two-colourable.
+
+The assembly geometry remains explicit.  This file proves only the finite
+linear base-fibre conclusion under a supplied compatible order; it makes no
+claim that linearity alone provides such an order.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- The geometric base-fibre compatibility predicate is precisely the generic
+running-intersection geometry used by host-relative finite generation. -/
+theorem baseFiberAssemblyCompatible.runningEdgeAssemblyGeometry
+    {S : Set (Edge G)} :
+    ∀ nodes : List (Node G),
+      baseFiberAssemblyCompatible S nodes →
+        TripleSystem.BridgeBlock.RunningEdgeAssemblyGeometry (system G)
+          (nodes.map (baseFiber S)) := by
+  intro nodes hcompatible
+  induction nodes with
+  | nil =>
+      trivial
+  | cons q nodes ih =>
+      rcases hcompatible with ⟨htail, hEdges, hSupports⟩
+      refine ⟨ih htail, ?_, ?_⟩
+      · simpa [TripleSystem.edgePieceUnion] using hEdges
+      · simpa [TripleSystem.edgePieceUnion] using hSupports
+
+/-- A finite fibre of a linear sequence-lift restriction is generated by a
+private-vertex expansion of a finite graph carrying its canonical non-induced
+factor map into the ambient host. -/
+theorem baseFiber_finiteLiftGenerated_of_linear
+    {S : Set (Edge G)} (hS : S.Finite) (q : Node G)
+    (hlinear : ((system G).edgeRestriction S).Linear) :
+    TripleSystem.FiniteLiftGenerated G
+      ((system G).edgeRestriction (baseFiber S q)) := by
+  classical
+  obtain ⟨inst, hfactor, hiso⟩ :=
+    exists_fintype_baseFiberLetterSubgraphFactorExpansionIso_of_linear
+      hS q hlinear
+  letI : Fintype
+      (baseLetterSubgraph G (baseLetter '' baseFiber S q)).verts := inst
+  rcases hfactor with ⟨factor⟩
+  rcases hiso with ⟨iso⟩
+  exact TripleSystem.FiniteLiftGenerated.ofIso
+    (TripleSystem.FiniteLiftGenerated.ofExpansion G factor) iso
+
+/-- A compatible finite assembly of linear base fibres gives a finite
+host-relative generation certificate for the exact selected restriction.  The
+cover equality is retained explicitly: it is a proved assembly premise rather
+than an unproved global sequence-lift decomposition assertion. -/
+theorem edgeRestriction_finiteLiftGenerated_of_linear_of_baseFiberAssembly
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (nodes : List (Node G))
+    (hcover : TripleSystem.edgePieceUnion (nodes.map (baseFiber S)) = S)
+    (hcompatible : baseFiberAssemblyCompatible S nodes) :
+    TripleSystem.FiniteLiftGenerated G ((system G).edgeRestriction S) := by
+  have hgeometry :
+      TripleSystem.BridgeBlock.RunningEdgeAssemblyGeometry (system G)
+        (nodes.map (baseFiber S)) :=
+    baseFiberAssemblyCompatible.runningEdgeAssemblyGeometry nodes hcompatible
+  have hgenerated :
+      TripleSystem.FiniteLiftGenerated G
+        ((system G).edgeRestriction
+          (TripleSystem.edgePieceUnion (nodes.map (baseFiber S)))) :=
+    TripleSystem.FiniteLiftGenerated.ofRunningEdgeAssemblyGeometry
+      G (system G) (nodes.map (baseFiber S)) hgeometry (by
+        intro T hT
+        rw [List.mem_map] at hT
+        rcases hT with ⟨q, _, rfl⟩
+        exact baseFiber_finiteLiftGenerated_of_linear hS q hlinear)
+  rw [hcover] at hgenerated
+  exact hgenerated
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftFiniteLiftGenerated
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftFiniteLiftGenerated
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftFiniteLiftGeneratedEndpoints
+Source: Erdos593/TripleSystem/SequenceLiftFiniteLiftGeneratedEndpoints.lean
+Normalized SHA-256: e122e694bd278746b8bce9cec6849743492012154af84eb5a0fc7ab1898c63b5
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftFiniteLiftGeneratedEndpoints
+
+/-!
+# Finite-generation endpoint from acyclic base-fibre support overlap
+
+An acyclic active base-fibre support-overlap graph has a leaf-elimination
+order.  That order supplies the tail-degree-one compatibility required by the
+generic host-relative finite-generation assembly theorem.
+
+The acyclicity hypothesis remains explicit: it is not inferred from linearity
+alone.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- A finite linear sequence-lift restriction with acyclic active base-fibre
+support overlap is host-relatively finitely generated. -/
+theorem edgeRestriction_finiteLiftGenerated_of_linear_of_supportOverlapAcyclic
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hacyclic : (baseFiberSupportOverlapGraph S).IsAcyclic) :
+    TripleSystem.FiniteLiftGenerated G ((system G).edgeRestriction S) := by
+  obtain ⟨nodes, hnodup, hcover, hdegree⟩ :=
+    exists_baseFiberSupportTailAtMostOneNeighbor_order_of_supportOverlapAcyclic
+      hS hacyclic
+  exact
+    edgeRestriction_finiteLiftGenerated_of_linear_of_baseFiberAssembly
+      hS hlinear nodes
+      (edgePieceUnion_baseFiber_eq_of_baseNode_mem nodes hcover)
+      (baseFiberAssemblyCompatible_of_linear_of_nodup_of_tailAtMostOneNeighbor
+        hlinear hnodup hdegree)
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftFiniteLiftGeneratedEndpoints
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftFiniteLiftGeneratedEndpoints
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberGlobalSpine.lean
 Normalized SHA-256: 26312dc76e3e6ca9e5db3e25f1de3c811248426c478b272842740fc83971bb9d
@@ -16710,7 +16981,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 3ffa678e5c20b69c737c8d07fc002fbc550368b21f8367e4107aa681a043e046
+Normalized SHA-256: 3a57f27e37239062310bf9b49b66403d827ab3f9d90b8877398f2c10a1e7cf60
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

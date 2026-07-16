@@ -45,6 +45,14 @@ requirement by a finite forest leaf-elimination order.  This is an existential
 order, not a claim that the canonical active-base enumeration has that
 property, and acyclicity is not inferred from linearity alone.
 
+The host-relative `FiniteLiftGenerated` class separately records finite
+generation from finite non-induced host factors, private-vertex expansions,
+disjoint unions, one-point amalgamations, and isomorphisms.  A finite linear
+base fibre is one such atom, and the explicitly acyclic support-overlap order
+now supplies a finite-generation certificate for the whole restriction.  This
+does not assert constructibility, obligatoriness, or an unrestricted trace
+decomposition.
+
 ## Current status
 
 The imported source closure contains no `sorry`, `admit`, project `axiom`,
