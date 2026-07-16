@@ -14530,6 +14530,101 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberExpansion
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberConstructible
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberConstructible.lean
+Normalized SHA-256: b7926d44d0c9e9f7be98f29309b04b373c65665930d04c3ea27b51627bc2ce62
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberConstructible
+
+/-!
+# Constructible linear sequence-lift base fibres
+
+This module records the exact conditional bridge from the local graph-side
+description of a linear sequence-lift base fibre to constructibility.  The
+extra two-colourability hypothesis is explicit: linearity alone does not make
+the canonical base-letter subgraph bipartite.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- A finite linear base fibre is constructible when the graph selected by its
+canonical base letters is two-colourable. -/
+theorem baseFiber_constructible_of_linear_of_colorable
+    {S : Set (Edge G)} (hS : S.Finite) (q : Node G)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hcolor : (baseLetterSubgraph G (baseLetter '' baseFiber S q)).coe.Colorable 2) :
+    TripleSystem.Constructible ((system G).edgeRestriction (baseFiber S q)) := by
+  classical
+  letI : Finite (baseLetterSubgraph G (baseLetter '' baseFiber S q)).verts :=
+    Set.finite_coe_iff.mpr <|
+      baseLetterSubgraph_finite_verts G <|
+        (hS.subset (baseFiber_subset S q)).image baseLetter
+  letI : Fintype (baseLetterSubgraph G (baseLetter '' baseFiber S q)).verts :=
+    Fintype.ofFinite _
+  exact TripleSystem.Constructible.ofIso
+    (TripleSystem.Constructible.ofExpansion
+      (baseLetterSubgraph G (baseLetter '' baseFiber S q)).coe hcolor)
+    (baseFiber_privateVertexExpansionIso_of_linear q hlinear)
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberConstructible
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberConstructible
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberObligatory
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberObligatory.lean
+Normalized SHA-256: 7172acce30e32070ea391ea0f55d1529664b418bac665b840f5274d26548793c
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberObligatory
+
+/-!
+# Obligatory linear sequence-lift base fibres
+
+This is the fibre-local use of the established classical positive-atom theorem:
+once a finite linear base fibre has a two-colourable canonical base-letter
+subgraph, its private-vertex-expansion description makes it constructible and
+hence obligatory.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- A finite linear base fibre is obligatory when the graph selected by its
+canonical base letters is two-colourable. -/
+theorem baseFiber_isObligatory_of_linear_of_colorable
+    {S : Set (Edge G)} (hS : S.Finite) (q : Node G)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hcolor : (baseLetterSubgraph G (baseLetter '' baseFiber S q)).coe.Colorable 2) :
+    ((system G).edgeRestriction (baseFiber S q)).IsObligatory :=
+  TripleSystem.Constructible.isObligatory
+    (baseFiber_constructible_of_linear_of_colorable hS q hlinear hcolor)
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberObligatory
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberObligatory
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIndex.lean
 Normalized SHA-256: 97eac82992974611798568b63f551e5057a747e53075b09f3bbca22a55e5d469
@@ -15266,7 +15361,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 9024b7805821697076156de1afb2cec33979f392d14cbf809f446ea3be5abb59
+Normalized SHA-256: f3e97d0d44c3f160655d88d4e825035c03c9861683690996c90ac94cfb6999e5
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
