@@ -157,7 +157,17 @@ constructibility theorem: prove that one finite linear base fibre is
 isomorphic to the private-vertex expansion of an exact finite non-induced
 graph factor of `G`.
 
-### Candidate next theorem (planned, not yet formalized)
+### Historical candidate (now completed)
+
+**Status update.** The local expansion package below is now compiled in
+`SequenceLiftBaseFiberExpansion.lean` as
+`baseFiber_privateVertexExpansionIso_of_linear` and
+`exists_fintype_baseFiberLetterSubgraphFactorExpansionIso_of_linear`.
+The retained sketch records the original target shape only; it is not an open
+proof obligation. The next global sequence-lift bridge is instead the explicit
+support-tail-overlap coherence theorem in
+`SequenceLiftBaseFiberSupportRunningOrder.lean`. It deliberately assumes that
+coherence rather than deriving it from linearity.
 
 ~~~lean
 theorem exists_baseFiberExpansionIso_of_finite_linear

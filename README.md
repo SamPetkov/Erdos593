@@ -205,6 +205,12 @@ linearity: distinct canonical base fibres have singleton-or-empty supported
 point intersection. The canonical finite active-base enumeration inherits that
 pairwise property. This still does not yield the stronger accumulated
 running-intersection condition or a global assembly order.
+`SequenceLiftBaseFiberSupportRunningOrder` makes one sufficient extra condition
+fully explicit: a noduplicated list is recursively coherent when all of a new
+fibre's nonempty pairwise support intersections with its assembled tail agree.
+Together with linearity, that condition yields the literal N5 running-assembly
+geometry. It permits several fibres to share one common apex, but it is not
+derived from finite linearity or from the canonical enumeration alone.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across
