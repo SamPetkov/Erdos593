@@ -10804,6 +10804,51 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRadoCarrier
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
+Source: Erdos593/TripleSystem/ErdosRado/CanonicalTrace.lean
+Normalized SHA-256: daf689da56d29ec75048ecc66818d0222965ef145c81de7fb21500e5c24ff044
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalTrace
+
+/-!
+# Canonical ordinal carrier for the Erdos--Rado trace
+
+This module provides only the carrier reindexing needed by a later trace
+construction. It proves no partition relation and selects no trace nodes.
+-/
+
+namespace Erdos593
+namespace TripleSystem
+namespace TriangleHost
+namespace ErdosRado
+
+/-- The initial ordinal whose cardinality is the successor of the continuum. -/
+noncomputable abbrev TraceCarrier : Type :=
+  (Order.succ (Cardinal.continuum : Cardinal)).ord.ToType
+
+/-- The trace carrier has the desired successor-of-continuum cardinality. -/
+theorem mk_traceCarrier :
+    Cardinal.mk TraceCarrier = Order.succ (Cardinal.continuum : Cardinal) := by
+  exact Cardinal.mk_ord_toType _
+
+/-- Reindex the existing carrier onto the canonical ordinal carrier.
+Choice is used only to obtain an equivalence from their proven equal cardinalities. -/
+noncomputable def erdosRadoCarrierEquivTraceCarrier :
+    Equiv ErdosRadoCarrier TraceCarrier :=
+  Classical.choice <|
+    Cardinal.eq.mp (mk_erdosRadoCarrier.trans mk_traceCarrier.symm)
+
+end ErdosRado
+end TriangleHost
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalTrace
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.TriangleHostRamseyChromatic
 Source: Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean
 Normalized SHA-256: ed98db2e972312fb896710474097a37c3301cd332fa7188c37dfd4caf3b6a2c1
@@ -19321,7 +19366,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: e138a2ec6253aa8887bd0603f39116567da577a46d3cb0f749117d4e32c0186b
+Normalized SHA-256: 7fe39f57c137247e5313f7bbe05f6393f618f817441c338b6e5026406f37df1f
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
