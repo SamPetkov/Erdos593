@@ -660,13 +660,17 @@ host and transport code.
    interface over the existing finite `TriangleHost.Pair` and
    `TriangleHost.Triangle` representations. It is implemented; it contains
    only the finite extraction and equivalence bridge above.
-2. `ErdosRado.lean` chooses the concrete cardinal carrier only after a
-   pinned-Mathlib feasibility audit confirms the exact constructor APIs. It
-   formalizes the needed specialization of
+2. `ErdosRadoCarrier.lean` fixes the base-universe carrier
+   `Order.succ Cardinal.continuum`, proves its exact cardinality, and
+   packages the required infinite-homogeneous-set premise as
+   `ErdosRadoHomogeneousPairSet`. It is implemented and deliberately makes
+   no partition-calculus assertion.
+3. `ErdosRado.lean` proves `ErdosRadoHomogeneousPairSet` by formalizing the
+   needed specialization of
    `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`, returns an infinite homogeneous
    set, and applies the checked finite bridge. It must not replace this with
    a finite-colour result.
-3. `TriangleHostRamseyUnconditional.lean` applies N22's existing
+4. `TriangleHostRamseyUnconditional.lean` applies N22's existing
    `not_isObligatory_of_not_linear_of_exactTriangleHost` to that witness. It
    must not duplicate `reindex`, the ULift argument, or the finite-linearity
    proof.

@@ -35,6 +35,7 @@ import Mathlib.Order.WellFounded
 import Mathlib.SetTheory.Cardinal.Aleph
 import Mathlib.SetTheory.Cardinal.Arithmetic
 import Mathlib.SetTheory.Cardinal.Basic
+import Mathlib.SetTheory.Cardinal.Continuum
 import Mathlib.SetTheory.Cardinal.Finite
 import Mathlib.SetTheory.Cardinal.Order
 import Mathlib.SetTheory.Cardinal.Ordinal
@@ -10651,6 +10652,61 @@ END SOURCE MODULE: Erdos593.TripleSystem.CardinalPairPartition
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRadoCarrier
+Source: Erdos593/TripleSystem/ErdosRadoCarrier.lean
+Normalized SHA-256: b95a1fed210d8054ed954de1ac6890e7cc21a67ca3a1341e9b40c8ac6bbd9b62
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRadoCarrier
+
+/-!
+# Erdos--Rado carrier interface
+
+This module fixes the base-universe carrier of cardinality the successor of
+the continuum and records the exact infinite homogeneous-set premise needed
+by the countably-coloured Erdos--Rado special case.  It intentionally does
+not assert or prove that premise.
+-/
+
+namespace Erdos593
+namespace TripleSystem
+namespace TriangleHost
+
+/-- The base-universe carrier of cardinality `(2^aleph0)^+`. -/
+noncomputable abbrev ErdosRadoCarrier : Type :=
+  (Order.succ (Cardinal.continuum : Cardinal)).out
+
+/-- The chosen cardinal carrier has decidable equality, noncomputably. -/
+noncomputable instance erdosRadoCarrierDecidableEq : DecidableEq ErdosRadoCarrier :=
+  Classical.decEq _
+
+/-- The carrier has exactly the desired successor-of-continuum cardinality. -/
+theorem mk_erdosRadoCarrier :
+    Cardinal.mk ErdosRadoCarrier = Order.succ (Cardinal.continuum : Cardinal) :=
+  Cardinal.mk_out _
+
+/-- The precise countably-coloured infinite homogeneous-set consequence that
+a future Erdos--Rado formalization must establish. -/
+def ErdosRadoHomogeneousPairSet : Prop :=
+  ∀ c : Pair ErdosRadoCarrier → ℕ, ∃ H : Set ErdosRadoCarrier,
+    H.Infinite ∧ PairHomogeneous c H
+
+/-- The external homogeneous-set theorem implies the local Ramsey interface.
+This is only a conditional composition of the checked finite bridge. -/
+theorem pairRamseyTriangle_erdosRadoCarrier_of
+    (h : ErdosRadoHomogeneousPairSet) :
+    PairRamseyTriangle ErdosRadoCarrier :=
+  pairRamseyTriangle_of_infinite_pair_homogeneous h
+
+end TriangleHost
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRadoCarrier
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ErdosRadoCarrier
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.TriangleHostRamseyChromatic
 Source: Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean
 Normalized SHA-256: ed98db2e972312fb896710474097a37c3301cd332fa7188c37dfd4caf3b6a2c1
@@ -19168,7 +19224,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 6d612a5efffeb6ec24a45efcadf42470e87a2010d7345f54ae063c0fc76ea58e
+Normalized SHA-256: cd01ea67b45f0853967fa6e992d5b216cafb587cb9c91ab73f073b150f90574d
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
