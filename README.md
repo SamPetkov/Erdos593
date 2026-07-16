@@ -214,6 +214,12 @@ derived from finite linearity or from the canonical enumeration alone.
 The coherent-order endpoint module feeds that same explicit premise into the
 exact-cover, base-node-cover, and canonical-active-list constructible and
 obligatory theorems; it does not make the premise automatic.
+`SequenceLiftBaseFiberSupportIncidenceForestOrderBridge` now supplies a
+strictly weaker sufficient graph condition: if the finite bipartite incidence
+graph between active base fibres and their support points is acyclic, dynamic
+leaf elimination yields such a coherent base-node cover.  This correctly
+allows arbitrary common-apex stars; it remains an explicit incidence-forest
+hypothesis and is not claimed to follow from linearity alone.
 An even stronger tail-degree condition -- each new fibre has at most one
 overlapping tail neighbour -- now implies coherence and has matching direct
 exact-cover, base-node-cover, and canonical-active-list endpoints.  It is
