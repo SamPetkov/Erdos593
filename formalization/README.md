@@ -35,7 +35,9 @@ support hypotheses are deliberately not inferred from the existing edge-fibre
 partition.  A coherent newest-first support order is now a concrete sufficient
 condition: under linearity, it feeds the same constructible and obligatory
 endpoints in exact-cover, base-node-cover, and canonical-active-list forms.
-It remains an explicit hypothesis rather than a consequence of linearity.
+An even stronger tail-degree condition, in which each new fibre has at most
+one overlapping tail neighbour, now implies that coherence directly.  Both
+remain explicit hypotheses rather than consequences of linearity.
 
 ## Current status
 

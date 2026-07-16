@@ -120,11 +120,11 @@ against the Lean and Mathlib versions pinned by `lean-toolchain` and
 provisioned pinned environment. Routine release validation uses the focused
 module checks recorded below.
 
-## Recorded verification (15 July 2026)
+## Recorded verification (16 July 2026)
 
-- Deterministic regeneration check: passed for 112 source modules, 44 external
-  Mathlib imports, 16,176 physical lines, and SHA-256
-  `582c86eba4199b4279b7c2c15a84b2f17251af1e83cc68bbc46df7160306bd1e`.
+- Deterministic regeneration check: passed for 113 source modules, 44 external
+  Mathlib imports, 16,254 physical lines, and SHA-256
+  `456b6055d025b8e0b98ecff953326149a80f24d7b266d740caec48c402034dc0`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.Graph.FiniteEdgeFactor`,
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
@@ -154,6 +154,8 @@ module checks recorded below.
   Lake jobs), and
   `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportRunningOrderEndpoints`
   (1,591 Lake jobs), and
+  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportTailDegree` (1,591 Lake
+  jobs), and
   `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake jobs),
   and `Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine` (1,237 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality` (1,289
@@ -180,6 +182,7 @@ module checks recorded below.
   `SequenceLiftBaseFiberSupport`, `SequenceLiftBaseFiberAssembly`,
   `SequenceLiftBaseFiberSupportRunningOrder`,
   `SequenceLiftBaseFiberSupportRunningOrderEndpoints`,
+  `SequenceLiftBaseFiberSupportTailDegree`,
   `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberGlobalSpine`,
   `SequenceLiftBaseFiberCardinality`,
   `SequenceLiftBaseFiberTraceSum`, `SequenceLiftBaseFiberEquiv`,
@@ -293,6 +296,9 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_coherentBaseFiberAssembly
 #print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_coherentBaseNodeCover
 #print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_activeBaseNodeSupportTailOverlapCoherent
+#print axioms Erdos593.SequenceLift.baseFiberSupportTailAtMostOneNeighbor
+#print axioms Erdos593.SequenceLift.baseFiberSupportTailOverlapCoherent_of_tailAtMostOneNeighbor
+#print axioms Erdos593.SequenceLift.baseFiberAssemblyCompatible_of_linear_of_nodup_of_tailAtMostOneNeighbor
 #print axioms Erdos593.SequenceLift.mem_edgePieceUnion_baseFiberList
 #print axioms Erdos593.SequenceLift.edgePieceUnion_baseFiber_eq_of_baseNode_mem
 #print axioms Erdos593.SequenceLift.activeBaseNodeList
