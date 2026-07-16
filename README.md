@@ -100,9 +100,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 108 source modules. The
-generated one-file checkpoint contains 15,399 physical lines, 44 external
-Mathlib imports, and 471 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 109 source modules. The
+generated one-file checkpoint contains 15,512 physical lines, 44 external
+Mathlib imports, and 474 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
@@ -193,6 +193,13 @@ constructible-to-obligatory theorem to the same fibre, including this ambient
 two-colourability corollary. The two-colourability premise is explicit and
 essential; these local results do not make a global sequence-lift
 constructibility or atom claim.
+`SequenceLiftBaseFiberAssembly` supplies the next conditional global bridge:
+an explicitly ordered finite family of base fibres assembles to a
+constructible, hence obligatory, exact restriction when it covers the selected
+edge set and every new fibre is edge-disjoint from the accumulated tail and
+has either disjoint or singleton-intersecting total vertex support. This
+running-intersection hypothesis is retained explicitly; the current fibre
+partition API does not prove it.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

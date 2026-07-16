@@ -122,9 +122,9 @@ module checks recorded below.
 
 ## Recorded verification (15 July 2026)
 
-- Deterministic regeneration check: passed for 108 source modules, 44 external
-  Mathlib imports, 15,399 physical lines, and SHA-256
-  `522a6bea76d37da391ced1cef7f7d7efde1c8808559f71f0f351e90a67e06e52`.
+- Deterministic regeneration check: passed for 109 source modules, 44 external
+  Mathlib imports, 15,512 physical lines, and SHA-256
+  `0bc771f1cfc061d9a91f511e593fb893e801701aa6f7669470742b0d17bce44a`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.Graph.FiniteEdgeFactor`,
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
@@ -145,6 +145,8 @@ module checks recorded below.
   Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberConstructible`
   (1,251 Lake jobs), and
   `Erdos593.TripleSystem.SequenceLiftBaseFiberObligatory` (1,584 Lake jobs),
+  and
+  `Erdos593.TripleSystem.SequenceLiftBaseFiberAssembly` (1,585 Lake jobs),
   and
   `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake jobs),
   and `Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine` (1,237 Lake
@@ -169,6 +171,7 @@ module checks recorded below.
   `SequenceLiftBaseIncidence`, `SequenceLiftBaseLetterSubgraph`,
   `SequenceLiftBaseFiberFactor`, `SequenceLiftBaseFiberExpansion`,
   `SequenceLiftBaseFiberConstructible`, `SequenceLiftBaseFiberObligatory`,
+  `SequenceLiftBaseFiberAssembly`,
   `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberGlobalSpine`,
   `SequenceLiftBaseFiberCardinality`,
   `SequenceLiftBaseFiberTraceSum`, `SequenceLiftBaseFiberEquiv`,
@@ -272,6 +275,8 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.finite_baseFiberExpansionFactorSpine_of_linear
 #print axioms Erdos593.SequenceLift.baseFiber_constructible_of_linear_of_colorable
 #print axioms Erdos593.SequenceLift.baseFiber_isObligatory_of_linear_of_colorable
+#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_baseFiberAssembly
+#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseFiberAssembly
 #print axioms Erdos593.SequenceLift.finite_activeBaseNodeIndex
 #print axioms Erdos593.SequenceLift.iUnion_baseFiber_activeBaseNodeIndex
 #print axioms Erdos593.SequenceLift.surjective_baseNodeIndexMap
