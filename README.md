@@ -211,6 +211,9 @@ fibre's nonempty pairwise support intersections with its assembled tail agree.
 Together with linearity, that condition yields the literal N5 running-assembly
 geometry. It permits several fibres to share one common apex, but it is not
 derived from finite linearity or from the canonical enumeration alone.
+The coherent-order endpoint module feeds that same explicit premise into the
+exact-cover, base-node-cover, and canonical-active-list constructible and
+obligatory theorems; it does not make the premise automatic.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across

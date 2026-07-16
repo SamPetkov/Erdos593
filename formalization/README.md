@@ -32,7 +32,10 @@ discharged by the simpler condition that the list contains the canonical base
 node of every selected edge; for a finite selected family, a canonical active
 base-node enumeration now supplies that cover automatically.  The cross-fibre
 support hypotheses are deliberately not inferred from the existing edge-fibre
-partition.
+partition.  A coherent newest-first support order is now a concrete sufficient
+condition: under linearity, it feeds the same constructible and obligatory
+endpoints in exact-cover, base-node-cover, and canonical-active-list forms.
+It remains an explicit hypothesis rather than a consequence of linearity.
 
 ## Current status
 

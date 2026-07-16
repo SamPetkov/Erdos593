@@ -15419,6 +15419,136 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportRunningOrde
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportRunningOrderEndpoints
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportRunningOrderEndpoints.lean
+Normalized SHA-256: 0e285cc156b5c07e298f08e86636575e343faf91d7dafba65ab078da8a4afcf6
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportRunningOrderEndpoints
+
+/-!
+# Constructible and obligatory endpoints for coherent base-fibre orders
+
+The support-tail-overlap coherence condition is a genuinely additional global
+ordering premise.  This module merely feeds its verified geometric consequence
+into the existing N5 assembly endpoints; it does not claim that linearity or
+the canonical active-base enumeration supplies that premise.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- The canonical active-base enumeration has no repeated base node. -/
+theorem activeBaseNodeList_nodup
+    {S : Set (Edge G)} (hS : S.Finite) :
+    (activeBaseNodeList S hS).Nodup := by
+  change
+    ((@Finset.univ (activeBaseNodeIndex S)
+      (activeBaseNodeIndexFintype hS)).toList.map Subtype.val).Nodup
+  exact (Finset.nodup_toList _).map Subtype.val_injective
+
+/-- A noduplicated coherent support running order gives a constructible exact
+sequence-lift restriction once its base fibres cover the selected edge set. -/
+theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_coherentBaseFiberAssembly
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) (nodes : List (Node G))
+    (hcover : TripleSystem.edgePieceUnion (nodes.map (baseFiber S)) = S)
+    (hnodup : nodes.Nodup)
+    (hcoherent : baseFiberSupportTailOverlapCoherent S nodes) :
+    TripleSystem.Constructible ((system G).edgeRestriction S) :=
+  edgeRestriction_constructible_of_linear_of_hostColorable_of_baseFiberAssembly
+    hS hlinear hG nodes hcover
+    (baseFiberAssemblyCompatible_of_linear_of_nodup_of_supportTailOverlapCoherent
+      hlinear hnodup hcoherent)
+
+/-- The canonical-base-node cover form of the coherent-running-order
+constructibility theorem. -/
+theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_coherentBaseNodeCover
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) (nodes : List (Node G))
+    (hcover : ∀ e, e ∈ S → baseNode e ∈ nodes)
+    (hnodup : nodes.Nodup)
+    (hcoherent : baseFiberSupportTailOverlapCoherent S nodes) :
+    TripleSystem.Constructible ((system G).edgeRestriction S) :=
+  edgeRestriction_constructible_of_linear_of_hostColorable_of_baseNodeCover
+    hS hlinear hG nodes hcover
+    (baseFiberAssemblyCompatible_of_linear_of_nodup_of_supportTailOverlapCoherent
+      hlinear hnodup hcoherent)
+
+/-- The canonical active-base enumeration yields a constructible exact
+restriction when its explicit support-tail-overlap coherence premise holds. -/
+theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_activeBaseNodeSupportTailOverlapCoherent
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hcoherent :
+      baseFiberSupportTailOverlapCoherent S (activeBaseNodeList S hS)) :
+    TripleSystem.Constructible ((system G).edgeRestriction S) :=
+  edgeRestriction_constructible_of_linear_of_hostColorable_of_activeBaseNodeAssembly
+    hS hlinear hG
+    (baseFiberAssemblyCompatible_of_linear_of_nodup_of_supportTailOverlapCoherent
+      hlinear (activeBaseNodeList_nodup hS) hcoherent)
+
+/-- The exact-cover coherent-running-order endpoint is obligatory by the
+completed classical positive-atom closure theorem. -/
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_coherentBaseFiberAssembly
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) (nodes : List (Node G))
+    (hcover : TripleSystem.edgePieceUnion (nodes.map (baseFiber S)) = S)
+    (hnodup : nodes.Nodup)
+    (hcoherent : baseFiberSupportTailOverlapCoherent S nodes) :
+    ((system G).edgeRestriction S).IsObligatory :=
+  edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseFiberAssembly
+    hS hlinear hG nodes hcover
+    (baseFiberAssemblyCompatible_of_linear_of_nodup_of_supportTailOverlapCoherent
+      hlinear hnodup hcoherent)
+
+/-- The canonical-base-node-cover coherent-running-order endpoint is
+obligatory. -/
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_coherentBaseNodeCover
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) (nodes : List (Node G))
+    (hcover : ∀ e, e ∈ S → baseNode e ∈ nodes)
+    (hnodup : nodes.Nodup)
+    (hcoherent : baseFiberSupportTailOverlapCoherent S nodes) :
+    ((system G).edgeRestriction S).IsObligatory :=
+  edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseNodeCover
+    hS hlinear hG nodes hcover
+    (baseFiberAssemblyCompatible_of_linear_of_nodup_of_supportTailOverlapCoherent
+      hlinear hnodup hcoherent)
+
+/-- The canonical active-base endpoint is obligatory when the explicit
+support-tail-overlap coherence premise holds. -/
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_activeBaseNodeSupportTailOverlapCoherent
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hcoherent :
+      baseFiberSupportTailOverlapCoherent S (activeBaseNodeList S hS)) :
+    ((system G).edgeRestriction S).IsObligatory :=
+  edgeRestriction_isObligatory_of_linear_of_hostColorable_of_activeBaseNodeAssembly
+    hS hlinear hG
+    (baseFiberAssemblyCompatible_of_linear_of_nodup_of_supportTailOverlapCoherent
+      hlinear (activeBaseNodeList_nodup hS) hcoherent)
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportRunningOrderEndpoints
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportRunningOrderEndpoints
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberGlobalSpine.lean
 Normalized SHA-256: 26312dc76e3e6ca9e5db3e25f1de3c811248426c478b272842740fc83971bb9d
@@ -16030,7 +16160,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 7f07cdfe8806cc1b2b60950988bc657b3e37972bb94f184b3dd8bdd347b53550
+Normalized SHA-256: fe55bb9a296d37c5b55556726dbe2fbed2831be96273a134080a45b6a3ef5e4e
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
