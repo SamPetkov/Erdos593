@@ -574,6 +574,25 @@ lemmas are implemented and strict-clean in
 `PairRamseyTriangle`, a Ramsey partition relation, a cardinal lower bound,
 or a cross-universe host bridge. Those remain separate proof obligations.
 
+### N21 -- conditional chromatic-cardinal bridge
+
+In `Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean`, convert the
+natural-colour interface to the precise cardinal conclusion needed later:
+under `PairRamseyTriangle kappa`, the triangle host has chromatic cardinal
+strictly above `aleph-zero`. The proof uses the existing
+`chromaticCardinal_le_mk_iff` characterization, pulls a hypothetical
+countable colouring back through `ULift`, and invokes the N20 contradiction.
+
+This is still conditional on the Ramsey interface. It does not prove an
+Erdos--Rado relation, provide a witness `kappa`, or transport the result to
+a host in arbitrary vertex and edge universes.
+
+**N21 status (2026-07-16).** The conditional cardinal bridge is implemented
+and strict-clean in
+`Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean`. The outstanding
+work is the explicit Ramsey witness and the separately scoped reindexing
+bridge for the generic nonlinearity obstruction.
+
 ### Aristotle call schedule for Terra Max
 
 Terra Max should keep local proof search moving while Aristotle runs. It must

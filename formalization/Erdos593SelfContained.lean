@@ -10555,6 +10555,61 @@ END SOURCE MODULE: Erdos593.TripleSystem.TriangleHostRamsey
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.TriangleHostRamseyChromatic
+Source: Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean
+Normalized SHA-256: ed98db2e972312fb896710474097a37c3301cd332fa7188c37dfd4caf3b6a2c1
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_TriangleHostRamseyChromatic
+
+/-!
+# A chromatic-cardinal consequence of the triangle-host Ramsey interface
+
+This module converts the exact natural-colour Ramsey interface into the
+strict cardinal lower bound required by the later obstruction argument.  It
+is conditional on `PairRamseyTriangle`; it does not establish an
+Erdős--Rado partition theorem.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal
+
+universe u
+
+namespace TripleSystem
+namespace TriangleHost
+
+/-- Under the Ramsey interface, the triangle host has chromatic cardinal
+strictly above `ℵ₀`. -/
+theorem aleph0_lt_chromaticCardinal_of_pairRamseyTriangle
+    (κ : Type u) [DecidableEq κ]
+    (hRamsey : PairRamseyTriangle κ) :
+    ℵ₀ < (system κ).chromaticCardinal := by
+  by_contra hnot
+  have hle : (system κ).chromaticCardinal ≤ ℵ₀ := le_of_not_gt hnot
+  have hle' : (system κ).chromaticCardinal ≤ #(ULift.{u} ℕ) := by
+    simpa using hle
+  obtain ⟨c, hc⟩ :=
+    ((system κ).chromaticCardinal_le_mk_iff (C := ULift.{u} ℕ)).mp hle'
+  let d : Pair κ → ℕ := fun p ↦ (c p).down
+  apply not_isProperColoring_nat_of_pairRamseyTriangle κ hRamsey d
+  intro e
+  rcases hc e with ⟨x, hx, y, hy, hxy⟩
+  refine ⟨x, hx, y, hy, ?_⟩
+  intro hdown
+  apply hxy
+  exact ULift.ext _ _ hdown
+
+end TriangleHost
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_TriangleHostRamseyChromatic
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.TriangleHostRamseyChromatic
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ObligatoryBipartiteReduction
 Source: Erdos593/TripleSystem/ObligatoryBipartiteReduction.lean
 Normalized SHA-256: 4b4577db30d105778662972ef4ce51f244b234cc9b7f600804d3acb2aefbe167
@@ -18862,7 +18917,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: c17d3d1cfe37b4a2ff4ce78ccecfd04b95520f1a75f4a2563aaece93862368a5
+Normalized SHA-256: 2bd43ed29fd969acfb7e9c1c06030d8b97fb8ca9b4992dee975f2391194d494f
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
