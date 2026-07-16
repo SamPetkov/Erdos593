@@ -190,7 +190,8 @@ public obligatory endpoints, sequence-trace rigidity lemmas, and the
 `SequenceLiftBaseFiberPartition` / `SequenceLiftBaseApex` /
 `SequenceLiftBaseIncidence` / `SequenceLiftBaseLetterSubgraph` /
 `SequenceLiftBaseFiberFactor` /
-`SequenceLiftBaseFiberSupportIndex` / `SequenceLiftBaseFiberCardinality` /
+`SequenceLiftBaseFiberSupportIndex` / `SequenceLiftBaseFiberSupportIncidenceGraph` /
+`SequenceLiftBaseFiberCardinality` /
 `SequenceLiftBaseFiberTraceSum` / `SequenceLiftBaseFiberEquiv` /
 `SequenceLiftTaggedBaseLetterEquiv` /
 `SequenceLiftTaggedBaseLetterSourceEquiv` / `SequenceLiftBaseApexEquiv` /

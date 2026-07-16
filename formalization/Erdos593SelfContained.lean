@@ -5134,7 +5134,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.Constructive
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.EdgeRestriction
 Source: Erdos593/TripleSystem/EdgeRestriction.lean
-Normalized SHA-256: 611d4a4e03a36b58e2fb32a602bc4118a01ea269f98e60da3d4657842ee45046
+Normalized SHA-256: 0435e5f79927a45b5ae21b597f2f910d122eac6c58e2fcf928e3e8b9d8f6bd09
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_EdgeRestriction
 
@@ -5157,6 +5157,22 @@ variable {V : Type u} {E : Type v} (F : TripleSystem V E)
 /-- The set of points lying on at least one edge whose index belongs to `S`. -/
 def edgeSupportSet (S : Set E) : Set V :=
   {x | ∃ e : E, e ∈ S ∧ F.Inc x e}
+
+/-- The point support of a finite family of triple edges is finite. -/
+theorem edgeSupportSet_finite {S : Set E} (hS : S.Finite) :
+    (F.edgeSupportSet S).Finite := by
+  induction S, hS using Set.Finite.induction_on with
+  | empty =>
+      simp [edgeSupportSet]
+  | insert hnotmem hfinite ih =>
+      rename_i e S
+      rw [show F.edgeSupportSet (insert e S) =
+        {x : V | F.Inc x e} ∪ F.edgeSupportSet S by
+          ext x
+          simp [edgeSupportSet]]
+      exact (Set.finite_of_ncard_ne_zero (by
+        rw [F.edge_ncard e]
+        decide)).union ih
 
 /-- The type of points supported by an edge-index set. -/
 abbrev EdgeSupport (S : Set E) := F.edgeSupportSet S
@@ -16434,6 +16450,110 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftFiniteLiftGeneratedEndpoint
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceGraph
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceGraph.lean
+Normalized SHA-256: d3b001bf0ba60735129549d29a7ab7aff3e0b5b4b0fc4b3c711a2c32cde98723
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceGraph
+
+/-!
+# Finite support-incidence graphs for sequence-lift base fibres
+
+This module records the bipartite incidence graph between the active canonical
+base fibres of a finite selected family and the points in its total support.
+Unlike the projected support-overlap graph, a point shared by several fibres is
+represented by one point-side vertex rather than a clique.  The module only
+provides finite carriers and adjacency vocabulary; it does not assert an
+acyclicity or ordering theorem.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- The subtype of points in the total support of a selected edge family. -/
+abbrev activeBaseFiberSupportPointIndex (S : Set (Edge G)) : Type u :=
+  {p : Point G // p ∈ (system G).edgeSupportSet S}
+
+/-- A finite selected family has a finite point-side support index subtype. -/
+theorem finite_activeBaseFiberSupportPointIndex {S : Set (Edge G)}
+    (hS : S.Finite) :
+    Finite (activeBaseFiberSupportPointIndex S) :=
+  ((system G).edgeSupportSet_finite hS).to_subtype
+
+/-- A chosen finite enumeration of the point-side support index of a finite
+selected family. This is supplied explicitly rather than as a global instance. -/
+@[reducible]
+noncomputable def activeBaseFiberSupportPointIndexFintype {S : Set (Edge G)}
+    (hS : S.Finite) : Fintype (activeBaseFiberSupportPointIndex S) := by
+  letI : Finite (activeBaseFiberSupportPointIndex S) :=
+    finite_activeBaseFiberSupportPointIndex hS
+  exact Fintype.ofFinite _
+
+/-- The bipartite graph joining an active base-fibre index to each point in
+that fibre's support.  The point-side carrier is the total support of `S`, so
+it is finite whenever `S` is finite. -/
+def baseFiberSupportIncidenceGraph (S : Set (Edge G)) :
+    SimpleGraph
+      (activeBaseNodeIndex S ⊕ activeBaseFiberSupportPointIndex S) :=
+  SimpleGraph.fromRel fun x y =>
+    match x, y with
+    | .inl q, .inr p =>
+        p.1 ∈ (system G).edgeSupportSet (baseFiber S q.1)
+    | _, _ => False
+
+/-- A fibre-side vertex is adjacent to a point-side vertex exactly when that
+point belongs to the fibre support. -/
+@[simp]
+theorem baseFiberSupportIncidenceGraph_adj_inl_inr_iff
+    {S : Set (Edge G)}
+    {q : activeBaseNodeIndex S}
+    {p : activeBaseFiberSupportPointIndex S} :
+    (baseFiberSupportIncidenceGraph S).Adj (.inl q) (.inr p) ↔
+      p.1 ∈ (system G).edgeSupportSet (baseFiber S q.1) := by
+  simp [baseFiberSupportIncidenceGraph, SimpleGraph.fromRel_adj]
+
+/-- The incidence relation is symmetric when read from point-side to
+fibre-side vertices. -/
+@[simp]
+theorem baseFiberSupportIncidenceGraph_adj_inr_inl_iff
+    {S : Set (Edge G)}
+    {q : activeBaseNodeIndex S}
+    {p : activeBaseFiberSupportPointIndex S} :
+    (baseFiberSupportIncidenceGraph S).Adj (.inr p) (.inl q) ↔
+      p.1 ∈ (system G).edgeSupportSet (baseFiber S q.1) := by
+  simp [baseFiberSupportIncidenceGraph, SimpleGraph.fromRel_adj]
+
+/-- There are no fibre-side to fibre-side incidence edges. -/
+@[simp]
+theorem not_baseFiberSupportIncidenceGraph_adj_inl_inl
+    {S : Set (Edge G)}
+    {q r : activeBaseNodeIndex S} :
+    ¬ (baseFiberSupportIncidenceGraph S).Adj (.inl q) (.inl r) := by
+  simp [baseFiberSupportIncidenceGraph, SimpleGraph.fromRel_adj]
+
+/-- There are no point-side to point-side incidence edges. -/
+@[simp]
+theorem not_baseFiberSupportIncidenceGraph_adj_inr_inr
+    {S : Set (Edge G)}
+    {p r : activeBaseFiberSupportPointIndex S} :
+    ¬ (baseFiberSupportIncidenceGraph S).Adj (.inr p) (.inr r) := by
+  simp [baseFiberSupportIncidenceGraph, SimpleGraph.fromRel_adj]
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceGraph
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceGraph
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberGlobalSpine.lean
 Normalized SHA-256: 26312dc76e3e6ca9e5db3e25f1de3c811248426c478b272842740fc83971bb9d
@@ -17045,7 +17165,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 3e82aa104bfacb963c2b65b639efe94e5841a1582602b2f7092fff8d4aa670b1
+Normalized SHA-256: 25fd69455b3d11009f7b967cd7358a31eaa224a5173a0b4903a64d551f9dface
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
