@@ -326,6 +326,8 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.baseFiber_finiteLiftGenerated_of_linear
 #print axioms Erdos593.SequenceLift.edgeRestriction_finiteLiftGenerated_of_linear_of_baseFiberAssembly
 #print axioms Erdos593.SequenceLift.edgeRestriction_finiteLiftGenerated_of_linear_of_supportOverlapAcyclic
+#print axioms Erdos593.TripleSystem.FiniteLiftGenerated.constructible_of_hostColorable
+#print axioms Erdos593.TripleSystem.FiniteLiftGenerated.isObligatory_of_hostColorable
 #print axioms Erdos593.SequenceLift.mem_edgePieceUnion_baseFiberList
 #print axioms Erdos593.SequenceLift.edgePieceUnion_baseFiber_eq_of_baseNode_mem
 #print axioms Erdos593.SequenceLift.activeBaseNodeList

@@ -53,6 +53,12 @@ now supplies a finite-generation certificate for the whole restriction.  This
 does not assert constructibility, obligatoriness, or an unrestricted trace
 decomposition.
 
+If the host graph is two-colourable, the factor maps in that certificate pull
+the colouring back to every atom.  The generic closure therefore proves the
+restriction constructible and then obligatory through the completed positive
+constructible theorem.  This conditional consequence does not remove the
+explicit host-colourability or support-overlap hypotheses.
+
 ## Current status
 
 The imported source closure contains no `sorry`, `admit`, project `axiom`,
