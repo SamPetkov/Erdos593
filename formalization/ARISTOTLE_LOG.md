@@ -1195,6 +1195,31 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   `fa66819efd7439e6226c02c5f9c2e29cb9389fab`, which was compiled, axiom-audited,
   and passed GitHub Actions. The remote result is therefore accepted only as
   an independent proof/API audit and must not overwrite the tracked source.
+## O35: TriangleHost finite-linearity audit
+
+- Submitted (UTC): 2026-07-16. The authenticated Aristotle project is
+  `7adf363f-f766-4d57-bde6-74dc6cee4292`; its task is
+  `b2b05f74-92cf-40cc-a2c3-23ce534f7b72`.
+- Exact task boundary: create only the proposed module
+  `Erdos593/TripleSystem/TriangleHostLinearity.lean`, using 2-subsets of a
+  type `κ` as vertices and 3-subsets as edges, and prove only the finite
+  triple-system and linearity facts. The required finite obligations are
+  3-subsets having exactly three 2-subsets, extensional simplicity, and the
+  fact that two 3-subsets sharing two distinct 2-subsets are equal.
+- Explicit non-goals: no Ramsey or Erdos--Rado partition theorem, no
+  chromatic-cardinality theorem, no odd-Berge or sequence-lift work, and no
+  classification theorem. The task must preserve a same-universe host
+  representation or report a precise universe obstruction.
+- Submitted files: none. Aristotle received only the public repository
+  context and a bounded prompt; no local tree, credential, secret, or private
+  artifact was uploaded.
+- Required verification: focused warnings-as-errors compilation, focused Lake
+  build, `#print axioms`, and a prohibited-construct audit. The prompt forbids
+  `sorry`, `admit`, new axioms, `unsafe`, `native_decide`, `implemented_by`,
+  resource-limit overrides, upstream edits, commits, and pushes.
+- Remote status at recording: `QUEUED`. Any result is advisory until an exact
+  local source, dependency, source-gap, banned-construct, strict-build,
+  axiom, self-contained, and GitHub Actions audit is complete.
 ## Record format
 
 For every submission, record:

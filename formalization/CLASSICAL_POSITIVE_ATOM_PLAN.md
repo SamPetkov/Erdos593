@@ -540,6 +540,20 @@ Only after all three layers are checked may the result instantiate
 `not_isObligatory_of_not_linear_of_linear_highChromatic`. No tracked Lean
 Erdős--Rado or partition-calculus theorem currently supplies layer 3; this is
 the principal remaining nonlinearity branch.
+
+**N19 status (2026-07-16).** Layers 1--2 are now implemented independently in
+`Erdos593/TripleSystem/TriangleHostLinearity.lean`.  The module defines the
+same-universe finite-pair/finite-triangle host and proves its exact
+triple-system structure and `TriangleHost.linear`.
+
+It passes the strict source command and focused Lake build for that module.
+Its `#print axioms` audit reports only `propext`, `Classical.choice`, and
+`Quot.sound`.
+
+This discharges only the finite host and linearity layer.  The Ramsey/high
+chromaticity layer is still open, and an explicit universe-lifting or
+reindexing bridge is still required before an arbitrary source can use this
+same-universe host in the generic nonlinearity endpoint.
 ### Aristotle call schedule for Terra Max
 
 Terra Max should keep local proof search moving while Aristotle runs. It must

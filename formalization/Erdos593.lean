@@ -53,6 +53,7 @@ import Erdos593.TripleSystem.OnePointAmalgamation
 import Erdos593.TripleSystem.OnePointAmalgamationIntrinsic
 import Erdos593.TripleSystem.Obligatory
 import Erdos593.TripleSystem.NonlinearObstruction
+import Erdos593.TripleSystem.TriangleHostLinearity
 import Erdos593.TripleSystem.ObligatoryAtoms
 import Erdos593.TripleSystem.ObligatoryDisjointUnion
 import Erdos593.TripleSystem.ObligatoryIsolatedReduction
