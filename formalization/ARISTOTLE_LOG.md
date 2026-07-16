@@ -1220,6 +1220,10 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
 - Remote status at recording: `QUEUED`. Any result is advisory until an exact
   local source, dependency, source-gap, banned-construct, strict-build,
   axiom, self-contained, and GitHub Actions audit is complete.
+- Local disposition (2026-07-16): the independently authored finite host layer
+  was published in `06eb3c6120f56cb0587e52b14be0f4b11912673a` and passed its
+  focused GitHub Actions Lean checks. The queued remote audit remains advisory
+  and must not overwrite that checked source.
 ## Record format
 
 For every submission, record:

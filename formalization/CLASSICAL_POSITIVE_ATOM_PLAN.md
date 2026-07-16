@@ -554,6 +554,26 @@ This discharges only the finite host and linearity layer.  The Ramsey/high
 chromaticity layer is still open, and an explicit universe-lifting or
 reindexing bridge is still required before an arbitrary source can use this
 same-universe host in the generic nonlinearity endpoint.
+
+### N20 -- natural-colour Ramsey interface
+
+Keep this layer separate from the external partition-calculus theorem.
+In `Erdos593/TripleSystem/TriangleHostRamsey.lean`, define only the exact
+natural-colour consequence required of a future Erdos--Rado theorem.
+`PairRamseyTriangle kappa` says that every map `Pair kappa -> Nat` is
+constant on the three pair-faces of some `Triangle kappa`.
+
+Use it to prove that `TriangleHost.system kappa` has no proper
+natural-number colouring. This is the local combinatorial contradiction
+needed by the existing chromatic-cardinal pattern; it is not a proof that
+the host has chromatic cardinal strictly above aleph-zero.
+
+**N20 status (2026-07-16).** The interface and its two direct anti-colouring
+lemmas are implemented and strict-clean in
+`Erdos593/TripleSystem/TriangleHostRamsey.lean`. The module does not prove
+`PairRamseyTriangle`, a Ramsey partition relation, a cardinal lower bound,
+or a cross-universe host bridge. Those remain separate proof obligations.
+
 ### Aristotle call schedule for Terra Max
 
 Terra Max should keep local proof search moving while Aristotle runs. It must

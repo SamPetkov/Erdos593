@@ -10497,6 +10497,64 @@ END SOURCE MODULE: Erdos593.TripleSystem.TriangleHostLinearity
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.TriangleHostRamsey
+Source: Erdos593/TripleSystem/TriangleHostRamsey.lean
+Normalized SHA-256: 1569d108a8c5f335dbc2bdb01a83227660d1d1ca97b6b8475069483c887f1c9f
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_TriangleHostRamsey
+
+/-!
+# A Ramsey interface for the triangle host
+
+This module isolates the exact Ramsey consequence needed to rule out a
+natural-number proper colouring of `TriangleHost.system`.  It does not prove
+the Ramsey hypothesis itself: that remains the separate Erdős--Rado/cardinal
+layer of the classical positive-atom programme.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace TripleSystem
+namespace TriangleHost
+
+/-- Every natural-number colouring of pair-vertices has a triangle all of whose
+pair-faces have one colour. -/
+def PairRamseyTriangle (κ : Type u) [DecidableEq κ] : Prop :=
+  ∀ c : Pair κ → ℕ, ∃ t : Triangle κ,
+    ∀ p q : Pair κ, p.1 ⊆ t.1 → q.1 ⊆ t.1 → c p = c q
+
+/-- Under `PairRamseyTriangle`, a natural-number colouring of the triangle
+host cannot be proper. -/
+theorem not_isProperColoring_nat_of_pairRamseyTriangle
+    (κ : Type u) [DecidableEq κ]
+    (hRamsey : PairRamseyTriangle κ) (c : Pair κ → ℕ) :
+    ¬ (system κ).IsProperColoring c := by
+  intro hc
+  obtain ⟨t, ht⟩ := hRamsey c
+  rcases hc t with ⟨p, hp, q, hq, hpq⟩
+  exact hpq (ht p q hp hq)
+
+/-- Under `PairRamseyTriangle`, the triangle host has no proper countable
+colouring expressed with natural-number colours. -/
+theorem no_natProperColoring_of_pairRamseyTriangle
+    (κ : Type u) [DecidableEq κ]
+    (hRamsey : PairRamseyTriangle κ) :
+    ¬ ∃ c : Pair κ → ℕ, (system κ).IsProperColoring c := by
+  rintro ⟨c, hc⟩
+  exact not_isProperColoring_nat_of_pairRamseyTriangle κ hRamsey c hc
+
+end TriangleHost
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_TriangleHostRamsey
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.TriangleHostRamsey
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ObligatoryBipartiteReduction
 Source: Erdos593/TripleSystem/ObligatoryBipartiteReduction.lean
 Normalized SHA-256: 4b4577db30d105778662972ef4ce51f244b234cc9b7f600804d3acb2aefbe167
@@ -18804,7 +18862,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 794c96d41ded3e91bdd419cf7b7aa2e608020744b9ef4ad5928b2b6b2479d746
+Normalized SHA-256: c17d3d1cfe37b4a2ff4ce78ccecfd04b95520f1a75f4a2563aaece93862368a5
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
