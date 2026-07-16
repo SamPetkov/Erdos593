@@ -122,7 +122,13 @@ base fibre. It remains factor-local and makes no global cardinality or
 trace-decomposition claim. `SequenceLiftBaseFiberSupportIndex` reindexes the
 partition by the active-base subtype and, for finite embedded sources, gives a
 source-edge surjection and cardinal bound for that index. It still proves no
-fibre-cardinality sum or global trace decomposition. `SequenceLiftBaseFiberCardinality`
+fibre-cardinality sum or global trace decomposition.
+`SequenceLiftBaseFiberSupportIncidenceForestOrder` supplies the generic
+finite bipartite-incidence-forest elimination theorem needed by the next
+sequence-lift bridge: it recomputes the right-side carrier at each deletion,
+so common-apex stars are allowed while each selected left vertex has at most
+one shared right point with its remaining tail. It does not yet instantiate
+that order for canonical base fibres. `SequenceLiftBaseFiberCardinality`
 now proves the exact finite selected-edge fibre sum and the corresponding
 source-index sigma/cardinality identities. It deliberately does not sum global
 base-letter images or traces. `SequenceLiftBaseFiberTraceSum` expresses that
@@ -191,6 +197,7 @@ public obligatory endpoints, sequence-trace rigidity lemmas, and the
 `SequenceLiftBaseIncidence` / `SequenceLiftBaseLetterSubgraph` /
 `SequenceLiftBaseFiberFactor` /
 `SequenceLiftBaseFiberSupportIndex` / `SequenceLiftBaseFiberSupportIncidenceGraph` /
+`SequenceLiftBaseFiberSupportIncidenceForestOrder` /
 `SequenceLiftBaseFiberCardinality` /
 `SequenceLiftBaseFiberTraceSum` / `SequenceLiftBaseFiberEquiv` /
 `SequenceLiftTaggedBaseLetterEquiv` /
