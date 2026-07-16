@@ -123,8 +123,8 @@ module checks recorded below.
 ## Recorded verification (15 July 2026)
 
 - Deterministic regeneration check: passed for 109 source modules, 44 external
-  Mathlib imports, 15,577 physical lines, and SHA-256
-  `d751c57b8354e6a8447e33105bb3e2dcf9d84f3e3d663038dd717a93eff51d60`.
+  Mathlib imports, 15,630 physical lines, and SHA-256
+  `388de5c701bd4d138578dab70834933cd5f2ea53d63ae9e0caecf2eb2b3331f2`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.Graph.FiniteEdgeFactor`,
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
@@ -277,10 +277,14 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.baseFiber_isObligatory_of_linear_of_colorable
 #print axioms Erdos593.SequenceLift.mem_edgePieceUnion_baseFiberList
 #print axioms Erdos593.SequenceLift.edgePieceUnion_baseFiber_eq_of_baseNode_mem
+#print axioms Erdos593.SequenceLift.activeBaseNodeList
+#print axioms Erdos593.SequenceLift.edgePieceUnion_activeBaseNodeList
 #print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_baseFiberAssembly
 #print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_baseNodeCover
+#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_activeBaseNodeAssembly
 #print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseFiberAssembly
 #print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseNodeCover
+#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_activeBaseNodeAssembly
 #print axioms Erdos593.SequenceLift.finite_activeBaseNodeIndex
 #print axioms Erdos593.SequenceLift.iUnion_baseFiber_activeBaseNodeIndex
 #print axioms Erdos593.SequenceLift.surjective_baseNodeIndexMap

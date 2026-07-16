@@ -1,5 +1,6 @@
 import Erdos593.TripleSystem.EdgeRestrictionReconstruction
 import Erdos593.TripleSystem.SequenceLiftBaseFiberObligatory
+import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex
 
 /-!
 # Running assemblies of linear sequence-lift base fibres
@@ -78,6 +79,33 @@ theorem edgePieceUnion_baseFiber_eq_of_baseNode_mem
   · intro he
     exact ⟨baseNode e, hcover e he, ⟨he, rfl⟩⟩
 
+/-- A finite selected edge set has a canonical finite list of its active base
+nodes.  This list is an enumeration only; it does not assert any geometric
+running order. -/
+noncomputable def activeBaseNodeList
+    (S : Set (Edge G)) (hS : S.Finite) : List (Node G) :=
+  (@Finset.univ (activeBaseNodeIndex S) (activeBaseNodeIndexFintype hS)).toList.map
+    Subtype.val
+
+/-- The canonical finite active-base list covers the exact union of all
+selected base fibres. -/
+theorem edgePieceUnion_activeBaseNodeList
+    {S : Set (Edge G)} (hS : S.Finite) :
+    TripleSystem.edgePieceUnion
+        ((activeBaseNodeList S hS).map (baseFiber S)) = S := by
+  apply edgePieceUnion_baseFiber_eq_of_baseNode_mem (activeBaseNodeList S hS)
+  intro e he
+  let q : activeBaseNodeIndex S :=
+    { val := baseNode e
+      property := Exists.intro e (And.intro he rfl) }
+  change List.Mem q.val
+    ((@Finset.univ (activeBaseNodeIndex S)
+      (activeBaseNodeIndexFintype hS)).toList.map Subtype.val)
+  exact List.mem_map_of_mem
+    (Finset.mem_toList.mpr
+      (@Finset.mem_univ (activeBaseNodeIndex S)
+        (activeBaseNodeIndexFintype hS) q))
+
 /-- Finite linear base fibres over a two-colourable host form a generic
 running edge assembly whenever their supports satisfy
 `baseFiberAssemblyCompatible`. -/
@@ -137,6 +165,20 @@ theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_baseNodeCove
     (edgePieceUnion_baseFiber_eq_of_baseNode_mem nodes hcover)
     hcompatible
 
+/-- The canonical active-base enumeration removes the separate cover premise
+from the compatible finite assembly theorem.  Its compatibility requirement
+remains an explicit geometric obligation. -/
+theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_activeBaseNodeAssembly
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hcompatible : baseFiberAssemblyCompatible S (activeBaseNodeList S hS)) :
+    TripleSystem.Constructible ((system G).edgeRestriction S) :=
+  edgeRestriction_constructible_of_linear_of_hostColorable_of_baseFiberAssembly
+    hS hlinear hG (activeBaseNodeList S hS)
+    (edgePieceUnion_activeBaseNodeList hS)
+    hcompatible
+
 /-- The preceding finite compatible assembly is obligatory, by the completed
 classical positive-atom closure theorem for constructible triple systems. -/
 theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseFiberAssembly
@@ -162,6 +204,18 @@ theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseNodeCover
   TripleSystem.Constructible.isObligatory
     (edgeRestriction_constructible_of_linear_of_hostColorable_of_baseNodeCover
       hS hlinear hG nodes hcover hcompatible)
+
+/-- The canonical-active-base version of the compatible-assembly
+obligatoriness theorem. -/
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_activeBaseNodeAssembly
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hcompatible : baseFiberAssemblyCompatible S (activeBaseNodeList S hS)) :
+    ((system G).edgeRestriction S).IsObligatory :=
+  TripleSystem.Constructible.isObligatory
+    (edgeRestriction_constructible_of_linear_of_hostColorable_of_activeBaseNodeAssembly
+      hS hlinear hG hcompatible)
 
 end SequenceLift
 

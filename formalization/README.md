@@ -29,8 +29,10 @@ obligatory.  A separate running-assembly bridge glues an explicitly ordered
 finite family only when its stated edge-disjoint and total-support
 running-intersection hypotheses hold.  Its exact fibre-cover equality can be
 discharged by the simpler condition that the list contains the canonical base
-node of every selected edge.  The cross-fibre support hypotheses are
-deliberately not inferred from the existing edge-fibre partition.
+node of every selected edge; for a finite selected family, a canonical active
+base-node enumeration now supplies that cover automatically.  The cross-fibre
+support hypotheses are deliberately not inferred from the existing edge-fibre
+partition.
 
 ## Current status
 
