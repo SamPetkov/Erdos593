@@ -623,9 +623,9 @@ TriangleHost.PairRamseyTriangle kappa
 ~~~
 
 Equivalently, every `c : TriangleHost.Pair kappa -> Nat` must have a
-`t : TriangleHost.Triangle kappa` such that all pair-faces `p q` satisfying
-`p.1 ? t.1` and `q.1 ? t.1` have `c p = c q`. The theorem must be obtained
-from an actual special case of the Erd?s--Rado theorem, with countably many
+`t : TriangleHost.Triangle kappa` such that every two pair-faces `p q`
+contained in `t.1` have `c p = c q`. The theorem must be obtained from an
+actual special case of the Erdos--Rado theorem, with countably many
 colours; replacing it by a finite-colour theorem is not sufficient.
 
 **Module split.** Keep the external combinatorics separate from the current
@@ -646,7 +646,7 @@ host and transport code.
    must not duplicate `reindex`, the ULift argument, or the finite-linearity
    proof.
 
-**Non-goals and hard stop.** Do not claim an Erd?s--Rado witness, the full
+**Non-goals and hard stop.** Do not claim an Erdos--Rado witness, the full
 classical positive-atom theorem, or any positive classification result until
 the special-case partition theorem itself is strict-clean. No `axiom`,
 `sorry`, `admit`, `unsafe`, `native_decide`, `implemented_by`, finite-colour
@@ -713,16 +713,16 @@ are frozen locally. It is a separate request from A3 and A4.
 Submit only the N23 bridge from a homogeneous three-point set to
 `PairRamseyTriangle`, with the existing `Set.powersetCard` pair/triangle
 representations and exact universe parameters. Ask for a checked patch or the
-smallest API obstruction; do not submit the Erd?s--Rado theorem in this call.
+smallest API obstruction; do not submit the Erdos--Rado theorem in this call.
 
-#### A7 -- pinned-Mathlib Erd?s--Rado feasibility audit
+#### A7 -- pinned-Mathlib Erdos--Rado feasibility audit
 
 Ask Aristotle to locate an existing usable theorem in the exact pinned
 Mathlib version, or report precise missing declarations/files. It may not add
 an axiom, replace countably many colours by finitely many, or claim a witness.
 This feasibility result gates any full formalization request.
 
-#### A8 -- bounded special-case Erd?s--Rado proof
+#### A8 -- bounded special-case Erdos--Rado proof
 
 Only after A6 and A7 freeze viable signatures, request the concrete
 countably-coloured pair theorem for the chosen successor-of-continuum carrier.

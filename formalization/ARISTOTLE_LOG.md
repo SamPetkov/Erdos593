@@ -1237,7 +1237,7 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   endpoint). It may return a minimal correction confined to this module or an
   explicit soundness report.
 - Explicit non-goals: no construction or assumption of
-  `PairRamseyTriangle`, no Erd?s--Rado proof, no unconditioned classification,
+  `PairRamseyTriangle`, no Erdos--Rado proof, no unconditioned classification,
   and no upstream commit, push, or unrelated refactor.
 - Required audit: focused warnings-as-errors elaboration and Lake build,
   endpoint `#print axioms`, and a scan for `sorry`, `admit`, `axiom`, `unsafe`,
