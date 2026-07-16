@@ -607,6 +607,59 @@ to show that every non-linear source is not obligatory.
 conditional negative route: it does not construct `kappa`, prove the
 Erdos--Rado input, or settle the full classical positive-atom theorem.
 
+### N23 -- explicit Erdos--Rado witness (Terra handoff)
+
+This is the sole missing input to turn the N22 route into an unconditional
+nonlinearity obstruction. It is a real partition-calculus formalization, not
+a library import or a permissible axiom. The pinned Mathlib snapshot has no
+usable theorem that supplies the required countably-coloured pair relation.
+
+**Exact target.** Construct a concrete type `kappa` with a proved cardinal
+bound corresponding to the successor of the continuum, equip it with
+`DecidableEq kappa`, and prove the existing interface without changing it:
+
+~~~lean
+TriangleHost.PairRamseyTriangle kappa
+~~~
+
+Equivalently, every `c : TriangleHost.Pair kappa -> Nat` must have a
+`t : TriangleHost.Triangle kappa` such that all pair-faces `p q` satisfying
+`p.1 ? t.1` and `q.1 ? t.1` have `c p = c q`. The theorem must be obtained
+from an actual special case of the Erd?s--Rado theorem, with countably many
+colours; replacing it by a finite-colour theorem is not sufficient.
+
+**Module split.** Keep the external combinatorics separate from the current
+host and transport code.
+
+1. `CardinalPairPartition.lean` defines a small cardinal pair-colouring
+   relation over the existing `Set.powersetCard kappa 2` representation and
+   proves only the bridge from its homogeneous-three-point conclusion to
+   `PairRamseyTriangle kappa`.
+2. `ErdosRado.lean` chooses the concrete cardinal carrier only after a
+   pinned-Mathlib feasibility audit confirms the exact constructor APIs. It
+   formalizes the needed specialization of
+   `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`, then extracts three distinct
+   points, packages them as `Set.powersetCard kappa 3`, and proves all three
+   pair-faces homogeneous.
+3. `TriangleHostRamseyUnconditional.lean` applies N22's existing
+   `not_isObligatory_of_not_linear_of_exactTriangleHost` to that witness. It
+   must not duplicate `reindex`, the ULift argument, or the finite-linearity
+   proof.
+
+**Non-goals and hard stop.** Do not claim an Erd?s--Rado witness, the full
+classical positive-atom theorem, or any positive classification result until
+the special-case partition theorem itself is strict-clean. No `axiom`,
+`sorry`, `admit`, `unsafe`, `native_decide`, `implemented_by`, finite-colour
+reduction, or hidden classical witness is acceptable. If the theorem cannot
+be built in the pinned environment, deliver the smallest exact missing lemma
+and stop there; that is a valid result for Terra Ultra review.
+
+**Acceptance checks.** For each module, run focused warnings-as-errors
+elaboration and `lake build`, scan the changed Lean files for prohibited
+constructs, inspect `#print axioms` for the Ramsey witness and final endpoint,
+run `git diff --check`, regenerate/check the self-contained file, and monitor
+the targeted GitHub Action after the isolated commit is pushed to `main`.
+
 ### Aristotle call schedule for Terra Max
 
 Terra Max should keep local proof search moving while Aristotle runs. It must
@@ -654,6 +707,27 @@ statement.
 
 Submit source transport only after its exact statement and permitted imports
 are frozen locally. It is a separate request from A3 and A4.
+
+#### A6 -- pair-interface and three-point extraction audit
+
+Submit only the N23 bridge from a homogeneous three-point set to
+`PairRamseyTriangle`, with the existing `Set.powersetCard` pair/triangle
+representations and exact universe parameters. Ask for a checked patch or the
+smallest API obstruction; do not submit the Erd?s--Rado theorem in this call.
+
+#### A7 -- pinned-Mathlib Erd?s--Rado feasibility audit
+
+Ask Aristotle to locate an existing usable theorem in the exact pinned
+Mathlib version, or report precise missing declarations/files. It may not add
+an axiom, replace countably many colours by finitely many, or claim a witness.
+This feasibility result gates any full formalization request.
+
+#### A8 -- bounded special-case Erd?s--Rado proof
+
+Only after A6 and A7 freeze viable signatures, request the concrete
+countably-coloured pair theorem for the chosen successor-of-continuum carrier.
+Require either a strict-clean proof of the exact statement or a checked
+minimal blocker. Keep the final N22 instantiation in a separate local commit.
 
 Every Aristotle prompt must contain this package:
 

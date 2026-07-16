@@ -1224,6 +1224,29 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   was published in `06eb3c6120f56cb0587e52b14be0f4b11912673a` and passed its
   focused GitHub Actions Lean checks. The queued remote audit remains advisory
   and must not overwrite that checked source.
+
+## O36: N22 exact transport adversarial audit
+
+- Submitted (UTC): 2026-07-16. The authenticated Aristotle project is
+  `144416b7-f89a-4388-8fb5-b48fd89e5656`; its task is
+  `34e128b0-388d-40d1-8c2b-e3f68e9cb95e`.
+- Exact task boundary: independently audit only the existing declarations in
+  `Erdos593/TripleSystem/TriangleHostRamseyTransport.lean` from public `main`
+  at `8b830fa` (two-sided reindexing, ULift orientation, countable-colouring
+  pullback, chromatic-cardinal bridge, and the conditional nonlinearity
+  endpoint). It may return a minimal correction confined to this module or an
+  explicit soundness report.
+- Explicit non-goals: no construction or assumption of
+  `PairRamseyTriangle`, no Erd?s--Rado proof, no unconditioned classification,
+  and no upstream commit, push, or unrelated refactor.
+- Required audit: focused warnings-as-errors elaboration and Lake build,
+  endpoint `#print axioms`, and a scan for `sorry`, `admit`, `axiom`, `unsafe`,
+  `native_decide`, `implemented_by`, and resource-limit overrides.
+- Remote status at submission: `QUEUED`. The result is advisory until it is
+  compared against the exact public source, strict-checked under the pinned
+  Lean/mathlib toolchain, source-gap audited, and accepted or rejected in this
+  log.
+
 ## Record format
 
 For every submission, record:
