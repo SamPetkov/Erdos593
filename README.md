@@ -200,6 +200,11 @@ edge set and every new fibre is edge-disjoint from the accumulated tail and
 has either disjoint or singleton-intersecting total vertex support. This
 running-intersection hypothesis is retained explicitly; the current fibre
 partition API does not prove it.
+`SequenceLiftBaseFiberSupport` proves the sharp pairwise consequence of
+linearity: distinct canonical base fibres have singleton-or-empty supported
+point intersection. The canonical finite active-base enumeration inherits that
+pairwise property. This still does not yield the stronger accumulated
+running-intersection condition or a global assembly order.
 The balanced complete-bipartite expansion atom is now obligatory for every
 natural parameter, which yields obligatoriness of all constructible systems
 and the finite intrinsic-isolated-reduction corollary. Reconstruction across
