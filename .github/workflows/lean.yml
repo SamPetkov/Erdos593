@@ -33,6 +33,7 @@ jobs:
           lake build Erdos593.TripleSystem.TriangleHostLinearity
           lake build Erdos593.TripleSystem.TriangleHostRamsey
           lake build Erdos593.TripleSystem.TriangleHostRamseyChromatic
+          lake build Erdos593.TripleSystem.TriangleHostRamseyTransport
           lake build Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
           lake build Erdos593.TripleSystem.ConstructiblePositiveObligatory
           lake build Erdos593.TripleSystem.SequenceLiftTrace
@@ -82,6 +83,7 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostLinearity.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostRamsey.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostRamseyTransport.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTrace.lean

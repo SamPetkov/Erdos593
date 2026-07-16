@@ -593,6 +593,20 @@ and strict-clean in
 work is the explicit Ramsey witness and the separately scoped reindexing
 bridge for the generic nonlinearity obstruction.
 
+### N22 -- exact lifted-host obstruction bridge
+
+`TriangleHostRamseyTransport.lean` defines a two-sided `reindex` and uses it
+to lift the base-universe triangle host into the exact vertex and edge
+universes of an arbitrary source. Under `PairRamseyTriangle kappa`, the
+module proves that the lifted host is linear and has chromatic cardinal
+strictly above aleph-zero. It then applies the generic nonlinearity obstruction
+to show that every non-linear source is not obligatory.
+
+**N22 status (2026-07-16).** Implemented and strict-clean in
+`Erdos593/TripleSystem/TriangleHostRamseyTransport.lean`. This remains a
+conditional negative route: it does not construct `kappa`, prove the
+Erdos--Rado input, or settle the full classical positive-atom theorem.
+
 ### Aristotle call schedule for Terra Max
 
 Terra Max should keep local proof search moving while Aristotle runs. It must

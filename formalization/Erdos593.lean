@@ -56,6 +56,7 @@ import Erdos593.TripleSystem.NonlinearObstruction
 import Erdos593.TripleSystem.TriangleHostLinearity
 import Erdos593.TripleSystem.TriangleHostRamsey
 import Erdos593.TripleSystem.TriangleHostRamseyChromatic
+import Erdos593.TripleSystem.TriangleHostRamseyTransport
 import Erdos593.TripleSystem.ObligatoryAtoms
 import Erdos593.TripleSystem.ObligatoryDisjointUnion
 import Erdos593.TripleSystem.ObligatoryIsolatedReduction
