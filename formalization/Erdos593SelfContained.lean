@@ -17030,6 +17030,82 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceFo
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints.lean
+Normalized SHA-256: 8442924467891689fd93adf40321d5dc63d32b9437aa44373049d13e26cf6882
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints
+
+/-!
+# Endpoints from acyclic base-fibre support incidence graphs
+
+The incidence-forest order bridge supplies both the compatible base-fibre
+assembly needed for finite generation and the coherent running order needed by
+the existing constructibility and obligatoriness endpoints.  The incidence
+acyclicity hypothesis is deliberately explicit here.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- A finite linear selected family whose base-fibre support incidence graph is
+acyclic is host-relatively finitely generated. -/
+theorem edgeRestriction_finiteLiftGenerated_of_linear_of_incidenceAcyclic
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hacyclic : (baseFiberSupportIncidenceGraph S).IsAcyclic) :
+    TripleSystem.FiniteLiftGenerated G ((system G).edgeRestriction S) := by
+  obtain ⟨nodes, _, hcover, hcompatible⟩ :=
+    exists_baseFiberAssemblyCompatible_order_of_linear_of_incidenceAcyclic
+      hS hlinear hacyclic
+  exact edgeRestriction_finiteLiftGenerated_of_linear_of_baseFiberAssembly
+    hS hlinear nodes
+    (edgePieceUnion_baseFiber_eq_of_baseNode_mem nodes hcover)
+    hcompatible
+
+/-- Under the same explicit incidence-acyclicity premise, a two-colourable
+host gives a constructible selected restriction. -/
+theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_incidenceAcyclic
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hacyclic : (baseFiberSupportIncidenceGraph S).IsAcyclic) :
+    TripleSystem.Constructible ((system G).edgeRestriction S) := by
+  obtain ⟨nodes, hnodup, hcover, hcoherent⟩ :=
+    exists_baseFiberSupportTailOverlapCoherent_order_of_incidenceAcyclic
+      hS hlinear hacyclic
+  exact edgeRestriction_constructible_of_linear_of_hostColorable_of_coherentBaseNodeCover
+    hS hlinear hG nodes hcover hnodup hcoherent
+
+/-- Under the same explicit incidence-acyclicity premise, the selected
+restriction is obligatory by the completed classical positive-atom closure. -/
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_incidenceAcyclic
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hacyclic : (baseFiberSupportIncidenceGraph S).IsAcyclic) :
+    ((system G).edgeRestriction S).IsObligatory := by
+  obtain ⟨nodes, hnodup, hcover, hcoherent⟩ :=
+    exists_baseFiberSupportTailOverlapCoherent_order_of_incidenceAcyclic
+      hS hlinear hacyclic
+  exact edgeRestriction_isObligatory_of_linear_of_hostColorable_of_coherentBaseNodeCover
+    hS hlinear hG nodes hcover hnodup hcoherent
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberGlobalSpine.lean
 Normalized SHA-256: 26312dc76e3e6ca9e5db3e25f1de3c811248426c478b272842740fc83971bb9d
@@ -17641,7 +17717,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: ee5cbe73cbde2634a7ed4adc15f8074f258c260ba9b298494e8bc0d5a4779aa1
+Normalized SHA-256: 0e2e65dc3d7958ac1130b87e7a198edcde028aba2383a1901f441ee40efb9537
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
