@@ -3,25 +3,31 @@
 This Lean 4/mathlib project formalizes the finite structural kernel of the
 classification of obligatory triple systems.
 
-The completed structural endpoint is equivalence between constructibility of
-an isolated-point reduction and these intrinsic conditions:
+The completed finite structural endpoint is the equivalence between
+constructibility of an isolated-point reduction and these intrinsic
+conditions:
 
 1. linearity;
 2. a bridge incident with every hyperedge-node;
 3. even length of every Berge cycle.
 
 In Lean this endpoint is
-`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`. It does
-not yet assert `Constructible F ↔ F.Intrinsic` for arbitrary `F`, nor a full
-obligatoriness classification. The all-parameter balanced complete-bipartite
-expansion atom is now obligatory, yielding obligatoriness of every
-constructible triple system and the finite intrinsic-isolated-reduction
-corollary. The sequence-lift layer also has its local linear-trace rigidity
-package: extension-letter determinacy, apex-to-edge-letter collision, and
-lifted-edge uniqueness up to base-edge orientation. The finite-trace theorem
-beyond that step, isolated-vertex
-reconstruction bridge, and remaining avoidance arguments form the next
-milestone.
+`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`. The
+all-parameter balanced complete-bipartite expansion atom is obligatory,
+yielding obligatoriness of every constructible triple system and the finite
+intrinsic-isolated-reduction corollary.
+
+The sequence-lift development now goes beyond local rigidity. In particular,
+`edgeRestriction_finiteLiftGenerated_of_linear` proves the finite-linear
+trace decomposition for every finite selected restriction;
+`isolatedReduction_finiteLiftGenerated_of_linear_of_embedding` transports
+that result to an arbitrary embedded finite linear source; and
+`not_isObligatory_of_linear_of_not_isolatedReduction_bridgeAtEveryEdge`
+packages the missing-bridge obstruction under a host graph with no countable
+colouring. The project is still not a complete machine-checked proof of
+Erdős Problem 593: the concrete Erdős–Rado nonlinear host, the
+large-odd-girth avoidance construction, and the final global equivalence
+remain open.
 
 For finite linear base fibres over a two-colourable host, the imported
 sequence-lift bridge now proves each individual fibre constructible and hence
@@ -148,11 +154,10 @@ base-letter sigma under a linear image. It introduces no global untagged
 base-letter union or trace decomposition. `SequenceLiftBaseApexEquiv`
 independently packages each linear base fibre as its own canonical-apex
 image. It neither identifies apexes across fibres nor asserts a global union,
-cardinality statement, or trace decomposition. The project is not yet a
-complete machine-checked
-proof of Erdős Problem 593: the full
-finite-trace theorem, isolated-vertex reconstruction bridge, and the remaining
-infinitary avoidance direction are open. `SequenceLiftTaggedBaseApexEquiv`
+cardinality statement, or trace decomposition. These local equivalences are
+supporting interfaces for the completed finite-linear endpoints named in the
+opening summary; none of them alone is the global trace theorem.
+`SequenceLiftTaggedBaseApexEquiv`
 combines the tagged selected-edge/base-fibre equivalence with the local
 canonical-apex image maps, retaining the active base-node tag and therefore
 introducing no untagged apex union, cross-fibre identification, cardinality
