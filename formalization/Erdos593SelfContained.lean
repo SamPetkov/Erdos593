@@ -17807,7 +17807,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceEndpoints
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceBridge
 Source: Erdos593/TripleSystem/SequenceLiftEmbeddedSourceBridge.lean
-Normalized SHA-256: a0fd4108a01c598e9894c1b5bbc69b5c7f09b8f8266918ef7f1fae3e78b0c693
+Normalized SHA-256: e3a7f1a7dacff681253fa2d96a72c4dd7afefef739f0b57f1a0eff1166d46213
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftEmbeddedSourceBridge
 
@@ -17837,6 +17837,18 @@ theorem isolatedReduction_bridgeAtEveryEdge_of_linear_of_embedding
     F.isolatedReduction.BridgeAtEveryEdge := by
   exact TripleSystem.FiniteLiftGenerated.bridgeAtEveryEdge G
     (isolatedReduction_finiteLiftGenerated_of_linear_of_embedding f hlinear)
+
+/-- A finite linear source whose isolated reduction has no Levi bridge
+incident to some hyperedge cannot embed into a sequence lift. -/
+theorem not_nonempty_embedding_of_not_isolatedReduction_bridgeAtEveryEdge
+    [Fintype I]
+    (hlinear : F.Linear)
+    (hno : Not F.isolatedReduction.BridgeAtEveryEdge) :
+    Not (Nonempty (F.Embedding (system G))) := by
+  intro h
+  cases h with
+  | intro f =>
+      exact hno (isolatedReduction_bridgeAtEveryEdge_of_linear_of_embedding f hlinear)
 
 end SequenceLift
 

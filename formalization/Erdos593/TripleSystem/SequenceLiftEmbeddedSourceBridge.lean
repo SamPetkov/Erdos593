@@ -28,6 +28,18 @@ theorem isolatedReduction_bridgeAtEveryEdge_of_linear_of_embedding
   exact TripleSystem.FiniteLiftGenerated.bridgeAtEveryEdge G
     (isolatedReduction_finiteLiftGenerated_of_linear_of_embedding f hlinear)
 
+/-- A finite linear source whose isolated reduction has no Levi bridge
+incident to some hyperedge cannot embed into a sequence lift. -/
+theorem not_nonempty_embedding_of_not_isolatedReduction_bridgeAtEveryEdge
+    [Fintype I]
+    (hlinear : F.Linear)
+    (hno : Not F.isolatedReduction.BridgeAtEveryEdge) :
+    Not (Nonempty (F.Embedding (system G))) := by
+  intro h
+  cases h with
+  | intro f =>
+      exact hno (isolatedReduction_bridgeAtEveryEdge_of_linear_of_embedding f hlinear)
+
 end SequenceLift
 
 end Erdos593
