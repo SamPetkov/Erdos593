@@ -15740,6 +15740,365 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportTailDegreeE
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrder
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportForestOrder.lean
+Normalized SHA-256: fc44639585038e980516bcd2f5db9dc50d7a9f6d297fabef65b242905452afd8
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportForestOrder
+
+/-!
+# Leaf-elimination orders for finite forests
+
+This is the graph-theoretic core needed when a support-overlap graph is
+acyclic.  Every finite induced subgraph of a forest has an isolated vertex or
+a leaf, so its vertices can be ordered such that each vertex has at most one
+neighbour later in the order.
+-/
+
+namespace SimpleGraph
+
+universe u
+
+variable {V : Type u}
+
+/-- `tailAtMostOneNeighbor G l` says that every vertex in the list has at
+most one `G`-neighbour later in the list. -/
+def tailAtMostOneNeighbor (G : SimpleGraph V) : List V → Prop
+  | [] => True
+  | q :: tail =>
+      tailAtMostOneNeighbor G tail ∧
+        ∀ u ∈ tail, ∀ w ∈ tail, G.Adj q u → G.Adj q w → u = w
+
+/-- A nonempty finite acyclic graph has a vertex with at most one neighbour.
+
+The result deliberately includes isolated vertices: this makes it apply to
+arbitrary induced subgraphs during leaf elimination. -/
+theorem IsAcyclic.exists_vertex_adj_unique
+    {G : SimpleGraph V} [Fintype V] [DecidableRel G.Adj] [Nonempty V]
+    (hG : G.IsAcyclic) :
+    ∃ q : V, ∀ ⦃u w : V⦄, G.Adj q u → G.Adj q w → u = w := by
+  classical
+  let x : V := Classical.choice (inferInstance : Nonempty V)
+  by_cases hx : G.degree x = 0
+  · refine ⟨x, ?_⟩
+    intro u w hxu _
+    have hpos : 0 < G.degree x := (G.degree_pos_iff_exists_adj x).mpr ⟨u, hxu⟩
+    omega
+  · have hpos : 0 < G.degree x := Nat.pos_of_ne_zero hx
+    obtain ⟨y, hxy⟩ := (G.degree_pos_iff_exists_adj x).mp hpos
+    let c : G.ConnectedComponent := G.connectedComponentMk x
+    have hxc : x ∈ c := by
+      exact SimpleGraph.ConnectedComponent.connectedComponentMk_mem (G := G)
+    have hyc : y ∈ c := c.mem_supp_of_adj_mem_supp hxc hxy
+    have hne : (⟨x, hxc⟩ : c) ≠ ⟨y, hyc⟩ := by
+      intro h
+      exact hxy.ne (congrArg Subtype.val h)
+    letI : Nontrivial c := ⟨⟨x, hxc⟩, ⟨y, hyc⟩, hne⟩
+    obtain ⟨q, hq⟩ := (hG.isTree_connectedComponent c).exists_vert_degree_one_of_nontrivial
+    have huniq : ∃! z : c, c.toSimpleGraph.Adj q z :=
+      (SimpleGraph.degree_eq_one_iff_existsUnique_adj).mp hq
+    refine ⟨q, ?_⟩
+    intro u w hqu hqw
+    have huc : u ∈ c := c.mem_supp_of_adj_mem_supp q.property hqu
+    have hwc : w ∈ c := c.mem_supp_of_adj_mem_supp q.property hqw
+    have hqu' : c.toSimpleGraph.Adj q ⟨u, huc⟩ :=
+      (c.toSimpleGraph_adj q.property huc).mpr hqu
+    have hqw' : c.toSimpleGraph.Adj q ⟨w, hwc⟩ :=
+      (c.toSimpleGraph_adj q.property hwc).mpr hqw
+    exact congrArg Subtype.val (huniq.unique hqu' hqw')
+
+/-- Every finite set of vertices in an acyclic graph has a noduplicated
+leaf-elimination order.  In the resulting order each vertex has at most one
+neighbour in its tail. -/
+theorem IsAcyclic.exists_finset_tailAtMostOneNeighborOrder
+    {G : SimpleGraph V} [DecidableEq V] [DecidableRel G.Adj]
+    (hG : G.IsAcyclic) (s : Finset V) :
+    ∃ l : List V, l.Nodup ∧ l.toFinset = s ∧ G.tailAtMostOneNeighbor l := by
+  classical
+  induction s using Finset.strongInduction with
+  | H s ih =>
+    by_cases hs : s = ∅
+    · subst s
+      exact ⟨[], List.nodup_nil, by simp, trivial⟩
+    · have hsne : s.Nonempty := Finset.nonempty_iff_ne_empty.mpr hs
+      letI : Nonempty s := hsne.to_subtype
+      obtain ⟨q, hq⟩ :=
+        IsAcyclic.exists_vertex_adj_unique (hG.induce (↑s : Set V))
+      obtain ⟨l, hlNodup, hlFinset, hlTail⟩ :=
+        ih (s.erase q) (Finset.erase_ssubset q.property)
+      refine ⟨q.val :: l, ?_, ?_, ?_⟩
+      · rw [List.nodup_cons]
+        refine ⟨?_, hlNodup⟩
+        intro hqmem
+        have hqerase : q.val ∈ s.erase q.val := by
+          rw [← hlFinset]
+          exact List.mem_toFinset.mpr hqmem
+        exact (Finset.mem_erase.mp hqerase).1 rfl
+      · rw [List.toFinset_cons, hlFinset, Finset.insert_erase q.property]
+      · change
+          tailAtMostOneNeighbor G l ∧
+            ∀ u ∈ l, ∀ w ∈ l, G.Adj q.val u → G.Adj q.val w → u = w
+        refine ⟨hlTail, ?_⟩
+        intro u hu w hw hqu hqw
+        have huerase : u ∈ s.erase q.val := by
+          rw [← hlFinset]
+          exact List.mem_toFinset.mpr hu
+        have hwerase : w ∈ s.erase q.val := by
+          rw [← hlFinset]
+          exact List.mem_toFinset.mpr hw
+        have hqu' : (G.induce (↑s : Set V)).Adj q
+            ⟨u, Finset.mem_of_mem_erase huerase⟩ :=
+          SimpleGraph.induce_adj.mpr hqu
+        have hqw' : (G.induce (↑s : Set V)).Adj q
+            ⟨w, Finset.mem_of_mem_erase hwerase⟩ :=
+          SimpleGraph.induce_adj.mpr hqw
+        exact congrArg Subtype.val (hq hqu' hqw')
+
+/-- A finite acyclic graph has a noduplicated leaf-elimination order of all
+of its vertices. -/
+theorem IsAcyclic.exists_tailAtMostOneNeighborOrder
+    {G : SimpleGraph V} [Fintype V] [DecidableEq V] [DecidableRel G.Adj]
+    (hG : G.IsAcyclic) :
+    ∃ l : List V, l.Nodup ∧ l.toFinset = Finset.univ ∧ G.tailAtMostOneNeighbor l :=
+  hG.exists_finset_tailAtMostOneNeighborOrder Finset.univ
+
+end SimpleGraph
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportForestOrder
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrder
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportOverlapGraph
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportOverlapGraph.lean
+Normalized SHA-256: 3674681a775f8170d9554521d8b5c9af5d27bb8addfb5f04e2e73c981a94a8c8
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportOverlapGraph
+
+/-!
+# The finite support-overlap graph of sequence-lift base fibres
+
+For a selected edge family, the active canonical base fibres form the vertices
+of a finite graph.  Two distinct vertices are adjacent exactly when their
+vertex-supports overlap.  This is only vocabulary for the ordering bridge:
+it does not assert acyclicity.  In particular, linearity supplies pairwise
+singleton-or-empty overlaps, but does not itself rule out cycles in this graph.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- The support-overlap relation between two canonical base fibres. -/
+def baseFiberSupportOverlap
+    (S : Set (Edge G)) (q u : Node G) : Prop :=
+  (((system G).edgeSupportSet (baseFiber S q) ∩
+    (system G).edgeSupportSet (baseFiber S u)).Nonempty)
+
+/-- Support overlap is symmetric. -/
+theorem baseFiberSupportOverlap_comm
+    (S : Set (Edge G)) (q u : Node G) :
+    baseFiberSupportOverlap S q u ↔ baseFiberSupportOverlap S u q := by
+  constructor
+  · rintro ⟨p, hpq, hpu⟩
+    exact ⟨p, hpu, hpq⟩
+  · rintro ⟨p, hpu, hpq⟩
+    exact ⟨p, hpq, hpu⟩
+
+/-- The simple graph on active base nodes whose edges record nonempty
+support-overlap of distinct canonical base fibres. -/
+def baseFiberSupportOverlapGraph
+    (S : Set (Edge G)) : SimpleGraph (activeBaseNodeIndex S) :=
+  SimpleGraph.fromRel fun q u => baseFiberSupportOverlap S q.1 u.1
+
+/-- Adjacency in the active base-fibre support-overlap graph is precisely a
+distinct pair of base nodes with nonempty support overlap. -/
+theorem baseFiberSupportOverlapGraph_adj_iff
+    {S : Set (Edge G)} {q u : activeBaseNodeIndex S} :
+    (baseFiberSupportOverlapGraph S).Adj q u ↔
+      q ≠ u ∧ baseFiberSupportOverlap S q.1 u.1 := by
+  change q ≠ u ∧
+      (baseFiberSupportOverlap S q.1 u.1 ∨
+        baseFiberSupportOverlap S u.1 q.1) ↔ _
+  constructor
+  · rintro ⟨hqu, hforward | hbackward⟩
+    · exact ⟨hqu, hforward⟩
+    · exact ⟨hqu, (baseFiberSupportOverlap_comm S _ _).mpr hbackward⟩
+  · rintro ⟨hqu, hoverlap⟩
+    exact ⟨hqu, Or.inl hoverlap⟩
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportOverlapGraph
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportOverlapGraph
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderBridge
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportForestOrderBridge.lean
+Normalized SHA-256: b9088347f7638471615141db5784c01a981d69aaa790567dec51aa1e5d49fd42
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportForestOrderBridge
+
+/-!
+# From acyclic support-overlap graphs to base-fibre running orders
+
+This module transports a finite forest leaf-elimination order of active base
+nodes to the tail-degree-one support order used by the base-fibre assembly
+theorems.  Its hypothesis is deliberately graph-theoretic: pairwise
+linearity alone does not imply support-overlap acyclicity.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- A tail-degree-one order in the active support-overlap graph gives the
+corresponding tail-degree-one order of the underlying canonical base nodes. -/
+theorem baseFiberSupportTailAtMostOneNeighbor_of_overlapGraphTailOrder
+    {S : Set (Edge G)} {qs : List (activeBaseNodeIndex S)}
+    (hnodup : qs.Nodup)
+    (htail : (baseFiberSupportOverlapGraph S).tailAtMostOneNeighbor qs) :
+    baseFiberSupportTailAtMostOneNeighbor S (qs.map Subtype.val) := by
+  induction qs with
+  | nil =>
+      trivial
+  | cons q qs ih =>
+      change (baseFiberSupportOverlapGraph S).tailAtMostOneNeighbor qs ∧ _ at htail
+      rcases htail with ⟨htailTail, htailHead⟩
+      rw [List.map_cons]
+      refine ⟨ih (List.nodup_cons.mp hnodup).2 htailTail, ?_⟩
+      intro u hu v hv hqu hqv
+      rcases List.mem_map.1 hu with ⟨u', hu', rfl⟩
+      rcases List.mem_map.1 hv with ⟨v', hv', rfl⟩
+      change baseFiberSupportOverlap S q.1 u'.1 at hqu
+      change baseFiberSupportOverlap S q.1 v'.1 at hqv
+      have hquNe : q ≠ u' := by
+        intro hEq
+        apply (List.nodup_cons.mp hnodup).1
+        simpa [hEq] using hu'
+      have hqvNe : q ≠ v' := by
+        intro hEq
+        apply (List.nodup_cons.mp hnodup).1
+        simpa [hEq] using hv'
+      have hquAdj : (baseFiberSupportOverlapGraph S).Adj q u' :=
+        baseFiberSupportOverlapGraph_adj_iff.mpr ⟨hquNe, hqu⟩
+      have hqvAdj : (baseFiberSupportOverlapGraph S).Adj q v' :=
+        baseFiberSupportOverlapGraph_adj_iff.mpr ⟨hqvNe, hqv⟩
+      exact congrArg Subtype.val (htailHead u' hu' v' hv' hquAdj hqvAdj)
+
+/-- If the finite active base-fibre support-overlap graph is acyclic, then
+the selected family admits a noduplicated base-node cover with tail support
+degree at most one.  The order is existential; this theorem makes no claim
+about the fixed canonical active-base enumeration. -/
+theorem exists_baseFiberSupportTailAtMostOneNeighbor_order_of_supportOverlapAcyclic
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hacyclic : (baseFiberSupportOverlapGraph S).IsAcyclic) :
+    ∃ nodes : List (Node G),
+      nodes.Nodup ∧
+        (∀ e, e ∈ S → baseNode e ∈ nodes) ∧
+        baseFiberSupportTailAtMostOneNeighbor S nodes := by
+  classical
+  letI : Fintype (activeBaseNodeIndex S) := activeBaseNodeIndexFintype hS
+  obtain ⟨qs, hnodup, hqs, htail⟩ :=
+    hacyclic.exists_tailAtMostOneNeighborOrder
+  refine ⟨qs.map Subtype.val, hnodup.map Subtype.val_injective, ?_, ?_⟩
+  · intro e he
+    let q : activeBaseNodeIndex S := ⟨baseNode e, ⟨e, he, rfl⟩⟩
+    have hqmemFinset : q ∈ qs.toFinset := by
+      rw [hqs]
+      exact Finset.mem_univ q
+    have hqmem : q ∈ qs := List.mem_toFinset.mp hqmemFinset
+    change q.1 ∈ qs.map Subtype.val
+    exact List.mem_map_of_mem hqmem
+  · exact baseFiberSupportTailAtMostOneNeighbor_of_overlapGraphTailOrder hnodup htail
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportForestOrderBridge
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderBridge
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderEndpoints
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportForestOrderEndpoints.lean
+Normalized SHA-256: 894b0f81eb339bbd835b5edb6580532b034d809c3b1eccc79319c5b011273600
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportForestOrderEndpoints
+
+/-!
+# Constructibility endpoints from acyclic support-overlap graphs
+
+An acyclic active support-overlap graph has a leaf-elimination order, which
+supplies the tail-degree-one hypothesis required by the existing sequence-lift
+assembly endpoints.  The acyclicity premise is explicit: it is not inferred
+from linearity alone.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- A finite selected family with an acyclic active base-fibre support-overlap
+graph has a constructible restriction, provided the restriction is linear and
+the host graph is two-colourable. -/
+theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_supportOverlapAcyclic
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hacyclic : (baseFiberSupportOverlapGraph S).IsAcyclic) :
+    TripleSystem.Constructible ((system G).edgeRestriction S) := by
+  obtain ⟨nodes, hnodup, hcover, hdegree⟩ :=
+    exists_baseFiberSupportTailAtMostOneNeighbor_order_of_supportOverlapAcyclic
+      hS hacyclic
+  exact
+    edgeRestriction_constructible_of_linear_of_hostColorable_of_tailDegreeBaseNodeCover
+      hS hlinear hG nodes hcover hnodup hdegree
+
+/-- Under the same explicit acyclicity premise, the finite restriction is
+obligatory by the completed classical positive-atom closure theorem. -/
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_supportOverlapAcyclic
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2)
+    (hacyclic : (baseFiberSupportOverlapGraph S).IsAcyclic) :
+    ((system G).edgeRestriction S).IsObligatory := by
+  obtain ⟨nodes, hnodup, hcover, hdegree⟩ :=
+    exists_baseFiberSupportTailAtMostOneNeighbor_order_of_supportOverlapAcyclic
+      hS hacyclic
+  exact
+    edgeRestriction_isObligatory_of_linear_of_hostColorable_of_tailDegreeBaseNodeCover
+      hS hlinear hG nodes hcover hnodup hdegree
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportForestOrderEndpoints
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderEndpoints
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberGlobalSpine.lean
 Normalized SHA-256: 26312dc76e3e6ca9e5db3e25f1de3c811248426c478b272842740fc83971bb9d
@@ -16351,7 +16710,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 6b69d75ac2f0e11cf3ce76af257b210024acd4ea0514d1835951960a22db1827
+Normalized SHA-256: 3ffa678e5c20b69c737c8d07fc002fbc550368b21f8367e4107aa681a043e046
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

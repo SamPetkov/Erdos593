@@ -156,6 +156,11 @@ module checks recorded below.
   (1,591 Lake jobs), and
   `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportTailDegree` (1,591 Lake
   jobs), and
+  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrder`,
+  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportOverlapGraph`,
+  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderBridge`, and
+  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderEndpoints`,
+  and
   `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake jobs),
   and `Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine` (1,237 Lake
   jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality` (1,289
@@ -183,6 +188,10 @@ module checks recorded below.
   `SequenceLiftBaseFiberSupportRunningOrder`,
   `SequenceLiftBaseFiberSupportRunningOrderEndpoints`,
   `SequenceLiftBaseFiberSupportTailDegree`,
+  `SequenceLiftBaseFiberSupportForestOrder`,
+  `SequenceLiftBaseFiberSupportOverlapGraph`,
+  `SequenceLiftBaseFiberSupportForestOrderBridge`,
+  `SequenceLiftBaseFiberSupportForestOrderEndpoints`,
   `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberGlobalSpine`,
   `SequenceLiftBaseFiberCardinality`,
   `SequenceLiftBaseFiberTraceSum`, `SequenceLiftBaseFiberEquiv`,
@@ -305,6 +314,13 @@ import Erdos593
 #print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_tailDegreeBaseFiberAssembly
 #print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_tailDegreeBaseNodeCover
 #print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_activeBaseNodeSupportTailAtMostOneNeighbor
+#print axioms SimpleGraph.IsAcyclic.exists_finset_tailAtMostOneNeighborOrder
+#print axioms Erdos593.SequenceLift.baseFiberSupportOverlapGraph
+#print axioms Erdos593.SequenceLift.baseFiberSupportOverlapGraph_adj_iff
+#print axioms Erdos593.SequenceLift.baseFiberSupportTailAtMostOneNeighbor_of_overlapGraphTailOrder
+#print axioms Erdos593.SequenceLift.exists_baseFiberSupportTailAtMostOneNeighbor_order_of_supportOverlapAcyclic
+#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_supportOverlapAcyclic
+#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_supportOverlapAcyclic
 #print axioms Erdos593.SequenceLift.mem_edgePieceUnion_baseFiberList
 #print axioms Erdos593.SequenceLift.edgePieceUnion_baseFiber_eq_of_baseNode_mem
 #print axioms Erdos593.SequenceLift.activeBaseNodeList

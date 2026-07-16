@@ -39,7 +39,11 @@ An even stronger tail-degree condition, in which each new fibre has at most
 one overlapping tail neighbour, now implies that coherence directly and feeds
 the same constructible and obligatory endpoints in exact-cover,
 base-node-cover, and canonical-active-list forms.  Both remain explicit
-ordering hypotheses rather than consequences of linearity.
+ordering hypotheses rather than consequences of linearity.  An explicitly
+acyclic active support-overlap graph now discharges the existential ordering
+requirement by a finite forest leaf-elimination order.  This is an existential
+order, not a claim that the canonical active-base enumeration has that
+property, and acyclicity is not inferred from linearity alone.
 
 ## Current status
 
