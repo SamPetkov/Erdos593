@@ -1217,13 +1217,15 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   build, `#print axioms`, and a prohibited-construct audit. The prompt forbids
   `sorry`, `admit`, new axioms, `unsafe`, `native_decide`, `implemented_by`,
   resource-limit overrides, upstream edits, commits, and pushes.
-- Remote status at recording: `QUEUED`. Any result is advisory until an exact
-  local source, dependency, source-gap, banned-construct, strict-build,
-  axiom, self-contained, and GitHub Actions audit is complete.
+- Remote status (2026-07-16): `RUNNING`. It is the one relevant active task;
+  no queued task or idle project consumes an Aristotle worker slot. Any result
+  remains advisory until an exact local source, dependency, source-gap,
+  banned-construct, strict-build, axiom, self-contained, and GitHub Actions
+  audit is complete.
 - Local disposition (2026-07-16): the independently authored finite host layer
   was published in `06eb3c6120f56cb0587e52b14be0f4b11912673a` and passed its
-  focused GitHub Actions Lean checks. The queued remote audit remains advisory
-  and must not overwrite that checked source.
+  focused GitHub Actions Lean checks. The running remote audit remains
+  advisory and must not overwrite that checked source.
 
 ## O36: N22 exact transport adversarial audit
 
@@ -1242,10 +1244,12 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
 - Required audit: focused warnings-as-errors elaboration and Lake build,
   endpoint `#print axioms`, and a scan for `sorry`, `admit`, `axiom`, `unsafe`,
   `native_decide`, `implemented_by`, and resource-limit overrides.
-- Remote status at submission: `QUEUED`. The result is advisory until it is
-  compared against the exact public source, strict-checked under the pinned
-  Lean/mathlib toolchain, source-gap audited, and accepted or rejected in this
-  log.
+- Remote completion (2026-07-16): `COMPLETE_WITH_ERRORS` at the project level;
+  its terminal response contains a substantive soundness audit, not a Lean
+  error. It accepted the exact N22 declarations, found no correction, verified
+  the strict/Lake checks and expected axioms, and confirmed that the assumed
+  `PairRamseyTriangle` does not supply the missing Erdos--Rado theorem.
+- Local disposition (2026-07-16): accepted as a bounded advisory audit only.
 
 ## Record format
 

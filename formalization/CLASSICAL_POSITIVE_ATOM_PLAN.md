@@ -628,19 +628,44 @@ contained in `t.1` have `c p = c q`. The theorem must be obtained from an
 actual special case of the Erdos--Rado theorem, with countably many
 colours; replacing it by a finite-colour theorem is not sufficient.
 
+**Implemented finite bridge (2026-07-16).**
+`CardinalPairPartition.lean` is now strict-clean and imported by the
+aggregate root. It defines `PairHomogeneous c H` using the project's finite
+`TriangleHost.Pair` faces, and
+`HomogeneousThreePointPairColoring kappa Nat`. It proves exactly:
+
+1. `pairRamseyTriangle_of_infinite_pair_homogeneous`;
+2. `pairRamseyTriangle_of_homogeneousThreePoint`;
+3. `homogeneousThreePoint_of_pairRamseyTriangle`; and
+4. `homogeneousThreePointPairColoring_iff_pairRamseyTriangle`.
+
+The module has no new axiom and only reduces an infinite homogeneous set to
+a three-point finite witness. It does not establish the existence of that
+homogeneous set.
+
+**Exact remaining external obligation.** For the selected base-universe
+carrier `ErdosRadoCarrier` with cardinality the successor of the continuum,
+every `c : TriangleHost.Pair ErdosRadoCarrier -> Nat` must have an infinite
+`H : Set ErdosRadoCarrier` satisfying `TriangleHost.PairHomogeneous c H`.
+
+This is the countably-coloured special case customarily written
+`(2^aleph0)^+ -> (aleph1)^2_{aleph0}`. It is the sole non-finite
+combinatorial gap; a proof must be formalized rather than hidden behind an
+interface or an assumed witness.
+
 **Module split.** Keep the external combinatorics separate from the current
 host and transport code.
 
 1. `CardinalPairPartition.lean` defines a small cardinal pair-colouring
-   relation over the existing `Set.powersetCard kappa 2` representation and
-   proves only the bridge from its homogeneous-three-point conclusion to
-   `PairRamseyTriangle kappa`.
+   interface over the existing finite `TriangleHost.Pair` and
+   `TriangleHost.Triangle` representations. It is implemented; it contains
+   only the finite extraction and equivalence bridge above.
 2. `ErdosRado.lean` chooses the concrete cardinal carrier only after a
    pinned-Mathlib feasibility audit confirms the exact constructor APIs. It
    formalizes the needed specialization of
-   `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`, then extracts three distinct
-   points, packages them as `Set.powersetCard kappa 3`, and proves all three
-   pair-faces homogeneous.
+   `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`, returns an infinite homogeneous
+   set, and applies the checked finite bridge. It must not replace this with
+   a finite-colour result.
 3. `TriangleHostRamseyUnconditional.lean` applies N22's existing
    `not_isObligatory_of_not_linear_of_exactTriangleHost` to that witness. It
    must not duplicate `reindex`, the ULift argument, or the finite-linearity
@@ -711,9 +736,11 @@ are frozen locally. It is a separate request from A3 and A4.
 #### A6 -- pair-interface and three-point extraction audit
 
 Submit only the N23 bridge from a homogeneous three-point set to
-`PairRamseyTriangle`, with the existing `Set.powersetCard` pair/triangle
-representations and exact universe parameters. Ask for a checked patch or the
-smallest API obstruction; do not submit the Erdos--Rado theorem in this call.
+`PairRamseyTriangle`, together with the infinite-homogeneous-set extraction,
+using the existing `TriangleHost.Pair` and `TriangleHost.Triangle` finite
+representations and exact universe parameters. Ask for a checked patch or
+the smallest API obstruction; do not submit the Erdos--Rado theorem in this
+call.
 
 #### A7 -- pinned-Mathlib Erdos--Rado feasibility audit
 
@@ -721,6 +748,11 @@ Ask Aristotle to locate an existing usable theorem in the exact pinned
 Mathlib version, or report precise missing declarations/files. It may not add
 an axiom, replace countably many colours by finitely many, or claim a witness.
 This feasibility result gates any full formalization request.
+
+**A7 status (2026-07-16).** The completed feasibility audit found no usable
+generic Erdos--Rado or cardinal partition-calculus API in the pinned
+Mathlib snapshot. Treat `ErdosRado.lean` as a genuine new formalization task;
+do not reopen the finite bridge or search for a nonexistent import.
 
 #### A8 -- bounded special-case Erdos--Rado proof
 
