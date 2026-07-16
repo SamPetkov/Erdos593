@@ -1163,6 +1163,31 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   and integrated separately; Aristotle is a bounded second proof/API audit,
   not the acceptance authority.
 
+## O34: sequence-lift missing-bridge obstruction audit
+
+- Submitted (UTC): 2026-07-16. The authenticated Aristotle project is
+  `7adf363f-f766-4d57-bde6-74dc6cee4292`; its task is
+  `f2aaefef-2eb6-4a1c-805a-315a22593f18`.
+- Exact task boundary: add only
+  `Erdos593/TripleSystem/SequenceLiftMissingBridgeObstruction.lean`, proving
+  `SequenceLift.not_isObligatory_of_linear_of_not_isolatedReduction_bridgeAtEveryEdge`
+  for a finite linear source, a graph with no countable colouring, and a
+  missing isolated-reduction Levi bridge. The required proof instantiates
+  `F.IsObligatory` at `SequenceLift.system G`, applies
+  `aleph0_lt_chromaticCardinal`, and contradicts the existing no-embedding
+  bridge wrapper. It may not attempt the remaining odd-Berge or nonlinearity
+  branches of the classification.
+- Submitted files: none. Aristotle received only the public repository
+  reference at `9d4ed4070d8325958def4b3d7863c52a3f22e1db`, the exact imports,
+  statement, verification commands, and restriction list; no local tree,
+  credential, secret, or private artifact was uploaded.
+- Required verification: focused warnings-as-errors compilation, focused Lake
+  build, `#print axioms`, and a prohibited-construct audit. The prompt forbids
+  `sorry`, `admit`, new axioms, `unsafe`, `native_decide`, `implemented_by`,
+  and resource-limit overrides.
+- Remote status at recording: `IN_PROGRESS`. No remote result has been
+  adopted. A local independently authored version is being compiled and will
+  be accepted only after the normal source, build, axiom, and CI audits.
 ## Record format
 
 For every submission, record:

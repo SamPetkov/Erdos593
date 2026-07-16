@@ -53,7 +53,9 @@ jobs:
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints
           lake build Erdos593.TripleSystem.FiniteLiftGeneratedBridge
           lake build Erdos593.TripleSystem.SequenceLiftEmbeddedSourceEndpoints
+          lake build Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
           lake build Erdos593.TripleSystem.SequenceLiftEmbeddedSourceBridge
+          lake build Erdos593.TripleSystem.SequenceLiftMissingBridgeObstruction
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrder
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrderBridge
           lake build Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints
@@ -95,7 +97,9 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/FiniteLiftGeneratedBridge.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftEmbeddedSourceEndpoints.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftEmbeddedSourceIntrinsic.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftEmbeddedSourceBridge.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftMissingBridgeObstruction.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrder.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrderBridge.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints.lean

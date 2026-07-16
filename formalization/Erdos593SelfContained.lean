@@ -17805,6 +17805,40 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceEndpoints
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
+Source: Erdos593/TripleSystem/SequenceLiftEmbeddedSourceIntrinsic.lean
+Normalized SHA-256: 1b61d6b9e6b613e4298e7d4e26b23ef4df3f6b9b13dc0fdc1b527318bd3bd4cf
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftEmbeddedSourceIntrinsic
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+variable {X I : Type u} {F : TripleSystem X I}
+
+/-- A finite linear source embedded in a two-colourable sequence lift has an
+intrinsic isolated reduction. -/
+theorem isolatedReduction_intrinsic_of_linear_of_embedding
+    [Fintype I]
+    (f : F.Embedding (system G)) (hlinear : F.Linear)
+    (hG : G.Colorable 2) :
+    F.isolatedReduction.Intrinsic := by
+  exact TripleSystem.Constructible.intrinsic
+    (isolatedReduction_constructible_of_linear_of_embedding f hlinear hG)
+
+end SequenceLift
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftEmbeddedSourceIntrinsic
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceBridge
 Source: Erdos593/TripleSystem/SequenceLiftEmbeddedSourceBridge.lean
 Normalized SHA-256: e3a7f1a7dacff681253fa2d96a72c4dd7afefef739f0b57f1a0eff1166d46213
@@ -17857,6 +17891,54 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftEmbeddedSourceBridge
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceBridge
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftMissingBridgeObstruction
+Source: Erdos593/TripleSystem/SequenceLiftMissingBridgeObstruction.lean
+Normalized SHA-256: 8acc4108b1cd5f5dab96a1147f8e77fae36389e72a1ceac0360e94cb9aca1e6b
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftMissingBridgeObstruction
+
+/-!
+# Missing-bridge obstruction in the sequence lift
+
+A finite linear source whose isolated reduction is missing an incident Levi
+bridge cannot be obligatory: the one-apex sequence lift of any graph without
+a countable colouring is an uncountably chromatic witness which avoids it.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+variable {X I : Type u} {F : TripleSystem X I}
+
+/-- A missing Levi bridge in the isolated reduction of a finite linear source
+is witnessed against obligatoriness by the uncountably chromatic sequence
+lift. -/
+theorem not_isObligatory_of_linear_of_not_isolatedReduction_bridgeAtEveryEdge
+    [Fintype I]
+    (hG : ¬ Nonempty (G.Coloring ℕ))
+    (hlinear : F.Linear)
+    (hno : ¬ F.isolatedReduction.BridgeAtEveryEdge) :
+    ¬ F.IsObligatory := by
+  classical
+  intro hF
+  exact not_nonempty_embedding_of_not_isolatedReduction_bridgeAtEveryEdge
+    hlinear hno
+    (hF _ _ (system G) (aleph0_lt_chromaticCardinal hG))
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftMissingBridgeObstruction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftMissingBridgeObstruction
 ========================================================================== -/
 
 /- ==========================================================================
@@ -18471,7 +18553,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 4056d8de50eed230d8a116159f96c9e9bd48ed0bea08d3b655e977ab29901a9f
+Normalized SHA-256: 46bb50321330c6e367b547edacabc2e87c35230424acccb00e13ea0a617158b0
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
