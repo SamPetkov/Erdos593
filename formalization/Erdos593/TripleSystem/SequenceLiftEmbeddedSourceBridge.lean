@@ -1,0 +1,33 @@
+import Erdos593.TripleSystem.FiniteLiftGeneratedBridge
+import Erdos593.TripleSystem.SequenceLiftEmbeddedSourceEndpoints
+
+/-!
+# Bridge obstruction for finite linear sources embedded in a sequence lift
+
+The finite lift-generation endpoint already gives the isolated reduction of a
+finite linear embedded source. The generic finite-lift bridge invariant then
+turns that into the structural bridge-at-every-edge witness used by the
+classical classification obstruction side.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+variable {X I : Type u} {F : TripleSystem X I}
+
+/-- The isolated reduction of a finite linear source embedded in a sequence
+lift has a Levi bridge incident to every hyperedge. -/
+theorem isolatedReduction_bridgeAtEveryEdge_of_linear_of_embedding
+    [Fintype I]
+    (f : F.Embedding (system G)) (hlinear : F.Linear) :
+    F.isolatedReduction.BridgeAtEveryEdge := by
+  exact TripleSystem.FiniteLiftGenerated.bridgeAtEveryEdge G
+    (isolatedReduction_finiteLiftGenerated_of_linear_of_embedding f hlinear)
+
+end SequenceLift
+
+end Erdos593
