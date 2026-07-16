@@ -14532,7 +14532,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberExpansion
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberConstructible
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberConstructible.lean
-Normalized SHA-256: b7926d44d0c9e9f7be98f29309b04b373c65665930d04c3ea27b51627bc2ce62
+Normalized SHA-256: 147dcf705e1e69a4e005b9f7e2fd39d983a465d035bd428b130823013a4ca56f
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberConstructible
 
@@ -14572,6 +14572,18 @@ theorem baseFiber_constructible_of_linear_of_colorable
       (baseLetterSubgraph G (baseLetter '' baseFiber S q)).coe hcolor)
     (baseFiber_privateVertexExpansionIso_of_linear q hlinear)
 
+/-- A finite linear base fibre is constructible whenever its ambient host
+graph is two-colourable.  The required local colouring is pulled back through
+the canonical non-induced factor of the selected base-letter subgraph. -/
+theorem baseFiber_constructible_of_linear_of_hostColorable
+    {S : Set (Edge G)} (hS : S.Finite) (q : Node G)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) :
+    TripleSystem.Constructible ((system G).edgeRestriction (baseFiber S q)) :=
+  baseFiber_constructible_of_linear_of_colorable hS q hlinear
+    (_root_.SimpleGraph.Colorable.of_hom
+      (baseFiberLetterSubgraphFactor S q).toHom hG)
+
 end SequenceLift
 
 end Erdos593
@@ -14584,7 +14596,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberConstructible
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberObligatory
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberObligatory.lean
-Normalized SHA-256: 7172acce30e32070ea391ea0f55d1529664b418bac665b840f5274d26548793c
+Normalized SHA-256: 65590e7b4955d71913011e528fd23d61052a7582d92c88de9cbce9ebe801a069
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberObligatory
 
@@ -14614,6 +14626,16 @@ theorem baseFiber_isObligatory_of_linear_of_colorable
     ((system G).edgeRestriction (baseFiber S q)).IsObligatory :=
   TripleSystem.Constructible.isObligatory
     (baseFiber_constructible_of_linear_of_colorable hS q hlinear hcolor)
+
+/-- A finite linear base fibre is obligatory whenever its ambient host graph
+is two-colourable. -/
+theorem baseFiber_isObligatory_of_linear_of_hostColorable
+    {S : Set (Edge G)} (hS : S.Finite) (q : Node G)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) :
+    ((system G).edgeRestriction (baseFiber S q)).IsObligatory :=
+  TripleSystem.Constructible.isObligatory
+    (baseFiber_constructible_of_linear_of_hostColorable hS q hlinear hG)
 
 end SequenceLift
 

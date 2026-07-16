@@ -95,11 +95,12 @@ or base-letter images across fibres.
 
 With an explicit two-colourability hypothesis on a chosen fibre's canonical
 base-letter subgraph, that finite linear fibre is now constructible. The
-existing classical positive-atom/constructible closure then proves the same
-fibre obligatory. These are intentionally conditional, fibre-local bridges:
-linearity supplies no such two-colourability hypothesis, and the result does
-not glue fibres into a constructibility or atom theorem for the whole selected
-family.
+canonical non-induced factor also pulls a two-colouring of the ambient host
+graph back to that subgraph. The existing classical positive-atom/constructible
+closure then proves the same fibre obligatory. These are intentionally
+conditional, fibre-local bridges: linearity alone supplies no such
+two-colourability hypothesis, and the result does not glue fibres into a
+constructibility or atom theorem for the whole selected family.
 
 ## Reproduction and exactness check
 
@@ -122,8 +123,8 @@ module checks recorded below.
 ## Recorded verification (15 July 2026)
 
 - Deterministic regeneration check: passed for 108 source modules, 44 external
-  Mathlib imports, 15,377 physical lines, and SHA-256
-  `47a176b44175ec275ecb8b4df2e66c6d2a578dbe74207e0f6d8440e11fcd175d`.
+  Mathlib imports, 15,399 physical lines, and SHA-256
+  `522a6bea76d37da391ced1cef7f7d7efde1c8808559f71f0f351e90a67e06e52`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.Graph.FiniteEdgeFactor`,
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)

@@ -28,6 +28,16 @@ theorem baseFiber_isObligatory_of_linear_of_colorable
   TripleSystem.Constructible.isObligatory
     (baseFiber_constructible_of_linear_of_colorable hS q hlinear hcolor)
 
+/-- A finite linear base fibre is obligatory whenever its ambient host graph
+is two-colourable. -/
+theorem baseFiber_isObligatory_of_linear_of_hostColorable
+    {S : Set (Edge G)} (hS : S.Finite) (q : Node G)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) :
+    ((system G).edgeRestriction (baseFiber S q)).IsObligatory :=
+  TripleSystem.Constructible.isObligatory
+    (baseFiber_constructible_of_linear_of_hostColorable hS q hlinear hG)
+
 end SequenceLift
 
 end Erdos593

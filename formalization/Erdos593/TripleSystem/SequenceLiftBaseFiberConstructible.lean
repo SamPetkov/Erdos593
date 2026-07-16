@@ -37,6 +37,18 @@ theorem baseFiber_constructible_of_linear_of_colorable
       (baseLetterSubgraph G (baseLetter '' baseFiber S q)).coe hcolor)
     (baseFiber_privateVertexExpansionIso_of_linear q hlinear)
 
+/-- A finite linear base fibre is constructible whenever its ambient host
+graph is two-colourable.  The required local colouring is pulled back through
+the canonical non-induced factor of the selected base-letter subgraph. -/
+theorem baseFiber_constructible_of_linear_of_hostColorable
+    {S : Set (Edge G)} (hS : S.Finite) (q : Node G)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) :
+    TripleSystem.Constructible ((system G).edgeRestriction (baseFiber S q)) :=
+  baseFiber_constructible_of_linear_of_colorable hS q hlinear
+    (_root_.SimpleGraph.Colorable.of_hom
+      (baseFiberLetterSubgraphFactor S q).toHom hG)
+
 end SequenceLift
 
 end Erdos593
