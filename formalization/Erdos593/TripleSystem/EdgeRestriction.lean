@@ -20,6 +20,22 @@ variable {V : Type u} {E : Type v} (F : TripleSystem V E)
 def edgeSupportSet (S : Set E) : Set V :=
   {x | ∃ e : E, e ∈ S ∧ F.Inc x e}
 
+/-- The point support of a finite family of triple edges is finite. -/
+theorem edgeSupportSet_finite {S : Set E} (hS : S.Finite) :
+    (F.edgeSupportSet S).Finite := by
+  induction S, hS using Set.Finite.induction_on with
+  | empty =>
+      simp [edgeSupportSet]
+  | insert hnotmem hfinite ih =>
+      rename_i e S
+      rw [show F.edgeSupportSet (insert e S) =
+        {x : V | F.Inc x e} ∪ F.edgeSupportSet S by
+          ext x
+          simp [edgeSupportSet]]
+      exact (Set.finite_of_ncard_ne_zero (by
+        rw [F.edge_ncard e]
+        decide)).union ih
+
 /-- The type of points supported by an edge-index set. -/
 abbrev EdgeSupport (S : Set E) := F.edgeSupportSet S
 
