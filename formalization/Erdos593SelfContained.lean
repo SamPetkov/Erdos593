@@ -14649,7 +14649,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberObligatory
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberAssembly
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberAssembly.lean
-Normalized SHA-256: c8a44485b18bd1a4c3e49ecbc4fa4e3ba9adeb16eb5f3afe346292680da82877
+Normalized SHA-256: ae12e6a76a50e21293a33ab6959bdcecbde6320927f60fd075cc7981ec00649a
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberAssembly
 
@@ -14692,6 +14692,43 @@ def baseFiberAssemblyCompatible (S : Set (Edge G)) : List (Node G) → Prop
           (system G).edgeSupportSet
               (TripleSystem.edgePieceUnion (nodes.map (baseFiber S))) ∩
             (system G).edgeSupportSet (baseFiber S q) = {r})
+
+/-- Membership in a finite union of listed base fibres is exactly membership in
+one fibre indexed by a node occurring in the list. -/
+theorem mem_edgePieceUnion_baseFiberList
+    (S : Set (Edge G)) (nodes : List (Node G)) {e : Edge G} :
+    e ∈ TripleSystem.edgePieceUnion (nodes.map (baseFiber S)) ↔
+      ∃ q, q ∈ nodes ∧ e ∈ baseFiber S q := by
+  induction nodes with
+  | nil =>
+      simp [TripleSystem.edgePieceUnion]
+  | cons q nodes ih =>
+      change
+        (e ∈ TripleSystem.edgePieceUnion (nodes.map (baseFiber S)) ∨
+          e ∈ baseFiber S q) ↔ _
+      constructor
+      · rintro (he | he)
+        · rcases ih.mp he with ⟨q', hq', heq'⟩
+          exact ⟨q', List.mem_cons.mpr (Or.inr hq'), heq'⟩
+        · exact ⟨q, List.mem_cons.mpr (Or.inl rfl), he⟩
+      · rintro ⟨q', hq', he⟩
+        rcases List.mem_cons.mp hq' with rfl | hq'
+        · exact Or.inr he
+        · exact Or.inl (ih.mpr ⟨q', hq', he⟩)
+
+/-- A listed family of base fibres covers exactly the edge set S as soon as it
+contains the canonical base node of every edge of S. -/
+theorem edgePieceUnion_baseFiber_eq_of_baseNode_mem
+    {S : Set (Edge G)} (nodes : List (Node G))
+    (hcover : ∀ e, e ∈ S → baseNode e ∈ nodes) :
+    TripleSystem.edgePieceUnion (nodes.map (baseFiber S)) = S := by
+  ext e
+  rw [mem_edgePieceUnion_baseFiberList]
+  constructor
+  · rintro ⟨q, hq, he⟩
+    exact he.1
+  · intro he
+    exact ⟨baseNode e, hcover e he, ⟨he, rfl⟩⟩
 
 /-- Finite linear base fibres over a two-colourable host form a generic
 running edge assembly whenever their supports satisfy
@@ -14737,6 +14774,21 @@ theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_baseFiberAss
   rw [hcover] at hconstructible
   exact hconstructible
 
+/-- The exact cover premise in the compatible-assembly theorem follows from
+the simpler requirement that the list contains every edge's canonical base
+node. -/
+theorem edgeRestriction_constructible_of_linear_of_hostColorable_of_baseNodeCover
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) (nodes : List (Node G))
+    (hcover : ∀ e, e ∈ S → baseNode e ∈ nodes)
+    (hcompatible : baseFiberAssemblyCompatible S nodes) :
+    TripleSystem.Constructible ((system G).edgeRestriction S) :=
+  edgeRestriction_constructible_of_linear_of_hostColorable_of_baseFiberAssembly
+    hS hlinear hG nodes
+    (edgePieceUnion_baseFiber_eq_of_baseNode_mem nodes hcover)
+    hcompatible
+
 /-- The preceding finite compatible assembly is obligatory, by the completed
 classical positive-atom closure theorem for constructible triple systems. -/
 theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseFiberAssembly
@@ -14748,6 +14800,19 @@ theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseFiberAsse
     ((system G).edgeRestriction S).IsObligatory :=
   TripleSystem.Constructible.isObligatory
     (edgeRestriction_constructible_of_linear_of_hostColorable_of_baseFiberAssembly
+      hS hlinear hG nodes hcover hcompatible)
+
+/-- The canonical-base-node cover version of the compatible-assembly
+obligatoriness theorem. -/
+theorem edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseNodeCover
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hlinear : ((system G).edgeRestriction S).Linear)
+    (hG : G.Colorable 2) (nodes : List (Node G))
+    (hcover : ∀ e, e ∈ S → baseNode e ∈ nodes)
+    (hcompatible : baseFiberAssemblyCompatible S nodes) :
+    ((system G).edgeRestriction S).IsObligatory :=
+  TripleSystem.Constructible.isObligatory
+    (edgeRestriction_constructible_of_linear_of_hostColorable_of_baseNodeCover
       hS hlinear hG nodes hcover hcompatible)
 
 end SequenceLift
