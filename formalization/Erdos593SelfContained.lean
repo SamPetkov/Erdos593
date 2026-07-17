@@ -11007,7 +11007,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceExtension
 Source: Erdos593/TripleSystem/ErdosRado/TraceExtension.lean
-Normalized SHA-256: afe1dc421e9cc396aa5d13e78bc257f02ff9e33b43fe2dbab027ae3f3adb13fd
+Normalized SHA-256: 37b35f5fdb6fddd91e96abe80bea66ee7dc52d9d77ba751999d63ff03ffd0c94
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceExtension
 
@@ -11411,6 +11411,24 @@ theorem valueSet_snoc_subset_inter_Ioi {c : TraceColoring} {α : TraceCarrier}
         simpa using agrees_snoc_old p q r ξ
     }, hr⟩
   · simpa [← hr] using snoc_value_lt p q r
+
+/-- Conditional localization of the canonical successor minimum. -/
+theorem least_snoc_value_mem_inter_Ioi {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p)
+    (h : Nonempty (TraceCandidate c (p.snoc q))) :
+    (least h).value ∈ valueSet c p ∩ Set.Ioi q.value := by
+  apply valueSet_snoc_subset_inter_Ioi p q
+  exact ⟨least h, rfl⟩
+
+/-- Conditional strict growth of least candidate values across a supplied
+successor extension. -/
+theorem least_value_lt_least_snoc {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p)
+    (hp : Nonempty (TraceCandidate c p))
+    (hs : Nonempty (TraceCandidate c (p.snoc q))) :
+    (least hp).value < (least hs).value := by
+  exact lt_of_le_of_lt (least_value_le hp q)
+    (Set.mem_Ioi.mp (least_snoc_value_mem_inter_Ioi p q hs).2)
 
 /-- A candidate for an appended prefix agrees with the anchor colour at its
 newly appended node. -/

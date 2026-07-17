@@ -401,6 +401,24 @@ theorem valueSet_snoc_subset_inter_Ioi {c : TraceColoring} {α : TraceCarrier}
     }, hr⟩
   · simpa [← hr] using snoc_value_lt p q r
 
+/-- Conditional localization of the canonical successor minimum. -/
+theorem least_snoc_value_mem_inter_Ioi {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p)
+    (h : Nonempty (TraceCandidate c (p.snoc q))) :
+    (least h).value ∈ valueSet c p ∩ Set.Ioi q.value := by
+  apply valueSet_snoc_subset_inter_Ioi p q
+  exact ⟨least h, rfl⟩
+
+/-- Conditional strict growth of least candidate values across a supplied
+successor extension. -/
+theorem least_value_lt_least_snoc {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p)
+    (hp : Nonempty (TraceCandidate c p))
+    (hs : Nonempty (TraceCandidate c (p.snoc q))) :
+    (least hp).value < (least hs).value := by
+  exact lt_of_le_of_lt (least_value_le hp q)
+    (Set.mem_Ioi.mp (least_snoc_value_mem_inter_Ioi p q hs).2)
+
 /-- A candidate for an appended prefix agrees with the anchor colour at its
 newly appended node. -/
 theorem agrees_snoc_last {c : TraceColoring} {α : TraceCarrier}
