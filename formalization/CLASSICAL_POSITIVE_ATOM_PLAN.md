@@ -751,9 +751,11 @@ specialized to `kappa = aleph1`, `gamma = omega`, and
 and does not use CH.
 
 For each ordinal endpoint `alpha < lambda^+` and stage `eta < kappa`, the
-formal trace must define `B^alpha_eta = {beta^alpha_zeta | zeta < eta}` and
-the lower bound `hatBeta^alpha_eta = sup_{zeta < eta}(beta^alpha_zeta + 1)`.
-For a pair colouring `c`, its exact eligible-candidate predicate is:
+formal trace must define `B^alpha_eta = {beta^alpha_zeta | zeta < eta}` for
+every `eta <= phi(alpha)`, including the terminal range. The lower bound at a
+live stage is `hatBeta^alpha_eta = sup_{zeta < eta}(beta^alpha_zeta + 1)`.
+For a pair colouring `c`, the exact eligible-candidate predicate at each
+live stage `eta < phi(alpha)` is:
 
 ~~~text
 beta < alpha /\\ hatBeta^alpha_eta <= beta /\\
@@ -764,31 +766,50 @@ forall zeta < eta,
 When eligible candidates exist, `beta^alpha_eta` is their ordinal minimum.
 At a limit stage the preceding supremum is part of that predicate; do not
 replace it by arbitrary colour-class choices or an unconstrained
-`Classical.choose`. Truncate the trace at `kappa`, writing `phi(alpha) <=
-kappa` for its height. `phi(alpha) < kappa` means its next eligible set is
-empty; `phi(alpha) = kappa` is the success case, not a failure code.
+`Classical.choose`. Truncate the trace at `kappa`, writing `phi(alpha) <=`
+`kappa` for its height. `phi(alpha) < kappa` means its next eligible set is
+empty; `phi(alpha) = kappa` is the success case, not a failure code. In that
+success case the terminal prefix is explicitly
+`B^alpha_kappa = {beta^alpha_zeta | zeta < kappa}`; more generally the
+terminal prefix is `B^alpha_(phi alpha)` by the same range definition.
+Every displayed brace passed to the pair colouring must carry strict endpoint
+proofs, so `beta^alpha_zeta < beta < alpha` (or the corresponding trace
+inequality) certifies an actual two-element `Pair` rather than silently
+treating a repeated endpoint as a face.
 
 The following source invariants are mandatory Lean obligations:
 
-1. Each trace is strictly increasing and every node is below its endpoint.
-2. `B^alpha_(phi alpha) union {alpha}` is endhomogeneous.
-3. Trace coherence: if `beta` occurs in the trace of `alpha`, then every
-   prefix of the trace of `beta` agrees with the corresponding prefix of the
-   trace of `alpha`.
+1. Indexed strictness: `zeta < eta < phi(alpha)` implies
+   `beta^alpha_zeta < beta^alpha_eta < alpha`.
+2. `B^alpha_(phi alpha) union {alpha}` is endhomogeneous, with the terminal
+   `B^alpha_kappa` available when `phi(alpha) = kappa`.
+3. Indexed trace coherence: if `beta = beta^alpha_eta`, then
+   `phi(beta) = eta` and for every `zeta < eta`,
+   `beta^beta_zeta = beta^alpha_zeta`.
 4. For the canonical predecessor relation `beta prec alpha` iff `beta`
-   occurs in the trace of `alpha`, its tree rank equals `phi(alpha)`.
+   occurs in the trace of `alpha`, its tree rank equals `phi(alpha)`; the
+   rank proof consumes the cutoff equality from indexed coherence.
 
 At each fixed height `varphi < kappa`, the source's reduced-colour code is
 the function `C_alpha : varphi -> gamma` whose `zeta` coordinate is
 `c({beta^alpha_zeta, alpha})`. The central theorem to formalize explicitly is
 `alpha, beta in T_varphi /\\ C_alpha = C_beta -> alpha = beta`, proved by
 transfinite induction from trace coherence and ordinal-minimal selection.
-It is not an immediate definitional fact. The cardinal bound is then
-`|T_varphi| <= |gamma|^|varphi| <= lambda`, followed by the union bound for
-all heights below `kappa`. Since the carrier has cardinality `lambda^+`, a
-height-`kappa` trace exists. Its endhomogeneous set has order type
-`omega_1 + 1`; a countable unary-colour pigeonhole argument yields the
-required `omega_1`-sized homogeneous set.
+It is not an immediate definitional fact. The counting layer must name the
+ZFC facts `omega < cf(kappa)`, `kappa <= lambda`,
+`varphi < kappa -> omega^|varphi| <= 2^aleph0 = lambda`, and
+`kappa * lambda = lambda`; none is a use of CH. It then proves
+`|T_varphi| <= |gamma|^|varphi| <= lambda` and the union bound for all
+heights below `kappa`. Since the carrier has cardinality `lambda^+`, a
+height-`kappa` trace exists. For a successful trace define the induced unary
+end-colour `d(beta^alpha_zeta) = c({beta^alpha_zeta, alpha})` on its index
+domain `kappa`. Regularity and `omega < cf(kappa)` yield a `kappa`-sized
+index fibre `I : Set kappa` on which this induced colour is constant. Let
+`H = {beta^alpha_zeta | zeta in I}`. Indexed strictness makes this node set
+have cardinality `kappa`; for `zeta < eta` both in `I`, endhomogeneity gives
+`c({beta^alpha_zeta, beta^alpha_eta}) = d(beta^alpha_zeta)`. This direct
+`r = 2` argument proves pair homogeneity of `H` and replaces an informal
+countable unary-colour pigeonhole sentence.
 
 **Six owner modules.** Each module exports only its local interface; later
 modules must not reopen or duplicate earlier arguments.
@@ -804,10 +825,12 @@ modules must not reopen or duplicate earlier arguments.
 2. `Erdos593/TripleSystem/ErdosRado/CanonicalTrace.lean`
 
    Work on the native ordinal carrier. Define the exact eligible predicate,
-   ordinal-minimum successor, limit lower bound, cutoff height, and local
-   trace invariants (strictness, endpoint bounds, endhomogeneity, and prefix
-   coherence). A generic least-selector is only support infrastructure; this
-   module must connect it to the displayed predicate.
+   ordinal-minimum successor, limit lower bound, cutoff height, terminal
+   ranges `B_(phi alpha)` and `B_kappa`, and local trace invariants
+   (indexed strictness, endpoint bounds, genuine-pair face proofs,
+   endhomogeneity, and indexed coherence). A generic least-selector is only
+   support infrastructure; this module must connect it to the displayed
+   predicate.
 
 3. `Erdos593/TripleSystem/ErdosRado/CanonicalTree.lean`
 
@@ -826,13 +849,16 @@ modules must not reopen or duplicate earlier arguments.
 
    Prove the level-code cardinal bound, the union bound below `aleph1`, and
    existence of a height-`aleph1` trace on the successor-continuum carrier,
-   keeping all universe lifts and `2^(<aleph1) = 2^aleph0` explicit.
+   keeping all universe lifts and `2^(<aleph1) = 2^aleph0` explicit. Name
+   the cofinality, exponent, comparison, and product cardinal lemmas used
+   by the bound rather than hiding them in a combined estimate.
 
 6. `Erdos593/TripleSystem/ErdosRado/EndhomogeneousLift.lean`
 
-   Convert a height trace to its endhomogeneous set, apply the countable
-   unary-colour pigeonhole step, transport from the native carrier to
-   `ErdosRadoCarrier`, and prove
+   Convert a height trace to its endhomogeneous set, define the induced
+   unary end-colour, obtain a `kappa`-sized regularity fibre, and prove
+   directly that its pairs are homogeneous. Then transport from the native
+   carrier to `ErdosRadoCarrier`, and prove
    `erdosRadoUncountableHomogeneousPairSet`. It must reuse the existing N22
    endpoint instead of duplicating finite three-point extraction.
 
@@ -857,14 +883,16 @@ each owner module is committed to a public `main` SHA:
 
 - N24-A: audit pair equivalence, image homogeneity, and cardinal transport;
 - N24-B: audit the source-native canonical trace: eligible predicate,
-  ordinal minimum, limit lower bound, cutoff, and prefix coherence;
+  ordinal minimum, limit lower bound, terminal range, strict pair faces,
+  cutoff, and indexed coherence;
 - N24-C: audit canonical-tree rank and fixed-level reduced-colour-code
   injectivity by transfinite induction;
-- N24-D: audit level and union cardinal bounds, universe lifts, and the
-  height-`aleph1` existence argument without CH; and
-- N24-E: audit the endhomogeneous lift, countable unary-colour pigeonhole,
-  carrier transport, final dichotomy, and absence of a hidden partition
-  assumption.
+- N24-D: audit level and union cardinal bounds, the named
+  cofinality/exponent/comparison/product facts, universe lifts, and
+  the height-`aleph1` existence argument without CH; and
+- N24-E: audit the induced unary end-colour, regularity fibre, direct
+  pair-homogeneity lift, carrier transport, final dichotomy, and absence of
+  a hidden partition assumption.
 
 Each request uses only the exact public commit and its owner module, requests
 either a compile-checked patch or the smallest precise blocker, and forbids
