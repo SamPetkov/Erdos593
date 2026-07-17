@@ -366,6 +366,41 @@ theorem snoc_value_lt {c : TraceColoring} {α : TraceCarrier}
   have h := r.above_prefix p.snocLast
   simpa [TracePrefix.snoc_node_last] using h
 
+/-- A conditional successor extension only narrows the values eligible for a
+candidate: every candidate for the appended prefix was already a candidate for
+the old prefix. -/
+theorem valueSet_snoc_subset {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p) :
+    valueSet c (p.snoc q) ⊆ valueSet c p := by
+  intro x hx
+  rcases hx with ⟨r, hr⟩
+  refine ⟨{
+    live := q.live
+    value := r.value
+    lt_anchor := r.lt_anchor
+    above_prefix := fun ξ => snoc_old_value_lt p q r ξ
+    agrees := fun ξ => by
+      simpa using agrees_snoc_old p q r ξ
+  }, hr⟩
+
+/-- Every conditional successor candidate is both an old candidate and above
+the appended value. -/
+theorem valueSet_snoc_subset_inter_Ioi {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p) :
+    valueSet c (p.snoc q) ⊆ valueSet c p ∩ Set.Ioi q.value := by
+  intro x hx
+  rcases hx with ⟨r, hr⟩
+  refine ⟨?_, ?_⟩
+  · exact ⟨{
+      live := q.live
+      value := r.value
+      lt_anchor := r.lt_anchor
+      above_prefix := fun ξ => snoc_old_value_lt p q r ξ
+      agrees := fun ξ => by
+        simpa using agrees_snoc_old p q r ξ
+    }, hr⟩
+  · simpa [← hr] using snoc_value_lt p q r
+
 /-- A candidate for an appended prefix agrees with the anchor colour at its
 newly appended node. -/
 theorem agrees_snoc_last {c : TraceColoring} {α : TraceCarrier}

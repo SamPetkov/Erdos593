@@ -11007,7 +11007,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceExtension
 Source: Erdos593/TripleSystem/ErdosRado/TraceExtension.lean
-Normalized SHA-256: 5206ddfefc81dc844f15dd8288407acf0750c0785ff9ccf5f624d3648a576bc0
+Normalized SHA-256: afe1dc421e9cc396aa5d13e78bc257f02ff9e33b43fe2dbab027ae3f3adb13fd
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceExtension
 
@@ -11376,6 +11376,41 @@ theorem snoc_value_lt {c : TraceColoring} {α : TraceCarrier}
     (r : TraceCandidate c (p.snoc q)) : q.value < r.value := by
   have h := r.above_prefix p.snocLast
   simpa [TracePrefix.snoc_node_last] using h
+
+/-- A conditional successor extension only narrows the values eligible for a
+candidate: every candidate for the appended prefix was already a candidate for
+the old prefix. -/
+theorem valueSet_snoc_subset {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p) :
+    valueSet c (p.snoc q) ⊆ valueSet c p := by
+  intro x hx
+  rcases hx with ⟨r, hr⟩
+  refine ⟨{
+    live := q.live
+    value := r.value
+    lt_anchor := r.lt_anchor
+    above_prefix := fun ξ => snoc_old_value_lt p q r ξ
+    agrees := fun ξ => by
+      simpa using agrees_snoc_old p q r ξ
+  }, hr⟩
+
+/-- Every conditional successor candidate is both an old candidate and above
+the appended value. -/
+theorem valueSet_snoc_subset_inter_Ioi {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p) :
+    valueSet c (p.snoc q) ⊆ valueSet c p ∩ Set.Ioi q.value := by
+  intro x hx
+  rcases hx with ⟨r, hr⟩
+  refine ⟨?_, ?_⟩
+  · exact ⟨{
+      live := q.live
+      value := r.value
+      lt_anchor := r.lt_anchor
+      above_prefix := fun ξ => snoc_old_value_lt p q r ξ
+      agrees := fun ξ => by
+        simpa using agrees_snoc_old p q r ξ
+    }, hr⟩
+  · simpa [← hr] using snoc_value_lt p q r
 
 /-- A candidate for an appended prefix agrees with the anchor colour at its
 newly appended node. -/
