@@ -1,0 +1,9 @@
+diff --git a/formalization/tmp/UncountableToInfiniteAPITest.lean b/formalization/tmp/UncountableToInfiniteAPITest.lean
+--- a/formalization/tmp/UncountableToInfiniteAPITest.lean
++++ b/formalization/tmp/UncountableToInfiniteAPITest.lean
+@@ -8,4 +8,4 @@ theorem scratch_set_infinite_of_aleph0_lt_mk {α : Type u} {H : Set α}
+     (hH : Cardinal.aleph0 < Cardinal.mk H) : H.Infinite := by
+   intro hHfin
+-  exact hH.not_le (Cardinal.lt_aleph0_iff_set_finite.mpr hHfin).le
++  exact hH.2 (Cardinal.lt_aleph0_iff_set_finite.mpr hHfin).le
+ 

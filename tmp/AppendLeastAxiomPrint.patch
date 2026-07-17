@@ -1,0 +1,10 @@
+diff --git a/formalization/tmp/LeastCandidatePrototype.lean b/formalization/tmp/LeastCandidatePrototype.lean
+--- a/formalization/tmp/LeastCandidatePrototype.lean
++++ b/formalization/tmp/LeastCandidatePrototype.lean
+@@ -63,0 +64,6 @@
++
++#print axioms Erdos593.Prototype.leastCandidate
++#print axioms Erdos593.Prototype.leastCandidate_mem
++#print axioms Erdos593.Prototype.leastCandidate_le_of_mem
++#print axioms Erdos593.Prototype.eq_leastCandidate_of_mem_of_le
++#print axioms Erdos593.Prototype.eq_leastCandidate_iff

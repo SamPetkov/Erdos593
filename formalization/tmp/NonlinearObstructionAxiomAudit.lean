@@ -1,0 +1,5 @@
+import Erdos593.TripleSystem.NonlinearObstruction
+
+#print axioms Erdos593.TripleSystem.Embedding.source_linear_of_target_linear
+#print axioms Erdos593.TripleSystem.Embedding.source_linear_of_imageEdgeRestriction_linear
+#print axioms Erdos593.TripleSystem.not_isObligatory_of_not_linear_of_linear_highChromatic

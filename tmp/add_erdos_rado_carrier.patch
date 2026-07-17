@@ -1,0 +1,111 @@
+diff --git a/formalization/Erdos593/TripleSystem/ErdosRadoCarrier.lean b/formalization/Erdos593/TripleSystem/ErdosRadoCarrier.lean
+new file mode 100644
+--- /dev/null
++++ b/formalization/Erdos593/TripleSystem/ErdosRadoCarrier.lean
+@@ -0,0 +1,43 @@
++import Erdos593.TripleSystem.CardinalPairPartition
++import Mathlib.SetTheory.Cardinal.Continuum
++
++/-!
++# Erdos--Rado carrier interface
++
++This module fixes the base-universe carrier of cardinality the successor of
++the continuum and records the exact infinite homogeneous-set premise needed
++by the countably-coloured Erdos--Rado special case.  It intentionally does
++not assert or prove that premise.
++-/
++
++namespace Erdos593
++namespace TripleSystem
++namespace TriangleHost
++
++/-- The base-universe carrier of cardinality `(2^aleph0)^+`. -/
++noncomputable abbrev ErdosRadoCarrier : Type :=
++  (Order.succ (Cardinal.continuum : Cardinal)).out
++
++/-- The chosen cardinal carrier has decidable equality, noncomputably. -/
++noncomputable instance erdosRadoCarrierDecidableEq : DecidableEq ErdosRadoCarrier :=
++  Classical.decEq _
++
++/-- The carrier has exactly the desired successor-of-continuum cardinality. -/
++theorem mk_erdosRadoCarrier :
++    Cardinal.mk ErdosRadoCarrier = Order.succ (Cardinal.continuum : Cardinal) :=
++  Cardinal.mk_out _
++
++/-- The precise countably-coloured infinite homogeneous-set consequence that
++a future Erdos--Rado formalization must establish. -/
++def ErdosRadoHomogeneousPairSet : Prop :=
++  ∀ c : Pair ErdosRadoCarrier → ℕ, ∃ H : Set ErdosRadoCarrier,
++    H.Infinite ∧ PairHomogeneous c H
++
++/-- The external homogeneous-set theorem implies the local Ramsey interface.
++This is only a conditional composition of the checked finite bridge. -/
++theorem pairRamseyTriangle_erdosRadoCarrier_of
++    (h : ErdosRadoHomogeneousPairSet) :
++    PairRamseyTriangle ErdosRadoCarrier :=
++  pairRamseyTriangle_of_infinite_pair_homogeneous h
++
++end TriangleHost
++end TripleSystem
++end Erdos593
+diff --git a/formalization/Erdos593.lean b/formalization/Erdos593.lean
+--- a/formalization/Erdos593.lean
++++ b/formalization/Erdos593.lean
+@@ -55,6 +55,7 @@
+ import Erdos593.TripleSystem.TriangleHostLinearity
+ import Erdos593.TripleSystem.TriangleHostRamsey
+ import Erdos593.TripleSystem.CardinalPairPartition
++import Erdos593.TripleSystem.ErdosRadoCarrier
+ import Erdos593.TripleSystem.TriangleHostRamseyChromatic
+ import Erdos593.TripleSystem.TriangleHostRamseyTransport
+ import Erdos593.TripleSystem.ObligatoryAtoms
+diff --git a/.github/workflows/lean.yml b/.github/workflows/lean.yml
+--- a/.github/workflows/lean.yml
++++ b/.github/workflows/lean.yml
+@@ -34,6 +34,7 @@
+           lake build Erdos593.TripleSystem.TriangleHostRamsey
+           lake build Erdos593.TripleSystem.TriangleHostRamseyChromatic
+           lake build Erdos593.TripleSystem.TriangleHostRamseyTransport
+           lake build Erdos593.TripleSystem.CardinalPairPartition
++          lake build Erdos593.TripleSystem.ErdosRadoCarrier
+           lake build Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
+           lake build Erdos593.TripleSystem.ConstructiblePositiveObligatory
+           lake build Erdos593.TripleSystem.SequenceLiftTrace
+@@ -85,6 +86,7 @@
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostRamsey.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostRamseyTransport.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/CardinalPairPartition.lean
++          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRadoCarrier.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTrace.lean
+diff --git a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+--- a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
++++ b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+@@ -656,17 +656,22 @@
+ **Module split.** Keep the external combinatorics separate from the current
+ host and transport code.
+ 
+ 1. `CardinalPairPartition.lean` defines a small cardinal pair-colouring
+    interface over the existing finite `TriangleHost.Pair` and
+    `TriangleHost.Triangle` representations. It is implemented; it contains
+    only the finite extraction and equivalence bridge above.
+-2. `ErdosRado.lean` chooses the concrete cardinal carrier only after a
+-   pinned-Mathlib feasibility audit confirms the exact constructor APIs. It
+-   formalizes the needed specialization of
++2. `ErdosRadoCarrier.lean` fixes the base-universe carrier
++   `Order.succ Cardinal.continuum`, proves its exact cardinality, and
++   packages the required infinite-homogeneous-set premise as
++   `ErdosRadoHomogeneousPairSet`. It is implemented and deliberately makes
++   no partition-calculus assertion.
++3. `ErdosRado.lean` proves `ErdosRadoHomogeneousPairSet` by formalizing the
++   needed specialization of
+    `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`, returns an infinite homogeneous
+    set, and applies the checked finite bridge. It must not replace this with
+    a finite-colour result.
+-3. `TriangleHostRamseyUnconditional.lean` applies N22's existing
++4. `TriangleHostRamseyUnconditional.lean` applies N22's existing
+    `not_isObligatory_of_not_linear_of_exactTriangleHost` to that witness. It
+    must not duplicate `reindex`, the ULift argument, or the finite-linearity
+    proof.

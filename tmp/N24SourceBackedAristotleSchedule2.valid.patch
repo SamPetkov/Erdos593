@@ -1,0 +1,21 @@
+diff --git a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+--- a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
++++ b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+@@ -858,7 +858,10 @@
+-- N24-A: audit pair equivalence, image homogeneity, and cardinal transport;
+-- N24-B: audit canonical/least trace selection and trace invariants;
+-- N24-C: audit the success branch, especially the countable-colour pigeonhole
+-  and all-pairs homogeneity conclusion;
+-- N24-D: audit first-failure coding and fixed-rank injectivity; and
+-- N24-E: audit cardinal arithmetic, universe lifts, the final dichotomy, and
+-  the absence of CH or a hidden partition assumption.
++- N24-A: audit pair equivalence, image homogeneity, and cardinal transport;
++- N24-B: audit the source-native canonical trace: eligible predicate,
++  ordinal minimum, limit lower bound, cutoff, and prefix coherence;
++- N24-C: audit canonical-tree rank and fixed-level reduced-colour-code
++  injectivity by transfinite induction;
++- N24-D: audit level and union cardinal bounds, universe lifts, and the
++  height-`aleph1` existence argument without CH; and
++- N24-E: audit the endhomogeneous lift, countable unary-colour pigeonhole,
++  carrier transport, final dichotomy, and absence of a hidden partition
++  assumption.

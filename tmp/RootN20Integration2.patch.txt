@@ -1,0 +1,74 @@
+diff --git a/formalization/.github/workflows/lean.yml b/formalization/.github/workflows/lean.yml
+--- a/formalization/.github/workflows/lean.yml
++++ b/formalization/.github/workflows/lean.yml
+__HUNK__ -25,6 +25,7 __HUNK__ jobs:
+           lake build Erdos593.TripleSystem.EmbeddingLinearity
+           lake build Erdos593.TripleSystem.NonlinearObstruction
+           lake build Erdos593.TripleSystem.TriangleHostLinearity
++          lake build Erdos593.TripleSystem.TriangleHostRamsey
+           lake build Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
+           lake build Erdos593.TripleSystem.ConstructiblePositiveObligatory
+           lake build Erdos593.TripleSystem.SequenceLiftTrace
+__HUNK__ -77,6 +78,7 __HUNK__ jobs:
+           lake env lean -DwarningAsError=true Erdos593/Graph/FiniteEdgeFactor.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/EmbeddingLinearity.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/NonlinearObstruction.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostLinearity.lean
++          lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostRamsey.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTrace.lean
+diff --git a/formalization/ARISTOTLE_LOG.md b/formalization/ARISTOTLE_LOG.md
+--- a/formalization/ARISTOTLE_LOG.md
++++ b/formalization/ARISTOTLE_LOG.md
+__HUNK__ -648,6 +648,10 __HUNK__
+ - Remote status at recording: `QUEUED`. Any result is advisory until an exact
+   local source, dependency, source-gap, banned-construct, strict-build,
+   axiom, self-contained, and GitHub Actions audit is complete.
++- Local disposition (2026-07-16): the independently authored finite host layer
++  was published in `06eb3c6120f56cb0587e52b14be0f4b11912673a` and passed its
++  focused GitHub Actions Lean checks. The queued remote audit remains advisory
++  and must not overwrite that checked source.
+ ## Record format
+ 
+ For every submission, record:
+diff --git a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+--- a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
++++ b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+__HUNK__ -557,0 +558,24 __HUNK__
++
++### N20 -- countable-colour Ramsey interface
++
++Keep the next layer separate from the external partition-calculus theorem.
++In `Erdos593/TripleSystem/TriangleHostRamsey.lean`, define only the exact
++natural-colour consequence required of a future Erdős--Rado theorem:
++
++~~~lean
++def PairRamseyTriangle (κ : Type u) [DecidableEq κ] : Prop :=
++  ∀ c : Pair κ → ℕ, ∃ t : Triangle κ,
++    ∀ p q : Pair κ, p.1 ⊆ t.1 → q.1 ⊆ t.1 → c p = c q
++~~~
++
++Use it to prove exactly that `TriangleHost.system κ` has no proper
++natural-number colouring. This is the local combinatorial contradiction
++needed by the existing chromatic-cardinal pattern; it is not itself a proof
++of `ℵ₀ < (TriangleHost.system κ).chromaticCardinal`.
++
++**N20 status (2026-07-16).** The interface and the two direct anti-colouring
++lemmas are implemented and strict-clean in
++`Erdos593/TripleSystem/TriangleHostRamsey.lean`. The module does not prove
++`PairRamseyTriangle`, the cardinal lower bound, an Erdős--Rado partition
++relation, or a cross-universe host transport theorem. Those remain distinct
++proof obligations.
++
+diff --git a/formalization/Erdos593.lean b/formalization/Erdos593.lean
+--- a/formalization/Erdos593.lean
++++ b/formalization/Erdos593.lean
+__HUNK__ -53,6 +53,7 __HUNK__
+ import Erdos593.TripleSystem.Obligatory
+ import Erdos593.TripleSystem.NonlinearObstruction
+ import Erdos593.TripleSystem.TriangleHostLinearity
++import Erdos593.TripleSystem.TriangleHostRamsey
+ import Erdos593.TripleSystem.ObligatoryAtoms
+ import Erdos593.TripleSystem.ObligatoryDisjointUnion
+ import Erdos593.TripleSystem.ObligatoryIsolatedReduction

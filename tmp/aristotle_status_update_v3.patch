@@ -1,0 +1,61 @@
+diff --git a/formalization/ARISTOTLE_LOG.md b/formalization/ARISTOTLE_LOG.md
+--- a/formalization/ARISTOTLE_LOG.md
++++ b/formalization/ARISTOTLE_LOG.md
+@@ -1341,12 +1341,58 @@
+- Remote status (2026-07-16): `IN_PROGRESS`. It is the sole active N24 audit.
+- Three stale continuation projects were released by cancelling their queued
+- re-runs (`416f2f75-2663-43c9-ba5c-08d1d4cde184`,
+- `ebb5aa4b-49eb-4bd6-a069-4b9978abe2f0`, and
+- `58327fa1-fac8-48ad-9beb-6a40fa72b869`); no active stale task remains.
++- Remote completion (2026-07-16): project metadata reports
+++  `COMPLETE_WITH_ERRORS`, while its terminal report is a substantive pass.
+++  Aristotle cloned and SHA-verified the stated public commit, kept its audit
+++  checkout clean, passed focused warnings-as-errors elaboration and the Lake
+++  build, and found no prohibited construct or resource-limit workaround.
+++  It verified that the module proves only same-universe pair transport and
+++  image-cardinality facts; it makes no Erdos--Rado, Ramsey, or partition
+++  theorem claim. The report lists only the expected foundational axioms:
+++  `propext`, `Classical.choice`, and `Quot.sound`. The error label came from
+++  an auxiliary command rather than a Lean or soundness failure.
++- Stale continuation cleanup (2026-07-16): the queued reruns
+++  `416f2f75-2663-43c9-ba5c-08d1d4cde184`,
+++  `ebb5aa4b-49eb-4bd6-a069-4b9978abe2f0`, and
+++  `58327fa1-fac8-48ad-9beb-6a40fa72b869` were cancelled. A final re-poll
+++  found no queued or running stale task in the three old projects.
+ - GitHub Actions status (2026-07-16): GitHub's API returned HTTP 503 for both
+   Actions-run and commit-check queries for this SHA. This is recorded as an
+   external availability failure, not a failed Lean check; retry before taking
+   any CI disposition.
+- Local disposition: pending. Any Aristotle result remains advisory until the
+- exact source passes local strict build, axiom, banned-construct, and
+- self-contained checks and GitHub Actions become observable.
++- Local disposition (2026-07-16): accepted only as an independent advisory
+++  audit. The exact public source had already passed local strict build, axiom,
+++  banned-construct, and self-contained checks; GitHub Actions remains an
+++  external availability retry item.
+++
++## O40: N24 source-backed construction-plan public audit
+++
++- Submitted (UTC): 2026-07-16. The authenticated Aristotle project is
+++  `e1f06001-5df1-434b-8b07-5e1f4d9d7c63`; its task is
+++  `d5a4904f-6ee7-41d7-96e3-fc6bb78b6b6c`. It audits exact public `main`
+++  commit `a2a7eeb6842ee4660d5e562651c2949629662abc`.
++- Exact task boundary: advisory-check the public source-backed proof plan for
+++  the countably-coloured Erdos--Rado specialization
+++  `(2^aleph0)^+ -> (aleph1)^2_aleph0`, not a Lean implementation. It must
+++  examine the exact r=2 eligible-ordinal predicate, ordinal minimum and limit
+++  supremum, prefix coherence, canonical-tree rank and fixed-level code
+++  injectivity, counting bounds, and the endhomogeneous-to-homogeneous lift.
++- Explicit non-goals: no private checkout upload, no edits, no new theorem
+++  assertion, no commits or pushes, no use of CH, and no finite-colour
+++  replacement. Its result is an advisory report only and cannot make the
+++  partition relation true by assertion.
++- Submitted files: none. The request directs Aristotle to clone the exact
+++  public commit and compare the plan with the cited public source; no local
+++  tree, credential, secret, or private artifact was uploaded.
++- Remote status (2026-07-16): `IN_PROGRESS`. It is deliberately retained as
+++  the only active proof-plan audit after stale work was released.
++- Local disposition: pending. Any report will be used to revise the explicit
+++  proof obligations before the trace/tree/counting modules are attempted.
+ 
+ ## Record format

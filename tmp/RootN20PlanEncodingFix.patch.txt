@@ -1,0 +1,47 @@
+diff --git a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+--- a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
++++ b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+__HUNK__ -559,24 +559,19 __HUNK__
+-### N20 -- countable-colour Ramsey interface
+-
+-Keep the next layer separate from the external partition-calculus theorem.
+-In `Erdos593/TripleSystem/TriangleHostRamsey.lean`, define only the exact
+-natural-colour consequence required of a future Erd??s--Rado theorem:
+-
+-~~~lean
+-def PairRamseyTriangle (?? : Type u) [DecidableEq ??] : Prop :=
+-  ??? c : Pair ?? ??? ???, ??? t : Triangle ??,
+-    ??? p q : Pair ??, p.1 ??? t.1 ??? q.1 ??? t.1 ??? c p = c q
+-~~~
+-
+-Use it to prove exactly that `TriangleHost.system ??` has no proper
+-natural-number colouring. This is the local combinatorial contradiction
+-needed by the existing chromatic-cardinal pattern; it is not itself a proof
+-of `?????? < (TriangleHost.system ??).chromaticCardinal`.
+-
+-**N20 status (2026-07-16).** The interface and the two direct anti-colouring
+-lemmas are implemented and strict-clean in
+-`Erdos593/TripleSystem/TriangleHostRamsey.lean`. The module does not prove
+-`PairRamseyTriangle`, the cardinal lower bound, an Erd??s--Rado partition
+-relation, or a cross-universe host transport theorem. Those remain distinct
+-proof obligations.
+-
++### N20 -- natural-colour Ramsey interface
++
++Keep this layer separate from the external partition-calculus theorem.
++In `Erdos593/TripleSystem/TriangleHostRamsey.lean`, define only the exact
++natural-colour consequence required of a future Erdos--Rado theorem.
++`PairRamseyTriangle kappa` says that every map `Pair kappa -> Nat` is
++constant on the three pair-faces of some `Triangle kappa`.
++
++Use it to prove that `TriangleHost.system kappa` has no proper
++natural-number colouring. This is the local combinatorial contradiction
++needed by the existing chromatic-cardinal pattern; it is not a proof that
++the host has chromatic cardinal strictly above aleph-zero.
++
++**N20 status (2026-07-16).** The interface and its two direct anti-colouring
++lemmas are implemented and strict-clean in
++`Erdos593/TripleSystem/TriangleHostRamsey.lean`. The module does not prove
++`PairRamseyTriangle`, a Ramsey partition relation, a cardinal lower bound,
++or a cross-universe host bridge. Those remain separate proof obligations.
++

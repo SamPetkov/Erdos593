@@ -1,0 +1,13 @@
+diff --git a/formalization/ARISTOTLE_LOG.md b/formalization/ARISTOTLE_LOG.md
+--- a/formalization/ARISTOTLE_LOG.md
++++ b/formalization/ARISTOTLE_LOG.md
+@@ -1292,2 +1292,0 @@
+-## Record format
+-
+@@ -1321,3 +1319,5 @@
+   self-contained consistency checks, and GitHub Actions.
+ 
++## Record format
++
+ For every submission, record:
+

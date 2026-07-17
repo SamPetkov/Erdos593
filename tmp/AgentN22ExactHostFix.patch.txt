@@ -1,0 +1,45 @@
+diff --git a/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.lean b/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.lean
+--- a/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.lean
++++ b/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.lean
+__HUNK__ -36,13 +36,13 __HUNK__
+       · rintro ⟨y, hy, rfl⟩
+-        simpa using hy
++        simpa [s, TripleSystem.edgeSet] using hy
+@@
+-    apply edgeEquiv.injective
++    apply edgeEquiv.symm.injective
+@@
+   reindex (TriangleHost.system κ)
+-    (Equiv.ulift : TriangleHost.Pair κ ≃ ULift.{u} (TriangleHost.Pair κ))
+-    (Equiv.ulift : TriangleHost.Triangle κ ≃ ULift.{v} (TriangleHost.Triangle κ))
++    (Equiv.ulift : ULift.{u} (TriangleHost.Pair κ) ≃ TriangleHost.Pair κ).symm
++    (Equiv.ulift : ULift.{v} (TriangleHost.Triangle κ) ≃ TriangleHost.Triangle κ).symm
+@@
+-    (exactSystem (u := u) (v := v) κ).Inc (ULift.up p) (ULift.up t) ↔
++    (exactSystem.{u, v} κ).Inc (ULift.up p) (ULift.up t) ↔
+@@
+-    (exactSystem (u := u) (v := v) κ).Linear := by
++    (exactSystem.{u, v} κ).Linear := by
+@@
+-      (exactSystem (u := u) (v := v) κ).IsProperColoring c := by
++      (exactSystem.{u, v} κ).IsProperColoring c := by
+@@
+-    ℵ₀ < (exactSystem (u := u) (v := v) κ).chromaticCardinal := by
++    ℵ₀ < (exactSystem.{u, v} κ).chromaticCardinal := by
+@@
+-  have hle : (exactSystem (u := u) (v := v) κ).chromaticCardinal ≤ ℵ₀ :=
++  have hle : (exactSystem.{u, v} κ).chromaticCardinal ≤ ℵ₀ :=
+@@
+-  have hle' : (exactSystem (u := u) (v := v) κ).chromaticCardinal ≤
++  have hle' : (exactSystem.{u, v} κ).chromaticCardinal ≤
+@@
+-    ((exactSystem (u := u) (v := v) κ).chromaticCardinal_le_mk_iff
++    ((exactSystem.{u, v} κ).chromaticCardinal_le_mk_iff
+@@
+-  exact no_countableProperColoring_exactSystem (u := u) (v := v) κ hRamsey ⟨c, hc⟩
++  exact no_countableProperColoring_exactSystem.{u, v} κ hRamsey ⟨c, hc⟩
+@@
+-  · exact exactSystem_linear (u := u) (v := v) κ
+-  · exact aleph0_lt_chromaticCardinal_exactSystem (u := u) (v := v) κ hRamsey
++  · exact exactSystem_linear.{u, v} κ
++  · exact aleph0_lt_chromaticCardinal_exactSystem.{u, v} κ hRamsey

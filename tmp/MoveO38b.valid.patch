@@ -1,0 +1,17 @@
+diff --git a/formalization/ARISTOTLE_LOG.md b/formalization/ARISTOTLE_LOG.md
+--- a/formalization/ARISTOTLE_LOG.md
++++ b/formalization/ARISTOTLE_LOG.md
+@@ -1292,2 +1292,0 @@
+-## Record format
+-
+@@ -1319,7 +1317,9 @@
+ - Local disposition (2026-07-16): accepted only as an independent advisory
+   audit. The source remains subject to local strict builds, axiom checks,
+   self-contained consistency checks, and GitHub Actions.
+ 
++## Record format
++
+ For every submission, record:
+ 
+ - UTC timestamp and Aristotle project/task identifier;
+

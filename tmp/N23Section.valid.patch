@@ -1,0 +1,105 @@
+diff --git a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+--- a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
++++ b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+@@ -610 +610 @@
+-### N23 -- explicit Erdos--Rado witness (Terra handoff)
+-
+-This is the sole missing input to turn the N22 route into an unconditional
+-nonlinearity obstruction. It is a real partition-calculus formalization, not
+-a library import or a permissible axiom. The pinned Mathlib snapshot has no
+-usable theorem that supplies the required countably-coloured pair relation.
+-
+-**Exact target.** Construct a concrete type `kappa` with a proved cardinal
+-bound corresponding to the successor of the continuum, equip it with
+-`DecidableEq kappa`, and prove the existing interface without changing it:
+-
+-~~~lean
+-TriangleHost.PairRamseyTriangle kappa
+-~~~
+-
+-Equivalently, every `c : TriangleHost.Pair kappa -> Nat` must have a
+-`t : TriangleHost.Triangle kappa` such that every two pair-faces `p q`
+-contained in `t.1` have `c p = c q`. The theorem must be obtained from an
+-actual special case of the Erdos--Rado theorem, with countably many
+-colours; replacing it by a finite-colour theorem is not sufficient.
+-
+-**Module split.** Keep the external combinatorics separate from the current
+-host and transport code.
+-
+-1. `CardinalPairPartition.lean` defines a small cardinal pair-colouring
+-   relation over the existing `Set.powersetCard kappa 2` representation and
+-   proves only the bridge from its homogeneous-three-point conclusion to
+-   `PairRamseyTriangle kappa`.
+-2. `ErdosRado.lean` chooses the concrete cardinal carrier only after a
+-   pinned-Mathlib feasibility audit confirms the exact constructor APIs. It
+-   formalizes the needed specialization of
+-   `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`, then extracts three distinct
+-   points, packages them as `Set.powersetCard kappa 3`, and proves all three
+-   pair-faces homogeneous.
+-3. `TriangleHostRamseyUnconditional.lean` applies N22's existing
+-   `not_isObligatory_of_not_linear_of_exactTriangleHost` to that witness. It
+-   must not duplicate `reindex`, the ULift argument, or the finite-linearity
+-   proof.
++### N23 -- explicit Erdos--Rado witness (Terra handoff)
++
++This is the sole missing input to turn the N22 route into an unconditional
++nonlinearity obstruction. It is a real partition-calculus formalization, not
++a library import or a permissible axiom. The pinned Mathlib snapshot has no
++usable theorem that supplies the required countably-coloured pair relation.
++
++**Exact target.** Construct a concrete type `kappa` with a proved cardinal
++bound corresponding to the successor of the continuum, equip it with
++`DecidableEq kappa`, and prove the existing interface without changing it:
++
++~~~lean
++TriangleHost.PairRamseyTriangle kappa
++~~~
++
++Equivalently, every `c : TriangleHost.Pair kappa -> Nat` must have a
++`t : TriangleHost.Triangle kappa` such that every two pair-faces `p q`
++contained in `t.1` have `c p = c q`. The theorem must be obtained from an
++actual special case of the Erdos--Rado theorem, with countably many
++colours; replacing it by a finite-colour theorem is not sufficient.
++
++**Implemented finite bridge (2026-07-16).**
++`CardinalPairPartition.lean` is now strict-clean and imported by the
++aggregate root. It defines `PairHomogeneous c H` using the project's finite
++`TriangleHost.Pair` faces, and
++`HomogeneousThreePointPairColoring kappa Nat`. It proves exactly:
++
++1. `pairRamseyTriangle_of_infinite_pair_homogeneous`;
++2. `pairRamseyTriangle_of_homogeneousThreePoint`;
++3. `homogeneousThreePoint_of_pairRamseyTriangle`; and
++4. `homogeneousThreePointPairColoring_iff_pairRamseyTriangle`.
++
++The module has no new axiom and only reduces an infinite homogeneous set to
++a three-point finite witness. It does not establish the existence of that
++homogeneous set.
++
++**Exact remaining external obligation.** For the selected base-universe
++carrier `ErdosRadoCarrier` with cardinality the successor of the continuum,
++every `c : TriangleHost.Pair ErdosRadoCarrier -> Nat` must have an infinite
++`H : Set ErdosRadoCarrier` satisfying `TriangleHost.PairHomogeneous c H`.
++
++This is the countably-coloured special case customarily written
++`(2^aleph0)^+ -> (aleph1)^2_{aleph0}`. It is the sole non-finite
++combinatorial gap; a proof must be formalized rather than hidden behind an
++interface or an assumed witness.
++
++**Module split.** Keep the external combinatorics separate from the current
++host and transport code.
++
++1. `CardinalPairPartition.lean` defines a small cardinal pair-colouring
++   interface over the existing finite `TriangleHost.Pair` and
++   `TriangleHost.Triangle` representations. It is implemented; it contains
++   only the finite extraction and equivalence bridge above.
++2. `ErdosRado.lean` chooses the concrete cardinal carrier only after a
++   pinned-Mathlib feasibility audit confirms the exact constructor APIs. It
++   formalizes the needed specialization of
++   `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`, returns an infinite homogeneous
++   set, and applies the checked finite bridge. It must not replace this with
++   a finite-colour result.
++3. `TriangleHostRamseyUnconditional.lean` applies N22's existing
++   `not_isObligatory_of_not_linear_of_exactTriangleHost` to that witness. It
++   must not duplicate `reindex`, the ULift argument, or the finite-linearity
++   proof.

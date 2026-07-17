@@ -1,0 +1,187 @@
+diff --git a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+--- a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
++++ b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+@@ -610,8 +610,9 @@
+ ### N23 -- explicit Erdos--Rado witness (Terra handoff)
+ 
+-This is the sole missing input to turn the N22 route into an unconditional
+-nonlinearity obstruction. It is a real partition-calculus formalization, not
+-a library import or a permissible axiom. The pinned Mathlib snapshot has no
++This is the remaining theorem-level combinatorial input currently identified
++for the unconditional N22 route, subject to separately checked carrier and
++transport integration. It is a real partition-calculus formalization, not a
++library import or a permissible axiom. The pinned Mathlib snapshot has no
+ usable theorem that supplies the required countably-coloured pair relation.
+ 
+@@ -618,9 +619,10 @@
+-**Exact target.** Construct a concrete type `kappa` with a proved cardinal
+-bound corresponding to the successor of the continuum, equip it with
+-`DecidableEq kappa`, and prove the existing interface without changing it:
++**Exact target.** Use the existing base-universe carrier
++`ErdosRadoCarrier`, its supplied noncomputable `DecidableEq`, and its
++stronger cardinal-form target; then derive the existing interface without
++changing it:
+ 
+ ~~~lean
+ TriangleHost.PairRamseyTriangle kappa
+@@ -655,8 +657,9 @@
+ This is the countably-coloured special case customarily written
+ `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`. It is the sole non-finite
+ combinatorial gap; a proof must be formalized rather than hidden behind an
+ interface or an assumed witness.
+ 
+@@ -664,17 +667,19 @@
+ 2. `ErdosRadoCarrier.lean` fixes the base-universe carrier
+    `Order.succ Cardinal.continuum`, proves its exact cardinality, and
+    packages both the required infinite-homogeneous-set premise and the
+    stronger uncountable target
+    `ErdosRadoUncountableHomogeneousPairSet`, with a checked reduction from
+    the latter to the former. It deliberately makes no partition-calculus
+    assertion.
+-3. `ErdosRado.lean` proves the stronger target by formalizing the needed
+-   specialization of `(2^aleph0)^+ -> (aleph1)^2_{aleph0}`, then applies
+-   the checked reduction and finite bridge. It must not replace this with
+-   a finite-colour result.
++3. The five N24 owner modules formalize the stronger target in bounded
++   layers. `CountingAndMain.lean` owns the final theorem; an optional
++   `ErdosRado.lean` may be an import-only umbrella and must contain no
++   proof. The proof must not replace countably many colours with a
++   finite-colour result.
+ 4. `TriangleHostRamseyUnconditional.lean` applies N22's existing
+    `not_isObligatory_of_not_linear_of_exactTriangleHost` to that witness. It
+    must not duplicate `reindex`, the ULift argument, or the finite-linearity
+@@ -696,6 +701,119 @@
+ the targeted GitHub Action after the isolated commit is pushed to `main`.
+ 
++### N24 -- direct countably-coloured Erdos--Rado formalization
++
++**Status and hard boundary.** This is an execution plan, not a claim that
++the partition theorem is present. The checked repository contains the finite
++extraction bridge, successor-of-continuum carrier interface, and
++same-universe pair-transport layer, but it does not prove:
++
++~~~lean
++ErdosRadoUncountableHomogeneousPairSet
++PairRamseyTriangle ErdosRadoCarrier
++~~~
++
++or the unconditional N22 negative endpoint. No stage below may assume any
++of those statements.
++
++**Fixed theorem target.** In namespace
++`Erdos593.TripleSystem.TriangleHost`, the final module must prove:
++
++~~~lean
++theorem erdosRadoUncountableHomogeneousPairSet :
++    ErdosRadoUncountableHomogeneousPairSet
++~~~
++
++That is, for every `c : Pair ErdosRadoCarrier -> Nat`, it must construct
++`H : Set ErdosRadoCarrier` with
++
++~~~lean
++Cardinal.aleph0 < Cardinal.mk H /\ PairHomogeneous c H
++~~~
++
++The only permitted final conversion is the existing checked theorem
++`pairRamseyTriangle_erdosRadoCarrier_of_uncountable`. Do not assume CH,
++replace natural-number colours by finitely many colours, introduce a project
++axiom, or use an unproved library partition theorem.
++
++The intended mathematics is the countably-coloured special case
++`(2^aleph0)^+ -> (aleph1)^2_{aleph0}`. Every cardinal lift, successor
++comparison, countability claim, and use of classical choice must be explicit.
++Classical.choice is ordinary Lean foundation, but it must not conceal the
++partition theorem or an arbitrary non-canonical trace later counted as
++canonical.
++
++**Five owner modules.** Each module exports only its local interface; later
++modules must not reopen or duplicate earlier arguments.
++
++1. `Erdos593/TripleSystem/ErdosRado/PairTransport.lean`
++
++   This implemented layer defines generic same-universe transport of finite
++   pairs, colourings, pair homogeneity, and subset cardinality along an
++   equivalence. It proves that reindexing a homogeneous set preserves both
++   homogeneity and cardinality, and it must not mention, assume, or prove an
++   Erdos--Rado conclusion.
++
++2. `Erdos593/TripleSystem/ErdosRado/CanonicalTrace.lean`
++
++   For a fixed colouring of `Pair ErdosRadoCarrier`, define the canonical
++   trace/tree data and establish its local invariants: extension,
++   comparability, uniqueness of the selected next candidate, and the
++   relation between trace data and pair colours. If a least candidate is
++   required, use the relevant well-founded/minimum construction; an
++   unconstrained `choose` is not enough. This module proves neither the
++   success conclusion nor the global cardinal contradiction.
++
++3. `Erdos593/TripleSystem/ErdosRado/SuccessCase.lean`
++
++   Prove the conditional success branch: a sufficiently long canonical trace
++   yields a set of cardinality strictly above `aleph0` on which the original
++   colouring is pair-homogeneous. The countable-colour step must prove that
++   one natural-number colour occurs on an uncountable trace subset, then
++   prove homogeneity for all pairs of that subset, not merely pairs sharing
++   one anchor.
++
++4. `Erdos593/TripleSystem/ErdosRado/FailureCode.lean`
++
++   Assuming the success branch never occurs, assign every anchor its first
++   failure rank and a canonical lower-rank colour code. Prove the exact
++   fixed-rank injectivity statement into the relevant function/code space.
++   This module establishes the coding map and injectivity, but does not
++   silently invoke the final continuum bound.
++
++5. `Erdos593/TripleSystem/ErdosRado/CountingAndMain.lean`
++
++   Prove the cardinal arithmetic and assemble the dichotomy. In particular,
++   prove rather than assume that predecessor segments below the `aleph_one`
++   index are countable; each relevant natural-valued code space and fixed-rank
++   failure fibre has cardinality at most `Cardinal.continuum`; the union of at
++   most `aleph_one` fibres still has cardinality at most the continuum, with
++   universe lifts explicit; and this contradicts
++   `mk_erdosRadoCarrier = Order.succ Cardinal.continuum`. The module then
++   proves `erdosRadoUncountableHomogeneousPairSet`; it must not duplicate the
++   finite three-point extraction or N22 reindexing argument.
++
++The dependency graph is:
++
++~~~text
++PairTransport
++    -> CanonicalTrace
++        -> SuccessCase
++        -> FailureCode
++SuccessCase + FailureCode
++    -> CountingAndMain
++    -> checked carrier reduction
++    -> existing TriangleHostRamseyUnconditional endpoint
++~~~
++
++**Per-module gates.** Before beginning the next module, the owner module
++must pass focused warnings-as-errors elaboration, focused `lake build`, a
++prohibited-construct scan, targeted `#print axioms`, `git diff --check`, and
++deterministic self-contained generation/check. Do not use aggregate-root Lean
++checks.
++
++**Aristotle schedule.** Submit exactly one narrow Aristotle request after
++each owner module is committed to a public `main` SHA:
++
++- N24-A: audit pair equivalence, image homogeneity, and cardinal transport;
++- N24-B: audit canonical/least trace selection and trace invariants;
++- N24-C: audit the success branch, especially the countable-colour pigeonhole
++  and all-pairs homogeneity conclusion;
++- N24-D: audit first-failure coding and fixed-rank injectivity; and
++- N24-E: audit cardinal arithmetic, universe lifts, the final dichotomy, and
++  the absence of CH or a hidden partition assumption.
++
++Each request uses only the exact public commit and its owner module, requests
++either a compile-checked patch or the smallest precise blocker, and forbids
++theorem weakening, hidden hypotheses, aggregate imports, `sorry`, `admit`,
++axioms, unsafe declarations, and resource-limit workarounds. N24-A through
++N24-E supersede the former monolithic A8 request; the implemented A6 finite
++bridge is rerun only if that bridge changes.
++
+ ### Aristotle call schedule for Terra Max
+ 
+ Terra Max should keep local proof search moving while Aristotle runs. It must

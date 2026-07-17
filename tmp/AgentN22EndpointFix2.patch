@@ -1,0 +1,19 @@
+diff --git a/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.new.lean b/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.new.lean
+--- a/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.new.lean
++++ b/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.new.lean
+@@ -132,8 +132,11 @@ theorem not_isObligatory_of_not_linear_of_exactTriangleHost
+     (F : TripleSystem V E) (hnotlinear : ¬ F.Linear)
+     (κ : Type) [DecidableEq κ]
+     (hRamsey : TriangleHost.PairRamseyTriangle κ) :
+     ¬ F.IsObligatory := by
+-  apply not_isObligatory_of_not_linear_of_linear_highChromatic
+-  · exact hnotlinear
+-  · exact exactSystem_linear.{u, v} κ
+-  · exact aleph0_lt_chromaticCardinal_exactSystem.{u, v} κ hRamsey
++  letI : DecidableEq (TriangleHost.Pair κ) := inferInstance
++  letI : DecidableEq (ULift.{u} (TriangleHost.Pair κ)) := inferInstance
++  exact not_isObligatory_of_not_linear_of_linear_highChromatic
++    (F := F) (H := exactSystem.{u, v} κ)
++    hnotlinear
++    (exactSystem_linear.{u, v} κ)
++    (aleph0_lt_chromaticCardinal_exactSystem.{u, v} κ hRamsey)

@@ -1,0 +1,133 @@
+import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrder
+import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportRunningOrder
+
+/-!
+# Dynamic incidence-forest leaves for base-fibre supports
+
+The support-overlap graph is not appropriate when several fibres share one
+apex. This module instead uses a bipartite graph whose vertices are fibres
+and actual support points. It proves the dynamic-pruning leaf step: after
+retaining only points incident with at least two remaining fibres, a leaf can
+be chosen on the fibre side.
+-/
+
+namespace SimpleGraph
+
+universe u v
+
+/-- The bipartite incidence graph of a family of point sets. -/
+def setFamilyIncidenceGraph {A : Type u} {P : Type v}
+    (F : A → Set P) : SimpleGraph (Sum A P) :=
+  SimpleGraph.fromRel fun x y =>
+    match x, y with
+    | Sum.inl a, Sum.inr p => p ∈ F a
+    | Sum.inr p, Sum.inl a => p ∈ F a
+    | _, _ => False
+
+@[simp] theorem setFamilyIncidenceGraph_adj_left_right
+    {A : Type u} {P : Type v} {F : A → Set P} {a : A} {p : P} :
+    (setFamilyIncidenceGraph F).Adj (Sum.inl a) (Sum.inr p) ↔ p ∈ F a := by
+  simp [setFamilyIncidenceGraph]
+
+@[simp] theorem setFamilyIncidenceGraph_adj_right_left
+    {A : Type u} {P : Type v} {F : A → Set P} {a : A} {p : P} :
+    (setFamilyIncidenceGraph F).Adj (Sum.inr p) (Sum.inl a) ↔ p ∈ F a := by
+  simp [setFamilyIncidenceGraph]
+
+/-- Generic dynamic-pruning leaf lemma. If a retained fibre-side vertex exists
+and every retained point-side vertex has two distinct retained fibre-side
+neighbours, then an induced finite forest has a retained fibre-side vertex
+with at most one retained neighbour. -/
+theorem IsAcyclic.exists_left_leaf_of_right_two_neighbors
+    {A : Type u} {P : Type v} [Fintype A] [Fintype P]
+    {G : SimpleGraph (Sum A P)} (hG : G.IsAcyclic)
+    (R : Set (Sum A P))
+    (hleft : ∃ a, Sum.inl a ∈ R)
+    (hright : ∀ p, Sum.inr p ∈ R →
+      ∃ a b, a ≠ b ∧ Sum.inl a ∈ R ∧ Sum.inl b ∈ R ∧
+        G.Adj (Sum.inr p) (Sum.inl a) ∧
+        G.Adj (Sum.inr p) (Sum.inl b)) :
+    ∃ a, ∃ ha : Sum.inl a ∈ R, ∀ ⦃x y : R⦄,
+      (G.induce R).Adj ⟨Sum.inl a, ha⟩ x →
+      (G.induce R).Adj ⟨Sum.inl a, ha⟩ y → x = y := by
+  classical
+  letI : Nonempty R := ⟨⟨Sum.inl hleft.choose, hleft.choose_spec⟩⟩
+  obtain ⟨q, hq⟩ := IsAcyclic.exists_vertex_adj_unique (hG.induce R)
+  rcases hqval : q.1 with a | p
+  · have ha : Sum.inl a ∈ R := hqval ▸ q.2
+    refine ⟨a, ha, ?_⟩
+    intro x y hx hy
+    have hqa : q = ⟨Sum.inl a, ha⟩ := by
+      apply Subtype.ext
+      exact hqval
+    exact hq (hqa ▸ hx) (hqa ▸ hy)
+  · obtain ⟨a, b, hab, ha, hb, hpa, hpb⟩ := hright p (hqval ▸ q.2)
+    have hqright : q = ⟨Sum.inr p, hqval ▸ q.2⟩ := by
+      apply Subtype.ext
+      exact hqval
+    have hqa : (G.induce R).Adj q ⟨Sum.inl a, ha⟩ := by
+      rw [hqright]
+      exact SimpleGraph.induce_adj.mpr hpa
+    have hqb : (G.induce R).Adj q ⟨Sum.inl b, hb⟩ := by
+      rw [hqright]
+      exact SimpleGraph.induce_adj.mpr hpb
+    have heq := hq hqa hqb
+    exact (hab (Sum.inl.inj (congrArg Subtype.val heq))).elim
+
+end SimpleGraph
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {V : Type u} {G : _root_.SimpleGraph V}
+
+/-- The incidence graph between active base fibres and actual points in the
+support of the selected edge set. -/
+def baseFiberSupportIncidenceGraph (S : Set (Edge G)) :
+    SimpleGraph (Sum (activeBaseNodeIndex S) ((system G).EdgeSupport S)) :=
+  SimpleGraph.setFamilyIncidenceGraph fun q p =>
+    p.1 ∈ (system G).edgeSupportSet (baseFiber S q.1)
+
+/-- Exact concrete dynamic-pruning bridge. For a nonempty remaining set `Q`,
+retain precisely its fibre vertices and support points incident with two
+distinct members of `Q`. Ambient incidence-forest acyclicity supplies a
+remaining fibre with at most one neighbour in this induced graph. -/
+theorem exists_activeBaseFiber_leaf_in_dynamic_incidence
+    {S : Set (Edge G)} (hS : S.Finite)
+    (hacyclic : (baseFiberSupportIncidenceGraph S).IsAcyclic)
+    (Q : Finset (activeBaseNodeIndex S)) (hQ : Q.Nonempty) :
+    let R : Set (Sum (activeBaseNodeIndex S) ((system G).EdgeSupport S)) :=
+      fun z => match z with
+      | Sum.inl q => q ∈ Q
+      | Sum.inr p => ∃ q ∈ Q, ∃ r ∈ Q, q ≠ r ∧
+          p.1 ∈ (system G).edgeSupportSet (baseFiber S q.1) ∧
+          p.1 ∈ (system G).edgeSupportSet (baseFiber S r.1)
+    ∃ q, ∃ hq : Sum.inl q ∈ R, ∀ ⦃x y : R⦄,
+      ((baseFiberSupportIncidenceGraph S).induce R).Adj
+        ⟨Sum.inl q, hq⟩ x →
+      ((baseFiberSupportIncidenceGraph S).induce R).Adj
+        ⟨Sum.inl q, hq⟩ y → x = y := by
+  classical
+  letI : Fintype (activeBaseNodeIndex S) := activeBaseNodeIndexFintype hS
+  letI : Fintype ((system G).EdgeSupport S) :=
+    (TripleSystem.edgeSupportSet_finite (system G) hS).fintype
+  dsimp only
+  apply SimpleGraph.IsAcyclic.exists_left_leaf_of_right_two_neighbors hacyclic
+  · obtain ⟨q, hq⟩ := hQ
+    exact ⟨q, hq⟩
+  · intro p hp
+    rcases hp with ⟨q, hq, r, hr, hqr, hpq, hpr⟩
+    refine ⟨q, r, hqr, hq, hr, ?_, ?_⟩
+    · rw [baseFiberSupportIncidenceGraph,
+        SimpleGraph.setFamilyIncidenceGraph_adj_right_left]
+      exact hpq
+    · rw [baseFiberSupportIncidenceGraph,
+        SimpleGraph.setFamilyIncidenceGraph_adj_right_left]
+      exact hpr
+
+end SequenceLift
+
+end Erdos593

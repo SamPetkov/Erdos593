@@ -1,0 +1,7 @@
+diff --git a/.github/workflows/lean.yml b/.github/workflows/lean.yml
+--- a/.github/workflows/lean.yml
++++ b/.github/workflows/lean.yml
+@@ -36,0 +37 @@
++          lake build Erdos593.TripleSystem.CardinalPairPartition
+@@ -86,0 +88 @@
++          lake env lean -DwarningAsError=true Erdos593/TripleSystem/CardinalPairPartition.lean

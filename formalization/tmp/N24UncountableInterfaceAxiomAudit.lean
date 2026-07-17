@@ -1,0 +1,4 @@
+import Erdos593.TripleSystem.ErdosRadoCarrier
+
+#print axioms Erdos593.TripleSystem.TriangleHost.erdosRadoHomogeneousPairSet_of_uncountable
+#print axioms Erdos593.TripleSystem.TriangleHost.pairRamseyTriangle_erdosRadoCarrier_of_uncountable

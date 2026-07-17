@@ -1,0 +1,56 @@
+diff --git a/formalization/Erdos593.lean b/formalization/Erdos593.lean
+--- a/formalization/Erdos593.lean
++++ b/formalization/Erdos593.lean
+__HUNK__ -54,7 +54,8 __HUNK__
+ import Erdos593.TripleSystem.NonlinearObstruction
+ import Erdos593.TripleSystem.TriangleHostLinearity
+ import Erdos593.TripleSystem.TriangleHostRamsey
++import Erdos593.TripleSystem.TriangleHostRamseyChromatic
+ import Erdos593.TripleSystem.ObligatoryAtoms
+ import Erdos593.TripleSystem.ObligatoryDisjointUnion
+ import Erdos593.TripleSystem.ObligatoryIsolatedReduction
+diff --git a/.github/workflows/lean.yml b/.github/workflows/lean.yml
+--- a/.github/workflows/lean.yml
++++ b/.github/workflows/lean.yml
+__HUNK__ -29,6 +29,7 __HUNK__
+           lake build Erdos593.TripleSystem.TriangleHostLinearity
+           lake build Erdos593.TripleSystem.TriangleHostRamsey
++          lake build Erdos593.TripleSystem.TriangleHostRamseyChromatic
+           lake build Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
+           lake build Erdos593.TripleSystem.ConstructiblePositiveObligatory
+           lake build Erdos593.TripleSystem.SequenceLiftTrace
+__HUNK__ -81,6 +82,7 __HUNK__
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostLinearity.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostRamsey.lean
++          lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean
+           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTrace.lean
+diff --git a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+--- a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
++++ b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+__HUNK__ -573,6 +573,23 __HUNK__
+ `Erdos593/TripleSystem/TriangleHostRamsey.lean`. The module does not prove
+ `PairRamseyTriangle`, a Ramsey partition relation, a cardinal lower bound,
+ or a cross-universe host bridge. Those remain separate proof obligations.
+ 
++### N21 -- conditional chromatic-cardinal bridge
++
++In `Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean`, convert the
++natural-colour interface to the precise cardinal conclusion needed later:
++under `PairRamseyTriangle kappa`, the triangle host has chromatic cardinal
++strictly above `aleph-zero`. The proof uses the existing
++`chromaticCardinal_le_mk_iff` characterization, pulls a hypothetical
++countable colouring back through `ULift`, and invokes the N20 contradiction.
++
++This is still conditional on the Ramsey interface. It does not prove an
++Erdos--Rado relation, provide a witness `kappa`, or transport the result to
++a host in arbitrary vertex and edge universes.
++
++**N21 status (2026-07-16).** The conditional cardinal bridge is implemented
++and strict-clean in
++`Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean`. The outstanding
++work is the explicit Ramsey witness and the separately scoped reindexing
++bridge for the generic nonlinearity obstruction.
++
+ ### Aristotle call schedule for Terra Max

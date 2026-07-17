@@ -1,0 +1,6 @@
+diff --git a/formalization/Erdos593/TripleSystem/TriangleHostRamseyTransport.lean b/formalization/Erdos593/TripleSystem/TriangleHostRamseyTransport.lean
+--- a/formalization/Erdos593/TripleSystem/TriangleHostRamseyTransport.lean
++++ b/formalization/Erdos593/TripleSystem/TriangleHostRamseyTransport.lean
+@@ -1 +1 @@
+-/-!
++/-

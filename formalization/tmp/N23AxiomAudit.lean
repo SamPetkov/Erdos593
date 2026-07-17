@@ -1,0 +1,6 @@
+import Erdos593.TripleSystem.TriangleHostRamseyTransport
+
+#print axioms Erdos593.TripleSystem.TriangleHostTransport.exactSystem_linear
+#print axioms Erdos593.TripleSystem.TriangleHostTransport.no_countableProperColoring_exactSystem
+#print axioms Erdos593.TripleSystem.TriangleHostTransport.aleph0_lt_chromaticCardinal_exactSystem
+#print axioms Erdos593.TripleSystem.TriangleHostTransport.not_isObligatory_of_not_linear_of_exactTriangleHost

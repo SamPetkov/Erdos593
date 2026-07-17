@@ -1,0 +1,12 @@
+diff --git a/formalization/ARISTOTLE_LOG.md b/formalization/ARISTOTLE_LOG.md
+--- a/formalization/ARISTOTLE_LOG.md
++++ b/formalization/ARISTOTLE_LOG.md
+@@ -1220 +1220 @@
+- Remote status at recording: `QUEUED`. Any result is advisory until an exact
+-  local source, dependency, source-gap, banned-construct, strict-build,
+-  axiom, self-contained, and GitHub Actions audit is complete.
++- Remote status (2026-07-16): `RUNNING`. It is the one relevant active task;
++  no queued task or idle project consumes an Aristotle worker slot. Any result
++  remains advisory until an exact local source, dependency, source-gap,
++  banned-construct, strict-build, axiom, self-contained, and GitHub Actions
++  audit is complete.

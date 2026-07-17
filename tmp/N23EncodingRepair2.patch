@@ -1,0 +1,43 @@
+diff --git a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+--- a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
++++ b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+@@ -625,5 +625,5 @@
+ Equivalently, every `c : TriangleHost.Pair kappa -> Nat` must have a
+-`t : TriangleHost.Triangle kappa` such that all pair-faces `p q` satisfying
+-`p.1 ? t.1` and `q.1 ? t.1` have `c p = c q`. The theorem must be obtained
+-from an actual special case of the Erd?s--Rado theorem, with countably many
++`t : TriangleHost.Triangle kappa` such that every two pair-faces `p q`
++contained in `t.1` have `c p = c q`. The theorem must be obtained from an
++actual special case of the Erdos--Rado theorem, with countably many
+ colours; replacing it by a finite-colour theorem is not sufficient.
+@@ -648,3 +648,3 @@
+ 
+-**Non-goals and hard stop.** Do not claim an Erd?s--Rado witness, the full
++**Non-goals and hard stop.** Do not claim an Erdos--Rado witness, the full
+ classical positive-atom theorem, or any positive classification result until
+@@ -714,12 +714,12 @@
+ `PairRamseyTriangle`, with the existing `Set.powersetCard` pair/triangle
+ representations and exact universe parameters. Ask for a checked patch or the
+-smallest API obstruction; do not submit the Erd?s--Rado theorem in this call.
++smallest API obstruction; do not submit the Erdos--Rado theorem in this call.
+ 
+-#### A7 -- pinned-Mathlib Erd?s--Rado feasibility audit
++#### A7 -- pinned-Mathlib Erdos--Rado feasibility audit
+ 
+ Ask Aristotle to locate an existing usable theorem in the exact pinned
+ Mathlib version, or report precise missing declarations/files. It may not add
+ an axiom, replace countably many colours by finitely many, or claim a witness.
+ This feasibility result gates any full formalization request.
+ 
+-#### A8 -- bounded special-case Erd?s--Rado proof
++#### A8 -- bounded special-case Erdos--Rado proof
+diff --git a/formalization/ARISTOTLE_LOG.md b/formalization/ARISTOTLE_LOG.md
+--- a/formalization/ARISTOTLE_LOG.md
++++ b/formalization/ARISTOTLE_LOG.md
+@@ -1238,5 +1238,5 @@
+   explicit soundness report.
+ - Explicit non-goals: no construction or assumption of
+-  `PairRamseyTriangle`, no Erd?s--Rado proof, no unconditioned classification,
++  `PairRamseyTriangle`, no Erdos--Rado proof, no unconditioned classification,
+   and no upstream commit, push, or unrelated refactor.
+ - Required audit: focused warnings-as-errors elaboration and Lake build,

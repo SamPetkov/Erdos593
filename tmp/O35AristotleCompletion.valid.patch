@@ -1,0 +1,25 @@
+diff --git a/formalization/ARISTOTLE_LOG.md b/formalization/ARISTOTLE_LOG.md
+--- a/formalization/ARISTOTLE_LOG.md
++++ b/formalization/ARISTOTLE_LOG.md
+@@ -1220,10 +1220,13 @@
+- Remote status (2026-07-16): `RUNNING`. It is the one relevant active task;
+-  no queued task or idle project consumes an Aristotle worker slot. Any result
+-  remains advisory until an exact local source, dependency, source-gap,
+-  banned-construct, strict-build, axiom, self-contained, and GitHub Actions
+-  audit is complete.
+- Local disposition (2026-07-16): the independently authored finite host layer
+-  was published in `06eb3c6120f56cb0587e52b14be0f4b11912673a` and passed its
+-  focused GitHub Actions Lean checks. The running remote audit remains
+-  advisory and must not overwrite that checked source.
++- Remote completion (2026-07-16): `COMPLETE`. Aristotle reported the exact
++  finite host and linearity declarations, focused warnings-as-errors
++  elaboration and Lake build, a clean prohibited-construct scan, and only
++  `propext`, `Classical.choice`, and `Quot.sound` in its axiom reports.
++  Its report mentioned a commit/push, but local Git provenance confirms the
++  module was already present in ancestor commit
++  `06eb3c6120f56cb0587e52b14be0f4b11912673a`; no remote divergence or local
++  Git write resulted from the audit.
++- Local disposition (2026-07-16): accepted as an independent advisory audit.
++  The checked source remains the independently authored finite host layer
++  already published in `06eb3c6120f56cb0587e52b14be0f4b11912673a` and verified
++  by focused GitHub Actions Lean checks.

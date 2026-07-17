@@ -1,0 +1,12 @@
+diff --git a/formalization/Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean b/formalization/Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean
+--- a/formalization/Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean
++++ b/formalization/Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean
+__HUNK__ -13,6 +13,8 __HUNK__
+ 
+ namespace Erdos593
+ 
++open scoped Cardinal
++
+ universe u
+ 
+ namespace TripleSystem

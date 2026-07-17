@@ -1,0 +1,37 @@
+diff --git a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+--- a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
++++ b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+@@ -736 +736 @@
+-#### A6 -- pair-interface and three-point extraction audit
+-
+-Submit only the N23 bridge from a homogeneous three-point set to
+-`PairRamseyTriangle`, with the existing `Set.powersetCard` pair/triangle
+-representations and exact universe parameters. Ask for a checked patch or the
+-smallest API obstruction; do not submit the Erdos--Rado theorem in this call.
+-
+-#### A7 -- pinned-Mathlib Erdos--Rado feasibility audit
+-
+-Ask Aristotle to locate an existing usable theorem in the exact pinned
+-Mathlib version, or report precise missing declarations/files. It may not add
+-an axiom, replace countably many colours by finitely many, or claim a witness.
+-This feasibility result gates any full formalization request.
++#### A6 -- pair-interface and three-point extraction audit
++
++Submit only the N23 bridge from a homogeneous three-point set to
++`PairRamseyTriangle`, together with the infinite-homogeneous-set extraction,
++using the existing `TriangleHost.Pair` and `TriangleHost.Triangle` finite
++representations and exact universe parameters. Ask for a checked patch or
++the smallest API obstruction; do not submit the Erdos--Rado theorem in this
++call.
++
++#### A7 -- pinned-Mathlib Erdos--Rado feasibility audit
++
++Ask Aristotle to locate an existing usable theorem in the exact pinned
++Mathlib version, or report precise missing declarations/files. It may not add
++an axiom, replace countably many colours by finitely many, or claim a witness.
++This feasibility result gates any full formalization request.
++
++**A7 status (2026-07-16).** The completed feasibility audit found no usable
++generic Erdos--Rado or cardinal partition-calculus API in the pinned
++Mathlib snapshot. Treat `ErdosRado.lean` as a genuine new formalization task;
++do not reopen the finite bridge or search for a nonexistent import.

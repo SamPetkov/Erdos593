@@ -1,0 +1,9 @@
+diff --git a/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.new.lean b/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.new.lean
+--- a/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.new.lean
++++ b/formalization/tmp/AgentN22ExactTriangleHostTransportScratch.new.lean
+@@ -136 +136,4 @@
+-  apply not_isObligatory_of_not_linear_of_linear_highChromatic
++  letI : DecidableEq (TriangleHost.Pair κ) := inferInstance
++  letI : DecidableEq (ULift.{u} (TriangleHost.Pair κ)) := inferInstance
++  apply not_isObligatory_of_not_linear_of_linear_highChromatic
++    (H := exactSystem.{u, v} κ)

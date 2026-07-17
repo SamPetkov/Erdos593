@@ -1,0 +1,6 @@
+diff --git a/formalization/Erdos593/TripleSystem/TriangleHostRamsey.lean b/formalization/Erdos593/TripleSystem/TriangleHostRamsey.lean
+--- a/formalization/Erdos593/TripleSystem/TriangleHostRamsey.lean
++++ b/formalization/Erdos593/TripleSystem/TriangleHostRamsey.lean
+__HUNK__ -9 +9 __HUNK__
+-Ramsey hypothesis itself: that remains the separate Erdős--Rado/cardinal
++the Ramsey hypothesis itself: that remains the separate Erdős--Rado/cardinal

@@ -1,0 +1,42 @@
+diff --git a/formalization/Erdos593/TripleSystem/ErdosRadoCarrier.lean b/formalization/Erdos593/TripleSystem/ErdosRadoCarrier.lean
+--- a/formalization/Erdos593/TripleSystem/ErdosRadoCarrier.lean
++++ b/formalization/Erdos593/TripleSystem/ErdosRadoCarrier.lean
+@@
+-  exact Set.infinite_coe_iff.mp (Cardinal.aleph0_le_mk_iff.mp hH.1)
++  exact Set.infinite_coe_iff.mp (Cardinal.aleph0_le_mk_iff.mp hH.le)
+diff --git a/formalization/ARISTOTLE_LOG.md b/formalization/ARISTOTLE_LOG.md
+--- a/formalization/ARISTOTLE_LOG.md
++++ b/formalization/ARISTOTLE_LOG.md
+@@
+ ## O36: N22 exact transport adversarial audit
+@@
+ - Local disposition (2026-07-16): accepted as a bounded advisory audit only.
++
++## O37: Erdős--Rado carrier public-source audit
++
++- Submitted (UTC): 2026-07-16. The authenticated Aristotle project is
++  `99e11664-be71-49f0-bc9a-a987d282340c`; its task is
++  `870dff93-6f60-44eb-93ea-56087069dafd`.
++- Exact task boundary: audit the public carrier module at commit
++  `eb22d73`, including its exact successor-of-continuum cardinality,
++  classical decidable-equality instance, explicit homogeneous-set premise,
++  and conditional finite-Ramsey composition. It must verify that the module
++  does not assert an Erdős--Rado partition-calculus theorem.
++- Submitted files: none. Aristotle received only the public repository
++  reference and exact module boundary; no local tree, credential, secret, or
++  private artifact was uploaded.
++- Required audit: focused warnings-as-errors elaboration and Lake build,
++  endpoint `#print axioms`, and a scan for `sorry`, `admit`, `axiom`,
++  `unsafe`, `native_decide`, `implemented_by`, and resource-limit
++  overrides.
++- Remote completion (2026-07-16): `COMPLETE_WITH_ERRORS` at the project
++  label, but its terminal report is a substantive pass: it found no Lean
++  error or prohibited construct, reported only `propext`,
++  `Classical.choice`, and `Quot.sound`, and confirmed the public GitHub
++  Actions run for the audited commit. The error label came from an auxiliary
++  command rather than the Lean audit.
++- Local disposition (2026-07-16): accepted only as an independent advisory
++  audit. The carrier and all later extensions remain subject to local strict
++  builds, axiom checks, self-contained consistency checks, and GitHub Actions.
+ 
+ ## Record format

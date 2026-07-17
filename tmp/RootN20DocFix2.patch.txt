@@ -1,0 +1,14 @@
+diff --git a/formalization/Erdos593/TripleSystem/TriangleHostRamsey.lean b/formalization/Erdos593/TripleSystem/TriangleHostRamsey.lean
+--- a/formalization/Erdos593/TripleSystem/TriangleHostRamsey.lean
++++ b/formalization/Erdos593/TripleSystem/TriangleHostRamsey.lean
+__HUNK__ -6,5 +6,5 __HUNK__
+ This module isolates the exact Ramsey consequence needed to rule out a
+-countable proper colouring of `TriangleHost.system`.  It does not prove the
++natural-number proper colouring of `TriangleHost.system`.  It does not prove
+ Ramsey hypothesis itself: that remains the separate Erdős--Rado/cardinal
+ layer of the classical positive-atom programme.
+ -/
+__HUNK__ -18,2 +18,2 __HUNK__
+-/-- Every countable colouring of pair-vertices has a triangle all of whose
++/-- Every natural-number colouring of pair-vertices has a triangle all of whose
+ pair-faces have one colour. -/

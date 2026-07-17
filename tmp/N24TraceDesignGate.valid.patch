@@ -1,0 +1,18 @@
+diff --git a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+--- a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
++++ b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+@@ -742,2 +742,11 @@
++**Proof-design gate before N24-B.** The transport layer and a generic
++least-selector are infrastructure only. Before trace-specific declarations,
++commit a source-backed mathematical specification giving the node/index type,
++eligibility predicate, successor rule, limit-stage invariant, first-failure
++code, fixed-rank injectivity target, and the exact cardinal bound for those
++codes. Work natively on an ordinal carrier or parameterize any chosen
++equivalence; `Classical.choice` does not make an indexing canonical. If this
++specification is absent, stop at the generic selector and report it as the
++precise blocker rather than treating an arbitrary recursion as an
++Erdos--Rado proof.
++
+ **Five owner modules.** Each module exports only its local interface; later
+ modules must not reopen or duplicate earlier arguments.
+

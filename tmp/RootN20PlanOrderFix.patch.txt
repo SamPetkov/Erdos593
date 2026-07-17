@@ -1,0 +1,9 @@
+diff --git a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+--- a/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
++++ b/formalization/CLASSICAL_POSITIVE_ATOM_PLAN.md
+__HUNK__ -557,1 +556,0 __HUNK__
+-### Aristotle call schedule for Terra Max
+__HUNK__ -578 +577,3 __HUNK__
++### Aristotle call schedule for Terra Max
++
+ Terra Max should keep local proof search moving while Aristotle runs. It must

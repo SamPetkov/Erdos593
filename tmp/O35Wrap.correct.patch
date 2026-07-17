@@ -1,0 +1,10 @@
+diff --git a/formalization/ARISTOTLE_LOG.md b/formalization/ARISTOTLE_LOG.md
+--- a/formalization/ARISTOTLE_LOG.md
++++ b/formalization/ARISTOTLE_LOG.md
+@@ -1225,3 +1225,4 @@
+-  was published in `06eb3c6120f56cb0587e52b14be0f4b11912673a` and passed its focused GitHub Actions Lean
+-  checks. The running remote audit remains advisory and must not overwrite
+-  that checked source.
++  was published in `06eb3c6120f56cb0587e52b14be0f4b11912673a` and passed its
++  focused GitHub Actions Lean checks. The running remote audit remains
++  advisory and must not overwrite that checked source.

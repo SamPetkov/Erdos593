@@ -1,0 +1,6 @@
+import Erdos593.TripleSystem.CardinalPairPartition
+
+#print axioms Erdos593.TripleSystem.TriangleHost.pairRamseyTriangle_of_infinite_pair_homogeneous
+#print axioms Erdos593.TripleSystem.TriangleHost.pairRamseyTriangle_of_homogeneousThreePoint
+#print axioms Erdos593.TripleSystem.TriangleHost.homogeneousThreePoint_of_pairRamseyTriangle
+#print axioms Erdos593.TripleSystem.TriangleHost.homogeneousThreePointPairColoring_iff_pairRamseyTriangle

@@ -1,0 +1,19 @@
+diff --git a/formalization/Erdos593/TripleSystem/ErdosRadoCarrier.lean b/formalization/Erdos593/TripleSystem/ErdosRadoCarrier.lean
+--- a/formalization/Erdos593/TripleSystem/ErdosRadoCarrier.lean
++++ b/formalization/Erdos593/TripleSystem/ErdosRadoCarrier.lean
+@@ -55,6 +55,0 @@
+-/-- The stronger cardinal-form target implies the local Ramsey interface. -/
+-theorem pairRamseyTriangle_erdosRadoCarrier_of_uncountable
+-    (h : ErdosRadoUncountableHomogeneousPairSet) :
+-    PairRamseyTriangle ErdosRadoCarrier :=
+-  pairRamseyTriangle_erdosRadoCarrier_of
+-    (erdosRadoHomogeneousPairSet_of_uncountable h)
+@@ -66,0 +61,7 @@ theorem pairRamseyTriangle_erdosRadoCarrier_of
+   pairRamseyTriangle_of_infinite_pair_homogeneous h
++
++/-- The stronger cardinal-form target implies the local Ramsey interface. -/
++theorem pairRamseyTriangle_erdosRadoCarrier_of_uncountable
++    (h : ErdosRadoUncountableHomogeneousPairSet) :
++    PairRamseyTriangle ErdosRadoCarrier :=
++  pairRamseyTriangle_erdosRadoCarrier_of
++    (erdosRadoHomogeneousPairSet_of_uncountable h)

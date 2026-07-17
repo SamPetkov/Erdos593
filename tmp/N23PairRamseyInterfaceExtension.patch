@@ -1,0 +1,37 @@
+diff --git a/tmp/N23PairRamseyInterfaceScratch.lean b/tmp/N23PairRamseyInterfaceScratch.lean
+--- a/tmp/N23PairRamseyInterfaceScratch.lean
++++ b/tmp/N23PairRamseyInterfaceScratch.lean
+@@ -38,6 +38,31 @@ theorem pairRamseyTriangle_of_homogeneousThreePoint
+   intro p q hp hq
+   exact hc p q hp hq
+ 
++/-- Conversely, a triangle supplied by `PairRamseyTriangle` can be unpacked
++into three distinct points.  Thus the scratch interface is extensionally the
++same natural-colour assertion as `PairRamseyTriangle`. -/
++theorem homogeneousThreePoint_of_pairRamseyTriangle
++    (κ : Type u) [DecidableEq κ]
++    (h : PairRamseyTriangle κ) :
++    HomogeneousThreePointPairColoring κ ℕ := by
++  intro c
++  obtain ⟨t, ht⟩ := h c
++  rcases Finset.card_eq_three.mp t.2 with ⟨a, b, d, hab, had, hbd, htd⟩
++  refine ⟨a, b, d, hab, had, hbd, ?_⟩
++  intro p q hp hq
++  apply ht p q
++  · rw [htd]
++    exact hp
++  · rw [htd]
++    exact hq
++
++/-- The natural-colour form of the three-point interface is equivalent to
++the repository's `PairRamseyTriangle` target. -/
++theorem homogeneousThreePointPairColoring_iff_pairRamseyTriangle
++    (κ : Type u) [DecidableEq κ] :
++    HomogeneousThreePointPairColoring κ ℕ ↔ PairRamseyTriangle κ := by
++  constructor
++  · exact pairRamseyTriangle_of_homogeneousThreePoint κ
++  · exact homogeneousThreePoint_of_pairRamseyTriangle κ
++
+ end TriangleHost
+ end TripleSystem
+ end Erdos593

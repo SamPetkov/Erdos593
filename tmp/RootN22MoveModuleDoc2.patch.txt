@@ -1,0 +1,29 @@
+diff --git a/formalization/Erdos593/TripleSystem/TriangleHostRamseyTransport.lean b/formalization/Erdos593/TripleSystem/TriangleHostRamseyTransport.lean
+--- a/formalization/Erdos593/TripleSystem/TriangleHostRamseyTransport.lean
++++ b/formalization/Erdos593/TripleSystem/TriangleHostRamseyTransport.lean
+__HUNK__ -1,14 +1,14 __HUNK__
+-/-!
+-# A universe-exact triangle-host Ramsey transport
+-
+-This module transports the base-universe triangle host into the precise vertex
+-and edge universes of an arbitrary source system.  It converts the conditional
+-`PairRamseyTriangle` interface into a linear, uncountably chromatic target and
+-therefore into the existing nonlinearity obstruction.  It does not construct a
+-Ramsey witness or prove an Erdős--Rado partition relation.
+--/
+-
+ import Erdos593.TripleSystem.TriangleHostRamsey
+ import Erdos593.TripleSystem.NonlinearObstruction
+ import Erdos593.TripleSystem.ObligatoryDisjointUnion
+ 
++/-!
++# A universe-exact triangle-host Ramsey transport
++
++This module transports the base-universe triangle host into the precise vertex
++and edge universes of an arbitrary source system.  It converts the conditional
++`PairRamseyTriangle` interface into a linear, uncountably chromatic target and
++therefore into the existing nonlinearity obstruction.  It does not construct a
++Ramsey witness or prove an Erdős--Rado partition relation.
++-/
++
+ namespace Erdos593

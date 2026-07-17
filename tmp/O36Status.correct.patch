@@ -1,0 +1,14 @@
+diff --git a/formalization/ARISTOTLE_LOG.md b/formalization/ARISTOTLE_LOG.md
+--- a/formalization/ARISTOTLE_LOG.md
++++ b/formalization/ARISTOTLE_LOG.md
+@@ -1242,4 +1242,6 @@
+-- Remote status at submission: `QUEUED`. The result is advisory until it is
+-  compared against the exact public source, strict-checked under the pinned
+-  Lean/mathlib toolchain, source-gap audited, and accepted or rejected in this
+-  log.
++- Remote completion (2026-07-16): `COMPLETE_WITH_ERRORS` at the project level;
++  its terminal response contains a substantive soundness audit, not a Lean
++  error. It accepted the exact N22 declarations, found no correction, verified
++  the strict/Lake checks and expected axioms, and confirmed that the assumed
++  `PairRamseyTriangle` does not supply the missing Erdos--Rado theorem.
++- Local disposition (2026-07-16): accepted as a bounded advisory audit only.
