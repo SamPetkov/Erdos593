@@ -121,6 +121,48 @@ theorem value_ne_anchor {c : TraceColoring} {α : TraceCarrier}
     {p : TracePrefix α} (q : TraceCandidate c p) : q.value ≠ α :=
   ne_of_lt q.lt_anchor
 
+/-- The values realized by candidates extending a fixed trace prefix. -/
+def valueSet (c : TraceColoring) {α : TraceCarrier} (p : TracePrefix α) :
+    Set TraceCarrier :=
+  {x | ∃ q : TraceCandidate c p, q.value = x}
+
+theorem valueSet_nonempty {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) :
+    (valueSet c p).Nonempty := by
+  rcases h with ⟨q⟩
+  exact ⟨q.value, q, rfl⟩
+
+/-- The least ordinal value among candidates for a nonempty prefix extension problem. -/
+noncomputable def leastValue {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) : TraceCarrier :=
+  WellFounded.min wellFounded_lt (valueSet c p) (valueSet_nonempty h)
+
+theorem leastValue_mem {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) :
+    leastValue h ∈ valueSet c p := by
+  exact WellFounded.min_mem wellFounded_lt (valueSet c p) (valueSet_nonempty h)
+
+/-- The least candidate in the canonical ordinal order, conditional on existence. -/
+noncomputable def least {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) : TraceCandidate c p :=
+  Classical.choose (leastValue_mem h)
+
+theorem least_value {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) :
+    (least h).value = leastValue h :=
+  Classical.choose_spec (leastValue_mem h)
+
+theorem not_lt_least_value {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p))
+    (q : TraceCandidate c p) : ¬ q.value < (least h).value := by
+  rw [least_value]
+  exact WellFounded.not_lt_min wellFounded_lt (valueSet c p) ⟨q, rfl⟩
+
+theorem least_value_le {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p))
+    (q : TraceCandidate c p) : (least h).value ≤ q.value := by
+  exact le_of_not_gt (not_lt_least_value h q)
+
 /-- A terminal prefix admits no live candidate. -/
 theorem not_nonempty_of_length_eq_traceHeight
     {c : TraceColoring} {α : TraceCarrier} (p : TracePrefix α)

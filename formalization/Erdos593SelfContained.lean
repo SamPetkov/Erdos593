@@ -10807,7 +10807,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRadoCarrier
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 Source: Erdos593/TripleSystem/ErdosRado/CanonicalTrace.lean
-Normalized SHA-256: 4b7d69f3050c4c2a46db84bada5e332df3fed2acf46e0a2a6cf72558b6592104
+Normalized SHA-256: ee5f44e8306429db036b8aec0f903f706c90bfeb7c3536833e68d54ebf291ded
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalTrace
 
@@ -10931,6 +10931,48 @@ theorem node_ne_value {c : TraceColoring} {α : TraceCarrier}
 theorem value_ne_anchor {c : TraceColoring} {α : TraceCarrier}
     {p : TracePrefix α} (q : TraceCandidate c p) : q.value ≠ α :=
   ne_of_lt q.lt_anchor
+
+/-- The values realized by candidates extending a fixed trace prefix. -/
+def valueSet (c : TraceColoring) {α : TraceCarrier} (p : TracePrefix α) :
+    Set TraceCarrier :=
+  {x | ∃ q : TraceCandidate c p, q.value = x}
+
+theorem valueSet_nonempty {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) :
+    (valueSet c p).Nonempty := by
+  rcases h with ⟨q⟩
+  exact ⟨q.value, q, rfl⟩
+
+/-- The least ordinal value among candidates for a nonempty prefix extension problem. -/
+noncomputable def leastValue {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) : TraceCarrier :=
+  WellFounded.min wellFounded_lt (valueSet c p) (valueSet_nonempty h)
+
+theorem leastValue_mem {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) :
+    leastValue h ∈ valueSet c p := by
+  exact WellFounded.min_mem wellFounded_lt (valueSet c p) (valueSet_nonempty h)
+
+/-- The least candidate in the canonical ordinal order, conditional on existence. -/
+noncomputable def least {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) : TraceCandidate c p :=
+  Classical.choose (leastValue_mem h)
+
+theorem least_value {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) :
+    (least h).value = leastValue h :=
+  Classical.choose_spec (leastValue_mem h)
+
+theorem not_lt_least_value {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p))
+    (q : TraceCandidate c p) : ¬ q.value < (least h).value := by
+  rw [least_value]
+  exact WellFounded.not_lt_min wellFounded_lt (valueSet c p) ⟨q, rfl⟩
+
+theorem least_value_le {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (h : Nonempty (TraceCandidate c p))
+    (q : TraceCandidate c p) : (least h).value ≤ q.value := by
+  exact le_of_not_gt (not_lt_least_value h q)
 
 /-- A terminal prefix admits no live candidate. -/
 theorem not_nonempty_of_length_eq_traceHeight
@@ -11094,6 +11136,83 @@ end Erdos593.TripleSystem.TriangleHost.ErdosRado
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalTree
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTree
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode
+Source: Erdos593/TripleSystem/ErdosRado/CanonicalLevelCode.lean
+Normalized SHA-256: 60bc3318f4894ed08cb0d0775632efa5857a1fa8aff7af267410b997cccaacb0
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalLevelCode
+
+/-!
+# Conditional canonical level codes
+
+This file records the code supplied by a coherent trace system. It deliberately
+does not assert that the code is injective: that needs the source-native trace
+selection and coherence hypotheses not present in `CoherentTraceSystem`.
+-/
+
+namespace Erdos593.TripleSystem.TriangleHost.ErdosRado
+namespace CoherentTraceSystem
+
+variable {c : TraceColoring} (T : CoherentTraceSystem c)
+
+/-- The ordinal represented by a coordinate of `rho.ToType`. -/
+noncomputable def levelIndex (rho : Ordinal) (zeta : rho.ToType) : Ordinal :=
+  zeta.toOrd.1
+
+/-- A coordinate of `rho.ToType` denotes an ordinal strictly below `rho`. -/
+theorem levelIndex_lt (rho : Ordinal) (zeta : rho.ToType) :
+    levelIndex rho zeta < rho :=
+  zeta.toOrd.2
+
+/-- A level-code coordinate is a valid trace index for its endpoint. -/
+theorem levelIndex_lt_height (rho : Ordinal) (a : T.level rho)
+    (zeta : rho.ToType) :
+    levelIndex rho zeta < T.height a.1 := by
+  rw [a.2]
+  exact levelIndex_lt rho zeta
+
+/-- The trace node addressed by a code coordinate. -/
+noncomputable def levelNode (rho : Ordinal) (a : T.level rho)
+    (zeta : rho.ToType) : TraceCarrier :=
+  T.node a.1 (T.levelIndex_lt_height rho a zeta)
+
+/-- Every node used by a level code lies below the endpoint. -/
+theorem levelNode_lt_anchor (rho : Ordinal) (a : T.level rho)
+    (zeta : rho.ToType) :
+    T.levelNode rho a zeta < a.1 :=
+  T.node_lt_anchor a.1 (T.levelIndex_lt_height rho a zeta)
+
+/-- The coloring code of an endpoint at a fixed supplied trace height. -/
+noncomputable def levelCode (rho : Ordinal) (a : T.level rho) :
+    rho.ToType -> Nat :=
+  fun zeta =>
+    c (tracePair (T.levelNode rho a zeta) a.1
+      (ne_of_lt (T.levelNode_lt_anchor rho a zeta)))
+
+/-- A coordinate of the level code is the color of the corresponding trace face. -/
+@[simp] theorem levelCode_apply (rho : Ordinal) (a : T.level rho)
+    (zeta : rho.ToType) :
+    T.levelCode rho a zeta =
+      c (tracePair (T.levelNode rho a zeta) a.1
+        (ne_of_lt (T.levelNode_lt_anchor rho a zeta))) :=
+  rfl
+
+/-- The downstream fixed-level separation obligation for source-native traces.
+
+This is only a proposition here. It is not a theorem of `CoherentTraceSystem`.
+-/
+def LevelCodeInjective (rho : Ordinal) : Prop :=
+  Function.Injective (T.levelCode rho)
+
+end CoherentTraceSystem
+end Erdos593.TripleSystem.TriangleHost.ErdosRado
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalLevelCode
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode
 ========================================================================== -/
 
 /- ==========================================================================
@@ -19614,7 +19733,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 1f7013f847daeaa8ec58e6db53038785b3ab3783a314dca9b01c58751e893125
+Normalized SHA-256: bb45552e89d74d8db90fe33ab862c282b4c04c5eea4fca6211f91df8b472f79f
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
