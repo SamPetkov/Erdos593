@@ -60,12 +60,61 @@ noncomputable def restrict {α : TraceCarrier} (p : TracePrefix α)
     apply (Ordinal.ToType.mk (o := p.length)).lt_iff_lt.mpr
     exact (Ordinal.ToType.mk (o := η)).symm.lt_iff_lt.mpr hξζ
 
+/-- The canonical index inclusion preserves the represented ordinal. -/
+@[simp]
+theorem restrictIndex_toOrd {α : TraceCarrier} (p : TracePrefix α)
+    {η : Ordinal} (hη : η ≤ p.length) (ξ : η.ToType) :
+    ((p.restrictIndex hη ξ).toOrd : Ordinal) = ξ.toOrd :=
+  by
+    unfold restrictIndex
+    exact congrArg Subtype.val ((Ordinal.ToType.mk (o := p.length)).left_inv _)
+
+/-- Restricting at the full prefix length leaves every index unchanged. -/
+@[simp]
+theorem restrictIndex_self {α : TraceCarrier} (p : TracePrefix α)
+    (ξ : p.length.ToType) : p.restrictIndex le_rfl ξ = ξ := by
+  apply (Ordinal.ToType.mk (o := p.length)).symm.injective
+  apply Subtype.ext
+  exact p.restrictIndex_toOrd le_rfl ξ
+
 /-- The nodes of a restricted prefix are the corresponding nodes of the
 ambient prefix. -/
 theorem restrict_node {α : TraceCarrier} (p : TracePrefix α)
     {η : Ordinal} (hη : η ≤ p.length) (ξ : η.ToType) :
     (p.restrict η hη).node ξ = p.node (p.restrictIndex hη ξ) :=
   rfl
+
+/-- Restricting at the full prefix length is pointwise the identity on nodes.
+The pointwise form avoids irrelevant proof fields in `TracePrefix` equality. -/
+@[simp]
+theorem restrict_self_node {α : TraceCarrier} (p : TracePrefix α)
+    (ξ : p.length.ToType) :
+    (p.restrict p.length le_rfl).node ξ = p.node ξ := by
+  rw [restrict_node, restrictIndex_self]
+
+/-- Nested ordinal-index inclusions compose to the direct inclusion. -/
+theorem restrictIndex_comp {α : TraceCarrier} (p : TracePrefix α)
+    {η θ : Ordinal} (hη : η ≤ p.length) (hθ : θ ≤ η)
+    (ξ : θ.ToType) :
+    p.restrictIndex hη ((p.restrict η hη).restrictIndex hθ ξ) =
+      p.restrictIndex (hθ.trans hη) ξ := by
+  apply (Ordinal.ToType.mk (o := p.length)).symm.injective
+  apply Subtype.ext
+  rw [p.restrictIndex_toOrd hη]
+  rw [p.restrictIndex_toOrd (hθ.trans hη)]
+  unfold restrictIndex
+  exact congrArg Subtype.val
+    ((Ordinal.ToType.mk (o := (p.restrict η hη).length)).left_inv _)
+
+/-- Nested restrictions agree pointwise with the corresponding direct
+restriction. This is the usable dependent-index composition law. -/
+theorem restrict_restrict_node {α : TraceCarrier} (p : TracePrefix α)
+    {η θ : Ordinal} (hη : η ≤ p.length) (hθ : θ ≤ η)
+    (ξ : θ.ToType) :
+    ((p.restrict η hη).restrict θ hθ).node ξ =
+      (p.restrict θ (hθ.trans hη)).node ξ := by
+  rw [restrict_node, restrict_node p hη, restrict_node p (hθ.trans hη),
+    restrictIndex_comp]
 
 /-- Restricting the index inclusion preserves strict order. -/
 theorem restrictIndex_lt {α : TraceCarrier} (p : TracePrefix α)

@@ -50,6 +50,38 @@ theorem pairHomogeneous_image {α β : Type u} (e : α ≃ β) (c : Pair α → 
     rw [← hzy]
     simpa using hz
 
+/-- Pull homogeneous vertices back along a same-universe equivalence.
+
+The colouring is the forward transport of `c`, so applying `e.symm` to a
+homogeneous set for that transported colouring recovers a homogeneous set for
+the original colouring. -/
+theorem pairHomogeneous_symm_image {α β : Type u} (e : α ≃ β) (c : Pair α → ℕ)
+    (H : Set β) (h : PairHomogeneous (transportedColor e c) H) :
+    PairHomogeneous c (e.symm '' H) := by
+  intro p q hp hq
+  have hp' : ((pairEquiv e p).1 : Set β) ⊆ H := by
+    rw [coe_pairEquiv]
+    rintro z ⟨x, hxp, rfl⟩
+    rcases hp hxp with ⟨y, hyH, hyx⟩
+    have hexy : e x = y := by
+      calc
+        e x = e (e.symm y) := congrArg e hyx.symm
+        _ = y := e.apply_symm_apply y
+    simpa [hexy] using hyH
+  have hq' : ((pairEquiv e q).1 : Set β) ⊆ H := by
+    rw [coe_pairEquiv]
+    rintro z ⟨x, hxq, rfl⟩
+    rcases hq hxq with ⟨y, hyH, hyx⟩
+    have hexy : e x = y := by
+      calc
+        e x = e (e.symm y) := congrArg e hyx.symm
+        _ = y := e.apply_symm_apply y
+    simpa [hexy] using hyH
+  have htransported := h (pairEquiv e p) (pairEquiv e q) hp' hq'
+  change c ((pairEquiv e).symm (pairEquiv e p)) =
+    c ((pairEquiv e).symm (pairEquiv e q)) at htransported
+  simpa using htransported
+
 /-- The image of a set under a same-universe equivalence has the same
 cardinality. Cross-universe uses require explicit cardinal lifts. -/
 theorem mk_image_eq_of_equiv {α β : Type u} (e : α ≃ β) (H : Set α) :

@@ -901,6 +901,235 @@ axioms, unsafe declarations, and resource-limit workarounds. N24-A through
 N24-E supersede the former monolithic A8 request; the implemented A6 finite
 bridge is rerun only if that bridge changes.
 
+### N24 Sol-ultra → Terra-ultra execution handoff (2026-07-17)
+
+**Authority, accepted baseline, and theorem boundary.** This dated subsection
+is the current execution contract for N24; it refines the older six-module and
+N24-A--E schedules above without erasing their history. The classical
+positive-atom theorem developed earlier in this plan is already closed. That
+result is logically separate from N24's unconditional nonlinear/negative
+direction and does not supply the partition theorem below. The accepted N24
+baseline is public `main` commit `9b3e2e2` (`Expose source eligibility and
+prefix restriction`). It contains checked local source-eligibility and prefix-
+restriction interfaces, not a global trace construction and not an
+Erdos--Rado theorem.
+
+The sole global N24 target remains the following theorem in namespace
+`Erdos593.TripleSystem.TriangleHost`:
+
+~~~lean
+theorem erdosRadoUncountableHomogeneousPairSet :
+    ErdosRadoUncountableHomogeneousPairSet
+~~~
+
+After unfolding the target, its exact quantifiers and conclusion are:
+
+~~~lean
+∀ c : Pair ErdosRadoCarrier → ℕ, ∃ H : Set ErdosRadoCarrier,
+  Cardinal.aleph0 < Cardinal.mk H ∧ PairHomogeneous c H
+~~~
+
+No intermediate structure, conditional trace lemma, cardinal estimate, or
+Aristotle result is a proof of this statement. The theorem is complete only
+when this declaration kernel-checks locally with the audited dependency and
+axiom footprint.
+
+**External-live eligibility contract.** For a prefix `p : TracePrefix α`,
+`TraceCandidate.Eligible c p β` contains only the source's order, lower-bound,
+and colour-agreement conditions: `β < α`,
+`p.lowerBound ≤ β.toOrd`, and agreement with the anchor along every node
+of `p`. Liveness is deliberately not a field of `Eligible`; it is the external
+recursion guard. The accepted bridge has the exact shape
+
+~~~lean
+p.length < TraceHeight ∧ TraceCandidate.Eligible c p β ↔
+  ∃ q : TraceCandidate c p, q.value = β
+
+Nonempty (TraceCandidate c p) ↔
+  p.length < TraceHeight ∧
+    ∃ β : TraceCarrier, TraceCandidate.Eligible c p β
+~~~
+
+Consequently, reaching `p.length = TraceHeight` is the success cutoff: the
+candidate type is empty because the external live guard is false, not because
+source eligibility has failed. A terminal non-eligibility conclusion is valid
+only under the short-cutoff hypothesis `p.length < TraceHeight`. Terra must
+preserve this distinction in every stopped-recursion and terminal theorem.
+
+**Revised owner dependency chain.** Keep the abstract `CanonicalTree` and
+`CanonicalLevelCode` APIs generic, but do not ask those abstractions alone to
+prove source injectivity. The concrete canonical system and its coherence are
+the extra data needed by the fixed-level argument. The intended owner graph is:
+
+~~~text
+CanonicalTrace
+  -> TraceExtension
+  -> TraceRestriction / TraceLimit
+  -> CanonicalTraceRecursion
+  -> CanonicalTraceCoherence ----+
+                                  +-> CanonicalLevelInjectivity
+CanonicalTree -------------------+
+CanonicalLevelCode --------------+
+  -> ErdosRadoCardinalArithmetic
+  -> CanonicalCounting
+  -> EndhomogeneousLift
+  -> final N24 theorem
+
+PairTransport ----------------------> EndhomogeneousLift
+~~~
+
+`TraceRestriction` denotes the accepted restriction API currently exported
+from `TraceExtension.lean`; `TraceLimit.lean` should own coherent limit-prefix
+assembly. New proof owners should be separate focused modules rather than a
+large expansion of `CanonicalTrace.lean`. An import-only umbrella is allowed,
+but it must contain no proof.
+
+**Stopped raw-history recursion.** Use Mathlib's pinned
+`transfiniteIterate` API rather than hiding a coherent family inside an
+unproved choice. Take
+
+~~~lean
+StageIndex := (Order.succ TraceHeight).ToType
+RawHistory := Set (Ordinal × TraceCarrier)
+run j := transfiniteIterate step j ∅
+~~~
+
+where `step` first decodes a valid functional raw graph as a trace prefix. If
+that prefix is live and has a candidate, insert exactly
+`(p.length, leastCandidate.value)`; if it is stopped or invalid, return the
+history unchanged. Prove the empty, successor, limit, and monotonicity laws
+from `transfiniteIterate_bot`, `transfiniteIterate_succ`,
+`transfiniteIterate_limit`, and `monotone_transfiniteIterate`, together with
+the graph/function decoding lemmas and `graph (p.snoc q) = insert ...`.
+
+The exact limit invariant is not merely that a limit prefix exists. For every
+limit `λ ≤ TraceHeight`,
+
+~~~text
+run λ = ⋃ (j < λ), run j,
+~~~
+
+and precisely one of the following compatible cases must be proved:
+
+1. no stage below `λ` has stopped, the union decodes to a prefix `pλ` of
+   length exactly `λ`, and for every `j < λ` the restriction of `pλ` to
+   `j` is the prefix decoded from `run j`; or
+2. there is a least stopped stage `μ < λ`, `run j = run μ` for every
+   `μ ≤ j ≤ λ`, and the limit union is exactly `run μ`.
+
+The coherent `TraceLimit` diagonal supplies case 1. Inflationarity and the
+fixed-point propagation lemma supply case 2. Every later terminal/coherence
+claim must consume this disjunction rather than assume that all stages have
+their index as their length.
+
+**Ten remaining obligation groups.** Track completion by discharged theorem
+obligations, never by an informal percentage. The accepted baseline closes
+the fixed-point eligibility bridge and the restriction half of the first two
+groups, but the end-to-end campaign still has these ten auditable groups:
+
+1. Source eligibility: preserve the external-live equivalences through the
+   minimum selector and prove the short-stage candidate/non-eligibility laws.
+2. Restriction and limits: finish initial-segment algebra and the coherent
+   limit-prefix construction, including node, lower-bound, and
+   endhomogeneity preservation.
+3. Stopped recursion: build and decode the raw-history
+   `transfiniteIterate`, prove validity, inflationarity, successor insertion,
+   limit union, least stop, and fixed-point propagation.
+4. Terminal and local coherence: define cutoff and terminal prefixes and
+   prove minimum selection, indexed strictness, short terminal failure, and
+   full-height success without conflating those last two cases.
+5. Actual coherent system: package the prefixes constructed by recursion and
+   prove source indexed coherence and the canonical predecessor/rank laws for
+   that concrete system.
+6. Fixed-level canonical injectivity: prove reduced-colour-code injectivity
+   for the concrete canonical system by transfinite induction. The abstract
+   `CoherentTraceSystem` interface alone is insufficient.
+7. Cardinal arithmetic and counting kernel: isolate the cofinality,
+   exponent, comparison, multiplication, level bound, union bound, and all
+   universe-lift equalities without CH.
+8. Full-height endpoint: use the successor-continuum carrier size and the
+   counting bound to obtain an endpoint whose cutoff is exactly
+   `TraceHeight`, then expose its terminal endhomogeneous trace.
+9. Unary fibre and pair lift: define the induced end-colour, obtain an
+   `aleph1`-sized constant fibre by regularity, prove node-map injectivity, and
+   prove pair homogeneity directly from indexed endhomogeneity.
+10. Final transport and theorem: reuse `PairTransport`, transport cardinality
+    and homogeneity to `ErdosRadoCarrier`, prove the exact target above, and
+    invoke the existing finite extraction/downstream endpoint separately.
+
+**Aristotle call schedule for this handoff.** Each request is a narrow audit
+or lemma formalization against an exact public `main` SHA. Reconcile the live
+dashboard/CLI queue before submission, never duplicate an active request, and
+ask for either a compile-checked patch or the smallest exact blocker with all
+quantifiers visible. Terra continues local work while Aristotle runs.
+
+- **B0 -- accepted eligibility/restriction audit.** Audit commit `9b3e2e2`,
+  especially the external-live equivalences, dependent pair proofs, prefix
+  restriction, and preservation lemmas. Do not ask B0 to invent recursion or
+  claim the global theorem.
+- **B1 -- coherent limit-prefix package.** Give Aristotle the frozen
+  `TraceLimit` signatures and require only the coherent exact-stage
+  (live/cofinal) limit-prefix construction, restriction equations, and
+  endhomogeneity preservation; the live-versus-frozen limit disjunction is a
+  B2 stopped-recursion obligation.
+- **B2 -- raw-history stopped recursion.** Submit only the graph decoder,
+  inflationary `step`, `transfiniteIterate` laws, validity invariant, and
+  fixed-point propagation. Reject an oracle, a chosen coherent family, or an
+  `Option TracePrefix` that omits the required history.
+- **B3 -- terminal/coherence package.** Audit cutoff, minimum successor,
+  strictness, short terminal failure, full-height success, and concrete
+  indexed trace coherence.
+- **C -- rank and concrete level injectivity.** Audit the canonical-tree rank
+  theorem and the transfinite-induction proof that equal reduced-colour codes
+  at one fixed level force equal endpoints. Keep the concrete-system
+  hypotheses explicit.
+- **D1 -- cardinal arithmetic kernel.** Locate or prove the exact pinned
+  Mathlib cofinality, power, comparison, product, and lift lemmas. Request
+  signatures and tiny compiling examples before a combined estimate.
+- **D2 -- counting and full-height endpoint.** Audit fixed-level bounds, the
+  union below `aleph1`, the successor-continuum contradiction, and extraction
+  of an endpoint with full trace height.
+- **E1 -- unary fibre and direct pair lift.** Audit regularity/pigeonhole,
+  index-fibre cardinality, node-map injectivity, induced colour constancy, and
+  the direct two-node homogeneity calculation.
+- **E2 -- final transport and adversarial endpoint audit.** Audit
+  same-universe transport, the exact `erdosRadoUncountableHomogeneousPairSet`
+  declaration, its downstream conditional use, and the complete absence of a
+  hidden partition assumption.
+
+**Focused acceptance gates.** Before one owner unlocks the next, require all
+of the following on the exact changed files and declarations:
+
+1. direct warnings-as-errors elaboration with
+   `lake env lean -DwarningAsError=true <owner-file>` and focused
+   `lake build Erdos593.<owner>`; do not use an aggregate root build as the
+   proof check;
+2. GitHub Actions coverage naming every new or modified N24 owner, monitored
+   to completion on the exact pushed SHA;
+3. deterministic `Erdos593SelfContained.lean` regeneration and `--check`,
+   plus `git diff --check`;
+4. targeted kernel `#print axioms` on every exported bridge and endpoint. The
+   expected foundational footprint is exactly `propext`,
+   `Classical.choice`, and `Quot.sound`; any additional project axiom or
+   theorem-shaped assumption is a failure; and
+5. a production-source scan forbidding `sorry`, `sorryAx`, `admit`, `axiom`,
+   `unsafe`, `native_decide`, `implemented_by`, and `run_tac`, as well as
+   `maxHeartbeats` or `maxRecDepth` overrides and equivalent resource-limit
+   workarounds.
+
+**Failure and overclaim checks.** A review must actively reject all of the
+following: treating full height as candidate failure; assuming a coherent
+history in order to construct that history; deriving concrete level
+injectivity from the abstract interfaces (the height-zero model is an
+immediate warning counterexample); using arbitrary choice where ordinal
+minimum is required; omitting strict endpoint inequalities from a `Pair`;
+using CH, a finite-colour reduction, or an unproved library partition theorem;
+hiding universe lifts or cardinal equalities in coercion automation; importing
+the target theorem circularly; or accepting an Aristotle success badge without
+local focused compilation and an axiom audit. If a checkpoint fails, record
+the smallest exact missing lemma, its hypotheses, quantifiers, owner, and
+downstream consumers. Such a blocker is valid progress, but it is not N24.
+
 ### Aristotle call schedule for Terra Max
 
 Terra Max should keep local proof search moving while Aristotle runs. It must
