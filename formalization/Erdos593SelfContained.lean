@@ -10807,7 +10807,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRadoCarrier
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 Source: Erdos593/TripleSystem/ErdosRado/CanonicalTrace.lean
-Normalized SHA-256: 52c7a08790e30d8c607ca54d33085e5eb66cecaa2be36eeccf72460a97651d86
+Normalized SHA-256: 672c5008b0ffca5c162786d4e3942c7f1e5ccc170a9128d248bcd43226c5a523
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalTrace
 
@@ -10905,6 +10905,28 @@ theorem node_ne_node {α : TraceCarrier} (p : TracePrefix α)
     {ξ ζ : p.length.ToType} (h : ξ ≠ ζ) : p.node ξ ≠ p.node ζ :=
   fun hnode => h (p.strictMono_node.injective hnode)
 
+/-- Source-native lower bound `sup (node + 1)` for a trace prefix. -/
+noncomputable def lowerBound {α : TraceCarrier} (p : TracePrefix α) : Ordinal :=
+  ⨆ ξ : p.length.ToType, (p.node ξ).toOrd + 1
+
+/-- Clearing the source lower bound is exactly being above every prior trace
+node. -/
+theorem lowerBound_le_iff {α : TraceCarrier} (p : TracePrefix α)
+    (x : TraceCarrier) :
+    p.lowerBound ≤ x.toOrd ↔ ∀ ξ, p.node ξ < x := by
+  constructor
+  · intro h ξ
+    apply ((Ordinal.ToType.mk
+      (o := (Order.succ (Cardinal.continuum : Cardinal)).ord)).symm.lt_iff_lt).mp
+    exact (Ordinal.lt_iSup_add_one
+      (fun ξ : p.length.ToType => (p.node ξ).toOrd) ξ).trans_le h
+  · intro h
+    apply Ordinal.iSup_add_one_le
+    intro ξ
+    exact ((Ordinal.ToType.mk
+      (o := (Order.succ (Cardinal.continuum : Cardinal)).ord)).symm.lt_iff_lt).mpr
+        (h ξ)
+
 /-- Every earlier trace node sees every later node in the same colour as it
 sees the distinguished endpoint. -/
 def EndhomogeneousTo {α : TraceCarrier} (p : TracePrefix α)
@@ -10935,6 +10957,12 @@ theorem node_lt_value {c : TraceColoring} {α : TraceCarrier}
     {p : TracePrefix α} (q : TraceCandidate c p) (ξ : p.length.ToType) :
     p.node ξ < q.value :=
   q.above_prefix ξ
+
+/-- Every supplied candidate lies above the source lower bound of its prefix. -/
+theorem lowerBound_le_value {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (q : TraceCandidate c p) :
+    p.lowerBound ≤ q.value.toOrd :=
+  (p.lowerBound_le_iff q.value).mpr q.above_prefix
 
 /-- A candidate value is distinct from every prefix node. -/
 theorem node_ne_value {c : TraceColoring} {α : TraceCarrier}
