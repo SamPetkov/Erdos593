@@ -10807,7 +10807,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRadoCarrier
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 Source: Erdos593/TripleSystem/ErdosRado/CanonicalTrace.lean
-Normalized SHA-256: 672c5008b0ffca5c162786d4e3942c7f1e5ccc170a9128d248bcd43226c5a523
+Normalized SHA-256: cfbf59837d53e9f323e008a99163e918d1bca9e3a1f80e12a5b7f8b1a8c129b6
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalTrace
 
@@ -10964,6 +10964,51 @@ theorem lowerBound_le_value {c : TraceColoring} {α : TraceCarrier}
     p.lowerBound ≤ q.value.toOrd :=
   (p.lowerBound_le_iff q.value).mpr q.above_prefix
 
+/-- Source-native order-and-colour eligibility of a fixed carrier point for a
+fixed prefix. Prefix liveness remains an external recursion guard, so reaching
+the full trace-height cutoff stays distinct from genuine candidate failure. -/
+structure Eligible (c : TraceColoring) {α : TraceCarrier}
+    (p : TracePrefix α) (β : TraceCarrier) : Prop where
+  lt_anchor : β < α
+  lowerBound_le : p.lowerBound ≤ β.toOrd
+  agrees : ∀ ξ,
+    c (tracePair (p.node ξ) β
+      (ne_of_lt ((p.lowerBound_le_iff β).mp lowerBound_le ξ))) =
+      c (tracePair (p.node ξ) α (ne_of_lt (p.node_lt_anchor ξ)))
+
+/-- Repackage fixed-point eligibility as the existing candidate structure. -/
+def ofEligible {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} {β : TraceCarrier}
+    (hlive : p.length < TraceHeight) (h : Eligible c p β) :
+    TraceCandidate c p where
+  live := hlive
+  value := β
+  lt_anchor := h.lt_anchor
+  above_prefix := (p.lowerBound_le_iff β).mp h.lowerBound_le
+  agrees := by
+    intro ξ
+    simpa only using h.agrees ξ
+
+/-- Every existing candidate witnesses eligibility of its value. -/
+theorem eligible_of_candidate {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (q : TraceCandidate c p) : Eligible c p q.value where
+  lt_anchor := q.lt_anchor
+  lowerBound_le := q.lowerBound_le_value
+  agrees := by
+    intro ξ
+    simpa only using q.agrees ξ
+
+/-- Eligibility is exactly the fibre of candidates with the prescribed value. -/
+theorem eligible_iff_exists_candidate_value {c : TraceColoring}
+    {α : TraceCarrier} (p : TracePrefix α) (β : TraceCarrier) :
+    p.length < TraceHeight ∧ Eligible c p β ↔
+      ∃ q : TraceCandidate c p, q.value = β := by
+  constructor
+  · rintro ⟨hlive, h⟩
+    exact ⟨ofEligible hlive h, rfl⟩
+  · rintro ⟨q, rfl⟩
+    exact ⟨q.live, eligible_of_candidate q⟩
+
 /-- A candidate value is distinct from every prefix node. -/
 theorem node_ne_value {c : TraceColoring} {α : TraceCarrier}
     {p : TracePrefix α} (q : TraceCandidate c p) (ξ : p.length.ToType) :
@@ -10979,6 +11024,25 @@ theorem value_ne_anchor {c : TraceColoring} {α : TraceCarrier}
 def valueSet (c : TraceColoring) {α : TraceCarrier} (p : TracePrefix α) :
     Set TraceCarrier :=
   {x | ∃ q : TraceCandidate c p, q.value = x}
+
+/-- Eligibility is exactly membership in the existing candidate-value set. -/
+theorem eligible_iff_mem_valueSet {c : TraceColoring}
+    {α : TraceCarrier} (p : TracePrefix α) (β : TraceCarrier) :
+    p.length < TraceHeight ∧ Eligible c p β ↔ β ∈ valueSet c p := by
+  simpa only [valueSet, Set.mem_setOf_eq] using
+    (eligible_iff_exists_candidate_value (c := c) p β)
+
+/-- Candidate existence is exactly liveness together with existence of a
+source-eligible carrier value. -/
+theorem nonempty_iff_exists_eligible {c : TraceColoring}
+    {α : TraceCarrier} (p : TracePrefix α) :
+    Nonempty (TraceCandidate c p) ↔
+      p.length < TraceHeight ∧ ∃ β : TraceCarrier, Eligible c p β := by
+  constructor
+  · rintro ⟨q⟩
+    exact ⟨q.live, q.value, eligible_of_candidate q⟩
+  · rintro ⟨hlive, β, hβ⟩
+    exact ⟨ofEligible hlive hβ⟩
 
 theorem valueSet_nonempty {c : TraceColoring} {α : TraceCarrier}
     {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) :
@@ -11041,7 +11105,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceExtension
 Source: Erdos593/TripleSystem/ErdosRado/TraceExtension.lean
-Normalized SHA-256: b50976b1e3c9b2e72413ab54a59db5b75df22e0f39e7c944c6351e08d9e68a7b
+Normalized SHA-256: 7dfc80a0b4de36cee531f0fc949be402fe83addfc65a317d74ac2d32014d2465
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceExtension
 
@@ -11083,6 +11147,61 @@ noncomputable def empty (a : TraceCarrier) : TracePrefix a where
   strictMono_node := by
     intro i
     exact isEmptyElim i
+
+/-- The canonical inclusion of a shorter ordinal-indexed prefix into its
+ambient prefix. -/
+noncomputable def restrictIndex {α : TraceCarrier} (p : TracePrefix α)
+    {η : Ordinal} (hη : η ≤ p.length) (ξ : η.ToType) : p.length.ToType :=
+  Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), by
+    exact Set.mem_Iio.mpr <| lt_of_lt_of_le
+      (Set.mem_Iio.mp ((Ordinal.ToType.mk (o := η)).symm ξ).property) hη⟩
+
+/-- Restrict a trace prefix to an initial segment of its ordinal length. -/
+noncomputable def restrict {α : TraceCarrier} (p : TracePrefix α)
+    (η : Ordinal) (hη : η ≤ p.length) : TracePrefix α where
+  length := η
+  length_le := hη.trans p.length_le
+  node ξ := p.node (p.restrictIndex hη ξ)
+  node_lt_anchor ξ := p.node_lt_anchor (p.restrictIndex hη ξ)
+  strictMono_node := by
+    intro ξ ζ hξζ
+    apply p.strictMono_node
+    apply (Ordinal.ToType.mk (o := p.length)).lt_iff_lt.mpr
+    exact (Ordinal.ToType.mk (o := η)).symm.lt_iff_lt.mpr hξζ
+
+/-- The nodes of a restricted prefix are the corresponding nodes of the
+ambient prefix. -/
+theorem restrict_node {α : TraceCarrier} (p : TracePrefix α)
+    {η : Ordinal} (hη : η ≤ p.length) (ξ : η.ToType) :
+    (p.restrict η hη).node ξ = p.node (p.restrictIndex hη ξ) :=
+  rfl
+
+/-- Restricting the index inclusion preserves strict order. -/
+theorem restrictIndex_lt {α : TraceCarrier} (p : TracePrefix α)
+    {η : Ordinal} (hη : η ≤ p.length) {ξ ζ : η.ToType} (hξζ : ξ < ζ) :
+    p.restrictIndex hη ξ < p.restrictIndex hη ζ := by
+  apply (Ordinal.ToType.mk (o := p.length)).lt_iff_lt.mpr
+  exact (Ordinal.ToType.mk (o := η)).symm.lt_iff_lt.mpr hξζ
+
+/-- Restriction can only lower the source-native prefix lower bound. -/
+theorem restrict_lowerBound_le {α : TraceCarrier} (p : TracePrefix α)
+    {η : Ordinal} (hη : η ≤ p.length) :
+    (p.restrict η hη).lowerBound ≤ p.lowerBound := by
+  apply Ordinal.iSup_le
+  intro ξ
+  change ((p.node (p.restrictIndex hη ξ)).toOrd : Ordinal) + 1 ≤
+    ⨆ ζ : p.length.ToType, ((p.node ζ).toOrd : Ordinal) + 1
+  exact Ordinal.le_iSup
+    (fun ζ : p.length.ToType => ((p.node ζ).toOrd : Ordinal) + 1)
+    (p.restrictIndex hη ξ)
+
+/-- Endhomogeneity is inherited by every initial restriction. -/
+theorem EndhomogeneousTo.restrict {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (hp : p.EndhomogeneousTo c)
+    {η : Ordinal} (hη : η ≤ p.length) :
+    (p.restrict η hη).EndhomogeneousTo c := by
+  intro ξ ζ hξζ
+  simpa only [restrict_node] using hp (p.restrictIndex_lt hη hξζ)
 
 end TracePrefix
 
@@ -11126,6 +11245,29 @@ theorem not_nonempty_empty_bot (c : TraceColoring) :
     ¬ Nonempty (TraceCandidate c (TracePrefix.empty (⊥ : TraceCarrier))) := by
   rintro ⟨q⟩
   exact (not_lt_of_ge (show (⊥ : TraceCarrier) ≤ q.value from bot_le) q.lt_anchor).elim
+
+/-- A candidate for a prefix remains a candidate for every initial
+restriction of that prefix. -/
+noncomputable def restrict {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (q : TraceCandidate c p)
+    {η : Ordinal} (hη : η ≤ p.length) :
+    TraceCandidate c (p.restrict η hη) where
+  live := hη.trans_lt q.live
+  value := q.value
+  lt_anchor := q.lt_anchor
+  above_prefix ξ := by
+    rw [TracePrefix.restrict_node]
+    exact q.above_prefix (p.restrictIndex hη ξ)
+  agrees ξ := by
+    simpa only [TracePrefix.restrict_node] using
+      q.agrees (p.restrictIndex hη ξ)
+
+@[simp]
+theorem restrict_value {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (q : TraceCandidate c p)
+    {η : Ordinal} (hη : η ≤ p.length) :
+    (q.restrict hη).value = q.value :=
+  rfl
 
 end TraceCandidate
 

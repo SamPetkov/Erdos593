@@ -153,6 +153,51 @@ theorem lowerBound_le_value {c : TraceColoring} {α : TraceCarrier}
     p.lowerBound ≤ q.value.toOrd :=
   (p.lowerBound_le_iff q.value).mpr q.above_prefix
 
+/-- Source-native order-and-colour eligibility of a fixed carrier point for a
+fixed prefix. Prefix liveness remains an external recursion guard, so reaching
+the full trace-height cutoff stays distinct from genuine candidate failure. -/
+structure Eligible (c : TraceColoring) {α : TraceCarrier}
+    (p : TracePrefix α) (β : TraceCarrier) : Prop where
+  lt_anchor : β < α
+  lowerBound_le : p.lowerBound ≤ β.toOrd
+  agrees : ∀ ξ,
+    c (tracePair (p.node ξ) β
+      (ne_of_lt ((p.lowerBound_le_iff β).mp lowerBound_le ξ))) =
+      c (tracePair (p.node ξ) α (ne_of_lt (p.node_lt_anchor ξ)))
+
+/-- Repackage fixed-point eligibility as the existing candidate structure. -/
+def ofEligible {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} {β : TraceCarrier}
+    (hlive : p.length < TraceHeight) (h : Eligible c p β) :
+    TraceCandidate c p where
+  live := hlive
+  value := β
+  lt_anchor := h.lt_anchor
+  above_prefix := (p.lowerBound_le_iff β).mp h.lowerBound_le
+  agrees := by
+    intro ξ
+    simpa only using h.agrees ξ
+
+/-- Every existing candidate witnesses eligibility of its value. -/
+theorem eligible_of_candidate {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (q : TraceCandidate c p) : Eligible c p q.value where
+  lt_anchor := q.lt_anchor
+  lowerBound_le := q.lowerBound_le_value
+  agrees := by
+    intro ξ
+    simpa only using q.agrees ξ
+
+/-- Eligibility is exactly the fibre of candidates with the prescribed value. -/
+theorem eligible_iff_exists_candidate_value {c : TraceColoring}
+    {α : TraceCarrier} (p : TracePrefix α) (β : TraceCarrier) :
+    p.length < TraceHeight ∧ Eligible c p β ↔
+      ∃ q : TraceCandidate c p, q.value = β := by
+  constructor
+  · rintro ⟨hlive, h⟩
+    exact ⟨ofEligible hlive h, rfl⟩
+  · rintro ⟨q, rfl⟩
+    exact ⟨q.live, eligible_of_candidate q⟩
+
 /-- A candidate value is distinct from every prefix node. -/
 theorem node_ne_value {c : TraceColoring} {α : TraceCarrier}
     {p : TracePrefix α} (q : TraceCandidate c p) (ξ : p.length.ToType) :
@@ -168,6 +213,25 @@ theorem value_ne_anchor {c : TraceColoring} {α : TraceCarrier}
 def valueSet (c : TraceColoring) {α : TraceCarrier} (p : TracePrefix α) :
     Set TraceCarrier :=
   {x | ∃ q : TraceCandidate c p, q.value = x}
+
+/-- Eligibility is exactly membership in the existing candidate-value set. -/
+theorem eligible_iff_mem_valueSet {c : TraceColoring}
+    {α : TraceCarrier} (p : TracePrefix α) (β : TraceCarrier) :
+    p.length < TraceHeight ∧ Eligible c p β ↔ β ∈ valueSet c p := by
+  simpa only [valueSet, Set.mem_setOf_eq] using
+    (eligible_iff_exists_candidate_value (c := c) p β)
+
+/-- Candidate existence is exactly liveness together with existence of a
+source-eligible carrier value. -/
+theorem nonempty_iff_exists_eligible {c : TraceColoring}
+    {α : TraceCarrier} (p : TracePrefix α) :
+    Nonempty (TraceCandidate c p) ↔
+      p.length < TraceHeight ∧ ∃ β : TraceCarrier, Eligible c p β := by
+  constructor
+  · rintro ⟨q⟩
+    exact ⟨q.live, q.value, eligible_of_candidate q⟩
+  · rintro ⟨hlive, β, hβ⟩
+    exact ⟨ofEligible hlive hβ⟩
 
 theorem valueSet_nonempty {c : TraceColoring} {α : TraceCarrier}
     {p : TracePrefix α} (h : Nonempty (TraceCandidate c p)) :

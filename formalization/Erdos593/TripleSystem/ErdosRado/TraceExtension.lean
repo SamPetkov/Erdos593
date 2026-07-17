@@ -39,6 +39,61 @@ noncomputable def empty (a : TraceCarrier) : TracePrefix a where
     intro i
     exact isEmptyElim i
 
+/-- The canonical inclusion of a shorter ordinal-indexed prefix into its
+ambient prefix. -/
+noncomputable def restrictIndex {α : TraceCarrier} (p : TracePrefix α)
+    {η : Ordinal} (hη : η ≤ p.length) (ξ : η.ToType) : p.length.ToType :=
+  Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), by
+    exact Set.mem_Iio.mpr <| lt_of_lt_of_le
+      (Set.mem_Iio.mp ((Ordinal.ToType.mk (o := η)).symm ξ).property) hη⟩
+
+/-- Restrict a trace prefix to an initial segment of its ordinal length. -/
+noncomputable def restrict {α : TraceCarrier} (p : TracePrefix α)
+    (η : Ordinal) (hη : η ≤ p.length) : TracePrefix α where
+  length := η
+  length_le := hη.trans p.length_le
+  node ξ := p.node (p.restrictIndex hη ξ)
+  node_lt_anchor ξ := p.node_lt_anchor (p.restrictIndex hη ξ)
+  strictMono_node := by
+    intro ξ ζ hξζ
+    apply p.strictMono_node
+    apply (Ordinal.ToType.mk (o := p.length)).lt_iff_lt.mpr
+    exact (Ordinal.ToType.mk (o := η)).symm.lt_iff_lt.mpr hξζ
+
+/-- The nodes of a restricted prefix are the corresponding nodes of the
+ambient prefix. -/
+theorem restrict_node {α : TraceCarrier} (p : TracePrefix α)
+    {η : Ordinal} (hη : η ≤ p.length) (ξ : η.ToType) :
+    (p.restrict η hη).node ξ = p.node (p.restrictIndex hη ξ) :=
+  rfl
+
+/-- Restricting the index inclusion preserves strict order. -/
+theorem restrictIndex_lt {α : TraceCarrier} (p : TracePrefix α)
+    {η : Ordinal} (hη : η ≤ p.length) {ξ ζ : η.ToType} (hξζ : ξ < ζ) :
+    p.restrictIndex hη ξ < p.restrictIndex hη ζ := by
+  apply (Ordinal.ToType.mk (o := p.length)).lt_iff_lt.mpr
+  exact (Ordinal.ToType.mk (o := η)).symm.lt_iff_lt.mpr hξζ
+
+/-- Restriction can only lower the source-native prefix lower bound. -/
+theorem restrict_lowerBound_le {α : TraceCarrier} (p : TracePrefix α)
+    {η : Ordinal} (hη : η ≤ p.length) :
+    (p.restrict η hη).lowerBound ≤ p.lowerBound := by
+  apply Ordinal.iSup_le
+  intro ξ
+  change ((p.node (p.restrictIndex hη ξ)).toOrd : Ordinal) + 1 ≤
+    ⨆ ζ : p.length.ToType, ((p.node ζ).toOrd : Ordinal) + 1
+  exact Ordinal.le_iSup
+    (fun ζ : p.length.ToType => ((p.node ζ).toOrd : Ordinal) + 1)
+    (p.restrictIndex hη ξ)
+
+/-- Endhomogeneity is inherited by every initial restriction. -/
+theorem EndhomogeneousTo.restrict {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (hp : p.EndhomogeneousTo c)
+    {η : Ordinal} (hη : η ≤ p.length) :
+    (p.restrict η hη).EndhomogeneousTo c := by
+  intro ξ ζ hξζ
+  simpa only [restrict_node] using hp (p.restrictIndex_lt hη hξζ)
+
 end TracePrefix
 
 namespace TraceCandidate
@@ -81,6 +136,29 @@ theorem not_nonempty_empty_bot (c : TraceColoring) :
     ¬ Nonempty (TraceCandidate c (TracePrefix.empty (⊥ : TraceCarrier))) := by
   rintro ⟨q⟩
   exact (not_lt_of_ge (show (⊥ : TraceCarrier) ≤ q.value from bot_le) q.lt_anchor).elim
+
+/-- A candidate for a prefix remains a candidate for every initial
+restriction of that prefix. -/
+noncomputable def restrict {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (q : TraceCandidate c p)
+    {η : Ordinal} (hη : η ≤ p.length) :
+    TraceCandidate c (p.restrict η hη) where
+  live := hη.trans_lt q.live
+  value := q.value
+  lt_anchor := q.lt_anchor
+  above_prefix ξ := by
+    rw [TracePrefix.restrict_node]
+    exact q.above_prefix (p.restrictIndex hη ξ)
+  agrees ξ := by
+    simpa only [TracePrefix.restrict_node] using
+      q.agrees (p.restrictIndex hη ξ)
+
+@[simp]
+theorem restrict_value {c : TraceColoring} {α : TraceCarrier}
+    {p : TracePrefix α} (q : TraceCandidate c p)
+    {η : Ordinal} (hη : η ≤ p.length) :
+    (q.restrict hη).value = q.value :=
+  rfl
 
 end TraceCandidate
 
