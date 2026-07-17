@@ -1,4 +1,4 @@
-import Erdos593.TripleSystem.ErdosRado.CanonicalTrace
+import Erdos593.TripleSystem.ErdosRado.TraceExtension
 import Mathlib.SetTheory.Ordinal.Rank
 
 /-!
