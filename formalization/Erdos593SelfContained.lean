@@ -10807,7 +10807,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRadoCarrier
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 Source: Erdos593/TripleSystem/ErdosRado/CanonicalTrace.lean
-Normalized SHA-256: ee5f44e8306429db036b8aec0f903f706c90bfeb7c3536833e68d54ebf291ded
+Normalized SHA-256: 54562a70058b7de90507632f94d221153a2b23513e5ed26f9cd4b7596e1ee69e
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalTrace
 
@@ -10898,6 +10898,15 @@ theorem node_lt_node {α : TraceCarrier} (p : TracePrefix α)
 theorem node_ne_node {α : TraceCarrier} (p : TracePrefix α)
     {ξ ζ : p.length.ToType} (h : ξ ≠ ζ) : p.node ξ ≠ p.node ζ :=
   fun hnode => h (p.strictMono_node.injective hnode)
+
+/-- Every earlier trace node sees every later node in the same colour as it
+sees the distinguished endpoint. -/
+def EndhomogeneousTo {α : TraceCarrier} (p : TracePrefix α)
+    (c : TraceColoring) : Prop :=
+  ∀ ⦃ξ ζ : p.length.ToType⦄ (h : ξ < ζ),
+    c (tracePair (p.node ξ) (p.node ζ)
+      (ne_of_lt (p.node_lt_node h))) =
+      c (tracePair (p.node ξ) α (ne_of_lt (p.node_lt_anchor ξ)))
 
 end TracePrefix
 
@@ -10998,7 +11007,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceExtension
 Source: Erdos593/TripleSystem/ErdosRado/TraceExtension.lean
-Normalized SHA-256: 43ac94ee8d1f26d13b0002bb28f030db811d287a427ba1c6f2f80b162a45640d
+Normalized SHA-256: 5206ddfefc81dc844f15dd8288407acf0750c0785ff9ccf5f624d3648a576bc0
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceExtension
 
@@ -11240,6 +11249,78 @@ theorem range_snoc_node {c : TraceColoring} {α : TraceCarrier}
     · rw [Set.mem_singleton_iff] at hx
       subst x
       exact ⟨p.snocLast, TracePrefix.snoc_node_last p q⟩
+
+end TracePrefix
+
+private theorem tracePair_congr {x y x' y' : TraceCarrier}
+    (hx : x = x') (hy : y = y') (hxy : x ≠ y) (hx'y' : x' ≠ y') :
+    tracePair x y hxy = tracePair x' y' hx'y' := by
+  subst x
+  subst y
+  rfl
+
+namespace TracePrefix
+
+/-- Appending a supplied candidate preserves endhomogeneity to the fixed
+endpoint; it asserts neither candidate existence nor a global trace. -/
+theorem endhomogeneousTo_snoc {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p)
+    (hp : p.EndhomogeneousTo c) :
+    (p.snoc q).EndhomogeneousTo c := by
+  unfold EndhomogeneousTo at hp ⊢
+  intro ξ ζ hξζ
+  rcases p.snoc_index_lt_or_eq_last ζ with hζ | hζ
+  · have hξ : (ξ.toOrd : Ordinal) < p.length :=
+      lt_of_lt_of_le
+        (((Ordinal.ToType.mk (o := Order.succ p.length)).symm.lt_iff_lt).mpr hξζ)
+        (le_of_lt hζ)
+    let ξ' : p.length.ToType :=
+      Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), hξ⟩
+    let ζ' : p.length.ToType :=
+      Ordinal.ToType.mk ⟨(ζ.toOrd : Ordinal), hζ⟩
+    have hξζ' : ξ' < ζ' := by
+      apply ((Ordinal.ToType.mk (o := p.length)).lt_iff_lt).mpr
+      change (ξ.toOrd : Ordinal) < (ζ.toOrd : Ordinal)
+      exact ((Ordinal.ToType.mk (o := Order.succ p.length)).symm.lt_iff_lt).mpr hξζ
+    have hnodeξ : (p.snoc q).node ξ = p.node ξ' :=
+      p.snoc_node_of_lt q ξ hξ
+    have hnodeζ : (p.snoc q).node ζ = p.node ζ' :=
+      p.snoc_node_of_lt q ζ hζ
+    calc
+      c (tracePair ((p.snoc q).node ξ) ((p.snoc q).node ζ)
+          (ne_of_lt ((p.snoc q).node_lt_node hξζ))) =
+          c (tracePair (p.node ξ') (p.node ζ')
+            (ne_of_lt (p.node_lt_node hξζ'))) := by
+              apply congrArg c
+              exact tracePair_congr hnodeξ hnodeζ _ _
+      _ = c (tracePair (p.node ξ') α (ne_of_lt (p.node_lt_anchor ξ'))) :=
+          hp hξζ'
+      _ = c (tracePair ((p.snoc q).node ξ) α
+            (ne_of_lt ((p.snoc q).node_lt_anchor ξ))) := by
+              apply congrArg c
+              exact (tracePair_congr hnodeξ rfl _ _).symm
+  · subst ζ
+    rcases p.snoc_index_lt_or_eq_last ξ with hξ | hξ
+    · let ξ' : p.length.ToType :=
+        Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), hξ⟩
+      have hnodeξ : (p.snoc q).node ξ = p.node ξ' :=
+        p.snoc_node_of_lt q ξ hξ
+      have hlast : (p.snoc q).node p.snocLast = q.value :=
+        p.snoc_node_last q
+      calc
+        c (tracePair ((p.snoc q).node ξ) ((p.snoc q).node p.snocLast)
+            (ne_of_lt ((p.snoc q).node_lt_node hξζ))) =
+            c (tracePair (p.node ξ') q.value
+              (ne_of_lt (q.above_prefix ξ'))) := by
+                apply congrArg c
+                exact tracePair_congr hnodeξ hlast _ _
+        _ = c (tracePair (p.node ξ') α (ne_of_lt (p.node_lt_anchor ξ'))) :=
+            q.agrees ξ'
+        _ = c (tracePair ((p.snoc q).node ξ) α
+              (ne_of_lt ((p.snoc q).node_lt_anchor ξ))) := by
+                apply congrArg c
+                exact (tracePair_congr hnodeξ rfl _ _).symm
+    · exact (lt_irrefl _ (hξ ▸ hξζ)).elim
 
 end TracePrefix
 

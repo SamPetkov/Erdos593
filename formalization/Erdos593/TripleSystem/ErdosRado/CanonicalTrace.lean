@@ -88,6 +88,15 @@ theorem node_ne_node {α : TraceCarrier} (p : TracePrefix α)
     {ξ ζ : p.length.ToType} (h : ξ ≠ ζ) : p.node ξ ≠ p.node ζ :=
   fun hnode => h (p.strictMono_node.injective hnode)
 
+/-- Every earlier trace node sees every later node in the same colour as it
+sees the distinguished endpoint. -/
+def EndhomogeneousTo {α : TraceCarrier} (p : TracePrefix α)
+    (c : TraceColoring) : Prop :=
+  ∀ ⦃ξ ζ : p.length.ToType⦄ (h : ξ < ζ),
+    c (tracePair (p.node ξ) (p.node ζ)
+      (ne_of_lt (p.node_lt_node h))) =
+      c (tracePair (p.node ξ) α (ne_of_lt (p.node_lt_anchor ξ)))
+
 end TracePrefix
 
 /-- A candidate extending a live prefix below its endpoint with the prescribed

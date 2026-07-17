@@ -241,6 +241,78 @@ theorem range_snoc_node {c : TraceColoring} {α : TraceCarrier}
 
 end TracePrefix
 
+private theorem tracePair_congr {x y x' y' : TraceCarrier}
+    (hx : x = x') (hy : y = y') (hxy : x ≠ y) (hx'y' : x' ≠ y') :
+    tracePair x y hxy = tracePair x' y' hx'y' := by
+  subst x
+  subst y
+  rfl
+
+namespace TracePrefix
+
+/-- Appending a supplied candidate preserves endhomogeneity to the fixed
+endpoint; it asserts neither candidate existence nor a global trace. -/
+theorem endhomogeneousTo_snoc {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p)
+    (hp : p.EndhomogeneousTo c) :
+    (p.snoc q).EndhomogeneousTo c := by
+  unfold EndhomogeneousTo at hp ⊢
+  intro ξ ζ hξζ
+  rcases p.snoc_index_lt_or_eq_last ζ with hζ | hζ
+  · have hξ : (ξ.toOrd : Ordinal) < p.length :=
+      lt_of_lt_of_le
+        (((Ordinal.ToType.mk (o := Order.succ p.length)).symm.lt_iff_lt).mpr hξζ)
+        (le_of_lt hζ)
+    let ξ' : p.length.ToType :=
+      Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), hξ⟩
+    let ζ' : p.length.ToType :=
+      Ordinal.ToType.mk ⟨(ζ.toOrd : Ordinal), hζ⟩
+    have hξζ' : ξ' < ζ' := by
+      apply ((Ordinal.ToType.mk (o := p.length)).lt_iff_lt).mpr
+      change (ξ.toOrd : Ordinal) < (ζ.toOrd : Ordinal)
+      exact ((Ordinal.ToType.mk (o := Order.succ p.length)).symm.lt_iff_lt).mpr hξζ
+    have hnodeξ : (p.snoc q).node ξ = p.node ξ' :=
+      p.snoc_node_of_lt q ξ hξ
+    have hnodeζ : (p.snoc q).node ζ = p.node ζ' :=
+      p.snoc_node_of_lt q ζ hζ
+    calc
+      c (tracePair ((p.snoc q).node ξ) ((p.snoc q).node ζ)
+          (ne_of_lt ((p.snoc q).node_lt_node hξζ))) =
+          c (tracePair (p.node ξ') (p.node ζ')
+            (ne_of_lt (p.node_lt_node hξζ'))) := by
+              apply congrArg c
+              exact tracePair_congr hnodeξ hnodeζ _ _
+      _ = c (tracePair (p.node ξ') α (ne_of_lt (p.node_lt_anchor ξ'))) :=
+          hp hξζ'
+      _ = c (tracePair ((p.snoc q).node ξ) α
+            (ne_of_lt ((p.snoc q).node_lt_anchor ξ))) := by
+              apply congrArg c
+              exact (tracePair_congr hnodeξ rfl _ _).symm
+  · subst ζ
+    rcases p.snoc_index_lt_or_eq_last ξ with hξ | hξ
+    · let ξ' : p.length.ToType :=
+        Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), hξ⟩
+      have hnodeξ : (p.snoc q).node ξ = p.node ξ' :=
+        p.snoc_node_of_lt q ξ hξ
+      have hlast : (p.snoc q).node p.snocLast = q.value :=
+        p.snoc_node_last q
+      calc
+        c (tracePair ((p.snoc q).node ξ) ((p.snoc q).node p.snocLast)
+            (ne_of_lt ((p.snoc q).node_lt_node hξζ))) =
+            c (tracePair (p.node ξ') q.value
+              (ne_of_lt (q.above_prefix ξ'))) := by
+                apply congrArg c
+                exact tracePair_congr hnodeξ hlast _ _
+        _ = c (tracePair (p.node ξ') α (ne_of_lt (p.node_lt_anchor ξ'))) :=
+            q.agrees ξ'
+        _ = c (tracePair ((p.snoc q).node ξ) α
+              (ne_of_lt ((p.snoc q).node_lt_anchor ξ))) := by
+                apply congrArg c
+                exact (tracePair_congr hnodeξ rfl _ _).symm
+    · exact (lt_irrefl _ (hξ ▸ hξζ)).elim
+
+end TracePrefix
+
 namespace TraceCandidate
 
 /-- Any candidate for an appended prefix retains the required colour agreement
