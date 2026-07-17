@@ -121,6 +121,15 @@ theorem value_ne_anchor {c : TraceColoring} {α : TraceCarrier}
     {p : TracePrefix α} (q : TraceCandidate c p) : q.value ≠ α :=
   ne_of_lt q.lt_anchor
 
+/-- A terminal prefix admits no live candidate. -/
+theorem not_nonempty_of_length_eq_traceHeight
+    {c : TraceColoring} {α : TraceCarrier} (p : TracePrefix α)
+    (hp : p.length = TraceHeight) : ¬ Nonempty (TraceCandidate c p) := by
+  rintro ⟨q⟩
+  have h := q.live
+  rw [hp] at h
+  exact lt_irrefl _ h
+
 end TraceCandidate
 
 end ErdosRado

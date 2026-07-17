@@ -59,6 +59,7 @@ import Erdos593.TripleSystem.CardinalPairPartition
 import Erdos593.TripleSystem.ErdosRado.PairTransport
 import Erdos593.TripleSystem.ErdosRadoCarrier
 import Erdos593.TripleSystem.ErdosRado.CanonicalTrace
+import Erdos593.TripleSystem.ErdosRado.CanonicalTree
 import Erdos593.TripleSystem.TriangleHostRamseyChromatic
 import Erdos593.TripleSystem.TriangleHostRamseyTransport
 import Erdos593.TripleSystem.ObligatoryAtoms
