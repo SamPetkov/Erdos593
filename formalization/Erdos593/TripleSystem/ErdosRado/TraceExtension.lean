@@ -266,6 +266,26 @@ theorem exists_agrees_snoc_old {c : TraceColoring} {α : TraceCarrier}
   refine ⟨hlt, ?_⟩
   simpa [hnode] using r.agrees ξ'
 
+/-- A candidate for an appended prefix lies above every inherited old node.
+This remains conditional on the appended-prefix candidate `r`. -/
+theorem snoc_old_value_lt {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p)
+    (r : TraceCandidate c (p.snoc q)) (ξ : p.length.ToType) :
+    p.node ξ < r.value := by
+  rw [← p.snoc_node_lift q ξ]
+  exact r.above_prefix (p.snocLift ξ)
+
+/-- A candidate for an appended prefix agrees with the anchor colour at every
+inherited old node. This remains conditional on the candidate `r`. -/
+theorem agrees_snoc_old {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p)
+    (r : TraceCandidate c (p.snoc q)) (ξ : p.length.ToType) :
+    c (tracePair (p.node ξ) r.value
+      (ne_of_lt (snoc_old_value_lt p q r ξ))) =
+      c (tracePair (p.node ξ) α (ne_of_lt (p.node_lt_anchor ξ))) := by
+  have h := r.agrees (p.snocLift ξ)
+  simpa only [TracePrefix.snoc_node_lift] using h
+
 /-- A candidate for an appended prefix lies above the appended value. This
 remains conditional on the appended-prefix candidate `r`. -/
 theorem snoc_value_lt {c : TraceColoring} {α : TraceCarrier}
