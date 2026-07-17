@@ -38,6 +38,12 @@ theorem mk_traceHeight :
     Cardinal.mk TraceHeight.ToType = Order.succ (Cardinal.aleph0 : Cardinal) := by
   exact Cardinal.mk_ord_toType _
 
+/-- The first-uncountable trace cutoff is closed under ordinal successor. -/
+theorem succ_lt_traceHeight {o : Ordinal} (ho : o < TraceHeight) :
+    Order.succ o < TraceHeight := by
+  exact (Cardinal.isSuccLimit_ord
+    (Order.le_succ (Cardinal.aleph0))).succ_lt ho
+
 /-- Classical decidable equality for the canonical trace carrier. -/
 noncomputable instance traceCarrierDecidableEq : DecidableEq TraceCarrier :=
   Classical.decEq _

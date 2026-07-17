@@ -131,6 +131,14 @@ noncomputable def snoc {c : TraceColoring} {α : TraceCarrier}
         simpa [hxEq] using hOrd
       exact (not_lt_of_ge hyle hcontra).elim
 
+/-- Appending a supplied live candidate keeps the prefix below the trace
+cutoff. -/
+theorem snoc_length_lt_traceHeight {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p) :
+    (p.snoc q).length < TraceHeight := by
+  change Order.succ p.length < TraceHeight
+  exact succ_lt_traceHeight q.live
+
 /-- At an index inherited from the old prefix, `snoc` keeps the old node. -/
 theorem snoc_node_of_lt {c : TraceColoring} {α : TraceCarrier}
     (p : TracePrefix α) (q : TraceCandidate c p)
@@ -428,6 +436,74 @@ theorem agrees_snoc_last {c : TraceColoring} {α : TraceCarrier}
       c (tracePair q.value α (ne_of_lt q.lt_anchor)) := by
   have h := r.agrees p.snocLast
   simpa [TracePrefix.snoc_node_last] using h
+
+/-- A compatible old candidate supplies a candidate for the appended prefix.
+The compatibility condition is exactly the new colour agreement; this does
+not assert that such a candidate exists. -/
+theorem nonempty_snoc_of_compatible_candidate {c : TraceColoring}
+    {α : TraceCarrier} (p : TracePrefix α) (q r : TraceCandidate c p)
+    (hqr : q.value < r.value)
+    (hagree :
+      c (tracePair q.value r.value (ne_of_lt hqr)) =
+        c (tracePair q.value α (ne_of_lt q.lt_anchor))) :
+    Nonempty (TraceCandidate c (p.snoc q)) := by
+  refine ⟨{
+    live := p.snoc_length_lt_traceHeight q
+    value := r.value
+    lt_anchor := r.lt_anchor
+    above_prefix := ?_
+    agrees := ?_
+  }⟩
+  · intro ξ
+    rcases p.snoc_index_lt_or_eq_last ξ with hξ | rfl
+    · let ξ' : p.length.ToType :=
+        Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), hξ⟩
+      have hnode : (p.snoc q).node ξ = p.node ξ' :=
+        p.snoc_node_of_lt q ξ hξ
+      rw [hnode]
+      exact r.above_prefix ξ'
+    · simpa only [TracePrefix.snoc_node_last] using hqr
+  · intro ξ
+    rcases p.snoc_index_lt_or_eq_last ξ with hξ | rfl
+    · let ξ' : p.length.ToType :=
+        Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), hξ⟩
+      have hnode : (p.snoc q).node ξ = p.node ξ' :=
+        p.snoc_node_of_lt q ξ hξ
+      calc
+        c (tracePair ((p.snoc q).node ξ) r.value
+            (ne_of_lt (by
+              rw [hnode]
+              exact r.above_prefix ξ'))) =
+            c (tracePair (p.node ξ') r.value
+              (ne_of_lt (r.above_prefix ξ'))) := by
+                apply congrArg c
+                exact tracePair_congr hnode rfl _ _
+        _ = c (tracePair (p.node ξ') α
+              (ne_of_lt (p.node_lt_anchor ξ'))) := r.agrees ξ'
+        _ = c (tracePair ((p.snoc q).node ξ) α
+              (ne_of_lt (by
+                rw [hnode]
+                exact p.node_lt_anchor ξ'))) := by
+                  apply congrArg c
+                  exact (tracePair_congr hnode rfl _ _).symm
+    · simpa only [TracePrefix.snoc_node_last] using hagree
+
+/-- Exact conditional successor-existence criterion. -/
+theorem nonempty_snoc_iff_exists_compatible {c : TraceColoring}
+    {α : TraceCarrier} (p : TracePrefix α) (q : TraceCandidate c p) :
+    Nonempty (TraceCandidate c (p.snoc q)) ↔
+      ∃ r : TraceCandidate c p, ∃ hqr : q.value < r.value,
+        c (tracePair q.value r.value (ne_of_lt hqr)) =
+          c (tracePair q.value α (ne_of_lt q.lt_anchor)) := by
+  constructor
+  · rintro ⟨r⟩
+    rcases valueSet_snoc_subset p q ⟨r, rfl⟩ with ⟨rOld, hvalue⟩
+    refine ⟨rOld, ?_, ?_⟩
+    · rw [hvalue]
+      exact snoc_value_lt p q r
+    · simpa only [hvalue] using agrees_snoc_last p q r
+  · rintro ⟨r, hqr, hagree⟩
+    exact nonempty_snoc_of_compatible_candidate p q r hqr hagree
 
 end TraceCandidate
 
