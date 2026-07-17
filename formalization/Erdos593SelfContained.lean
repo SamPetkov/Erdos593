@@ -10998,7 +10998,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceExtension
 Source: Erdos593/TripleSystem/ErdosRado/TraceExtension.lean
-Normalized SHA-256: 6e30e6b860cda6d58d1849312f597f6c86005f0452cc78bb187959afda08568f
+Normalized SHA-256: 516d9d44c8929bd2524b519989d4218bfee501e277dd7aef9fab750b78584608
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceExtension
 
@@ -11166,6 +11166,80 @@ theorem snoc_node_last {c : TraceColoring} {α : TraceCarrier}
     (p.snoc q).node p.snocLast = q.value := by
   apply TracePrefix.snoc_node_of_not_lt
   simp [TracePrefix.snocLast_toOrd]
+
+/-- Embed an old prefix index into the corresponding index of an appended
+prefix. -/
+noncomputable def snocLift {α : TraceCarrier} (p : TracePrefix α)
+    (ξ : p.length.ToType) : (Order.succ p.length).ToType :=
+  Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), Set.mem_Iio.mpr
+    (Order.lt_succ_iff.mpr (le_of_lt (Set.mem_Iio.mp ξ.toOrd.2)))⟩
+
+theorem snocLift_toOrd {α : TraceCarrier} (p : TracePrefix α)
+    (ξ : p.length.ToType) : ((p.snocLift ξ).toOrd : Ordinal) = ξ.toOrd := by
+  simp [TracePrefix.snocLift]
+
+/-- The embedded old index retains its old node after conditional extension. -/
+theorem snoc_node_lift {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p) (ξ : p.length.ToType) :
+    (p.snoc q).node (p.snocLift ξ) = p.node ξ := by
+  have hlt : ((p.snocLift ξ).toOrd : Ordinal) < p.length := by
+    rw [TracePrefix.snocLift_toOrd]
+    exact Set.mem_Iio.mp ξ.toOrd.2
+  rw [TracePrefix.snoc_node_of_lt p q (p.snocLift ξ) hlt]
+  apply congrArg p.node
+  calc
+    Ordinal.ToType.mk ⟨((p.snocLift ξ).toOrd : Ordinal), Set.mem_Iio.mpr hlt⟩ =
+        Ordinal.ToType.mk ξ.toOrd := by
+      congr 1
+      apply Subtype.ext
+      simpa using p.snocLift_toOrd ξ
+    _ = ξ := (Ordinal.ToType.mk (o := p.length)).apply_symm_apply ξ
+
+/-- Every embedded old index precedes the new final index. -/
+theorem snocLift_lt_last {α : TraceCarrier} (p : TracePrefix α)
+    (ξ : p.length.ToType) : p.snocLift ξ < p.snocLast := by
+  apply ((Ordinal.ToType.mk (o := Order.succ p.length)).symm.lt_iff_lt).mp
+  change ((p.snocLift ξ).toOrd : Ordinal) < (p.snocLast.toOrd : Ordinal)
+  rw [p.snocLift_toOrd, TracePrefix.snocLast_toOrd]
+  exact Set.mem_Iio.mp ξ.toOrd.2
+
+/-- Every index of an appended prefix is either inherited from the old prefix
+or is the final index. -/
+theorem snoc_index_lt_or_eq_last {α : TraceCarrier} (p : TracePrefix α)
+    (ξ : (Order.succ p.length).ToType) :
+    (ξ.toOrd : Ordinal) < p.length ∨ ξ = p.snocLast := by
+  by_cases h : (ξ.toOrd : Ordinal) < p.length
+  · exact Or.inl h
+  · right
+    have hle : (ξ.toOrd : Ordinal) ≤ p.length :=
+      Order.lt_succ_iff.mp (Set.mem_Iio.mp ξ.toOrd.2)
+    have heq : (ξ.toOrd : Ordinal) = p.length := le_antisymm hle (le_of_not_gt h)
+    apply (Ordinal.ToType.mk (o := Order.succ p.length)).symm.injective
+    apply Subtype.ext
+    simpa only [TracePrefix.snocLast_toOrd] using heq
+
+/-- The node range of a conditional successor extension consists exactly of
+the old node range and the supplied candidate value. This is a local
+decomposition and does not assert that a successor candidate exists. -/
+theorem range_snoc_node {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p) :
+    Set.range (p.snoc q).node = Set.range p.node ∪ {q.value} := by
+  ext x
+  constructor
+  · rintro ⟨ξ, rfl⟩
+    rcases p.snoc_index_lt_or_eq_last ξ with hξ | rfl
+    · left
+      refine ⟨Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), Set.mem_Iio.mpr hξ⟩, ?_⟩
+      exact (TracePrefix.snoc_node_of_lt p q ξ hξ).symm
+    · right
+      simpa only [Set.mem_singleton_iff] using TracePrefix.snoc_node_last p q
+  · intro hx
+    rcases hx with hx | hx
+    · rcases hx with ⟨ξ, rfl⟩
+      exact ⟨p.snocLift ξ, p.snoc_node_lift q ξ⟩
+    · rw [Set.mem_singleton_iff] at hx
+      subst x
+      exact ⟨p.snocLast, TracePrefix.snoc_node_last p q⟩
 
 end TracePrefix
 
