@@ -10998,7 +10998,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceExtension
 Source: Erdos593/TripleSystem/ErdosRado/TraceExtension.lean
-Normalized SHA-256: 579c2b34f2cbc4ac74a733d39981fd7a5787f7af64b435777cdd39b78e1569e4
+Normalized SHA-256: 6e30e6b860cda6d58d1849312f597f6c86005f0452cc78bb187959afda08568f
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceExtension
 
@@ -11069,6 +11069,21 @@ theorem nonempty_empty_of_bot_lt (c : TraceColoring)
       exact (not_lt_of_ge bot_le hi).elim
   }⟩
 
+/-- The empty prefix below `a` has a candidate exactly when `a` is non-minimal. -/
+theorem nonempty_empty_iff_bot_lt (c : TraceColoring) {a : TraceCarrier} :
+    Nonempty (TraceCandidate c (TracePrefix.empty a)) ↔ (⊥ : TraceCarrier) < a := by
+  constructor
+  · rintro ⟨q⟩
+    exact lt_of_le_of_lt (show (⊥ : TraceCarrier) ≤ q.value from bot_le) q.lt_anchor
+  · exact nonempty_empty_of_bot_lt c
+
+/-- The bottom endpoint has no candidate for its empty prefix. This is the
+explicit boundary complementary to `nonempty_empty_of_bot_lt`. -/
+theorem not_nonempty_empty_bot (c : TraceColoring) :
+    ¬ Nonempty (TraceCandidate c (TracePrefix.empty (⊥ : TraceCarrier))) := by
+  rintro ⟨q⟩
+  exact (not_lt_of_ge (show (⊥ : TraceCarrier) ≤ q.value from bot_le) q.lt_anchor).elim
+
 end TraceCandidate
 
 namespace TracePrefix
@@ -11135,6 +11150,23 @@ theorem snoc_node_of_not_lt {c : TraceColoring} {α : TraceCarrier}
     (p.snoc q).node ξ = q.value := by
   simp [TracePrefix.snoc, TracePrefix.snocNode, hξ]
 
+/-- The final index of an appended trace prefix. -/
+noncomputable def snocLast {α : TraceCarrier} (p : TracePrefix α) :
+    (Order.succ p.length).ToType :=
+  Ordinal.ToType.mk ⟨p.length,
+    Set.mem_Iio.mpr (Order.lt_succ_iff.mpr (le_refl _))⟩
+
+theorem snocLast_toOrd {α : TraceCarrier} (p : TracePrefix α) :
+    ((p.snocLast).toOrd : Ordinal) = p.length := by
+  simp [TracePrefix.snocLast]
+
+/-- The final node of an appended prefix is the supplied candidate value. -/
+theorem snoc_node_last {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p) :
+    (p.snoc q).node p.snocLast = q.value := by
+  apply TracePrefix.snoc_node_of_not_lt
+  simp [TracePrefix.snocLast_toOrd]
+
 end TracePrefix
 
 namespace TraceCandidate
@@ -11161,6 +11193,24 @@ theorem exists_agrees_snoc_old {c : TraceColoring} {α : TraceCarrier}
     exact r.above_prefix ξ'
   refine ⟨hlt, ?_⟩
   simpa [hnode] using r.agrees ξ'
+
+/-- A candidate for an appended prefix lies above the appended value. This
+remains conditional on the appended-prefix candidate `r`. -/
+theorem snoc_value_lt {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p)
+    (r : TraceCandidate c (p.snoc q)) : q.value < r.value := by
+  have h := r.above_prefix p.snocLast
+  simpa [TracePrefix.snoc_node_last] using h
+
+/-- A candidate for an appended prefix agrees with the anchor colour at its
+newly appended node. -/
+theorem agrees_snoc_last {c : TraceColoring} {α : TraceCarrier}
+    (p : TracePrefix α) (q : TraceCandidate c p)
+    (r : TraceCandidate c (p.snoc q)) :
+    c (tracePair q.value r.value (ne_of_lt (snoc_value_lt p q r))) =
+      c (tracePair q.value α (ne_of_lt q.lt_anchor)) := by
+  have h := r.agrees p.snocLast
+  simpa [TracePrefix.snoc_node_last] using h
 
 end TraceCandidate
 
