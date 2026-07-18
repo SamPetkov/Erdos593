@@ -12491,7 +12491,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.EndhomogeneousLift
 Source: Erdos593/TripleSystem/ErdosRado/EndhomogeneousLift.lean
-Normalized SHA-256: 2e1d0fade037c1a752a3b7ce5727cb5f24dc50ae1b181237bfd29eecd4b922a7
+Normalized SHA-256: 13fff500e0eeea30612862bcb44144e3a04cf8e1a88bce788cc7fb3733650409
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_EndhomogeneousLift
 
@@ -12686,6 +12686,20 @@ def FullEndhomogeneousTraceForEveryColoring : Prop :=
         p.EndhomogeneousTo
           (transportedColor erdosRadoCarrierEquivTraceCarrier c)
 
+/-- The next upstream construction interface: for every transported colouring,
+produce a coherent exact-stage chain all the way to `TraceHeight`, with
+endhomogeneity already verified at every proper stage.
+
+This remains a proposition, not a theorem.  It deliberately exposes the
+remaining transfinite-recursion obligation in a form that can be attacked by
+successor-stage and limit-stage lemmas separately. -/
+def FullEndhomogeneousLimitChainForEveryColoring : Prop :=
+  forall c : Pair ErdosRadoCarrier -> Nat,
+    exists a : TraceCarrier, exists F : TracePrefix.LimitChain a TraceHeight,
+      forall eta : TraceHeight.ToType,
+        (F.stage eta).EndhomogeneousTo
+          (transportedColor erdosRadoCarrierEquivTraceCarrier c)
+
 /-- A universal full endhomogeneous trace construction is exactly sufficient
 for the cardinal-form homogeneous-pair-set target.
 
@@ -12698,6 +12712,17 @@ theorem erdosRadoUncountableHomogeneousPairSet_of_fullEndhomogeneousTrace
   intro c
   exact erdosRado_uncountableHomogeneous_of_full_endhomogeneous_trace
     c (htrace c)
+
+/-- A universal full endhomogeneous trace construction is sufficient for the
+public pair-Ramsey interface on the Erdos--Rado carrier.
+
+This is the final checked composition layer before the still-missing
+full-height trace construction theorem. -/
+theorem pairRamseyTriangle_erdosRadoCarrier_of_fullEndhomogeneousTrace
+    (htrace : FullEndhomogeneousTraceForEveryColoring) :
+    PairRamseyTriangle ErdosRadoCarrier :=
+  pairRamseyTriangle_erdosRadoCarrier_of_uncountable
+    (erdosRadoUncountableHomogeneousPairSet_of_fullEndhomogeneousTrace htrace)
 
 end
 
