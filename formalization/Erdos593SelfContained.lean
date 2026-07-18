@@ -12491,7 +12491,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.EndhomogeneousLift
 Source: Erdos593/TripleSystem/ErdosRado/EndhomogeneousLift.lean
-Normalized SHA-256: 13fff500e0eeea30612862bcb44144e3a04cf8e1a88bce788cc7fb3733650409
+Normalized SHA-256: 70a7e8f429d38d11eed8c5ad692748801b00f2d4a35fd0728afc939a968ffe08
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_EndhomogeneousLift
 
@@ -12699,6 +12699,23 @@ def FullEndhomogeneousLimitChainForEveryColoring : Prop :=
       forall eta : TraceHeight.ToType,
         (F.stage eta).EndhomogeneousTo
           (transportedColor erdosRadoCarrierEquivTraceCarrier c)
+
+/-- A coherent endhomogeneous chain through every proper stage produces the
+required full-height trace by taking its limit prefix.
+
+The universe annotation on `hlimit` is essential: `TraceHeight` lives in the
+same universe expected by `TracePrefix.LimitChain.limitPrefix`, while an
+unannotated `Order.IsSuccLimit` hypothesis is generalized too far by Lean. -/
+theorem fullEndhomogeneousTrace_of_fullEndhomogeneousLimitChain
+    (hchain : FullEndhomogeneousLimitChainForEveryColoring) :
+    FullEndhomogeneousTraceForEveryColoring := by
+  have hlimit : Order.IsSuccLimit.{1} TraceHeight :=
+    Cardinal.isSuccLimit_ord (Order.le_succ (Cardinal.aleph0))
+  intro c
+  rcases hchain c with ⟨a, F, hend⟩
+  refine ⟨a, F.limitPrefix hlimit le_rfl, rfl, ?_⟩
+  exact F.endhomogeneous_limitPrefix hlimit le_rfl
+    (transportedColor erdosRadoCarrierEquivTraceCarrier c) hend
 
 /-- A universal full endhomogeneous trace construction is exactly sufficient
 for the cardinal-form homogeneous-pair-set target.
