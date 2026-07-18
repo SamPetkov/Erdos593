@@ -5,11 +5,11 @@ import Mathlib.SetTheory.Cardinal.Pigeonhole
 /-!
 # CH-free cardinal arithmetic for the canonical Erdos--Rado trace
 
-This module records only cardinal bounds supplied by the concrete canonical
-carrier and by an externally supplied coherent trace system.  In particular,
-it does not construct a trace system, prove level-code injectivity, or use the
-Continuum Hypothesis.  The conditional level bound takes injectivity as an
-explicit hypothesis; the later source-native construction must discharge it.
+This module records cardinal bounds supplied by the concrete canonical carrier
+and by a coherent trace system.  It does not construct that system or use the
+Continuum Hypothesis.  Under explicit endhomogeneity and stopping hypotheses,
+the preceding module supplies level-code injectivity and this module completes
+the counting argument to obtain a full-height endpoint.
 -/
 
 namespace Erdos593.TripleSystem.TriangleHost.ErdosRado
@@ -69,6 +69,58 @@ theorem mk_iUnion_le_continuum {alpha iota : Type} (f : iota -> Set alpha)
     _ = Cardinal.continuum := Cardinal.mul_eq_right Cardinal.aleph0_le_continuum
       Cardinal.aleph_one_le_continuum
       (Cardinal.aleph0_pos.trans Cardinal.aleph0_lt_aleph_one).ne'
+
+/-- A stopped coherent endhomogeneous trace system must contain a full-height
+endpoint.  Otherwise its short levels cover the carrier but have total size
+at most the continuum. -/
+theorem exists_height_eq_traceHeight_of_stopped {c : TraceColoring}
+    (T : CoherentTraceSystem c) (hend : T.IsEndhomogeneous)
+    (hstop : ∀ (rho : Ordinal) (a : T.level rho), rho < TraceHeight →
+      ¬ Nonempty (TraceCandidate c (T.levelTracePrefix rho a))) :
+    ∃ a : TraceCarrier, T.height a = TraceHeight := by
+  by_contra hfull
+  push Not at hfull
+  have hshort (a : TraceCarrier) : T.height a < TraceHeight :=
+    lt_of_le_of_ne (T.height_le a) (hfull a)
+  let levels : TraceHeight.ToType -> Set TraceCarrier := fun eta =>
+    T.level eta.toOrd
+  have hcover : (Set.univ : Set TraceCarrier) ⊆ Set.iUnion levels := by
+    intro a _
+    let eta : TraceHeight.ToType :=
+      Ordinal.ToType.mk ⟨T.height a, hshort a⟩
+    apply Set.mem_iUnion.mpr
+    refine ⟨eta, ?_⟩
+    change T.height a = eta.toOrd
+    simp [eta]
+  have hunion : Cardinal.mk (Set.iUnion levels) <= Cardinal.continuum := by
+    apply mk_iUnion_le_continuum levels
+    · exact mk_traceHeight_eq_aleph_one.le
+    · intro eta
+      have heta : (eta.toOrd : Ordinal) < TraceHeight :=
+        Set.mem_Iio.mp eta.toOrd.2
+      exact mk_level_le_continuum T eta.toOrd heta
+        (T.levelCodeInjective_of_stopped hend hstop eta.toOrd heta)
+  have hcarrier : Cardinal.mk TraceCarrier <= Cardinal.continuum := by
+    calc
+      Cardinal.mk TraceCarrier = Cardinal.mk (Set.univ : Set TraceCarrier) := by simp
+      _ <= Cardinal.mk (Set.iUnion levels) :=
+        Cardinal.mk_le_mk_of_subset hcover
+      _ <= Cardinal.continuum := hunion
+  rw [mk_traceCarrier] at hcarrier
+  exact (not_lt_of_ge hcarrier) (Order.lt_succ Cardinal.continuum)
+
+/-- The full-height endpoint supplied by counting carries a full
+endhomogeneous trace prefix. -/
+theorem exists_full_endhomogeneous_of_stopped {c : TraceColoring}
+    (T : CoherentTraceSystem c) (hend : T.IsEndhomogeneous)
+    (hstop : ∀ (rho : Ordinal) (a : T.level rho), rho < TraceHeight →
+      ¬ Nonempty (TraceCandidate c (T.levelTracePrefix rho a))) :
+    ∃ (a : TraceCarrier) (p : TracePrefix a),
+      p.length = TraceHeight ∧ p.EndhomogeneousTo c := by
+  obtain ⟨a, ha⟩ := exists_height_eq_traceHeight_of_stopped T hend hstop
+  let aLevel : T.level TraceHeight := ⟨a, ha⟩
+  exact ⟨a, T.levelTracePrefix TraceHeight aLevel, rfl,
+    T.levelTracePrefix_endhomogeneous hend TraceHeight aLevel⟩
 
 /-- Every natural-valued map on the trace carrier has an `aleph1`-sized fibre.
 The conclusion uses the carrier's successor-of-continuum cardinality and the

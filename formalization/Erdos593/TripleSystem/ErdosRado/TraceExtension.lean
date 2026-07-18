@@ -1,12 +1,13 @@
 import Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 
 /-!
-# Conditional successor extension for canonical traces
+# Local extension and reanchoring for canonical traces
 
-This module supplies only local, source-backed trace infrastructure: an empty
-prefix seed below a non-minimal endpoint and an operation that appends an
-already supplied candidate. It does not assert that arbitrary live prefixes
-have candidates, and it does not construct a global trace.
+This module supplies local, source-backed trace infrastructure: empty prefixes,
+restrictions, reanchoring at a candidate, transport of candidates across that
+reanchoring, and successor extension by an already supplied candidate.  It
+does not assert that arbitrary live prefixes have candidates, and it does not
+construct a global trace.
 -/
 
 namespace Erdos593
@@ -38,6 +39,77 @@ noncomputable def empty (a : TraceCarrier) : TracePrefix a where
   strictMono_node := by
     intro i
     exact isEmptyElim i
+
+/-- Regard an existing node sequence as a prefix below a new endpoint. -/
+noncomputable def reanchor {a : TraceCarrier} (p : TracePrefix a)
+    (b : TraceCarrier) (h : ∀ ξ, p.node ξ < b) : TracePrefix b where
+  length := p.length
+  length_le := p.length_le
+  node := p.node
+  node_lt_anchor := h
+  strictMono_node := p.strictMono_node
+
+@[simp]
+theorem reanchor_node {a : TraceCarrier} (p : TracePrefix a)
+    (b : TraceCarrier) (h : ∀ ξ, p.node ξ < b) (ξ : p.length.ToType) :
+    (p.reanchor b h).node ξ = p.node ξ :=
+  rfl
+
+@[simp]
+theorem reanchor_length {a : TraceCarrier} (p : TracePrefix a)
+    (b : TraceCarrier) (h : ∀ ξ, p.node ξ < b) :
+    (p.reanchor b h).length = p.length :=
+  rfl
+
+@[simp]
+theorem reanchor_lowerBound {a : TraceCarrier} (p : TracePrefix a)
+    (b : TraceCarrier) (h : ∀ ξ, p.node ξ < b) :
+    (p.reanchor b h).lowerBound = p.lowerBound :=
+  rfl
+
+/-- Reanchoring preserves endhomogeneity when the new endpoint has the old
+endpoint's colour code on every prefix node. -/
+theorem EndhomogeneousTo.reanchor {c : TraceColoring} {a b : TraceCarrier}
+    {p : TracePrefix a} (hp : p.EndhomogeneousTo c)
+    (hnode : ∀ ξ, p.node ξ < b)
+    (hcode : ∀ ξ,
+      c (tracePair (p.node ξ) a (ne_of_lt (p.node_lt_anchor ξ))) =
+        c (tracePair (p.node ξ) b (ne_of_lt (hnode ξ)))) :
+    (p.reanchor b hnode).EndhomogeneousTo c := by
+  intro ξ ζ hξζ
+  simpa only [reanchor_node] using (hp hξζ).trans (hcode ξ)
+
+/-- Reanchor a prefix at one of its candidates.  The candidate axioms give
+exactly the new upper bound and the colour-code compatibility needed below. -/
+noncomputable def atCandidate {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) : TracePrefix q.value :=
+  p.reanchor q.value q.above_prefix
+
+@[simp]
+theorem atCandidate_length {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) :
+    (p.atCandidate q).length = p.length :=
+  rfl
+
+@[simp]
+theorem atCandidate_node {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) (ξ : p.length.ToType) :
+    (p.atCandidate q).node ξ = p.node ξ :=
+  rfl
+
+@[simp]
+theorem atCandidate_lowerBound {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) :
+    (p.atCandidate q).lowerBound = p.lowerBound :=
+  rfl
+
+/-- Reanchoring at a candidate preserves end-homogeneity. -/
+theorem EndhomogeneousTo.atCandidate {c : TraceColoring}
+    {a : TraceCarrier} {p : TracePrefix a}
+    (hp : p.EndhomogeneousTo c) (q : TraceCandidate c p) :
+    (p.atCandidate q).EndhomogeneousTo c := by
+  simpa only [atCandidate] using
+    hp.reanchor q.above_prefix (fun ξ ↦ (q.agrees ξ).symm)
 
 /-- The canonical inclusion of a shorter ordinal-indexed prefix into its
 ambient prefix. -/
@@ -147,6 +219,120 @@ end TracePrefix
 
 namespace TraceCandidate
 
+/-- Reanchoring at `q` leaves exactly the old eligible values strictly below
+`q.value`.  This is the precise cross-anchor replacement for the false
+same-anchor persistence claim. -/
+theorem eligible_atCandidate_iff {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) (β : TraceCarrier) :
+    Eligible c (p.atCandidate q) β ↔ Eligible c p β ∧ β < q.value := by
+  constructor
+  · intro h
+    refine ⟨?_, h.lt_anchor⟩
+    refine {
+      lt_anchor := h.lt_anchor.trans q.lt_anchor
+      lowerBound_le := by
+        simpa only [TracePrefix.atCandidate_lowerBound] using h.lowerBound_le
+      agrees := by
+        intro ξ
+        simpa only [TracePrefix.atCandidate_node] using
+          (h.agrees ξ).trans (q.agrees ξ)
+    }
+  · rintro ⟨h, hβq⟩
+    refine {
+      lt_anchor := hβq
+      lowerBound_le := by
+        simpa only [TracePrefix.atCandidate_lowerBound] using h.lowerBound_le
+      agrees := by
+        intro ξ
+        simpa only [TracePrefix.atCandidate_node] using
+          (h.agrees ξ).trans (q.agrees ξ).symm
+    }
+
+/-- Transport an old candidate below `q` to the prefix reanchored at `q`. -/
+noncomputable def atCandidateOfLt {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q r : TraceCandidate c p)
+    (hrq : r.value < q.value) : TraceCandidate c (p.atCandidate q) :=
+  ofEligible
+    (p := p.atCandidate q)
+    (by simpa only [TracePrefix.atCandidate_length] using q.live)
+    ((eligible_atCandidate_iff p q r.value).2
+      ⟨eligible_of_candidate r, hrq⟩)
+
+@[simp]
+theorem atCandidateOfLt_value {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q r : TraceCandidate c p)
+    (hrq : r.value < q.value) :
+    (atCandidateOfLt p q r hrq).value = r.value :=
+  rfl
+
+/-- Forget the stricter anchor bound on a reanchored candidate. -/
+noncomputable def ofAtCandidate {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p)
+    (r : TraceCandidate c (p.atCandidate q)) : TraceCandidate c p :=
+  ofEligible (p := p) q.live <|
+    ((eligible_atCandidate_iff p q r.value).1
+      (eligible_of_candidate r)).1
+
+@[simp]
+theorem ofAtCandidate_value {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p)
+    (r : TraceCandidate c (p.atCandidate q)) :
+    (ofAtCandidate p q r).value = r.value :=
+  rfl
+
+/-- Candidate existence after reanchoring is equivalent to an old candidate
+strictly below the new anchor. -/
+theorem nonempty_atCandidate_iff_exists_lt {c : TraceColoring}
+    {a : TraceCarrier} (p : TracePrefix a) (q : TraceCandidate c p) :
+    Nonempty (TraceCandidate c (p.atCandidate q)) ↔
+      ∃ r : TraceCandidate c p, r.value < q.value := by
+  constructor
+  · rintro ⟨r⟩
+    refine ⟨ofAtCandidate p q r, ?_⟩
+    simpa only [ofAtCandidate_value] using
+      ((eligible_atCandidate_iff p q r.value).1
+        (eligible_of_candidate r)).2
+  · rintro ⟨r, hr⟩
+    exact ⟨atCandidateOfLt p q r hr⟩
+
+/-- Reanchoring at `q` cuts the old candidate-value set off exactly below
+`q.value`. -/
+theorem valueSet_atCandidate {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) :
+    valueSet c (p.atCandidate q) = valueSet c p ∩ Set.Iio q.value := by
+  ext β
+  simp only [Set.mem_inter_iff, Set.mem_Iio]
+  rw [← eligible_iff_mem_valueSet (c := c) (p.atCandidate q) β,
+    ← eligible_iff_mem_valueSet (c := c) p β]
+  simpa only [TracePrefix.atCandidate_length, q.live, true_and] using
+    eligible_atCandidate_iff p q β
+
+/-- The least old candidate remains least whenever the reanchored prefix has
+a candidate. -/
+theorem least_atCandidate_value_eq {c : TraceColoring}
+    {a : TraceCarrier} (p : TracePrefix a) (q : TraceCandidate c p)
+    (hp : Nonempty (TraceCandidate c p))
+    (hat : Nonempty (TraceCandidate c (p.atCandidate q))) :
+    (least hat).value = (least hp).value := by
+  have hOldLeNew : (least hp).value ≤ (least hat).value := by
+    simpa only [ofAtCandidate_value] using
+      least_value_le hp (ofAtCandidate p q (least hat))
+  have hOldLtQ : (least hp).value < q.value :=
+    hOldLeNew.trans_lt (least hat).lt_anchor
+  apply le_antisymm
+  · simpa only [atCandidateOfLt_value] using
+      least_value_le hat (atCandidateOfLt p q (least hp) hOldLtQ)
+  · exact hOldLeNew
+
+/-- Reanchoring at the least candidate is terminal immediately. -/
+theorem not_nonempty_at_least {c : TraceColoring}
+    {a : TraceCarrier} {p : TracePrefix a}
+    (hp : Nonempty (TraceCandidate c p)) :
+    ¬ Nonempty (TraceCandidate c (p.atCandidate (least hp))) := by
+  intro hat
+  rcases (nonempty_atCandidate_iff_exists_lt p (least hp)).1 hat with ⟨r, hr⟩
+  exact (not_lt_least_value hp r) hr
+
 /-- A non-minimal endpoint has a candidate for its empty prefix, namely the
 least carrier point. This is an initial seed only, not a successor-existence
 theorem for arbitrary prefixes. -/
@@ -212,6 +398,16 @@ theorem restrict_value {c : TraceColoring} {α : TraceCarrier}
 end TraceCandidate
 
 namespace TracePrefix
+
+/-- Restricting before or after reanchoring at a candidate gives the same
+node at every retained coordinate.  Pointwise equality avoids exposing
+dependent proof fields of `TracePrefix`. -/
+theorem restrict_atCandidate_node {c : TraceColoring}
+    {a : TraceCarrier} (p : TracePrefix a) (q : TraceCandidate c p)
+    {η : Ordinal} (hη : η ≤ p.length) (ξ : η.ToType) :
+    ((p.atCandidate q).restrict η hη).node ξ =
+      ((p.restrict η hη).atCandidate (q.restrict hη)).node ξ := by
+  rfl
 
 /-- The node map obtained by appending a supplied candidate value to a prefix. -/
 noncomputable def snocNode {c : TraceColoring} {α : TraceCarrier}

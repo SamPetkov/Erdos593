@@ -37,6 +37,38 @@ namespace CoherentTraceSystem
 
 variable {c : TraceColoring} (T : CoherentTraceSystem c)
 
+/-- The supplied trace of an endpoint, packaged as a `TracePrefix`. -/
+noncomputable def tracePrefix (a : TraceCarrier) : TracePrefix a where
+  length := T.height a
+  length_le := T.height_le a
+  node eta := T.node a (Set.mem_Iio.mp eta.toOrd.2)
+  node_lt_anchor eta := T.node_lt_anchor a (Set.mem_Iio.mp eta.toOrd.2)
+  strictMono_node := by
+    intro eta theta heta
+    apply T.node_strict a (Set.mem_Iio.mp eta.toOrd.2)
+      (Set.mem_Iio.mp theta.toOrd.2)
+    exact (Ordinal.ToType.mk (o := T.height a)).symm.lt_iff_lt.mpr heta
+
+@[simp]
+theorem tracePrefix_length (a : TraceCarrier) :
+    (T.tracePrefix a).length = T.height a :=
+  rfl
+
+@[simp]
+theorem tracePrefix_node (a : TraceCarrier) (eta : (T.height a).ToType) :
+    (T.tracePrefix a).node eta = T.node a (Set.mem_Iio.mp eta.toOrd.2) :=
+  rfl
+
+/-- Every earlier supplied node sees every later supplied node in the same
+colour as it sees the endpoint. -/
+def IsEndhomogeneous : Prop :=
+  ∀ (a : TraceCarrier) {eta zeta : Ordinal},
+    (heta : eta < T.height a) (hzeta : zeta < T.height a) (h : eta < zeta),
+      c (tracePair (T.node a heta) (T.node a hzeta)
+        (ne_of_lt (T.node_strict a heta hzeta h))) =
+        c (tracePair (T.node a heta) a
+          (ne_of_lt (T.node_lt_anchor a heta)))
+
 /-- A trace entry is a predecessor of the endpoint containing it. -/
 def predecessor (b a : TraceCarrier) : Prop :=
   ∃ (eta : Ordinal) (heta : eta < T.height a), T.node a heta = b

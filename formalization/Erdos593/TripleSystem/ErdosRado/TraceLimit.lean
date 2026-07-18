@@ -6,8 +6,9 @@ import Erdos593.TripleSystem.ErdosRado.TraceExtension
 This module isolates the limit-stage construction used by a later canonical
 trace recursion.  It assumes an exact prefix at each stage below a
 successor-limit ordinal together with literal initial-segment coherence, and
-forms their diagonal union.  It proves neither the existence of a chain nor
-any global trace-recursion theorem.
+forms their diagonal union.  It can also package all restrictions of an
+existing prefix as a coherent chain.  It does not construct candidates or a
+global trace recursion.
 -/
 
 namespace Erdos593
@@ -44,6 +45,30 @@ structure LimitChain (α : TraceCarrier) (o : Ordinal) where
     IsInitialSegment (stage η) (stage θ)
 
 namespace LimitChain
+
+/-- The coherent chain of all proper restrictions of a supplied prefix.
+
+This constructor contains no existence argument: it only packages the
+initial segments already present in `p`. -/
+noncomputable def ofPrefix {α : TraceCarrier} (p : TracePrefix α)
+    (o : Ordinal) (ho : o ≤ p.length) : LimitChain α o where
+  stage η := p.restrict η.toOrd <| by
+    exact (le_of_lt (Set.mem_Iio.mp η.toOrd.2)).trans ho
+  length_eq η := rfl
+  coherent := by
+    intro η θ hηθ
+    have hord : (η.toOrd : Ordinal) ≤ θ.toOrd := by
+      exact (Ordinal.ToType.mk (o := o)).symm.monotone hηθ
+    let hη : (η.toOrd : Ordinal) ≤ p.length :=
+      (le_of_lt (Set.mem_Iio.mp η.toOrd.2)).trans ho
+    let hθ : (θ.toOrd : Ordinal) ≤ p.length :=
+      (le_of_lt (Set.mem_Iio.mp θ.toOrd.2)).trans ho
+    let hlen : (p.restrict η.toOrd hη).length ≤
+        (p.restrict θ.toOrd hθ).length := hord
+    refine ⟨hlen, ?_⟩
+    intro ξ
+    simpa only [liftIndex, TracePrefix.restrict_node] using
+      p.restrict_restrict_node hθ hord ξ
 
 /-- The stage immediately after an index, available because the target
 ordinal is a successor-limit ordinal. -/
