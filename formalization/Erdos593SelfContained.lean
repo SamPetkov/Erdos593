@@ -3114,7 +3114,7 @@ END SOURCE MODULE: Erdos593.Graph.ShiftGraph
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.Graph.ShiftGraphChromatic
 Source: Erdos593/Graph/ShiftGraphChromatic.lean
-Normalized SHA-256: d49585ccb77dce937b8efa90ef2feadfcf00a1eac15b66a3de41a4f8b05713d5
+Normalized SHA-256: 950a36a017f1482d08a70eedbe814448dc7964a79a20062c537733f465d921ae
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_Graph_ShiftGraphChromatic
 
@@ -3260,7 +3260,7 @@ theorem mk_iteratedSet_nat (n : ℕ) :
   | succ n ih =>
     rw [iteratedSet_succ, Cardinal.mk_set, ih, ← Cardinal.beth_succ]
     change ℶ_ ((n : Ordinal) + 1) = ℶ_ (((n + 1 : ℕ) : Ordinal))
-    rw [Nat.cast_succ]
+    rw [Nat.cast_add_one]
 
 /-- Increasing one-tuples are canonically equivalent to their entries. -/
 def tupleOneEquiv : Tuple κ 1 ≃ κ where

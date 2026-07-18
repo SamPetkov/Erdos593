@@ -146,7 +146,7 @@ theorem mk_iteratedSet_nat (n : ℕ) :
   | succ n ih =>
     rw [iteratedSet_succ, Cardinal.mk_set, ih, ← Cardinal.beth_succ]
     change ℶ_ ((n : Ordinal) + 1) = ℶ_ (((n + 1 : ℕ) : Ordinal))
-    rw [Nat.cast_succ]
+    rw [Nat.cast_add_one]
 
 /-- Increasing one-tuples are canonically equivalent to their entries. -/
 def tupleOneEquiv : Tuple κ 1 ≃ κ where
