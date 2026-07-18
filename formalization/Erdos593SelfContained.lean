@@ -23496,7 +23496,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftShiftObstruction
 Source: Erdos593/TripleSystem/SequenceLiftShiftObstruction.lean
-Normalized SHA-256: 7dada3bc29f771ea3c647837a75725822e0f9554607698936f366e03ccf43c53
+Normalized SHA-256: 9e740339184c4b3c8545bc2db5b19a914b43c681ec7996c2e819e8903948d8b5
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftShiftObstruction
 
@@ -23531,6 +23531,22 @@ theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shif
   exact not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
     (G := ShiftGraph.graph κ r) hcolor hlinear hno
     (ShiftGraph.no_odd_closedWalk_up_to κ hgirth)
+
+/-- A convenient specialization of
+`not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftGraph`
+where the shift length is chosen from the finite Levi-edge bound, making the
+odd-girth inequality automatic. -/
+theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftGraph_succCard
+    [Fintype I] [Fintype F.isolatedReduction.levi.edgeSet]
+    (hcolor :
+      ¬ Nonempty
+        ((ShiftGraph.graph κ (F.isolatedReduction.levi.edgeFinset.card + 1)).Coloring ℕ))
+    (hlinear : F.Linear)
+    (hno : ¬ F.isolatedReduction.EvenBergeCycles) :
+    ¬ F.IsObligatory := by
+  exact not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftGraph
+    (κ := κ) (F := F)
+    hcolor (by omega) hlinear hno
 
 end SequenceLift
 

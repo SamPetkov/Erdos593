@@ -33,6 +33,22 @@ theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shif
     (G := ShiftGraph.graph κ r) hcolor hlinear hno
     (ShiftGraph.no_odd_closedWalk_up_to κ hgirth)
 
+/-- A convenient specialization of
+`not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftGraph`
+where the shift length is chosen from the finite Levi-edge bound, making the
+odd-girth inequality automatic. -/
+theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftGraph_succCard
+    [Fintype I] [Fintype F.isolatedReduction.levi.edgeSet]
+    (hcolor :
+      ¬ Nonempty
+        ((ShiftGraph.graph κ (F.isolatedReduction.levi.edgeFinset.card + 1)).Coloring ℕ))
+    (hlinear : F.Linear)
+    (hno : ¬ F.isolatedReduction.EvenBergeCycles) :
+    ¬ F.IsObligatory := by
+  exact not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftGraph
+    (κ := κ) (F := F)
+    hcolor (by omega) hlinear hno
+
 end SequenceLift
 
 end Erdos593
