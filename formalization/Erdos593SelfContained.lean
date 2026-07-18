@@ -11304,17 +11304,18 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TransfiniteIteration
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceExtension
 Source: Erdos593/TripleSystem/ErdosRado/TraceExtension.lean
-Normalized SHA-256: aa08984c679aea2bae2d365ea462fa8c08a9b277b38918c0669897dc711ae197
+Normalized SHA-256: 85bbe39f37dba5a15d2a6522aa9f471e1639325c26aa07c4868983eba8d0ba2c
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceExtension
 
 /-!
-# Conditional successor extension for canonical traces
+# Local extension and reanchoring for canonical traces
 
-This module supplies only local, source-backed trace infrastructure: an empty
-prefix seed below a non-minimal endpoint and an operation that appends an
-already supplied candidate. It does not assert that arbitrary live prefixes
-have candidates, and it does not construct a global trace.
+This module supplies local, source-backed trace infrastructure: empty prefixes,
+restrictions, reanchoring at a candidate, transport of candidates across that
+reanchoring, and successor extension by an already supplied candidate.  It
+does not assert that arbitrary live prefixes have candidates, and it does not
+construct a global trace.
 -/
 
 namespace Erdos593
@@ -11346,6 +11347,77 @@ noncomputable def empty (a : TraceCarrier) : TracePrefix a where
   strictMono_node := by
     intro i
     exact isEmptyElim i
+
+/-- Regard an existing node sequence as a prefix below a new endpoint. -/
+noncomputable def reanchor {a : TraceCarrier} (p : TracePrefix a)
+    (b : TraceCarrier) (h : ∀ ξ, p.node ξ < b) : TracePrefix b where
+  length := p.length
+  length_le := p.length_le
+  node := p.node
+  node_lt_anchor := h
+  strictMono_node := p.strictMono_node
+
+@[simp]
+theorem reanchor_node {a : TraceCarrier} (p : TracePrefix a)
+    (b : TraceCarrier) (h : ∀ ξ, p.node ξ < b) (ξ : p.length.ToType) :
+    (p.reanchor b h).node ξ = p.node ξ :=
+  rfl
+
+@[simp]
+theorem reanchor_length {a : TraceCarrier} (p : TracePrefix a)
+    (b : TraceCarrier) (h : ∀ ξ, p.node ξ < b) :
+    (p.reanchor b h).length = p.length :=
+  rfl
+
+@[simp]
+theorem reanchor_lowerBound {a : TraceCarrier} (p : TracePrefix a)
+    (b : TraceCarrier) (h : ∀ ξ, p.node ξ < b) :
+    (p.reanchor b h).lowerBound = p.lowerBound :=
+  rfl
+
+/-- Reanchoring preserves endhomogeneity when the new endpoint has the old
+endpoint's colour code on every prefix node. -/
+theorem EndhomogeneousTo.reanchor {c : TraceColoring} {a b : TraceCarrier}
+    {p : TracePrefix a} (hp : p.EndhomogeneousTo c)
+    (hnode : ∀ ξ, p.node ξ < b)
+    (hcode : ∀ ξ,
+      c (tracePair (p.node ξ) a (ne_of_lt (p.node_lt_anchor ξ))) =
+        c (tracePair (p.node ξ) b (ne_of_lt (hnode ξ)))) :
+    (p.reanchor b hnode).EndhomogeneousTo c := by
+  intro ξ ζ hξζ
+  simpa only [reanchor_node] using (hp hξζ).trans (hcode ξ)
+
+/-- Reanchor a prefix at one of its candidates.  The candidate axioms give
+exactly the new upper bound and the colour-code compatibility needed below. -/
+noncomputable def atCandidate {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) : TracePrefix q.value :=
+  p.reanchor q.value q.above_prefix
+
+@[simp]
+theorem atCandidate_length {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) :
+    (p.atCandidate q).length = p.length :=
+  rfl
+
+@[simp]
+theorem atCandidate_node {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) (ξ : p.length.ToType) :
+    (p.atCandidate q).node ξ = p.node ξ :=
+  rfl
+
+@[simp]
+theorem atCandidate_lowerBound {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) :
+    (p.atCandidate q).lowerBound = p.lowerBound :=
+  rfl
+
+/-- Reanchoring at a candidate preserves end-homogeneity. -/
+theorem EndhomogeneousTo.atCandidate {c : TraceColoring}
+    {a : TraceCarrier} {p : TracePrefix a}
+    (hp : p.EndhomogeneousTo c) (q : TraceCandidate c p) :
+    (p.atCandidate q).EndhomogeneousTo c := by
+  change (p.reanchor q.value q.above_prefix).EndhomogeneousTo c
+  exact hp.reanchor q.above_prefix (fun ξ ↦ (q.agrees ξ).symm)
 
 /-- The canonical inclusion of a shorter ordinal-indexed prefix into its
 ambient prefix. -/
@@ -11455,6 +11527,120 @@ end TracePrefix
 
 namespace TraceCandidate
 
+/-- Reanchoring at `q` leaves exactly the old eligible values strictly below
+`q.value`.  This is the precise cross-anchor replacement for the false
+same-anchor persistence claim. -/
+theorem eligible_atCandidate_iff {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) (β : TraceCarrier) :
+    Eligible c (p.atCandidate q) β ↔ Eligible c p β ∧ β < q.value := by
+  constructor
+  · intro h
+    refine ⟨?_, h.lt_anchor⟩
+    refine {
+      lt_anchor := h.lt_anchor.trans q.lt_anchor
+      lowerBound_le := by
+        simpa only [TracePrefix.atCandidate_lowerBound] using h.lowerBound_le
+      agrees := by
+        intro ξ
+        simpa only [TracePrefix.atCandidate_node] using
+          (h.agrees ξ).trans (q.agrees ξ)
+    }
+  · rintro ⟨h, hβq⟩
+    refine {
+      lt_anchor := hβq
+      lowerBound_le := by
+        simpa only [TracePrefix.atCandidate_lowerBound] using h.lowerBound_le
+      agrees := by
+        intro ξ
+        simpa only [TracePrefix.atCandidate_node] using
+          (h.agrees ξ).trans (q.agrees ξ).symm
+    }
+
+/-- Transport an old candidate below `q` to the prefix reanchored at `q`. -/
+noncomputable def atCandidateOfLt {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q r : TraceCandidate c p)
+    (hrq : r.value < q.value) : TraceCandidate c (p.atCandidate q) :=
+  ofEligible
+    (p := p.atCandidate q)
+    (by simpa only [TracePrefix.atCandidate_length] using q.live)
+    ((eligible_atCandidate_iff p q r.value).2
+      ⟨eligible_of_candidate r, hrq⟩)
+
+@[simp]
+theorem atCandidateOfLt_value {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q r : TraceCandidate c p)
+    (hrq : r.value < q.value) :
+    (atCandidateOfLt p q r hrq).value = r.value :=
+  rfl
+
+/-- Forget the stricter anchor bound on a reanchored candidate. -/
+noncomputable def ofAtCandidate {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p)
+    (r : TraceCandidate c (p.atCandidate q)) : TraceCandidate c p :=
+  ofEligible (p := p) q.live <|
+    ((eligible_atCandidate_iff p q r.value).1
+      (eligible_of_candidate r)).1
+
+@[simp]
+theorem ofAtCandidate_value {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p)
+    (r : TraceCandidate c (p.atCandidate q)) :
+    (ofAtCandidate p q r).value = r.value :=
+  rfl
+
+/-- Candidate existence after reanchoring is equivalent to an old candidate
+strictly below the new anchor. -/
+theorem nonempty_atCandidate_iff_exists_lt {c : TraceColoring}
+    {a : TraceCarrier} (p : TracePrefix a) (q : TraceCandidate c p) :
+    Nonempty (TraceCandidate c (p.atCandidate q)) ↔
+      ∃ r : TraceCandidate c p, r.value < q.value := by
+  constructor
+  · rintro ⟨r⟩
+    refine ⟨ofAtCandidate p q r, ?_⟩
+    simpa only [ofAtCandidate_value] using
+      ((eligible_atCandidate_iff p q r.value).1
+        (eligible_of_candidate r)).2
+  · rintro ⟨r, hr⟩
+    exact ⟨atCandidateOfLt p q r hr⟩
+
+/-- Reanchoring at `q` cuts the old candidate-value set off exactly below
+`q.value`. -/
+theorem valueSet_atCandidate {c : TraceColoring} {a : TraceCarrier}
+    (p : TracePrefix a) (q : TraceCandidate c p) :
+    valueSet c (p.atCandidate q) = valueSet c p ∩ Set.Iio q.value := by
+  ext β
+  simp only [Set.mem_inter_iff, Set.mem_Iio]
+  rw [← eligible_iff_mem_valueSet (c := c) (p.atCandidate q) β,
+    ← eligible_iff_mem_valueSet (c := c) p β]
+  simpa only [TracePrefix.atCandidate_length, q.live, true_and] using
+    eligible_atCandidate_iff p q β
+
+/-- The least old candidate remains least whenever the reanchored prefix has
+a candidate. -/
+theorem least_atCandidate_value_eq {c : TraceColoring}
+    {a : TraceCarrier} (p : TracePrefix a) (q : TraceCandidate c p)
+    (hp : Nonempty (TraceCandidate c p))
+    (hat : Nonempty (TraceCandidate c (p.atCandidate q))) :
+    (least hat).value = (least hp).value := by
+  have hOldLeNew : (least hp).value ≤ (least hat).value := by
+    simpa only [ofAtCandidate_value] using
+      least_value_le hp (ofAtCandidate p q (least hat))
+  have hOldLtQ : (least hp).value < q.value :=
+    hOldLeNew.trans_lt (least hat).lt_anchor
+  apply le_antisymm
+  · simpa only [atCandidateOfLt_value] using
+      least_value_le hat (atCandidateOfLt p q (least hp) hOldLtQ)
+  · exact hOldLeNew
+
+/-- Reanchoring at the least candidate is terminal immediately. -/
+theorem not_nonempty_at_least {c : TraceColoring}
+    {a : TraceCarrier} {p : TracePrefix a}
+    (hp : Nonempty (TraceCandidate c p)) :
+    ¬ Nonempty (TraceCandidate c (p.atCandidate (least hp))) := by
+  intro hat
+  rcases (nonempty_atCandidate_iff_exists_lt p (least hp)).1 hat with ⟨r, hr⟩
+  exact (not_lt_least_value hp r) hr
+
 /-- A non-minimal endpoint has a candidate for its empty prefix, namely the
 least carrier point. This is an initial seed only, not a successor-existence
 theorem for arbitrary prefixes. -/
@@ -11520,6 +11706,16 @@ theorem restrict_value {c : TraceColoring} {α : TraceCarrier}
 end TraceCandidate
 
 namespace TracePrefix
+
+/-- Restricting before or after reanchoring at a candidate gives the same
+node at every retained coordinate.  Pointwise equality avoids exposing
+dependent proof fields of `TracePrefix`. -/
+theorem restrict_atCandidate_node {c : TraceColoring}
+    {a : TraceCarrier} (p : TracePrefix a) (q : TraceCandidate c p)
+    {η : Ordinal} (hη : η ≤ p.length) (ξ : η.ToType) :
+    ((p.atCandidate q).restrict η hη).node ξ =
+      ((p.restrict η hη).atCandidate (q.restrict hη)).node ξ := by
+  rfl
 
 /-- The node map obtained by appending a supplied candidate value to a prefix. -/
 noncomputable def snocNode {c : TraceColoring} {α : TraceCarrier}
@@ -11955,7 +12151,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceExtension
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceLimit
 Source: Erdos593/TripleSystem/ErdosRado/TraceLimit.lean
-Normalized SHA-256: d50fe8e07db0271da367544d08f1371a355326a432c3bccccec97055c13767bc
+Normalized SHA-256: 2bbd2745179a39c793778c09a25ffe6780f50b8343b8df5f4625ebc37db121f5
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceLimit
 
@@ -11965,8 +12161,9 @@ section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceLimit
 This module isolates the limit-stage construction used by a later canonical
 trace recursion.  It assumes an exact prefix at each stage below a
 successor-limit ordinal together with literal initial-segment coherence, and
-forms their diagonal union.  It proves neither the existence of a chain nor
-any global trace-recursion theorem.
+forms their diagonal union.  It can also package all restrictions of an
+existing prefix as a coherent chain.  It does not construct candidates or a
+global trace recursion.
 -/
 
 namespace Erdos593
@@ -12003,6 +12200,34 @@ structure LimitChain (α : TraceCarrier) (o : Ordinal) where
     IsInitialSegment (stage η) (stage θ)
 
 namespace LimitChain
+
+/-- The coherent chain of all proper restrictions of a supplied prefix.
+
+This constructor contains no existence argument: it only packages the
+initial segments already present in `p`. -/
+noncomputable def ofPrefix {α : TraceCarrier} (p : TracePrefix α)
+    (o : Ordinal) (ho : o ≤ p.length) : LimitChain α o where
+  stage η := p.restrict η.toOrd <| by
+    exact (le_of_lt (Set.mem_Iio.mp η.toOrd.2)).trans ho
+  length_eq η := rfl
+  coherent := by
+    intro η θ hηθ
+    have hord : (η.toOrd : Ordinal) ≤ θ.toOrd := by
+      exact (Ordinal.ToType.mk (o := o)).symm.monotone hηθ
+    let hη : (η.toOrd : Ordinal) ≤ p.length :=
+      (le_of_lt (Set.mem_Iio.mp η.toOrd.2)).trans ho
+    let hθ : (θ.toOrd : Ordinal) ≤ p.length :=
+      (le_of_lt (Set.mem_Iio.mp θ.toOrd.2)).trans ho
+    let hlen : (p.restrict η.toOrd hη).length ≤
+        (p.restrict θ.toOrd hθ).length := hord
+    refine ⟨hlen, ?_⟩
+    intro ξ
+    simp only [liftIndex, TracePrefix.restrict_node]
+    apply congrArg p.node
+    apply (Ordinal.ToType.mk (o := p.length)).symm.injective
+    apply Subtype.ext
+    rw [p.restrictIndex_toOrd, p.restrictIndex_toOrd]
+    exact (p.restrict θ.toOrd hθ).restrictIndex_toOrd hlen ξ
 
 /-- The stage immediately after an index, available because the target
 ordinal is a successor-limit ordinal. -/
@@ -12175,7 +12400,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceLimit
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTree
 Source: Erdos593/TripleSystem/ErdosRado/CanonicalTree.lean
-Normalized SHA-256: f40b468beb425ce75fd1c1ae0ecbd60df3b64ab53f930451d421f50e93634347
+Normalized SHA-256: 7b1816fc7af19d3e7108e99b933958fbb928b66a826d29c4ca21d7da8e3c43cb
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalTree
 
@@ -12214,6 +12439,38 @@ structure CoherentTraceSystem (c : TraceColoring) where
 namespace CoherentTraceSystem
 
 variable {c : TraceColoring} (T : CoherentTraceSystem c)
+
+/-- The supplied trace of an endpoint, packaged as a `TracePrefix`. -/
+noncomputable def tracePrefix (a : TraceCarrier) : TracePrefix a where
+  length := T.height a
+  length_le := T.height_le a
+  node eta := T.node a (Set.mem_Iio.mp eta.toOrd.2)
+  node_lt_anchor eta := T.node_lt_anchor a (Set.mem_Iio.mp eta.toOrd.2)
+  strictMono_node := by
+    intro eta theta heta
+    apply T.node_strict a (Set.mem_Iio.mp eta.toOrd.2)
+      (Set.mem_Iio.mp theta.toOrd.2)
+    exact (Ordinal.ToType.mk (o := T.height a)).symm.lt_iff_lt.mpr heta
+
+@[simp]
+theorem tracePrefix_length (a : TraceCarrier) :
+    (T.tracePrefix a).length = T.height a :=
+  rfl
+
+@[simp]
+theorem tracePrefix_node (a : TraceCarrier) (eta : (T.height a).ToType) :
+    (T.tracePrefix a).node eta = T.node a (Set.mem_Iio.mp eta.toOrd.2) :=
+  rfl
+
+/-- Every earlier supplied node sees every later supplied node in the same
+colour as it sees the endpoint. -/
+def IsEndhomogeneous : Prop :=
+  ∀ (a : TraceCarrier) {eta zeta : Ordinal}
+      (heta : eta < T.height a) (hzeta : zeta < T.height a) (h : eta < zeta),
+      c (tracePair (T.node a heta) (T.node a hzeta)
+        (ne_of_lt (T.node_strict a heta hzeta h))) =
+        c (tracePair (T.node a heta) a
+          (ne_of_lt (T.node_lt_anchor a heta)))
 
 /-- A trace entry is a predecessor of the endpoint containing it. -/
 def predecessor (b a : TraceCarrier) : Prop :=
@@ -12318,22 +12575,42 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTree
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode
 Source: Erdos593/TripleSystem/ErdosRado/CanonicalLevelCode.lean
-Normalized SHA-256: 60bc3318f4894ed08cb0d0775632efa5857a1fa8aff7af267410b997cccaacb0
+Normalized SHA-256: 2b5896c5946d2be55ce29fb5b15b82d615aa238a3f3cdecd3eef29910bde6c0b
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalLevelCode
 
 /-!
 # Conditional canonical level codes
 
-This file records the code supplied by a coherent trace system. It deliberately
-does not assert that the code is injective: that needs the source-native trace
-selection and coherence hypotheses not present in `CoherentTraceSystem`.
+This file records the code supplied by a coherent trace system.  It proves
+injectivity only under explicit endhomogeneity and genuine stopping
+hypotheses.  The missing source-native construction is responsible for
+building a system satisfying those hypotheses.
 -/
 
 namespace Erdos593.TripleSystem.TriangleHost.ErdosRado
 namespace CoherentTraceSystem
 
 variable {c : TraceColoring} (T : CoherentTraceSystem c)
+
+private theorem tracePair_congr {x y x' y' : TraceCarrier}
+    (hx : x = x') (hy : y = y') (hxy : x ≠ y) (hx'y' : x' ≠ y') :
+    tracePair x y hxy = tracePair x' y' hx'y' := by
+  subst x
+  subst y
+  rfl
+
+/-- Include a coordinate of a smaller ordinal in a larger one. -/
+noncomputable def liftLevelIndex {delta rho : Ordinal} (h : delta < rho)
+    (xi : delta.ToType) : rho.ToType :=
+  Ordinal.ToType.mk ⟨(xi.toOrd : Ordinal),
+    (Set.mem_Iio.mp xi.toOrd.2).trans h⟩
+
+@[simp]
+theorem liftLevelIndex_toOrd {delta rho : Ordinal} (h : delta < rho)
+    (xi : delta.ToType) :
+    ((liftLevelIndex h xi).toOrd : Ordinal) = xi.toOrd := by
+  simp [liftLevelIndex]
 
 /-- The ordinal represented by a coordinate of `rho.ToType`. -/
 noncomputable def levelIndex (rho : Ordinal) (zeta : rho.ToType) : Ordinal :=
@@ -12356,11 +12633,69 @@ noncomputable def levelNode (rho : Ordinal) (a : T.level rho)
     (zeta : rho.ToType) : TraceCarrier :=
   T.node a.1 (T.levelIndex_lt_height rho a zeta)
 
+/-- A node below a level node is the corresponding node of the original
+endpoint. -/
+theorem levelNode_levelNode (rho : Ordinal) (a : T.level rho)
+    (zeta : rho.ToType) (xi : (levelIndex rho zeta).ToType) :
+    T.levelNode (levelIndex rho zeta)
+        ⟨T.levelNode rho a zeta, by
+          exact T.coherent_height a.1 (T.levelIndex_lt_height rho a zeta)⟩ xi =
+      T.levelNode rho a
+        (liftLevelIndex (levelIndex_lt rho zeta) xi) := by
+  have hparent : levelIndex (levelIndex rho zeta) xi < T.height a.1 := by
+    rw [a.2]
+    exact (levelIndex_lt (levelIndex rho zeta) xi).trans
+      (levelIndex_lt rho zeta)
+  have hcoherent := T.coherent_prefix a.1
+    (T.levelIndex_lt_height rho a zeta)
+    (T.levelIndex_lt_height (levelIndex rho zeta)
+      ⟨T.levelNode rho a zeta, by
+        exact T.coherent_height a.1 (T.levelIndex_lt_height rho a zeta)⟩ xi)
+    hparent
+  have hord :
+      levelIndex rho (liftLevelIndex (levelIndex_lt rho zeta) xi) =
+        levelIndex (levelIndex rho zeta) xi := by
+    simp [levelIndex, liftLevelIndex]
+  simpa only [levelNode, hord] using hcoherent
+
 /-- Every node used by a level code lies below the endpoint. -/
 theorem levelNode_lt_anchor (rho : Ordinal) (a : T.level rho)
     (zeta : rho.ToType) :
     T.levelNode rho a zeta < a.1 :=
   T.node_lt_anchor a.1 (T.levelIndex_lt_height rho a zeta)
+
+/-- The trace of an endpoint on a fixed supplied level. -/
+noncomputable def levelTracePrefix (rho : Ordinal) (a : T.level rho) :
+    TracePrefix a.1 where
+  length := rho
+  length_le := by
+    rw [← a.2]
+    exact T.height_le a.1
+  node := T.levelNode rho a
+  node_lt_anchor := T.levelNode_lt_anchor rho a
+  strictMono_node := by
+    intro xi zeta hxizeta
+    apply T.node_strict a.1 (T.levelIndex_lt_height rho a xi)
+      (T.levelIndex_lt_height rho a zeta)
+    exact (Ordinal.ToType.mk (o := rho)).symm.lt_iff_lt.mpr hxizeta
+
+@[simp]
+theorem levelTracePrefix_node (rho : Ordinal) (a : T.level rho)
+    (xi : rho.ToType) :
+    (T.levelTracePrefix rho a).node xi = T.levelNode rho a xi :=
+  rfl
+
+/-- The fixed-level trace prefix inherits endhomogeneity from the coherent
+system. -/
+theorem levelTracePrefix_endhomogeneous (hend : T.IsEndhomogeneous)
+    (rho : Ordinal) (a : T.level rho) :
+    (T.levelTracePrefix rho a).EndhomogeneousTo c := by
+  intro xi zeta hxizeta
+  have hord : levelIndex rho xi < levelIndex rho zeta :=
+    (Ordinal.ToType.mk (o := rho)).symm.lt_iff_lt.mpr hxizeta
+  simpa only [levelTracePrefix_node, levelNode] using
+    hend a.1 (T.levelIndex_lt_height rho a xi)
+      (T.levelIndex_lt_height rho a zeta) hord
 
 /-- The coloring code of an endpoint at a fixed supplied trace height. -/
 noncomputable def levelCode (rho : Ordinal) (a : T.level rho) :
@@ -12377,12 +12712,115 @@ noncomputable def levelCode (rho : Ordinal) (a : T.level rho) :
         (ne_of_lt (T.levelNode_lt_anchor rho a zeta))) :=
   rfl
 
+/-- The code of a trace node is the corresponding restriction of its
+endpoint's code. -/
+theorem levelCode_levelNode (hend : T.IsEndhomogeneous)
+    (rho : Ordinal) (a : T.level rho) (zeta : rho.ToType) :
+    T.levelCode (levelIndex rho zeta)
+        ⟨T.levelNode rho a zeta, by
+          exact T.coherent_height a.1 (T.levelIndex_lt_height rho a zeta)⟩ =
+      fun xi => T.levelCode rho a
+        (liftLevelIndex (levelIndex_lt rho zeta) xi) := by
+  funext xi
+  let xi' := liftLevelIndex (levelIndex_lt rho zeta) xi
+  have hxizeta : levelIndex rho xi' < levelIndex rho zeta := by
+    simpa [xi', levelIndex, liftLevelIndex] using
+      (levelIndex_lt (levelIndex rho zeta) xi)
+  have hxi : levelIndex rho xi' < T.height a.1 :=
+    T.levelIndex_lt_height rho a xi'
+  have hzeta : levelIndex rho zeta < T.height a.1 :=
+    T.levelIndex_lt_height rho a zeta
+  have hcolor := hend a.1 hxi hzeta hxizeta
+  have hnode_lt : T.levelNode rho a xi' < T.levelNode rho a zeta := by
+    exact T.node_strict a.1 hxi hzeta hxizeta
+  have hnode_ne : T.levelNode rho a xi' ≠ T.levelNode rho a zeta :=
+    ne_of_lt hnode_lt
+  unfold levelCode
+  calc
+    c (tracePair
+        (T.levelNode (levelIndex rho zeta)
+          ⟨T.levelNode rho a zeta, by
+            exact T.coherent_height a.1 (T.levelIndex_lt_height rho a zeta)⟩ xi)
+        (T.levelNode rho a zeta) _) =
+        c (tracePair (T.levelNode rho a xi') (T.levelNode rho a zeta) _) := by
+          apply congrArg c
+          exact tracePair_congr (T.levelNode_levelNode rho a zeta xi) rfl _ hnode_ne
+    _ = c (tracePair (T.levelNode rho a xi') a.1 _) := by
+      simpa only [levelNode] using hcolor
+
 /-- The downstream fixed-level separation obligation for source-native traces.
 
 This is only a proposition here. It is not a theorem of `CoherentTraceSystem`.
 -/
 def LevelCodeInjective (rho : Ordinal) : Prop :=
   Function.Injective (T.levelCode rho)
+
+/-- If two distinct ordered endpoints have the same nodes and the same level
+code, the smaller endpoint is a forbidden candidate below the larger one. -/
+theorem traceCandidate_of_lt_of_levelCode_eq
+    (rho : Ordinal) (a b : T.level rho) (hrho : rho < TraceHeight)
+    (hab : a.1 < b.1)
+    (hnodes : ∀ zeta : rho.ToType,
+      T.levelNode rho a zeta = T.levelNode rho b zeta)
+    (hcode : T.levelCode rho a = T.levelCode rho b) :
+    Nonempty (TraceCandidate c (T.levelTracePrefix rho b)) := by
+  refine ⟨{
+    live := hrho
+    value := a.1
+    lt_anchor := hab
+    above_prefix := ?_
+    agrees := ?_
+  }⟩
+  · intro zeta
+    rw [T.levelTracePrefix_node, ← hnodes zeta]
+    exact T.levelNode_lt_anchor rho a zeta
+  · intro zeta
+    have hnode := hnodes zeta
+    calc
+      c (tracePair ((T.levelTracePrefix rho b).node zeta) a.1 _) =
+          c (tracePair (T.levelNode rho a zeta) a.1 _) := by
+            apply congrArg c
+            exact tracePair_congr
+              ((T.levelTracePrefix_node rho b zeta).trans hnode.symm) rfl _ _
+      _ = c (tracePair (T.levelNode rho b zeta) b.1 _) :=
+        congrFun hcode zeta
+
+/-- Endhomogeneity, coherence, and genuine stopping at every short endpoint
+make the reduced colour code injective on each short level. -/
+theorem levelCodeInjective_of_stopped
+    (hend : T.IsEndhomogeneous)
+    (hstop : ∀ (rho : Ordinal) (a : T.level rho), rho < TraceHeight →
+      ¬ Nonempty (TraceCandidate c (T.levelTracePrefix rho a)))
+    (rho : Ordinal) (hrho : rho < TraceHeight) :
+    T.LevelCodeInjective rho := by
+  refine (wellFounded_lt : WellFounded (fun x y : Ordinal => x < y)).induction
+    (C := fun theta => theta < TraceHeight -> T.LevelCodeInjective theta)
+    rho ?_ hrho
+  intro theta ih htheta a b hcode
+  have hnodes : ∀ zeta : theta.ToType,
+      T.levelNode theta a zeta = T.levelNode theta b zeta := by
+    intro zeta
+    have hchild :
+        (⟨T.levelNode theta a zeta, by
+          exact T.coherent_height a.1 (T.levelIndex_lt_height theta a zeta)⟩ :
+            T.level (levelIndex theta zeta)) =
+        ⟨T.levelNode theta b zeta, by
+          exact T.coherent_height b.1 (T.levelIndex_lt_height theta b zeta)⟩ := by
+      apply ih (levelIndex theta zeta) (levelIndex_lt theta zeta)
+        ((levelIndex_lt theta zeta).trans htheta)
+      rw [T.levelCode_levelNode hend theta a zeta,
+        T.levelCode_levelNode hend theta b zeta]
+      funext xi
+      exact congrFun hcode (liftLevelIndex (levelIndex_lt theta zeta) xi)
+    exact congrArg Subtype.val hchild
+  apply Subtype.ext
+  by_contra hab
+  rcases lt_or_gt_of_ne hab with hablt | hbalt
+  · exact hstop theta b htheta <|
+      T.traceCandidate_of_lt_of_levelCode_eq theta a b htheta hablt hnodes hcode
+  · exact hstop theta a htheta <|
+      T.traceCandidate_of_lt_of_levelCode_eq theta b a htheta hbalt
+        (fun zeta ↦ (hnodes zeta).symm) hcode.symm
 
 end CoherentTraceSystem
 end Erdos593.TripleSystem.TriangleHost.ErdosRado
@@ -12395,18 +12833,18 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
 Source: Erdos593/TripleSystem/ErdosRado/ErdosRadoCardinalArithmetic.lean
-Normalized SHA-256: 128e5f084e2e62480d580e090ff6e856a60de6be8c8c3940fa36f24a7a4bdd2e
+Normalized SHA-256: f3d377337a94cdd5d8744b3f8c9618e3948cd89f696944cde1663622b38917ee
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_ErdosRadoCardinalArithmetic
 
 /-!
 # CH-free cardinal arithmetic for the canonical Erdos--Rado trace
 
-This module records only cardinal bounds supplied by the concrete canonical
-carrier and by an externally supplied coherent trace system.  In particular,
-it does not construct a trace system, prove level-code injectivity, or use the
-Continuum Hypothesis.  The conditional level bound takes injectivity as an
-explicit hypothesis; the later source-native construction must discharge it.
+This module records cardinal bounds supplied by the concrete canonical carrier
+and by a coherent trace system.  It does not construct that system or use the
+Continuum Hypothesis.  Under explicit endhomogeneity and stopping hypotheses,
+the preceding module supplies level-code injectivity and this module completes
+the counting argument to obtain a full-height endpoint.
 -/
 
 namespace Erdos593.TripleSystem.TriangleHost.ErdosRado
@@ -12467,6 +12905,58 @@ theorem mk_iUnion_le_continuum {alpha iota : Type} (f : iota -> Set alpha)
       Cardinal.aleph_one_le_continuum
       (Cardinal.aleph0_pos.trans Cardinal.aleph0_lt_aleph_one).ne'
 
+/-- A stopped coherent endhomogeneous trace system must contain a full-height
+endpoint.  Otherwise its short levels cover the carrier but have total size
+at most the continuum. -/
+theorem exists_height_eq_traceHeight_of_stopped {c : TraceColoring}
+    (T : CoherentTraceSystem c) (hend : T.IsEndhomogeneous)
+    (hstop : ∀ (rho : Ordinal) (a : T.level rho), rho < TraceHeight →
+      ¬ Nonempty (TraceCandidate c (T.levelTracePrefix rho a))) :
+    ∃ a : TraceCarrier, T.height a = TraceHeight := by
+  by_contra hfull
+  push Not at hfull
+  have hshort (a : TraceCarrier) : T.height a < TraceHeight :=
+    lt_of_le_of_ne (T.height_le a) (hfull a)
+  let levels : TraceHeight.ToType -> Set TraceCarrier := fun eta =>
+    T.level eta.toOrd
+  have hcover : (Set.univ : Set TraceCarrier) ⊆ Set.iUnion levels := by
+    intro a _
+    let eta : TraceHeight.ToType :=
+      Ordinal.ToType.mk ⟨T.height a, hshort a⟩
+    apply Set.mem_iUnion.mpr
+    refine ⟨eta, ?_⟩
+    change T.height a = eta.toOrd
+    simp [eta]
+  have hunion : Cardinal.mk (Set.iUnion levels) <= Cardinal.continuum := by
+    apply mk_iUnion_le_continuum levels
+    · exact mk_traceHeight_eq_aleph_one.le
+    · intro eta
+      have heta : (eta.toOrd : Ordinal) < TraceHeight :=
+        Set.mem_Iio.mp eta.toOrd.2
+      exact mk_level_le_continuum T eta.toOrd heta
+        (T.levelCodeInjective_of_stopped hend hstop eta.toOrd heta)
+  have hcarrier : Cardinal.mk TraceCarrier <= Cardinal.continuum := by
+    calc
+      Cardinal.mk TraceCarrier = Cardinal.mk (Set.univ : Set TraceCarrier) := by simp
+      _ <= Cardinal.mk (Set.iUnion levels) :=
+        Cardinal.mk_le_mk_of_subset hcover
+      _ <= Cardinal.continuum := hunion
+  rw [mk_traceCarrier] at hcarrier
+  exact (not_lt_of_ge hcarrier) (Order.lt_succ Cardinal.continuum)
+
+/-- The full-height endpoint supplied by counting carries a full
+endhomogeneous trace prefix. -/
+theorem exists_full_endhomogeneous_of_stopped {c : TraceColoring}
+    (T : CoherentTraceSystem c) (hend : T.IsEndhomogeneous)
+    (hstop : ∀ (rho : Ordinal) (a : T.level rho), rho < TraceHeight →
+      ¬ Nonempty (TraceCandidate c (T.levelTracePrefix rho a))) :
+    ∃ (a : TraceCarrier) (p : TracePrefix a),
+      p.length = TraceHeight ∧ p.EndhomogeneousTo c := by
+  obtain ⟨a, ha⟩ := exists_height_eq_traceHeight_of_stopped T hend hstop
+  let aLevel : T.level TraceHeight := ⟨a, ha⟩
+  exact ⟨a, T.levelTracePrefix TraceHeight aLevel, rfl,
+    T.levelTracePrefix_endhomogeneous hend TraceHeight aLevel⟩
+
 /-- Every natural-valued map on the trace carrier has an `aleph1`-sized fibre.
 The conclusion uses the carrier's successor-of-continuum cardinality and the
 regularity of `aleph1`; it does not specialize a finite-color theorem. -/
@@ -12491,7 +12981,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.EndhomogeneousLift
 Source: Erdos593/TripleSystem/ErdosRado/EndhomogeneousLift.lean
-Normalized SHA-256: 70a7e8f429d38d11eed8c5ad692748801b00f2d4a35fd0728afc939a968ffe08
+Normalized SHA-256: 11824790669482e7035771a24bc7a33c162c3bffdb7e296484df189a58fc91b8
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_EndhomogeneousLift
 
@@ -12699,6 +13189,28 @@ def FullEndhomogeneousLimitChainForEveryColoring : Prop :=
       forall eta : TraceHeight.ToType,
         (F.stage eta).EndhomogeneousTo
           (transportedColor erdosRadoCarrierEquivTraceCarrier c)
+
+/-- Constructing a stopped coherent trace system for each transported
+colouring is sufficient for the requested full limit chain.  The hypothesis
+is the remaining source-native recursion obligation; fixed-level injectivity
+and the counting contradiction are discharged upstream. -/
+theorem fullEndhomogeneousLimitChain_of_stoppedCoherentTraceSystems
+    (hsystem : ∀ d : TraceColoring,
+      ∃ T : CoherentTraceSystem d, T.IsEndhomogeneous ∧
+        ∀ (ρ : Ordinal) (a : T.level ρ), ρ < TraceHeight →
+          ¬ Nonempty (TraceCandidate d (T.levelTracePrefix ρ a))) :
+    FullEndhomogeneousLimitChainForEveryColoring := by
+  intro c
+  let d : TraceColoring :=
+    transportedColor erdosRadoCarrierEquivTraceCarrier c
+  obtain ⟨T, hend, hstop⟩ := hsystem d
+  obtain ⟨a, p, hp, hpEnd⟩ :=
+    exists_full_endhomogeneous_of_stopped T hend hstop
+  let hheight : TraceHeight ≤ p.length := hp.ge
+  refine ⟨a, TracePrefix.LimitChain.ofPrefix p TraceHeight hheight, ?_⟩
+  intro η
+  exact hpEnd.restrict
+    ((le_of_lt (Set.mem_Iio.mp η.toOrd.2)).trans hheight)
 
 /-- A coherent endhomogeneous chain through every proper stage produces the
 required full-height trace by taking its limit prefix.
