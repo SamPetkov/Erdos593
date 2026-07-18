@@ -1,5 +1,6 @@
 import Erdos593.TripleSystem.ErdosRado.PairTransport
 import Erdos593.TripleSystem.ErdosRado.TraceLimit
+import Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
 import Mathlib.SetTheory.Cardinal.Pigeonhole
 
 /-!
@@ -206,6 +207,28 @@ def FullEndhomogeneousLimitChainForEveryColoring : Prop :=
       forall eta : TraceHeight.ToType,
         (F.stage eta).EndhomogeneousTo
           (transportedColor erdosRadoCarrierEquivTraceCarrier c)
+
+/-- Constructing a stopped coherent trace system for each transported
+colouring is sufficient for the requested full limit chain.  The hypothesis
+is the remaining source-native recursion obligation; fixed-level injectivity
+and the counting contradiction are discharged upstream. -/
+theorem fullEndhomogeneousLimitChain_of_stoppedCoherentTraceSystems
+    (hsystem : ∀ d : TraceColoring,
+      ∃ T : CoherentTraceSystem d, T.IsEndhomogeneous ∧
+        ∀ (ρ : Ordinal) (a : T.level ρ), ρ < TraceHeight →
+          ¬ Nonempty (TraceCandidate d (T.levelTracePrefix ρ a))) :
+    FullEndhomogeneousLimitChainForEveryColoring := by
+  intro c
+  let d : TraceColoring :=
+    transportedColor erdosRadoCarrierEquivTraceCarrier c
+  obtain ⟨T, hend, hstop⟩ := hsystem d
+  obtain ⟨a, p, hp, hpEnd⟩ :=
+    exists_full_endhomogeneous_of_stopped T hend hstop
+  let hheight : TraceHeight ≤ p.length := hp.ge
+  refine ⟨a, TracePrefix.LimitChain.ofPrefix p TraceHeight hheight, ?_⟩
+  intro η
+  exact hpEnd.restrict
+    ((le_of_lt (Set.mem_Iio.mp η.toOrd.2)).trans hheight)
 
 /-- A coherent endhomogeneous chain through every proper stage produces the
 required full-height trace by taking its limit prefix.
