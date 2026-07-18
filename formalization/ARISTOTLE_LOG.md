@@ -203,6 +203,32 @@ DB7BB24B756D745BBDE83FE92718B51BD3625DAE3701BA0F598D0EEDCD3F3028  lean-toolchain
   repository under Lean/mathlib `v4.32.0`, with no `axiom`, `sorry`, `admit`, or
   `unsafe`.
 
+## ShiftGraph chromatic descent focused Aristotle request
+
+- Submitted (UTC): 2026-07-18 21:15
+- Aristotle CLI: `aristotlelib 2.1.0`
+- Aristotle project: `8024f6b3-a1bf-47b7-8b14-840e3edbc0b8`
+- Aristotle task: `bdc5b255-d32e-43c7-8112-df720e6cfbc5`
+- Initial status: `QUEUED`
+- Local/public base SHA at submission:
+  `92d62e424f30b9e0abf9e5b07caebf808abbaed3`.
+- Scope: prove the missing iterated shift-graph chromatic/cardinal descent in
+  `Erdos593/Graph/ShiftGraphChromatic.lean`, preferably
+  `ShiftGraph.not_nonempty_coloring_nat_of_beth_lt`, and otherwise the
+  strongest checked replacement endpoint that iterates `ShiftGraph.lowerColoring`
+  to the one-tuple complete-graph base case. If the chromatic theorem lands,
+  also package it for `SequenceLiftShiftObstruction`.
+- Submitted directory: clean staging copy under `tmp/aristotle/` containing
+  `Erdos593/`, `Erdos593.lean`, `lakefile.toml`, `lake-manifest.json`, and
+  `lean-toolchain`; `.lake`, `formalization/tmp`, and scratch archives were not
+  included.
+- Service warning: Aristotle reported its usual preference for Lean `v4.28.0`
+  and noted the intentionally omitted `.lake` dependency directory.
+- Acceptance condition: any returned patch must compile in the canonical
+  repository under Lean/mathlib `v4.32.0`, with no `axiom`, `sorry`, `admit`,
+  `unsafe`, resource-limit override, theorem weakening, or finite-colour
+  replacement for the infinite/cardinal statement.
+
 ## F1: linearity of a private-vertex expansion
 
 - Submitted (UTC): 2026-07-15 00:24
