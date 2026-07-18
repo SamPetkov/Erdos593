@@ -31,6 +31,30 @@ def BergeCycleTraceTo (G : _root_.SimpleGraph V) (K : TripleSystem X I) : Prop :
 
 namespace BergeCycleTraceTo
 
+/-- If Berge cycles in `K` trace to closed walks in `G`, and `G` has no odd
+closed walk up to the finite Levi-edge bound for `K`, then `K` has only even
+Berge cycles.  This is the bridge used by the final odd-Berge obstruction:
+the trace divides the Levi-cycle length by two, and the host odd-girth
+hypothesis makes the traced length even. -/
+theorem evenBergeCycles_of_no_odd_closedWalk_up_to
+    (G : _root_.SimpleGraph V) (K : TripleSystem X I)
+    [Fintype K.levi.edgeSet]
+    (htrace : BergeCycleTraceTo G K)
+    (hG : ∀ ⦃v : V⦄ (q : G.Walk v v),
+      q.length ≤ K.levi.edgeFinset.card → ¬ Odd q.length) :
+    K.EvenBergeCycles := by
+  intro z c hc
+  obtain ⟨v, q, hq⟩ := htrace c hc
+  have hcBound : c.length ≤ K.levi.edgeFinset.card := by
+    exact hc.isTrail.length_le_card_edgeFinset
+  have hqBound : q.length ≤ K.levi.edgeFinset.card := by
+    rw [hq] at hcBound
+    omega
+  have hqEven : Even q.length := Nat.not_odd_iff_even.mp (hG q hqBound)
+  obtain ⟨k, hk⟩ := hqEven
+  use k
+  omega
+
 /-- An edgeless triple system has no Berge cycle, so its trace property is
 vacuous. -/
 theorem edgeless (G : _root_.SimpleGraph V) (X : Type w) :

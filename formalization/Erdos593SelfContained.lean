@@ -21610,7 +21610,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.FiniteLiftGeneratedBridge
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.FiniteLiftGeneratedBergeCycleTrace
 Source: Erdos593/TripleSystem/FiniteLiftGeneratedBergeCycleTrace.lean
-Normalized SHA-256: 1893acdf22c3678fd588f944f7de59e2895b3eea03336defb22e6c8d6b8e9266
+Normalized SHA-256: 4826701a64cb271dcf7900a152daccddca3c1e4408c8eff393f11fcf60e8dc12
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_FiniteLiftGeneratedBergeCycleTrace
 
@@ -21640,6 +21640,30 @@ def BergeCycleTraceTo (G : _root_.SimpleGraph V) (K : TripleSystem X I) : Prop :
     ∃ (v : V) (q : G.Walk v v), c.length = 2 * q.length
 
 namespace BergeCycleTraceTo
+
+/-- If Berge cycles in `K` trace to closed walks in `G`, and `G` has no odd
+closed walk up to the finite Levi-edge bound for `K`, then `K` has only even
+Berge cycles.  This is the bridge used by the final odd-Berge obstruction:
+the trace divides the Levi-cycle length by two, and the host odd-girth
+hypothesis makes the traced length even. -/
+theorem evenBergeCycles_of_no_odd_closedWalk_up_to
+    (G : _root_.SimpleGraph V) (K : TripleSystem X I)
+    [Fintype K.levi.edgeSet]
+    (htrace : BergeCycleTraceTo G K)
+    (hG : ∀ ⦃v : V⦄ (q : G.Walk v v),
+      q.length ≤ K.levi.edgeFinset.card → ¬ Odd q.length) :
+    K.EvenBergeCycles := by
+  intro z c hc
+  obtain ⟨v, q, hq⟩ := htrace c hc
+  have hcBound : c.length ≤ K.levi.edgeFinset.card := by
+    exact hc.isTrail.length_le_card_edgeFinset
+  have hqBound : q.length ≤ K.levi.edgeFinset.card := by
+    rw [hq] at hcBound
+    omega
+  have hqEven : Even q.length := Nat.not_odd_iff_even.mp (hG q hqBound)
+  obtain ⟨k, hk⟩ := hqEven
+  use k
+  omega
 
 /-- An edgeless triple system has no Berge cycle, so its trace property is
 vacuous. -/
@@ -23392,7 +23416,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceEndpoints
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
 Source: Erdos593/TripleSystem/SequenceLiftEmbeddedSourceIntrinsic.lean
-Normalized SHA-256: 1b61d6b9e6b613e4298e7d4e26b23ef4df3f6b9b13dc0fdc1b527318bd3bd4cf
+Normalized SHA-256: 873f37c477b4021e14c7814d82eee3a3f6399a7bba6f1ce6e35d9e7b6543aa4a
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftEmbeddedSourceIntrinsic
 
@@ -23404,6 +23428,20 @@ namespace SequenceLift
 
 variable {V : Type u} {G : _root_.SimpleGraph V}
 variable {X I : Type u} {F : TripleSystem X I}
+
+/-- A finite linear source embedded in a sequence lift has an isolated
+reduction with only even Berge cycles whenever the host graph has no odd
+closed walk up to the finite Levi-edge bound of that isolated reduction. -/
+theorem isolatedReduction_evenBergeCycles_of_linear_of_embedding
+    [Fintype I] [Fintype F.isolatedReduction.levi.edgeSet]
+    (f : F.Embedding (system G)) (hlinear : F.Linear)
+    (hG : ∀ ⦃v : V⦄ (q : G.Walk v v),
+      q.length ≤ F.isolatedReduction.levi.edgeFinset.card → ¬ Odd q.length) :
+    F.isolatedReduction.EvenBergeCycles := by
+  exact TripleSystem.BergeCycleTraceTo.evenBergeCycles_of_no_odd_closedWalk_up_to
+    G F.isolatedReduction
+    (isolatedReduction_bergeCycleTraceTo_of_linear_of_embedding f hlinear)
+    hG
 
 /-- A finite linear source embedded in a two-colourable sequence lift has an
 intrinsic isolated reduction. -/

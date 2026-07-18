@@ -10,6 +10,20 @@ namespace SequenceLift
 variable {V : Type u} {G : _root_.SimpleGraph V}
 variable {X I : Type u} {F : TripleSystem X I}
 
+/-- A finite linear source embedded in a sequence lift has an isolated
+reduction with only even Berge cycles whenever the host graph has no odd
+closed walk up to the finite Levi-edge bound of that isolated reduction. -/
+theorem isolatedReduction_evenBergeCycles_of_linear_of_embedding
+    [Fintype I] [Fintype F.isolatedReduction.levi.edgeSet]
+    (f : F.Embedding (system G)) (hlinear : F.Linear)
+    (hG : ∀ ⦃v : V⦄ (q : G.Walk v v),
+      q.length ≤ F.isolatedReduction.levi.edgeFinset.card → ¬ Odd q.length) :
+    F.isolatedReduction.EvenBergeCycles := by
+  exact TripleSystem.BergeCycleTraceTo.evenBergeCycles_of_no_odd_closedWalk_up_to
+    G F.isolatedReduction
+    (isolatedReduction_bergeCycleTraceTo_of_linear_of_embedding f hlinear)
+    hG
+
 /-- A finite linear source embedded in a two-colourable sequence lift has an
 intrinsic isolated reduction. -/
 theorem isolatedReduction_intrinsic_of_linear_of_embedding
