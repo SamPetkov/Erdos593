@@ -32,6 +32,7 @@ import Mathlib.Data.Set.Finite.Range
 import Mathlib.Data.Set.PowersetCard
 import Mathlib.Logic.Embedding.Basic
 import Mathlib.Logic.Equiv.Fin.Basic
+import Mathlib.Order.TransfiniteIteration
 import Mathlib.Order.WellFounded
 import Mathlib.SetTheory.Cardinal.Aleph
 import Mathlib.SetTheory.Cardinal.Arithmetic
@@ -11227,6 +11228,80 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TransfiniteIteration
+Source: Erdos593/TripleSystem/ErdosRado/TransfiniteIteration.lean
+Normalized SHA-256: 7cca14245f7a059f43f9af89711f16f9bd5dda70e723cc96c677095c7a96e3e2
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TransfiniteIteration
+
+/-!
+# Transfinite set iteration for the Erdos--Rado trace route
+
+This file records the Mathlib transfinite-recursion interface used by the
+canonical-trace route. It is deliberately generic: a later construction must
+supply the inflationary extension step and prove that its added trace nodes
+satisfy the required coloring invariants.
+-/
+
+namespace Erdos593
+namespace TripleSystem
+namespace TriangleHost
+namespace ErdosRado
+namespace TraceIteration
+
+/-- A potential trace entry records the ordinal stage and the selected carrier point. -/
+abbrev TraceStage : Type 1 := Ordinal × TraceCarrier
+
+/-- The complete lattice on which the trace-extension step is iterated. -/
+abbrev TraceStageSet : Type 1 := Set TraceStage
+
+variable (step : TraceStageSet → TraceStageSet)
+
+/-- The transfinite run of a trace-extension step, initialized at the empty set. -/
+noncomputable def run (eta : Ordinal) : TraceStageSet :=
+  transfiniteIterate step eta ∅
+
+/-- The zero stage of the trace run is empty. -/
+@[simp]
+theorem run_zero : run step 0 = ∅ := by
+  change transfiniteIterate step (0 : Ordinal) (∅ : TraceStageSet) = ∅
+  rw [← Ordinal.bot_eq_zero]
+  exact transfiniteIterate_bot step (∅ : TraceStageSet)
+
+/-- A successor stage applies the extension step once. -/
+theorem run_succ (eta : Ordinal) (h_eta : ¬ IsMax eta) :
+    run step (Order.succ eta) = step (run step eta) := by
+  simpa [run] using
+    (transfiniteIterate_succ step (∅ : TraceStageSet) eta h_eta)
+
+/-- Ordinals have no maximal element, so the successor rewrite has no side condition. -/
+theorem run_succ_ordinal (eta : Ordinal) :
+    run step (Order.succ eta) = step (run step eta) := by
+  exact run_succ step eta (not_isMax eta)
+
+/-- A limit stage is the supremum of all earlier stages. -/
+theorem run_limit (eta : Ordinal) (h_eta : Order.IsSuccLimit eta) :
+    run step eta = ⨆ xi : Set.Iio eta, run step xi.1 := by
+  simpa [run] using
+    (transfiniteIterate_limit step (∅ : TraceStageSet) eta h_eta)
+
+/-- Inflationarity of the extension step makes the transfinite run monotone. -/
+theorem monotone_run (hinfl : ∀ s : TraceStageSet, s ⊆ step s) :
+    Monotone (run step) := by
+  exact monotone_transfiniteIterate step ∅ hinfl
+
+end TraceIteration
+end ErdosRado
+end TriangleHost
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TransfiniteIteration
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TransfiniteIteration
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceExtension
 Source: Erdos593/TripleSystem/ErdosRado/TraceExtension.lean
 Normalized SHA-256: aa08984c679aea2bae2d365ea462fa8c08a9b277b38918c0669897dc711ae197
@@ -21128,7 +21203,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 8323a21a0b761235965db3c4d9be7e7f0a47e66597bf2d7ba3da7f636c2e9f55
+Normalized SHA-256: 925f8e72d5ca34e65fdbc49bd83fd2f3eea248260ab6e7f7e6735115e66aa71a
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
