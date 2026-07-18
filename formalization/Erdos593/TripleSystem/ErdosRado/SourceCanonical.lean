@@ -1,5 +1,18 @@
 import Erdos593.TripleSystem.ErdosRado.TraceGraph
 
+/-!
+# Source-canonical trace prefixes
+
+A prefix is source-canonical when every node was chosen by the same local
+rule: at coordinate `ξ`, take the least candidate available after the nodes
+at earlier coordinates.  The invariant records a least-candidate witness at
+each coordinate.  Candidate proof objects need not be equal, but two least
+candidates have the same underlying value.
+
+The closure lemmas below show that source-canonicality survives restriction,
+one least-candidate extension, and coherent limits.
+-/
+
 namespace Erdos593
 namespace TripleSystem
 namespace TriangleHost
@@ -61,6 +74,30 @@ theorem IsSourceCanonicalFor.restrict {c : TraceColoring}
   rcases hp (p.restrictIndex hη ξ) with ⟨q, hq, hvalue⟩
   rw [before_restrict_eq p hη ξ]
   exact ⟨q, hq, by simpa only [restrict_node] using hvalue⟩
+
+/-- Restricting the larger member of an initial-segment pair recovers the
+smaller prefix. -/
+theorem restrict_eq_of_isInitialSegment {a : TraceCarrier}
+    (p q : TracePrefix a) (hseg : p.IsInitialSegment q) :
+    q.restrict p.length hseg.choose = p := by
+  apply graph_injective
+  rw [graph_restrict]
+  ext z
+  constructor
+  · rintro ⟨⟨ζ, rfl⟩, hζ⟩
+    let ξ : p.length.ToType :=
+      Ordinal.ToType.mk ⟨(ζ.toOrd : Ordinal), hζ⟩
+    refine ⟨ξ, ?_⟩
+    apply Prod.ext
+    · simp [ξ, Ordinal.ToType.toOrd]
+    · have hnode := hseg.choose_spec ξ
+      simpa [ξ, liftIndex, TracePrefix.restrictIndex] using hnode
+  · rintro ⟨ξ, rfl⟩
+    refine ⟨?_, Set.mem_setOf.mpr (Set.mem_Iio.mp ξ.toOrd.2)⟩
+    refine ⟨liftIndex hseg.choose ξ, ?_⟩
+    apply Prod.ext
+    · exact (liftIndex_toOrd hseg.choose ξ).symm
+    · exact (hseg.choose_spec ξ).symm
 
 private theorem before_snoc_of_lt_eq {c : TraceColoring}
     {a : TraceCarrier} (p : TracePrefix a) (q : TraceCandidate c p)
@@ -131,6 +168,46 @@ theorem IsSourceCanonicalFor.snoc {c : TraceColoring}
       exact (lt_irrefl p.length h').elim
     rw [before_snoc_of_not_lt_eq p q p.snocLast hnot]
     exact ⟨q, hq, (p.snoc_node_last q).symm⟩
+
+/-- A coherent limit of source-canonical prefixes is source-canonical. -/
+theorem IsSourceCanonicalFor.limitPrefix {c : TraceColoring}
+    {a : TraceCarrier} {o : Ordinal} (F : LimitChain a o)
+    (ho : Order.IsSuccLimit o) (hheight : o ≤ TraceHeight)
+    (hcanonical : ∀ η, (F.stage η).IsSourceCanonicalFor c) :
+    (F.limitPrefix ho hheight).IsSourceCanonicalFor c := by
+  intro ξ
+  let η := F.nextStage ho ξ
+  let ζ := F.diagonalIndex ho ξ
+  rcases hcanonical η ζ with ⟨q, hq, hvalue⟩
+  have hseg := F.stage_isInitialSegment_limitPrefix ho hheight η
+  have hstage :
+      (F.limitPrefix ho hheight).restrict (F.stage η).length hseg.choose =
+        F.stage η :=
+    restrict_eq_of_isInitialSegment (F.stage η)
+      (F.limitPrefix ho hheight) hseg
+  have hstagegraph := congrArg TracePrefix.graph hstage
+  rw [graph_restrict] at hstagegraph
+  have hbefore : (F.stage η).before ζ =
+      (F.limitPrefix ho hheight).before ξ := by
+    apply graph_injective
+    unfold before
+    rw [graph_restrict, graph_restrict, ← hstagegraph]
+    ext z
+    simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
+    have hord : (ζ.toOrd : Ordinal) = ξ.toOrd :=
+      F.diagonalIndex_toOrd ho ξ
+    constructor
+    · rintro ⟨⟨hz, hzη⟩, hzζ⟩
+      exact ⟨hz, by simpa [hord] using hzζ⟩
+    · rintro ⟨hz, hzξ⟩
+      refine ⟨⟨hz, ?_⟩, ?_⟩
+      · rw [F.length_eq, F.nextStage_toOrd]
+        exact hzξ.trans (Order.lt_succ _)
+      · simpa [hord] using hzξ
+  rw [← hbefore]
+  refine ⟨q, hq, ?_⟩
+  change q.value = F.limitNode ho ξ
+  simpa [η, ζ, LimitChain.limitNode] using hvalue
 
 end TracePrefix
 end ErdosRado

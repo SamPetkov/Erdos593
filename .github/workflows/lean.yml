@@ -45,6 +45,7 @@ jobs:
           lake build Erdos593.TripleSystem.ErdosRado.TraceGraph
           lake build Erdos593.TripleSystem.ErdosRado.SourceRecursion
           lake build Erdos593.TripleSystem.ErdosRado.SourceCanonical
+          lake build Erdos593.TripleSystem.ErdosRado.SourceRunInvariant
           lake build Erdos593.TripleSystem.ErdosRado.CanonicalTree
           lake build Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode
           lake build Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
@@ -110,6 +111,7 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/TraceGraph.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/SourceRecursion.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/SourceCanonical.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/SourceRunInvariant.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/CanonicalTree.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/CanonicalLevelCode.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/ErdosRadoCardinalArithmetic.lean

@@ -26,6 +26,17 @@ def graph {a : TraceCarrier} (p : TracePrefix a) :
   {z | ∃ ξ : p.length.ToType,
     z = ((ξ.toOrd : Ordinal), p.node ξ)}
 
+@[simp]
+theorem graph_empty (a : TraceCarrier) :
+    (empty a).graph = ∅ := by
+  ext z
+  constructor
+  · rintro ⟨ξ, _⟩
+    have hξ : (ξ.toOrd : Ordinal) < 0 := Set.mem_Iio.mp ξ.toOrd.2
+    exact (not_lt_of_ge bot_le hξ).elim
+  · intro hz
+    exact hz.elim
+
 /-- Restricting a prefix cuts its graph off at the new ordinal length. -/
 theorem graph_restrict {a : TraceCarrier} (p : TracePrefix a)
     {η : Ordinal} (hη : η ≤ p.length) :
@@ -173,6 +184,50 @@ theorem graph_injective {a : TraceCarrier} :
           exact congrArg Prod.fst hzeta
         subst zeta
         exact congrArg Prod.snd hzeta
+
+/-- Inclusion between prefix graphs is exactly the usual initial-segment
+relation.  This is the bridge used to recover coherent prefix chains from the
+monotonicity of a set-valued transfinite run. -/
+theorem isInitialSegment_of_graph_subset {a : TraceCarrier}
+    {p q : TracePrefix a} (hgraph : p.graph ⊆ q.graph) :
+    p.IsInitialSegment q := by
+  have hlength : p.length ≤ q.length := by
+    refine le_of_forall_lt fun β hβ ↦ ?_
+    let ξ : p.length.ToType := Ordinal.ToType.mk ⟨β, hβ⟩
+    have hz : ((β : Ordinal), p.node ξ) ∈ p.graph := by
+      refine ⟨ξ, ?_⟩
+      apply Prod.ext
+      · simp [ξ, Ordinal.ToType.toOrd]
+      · rfl
+    rcases hgraph hz with ⟨ζ, hζ⟩
+    have hβζ : β = (ζ.toOrd : Ordinal) := congrArg Prod.fst hζ
+    rw [hβζ]
+    exact Set.mem_Iio.mp ζ.toOrd.2
+  refine ⟨hlength, fun ξ ↦ ?_⟩
+  have hz : ((ξ.toOrd : Ordinal), p.node ξ) ∈ p.graph := ⟨ξ, rfl⟩
+  rcases hgraph hz with ⟨ζ, hζ⟩
+  have hindex : liftIndex hlength ξ = ζ := by
+    apply (Ordinal.ToType.mk (o := q.length)).symm.injective
+    apply Subtype.ext
+    rw [liftIndex_toOrd]
+    exact congrArg Prod.fst hζ
+  rw [hindex]
+  exact (congrArg Prod.snd hζ).symm
+
+theorem graph_subset_of_isInitialSegment {a : TraceCarrier}
+    {p q : TracePrefix a} (hpq : p.IsInitialSegment q) :
+    p.graph ⊆ q.graph := by
+  rcases hpq with ⟨hlength, hnode⟩
+  rintro z ⟨ξ, rfl⟩
+  refine ⟨liftIndex hlength ξ, ?_⟩
+  apply Prod.ext
+  · exact (liftIndex_toOrd hlength ξ).symm
+  · exact (hnode ξ).symm
+
+theorem graph_subset_iff_isInitialSegment {a : TraceCarrier}
+    {p q : TracePrefix a} :
+    p.graph ⊆ q.graph ↔ p.IsInitialSegment q :=
+  ⟨isInitialSegment_of_graph_subset, graph_subset_of_isInitialSegment⟩
 
 end TracePrefix
 

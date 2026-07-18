@@ -67,13 +67,7 @@ Li's main theorem states the same classification, and Sections 3--5 of his prepr
 
 ### Lemma 1.1: isolated-vertex reduction
 
-Let $F$ be a finite triple system and let $F^\circ$ be obtained by deleting all isolated vertices. Then
-
-$$
-F\text{ is obligatory}\iff F^\circ\text{ is obligatory},
-$$
-
-and
+Let $F$ be a finite triple system and let $F^\circ$ be obtained by deleting all isolated vertices. Then $F$ is obligatory if and only if $F^\circ$ is obligatory. Moreover,
 
 $$
 F\in\mathcal B\iff F^\circ\in\mathcal B.
@@ -158,10 +152,10 @@ For every positive integer $n$, every graph of uncountable chromatic number cont
 
 **Proof.** Suppose otherwise, and choose a $K_{n,n}$-free graph $G$ of uncountable chromatic number whose vertex cardinality $\kappa$ is minimal.
 
-For $A\in[\kappa]^n$, let
+For $A\in[\kappa]^n$, let $N(A)$ be its common neighbourhood in $G$, so that
 
 $$
-N(A)=\{v\in\kappa:v\text{ is adjacent to every member of }A\}.
+N(A)=\bigcap_{x\in A}N_G(x).
 $$
 
 Because $G$ is $K_{n,n}$-free, $|N(A)|<n$. Apply Lemma 1.4 to $A\mapsto N(A)$, and let $M_i,I_i$ be the resulting chain and layers.
@@ -247,7 +241,7 @@ avoiding $C$ and all previously chosen private vertices. At every stage fewer th
 Let
 
 $$
-E_1=\{e\in E:\text{some pair contained in }e\text{ is an edge of }R\},
+E_1=\{e\in E:[e]^2\cap E(R)\ne\varnothing\},
 \qquad E_2=E\setminus E_1.
 $$
 
@@ -448,10 +442,10 @@ Every component of $T$ contains an active vertex, because $F$ has no isolated ve
 
 **Proof of the claim.** For a point $p\in V(F)$, let $X(p)\in\mathscr C$ be the component of $L-B(L)$ containing the point-node $p$. The active pieces containing $p$ are precisely $P_{X(p)}$, when $X(p)$ is active, together with the pieces $P_D$ at active neighbours $D$ of $X(p)$ whose corresponding original bridge has point endpoint $p$. Thus the vertices of $T$ indexing pieces that contain $p$ are contained in the closed star centred at $X(p)$.
 
-Suppose that $p\in P_C$ also lies in an earlier piece. If $X(p)=C$, every other piece containing $p$ is indexed by a neighbour of $C$, and only the parent neighbour can be earlier. If $X(p)\ne C$, then $C$ is a neighbour of $X(p)$. The vertex $X(p)$ cannot be a child of $C$, because then $X(p)$ and all its other neighbours in the star would be deeper than $C$. Hence $X(p)$ is the parent of $C$. In either case, $p$ is the point endpoint of the unique parent edge of $C$. The same reasoning applies to every point shared with an earlier piece, so all such points coincide with this parent point $p_C$, and
+Suppose that $p\in P_C$ also lies in an earlier piece. If $X(p)=C$, every other piece containing $p$ is indexed by a neighbour of $C$, and only the parent neighbour can be earlier. If $X(p)\ne C$, then $C$ is a neighbour of $X(p)$. The vertex $X(p)$ cannot be a child of $C$, because then $X(p)$ and all its other neighbours in the star would be deeper than $C$. Hence $X(p)$ is the parent of $C$. In either case, $p$ is the point endpoint of the unique parent edge of $C$. Let $U_C$ be the union of the pieces preceding $P_C$. The same reasoning applies to every point shared with an earlier piece, so all such points coincide with this parent point $p_C$, and
 
 $$
-P_C\cap\bigcup_{D\text{ earlier}}P_D\subseteq\{p_C\}.
+P_C\cap U_C\subseteq\{p_C\}.
 $$
 
 For a root active component the intersection is empty. $\square$
@@ -559,9 +553,9 @@ We claim that $Q$ is a forest. Suppose it has a cycle, and choose on that cycle 
 
 On the remainder of the cycle, consecutive base nodes share a point and are therefore comparable. Every base node there has length at least that of $s$. Comparable descendants of $s$ lie in the same immediate branch below $s$, so the remainder of the cycle cannot move from the $a$-branch to the $a'$-branch without passing through a base node shorter than $s$. This contradicts the choice of $s$. Hence $Q$ is acyclic.
 
-Root each component of $Q$ at a base node, and order its base nodes by nondecreasing even distance from the root. For a nonroot base node $s$, let $p_s$ be the point-node adjacent to $s$ on the path to the root. Since $Q$ is a tree, any earlier factor meeting $K_s$ does so at $p_s$; earlier siblings can also meet $K_s$, but only at this same point. Equation (6.2) then gives
+Root each component of $Q$ at a base node, and order its base nodes by nondecreasing even distance from the root. For a nonroot base node $s$, let $p_s$ be the point-node adjacent to $s$ on the path to the root. Since $Q$ is a tree, any earlier factor meeting $K_s$ does so at $p_s$; earlier siblings can also meet $K_s$, but only at this same point. Let $U_s$ be the union of the factors preceding $K_s$. Equation (6.2) then gives
 $$
-V(K_s)\cap\bigcup_{u\text{ earlier}}V(K_u)\subseteq\{p_s\}.
+V(K_s)\cap U_s\subseteq\{p_s\}.
 $$
 Starting with the root factor, add the remaining factors in this order by disjoint unions or one-point amalgamations as appropriate. Different components of $Q$, and the isolated factors removed at the start, are combined by disjoint union. $\square$
 
@@ -785,21 +779,11 @@ We have established:
 - $(2)\Longleftrightarrow(3)$ from the Levi bridge-block decomposition and running-intersection reconstruction;
 - $\neg(3)\Longrightarrow\neg(1)$ from the explicit nonlinear host and the sequence-lift avoidance constructions.
 
-Therefore
+Therefore $F$ is obligatory if and only if $F\in\mathcal B$. Equivalently:
 
-$$
-\boxed{
-F\text{ is obligatory}
-\iff
-F\in\mathcal B
-\iff
-\begin{array}{l}
-F^\circ\text{ is linear},\\[1mm]
-\text{every hyperedge-node of }I(F^\circ)
-\text{ is incident with a bridge},\\[1mm]
-\text{every Berge cycle of }F^\circ\text{ has even length}.
-\end{array}}
-$$
+1. $F^\circ$ is linear;
+2. every hyperedge-node of $I(F^\circ)$ is incident with a bridge;
+3. every Berge cycle of $F^\circ$ has even length.
 
 All embeddings are non-induced: additional host hyperedges on the image vertices are irrelevant throughout. The proof uses only ZFC, the displayed successor cardinals, graph-colouring compactness, and the standard Erdős--Rado relation (8.1). It assumes neither CH nor GCH, and no forcing axiom or large-cardinal hypothesis.
 
