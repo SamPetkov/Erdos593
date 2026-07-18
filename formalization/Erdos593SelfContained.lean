@@ -12442,7 +12442,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceLimit
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceGraph
 Source: Erdos593/TripleSystem/ErdosRado/TraceGraph.lean
-Normalized SHA-256: 9b8b99b649d372a451e31f1c9d93a184f6eb7d0fa69b0c0bc583020affbe5a16
+Normalized SHA-256: ebd58292d62e0d7f88d337dc4bdf2b5836dc3eb62c2e6c558326976f5b9b7715
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceGraph
 
@@ -12531,6 +12531,31 @@ theorem graph_snoc {c : TraceColoring} {a : TraceCarrier}
       apply Prod.ext
       · exact (p.snocLast_toOrd).symm
       · exact (p.snoc_node_last q).symm
+
+/-- The graph of a coherent diagonal limit is exactly the union of the
+graphs supplied at its proper stages. -/
+theorem LimitChain.graph_limitPrefix {a : TraceCarrier} {o : Ordinal}
+    (F : LimitChain a o) (ho : Order.IsSuccLimit o)
+    (hheight : o ≤ TraceHeight) :
+    (F.limitPrefix ho hheight).graph =
+      ⋃ η : o.ToType, (F.stage η).graph := by
+  ext z
+  constructor
+  · rintro ⟨ξ, rfl⟩
+    rw [Set.mem_iUnion]
+    refine ⟨F.nextStage ho ξ, ?_⟩
+    refine ⟨F.diagonalIndex ho ξ, ?_⟩
+    apply Prod.ext
+    · exact (F.diagonalIndex_toOrd ho ξ).symm
+    · rfl
+  · rw [Set.mem_iUnion]
+    rintro ⟨η, ξ, rfl⟩
+    rcases F.stage_isInitialSegment_limitPrefix ho hheight η with
+      ⟨hlen, hnode⟩
+    refine ⟨liftIndex hlen ξ, ?_⟩
+    apply Prod.ext
+    · exact (liftIndex_toOrd hlen ξ).symm
+    · exact (hnode ξ).symm
 
 end TracePrefix
 
