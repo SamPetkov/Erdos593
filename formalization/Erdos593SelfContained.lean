@@ -23300,7 +23300,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAc
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceEndpoints
 Source: Erdos593/TripleSystem/SequenceLiftEmbeddedSourceEndpoints.lean
-Normalized SHA-256: 062a9cea1d3dc6ece04f3e3d9219185b93857f194ee4f320c80a52fc0ea324c7
+Normalized SHA-256: 668d3e85f4584ddf80d0f734f5a726f36d88e4da73d8f4d682b4ee8d2a0aac15
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftEmbeddedSourceEndpoints
 
@@ -23339,6 +23339,16 @@ theorem isolatedReduction_finiteLiftGenerated_of_linear_of_embedding
   exact TripleSystem.FiniteLiftGenerated.ofIso
     (edgeRestriction_finiteLiftGenerated_of_linear htrace.1 htrace.2.1)
     (Classical.choice htrace.2.2).symm
+
+/-- Every Berge cycle in the isolated reduction of a finite linear source
+embedded in a sequence lift contracts to a host closed walk of half its Levi
+length.  This is the transport interface used by the odd-Berge obstruction. -/
+theorem isolatedReduction_bergeCycleTraceTo_of_linear_of_embedding
+    [Fintype I]
+    (f : F.Embedding (system G)) (hlinear : F.Linear) :
+    TripleSystem.BergeCycleTraceTo G F.isolatedReduction := by
+  exact TripleSystem.FiniteLiftGenerated.bergeCycleTraceTo G
+    (isolatedReduction_finiteLiftGenerated_of_linear_of_embedding f hlinear)
 
 /-- In a two-colourable host, the isolated reduction of a finite linear
 embedded source is constructible. -/

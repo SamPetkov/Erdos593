@@ -183,6 +183,26 @@ DB7BB24B756D745BBDE83FE92718B51BD3625DAE3701BA0F598D0EEDCD3F3028  lean-toolchain
 30C6A9EFC11607C1E182AB6EF63AE5B8B28DA4D81ACBAE85633DF9640B81D22E  TASK.md
 ```
 
+## Final obstruction/classification fresh Aristotle request
+
+- Submitted (UTC): 2026-07-18 21:03
+- Aristotle CLI: `aristotlelib 2.1.0`
+- Aristotle project: `e433cb77-aa16-418b-aaa5-565368b8af42`
+- Aristotle task: `7a105082-bf63-4d4c-b853-7dae126afc63`
+- Initial status: `QUEUED`
+- Scope: complete the final finite obstruction/classification layer, with the
+  odd-Berge-cycle obstruction as the primary target and the final
+  `IsObligatory ↔ isolatedReduction.Intrinsic` theorem as the secondary target.
+- Submitted directory: clean staging copy under `tmp/aristotle/` containing
+  `Erdos593/`, `Erdos593.lean`, `lakefile.toml`, `lake-manifest.json`, and
+  `lean-toolchain`; `.lake`, `formalization/tmp`, and scratch archives were not
+  included.
+- Service warning: Aristotle reported its usual preference for Lean `v4.28.0`
+  and noted the intentionally omitted `.lake` dependency directory.
+- Acceptance condition: any returned patch must compile in the canonical
+  repository under Lean/mathlib `v4.32.0`, with no `axiom`, `sorry`, `admit`, or
+  `unsafe`.
+
 ## F1: linearity of a private-vertex expansion
 
 - Submitted (UTC): 2026-07-15 00:24
