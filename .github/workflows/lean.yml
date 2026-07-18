@@ -28,6 +28,7 @@ jobs:
       - name: Targeted wrapper builds
         run: |
           lake build Erdos593.Graph.FiniteEdgeFactor
+          lake build Erdos593.Graph.ShiftGraph
           lake build Erdos593.TripleSystem.EmbeddingLinearity
           lake build Erdos593.TripleSystem.NonlinearObstruction
           lake build Erdos593.TripleSystem.TriangleHostLinearity
@@ -88,6 +89,7 @@ jobs:
       - name: Strict wrapper source checks
         run: |
           lake env lean -DwarningAsError=true Erdos593/Graph/FiniteEdgeFactor.lean
+          lake env lean -DwarningAsError=true Erdos593/Graph/ShiftGraph.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/EmbeddingLinearity.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/NonlinearObstruction.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostLinearity.lean

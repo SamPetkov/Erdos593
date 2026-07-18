@@ -16,6 +16,7 @@ import Erdos593.Graph.Parity
 import Erdos593.Graph.RainbowBipartite
 import Erdos593.Graph.RainbowPositiveSize
 import Erdos593.Graph.RootedTree
+import Erdos593.Graph.ShiftGraph
 import Erdos593.TripleSystem.Embedding
 import Erdos593.TripleSystem.EmbeddingLinearity
 import Erdos593.TripleSystem.Expansion
