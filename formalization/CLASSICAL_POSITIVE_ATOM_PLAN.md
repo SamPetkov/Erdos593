@@ -223,6 +223,28 @@ Work from the public baseline commit
 4. incidence acyclicity itself is still an explicit hypothesis. It is not a
    consequence of linearity in the checked repository.
 
+**Current checked status (2026-07-18).** The checkpoint above is historical.
+The repository now contains the later incidence-cycle decision and endpoint
+closure:
+
+1. N14 conditional endpoint wrappers are implemented in
+   `SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints.lean`.
+2. N15's candidate theorem
+   `baseFiberSupportIncidenceGraph_isAcyclic_of_finite_linear` is implemented
+   in `SequenceLiftBaseFiberSupportIncidenceAcyclic.lean`.
+3. N16's unconditional finite-generation, constructible, and obligatory
+   wrappers are implemented in
+   `SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints.lean`.
+4. N17's arbitrary finite embedded-source transport is implemented in
+   `SequenceLiftEmbeddedSourceEndpoints.lean`, with bridge and intrinsic
+   corollaries in `SequenceLiftEmbeddedSourceBridge.lean` and
+   `SequenceLiftEmbeddedSourceIntrinsic.lean`.
+
+The 2026-07-18 audit compiled these modules with warnings as errors and
+reported only `propext`, `Classical.choice`, and `Quot.sound` for their public
+theorems.  Do not send N14--N17 back to Aristotle as open proof goals unless a
+future edit breaks this audit.
+
 Aristotle request `bc362149-d9ba-4378-a0d0-022ef752bdb7` completed on
 2026-07-16. It independently proved the dynamic incidence leaf package and
 reported the recursive-deletion obstruction, but deliberately did not claim
@@ -483,6 +505,22 @@ campaigns in separate modules: the missing-bridge host and the odd
 Berge-cycle/shift-graph host. Keep the Erdos--Rado nonlinearity route separate.
 No negative-host task may be marked complete merely because the conditional
 incidence endpoint exists.
+
+**N17 status (2026-07-18).** Implemented and strict-clean.  The public
+source-transport endpoints are:
+
+~~~lean
+SequenceLift.isolatedReduction_finiteLiftGenerated_of_linear_of_embedding
+SequenceLift.isolatedReduction_constructible_of_linear_of_embedding
+SequenceLift.isolatedReduction_isObligatory_of_linear_of_embedding
+SequenceLift.isObligatory_of_linear_of_embedding
+SequenceLift.isolatedReduction_bridgeAtEveryEdge_of_linear_of_embedding
+SequenceLift.not_nonempty_embedding_of_not_isolatedReduction_bridgeAtEveryEdge
+SequenceLift.isolatedReduction_intrinsic_of_linear_of_embedding
+~~~
+
+Their current axiom audit reports only ordinary Mathlib foundations:
+`propext`, `Classical.choice`, and `Quot.sound`.
 
 ### N18 -- generic nonlinearity endpoint before the Erdős--Rado host campaign
 
