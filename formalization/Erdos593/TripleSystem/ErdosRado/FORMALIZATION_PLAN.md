@@ -69,6 +69,37 @@ Implement it in four layers:
 The highest-risk obligation is cross-anchor coherence.  It must not be
 replaced by same-anchor candidate persistence: that statement is false.
 
+The first frozen theorem in this layer is:
+
+```lean
+theorem sourceRun_at_node_stage
+    {c : TraceColoring} {a : TraceCarrier} {p : TracePrefix a}
+    (hcanonical : p.IsSourceCanonicalFor c)
+    (ξ : p.length.ToType)
+    {θ : Ordinal} (hθ : θ ≤ ξ.toOrd) :
+    sourceRun c (p.node ξ) θ =
+      (p.restrict θ
+        (hθ.trans (le_of_lt ξ.toOrd.2))).graph
+```
+
+Its successor step uses two canonical witnesses: the least candidate chosen
+at the current coordinate and the later candidate whose value becomes the
+new anchor.  Restrict the later candidate to the current prefix, reanchor the
+prefix there, and transport the earlier least candidate with
+`TraceCandidate.IsLeast.atCandidateOfLt`.  The transported value is exactly
+the next node.  At a limit stage, use `sourceRun_limit` and `graph_restrict`.
+
+In particular, a candidate for `p` need not remain a candidate for
+`p.snoc q`.  Extending the prefix adds a new color-agreement requirement,
+which an arbitrary old candidate may fail.  The proof must instead use the
+exact identity
+`valueSet c (p.atCandidate q) = valueSet c p ∩ Set.Iio q.value`.
+
+After the bounded theorem, prove terminality at `ξ.toOrd` from the least
+candidate witness, then use stopped-run persistence to obtain the later-stage
+corollary.  Only then should terminal prefixes be packaged as a coherent
+trace system.
+
 ## Automated proof-search protocol
 
 Use Codex to control definitions, dependency direction, integration, and

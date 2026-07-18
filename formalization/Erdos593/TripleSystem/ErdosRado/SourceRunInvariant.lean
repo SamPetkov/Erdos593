@@ -4,7 +4,8 @@ import Erdos593.TripleSystem.ErdosRado.SourceCanonical
 /-!
 # The one-anchor source-run invariant
 
-At every stage up to `TraceHeight`, the source run is the graph of a
+With the carrier (or anchor) `a` fixed, at every stage up to `TraceHeight`,
+the source run is the graph of a
 source-canonical prefix.  The prefix either has exactly the stage length, or
 it is shorter and has stopped because it has no candidate.  Successor stages
 append the least candidate; limit stages either inherit an earlier stopped
@@ -20,7 +21,13 @@ open scoped Cardinal Ordinal
 
 namespace TraceIteration
 
-/-- The prefix-level specification expected of a source run at a stage. -/
+/-- The prefix-level specification expected of a source run at stage `η`.
+
+It records four facts: the run is the graph of a prefix, that prefix is
+source-canonical, its length is at most `η`, and it is either exact
+(`p.length = η`) or stopped (`p.length < η` and no candidate exists).  The
+length bound is redundant in either status branch, but retaining it gives
+later proofs a convenient projection. -/
 def SourceRunSpecAt (c : TraceColoring) (a : TraceCarrier)
     (η : Ordinal) : Prop :=
   ∃ p : TracePrefix a,
@@ -74,10 +81,11 @@ theorem sourceRunSpecAt_limit_of_prior
       sourceRun c a ξ.1 = p.graph ∧
       p.IsSourceCanonicalFor c ∧ p.length < ξ.1 ∧
       ¬ Nonempty (TraceCandidate c p)
+  -- If an earlier stage stopped, persistence settles the limit immediately.
   · rcases hstop with ⟨ξ, p, hrun, hcanonical, hlength, hterminal⟩
-    refine ⟨p, sourceRun_eq_graph_of_stopped c p hterminal hrun
-      (le_of_lt ξ.2), hcanonical, hlength.le.trans (le_of_lt ξ.2), ?_⟩
-    exact Or.inr ⟨hlength.trans ξ.2, hterminal⟩
+    exact sourceRunSpecAt_of_stopped_later c hcanonical hterminal hrun
+      (le_of_lt ξ.2) (hlength.trans ξ.2)
+  -- Otherwise every earlier witness has exact length and forms a coherent chain.
   · let stage : η.ToType → TracePrefix a := fun ξ ↦ Classical.choose (hspec ξ)
     have stage_spec (ξ : η.ToType) :
         sourceRun c a ξ.toOrd = (stage ξ).graph ∧
@@ -87,20 +95,33 @@ theorem sourceRunSpecAt_limit_of_prior
           ((stage ξ).length < ξ.toOrd ∧
             ¬ Nonempty (TraceCandidate c (stage ξ)))) :=
       Classical.choose_spec (hspec ξ)
+    have stage_run (ξ : η.ToType) :
+        sourceRun c a ξ.toOrd = (stage ξ).graph :=
+      (stage_spec ξ).1
+    have stage_canonical (ξ : η.ToType) :
+        (stage ξ).IsSourceCanonicalFor c :=
+      (stage_spec ξ).2.1
+    have stage_status (ξ : η.ToType) :
+        (stage ξ).length = ξ.toOrd ∨
+          ((stage ξ).length < ξ.toOrd ∧
+            ¬ Nonempty (TraceCandidate c (stage ξ))) :=
+      (stage_spec ξ).2.2.2
     have stage_length (ξ : η.ToType) : (stage ξ).length = ξ.toOrd := by
-      rcases (stage_spec ξ).2.2.2 with heq | hshort
+      rcases stage_status ξ with heq | hshort
       · exact heq
       · exfalso
         apply hstop
-        exact ⟨ξ, stage ξ, (stage_spec ξ).1, (stage_spec ξ).2.1,
+        exact ⟨ξ, stage ξ, stage_run ξ, stage_canonical ξ,
           hshort.1, hshort.2⟩
+    -- Run monotonicity gives graph inclusion; the graph bridge converts this
+    -- into the initial-segment relation required by `LimitChain`.
     let F : TracePrefix.LimitChain a η :=
       { stage := stage
         length_eq := stage_length
         coherent := by
           intro ξ θ hξθ
           apply TracePrefix.isInitialSegment_of_graph_subset
-          rw [← (stage_spec ξ).1, ← (stage_spec θ).1]
+          rw [← stage_run ξ, ← stage_run θ]
           apply monotone_sourceRun c a
           exact (Ordinal.ToType.mk (o := η)).symm.monotone hξθ }
     let p := F.limitPrefix hηlim hηheight
@@ -115,16 +136,16 @@ theorem sourceRunSpecAt_limit_of_prior
           · rintro ⟨ξ, hz⟩
             let j : η.ToType := Ordinal.ToType.mk ξ
             refine ⟨j, ?_⟩
-            rw [← (stage_spec j).1]
+            rw [← stage_run j]
             simpa [j, Ordinal.ToType.toOrd] using hz
           · rintro ⟨ξ, hz⟩
             refine ⟨ξ.toOrd, ?_⟩
-            rw [(stage_spec ξ).1]
+            rw [stage_run ξ]
             exact hz
         _ = p.graph := (F.graph_limitPrefix hηlim hηheight).symm
     · apply TracePrefix.IsSourceCanonicalFor.limitPrefix
       intro ξ
-      exact (stage_spec ξ).2.1
+      exact stage_canonical ξ
 
 /-- Every source run up to the construction height is represented by a
 source-canonical prefix that is either exact or stopped. -/
