@@ -39,6 +39,7 @@ import Mathlib.SetTheory.Cardinal.Continuum
 import Mathlib.SetTheory.Cardinal.Finite
 import Mathlib.SetTheory.Cardinal.Order
 import Mathlib.SetTheory.Cardinal.Ordinal
+import Mathlib.SetTheory.Cardinal.Pigeonhole
 import Mathlib.SetTheory.Ordinal.Rank
 import Mathlib.Tactic.GCongr
 import Mathlib.Tactic.Linarith
@@ -10655,7 +10656,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.CardinalPairPartition
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.PairTransport
 Source: Erdos593/TripleSystem/ErdosRado/PairTransport.lean
-Normalized SHA-256: 2a77c0942cd072d30736b9afeb115b8001abcf30e34dd8258dee37bddba72c79
+Normalized SHA-256: c755a6694447c62e790c6d2cc3933c96f367edd7d7631c34c567bfa37518d58d
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_PairTransport
 
@@ -10708,6 +10709,38 @@ theorem pairHomogeneous_image {α β : Type u} (e : α ≃ β) (c : Pair α → 
     rcases hq hqy with ⟨z, hz, hzy⟩
     rw [← hzy]
     simpa using hz
+
+/-- Pull homogeneous vertices back along a same-universe equivalence.
+
+The colouring is the forward transport of `c`, so applying `e.symm` to a
+homogeneous set for that transported colouring recovers a homogeneous set for
+the original colouring. -/
+theorem pairHomogeneous_symm_image {α β : Type u} (e : α ≃ β) (c : Pair α → ℕ)
+    (H : Set β) (h : PairHomogeneous (transportedColor e c) H) :
+    PairHomogeneous c (e.symm '' H) := by
+  intro p q hp hq
+  have hp' : ((pairEquiv e p).1 : Set β) ⊆ H := by
+    rw [coe_pairEquiv]
+    rintro z ⟨x, hxp, rfl⟩
+    rcases hp hxp with ⟨y, hyH, hyx⟩
+    have hexy : e x = y := by
+      calc
+        e x = e (e.symm y) := congrArg e hyx.symm
+        _ = y := e.apply_symm_apply y
+    simpa [hexy] using hyH
+  have hq' : ((pairEquiv e q).1 : Set β) ⊆ H := by
+    rw [coe_pairEquiv]
+    rintro z ⟨x, hxq, rfl⟩
+    rcases hq hxq with ⟨y, hyH, hyx⟩
+    have hexy : e x = y := by
+      calc
+        e x = e (e.symm y) := congrArg e hyx.symm
+        _ = y := e.apply_symm_apply y
+    simpa [hexy] using hyH
+  have htransported := h (pairEquiv e p) (pairEquiv e q) hp' hq'
+  change c ((pairEquiv e).symm (pairEquiv e p)) =
+    c ((pairEquiv e).symm (pairEquiv e q)) at htransported
+  simpa using htransported
 
 /-- The image of a set under a same-universe equivalence has the same
 cardinality. Cross-universe uses require explicit cardinal lifts. -/
@@ -11105,7 +11138,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceExtension
 Source: Erdos593/TripleSystem/ErdosRado/TraceExtension.lean
-Normalized SHA-256: 7dfc80a0b4de36cee531f0fc949be402fe83addfc65a317d74ac2d32014d2465
+Normalized SHA-256: aa08984c679aea2bae2d365ea462fa8c08a9b277b38918c0669897dc711ae197
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceExtension
 
@@ -11169,12 +11202,61 @@ noncomputable def restrict {α : TraceCarrier} (p : TracePrefix α)
     apply (Ordinal.ToType.mk (o := p.length)).lt_iff_lt.mpr
     exact (Ordinal.ToType.mk (o := η)).symm.lt_iff_lt.mpr hξζ
 
+/-- The canonical index inclusion preserves the represented ordinal. -/
+@[simp]
+theorem restrictIndex_toOrd {α : TraceCarrier} (p : TracePrefix α)
+    {η : Ordinal} (hη : η ≤ p.length) (ξ : η.ToType) :
+    ((p.restrictIndex hη ξ).toOrd : Ordinal) = ξ.toOrd :=
+  by
+    unfold restrictIndex
+    exact congrArg Subtype.val ((Ordinal.ToType.mk (o := p.length)).left_inv _)
+
+/-- Restricting at the full prefix length leaves every index unchanged. -/
+@[simp]
+theorem restrictIndex_self {α : TraceCarrier} (p : TracePrefix α)
+    (ξ : p.length.ToType) : p.restrictIndex le_rfl ξ = ξ := by
+  apply (Ordinal.ToType.mk (o := p.length)).symm.injective
+  apply Subtype.ext
+  exact p.restrictIndex_toOrd le_rfl ξ
+
 /-- The nodes of a restricted prefix are the corresponding nodes of the
 ambient prefix. -/
 theorem restrict_node {α : TraceCarrier} (p : TracePrefix α)
     {η : Ordinal} (hη : η ≤ p.length) (ξ : η.ToType) :
     (p.restrict η hη).node ξ = p.node (p.restrictIndex hη ξ) :=
   rfl
+
+/-- Restricting at the full prefix length is pointwise the identity on nodes.
+The pointwise form avoids irrelevant proof fields in `TracePrefix` equality. -/
+@[simp]
+theorem restrict_self_node {α : TraceCarrier} (p : TracePrefix α)
+    (ξ : p.length.ToType) :
+    (p.restrict p.length le_rfl).node ξ = p.node ξ := by
+  rw [restrict_node, restrictIndex_self]
+
+/-- Nested ordinal-index inclusions compose to the direct inclusion. -/
+theorem restrictIndex_comp {α : TraceCarrier} (p : TracePrefix α)
+    {η θ : Ordinal} (hη : η ≤ p.length) (hθ : θ ≤ η)
+    (ξ : θ.ToType) :
+    p.restrictIndex hη ((p.restrict η hη).restrictIndex hθ ξ) =
+      p.restrictIndex (hθ.trans hη) ξ := by
+  apply (Ordinal.ToType.mk (o := p.length)).symm.injective
+  apply Subtype.ext
+  rw [p.restrictIndex_toOrd hη]
+  rw [p.restrictIndex_toOrd (hθ.trans hη)]
+  unfold restrictIndex
+  exact congrArg Subtype.val
+    ((Ordinal.ToType.mk (o := (p.restrict η hη).length)).left_inv _)
+
+/-- Nested restrictions agree pointwise with the corresponding direct
+restriction. This is the usable dependent-index composition law. -/
+theorem restrict_restrict_node {α : TraceCarrier} (p : TracePrefix α)
+    {η θ : Ordinal} (hη : η ≤ p.length) (hθ : θ ≤ η)
+    (ξ : θ.ToType) :
+    ((p.restrict η hη).restrict θ hθ).node ξ =
+      (p.restrict θ (hθ.trans hη)).node ξ := by
+  rw [restrict_node, restrict_node p hη, restrict_node p (hθ.trans hη),
+    restrictIndex_comp]
 
 /-- Restricting the index inclusion preserves strict order. -/
 theorem restrictIndex_lt {α : TraceCarrier} (p : TracePrefix α)
@@ -11705,6 +11787,226 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceExtension
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceLimit
+Source: Erdos593/TripleSystem/ErdosRado/TraceLimit.lean
+Normalized SHA-256: d50fe8e07db0271da367544d08f1371a355326a432c3bccccec97055c13767bc
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceLimit
+
+/-!
+# Coherent limit prefixes for canonical traces
+
+This module isolates the limit-stage construction used by a later canonical
+trace recursion.  It assumes an exact prefix at each stage below a
+successor-limit ordinal together with literal initial-segment coherence, and
+forms their diagonal union.  It proves neither the existence of a chain nor
+any global trace-recursion theorem.
+-/
+
+namespace Erdos593
+namespace TripleSystem
+namespace TriangleHost
+namespace ErdosRado
+
+open scoped Cardinal Ordinal
+
+namespace TracePrefix
+
+/-- Canonical inclusion of an index from a shorter prefix length into a longer
+prefix length. -/
+noncomputable def liftIndex {α : TraceCarrier} {p q : TracePrefix α}
+    (h : p.length ≤ q.length) (ξ : p.length.ToType) : q.length.ToType :=
+  q.restrictIndex h ξ
+
+theorem liftIndex_toOrd {α : TraceCarrier} {p q : TracePrefix α}
+    (h : p.length ≤ q.length) (ξ : p.length.ToType) :
+    ((liftIndex h ξ).toOrd : Ordinal) = ξ.toOrd := by
+  simp [liftIndex, TracePrefix.restrictIndex]
+
+/-- `p` is literally the initial segment of `q` on its own ordinal domain. -/
+def IsInitialSegment {α : TraceCarrier} (p q : TracePrefix α) : Prop :=
+  ∃ h : p.length ≤ q.length,
+    ∀ ξ : p.length.ToType, q.node (liftIndex h ξ) = p.node ξ
+
+/-- A family containing an exact prefix at every stage below `o`, with
+literal coherence under the canonical ordinal inclusions. -/
+structure LimitChain (α : TraceCarrier) (o : Ordinal) where
+  stage : o.ToType → TracePrefix α
+  length_eq : ∀ η, (stage η).length = η.toOrd
+  coherent : ∀ {η θ : o.ToType}, η ≤ θ →
+    IsInitialSegment (stage η) (stage θ)
+
+namespace LimitChain
+
+/-- The stage immediately after an index, available because the target
+ordinal is a successor-limit ordinal. -/
+noncomputable def nextStage {α : TraceCarrier} {o : Ordinal}
+    (_F : LimitChain α o) (ho : Order.IsSuccLimit o)
+    (ξ : o.ToType) : o.ToType :=
+  Ordinal.ToType.mk ⟨Order.succ (ξ.toOrd : Ordinal),
+    Set.mem_Iio.mpr (ho.succ_lt (Set.mem_Iio.mp ξ.toOrd.2))⟩
+
+theorem nextStage_toOrd {α : TraceCarrier} {o : Ordinal}
+    (F : LimitChain α o) (ho : Order.IsSuccLimit o)
+    (ξ : o.ToType) :
+    ((F.nextStage ho ξ).toOrd : Ordinal) =
+      Order.succ (ξ.toOrd : Ordinal) := by
+  simp [nextStage]
+
+/-- The occurrence of `ξ` in its immediate successor stage. -/
+noncomputable def diagonalIndex {α : TraceCarrier} {o : Ordinal}
+    (F : LimitChain α o) (ho : Order.IsSuccLimit o)
+    (ξ : o.ToType) : (F.stage (F.nextStage ho ξ)).length.ToType :=
+  Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), Set.mem_Iio.mpr (by
+    rw [F.length_eq, F.nextStage_toOrd]
+    exact Order.lt_succ (ξ.toOrd : Ordinal))⟩
+
+theorem diagonalIndex_toOrd {α : TraceCarrier} {o : Ordinal}
+    (F : LimitChain α o) (ho : Order.IsSuccLimit o)
+    (ξ : o.ToType) :
+    ((F.diagonalIndex ho ξ).toOrd : Ordinal) = ξ.toOrd := by
+  simp [diagonalIndex]
+
+/-- The diagonal union node assignment. -/
+noncomputable def limitNode {α : TraceCarrier} {o : Ordinal}
+    (F : LimitChain α o) (ho : Order.IsSuccLimit o) :
+    o.ToType → TraceCarrier := fun ξ =>
+  (F.stage (F.nextStage ho ξ)).node (F.diagonalIndex ho ξ)
+
+/-- The occurrence of `ξ` in any later stage `η`. -/
+noncomputable def indexAt {α : TraceCarrier} {o : Ordinal}
+    (F : LimitChain α o) {η : o.ToType} (ξ : o.ToType)
+    (hξη : (ξ.toOrd : Ordinal) < η.toOrd) :
+    (F.stage η).length.ToType :=
+  Ordinal.ToType.mk ⟨(ξ.toOrd : Ordinal), Set.mem_Iio.mpr (by
+    rw [F.length_eq]
+    exact hξη)⟩
+
+theorem indexAt_toOrd {α : TraceCarrier} {o : Ordinal}
+    (F : LimitChain α o) {η : o.ToType} (ξ : o.ToType)
+    (hξη : (ξ.toOrd : Ordinal) < η.toOrd) :
+    ((F.indexAt ξ hξη).toOrd : Ordinal) = ξ.toOrd := by
+  simp [indexAt]
+
+/-- A diagonal node agrees with its occurrence in every later supplied stage. -/
+theorem limitNode_eq_stage {α : TraceCarrier} {o : Ordinal}
+    (F : LimitChain α o) (ho : Order.IsSuccLimit o)
+    {η : o.ToType} (ξ : o.ToType)
+    (hξη : (ξ.toOrd : Ordinal) < η.toOrd) :
+    F.limitNode ho ξ = (F.stage η).node (F.indexAt ξ hξη) := by
+  have hnext : F.nextStage ho ξ ≤ η := by
+    apply (Ordinal.ToType.mk (o := o)).symm.le_iff_le.mp
+    change ((F.nextStage ho ξ).toOrd : Ordinal) ≤ η.toOrd
+    rw [F.nextStage_toOrd]
+    exact Order.succ_le_iff.mpr hξη
+  rcases F.coherent hnext with ⟨hlen, hnode⟩
+  calc
+    F.limitNode ho ξ =
+        (F.stage (F.nextStage ho ξ)).node (F.diagonalIndex ho ξ) := rfl
+    _ = (F.stage η).node (liftIndex hlen (F.diagonalIndex ho ξ)) :=
+      (hnode (F.diagonalIndex ho ξ)).symm
+    _ = (F.stage η).node (F.indexAt ξ hξη) := by
+      apply congrArg (F.stage η).node
+      apply (Ordinal.ToType.mk (o := (F.stage η).length)).symm.injective
+      apply Subtype.ext
+      simp [liftIndex_toOrd, diagonalIndex_toOrd, indexAt_toOrd]
+
+/-- Union of a coherent exact-stage family at a successor-limit length.
+The construction assumes the whole coherent family and does not construct a
+chain or candidate. -/
+noncomputable def limitPrefix {α : TraceCarrier} {o : Ordinal}
+    (F : LimitChain α o) (ho : Order.IsSuccLimit o)
+    (hheight : o ≤ TraceHeight) : TracePrefix α where
+  length := o
+  length_le := hheight
+  node := F.limitNode ho
+  node_lt_anchor := by
+    intro ξ
+    exact (F.stage (F.nextStage ho ξ)).node_lt_anchor
+      (F.diagonalIndex ho ξ)
+  strictMono_node := by
+    intro ξ ζ hξζ
+    have hOrd : (ξ.toOrd : Ordinal) < ζ.toOrd :=
+      ((Ordinal.ToType.mk (o := o)).symm.lt_iff_lt).mpr hξζ
+    let η := F.nextStage ho ζ
+    have hζη : (ζ.toOrd : Ordinal) < η.toOrd := by
+      dsimp [η]
+      rw [F.nextStage_toOrd]
+      exact Order.lt_succ (ζ.toOrd : Ordinal)
+    have hξη : (ξ.toOrd : Ordinal) < η.toOrd := hOrd.trans hζη
+    rw [F.limitNode_eq_stage ho ξ hξη,
+      F.limitNode_eq_stage ho ζ hζη]
+    apply (F.stage η).strictMono_node
+    apply (Ordinal.ToType.mk (o := (F.stage η).length)).lt_iff_lt.mpr
+    simpa [F.indexAt_toOrd] using hOrd
+
+/-- Every supplied stage is an initial segment of the diagonal limit prefix. -/
+theorem stage_isInitialSegment_limitPrefix {α : TraceCarrier} {o : Ordinal}
+    (F : LimitChain α o) (ho : Order.IsSuccLimit o)
+    (hheight : o ≤ TraceHeight) (η : o.ToType) :
+    IsInitialSegment (F.stage η) (F.limitPrefix ho hheight) := by
+  let hlen : (F.stage η).length ≤ (F.limitPrefix ho hheight).length := by
+    change (F.stage η).length ≤ o
+    rw [F.length_eq]
+    exact le_of_lt (Set.mem_Iio.mp η.toOrd.2)
+  refine ⟨hlen, ?_⟩
+  intro ξ
+  have hξη : ((liftIndex hlen ξ).toOrd : Ordinal) < η.toOrd := by
+    rw [liftIndex_toOrd, ← F.length_eq]
+    exact Set.mem_Iio.mp ξ.toOrd.2
+  change F.limitNode ho (liftIndex hlen ξ) = (F.stage η).node ξ
+  rw [F.limitNode_eq_stage ho (liftIndex hlen ξ) hξη]
+  apply congrArg (F.stage η).node
+  calc
+    F.indexAt (liftIndex hlen ξ) hξη =
+        Ordinal.ToType.mk ξ.toOrd := by
+      rw [indexAt]
+      apply congrArg (Ordinal.ToType.mk (o := (F.stage η).length))
+      apply Subtype.ext
+      exact liftIndex_toOrd hlen ξ
+    _ = ξ :=
+      (Ordinal.ToType.mk (o := (F.stage η).length)).apply_symm_apply ξ
+
+/-- Stagewise endhomogeneity survives the coherent diagonal union.  This
+theorem assumes endhomogeneity of every supplied stage; it creates no stages
+and no candidates. -/
+theorem endhomogeneous_limitPrefix {α : TraceCarrier} {o : Ordinal}
+    (F : LimitChain α o) (ho : Order.IsSuccLimit o)
+    (hheight : o ≤ TraceHeight) (c : TraceColoring)
+    (hend : ∀ η, (F.stage η).EndhomogeneousTo c) :
+    (F.limitPrefix ho hheight).EndhomogeneousTo c := by
+  change ∀ ⦃ξ ζ : o.ToType⦄ (h : ξ < ζ),
+    c (tracePair (F.limitNode ho ξ) (F.limitNode ho ζ) _) =
+      c (tracePair (F.limitNode ho ξ) α _)
+  intro ξ ζ hξζ
+  have hOrd : (ξ.toOrd : Ordinal) < ζ.toOrd :=
+    ((Ordinal.ToType.mk (o := o)).symm.lt_iff_lt).mpr hξζ
+  let η := F.nextStage ho ζ
+  have hζη : (ζ.toOrd : Ordinal) < η.toOrd := by
+    dsimp [η]
+    rw [F.nextStage_toOrd]
+    exact Order.lt_succ (ζ.toOrd : Ordinal)
+  have hξη : (ξ.toOrd : Ordinal) < η.toOrd := hOrd.trans hζη
+  have hstage : F.indexAt ξ hξη < F.indexAt ζ hζη := by
+    apply (Ordinal.ToType.mk (o := (F.stage η).length)).lt_iff_lt.mpr
+    simpa [F.indexAt_toOrd] using hOrd
+  have hx := F.limitNode_eq_stage ho ξ hξη
+  have hz := F.limitNode_eq_stage ho ζ hζη
+  simpa only [hx, hz] using hend η hstage
+
+end LimitChain
+end TracePrefix
+end ErdosRado
+end TriangleHost
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceLimit
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceLimit
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalTree
 Source: Erdos593/TripleSystem/ErdosRado/CanonicalTree.lean
 Normalized SHA-256: f40b468beb425ce75fd1c1ae0ecbd60df3b64ab53f930451d421f50e93634347
@@ -11922,6 +12224,299 @@ end Erdos593.TripleSystem.TriangleHost.ErdosRado
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_CanonicalLevelCode
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
+Source: Erdos593/TripleSystem/ErdosRado/ErdosRadoCardinalArithmetic.lean
+Normalized SHA-256: 128e5f084e2e62480d580e090ff6e856a60de6be8c8c3940fa36f24a7a4bdd2e
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_ErdosRadoCardinalArithmetic
+
+/-!
+# CH-free cardinal arithmetic for the canonical Erdos--Rado trace
+
+This module records only cardinal bounds supplied by the concrete canonical
+carrier and by an externally supplied coherent trace system.  In particular,
+it does not construct a trace system, prove level-code injectivity, or use the
+Continuum Hypothesis.  The conditional level bound takes injectivity as an
+explicit hypothesis; the later source-native construction must discharge it.
+-/
+
+namespace Erdos593.TripleSystem.TriangleHost.ErdosRado
+
+open Cardinal
+
+/-- The canonical trace-height cutoff has cardinality `aleph1`. -/
+theorem mk_traceHeight_eq_aleph_one :
+    Cardinal.mk TraceHeight.ToType = Cardinal.aleph 1 := by
+  rw [mk_traceHeight, Cardinal.succ_aleph0]
+
+/-- Every ordinal strictly below the trace-height cutoff is countable. -/
+theorem card_le_aleph0_of_lt_traceHeight {rho : Ordinal.{0}}
+    (hrho : rho < TraceHeight) : rho.card <= Cardinal.aleph0 := by
+  apply Cardinal.lt_aleph_one_iff.mp
+  change rho < (Order.succ (Cardinal.aleph0 : Cardinal)).ord at hrho
+  rw [Cardinal.lt_ord] at hrho
+  simpa only [Cardinal.succ_aleph0] using hrho
+
+/-- A natural-number code indexed by a countable ordinal has cardinality at
+most the continuum. -/
+theorem mk_short_nat_code_le_continuum {rho : Ordinal.{0}}
+    (hrho : rho < TraceHeight) :
+    Cardinal.mk (rho.ToType -> Nat) <= Cardinal.continuum := by
+  rw [Cardinal.mk_arrow, Cardinal.mk_nat, Cardinal.lift_id, Cardinal.lift_id,
+    Cardinal.mk_toType]
+  calc
+    Cardinal.aleph0 ^ rho.card <= Cardinal.aleph0 ^ Cardinal.aleph0 :=
+      Cardinal.power_le_power_left Cardinal.aleph0_ne_zero
+        (card_le_aleph0_of_lt_traceHeight hrho)
+    _ = Cardinal.continuum := Cardinal.aleph0_power_aleph0
+
+/-- A fixed trace level is at most continuum-sized once its supplied code is
+injective.  The injectivity premise is deliberately not hidden in this bound. -/
+theorem mk_level_le_continuum {c : TraceColoring}
+    (T : CoherentTraceSystem c) (rho : Ordinal)
+    (hrho : rho < TraceHeight) (hcode : T.LevelCodeInjective rho) :
+    Cardinal.mk (T.level rho) <= Cardinal.continuum :=
+  (Cardinal.mk_le_of_injective hcode).trans
+    (mk_short_nat_code_le_continuum hrho)
+
+/-- A union of at most `aleph1` continuum-sized pieces is continuum-sized.
+This uses only `aleph1 <= continuum`, not CH. -/
+theorem mk_iUnion_le_continuum {alpha iota : Type} (f : iota -> Set alpha)
+    (hiota : Cardinal.mk iota <= Cardinal.aleph 1)
+    (hpiece : ∀ i, Cardinal.mk (f i) <= Cardinal.continuum) :
+    Cardinal.mk (⋃ i, f i) <= Cardinal.continuum := by
+  have hsup : (⨆ i, Cardinal.mk (f i)) <= Cardinal.continuum := by
+    exact ciSup_le' hpiece
+  calc
+    Cardinal.mk (⋃ i, f i) <= Cardinal.mk iota * ⨆ i, Cardinal.mk (f i) :=
+      Cardinal.mk_iUnion_le f
+    _ <= Cardinal.mk iota * Cardinal.continuum :=
+      mul_le_mul_right hsup (Cardinal.mk iota)
+    _ <= Cardinal.aleph 1 * Cardinal.continuum :=
+      mul_le_mul_left hiota _
+    _ = Cardinal.continuum := Cardinal.mul_eq_right Cardinal.aleph0_le_continuum
+      Cardinal.aleph_one_le_continuum
+      (Cardinal.aleph0_pos.trans Cardinal.aleph0_lt_aleph_one).ne'
+
+/-- Every natural-valued map on the trace carrier has an `aleph1`-sized fibre.
+The conclusion uses the carrier's successor-of-continuum cardinality and the
+regularity of `aleph1`; it does not specialize a finite-color theorem. -/
+theorem traceCarrier_nat_fiber (f : TraceCarrier -> Nat) :
+    ∃ n : Nat, Cardinal.aleph 1 <= Cardinal.mk (f ⁻¹' ({n} : Set Nat)) := by
+  refine Cardinal.infinite_pigeonhole_card f (Cardinal.aleph 1) ?_
+    Cardinal.aleph0_lt_aleph_one.le ?_
+  · calc
+      Cardinal.aleph 1 <= Cardinal.continuum := Cardinal.aleph_one_le_continuum
+      _ <= Order.succ Cardinal.continuum := Order.le_succ _
+      _ = Cardinal.mk TraceCarrier := mk_traceCarrier.symm
+  · rw [Cardinal.isRegular_aleph_one.cof_ord, Cardinal.mk_nat]
+    exact Cardinal.aleph0_lt_aleph_one
+
+end Erdos593.TripleSystem.TriangleHost.ErdosRado
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_ErdosRadoCardinalArithmetic
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.EndhomogeneousLift
+Source: Erdos593/TripleSystem/ErdosRado/EndhomogeneousLift.lean
+Normalized SHA-256: 93053758c3036284731f15b1ed4f3ae24e84cd5626d0706475557c9e7c105bda
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_EndhomogeneousLift
+
+/-!
+# Lifting a full endhomogeneous trace to a homogeneous pair set
+
+This module proves the downstream, conditional part of the canonical-trace
+route.  Given a trace prefix whose length is exactly `TraceHeight` and whose
+pair colouring is endhomogeneous to its endpoint, it extracts an uncountable
+homogeneous set.  It deliberately proves neither the existence of such a
+prefix nor the global Erdos--Rado theorem.
+-/
+
+namespace Erdos593
+namespace TripleSystem
+namespace TriangleHost
+namespace ErdosRado
+
+open scoped Cardinal Ordinal
+
+universe u
+
+noncomputable section
+
+/-- The colour seen by a trace node at the distinguished endpoint. -/
+noncomputable def endColor {a : TraceCarrier}
+    (p : TracePrefix a) (c : TraceColoring) : p.length.ToType -> Nat :=
+  fun x => c (tracePair (p.node x) a (p.node_ne_anchor x))
+
+/-- A two-element pair contained in a trace image is oriented by its two
+source indices.  The case split is essential because `Pair` is unordered. -/
+theorem exists_endColor_index_of_pair_subset_nodeImage
+    {a : TraceCarrier} (p : TracePrefix a) (c : TraceColoring)
+    (hend : p.EndhomogeneousTo c) (A : Set p.length.ToType)
+    (r : Pair TraceCarrier)
+    (hr : (r.1 : Set TraceCarrier) ⊆ p.node '' A) :
+    exists x, x ∈ A /\ c r = endColor p c x := by
+  classical
+  rcases Finset.card_eq_two.mp r.2 with ⟨x, y, hxy, hrxy⟩
+  have hx : x ∈ (r.1 : Set TraceCarrier) := by
+    rw [hrxy]
+    simp
+  have hy : y ∈ (r.1 : Set TraceCarrier) := by
+    rw [hrxy]
+    simp
+  rcases hr hx with ⟨xi, hxiA, hxEq⟩
+  rcases hr hy with ⟨zeta, hzetaA, hyEq⟩
+  have hxi_zeta : xi ≠ zeta := by
+    intro h
+    apply hxy
+    calc
+      x = p.node xi := hxEq.symm
+      _ = p.node zeta := by rw [h]
+      _ = y := hyEq
+  rcases lt_or_gt_of_ne hxi_zeta with hlt | hgt
+  · refine ⟨xi, hxiA, ?_⟩
+    have hr_eq : r = tracePair (p.node xi) (p.node zeta)
+        (ne_of_lt (p.node_lt_node hlt)) := by
+      apply Subtype.ext
+      rw [hrxy]
+      simp [tracePair, hxEq, hyEq]
+    rw [hr_eq]
+    simpa [endColor] using hend hlt
+  · refine ⟨zeta, hzetaA, ?_⟩
+    have hr_eq : r = tracePair (p.node zeta) (p.node xi)
+        (ne_of_lt (p.node_lt_node hgt)) := by
+      apply Subtype.ext
+      rw [hrxy]
+      ext z
+      simp [tracePair, hxEq, hyEq, or_comm]
+    rw [hr_eq]
+    simpa [endColor] using hend hgt
+
+/-- If the endpoint colours are constant on an index set, the corresponding
+trace nodes form a homogeneous pair set. -/
+theorem pairHomogeneous_nodeImage_of_endColor_constant
+    {a : TraceCarrier} (p : TracePrefix a) (c : TraceColoring)
+    (hend : p.EndhomogeneousTo c) (A : Set p.length.ToType) (n : Nat)
+    (hconstant : forall x, x ∈ A -> endColor p c x = n) :
+    PairHomogeneous c (p.node '' A) := by
+  intro r s hr hs
+  rcases exists_endColor_index_of_pair_subset_nodeImage p c hend A r hr with
+    ⟨xi, hxiA, hrc⟩
+  rcases exists_endColor_index_of_pair_subset_nodeImage p c hend A s hs with
+    ⟨zeta, hzetaA, hsc⟩
+  calc
+    c r = endColor p c xi := hrc
+    _ = n := hconstant xi hxiA
+    _ = endColor p c zeta := (hconstant zeta hzetaA).symm
+    _ = c s := hsc.symm
+
+/-- Injectivity of the trace-node map transfers the exact cardinality of an
+index set to its trace image. -/
+theorem mk_node_image_eq
+    {a : TraceCarrier} (p : TracePrefix a) (A : Set p.length.ToType) :
+    Cardinal.mk (p.node '' A) = Cardinal.mk A :=
+  Cardinal.mk_image_eq p.node_injective
+
+/-- A map from an uncountable same-universe type to natural numbers has an
+uncountable fibre.  `ULift` puts the natural-number codomain in the source
+universe before applying cardinal pigeonhole. -/
+theorem exists_nat_uncountable_fiber {gamma : Type u} (f : gamma -> Nat)
+    (hgamma : Cardinal.aleph0 < Cardinal.mk gamma) :
+    exists n : Nat, Cardinal.aleph0 < Cardinal.mk {x : gamma | f x = n} := by
+  letI : Uncountable gamma := Cardinal.aleph0_lt_mk_iff.mp hgamma
+  let g : gamma -> ULift.{u} Nat := fun x => ULift.up (f x)
+  have hg : Cardinal.mk (ULift.{u} Nat) < Cardinal.mk gamma := by
+    rw [Cardinal.mk_uLift, Cardinal.mk_nat, Cardinal.lift_aleph0]
+    exact hgamma
+  obtain ⟨⟨n⟩, hn⟩ := Cardinal.exists_uncountable_fiber g hg
+  have heq : g ⁻¹' ({ULift.up n} : Set (ULift.{u} Nat)) =
+      {x : gamma | f x = n} := by
+    ext x
+    simp [g]
+  rw [heq] at hn
+  exact ⟨n, Cardinal.aleph0_lt_mk_iff.mpr hn⟩
+
+/-- A full-height trace has an uncountable fibre of its endpoint-colour map. -/
+theorem exists_uncountable_endColor_fiber
+    {a : TraceCarrier} (p : TracePrefix a) (c : TraceColoring)
+    (hfull : p.length = TraceHeight) :
+    exists n : Nat, exists A : Set p.length.ToType,
+      Cardinal.aleph0 < Cardinal.mk A /\
+        forall x, x ∈ A -> endColor p c x = n := by
+  have huncountable : Cardinal.aleph0 < Cardinal.mk p.length.ToType := by
+    rw [hfull, mk_traceHeight, Cardinal.succ_aleph0]
+    exact Cardinal.aleph0_lt_aleph_one
+  obtain ⟨n, hn⟩ := exists_nat_uncountable_fiber (endColor p c) huncountable
+  refine ⟨n, {x | endColor p c x = n}, ?_, ?_⟩
+  · simpa using hn
+  · intro x hx
+    simpa using hx
+
+/-- A full endhomogeneous trace yields an uncountable pair-homogeneous set
+inside the trace carrier. -/
+theorem exists_uncountable_pairHomogeneous_of_full_endhomogeneous
+    {a : TraceCarrier} (p : TracePrefix a) (c : TraceColoring)
+    (hfull : p.length = TraceHeight) (hend : p.EndhomogeneousTo c) :
+    exists H : Set TraceCarrier,
+      Cardinal.aleph0 < Cardinal.mk H /\ PairHomogeneous c H := by
+  obtain ⟨n, A, hA, hconstant⟩ :=
+    exists_uncountable_endColor_fiber p c hfull
+  refine ⟨p.node '' A, ?_, ?_⟩
+  · rw [mk_node_image_eq]
+    exact hA
+  · exact pairHomogeneous_nodeImage_of_endColor_constant
+      p c hend A n hconstant
+
+/-- Reverse the carrier reindexing after a transported trace colouring has
+been made homogeneous. -/
+theorem erdosRado_lift_from_trace
+    (c : Pair ErdosRadoCarrier -> Nat)
+    (htrace : exists H : Set TraceCarrier,
+      Cardinal.aleph0 < Cardinal.mk H /\
+        PairHomogeneous
+          (transportedColor erdosRadoCarrierEquivTraceCarrier c) H) :
+    exists K : Set ErdosRadoCarrier,
+      Cardinal.aleph0 < Cardinal.mk K /\ PairHomogeneous c K := by
+  rcases htrace with ⟨H, hHcard, hHhom⟩
+  refine ⟨erdosRadoCarrierEquivTraceCarrier.symm '' H, ?_, ?_⟩
+  · rw [mk_image_eq_of_equiv erdosRadoCarrierEquivTraceCarrier.symm H]
+    exact hHcard
+  · exact pairHomogeneous_symm_image
+      erdosRadoCarrierEquivTraceCarrier c H hHhom
+
+/-- Conditional downstream bridge for the canonical trace route.  Its
+hypothesis is deliberately an explicit full trace; this theorem does not
+construct one. -/
+theorem erdosRado_uncountableHomogeneous_of_full_endhomogeneous_trace
+    (c : Pair ErdosRadoCarrier -> Nat)
+    (htrace : exists (a : TraceCarrier) (p : TracePrefix a),
+      p.length = TraceHeight /\
+        p.EndhomogeneousTo
+          (transportedColor erdosRadoCarrierEquivTraceCarrier c)) :
+    exists K : Set ErdosRadoCarrier,
+      Cardinal.aleph0 < Cardinal.mk K /\ PairHomogeneous c K := by
+  rcases htrace with ⟨a, p, hfull, hend⟩
+  apply erdosRado_lift_from_trace c
+  exact exists_uncountable_pairHomogeneous_of_full_endhomogeneous
+    p (transportedColor erdosRadoCarrierEquivTraceCarrier c) hfull hend
+
+end
+
+end ErdosRado
+end TriangleHost
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_EndhomogeneousLift
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.EndhomogeneousLift
 ========================================================================== -/
 
 /- ==========================================================================
@@ -20442,7 +21037,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: d1f9228de4ca249945f670e5a29ffcb92f800a544319d2103eb89b82c87966b9
+Normalized SHA-256: 579dfba19a99b5eb724c00ab11e2f6e89d8f5c4b189539cb20a78ed9a9bedcfa
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

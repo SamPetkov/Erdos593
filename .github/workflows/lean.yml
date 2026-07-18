@@ -35,9 +35,15 @@ jobs:
           lake build Erdos593.TripleSystem.TriangleHostRamseyChromatic
           lake build Erdos593.TripleSystem.TriangleHostRamseyTransport
           lake build Erdos593.TripleSystem.CardinalPairPartition
+          lake build Erdos593.TripleSystem.ErdosRado.PairTransport
           lake build Erdos593.TripleSystem.ErdosRadoCarrier
           lake build Erdos593.TripleSystem.ErdosRado.CanonicalTrace
           lake build Erdos593.TripleSystem.ErdosRado.TraceExtension
+          lake build Erdos593.TripleSystem.ErdosRado.TraceLimit
+          lake build Erdos593.TripleSystem.ErdosRado.CanonicalTree
+          lake build Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode
+          lake build Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
+          lake build Erdos593.TripleSystem.ErdosRado.EndhomogeneousLift
           lake build Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
           lake build Erdos593.TripleSystem.ConstructiblePositiveObligatory
           lake build Erdos593.TripleSystem.SequenceLiftTrace
@@ -89,9 +95,15 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/TriangleHostRamseyTransport.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/CardinalPairPartition.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/PairTransport.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRadoCarrier.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/CanonicalTrace.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/TraceExtension.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/TraceLimit.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/CanonicalTree.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/CanonicalLevelCode.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/ErdosRadoCardinalArithmetic.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/EndhomogeneousLift.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/SequenceLiftTrace.lean
