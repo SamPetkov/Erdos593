@@ -41,6 +41,36 @@ Accept an audit result or repair only if it:
 - The local theorem is closed. An external audit is corroborating evidence,
   not a missing local proof obligation.
 
+## Current checkpoint (2026-07-18)
+
+The positive-atom theorem, its zero/positive wrapper, and the constructible
+positive-obligatory endpoint are locally closed. The N14--N17 sequence-lift
+finite-linear and embedded-source endpoint layers are also present as checked
+Lean modules. Do not spend new work on re-proving these layers unless a
+regression appears in CI.
+
+The active remaining mathematical gap for the global classical route is the
+countably-coloured Erdos--Rado pair-partition theorem for
+`ErdosRadoCarrier`. Locally, `ErdosRado/EndhomogeneousLift.lean` now exposes
+the exact sufficient trace-construction interface:
+
+~~~lean
+Erdos593.TripleSystem.TriangleHost.ErdosRado.FullEndhomogeneousTraceForEveryColoring
+~~~
+
+and proves that this interface implies:
+
+~~~lean
+Erdos593.TripleSystem.TriangleHost.ErdosRado.erdosRadoUncountableHomogeneousPairSet_of_fullEndhomogeneousTrace
+~~~
+
+The next proof campaign should therefore target the full-height
+endhomogeneous trace construction, not the positive atom or finite
+sequence-lift wrappers. Aristotle request O40
+`a38acccf-92a5-41c1-ae37-c4cd1e90afed` has been submitted for this exact
+N24 endpoint. Any Aristotle patch must still be validated locally under Lean
+4.32 before committing.
+
 ## Proof dependency graph
 
 ~~~text

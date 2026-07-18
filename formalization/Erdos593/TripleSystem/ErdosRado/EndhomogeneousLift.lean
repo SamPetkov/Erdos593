@@ -180,6 +180,32 @@ theorem erdosRado_uncountableHomogeneous_of_full_endhomogeneous_trace
   exact exists_uncountable_pairHomogeneous_of_full_endhomogeneous
     p (transportedColor erdosRadoCarrierEquivTraceCarrier c) hfull hend
 
+/-- The exact remaining global trace-construction interface for the
+countably-coloured Erdos--Rado route.
+
+This is intentionally only a proposition: it says that every colouring admits
+a full-height endhomogeneous trace in the existing canonical trace carrier.
+It is not proved here and must not be confused with the partition theorem. -/
+def FullEndhomogeneousTraceForEveryColoring : Prop :=
+  forall c : Pair ErdosRadoCarrier -> Nat,
+    exists (a : TraceCarrier) (p : TracePrefix a),
+      p.length = TraceHeight /\
+        p.EndhomogeneousTo
+          (transportedColor erdosRadoCarrierEquivTraceCarrier c)
+
+/-- A universal full endhomogeneous trace construction is exactly sufficient
+for the cardinal-form homogeneous-pair-set target.
+
+The theorem only composes the checked full-trace extraction with the public
+`ErdosRadoUncountableHomogeneousPairSet` interface; it does not construct the
+traces. -/
+theorem erdosRadoUncountableHomogeneousPairSet_of_fullEndhomogeneousTrace
+    (htrace : FullEndhomogeneousTraceForEveryColoring) :
+    ErdosRadoUncountableHomogeneousPairSet := by
+  intro c
+  exact erdosRado_uncountableHomogeneous_of_full_endhomogeneous_trace
+    c (htrace c)
+
 end
 
 end ErdosRado

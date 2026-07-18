@@ -1350,6 +1350,32 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   exact source passes local strict build, axiom, banned-construct, and
   self-contained checks and GitHub Actions become observable.
 
+## O40: N24 full countably-coloured Erdos--Rado endpoint request
+
+- Submitted (UTC): 2026-07-18 11:08. The authenticated Aristotle project is
+  `a38acccf-92a5-41c1-ae37-c4cd1e90afed`.
+- Local base SHA at submission: `9aae61e38a3f90baa8a2be5b308cd7581ac14394`.
+- Exact task boundary: attempt the missing countably-coloured Erdos--Rado
+  pair-partition endpoint for `ErdosRadoCarrier`, preferably by proving
+  `ErdosRadoUncountableHomogeneousPairSet` or directly
+  `PairRamseyTriangle ErdosRadoCarrier`. The prompt requires reuse of the
+  existing `ErdosRado/CanonicalTrace`, `TraceExtension`, `TraceLimit`,
+  `PairTransport`, and `EndhomogeneousLift` scaffolding where possible.
+- Submitted files: local Lean project directory via `aristotle submit
+  --project-dir .`; no plaintext API key was printed or recorded.
+- Toolchain caveat: Aristotle warned that its preferred Lean toolchain is
+  `leanprover/lean4:v4.28.0`, while this repository currently uses
+  `leanprover/lean4:v4.32.0`. Any returned patch is advisory until it passes
+  local Lean 4.32 strict checks.
+- Required proof constraints: no `sorry`, `admit`, new `axiom`, `unsafe`,
+  `native_decide`, `implemented_by`, `run_tac`, theorem weakening, CH
+  assumption, finite-colour substitution, or hidden partition-calculus
+  assumption.
+- Local disposition: pending. The exact remaining local interface is now
+  `ErdosRado.FullEndhomogeneousTraceForEveryColoring`, whose sufficiency for
+  `ErdosRadoUncountableHomogeneousPairSet` is checked locally in
+  `ErdosRado/EndhomogeneousLift.lean`.
+
 ## Record format
 
 For every submission, record:
