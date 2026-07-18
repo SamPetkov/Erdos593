@@ -53,21 +53,28 @@ theorem sourceRun_spec
 
 Implement it in four layers:
 
-1. **Graph API.** Define `TracePrefix.graph` and prove its behavior under
+1. **Graph API (complete).** Define `TracePrefix.graph` and prove its behavior under
    restriction, successor extension, and limit prefixes.
-2. **Stopped recursion.** Define the source-eligible set, its least element,
+2. **Stopped recursion (complete).** Define the source-eligible set, its least element,
    the source step, and `sourceRun`.  Prove successor and limit equations and
    that the run remains fixed after its first terminal stage.
-3. **Cross-anchor coherence.** Prove that the run at a selected earlier node
+3. **Cross-anchor coherence (complete).** Prove that the run at a selected earlier node
    is the corresponding restriction of the parent's run.  The local algebra
    is provided by `TracePrefix.atCandidate`, `valueSet_atCandidate`, and
    `restrict_atCandidate_node`.
-4. **System packaging.** Use the terminal source-canonical prefixes as
+4. **System packaging (next).** Use the terminal source-canonical prefixes as
    `CoherentTraceSystem.height` and `.node`; prove strictness, coherent heights,
    coherent prefixes, endhomogeneity, and the stopping property.
 
 The highest-risk obligation is cross-anchor coherence.  It must not be
 replaced by same-anchor candidate persistence: that statement is false.
+
+This obligation is now discharged in `SourceCoherence.lean`.  Its stronger
+`sourceRun_at_candidate` theorem replays a canonical prefix below any
+candidate above it; `sourceRun_at_node_stage` then specializes this to every
+earlier stage below a selected node.  The remaining work begins with terminal
+prefix extraction and reanchoring, followed by endhomogeneity and coherent
+system packaging.
 
 The first frozen theorem in this layer is:
 

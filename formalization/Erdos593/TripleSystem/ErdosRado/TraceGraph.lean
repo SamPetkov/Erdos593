@@ -2,9 +2,9 @@ import Erdos593.TripleSystem.ErdosRado.TraceLimit
 import Erdos593.TripleSystem.ErdosRado.TransfiniteIteration
 
 /-!
-# Graph representation of canonical trace prefixes
+# Graph representation of trace prefixes
 
-The source recursion is most naturally iterated on sets of stage--value pairs,
+The source recursion is most naturally iterated on sets of coordinate–value pairs,
 whereas the local trace API uses dependent ordinal-indexed prefixes.  This
 module is the small conversion layer between those representations.  It makes
 no candidate-existence or global-coherence assertion.
@@ -62,6 +62,52 @@ theorem graph_restrict {a : TraceCarrier} (p : TracePrefix a)
     apply Prod.ext
     · exact hζOrd.symm
     · simp only [restrict_node, hindex]
+
+/-- Restricting through a successor coordinate consists of the preceding
+restriction together with the value at that coordinate. -/
+theorem graph_restrict_succ {a : TraceCarrier} (p : TracePrefix a)
+    {eta : Ordinal} (heta : Order.succ eta ≤ p.length) :
+    (p.restrict (Order.succ eta) heta).graph =
+      (p.restrict eta ((Order.le_succ eta).trans heta)).graph ∪
+        {((eta : Ordinal), p.node (Ordinal.ToType.mk
+          ⟨eta, (Order.lt_succ eta).trans_le heta⟩))} := by
+  rw [graph_restrict, graph_restrict]
+  ext z
+  simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_union,
+    Set.mem_singleton_iff]
+  constructor
+  · rintro ⟨hz, hzsucc⟩
+    rcases lt_or_eq_of_le (Order.lt_succ_iff.mp hzsucc) with hlt | heq
+    · exact Or.inl ⟨hz, hlt⟩
+    · right
+      rcases hz with ⟨xi, rfl⟩
+      let i : p.length.ToType := Ordinal.ToType.mk
+        ⟨eta, (Order.lt_succ eta).trans_le heta⟩
+      have hiord : (i.toOrd : Ordinal) = eta := by
+        exact congrArg Subtype.val
+          ((Ordinal.ToType.mk (o := p.length)).symm_apply_apply
+            ⟨eta, (Order.lt_succ eta).trans_le heta⟩)
+      have hxiord : (xi.toOrd : Ordinal) = eta := heq
+      have hxi : xi = i := by
+        apply (Ordinal.ToType.mk (o := p.length)).symm.injective
+        apply Subtype.ext
+        exact hxiord.trans hiord.symm
+      subst xi
+      apply Prod.ext
+      · exact hiord
+      · rfl
+  · rintro (⟨hz, hlt⟩ | rfl)
+    · exact ⟨hz, hlt.trans (Order.lt_succ eta)⟩
+    · let i : p.length.ToType := Ordinal.ToType.mk
+        ⟨eta, (Order.lt_succ eta).trans_le heta⟩
+      have hiord : (i.toOrd : Ordinal) = eta := by
+        exact congrArg Subtype.val
+          ((Ordinal.ToType.mk (o := p.length)).symm_apply_apply
+            ⟨eta, (Order.lt_succ eta).trans_le heta⟩)
+      refine ⟨⟨i, ?_⟩, Order.lt_succ eta⟩
+      apply Prod.ext
+      · exact hiord.symm
+      · rfl
 
 /-- Appending a candidate adds exactly the stage at the old prefix length. -/
 theorem graph_snoc {c : TraceColoring} {a : TraceCarrier}
