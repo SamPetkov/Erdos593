@@ -12442,7 +12442,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceLimit
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceGraph
 Source: Erdos593/TripleSystem/ErdosRado/TraceGraph.lean
-Normalized SHA-256: ebd58292d62e0d7f88d337dc4bdf2b5836dc3eb62c2e6c558326976f5b9b7715
+Normalized SHA-256: 11891e737ed4cc36a48a928cdebe06a673ca7ea708d626e673a17c6b09dbfe0c
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_TraceGraph
 
@@ -12589,6 +12589,38 @@ theorem historyLength_graph {a : TraceCarrier} (p : TracePrefix a) :
 
 end TraceIteration
 
+namespace TracePrefix
+
+/-- The graph representation determines a trace prefix uniquely. -/
+theorem graph_injective {a : TraceCarrier} :
+    Function.Injective (@graph a) := by
+  intro p q hgraph
+  have hlength : p.length = q.length := by
+    have h := congrArg TraceIteration.historyLength hgraph
+    simpa using h
+  cases p with
+  | mk plen ple pnode panchor pmono =>
+    cases q with
+    | mk qlen qle qnode qanchor qmono =>
+      dsimp at hlength
+      subst qlen
+      congr 1
+      apply funext
+      intro xi
+      have hz : (@graph a (TracePrefix.mk plen ple pnode panchor pmono))
+          ((xi.toOrd : Ordinal), pnode xi) := Exists.intro xi rfl
+      rw [hgraph] at hz
+      cases hz with
+      | intro zeta hzeta =>
+        have hxizeta : xi = zeta := by
+          apply (Ordinal.ToType.mk (o := plen)).symm.injective
+          apply Subtype.ext
+          exact congrArg Prod.fst hzeta
+        subst zeta
+        exact congrArg Prod.snd hzeta
+
+end TracePrefix
+
 end ErdosRado
 end TriangleHost
 end TripleSystem
@@ -12602,7 +12634,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceGraph
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.SourceRecursion
 Source: Erdos593/TripleSystem/ErdosRado/SourceRecursion.lean
-Normalized SHA-256: ea554faa1097d58ffb180637251f0c16bcf7feaf13579604094e22a7c7a4228c
+Normalized SHA-256: b973d9ad6d091d68417d000f9ce85561fa37a63c029b7e6bd6b635a43d0bd7d7
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_SourceRecursion
 
@@ -12629,6 +12661,11 @@ prefix below that endpoint. -/
 def RepresentsAt (a : TraceCarrier) (s : TraceStageSet) : Prop :=
   ∃ p : TracePrefix a, p.graph = s
 
+/-- Every concrete prefix graph is represented at its endpoint. -/
+theorem representsAt_graph {a : TraceCarrier} (p : TracePrefix a) :
+    RepresentsAt a p.graph :=
+  ⟨p, rfl⟩
+
 /-- Decode a represented stage set to one witnessing prefix. -/
 noncomputable def decodedPrefix {a : TraceCarrier} {s : TraceStageSet}
     (hs : RepresentsAt a s) : TracePrefix a :=
@@ -12638,6 +12675,20 @@ noncomputable def decodedPrefix {a : TraceCarrier} {s : TraceStageSet}
 theorem decodedPrefix_graph {a : TraceCarrier} {s : TraceStageSet}
     (hs : RepresentsAt a s) : (decodedPrefix hs).graph = s := by
   exact Classical.choose_spec hs
+
+/-- Graph injectivity makes decoding independent of the existential witness. -/
+@[simp]
+theorem decodedPrefix_eq {a : TraceCarrier} (p : TracePrefix a)
+    (hs : RepresentsAt a p.graph) : decodedPrefix hs = p := by
+  exact TracePrefix.graph_injective (decodedPrefix_graph hs)
+
+private theorem least_value_eq_of_prefix_eq {c : TraceColoring}
+    {a : TraceCarrier} {p q : TracePrefix a} (hpq : p = q)
+    (hp : Nonempty (TraceCandidate c p))
+    (hq : Nonempty (TraceCandidate c q)) :
+    (TraceCandidate.least hp).value = (TraceCandidate.least hq).value := by
+  subst q
+  rfl
 
 /-- Extend a represented graph by its least candidate, and leave stopped or
 non-representable graphs fixed. -/
@@ -12682,6 +12733,34 @@ theorem sourceStep_of_extendable_graph (c : TraceColoring) (a : TraceCarrier)
       ((decodedPrefix hs).snoc (TraceCandidate.least hp)).graph := by
   rw [sourceStep_of_extendable c a hs hp,
     TracePrefix.graph_snoc, decodedPrefix_graph]
+
+/-- On a concrete extendable prefix graph, the source step appends its least
+candidate. -/
+theorem sourceStep_graph_of_extendable (c : TraceColoring)
+    {a : TraceCarrier} (p : TracePrefix a)
+    (hp : Nonempty (TraceCandidate c p)) :
+    sourceStep c a p.graph =
+      (p.snoc (TraceCandidate.least hp)).graph := by
+  let hs : RepresentsAt a p.graph := representsAt_graph p
+  have hdecode : decodedPrefix hs = p := decodedPrefix_eq p hs
+  have hp' : Nonempty (TraceCandidate c (decodedPrefix hs)) := by
+    simpa only [hdecode] using hp
+  have hvalue : (TraceCandidate.least hp').value =
+      (TraceCandidate.least hp).value :=
+    least_value_eq_of_prefix_eq hdecode hp' hp
+  rw [TracePrefix.graph_snoc,
+    sourceStep_of_extendable c a hs hp']
+  rw [congrArg TracePrefix.length hdecode, hvalue]
+
+/-- On a concrete stopped prefix graph, the source step remains fixed. -/
+theorem sourceStep_graph_of_stopped (c : TraceColoring)
+    {a : TraceCarrier} (p : TracePrefix a)
+    (hp : ¬ Nonempty (TraceCandidate c p)) :
+    sourceStep c a p.graph = p.graph := by
+  let hs : RepresentsAt a p.graph := representsAt_graph p
+  have hdecode : decodedPrefix hs = p := decodedPrefix_eq p hs
+  apply sourceStep_of_stopped c a hs
+  simpa only [hdecode] using hp
 
 /-- A source step never removes a recorded stage. -/
 theorem sourceStep_inflationary (c : TraceColoring) (a : TraceCarrier) :

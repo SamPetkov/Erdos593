@@ -144,6 +144,38 @@ theorem historyLength_graph {a : TraceCarrier} (p : TracePrefix a) :
 
 end TraceIteration
 
+namespace TracePrefix
+
+/-- The graph representation determines a trace prefix uniquely. -/
+theorem graph_injective {a : TraceCarrier} :
+    Function.Injective (@graph a) := by
+  intro p q hgraph
+  have hlength : p.length = q.length := by
+    have h := congrArg TraceIteration.historyLength hgraph
+    simpa using h
+  cases p with
+  | mk plen ple pnode panchor pmono =>
+    cases q with
+    | mk qlen qle qnode qanchor qmono =>
+      dsimp at hlength
+      subst qlen
+      congr 1
+      apply funext
+      intro xi
+      have hz : (@graph a (TracePrefix.mk plen ple pnode panchor pmono))
+          ((xi.toOrd : Ordinal), pnode xi) := Exists.intro xi rfl
+      rw [hgraph] at hz
+      cases hz with
+      | intro zeta hzeta =>
+        have hxizeta : xi = zeta := by
+          apply (Ordinal.ToType.mk (o := plen)).symm.injective
+          apply Subtype.ext
+          exact congrArg Prod.fst hzeta
+        subst zeta
+        exact congrArg Prod.snd hzeta
+
+end TracePrefix
+
 end ErdosRado
 end TriangleHost
 end TripleSystem
