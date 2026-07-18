@@ -1376,6 +1376,55 @@ F8A38A7F0578CA9FD764F3516A621E9D47BFDF73D72D16E2ECC3A6FB1CE6F277  direct TASK.md
   `ErdosRadoUncountableHomogeneousPairSet` is checked locally in
   `ErdosRado/EndhomogeneousLift.lean`.
 
+## O41: Erdos593 shift-graph chromatic descent continuation
+
+- Submitted (UTC): 2026-07-18. The authenticated Aristotle project is
+  `344eb11a-5b85-4b7e-b6f2-db5268a152ab`; the active task at submission time
+  is `c69d4a8e-b9f1-42e4-bae4-7b8be9304ee3`.
+- Local/public base SHA at submission:
+  `ea4b1300e7698108e642e8143064f114f92f98ed`.
+- Exact task boundary: continue the existing shift-final request with a
+  sharper target in `Erdos593/Graph/ShiftGraphChromatic.lean`: turn the
+  existing one-step descent `ShiftGraph.lowerColoring` into a checked
+  chromatic/cardinal lower-bound endpoint, preferably
+  `ShiftGraph.not_nonempty_coloring_nat_of_beth_lt`.
+- Submitted files: none in this continuation, because Aristotle rejects file
+  uploads while a project is running. The prompt pins the exact public commit
+  and module instead.
+- Required proof constraints: no `sorry`, `admit`, new `axiom`, `unsafe`,
+  `native_decide`, `implemented_by`, `run_tac`, theorem weakening,
+  unexplained hypotheses, aggregate imports, unrelated refactoring, commits,
+  pushes, or resource-limit overrides. If the exact endpoint is blocked by
+  pinned-Mathlib cardinal APIs, Aristotle must return the smallest checked
+  replacement theorem and the exact missing wrapper lemma.
+- Local disposition: pending. Any returned patch is advisory until it passes
+  focused local Lean, axiom, prohibited-construct, self-contained, and GitHub
+  Actions checks.
+
+## O42: Erdos593 isolated-reduction classification continuation
+
+- Submitted (UTC): 2026-07-18. The authenticated Aristotle project is
+  `8d3ff5a0-24b9-4e1b-add6-c26577ffe1a2`; the active task at submission time
+  is `f0bc3334-5c1f-4ad4-ba37-ce0ba123f0bc`.
+- Local/public base SHA at submission:
+  `ea4b1300e7698108e642e8143064f114f92f98ed`.
+- Exact task boundary: continue the current Erdos593 formalization request
+  with the final negative-direction glue for the isolated-reduction
+  classification. The preferred endpoint is
+  `TripleSystem.isObligatory_iff_isolatedReduction_intrinsic`, with the
+  reverse implication proved by contraposition from the existing nonlinearity,
+  missing-bridge, and odd-Berge/shift-host obstruction modules.
+- Submitted files: none in this continuation, because the project is already
+  running. The prompt pins the exact public commit and names the intended
+  source modules and theorem dependencies.
+- Required proof constraints: no `sorry`, `admit`, new `axiom`, `unsafe`,
+  `native_decide`, `implemented_by`, `run_tac`, theorem weakening, hidden
+  assumptions, CH or finite-colour replacement, aggregate imports, unrelated
+  refactoring, commits, pushes, or resource-limit overrides.
+- Local disposition: pending. Any returned patch must preserve the
+  isolated-reduction formulation and is advisory until checked locally and in
+  GitHub Actions.
+
 ## Record format
 
 For every submission, record:
