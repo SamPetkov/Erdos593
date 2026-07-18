@@ -1,0 +1,118 @@
+import Erdos593.TripleSystem.ErdosRado.TraceGraph
+
+/-!
+# The stopped source recursion
+
+This module defines a guarded extension step on stage graphs and iterates it
+transfinitely.  A graph outside the image of `TracePrefix.graph` is left
+fixed.  Later modules prove the source-canonical invariant of runs from the
+empty graph; that invariant is not assumed by this definition.
+-/
+
+namespace Erdos593
+namespace TripleSystem
+namespace TriangleHost
+namespace ErdosRado
+
+open scoped Cardinal Ordinal
+
+namespace TraceIteration
+
+/-- A stage set represents a trace below `a` when it is the graph of some
+prefix below that endpoint. -/
+def RepresentsAt (a : TraceCarrier) (s : TraceStageSet) : Prop :=
+  ∃ p : TracePrefix a, p.graph = s
+
+/-- Decode a represented stage set to one witnessing prefix. -/
+noncomputable def decodedPrefix {a : TraceCarrier} {s : TraceStageSet}
+    (hs : RepresentsAt a s) : TracePrefix a :=
+  Classical.choose hs
+
+@[simp]
+theorem decodedPrefix_graph {a : TraceCarrier} {s : TraceStageSet}
+    (hs : RepresentsAt a s) : (decodedPrefix hs).graph = s := by
+  exact Classical.choose_spec hs
+
+/-- Extend a represented graph by its least candidate, and leave stopped or
+non-representable graphs fixed. -/
+noncomputable def sourceStep (c : TraceColoring) (a : TraceCarrier)
+    (s : TraceStageSet) : TraceStageSet := by
+  classical
+  exact
+    if hs : RepresentsAt a s then
+      if hp : Nonempty (TraceCandidate c (decodedPrefix hs)) then
+        s ∪ {(((decodedPrefix hs).length : Ordinal),
+          (TraceCandidate.least hp).value)}
+      else
+        s
+    else
+      s
+
+theorem sourceStep_of_invalid (c : TraceColoring) (a : TraceCarrier)
+    (s : TraceStageSet) (hs : ¬ RepresentsAt a s) :
+    sourceStep c a s = s := by
+  simp [sourceStep, hs]
+
+theorem sourceStep_of_stopped (c : TraceColoring) (a : TraceCarrier)
+    {s : TraceStageSet} (hs : RepresentsAt a s)
+    (hp : ¬ Nonempty (TraceCandidate c (decodedPrefix hs))) :
+    sourceStep c a s = s := by
+  simp [sourceStep, hs, hp]
+
+theorem sourceStep_of_extendable (c : TraceColoring) (a : TraceCarrier)
+    {s : TraceStageSet} (hs : RepresentsAt a s)
+    (hp : Nonempty (TraceCandidate c (decodedPrefix hs))) :
+    sourceStep c a s =
+      s ∪ {(((decodedPrefix hs).length : Ordinal),
+        (TraceCandidate.least hp).value)} := by
+  simp [sourceStep, hs, hp]
+
+/-- On an extendable represented graph, the step is exactly `snoc` of the
+decoded prefix by its least candidate. -/
+theorem sourceStep_of_extendable_graph (c : TraceColoring) (a : TraceCarrier)
+    {s : TraceStageSet} (hs : RepresentsAt a s)
+    (hp : Nonempty (TraceCandidate c (decodedPrefix hs))) :
+    sourceStep c a s =
+      ((decodedPrefix hs).snoc (TraceCandidate.least hp)).graph := by
+  rw [sourceStep_of_extendable c a hs hp,
+    TracePrefix.graph_snoc, decodedPrefix_graph]
+
+/-- A source step never removes a recorded stage. -/
+theorem sourceStep_inflationary (c : TraceColoring) (a : TraceCarrier) :
+    ∀ s : TraceStageSet, s ⊆ sourceStep c a s := by
+  intro s
+  by_cases hs : RepresentsAt a s
+  · by_cases hp : Nonempty (TraceCandidate c (decodedPrefix hs))
+    · rw [sourceStep_of_extendable c a hs hp]
+      exact Set.subset_union_left
+    · rw [sourceStep_of_stopped c a hs hp]
+  · rw [sourceStep_of_invalid c a s hs]
+
+/-- The transfinite source run below a fixed endpoint. -/
+noncomputable def sourceRun (c : TraceColoring) (a : TraceCarrier)
+    (η : Ordinal) : TraceStageSet :=
+  run (sourceStep c a) η
+
+@[simp]
+theorem sourceRun_zero (c : TraceColoring) (a : TraceCarrier) :
+    sourceRun c a 0 = ∅ := by
+  exact run_zero (sourceStep c a)
+
+theorem sourceRun_succ (c : TraceColoring) (a : TraceCarrier) (η : Ordinal) :
+    sourceRun c a (Order.succ η) = sourceStep c a (sourceRun c a η) := by
+  exact run_succ_ordinal (sourceStep c a) η
+
+theorem sourceRun_limit (c : TraceColoring) (a : TraceCarrier) (η : Ordinal)
+    (hη : Order.IsSuccLimit η) :
+    sourceRun c a η = ⋃ ξ : Set.Iio η, sourceRun c a ξ.1 := by
+  exact run_limit (sourceStep c a) η hη
+
+theorem monotone_sourceRun (c : TraceColoring) (a : TraceCarrier) :
+    Monotone (sourceRun c a) := by
+  exact monotone_run (sourceStep c a) (sourceStep_inflationary c a)
+
+end TraceIteration
+end ErdosRado
+end TriangleHost
+end TripleSystem
+end Erdos593
