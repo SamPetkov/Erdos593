@@ -23494,6 +23494,54 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftShiftObstruction
+Source: Erdos593/TripleSystem/SequenceLiftShiftObstruction.lean
+Normalized SHA-256: 7dada3bc29f771ea3c647837a75725822e0f9554607698936f366e03ccf43c53
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftShiftObstruction
+
+/-!
+# Shift-graph odd-Berge obstruction
+
+This file packages the odd-girth estimates for shift graphs with the generic
+sequence-lift obstruction.  The only remaining hard host input is the
+chromatic obstruction for the chosen shift graph.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {κ : Type u} [LinearOrder κ]
+variable {X I : Type u} {F : TripleSystem X I}
+
+/-- A shift graph with no countable colouring and odd-girth bound larger than
+the finite Levi-edge bound witnesses that a finite linear source with an odd
+Berge cycle in its isolated reduction is not obligatory. -/
+theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftGraph
+    {r : ℕ}
+    [Fintype I] [Fintype F.isolatedReduction.levi.edgeSet]
+    (hcolor : ¬ Nonempty ((ShiftGraph.graph κ r).Coloring ℕ))
+    (hgirth : F.isolatedReduction.levi.edgeFinset.card < 2 * r + 1)
+    (hlinear : F.Linear)
+    (hno : ¬ F.isolatedReduction.EvenBergeCycles) :
+    ¬ F.IsObligatory := by
+  exact not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+    (G := ShiftGraph.graph κ r) hcolor hlinear hno
+    (ShiftGraph.no_odd_closedWalk_up_to κ hgirth)
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftShiftObstruction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftShiftObstruction
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceBridge
 Source: Erdos593/TripleSystem/SequenceLiftEmbeddedSourceBridge.lean
 Normalized SHA-256: e3a7f1a7dacff681253fa2d96a72c4dd7afefef739f0b57f1a0eff1166d46213
@@ -24293,7 +24341,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 3611c290ba4bb7cc184b8c1bf6f34f0f35ca2759c7e842548a4d7b69344cee1f
+Normalized SHA-256: d75d71ff8071270ab204b6db3298124781c732a2eee0016c5ee0e67ce0cde30c
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 
