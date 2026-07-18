@@ -1,5 +1,6 @@
 import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints
 import Erdos593.TripleSystem.FiniteLinearImageTrace
+import Erdos593.TripleSystem.FiniteLiftGeneratedBergeCycleTrace
 
 /-!
 # Endpoints for finite linear sources embedded in a sequence lift
@@ -36,6 +37,16 @@ theorem isolatedReduction_finiteLiftGenerated_of_linear_of_embedding
   exact TripleSystem.FiniteLiftGenerated.ofIso
     (edgeRestriction_finiteLiftGenerated_of_linear htrace.1 htrace.2.1)
     (Classical.choice htrace.2.2).symm
+
+/-- Every Berge cycle in the isolated reduction of a finite linear source
+embedded in a sequence lift contracts to a host closed walk of half its Levi
+length.  This is the transport interface used by the odd-Berge obstruction. -/
+theorem isolatedReduction_bergeCycleTraceTo_of_linear_of_embedding
+    [Fintype I]
+    (f : F.Embedding (system G)) (hlinear : F.Linear) :
+    TripleSystem.BergeCycleTraceTo G F.isolatedReduction := by
+  exact TripleSystem.FiniteLiftGenerated.bergeCycleTraceTo G
+    (isolatedReduction_finiteLiftGenerated_of_linear_of_embedding f hlinear)
 
 /-- In a two-colourable host, the isolated reduction of a finite linear
 embedded source is constructible. -/
