@@ -85,7 +85,7 @@ theorem odd_cycle_length_ge :
         classical
         obtain ⟨x, hxc, hxmin⟩ :=
           Finset.exists_min_image c.support.toFinset (fun t => t.1 0)
-            (by simpa using c.start_mem_support)
+            (by simp)
         have hxsupp : x ∈ c.support := by simpa using hxc
         let d := c.rotate x hxsupp
         have hdcycle : d.IsCycle := hc.rotate hxsupp

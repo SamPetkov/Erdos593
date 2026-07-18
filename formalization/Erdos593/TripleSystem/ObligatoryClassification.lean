@@ -30,7 +30,7 @@ theorem isObligatory_iff_isolatedReduction_intrinsic
       exact (not_isObligatory_of_linear_of_not_isolatedReduction_bridgeAtEveryEdge
         F hlinear hbridge) hF
     · by_contra hberge
-      exact (SequenceLift.not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+      exact (SequenceLift.not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftHost
         F hlinear hberge) hF
   · exact intrinsic_isolatedReduction_isObligatory F
 

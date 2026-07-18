@@ -3296,7 +3296,7 @@ END SOURCE MODULE: Erdos593.Graph.ShiftGraphChromatic
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.Graph.ShiftGraphOddGirth
 Source: Erdos593/Graph/ShiftGraphOddGirth.lean
-Normalized SHA-256: 7df80fd92c32cdb5d2c68432449ba2450f0af7b2ba43eb152c50829af4a32f08
+Normalized SHA-256: 83f669ece3f8928c046f0cbfa50ccfa3fbf78cdb24758ee2aa817fb1205c603e
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_Graph_ShiftGraphOddGirth
 
@@ -3384,7 +3384,7 @@ theorem odd_cycle_length_ge :
         classical
         obtain ⟨x, hxc, hxmin⟩ :=
           Finset.exists_min_image c.support.toFinset (fun t => t.1 0)
-            (by simpa using c.start_mem_support)
+            (by simp)
         have hxsupp : x ∈ c.support := by simpa using hxc
         let d := c.rotate x hxsupp
         have hdcycle : d.IsCycle := hc.rotate hxsupp
@@ -23898,7 +23898,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftMissingBridgeUnconditional
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ShiftGraphBergeObstruction
 Source: Erdos593/TripleSystem/ShiftGraphBergeObstruction.lean
-Normalized SHA-256: 01d56260707205cf32e9158579d1d0d4dd441e481fd99df97cf5c45bb1e71a33
+Normalized SHA-256: c040c8d5cdf0bf03cdc5a978588d4f7e78e758a07aeddd611b129f158b216960
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ShiftGraphBergeObstruction
 
@@ -23935,7 +23935,7 @@ theorem not_nonempty_embedding_shiftHost_of_oddBergeCycle
 
 /-- A finite linear triple system whose isolated reduction has an odd Berge
 cycle is not obligatory. -/
-theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftHost
     (F : TripleSystem X I) [Fintype I]
     (hlinear : F.Linear)
     (hno : ¬ F.isolatedReduction.EvenBergeCycles) :
@@ -23964,7 +23964,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ShiftGraphBergeObstruction
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ObligatoryClassification
 Source: Erdos593/TripleSystem/ObligatoryClassification.lean
-Normalized SHA-256: 8c7c536c2468841ba308f81fd2841bca2ad78e991c7aa8ccaecaaaae693fda7b
+Normalized SHA-256: de3925c2b51bb79c86c6e5dc4e4bc2a13c47578fff5a9460594b3b56fefd7d44
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryClassification
 
@@ -23995,7 +23995,7 @@ theorem isObligatory_iff_isolatedReduction_intrinsic
       exact (not_isObligatory_of_linear_of_not_isolatedReduction_bridgeAtEveryEdge
         F hlinear hbridge) hF
     · by_contra hberge
-      exact (SequenceLift.not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+      exact (SequenceLift.not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftHost
         F hlinear hberge) hF
   · exact intrinsic_isolatedReduction_isObligatory F
 

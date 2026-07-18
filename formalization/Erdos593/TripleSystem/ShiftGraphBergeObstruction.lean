@@ -36,7 +36,7 @@ theorem not_nonempty_embedding_shiftHost_of_oddBergeCycle
 
 /-- A finite linear triple system whose isolated reduction has an odd Berge
 cycle is not obligatory. -/
-theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftHost
     (F : TripleSystem X I) [Fintype I]
     (hlinear : F.Linear)
     (hno : ¬ F.isolatedReduction.EvenBergeCycles) :
