@@ -108,8 +108,8 @@ theorem EndhomogeneousTo.atCandidate {c : TraceColoring}
     {a : TraceCarrier} {p : TracePrefix a}
     (hp : p.EndhomogeneousTo c) (q : TraceCandidate c p) :
     (p.atCandidate q).EndhomogeneousTo c := by
-  simpa only [atCandidate] using
-    hp.reanchor q.above_prefix (fun ξ ↦ (q.agrees ξ).symm)
+  change (p.reanchor q.value q.above_prefix).EndhomogeneousTo c
+  exact hp.reanchor q.above_prefix (fun ξ ↦ (q.agrees ξ).symm)
 
 /-- The canonical inclusion of a shorter ordinal-indexed prefix into its
 ambient prefix. -/
