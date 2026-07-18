@@ -135,6 +135,79 @@ private theorem isBridge_sum_inr {A B : Type*}
   exact (isBridge_iff_of_iso (_root_.SimpleGraph.Iso.sumComm)
     (.inl a) (.inl b)).mp hleft
 
+/-- A cycle in the left component of a graph sum lifts uniquely enough for
+our purposes to a cycle of the same length in that component. -/
+theorem exists_cycle_of_sum_inl {A B : Type*}
+    (P : _root_.SimpleGraph A) (Q : _root_.SimpleGraph B)
+    {a : A} (c : (P ⊕g Q).Walk (.inl a) (.inl a)) (hc : c.IsCycle) :
+    ∃ (a' : A) (d : P.Walk a' a'), d.IsCycle ∧ c.length = d.length := by
+  classical
+  have hsupp : ∀ x ∈ c.support,
+      x ∈ Set.range (Sum.inl : A → A ⊕ B) := by
+    intro x hx
+    cases x with
+    | inl x => exact ⟨x, rfl⟩
+    | inr y =>
+        exact False.elim
+          ((_root_.SimpleGraph.not_reachable_sum_inl_inr (G := P) (H := Q) a y)
+            ⟨c.takeUntil (.inr y) hx⟩)
+  let ci := c.induce (Set.range (Sum.inl : A → A ⊕ B)) hsupp
+  let proj : (P ⊕g Q).induce (Set.range (Sum.inl : A → A ⊕ B)) →g P :=
+    { toFun := fun x => Classical.choose x.2
+      map_rel' := by
+        intro x y hxy
+        have hx := Classical.choose_spec x.2
+        have hy := Classical.choose_spec y.2
+        have hxy' : (P ⊕g Q).Adj x.1 y.1 :=
+          _root_.SimpleGraph.induce_adj.mp hxy
+        rw [← hx, ← hy] at hxy'
+        simpa using hxy' }
+  have hproj : Function.Injective proj := by
+    intro x y hxy
+    apply Subtype.ext
+    have hx := Classical.choose_spec x.2
+    have hy := Classical.choose_spec y.2
+    rw [← hx, ← hy]
+    exact congrArg Sum.inl hxy
+  have hmap_ci :
+      ci.map (_root_.SimpleGraph.Embedding.induce
+        (G := P ⊕g Q) (Set.range (Sum.inl : A → A ⊕ B))).toHom = c := by
+    simp [ci]
+  have hci : ci.IsCycle := by
+    apply _root_.SimpleGraph.Walk.IsCycle.of_map
+    rw [hmap_ci]
+    exact hc
+  let d := ci.map proj
+  have hd : d.IsCycle := hci.map hproj
+  have hci_len : ci.length = c.length := by
+    calc
+      ci.length =
+          (ci.map (_root_.SimpleGraph.Embedding.induce
+            (G := P ⊕g Q) (Set.range (Sum.inl : A → A ⊕ B))).toHom).length := by
+        symm
+        apply _root_.SimpleGraph.Walk.length_map
+      _ = c.length := congrArg
+        (fun w : (P ⊕g Q).Walk (.inl a) (.inl a) => w.length) hmap_ci
+  have hd_len : d.length = ci.length := by simp [d]
+  exact ⟨proj ⟨Sum.inl a, ⟨a, rfl⟩⟩, d, hd,
+    hci_len.symm.trans hd_len.symm⟩
+
+/-- The right-component counterpart of `exists_cycle_of_sum_inl`. -/
+theorem exists_cycle_of_sum_inr {A B : Type*}
+    (P : _root_.SimpleGraph A) (Q : _root_.SimpleGraph B)
+    {b : B} (c : (P ⊕g Q).Walk (.inr b) (.inr b)) (hc : c.IsCycle) :
+    ∃ (b' : B) (d : Q.Walk b' b'), d.IsCycle ∧ c.length = d.length := by
+  let f : P ⊕g Q ≃g Q ⊕g P := _root_.SimpleGraph.Iso.sumComm
+  let c' := c.map f.toHom
+  have hc' : c'.IsCycle := hc.map f.injective
+  obtain ⟨b', d, hd, hlen⟩ := exists_cycle_of_sum_inl Q P c' hc'
+  refine ⟨b', d, hd, ?_⟩
+  calc
+    c.length = c'.length := by
+      symm
+      exact _root_.SimpleGraph.Walk.length_map f.toHom c
+    _ = d.length := hlen
+
 private theorem cycle_length_dvd_sum_inl {A B : Type*}
     (P : _root_.SimpleGraph A) (Q : _root_.SimpleGraph B) (n : ℕ)
     (hP : ∀ ⦃a : A⦄ (c : P.Walk a a), c.IsCycle → n ∣ c.length)

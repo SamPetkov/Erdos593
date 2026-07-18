@@ -76,7 +76,9 @@ private theorem rooted_cycle_support_in_one_of_two_sets
               p.dropLast hrootNot hB.2 x hx
           · exact hrootB
 
-private theorem cycle_support_in_one_of_two_sets
+/-- A cycle in a graph obtained by gluing two vertex sets at one root lies
+entirely in one of the two sets. -/
+theorem cycle_support_in_one_of_two_sets
     {X : Type*} (G : SimpleGraph X) (A B : Set X) (root : X)
     (hrootA : root ∈ A) (hrootB : root ∈ B)
     (hinter : A ∩ B ⊆ {root})
@@ -109,7 +111,9 @@ private theorem cycle_support_in_one_of_two_sets
               (by intro x y hxy; exact (hadj hxy).symm)
               (.cons h p) hr hB.1)
 
-private theorem cycle_lifts_through_embedding
+/-- A cycle supported on the range of a graph embedding lifts to a source
+cycle of the same length. -/
+theorem cycle_lifts_through_embedding
     {X Y : Type*} {G : SimpleGraph X} {H : SimpleGraph Y}
     (f : G ↪g H) {z : Y} (c : H.Walk z z) (hc : c.IsCycle)
     (hsupp : ∀ y ∈ c.support, y ∈ Set.range f) :

@@ -11,12 +11,15 @@ import Erdos593.Graph.FiniteClosureLayeringConstruction
 import Erdos593.Graph.FiniteOutdegreeColoring
 import Erdos593.Graph.MinimalBadCore
 import Erdos593.Graph.NonInducedFactor
+import Erdos593.Graph.OddClosedWalk
 import Erdos593.Graph.FiniteEdgeFactor
 import Erdos593.Graph.Parity
 import Erdos593.Graph.RainbowBipartite
 import Erdos593.Graph.RainbowPositiveSize
 import Erdos593.Graph.RootedTree
 import Erdos593.Graph.ShiftGraph
+import Erdos593.Graph.ShiftGraphChromatic
+import Erdos593.Graph.ShiftGraphOddGirth
 import Erdos593.TripleSystem.Embedding
 import Erdos593.TripleSystem.EmbeddingLinearity
 import Erdos593.TripleSystem.Expansion
@@ -127,6 +130,7 @@ import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderBridge
 import Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderEndpoints
 import Erdos593.TripleSystem.FiniteLiftGenerated
 import Erdos593.TripleSystem.FiniteLiftGeneratedBridge
+import Erdos593.TripleSystem.FiniteLiftGeneratedBergeCycleTrace
 import Erdos593.TripleSystem.FiniteLiftGeneratedConstructible
 import Erdos593.TripleSystem.SequenceLiftFiniteLiftGenerated
 import Erdos593.TripleSystem.SequenceLiftFiniteLiftGeneratedEndpoints
@@ -141,6 +145,7 @@ import Erdos593.TripleSystem.SequenceLiftEmbeddedSourceEndpoints
 import Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
 import Erdos593.TripleSystem.SequenceLiftEmbeddedSourceBridge
 import Erdos593.TripleSystem.SequenceLiftMissingBridgeObstruction
+import Erdos593.TripleSystem.SequenceLiftMissingBridgeUnconditional
 import Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine
 import Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality
 import Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum

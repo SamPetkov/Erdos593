@@ -771,32 +771,83 @@ is a monochromatic hyperedge. Therefore the colours \(k_{s_\alpha}\), \(\alpha<\
 Every finite linear subhypergraph \(K\) of \(\mathcal L(G)\) is obtainable, by finite disjoint unions and one-point amalgamations, from systems \(J^+\) where \(J\) is a finite subgraph of \(G\).
 
 \end{theorembox}
-\textit{Proof.} First set aside every isolated vertex of \(K\). Each is a one-vertex edgeless factor, hence isomorphic to \(J^+\) for a one-vertex edgeless subgraph \(J\) of \(G\), and may be restored by disjoint union at the end. We may therefore assume that every vertex of \(K\) lies in a hyperedge.
+\textit{Proof.} We first give a short dictionary for the objects used below.
+A \emph{base node} is a sequence \(s\) at which a lift hyperedge begins.  Its
+two vertices with sequence coordinate \(s\) are the \emph{core vertices}, and
+its third vertex, whose coordinate properly extends \(s\), is the
+\emph{apex}.  The \emph{base fibre} \(K_s\) consists of all hyperedges of
+\(K\) based at \(s\), together with their incident vertices.  Finally, an
+\emph{active base node} is a base node whose fibre is nonempty.  These names
+correspond respectively to the local expansion pieces, their overlap data,
+and the running-intersection assembly in the formalisation.
 
-Every hyperedge of \(\mathcal L(G)\) has a unique base node \(s\): exactly two of its vertices have sequence coordinate \(s\), while the apex has a strictly longer sequence coordinate. Group the hyperedges of \(K\) by their base nodes, and let \(K_s\) be the subhypergraph whose hyperedges are those based at \(s\) and whose vertices are their union.
+First set aside every isolated vertex of \(K\). Each is a one-vertex
+edgeless factor, hence isomorphic to \(J^+\) for a one-vertex edgeless
+subgraph \(J\) of \(G\), and may be restored by disjoint union at the end.
+We may therefore assume that every vertex of \(K\) lies in a hyperedge.
 
-For a fixed graph edge \(a=\{x,y\}\in E(G)\), at most one hyperedge of \(K_s\) can have base pair \(\{x_s,y_s\}\), since two such hyperedges would share two vertices and violate linearity. Let \(J_s\) be the finite subgraph of \(G\) whose edges are precisely the graph edges used by hyperedges of \(K_s\), with vertex set consisting of their endpoints.
+Every hyperedge of \(\mathcal L(G)\) has a unique base node: exactly two of
+its vertices have sequence coordinate \(s\), while the apex has a strictly
+longer sequence coordinate.  We group the hyperedges of \(K\) by this
+coordinate and use the notation \(K_s\) from the dictionary.
 
-Define a map \(J_s^+\to K_s\) by sending each graph vertex \(x\in V(J_s)\)
-to the core vertex \(x_s\), and by sending the private vertex of
-\(a=\{x,y\}\) to the apex of the unique hyperedge of \(K_s\) with base pair
-\(\{x_s,y_s\}\). Distinct graph edges have distinct apices: if \(z_t\)
-were the apex for \(a\) and \(a'\), the coordinate of \(t\) immediately
-after \(s\) would have to equal both \(a\) and \(a'\). No apex is a core
-vertex, because an apex has sequence coordinate strictly extending \(s\),
-whereas every core vertex has coordinate \(s\). The map is therefore
-injective, and by construction it is bijective on hyperedges and preserves
-each incidence. Hence \(K_s\cong J_s^+\).
+\medskip
+\noindent\textbf{Claim 6.3.1 (each base fibre is one expansion atom).}
+For every active base node \(s\), there is a finite subgraph \(J_s\) of
+\(G\) such that \(K_s\cong J_s^+\).
 
-Now consider intersections between different \(K_s\). If a point \(z_t\) lies in both \(K_s\) and \(K_u\), then both \(s\) and \(u\) are prefixes of \(t\), so they are comparable. Suppose \(s\subsetneq u\). A common point cannot be a core point of \(K_s\); it is an apex of \(K_s\). The graph edge used by its hyperedge in \(K_s\) is the coordinate of \(u\) immediately following \(s\). Hence all points in \(K_s\cap K_u\) would be apices of the same base edge of \(K_s\). There is at most one such apex. Therefore
+\smallskip
+\noindent\emph{Proof of Claim 6.3.1.}
+For a graph edge \(a=\{x,y\}\in E(G)\), at most one hyperedge of \(K_s\)
+can have base pair \(\{x_s,y_s\}\): two such hyperedges would share both
+core vertices, contrary to linearity.  Let \(J_s\) have precisely the graph
+edges used by the hyperedges of \(K_s\), and let its vertex set consist of
+their endpoints.
+
+Send a vertex \(x\in V(J_s)\) to the core vertex \(x_s\).  For an edge
+\(a=\{x,y\}\), send the private vertex of \(a\) in \(J_s^+\) to the apex of
+the unique hyperedge with base pair \(\{x_s,y_s\}\).  Apices belonging to
+distinct graph edges are distinct: if the same \(z_t\) were used for \(a\)
+and \(a'\), the coordinate of \(t\) immediately after \(s\) would be both
+\(a\) and \(a'\).  An apex cannot be a core vertex because its sequence
+coordinate properly extends \(s\).  Thus the map is injective; by
+construction it is bijective on hyperedges and preserves every incidence.
+This proves \(K_s\cong J_s^+\). \(\square\)
+
+\medskip
+\noindent\textbf{Claim 6.3.2 (two fibres have at most one common point).}
+For distinct active base nodes \(s\) and \(u\),
 
 \[
 |V(K_s)\cap V(K_u)|\le1. \tag{6.2}
 \]
 
+\smallskip
+\noindent\emph{Proof of Claim 6.3.2.}
+If \(z_t\) belongs to both fibres, then \(s\) and \(u\) are prefixes of
+\(t\), and hence are comparable.  Suppose \(s\subsetneq u\).  The common
+point cannot be a core point of \(K_s\), so it is an apex of \(K_s\).  The
+graph edge used by its hyperedge in \(K_s\) is the coordinate of \(u\)
+immediately after \(s\).  Consequently, every point in
+\(K_s\cap K_u\) would be the apex attached to that same base edge of
+\(K_s\).  Claim 6.3.1 gives only one such apex. \(\square\)
+
 Construct a bipartite incidence graph \(Q\) whose one class is the set of active base nodes \(s\), and whose other class consists of points lying in at least two of the \(K_s\); join \(s\) to \(p\) when \(p\in K_s\).
 
-We claim that \(Q\) is a forest. Suppose it has a cycle, and choose on that cycle a base node \(s\) of minimum length. Its two neighbouring base nodes on the cycle are proper descendants of \(s\). The two intervening shared points are distinct, so they are distinct apices in \(K_s\), arising from two distinct graph edges \(a\ne a'\). Thus the two neighbouring base nodes lie in different immediate branches below \(s\), one beginning with \(a\) and the other with \(a'\).
+\medskip
+\noindent\textbf{Claim 6.3.3 (the overlap graph is a forest).}
+The graph \(Q\) is acyclic.
+
+\smallskip
+\noindent\emph{Proof of Claim 6.3.3.}
+Suppose that \(Q\) has a cycle, and choose on it a base node \(s\) of
+minimum sequence length.  The two neighbouring base nodes on the cycle are
+proper descendants of \(s\).  The two intervening shared points are
+distinct.  The proof of Claim 6.3.2 shows that both are apices in \(K_s\),
+and their distinctness means that they arise from two distinct graph edges
+\(a\ne a'\).  Thus the two neighbouring base nodes
+lie in different immediate branches below \(s\), one beginning with \(a\)
+and the other with \(a'\).
 
 Starting from one neighbour of \(s\), every base node on the remaining
 part of the cycle lies in the same immediate branch below \(s\). Indeed,
@@ -804,7 +855,7 @@ consecutive base nodes share a point and are therefore comparable, and two
 comparable proper descendants of \(s\) cannot lie in different immediate
 branches. Induction along the remaining path therefore keeps every base
 node in the first branch, contradicting that its final node lies in the
-other branch. Hence \(Q\) is acyclic.
+other branch. \(\square\)
 
 Root each component of \(Q\) at a base node, and order its base nodes by
 nondecreasing even distance from the root. For a nonroot base node \(s\), let
@@ -812,12 +863,12 @@ nondecreasing even distance from the root. For a nonroot base node \(s\), let
 
 \phantomsection
 \label{claim-6.3.1-base-fibre-running-intersection}
-\begin{claimbox}{Claim 6.3.1: base-fibre running intersection}
+\begin{claimbox}{Claim 6.3.4: base-fibre running intersection}
 
 Every earlier factor that meets \(K_s\) meets it at \(p_s\).
 
 \end{claimbox}
-\textbf{Proof of the claim.} Suppose \(K_u\) is earlier and contains a point
+\textbf{Proof of Claim 6.3.4.} Suppose \(K_u\) is earlier and contains a point
 \(p\in K_s\). Then \(Q\) contains the length-two path \(s-p-u\). Let the
 distance of \(s\) from the root be \(2d\). The point-node \(p\) has distance
 either \(2d-1\) or \(2d+1\). In the second case \(u\) has distance \(2d+2\),
@@ -826,7 +877,10 @@ of the path to the root in the tree \(Q\) gives \(p=p_s\). This also covers
 an earlier sibling \(u\), which shares the same parent point \(p_s\).
 \(\square\)
 
-Let \(U_s\) be the union of the factors preceding \(K_s\). Equation (6.2) and the claim give
+\medskip
+\noindent\textbf{Claim 6.3.5 (the ordered fibres assemble to \(K\)).}
+Let \(U_s\) be the union of the factors preceding \(K_s\). Equation (6.2)
+and Claim 6.3.4 give
 \[
 V(K_s)\cap U_s\subseteq\{p_s\}.
 \]
@@ -835,7 +889,10 @@ disjoint unions or one-point amalgamations as appropriate. At each step the
 natural maps into \(K\) identify exactly the displayed common point and
 nothing else, so they assemble to an isomorphism onto the union of the
 factors already added. Different components of \(Q\), and the isolated
-factors removed at the start, are combined by disjoint union. \(\square\)
+factors removed at the start, are combined by disjoint union.  This is the
+running-intersection step: Claim 6.3.1 supplies the expansion atoms, while
+Claims 6.3.2--6.3.4 certify that each new atom is attached along at most one
+previous point. \(\square\)
 
 \phantomsection
 \label{corollary-6.4-restrictions-on-finite-linear-traces}
@@ -1087,21 +1144,69 @@ If \(F\) appeared in \(\mathcal L(G)\), retain exactly the host hyperedges corre
 Let \(F\) be finite and linear, and suppose \(F^\circ\) has an odd Berge cycle. Then \(F\) is non-obligatory.
 
 \end{propositionbox}
-\textit{Proof.} Again suppress isolated vertices. Put \(m=|E(F)|\). Choose \(r\) with \(2r+1>m\), and set
+\textit{Proof.} Again suppress isolated vertices.  The following dictionary
+separates the three kinds of cycles in the argument.  A \emph{Berge cycle}
+in a triple system is a simple cycle in its Levi graph, with Levi length
+twice its Berge length.  A \emph{factor cycle} is the corresponding cycle
+inside one expansion atom \(J_s^+\).  Its \emph{host trace} is the ordinary
+cycle in the graph \(J_s\subseteq G\) obtained by deleting the private
+vertices.  Berge length and host-cycle length are equal.
+
+Put \(m=|E(F)|\). Choose \(r\) with \(2r+1>m\), and set
 
 \[
 G=S_r\bigl(\beth_{r-1}(\aleph_0)^+\bigr).
 \]
 
-By Lemmas 7.1 and 7.2, \(\chi(G)>\aleph_0\), and \(G\) has no odd cycle of length at most \(m\). Lemma 6.2 gives
+\medskip
+\noindent\textbf{Claim 8.3.1 (the chosen host is large-chromatic and has the
+required odd-girth bound).}
+By Lemmas 7.1 and 7.2, \(\chi(G)>\aleph_0\), and \(G\) has no odd cycle of
+length at most \(m\).  Lemma 6.2 then gives
 
 \[
 \chi(\mathcal L(G))>\aleph_0.
 \]
 
-If \(F\) appeared in \(\mathcal L(G)\), the selected image hyperedges would form a finite linear trace. By Corollary 6.4, every Berge cycle of that trace lies in one factor \(J_s^+\) and induces an ordinary graph cycle of the same length in \(J_s\subseteq G\).
+\medskip
+\noindent\textbf{Claim 8.3.2 (cycle localisation).}
+If \(F\) embeds in \(\mathcal L(G)\), every Berge cycle in its selected image
+is contained in a single factor \(J_s^+\).
 
-The odd Berge cycle of \(F\) has length at most \(m\), so \(G\) would contain an odd cycle of length at most \(m\), a contradiction. Thus \(\mathcal L(G)\) is an uncountably chromatic \(F\)-free host. \(\square\)
+\smallskip
+\noindent\emph{Proof of Claim 8.3.2.}
+Retain exactly the host hyperedges corresponding to the hyperedges of
+\(F\).  Injectivity of the embedding and linearity of \(F\) make them a
+finite linear trace isomorphic to \(F\).  Theorem 6.3 assembles this trace by
+one-point amalgamations.  The amalgamation point is a cut vertex of the Levi
+graph.  A simple cycle cannot enter a component through that cut vertex and
+later leave through it without repeating the vertex.  Hence a simple Levi
+cycle, and therefore a Berge cycle, cannot cross from one factor to another.
+This is precisely the localisation assertion in Corollary 6.4. \(\square\)
+
+\medskip
+\noindent\textbf{Claim 8.3.3 (length and parity are preserved).}
+A Berge cycle of length \(\ell\) localised in \(J_s^+\) gives an ordinary
+cycle of length \(\ell\) in \(J_s\subseteq G\).
+
+\smallskip
+\noindent\emph{Proof of Claim 8.3.3.}
+Write the local Berge cycle in alternating form as core vertices and
+hyperedges.  In a private-vertex expansion, each hyperedge comes from a
+unique graph edge of \(J_s\).  Consecutive hyperedges on the Berge cycle
+meet at their common core vertex, so their graph edges are consecutive in
+\(J_s\).  Simplicity of the Levi cycle makes both the core vertices and the
+hyperedges distinct; consequently the resulting closed graph walk is a
+simple graph cycle.  There is one graph edge for each hyperedge of the Berge
+cycle.  Thus the graph cycle has length \(\ell\), not the Levi length
+\(2\ell\), and in particular has the same parity. \(\square\)
+
+Now suppose that \(F\) embeds in \(\mathcal L(G)\).  Its given odd Berge
+cycle uses distinct hyperedges, so its length \(\ell\) satisfies
+\(\ell\le m\).  Claims 8.3.2 and 8.3.3 produce an odd graph cycle of length
+\(\ell\) in \(G\), contradicting Claim 8.3.1.  Therefore
+\(\mathcal L(G)\) is an uncountably chromatic \(F\)-free host, and \(F\) is
+non-obligatory. \(\square\)
 
 The three propositions cover every failure of the intrinsic conditions, and prove
 
