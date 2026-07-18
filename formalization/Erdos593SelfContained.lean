@@ -12634,7 +12634,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.TraceGraph
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.SourceRecursion
 Source: Erdos593/TripleSystem/ErdosRado/SourceRecursion.lean
-Normalized SHA-256: b973d9ad6d091d68417d000f9ce85561fa37a63c029b7e6bd6b635a43d0bd7d7
+Normalized SHA-256: fdc89134c1593a6d0eaa1e58fa6ea4ab0485386108fee0964f20a2e5f917d14d
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_SourceRecursion
 
@@ -12796,6 +12796,44 @@ theorem monotone_sourceRun (c : TraceColoring) (a : TraceCarrier) :
     Monotone (sourceRun c a) := by
   exact monotone_run (sourceStep c a) (sourceStep_inflationary c a)
 
+/-- Once a source run reaches a stopped prefix graph, every later stage is
+that same graph. -/
+theorem sourceRun_eq_graph_of_stopped (c : TraceColoring)
+    {a : TraceCarrier} (p : TracePrefix a)
+    (hp : ¬ Nonempty (TraceCandidate c p))
+    {η : Ordinal} (hη : sourceRun c a η = p.graph) :
+    ∀ {θ : Ordinal}, η ≤ θ → sourceRun c a θ = p.graph := by
+  intro θ hηθ
+  induction θ using Ordinal.limitRecOn with
+  | zero =>
+      have hηzero : η = 0 :=
+        le_antisymm hηθ (bot_le : (0 : Ordinal) ≤ η)
+      simpa [hηzero] using hη
+  | add_one θ ih =>
+      by_cases hηθ' : η ≤ θ
+      · rw [← Order.succ_eq_add_one, sourceRun_succ, ih hηθ',
+          sourceStep_graph_of_stopped c p hp]
+      · have hθη : θ < η := lt_of_not_ge hηθ'
+        have hsuccη : θ + 1 ≤ η := by
+          rw [← Order.succ_eq_add_one]
+          exact Order.succ_le_of_lt hθη
+        have : η = θ + 1 := le_antisymm hηθ hsuccη
+        simpa [this] using hη
+  | limit θ hθ ih =>
+      by_cases heq : η = θ
+      · simpa [heq] using hη
+      · have hlt : η < θ := hηθ.lt_of_ne heq
+        rw [sourceRun_limit c a θ hθ]
+        apply le_antisymm
+        · refine iSup_le fun ξ ↦ ?_
+          by_cases hηξ : η ≤ ξ.1
+          · exact le_of_eq (ih ξ.1 ξ.2 hηξ)
+          · rw [← hη]
+            exact monotone_sourceRun c a (le_of_not_ge hηξ)
+        · rw [← hη]
+          exact le_iSup (fun ξ : Set.Iio θ ↦ sourceRun c a ξ.1)
+            ⟨η, hlt⟩
+
 end TraceIteration
 end ErdosRado
 end TriangleHost
@@ -12805,6 +12843,156 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_SourceRecursion
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.SourceRecursion
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.SourceCanonical
+Source: Erdos593/TripleSystem/ErdosRado/SourceCanonical.lean
+Normalized SHA-256: d7ccd5ce348f77cc6b22a37456c481a539985906f77c1c0c533f4e7b0d050cf4
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_SourceCanonical
+
+namespace Erdos593
+namespace TripleSystem
+namespace TriangleHost
+namespace ErdosRado
+
+open scoped Cardinal Ordinal
+
+namespace TracePrefix
+
+/-- The strict initial segment of `p` before the coordinate `ξ`. -/
+noncomputable def before {a : TraceCarrier} (p : TracePrefix a)
+    (ξ : p.length.ToType) : TracePrefix a :=
+  p.restrict ξ.toOrd (le_of_lt (Set.mem_Iio.mp ξ.toOrd.2))
+
+@[simp]
+theorem before_length {a : TraceCarrier} (p : TracePrefix a)
+    (ξ : p.length.ToType) : (p.before ξ).length = ξ.toOrd :=
+  rfl
+
+/-- Every recorded node was chosen as a least candidate for the prefix
+strictly before its coordinate. -/
+def IsSourceCanonicalFor {a : TraceCarrier} (p : TracePrefix a)
+    (c : TraceColoring) : Prop :=
+  ∀ ξ : p.length.ToType,
+    ∃ q : TraceCandidate c (p.before ξ),
+      q.IsLeast ∧ q.value = p.node ξ
+
+theorem isSourceCanonicalFor_empty (c : TraceColoring) (a : TraceCarrier) :
+    (empty a).IsSourceCanonicalFor c := by
+  intro ξ
+  have hξ : (ξ.toOrd : Ordinal) < 0 := Set.mem_Iio.mp ξ.toOrd.2
+  exact (not_lt_of_ge bot_le hξ).elim
+
+private theorem before_restrict_eq {a : TraceCarrier} (p : TracePrefix a)
+    {η : Ordinal} (hη : η ≤ p.length) (ξ : η.ToType) :
+    (p.restrict η hη).before ξ = p.before (p.restrictIndex hη ξ) := by
+  apply graph_injective
+  unfold before
+  rw [graph_restrict, graph_restrict, graph_restrict]
+  ext z
+  simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
+  have hord : ((p.restrictIndex hη ξ).toOrd : Ordinal) =
+      (ξ.toOrd : Ordinal) := p.restrictIndex_toOrd hη ξ
+  constructor
+  · rintro ⟨⟨hz, hzη⟩, hzξ⟩
+    rw [hord]
+    exact ⟨hz, hzξ⟩
+  · rintro ⟨hz, hzξ⟩
+    have hξη : (ξ.toOrd : Ordinal) < η := Set.mem_Iio.mp ξ.toOrd.2
+    rw [hord] at hzξ
+    have hzη : z.1 < η := hzξ.trans hξη
+    exact ⟨⟨hz, hzη⟩, hzξ⟩
+
+theorem IsSourceCanonicalFor.restrict {c : TraceColoring}
+    {a : TraceCarrier} {p : TracePrefix a}
+    (hp : p.IsSourceCanonicalFor c) {η : Ordinal} (hη : η ≤ p.length) :
+    (p.restrict η hη).IsSourceCanonicalFor c := by
+  intro ξ
+  rcases hp (p.restrictIndex hη ξ) with ⟨q, hq, hvalue⟩
+  rw [before_restrict_eq p hη ξ]
+  exact ⟨q, hq, by simpa only [restrict_node] using hvalue⟩
+
+private theorem before_snoc_of_lt_eq {c : TraceColoring}
+    {a : TraceCarrier} (p : TracePrefix a) (q : TraceCandidate c p)
+    (ζ : (p.snoc q).length.ToType) (hζ : (ζ.toOrd : Ordinal) < p.length) :
+    (p.snoc q).before ζ =
+      p.before (Ordinal.ToType.mk ⟨(ζ.toOrd : Ordinal), hζ⟩) := by
+  apply graph_injective
+  unfold before
+  rw [graph_restrict, graph_restrict, graph_snoc]
+  ext z
+  simp only [Set.mem_inter_iff, Set.mem_union, Set.mem_singleton_iff,
+    Set.mem_setOf_eq]
+  constructor
+  · rintro ⟨hz | rfl, hzζ⟩
+    · refine ⟨hz, ?_⟩
+      simpa [Ordinal.ToType.toOrd] using hzζ
+    · exact (not_lt_of_ge (le_of_lt hζ) hzζ).elim
+  · rintro ⟨hz, hzζ⟩
+    refine ⟨Or.inl hz, ?_⟩
+    simpa [Ordinal.ToType.toOrd] using hzζ
+
+private theorem before_snoc_of_not_lt_eq {c : TraceColoring}
+    {a : TraceCarrier} (p : TracePrefix a) (q : TraceCandidate c p)
+    (ζ : (p.snoc q).length.ToType)
+    (hζ : ¬ (ζ.toOrd : Ordinal) < p.length) :
+    (p.snoc q).before ζ = p := by
+  have hbound : (ζ.toOrd : Ordinal) < Order.succ p.length := by
+    have h := Set.mem_Iio.mp ζ.toOrd.2
+    change (ζ.toOrd : Ordinal) < Order.succ p.length at h
+    exact h
+  have heq : (ζ.toOrd : Ordinal) = p.length :=
+    le_antisymm (Order.lt_succ_iff.mp hbound) (le_of_not_gt hζ)
+  apply graph_injective
+  unfold before
+  rw [graph_restrict, graph_snoc]
+  rw [heq]
+  ext z
+  simp only [Set.mem_inter_iff, Set.mem_union, Set.mem_singleton_iff,
+    Set.mem_setOf_eq]
+  constructor
+  · rintro ⟨hz | rfl, hzlt⟩
+    · exact hz
+    · exact (lt_irrefl p.length hzlt).elim
+  · intro hz
+    refine ⟨Or.inl hz, ?_⟩
+    rcases hz with ⟨ξ, rfl⟩
+    exact Set.mem_Iio.mp ξ.toOrd.2
+
+theorem IsSourceCanonicalFor.snoc {c : TraceColoring}
+    {a : TraceCarrier} {p : TracePrefix a}
+    (hp : p.IsSourceCanonicalFor c) (q : TraceCandidate c p)
+    (hq : q.IsLeast) : (p.snoc q).IsSourceCanonicalFor c := by
+  intro ζ
+  rcases p.snoc_index_lt_or_eq_last ζ with hζ | rfl
+  · let ξ : p.length.ToType :=
+      Ordinal.ToType.mk ⟨(ζ.toOrd : Ordinal), hζ⟩
+    rcases hp ξ with ⟨r, hr, hvalue⟩
+    rw [before_snoc_of_lt_eq p q ζ hζ]
+    refine ⟨r, hr, ?_⟩
+    rw [p.snoc_node_of_lt q ζ hζ]
+    exact hvalue
+  · have hnot : ¬
+        (((p.snocLast : (p.snoc q).length.ToType).toOrd : Ordinal)) <
+          p.length := by
+      intro h
+      have h' : ((p.snocLast).toOrd : Ordinal) < p.length := h
+      rw [p.snocLast_toOrd] at h'
+      exact (lt_irrefl p.length h').elim
+    rw [before_snoc_of_not_lt_eq p q p.snocLast hnot]
+    exact ⟨q, hq, (p.snoc_node_last q).symm⟩
+
+end TracePrefix
+end ErdosRado
+end TriangleHost
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_SourceCanonical
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.SourceCanonical
 ========================================================================== -/
 
 /- ==========================================================================
@@ -22193,7 +22381,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: bb2d2ecf148c7411def47bf61ff846ce743eda11f4e590d16a191fa86b9f164e
+Normalized SHA-256: 3dfde6754abf60e402c2f20d4285ee625119392690ca5da3ea50f3dd9a1a34c6
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

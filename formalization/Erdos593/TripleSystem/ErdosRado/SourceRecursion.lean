@@ -158,6 +158,44 @@ theorem monotone_sourceRun (c : TraceColoring) (a : TraceCarrier) :
     Monotone (sourceRun c a) := by
   exact monotone_run (sourceStep c a) (sourceStep_inflationary c a)
 
+/-- Once a source run reaches a stopped prefix graph, every later stage is
+that same graph. -/
+theorem sourceRun_eq_graph_of_stopped (c : TraceColoring)
+    {a : TraceCarrier} (p : TracePrefix a)
+    (hp : ¬ Nonempty (TraceCandidate c p))
+    {η : Ordinal} (hη : sourceRun c a η = p.graph) :
+    ∀ {θ : Ordinal}, η ≤ θ → sourceRun c a θ = p.graph := by
+  intro θ hηθ
+  induction θ using Ordinal.limitRecOn with
+  | zero =>
+      have hηzero : η = 0 :=
+        le_antisymm hηθ (bot_le : (0 : Ordinal) ≤ η)
+      simpa [hηzero] using hη
+  | add_one θ ih =>
+      by_cases hηθ' : η ≤ θ
+      · rw [← Order.succ_eq_add_one, sourceRun_succ, ih hηθ',
+          sourceStep_graph_of_stopped c p hp]
+      · have hθη : θ < η := lt_of_not_ge hηθ'
+        have hsuccη : θ + 1 ≤ η := by
+          rw [← Order.succ_eq_add_one]
+          exact Order.succ_le_of_lt hθη
+        have : η = θ + 1 := le_antisymm hηθ hsuccη
+        simpa [this] using hη
+  | limit θ hθ ih =>
+      by_cases heq : η = θ
+      · simpa [heq] using hη
+      · have hlt : η < θ := hηθ.lt_of_ne heq
+        rw [sourceRun_limit c a θ hθ]
+        apply le_antisymm
+        · refine iSup_le fun ξ ↦ ?_
+          by_cases hηξ : η ≤ ξ.1
+          · exact le_of_eq (ih ξ.1 ξ.2 hηξ)
+          · rw [← hη]
+            exact monotone_sourceRun c a (le_of_not_ge hηξ)
+        · rw [← hη]
+          exact le_iSup (fun ξ : Set.Iio θ ↦ sourceRun c a ξ.1)
+            ⟨η, hlt⟩
+
 end TraceIteration
 end ErdosRado
 end TriangleHost
