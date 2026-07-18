@@ -17037,6 +17037,280 @@ END SOURCE MODULE: Erdos593.TripleSystem.PositiveAtomClassical
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.SourceSystem
+Source: Erdos593/TripleSystem/ErdosRado/SourceSystem.lean
+Normalized SHA-256: 26d09c25df09fa2ca099027ba9b4f20450cbd6759715949a383ed3a8bb8da0be
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_SourceSystem
+
+namespace Erdos593
+namespace TripleSystem
+namespace TriangleHost
+namespace ErdosRado
+
+open scoped Cardinal Ordinal
+
+namespace TraceIteration
+
+/-- The coordinate of a terminal prefix represented by an ordinal below its
+length. -/
+noncomputable def terminalIndex (c : TraceColoring) (a : TraceCarrier)
+    {eta : Ordinal} (heta : eta < (terminalPrefix c a).length) :
+    (terminalPrefix c a).length.ToType :=
+  Ordinal.ToType.mk ⟨eta, Set.mem_Iio.mpr heta⟩
+
+@[simp]
+theorem terminalIndex_toOrd (c : TraceColoring) (a : TraceCarrier)
+    {eta : Ordinal} (heta : eta < (terminalPrefix c a).length) :
+    ((terminalIndex c a heta).toOrd : Ordinal) = eta := by
+  simp [terminalIndex]
+
+/-- The coherent trace system obtained by taking the terminal source run at
+every anchor. -/
+noncomputable def sourceCoherentTraceSystem (c : TraceColoring) :
+    CoherentTraceSystem c where
+  height a := (terminalPrefix c a).length
+  height_le a := (terminalPrefix c a).length_le
+  node a eta heta := (terminalPrefix c a).node (terminalIndex c a heta)
+  node_lt_anchor a eta heta :=
+    (terminalPrefix c a).node_lt_anchor (terminalIndex c a heta)
+  node_strict a eta zeta heta hzeta hetazeta := by
+    apply (terminalPrefix c a).node_lt_node
+    simpa [terminalIndex] using hetazeta
+  coherent_height a eta heta := by
+    have hprefix := terminalPrefix_at_node c a (terminalIndex c a heta)
+    have hlength := congrArg TracePrefix.length hprefix
+    simpa only [TracePrefix.beforeAtNode_length, terminalIndex_toOrd] using hlength
+  coherent_prefix a eta zeta heta hzetaChild hzetaParent := by
+    let xi := terminalIndex c a heta
+    have hprefix := terminalPrefix_at_node c a xi
+    let child := terminalPrefix c ((terminalPrefix c a).node xi)
+    let childIndex := terminalIndex c ((terminalPrefix c a).node xi) hzetaChild
+    have hmem : ((zeta : Ordinal), child.node childIndex) ∈ child.graph := by
+      refine ⟨childIndex, ?_⟩
+      apply Prod.ext
+      · exact (terminalIndex_toOrd c ((terminalPrefix c a).node xi)
+          hzetaChild).symm
+      · rfl
+    have hgraph : child.graph = ((terminalPrefix c a).before xi).graph := by
+      rw [show child = terminalPrefix c ((terminalPrefix c a).node xi) from rfl,
+        hprefix, TracePrefix.graph_beforeAtNode]
+    rw [hgraph] at hmem
+    rcases hmem with ⟨k, hk⟩
+    have hkord : (k.toOrd : Ordinal) = zeta :=
+      (congrArg Prod.fst hk).symm
+    change child.node childIndex =
+      (terminalPrefix c a).node (terminalIndex c a hzetaParent)
+    calc
+      child.node childIndex = ((terminalPrefix c a).before xi).node k :=
+        congrArg Prod.snd hk
+      _ = (terminalPrefix c a).node (terminalIndex c a hzetaParent) := by
+        change (terminalPrefix c a).node
+            ((terminalPrefix c a).restrictIndex (le_of_lt xi.toOrd.2) k) = _
+        apply congrArg (terminalPrefix c a).node
+        apply (Ordinal.ToType.mk
+          (o := (terminalPrefix c a).length)).symm.injective
+        apply Subtype.ext
+        rw [(terminalPrefix c a).restrictIndex_toOrd,
+          terminalIndex_toOrd]
+        exact hkord
+
+@[simp]
+theorem sourceCoherentTraceSystem_height (c : TraceColoring) (a : TraceCarrier) :
+    (sourceCoherentTraceSystem c).height a = (terminalPrefix c a).length :=
+  rfl
+
+/-- The prefix supplied by the packaged system is the terminal source prefix. -/
+@[simp]
+theorem sourceCoherentTraceSystem_tracePrefix
+    (c : TraceColoring) (a : TraceCarrier) :
+    (sourceCoherentTraceSystem c).tracePrefix a = terminalPrefix c a := by
+  apply TracePrefix.graph_injective
+  ext z
+  constructor
+  · rintro ⟨xi, rfl⟩
+    refine ⟨xi, ?_⟩
+    apply Prod.ext
+    · rfl
+    · apply congrArg (terminalPrefix c a).node
+      apply (Ordinal.ToType.mk
+        (o := (terminalPrefix c a).length)).symm.injective
+      apply Subtype.ext
+      exact terminalIndex_toOrd c a (Set.mem_Iio.mp xi.toOrd.2)
+  · rintro ⟨xi, rfl⟩
+    refine ⟨xi, ?_⟩
+    apply Prod.ext
+    · rfl
+    · apply congrArg (terminalPrefix c a).node
+      apply (Ordinal.ToType.mk
+        (o := (terminalPrefix c a).length)).symm.injective
+      apply Subtype.ext
+      exact (terminalIndex_toOrd c a (Set.mem_Iio.mp xi.toOrd.2)).symm
+
+/-- The packaged terminal source system is endhomogeneous. -/
+theorem sourceCoherentTraceSystem_isEndhomogeneous (c : TraceColoring) :
+    (sourceCoherentTraceSystem c).IsEndhomogeneous := by
+  intro a eta zeta heta hzeta hetazeta
+  let xi := terminalIndex c a heta
+  let kappa := terminalIndex c a hzeta
+  have hxikappa : xi < kappa := by
+    simpa [xi, kappa, terminalIndex] using hetazeta
+  have hend := terminalPrefix_endhomogeneous c a hxikappa
+  simpa only [sourceCoherentTraceSystem, xi, kappa] using hend
+
+/-- On a supplied level, the system's level prefix is the terminal source
+prefix at that endpoint. -/
+@[simp]
+theorem sourceCoherentTraceSystem_levelTracePrefix
+    (c : TraceColoring) (rho : Ordinal)
+    (a : (sourceCoherentTraceSystem c).level rho) :
+    (sourceCoherentTraceSystem c).levelTracePrefix rho a =
+      terminalPrefix c a.1 := by
+  have hrho : (terminalPrefix c a.1).length = rho := a.2
+  apply TracePrefix.graph_injective
+  ext z
+  constructor
+  · rintro ⟨xi, rfl⟩
+    let xi' : (terminalPrefix c a.1).length.ToType :=
+      Ordinal.ToType.mk ⟨(xi.toOrd : Ordinal), by
+        rw [hrho]
+        exact Set.mem_Iio.mp xi.toOrd.2⟩
+    have hxi' : (xi'.toOrd : Ordinal) = xi.toOrd := by
+      exact congrArg Subtype.val
+        ((Ordinal.ToType.mk
+          (o := (terminalPrefix c a.1).length)).symm_apply_apply _)
+    refine ⟨xi', ?_⟩
+    apply Prod.ext
+    · exact hxi'.symm
+    · apply congrArg (terminalPrefix c a.1).node
+      apply (Ordinal.ToType.mk
+        (o := (terminalPrefix c a.1).length)).symm.injective
+      apply Subtype.ext
+      rw [terminalIndex_toOrd]
+      exact hxi'.symm
+  · rintro ⟨xi, rfl⟩
+    let xi' : rho.ToType := Ordinal.ToType.mk
+      ⟨(xi.toOrd : Ordinal), by
+        exact (Set.mem_Iio.mp xi.toOrd.2).trans_le (le_of_eq hrho)⟩
+    have hxi' : (xi'.toOrd : Ordinal) = xi.toOrd := by
+      exact congrArg Subtype.val
+        ((Ordinal.ToType.mk (o := rho)).symm_apply_apply _)
+    refine ⟨xi', ?_⟩
+    apply Prod.ext
+    · exact hxi'.symm
+    · apply congrArg (terminalPrefix c a.1).node
+      apply (Ordinal.ToType.mk
+        (o := (terminalPrefix c a.1).length)).symm.injective
+      apply Subtype.ext
+      rw [terminalIndex_toOrd]
+      exact hxi'.symm
+
+/-- Every level prefix in the packaged source system is genuinely stopped. -/
+theorem sourceCoherentTraceSystem_stopped
+    (c : TraceColoring) (rho : Ordinal)
+    (a : (sourceCoherentTraceSystem c).level rho) :
+    ¬ Nonempty
+      (TraceCandidate c
+        ((sourceCoherentTraceSystem c).levelTracePrefix rho a)) := by
+  rw [sourceCoherentTraceSystem_levelTracePrefix]
+  exact terminalPrefix_stopped c a.1
+
+/-- Every coloring admits a stopped coherent endhomogeneous trace system. -/
+theorem stoppedCoherentTraceSystemsForEveryColoring :
+    ∀ c : TraceColoring,
+      ∃ T : CoherentTraceSystem c, T.IsEndhomogeneous ∧
+        ∀ (rho : Ordinal) (a : T.level rho), rho < TraceHeight →
+          ¬ Nonempty
+            (TraceCandidate c (T.levelTracePrefix rho a)) := by
+  intro c
+  refine ⟨sourceCoherentTraceSystem c,
+    sourceCoherentTraceSystem_isEndhomogeneous c, ?_⟩
+  intro rho a _hrho
+  exact sourceCoherentTraceSystem_stopped c rho a
+
+end TraceIteration
+
+end ErdosRado
+end TriangleHost
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_SourceSystem
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.SourceSystem
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.Theorem
+Source: Erdos593/TripleSystem/ErdosRado/Theorem.lean
+Normalized SHA-256: c38343524ef74537aefd5d25c958d694734c7463cb310f41a43c983754011f7f
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_Theorem
+
+namespace Erdos593.TripleSystem.TriangleHost.ErdosRado
+
+/-- Every coloring admits a coherent endhomogeneous limit chain through all
+proper trace stages. -/
+theorem fullEndhomogeneousLimitChainForEveryColoring :
+    FullEndhomogeneousLimitChainForEveryColoring :=
+  fullEndhomogeneousLimitChain_of_stoppedCoherentTraceSystems
+    TraceIteration.stoppedCoherentTraceSystemsForEveryColoring
+
+/-- Every coloring admits a full-height endhomogeneous trace. -/
+theorem fullEndhomogeneousTraceForEveryColoring :
+    FullEndhomogeneousTraceForEveryColoring :=
+  fullEndhomogeneousTrace_of_fullEndhomogeneousLimitChain
+    fullEndhomogeneousLimitChainForEveryColoring
+
+/-- The Erdos--Rado carrier has an uncountable homogeneous pair set for every
+natural-valued coloring. -/
+theorem erdosRadoUncountableHomogeneousPairSet :
+    ErdosRadoUncountableHomogeneousPairSet :=
+  erdosRadoUncountableHomogeneousPairSet_of_fullEndhomogeneousTrace
+    fullEndhomogeneousTraceForEveryColoring
+
+/-- The Erdos--Rado carrier satisfies the local pair-Ramsey interface used by
+the triangle-host argument. -/
+theorem pairRamseyTriangle_erdosRadoCarrier :
+    PairRamseyTriangle ErdosRadoCarrier :=
+  pairRamseyTriangle_erdosRadoCarrier_of_fullEndhomogeneousTrace
+    fullEndhomogeneousTraceForEveryColoring
+
+end Erdos593.TripleSystem.TriangleHost.ErdosRado
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ErdosRado_Theorem
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ErdosRado.Theorem
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.TriangleHostRamseyUnconditional
+Source: Erdos593/TripleSystem/TriangleHostRamseyUnconditional.lean
+Normalized SHA-256: fbb8b05fde1a31487a4e8201aefebb7cdbb06942f68211896af9899ee339b606
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_TriangleHostRamseyUnconditional
+
+namespace Erdos593.TripleSystem
+
+universe u v
+
+/-- Every non-linear triple system fails obligatoriness. -/
+theorem not_isObligatory_of_not_linear
+    {V : Type u} {E : Type v}
+    (F : TripleSystem V E) (hnotlinear : ¬ F.Linear) :
+    ¬ F.IsObligatory :=
+  TriangleHostTransport.not_isObligatory_of_not_linear_of_exactTriangleHost
+    F hnotlinear TriangleHost.ErdosRadoCarrier
+      TriangleHost.ErdosRado.pairRamseyTriangle_erdosRadoCarrier
+
+end Erdos593.TripleSystem
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_TriangleHostRamseyUnconditional
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.TriangleHostRamseyUnconditional
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.CompleteBipartiteAtomObligatory
 Source: Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean
 Normalized SHA-256: 52c570c6725ef2fbb2834c70e7938d4b9f4a1c411fa8fa31582d7299f1a6d830
@@ -23112,7 +23386,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 7d74add150ac0a508a9174c49138447a4cbebcbc556d14bb2c746e7f339fea22
+Normalized SHA-256: 30c4837925bc0f0179eb9db9e609cb3dd7051d4fe7761933cc13183cf57c97c3
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

@@ -17,6 +17,8 @@ development also proves that every balanced complete-bipartite
 private-vertex-expansion atom is obligatory, hence that every constructible
 triple system is obligatory; for finite `F`, it proves the corollary
 `F.isolatedReduction.Intrinsic → F.IsObligatory`.
+It also proves the countably-coloured Erdos--Rado pair-partition witness and
+the unconditional obstruction `¬ F.Linear → ¬ F.IsObligatory`.
 
 The typesetting is monochrome and Annals-inspired, using `amsart` with New TX text and mathematics. It is an original presentation and is not the official *Annals of Mathematics* class or submission template.
 
@@ -37,7 +39,8 @@ The author reports developing the proof independently, without consulting Eric L
   kernel: the isolated-reduction constructive/intrinsic theorem, obligatory
   closure lemmas (including one-point amalgamation), the all-parameter
   balanced complete-bipartite atom theorem and its constructible-to-obligatory
-  consequence, exact `K_{n,n}` edge coordinates, a finite rainbow lemma, a
+  consequence, the Erdos--Rado pair-partition witness and unconditional
+  nonlinearity obstruction, exact `K_{n,n}` edge coordinates, a finite rainbow lemma, a
   non-induced graph-factor interface, a one-apex sequence lift with a
   chromatic obstruction, local linear-trace rigidity, canonical base-node
   normal forms, and a canonical trace key: every lift edge is displayed at its
@@ -100,9 +103,9 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 109 source modules. The
-generated one-file checkpoint contains 15,512 physical lines, 44 external
-Mathlib imports, and 474 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 162 source modules. The
+generated one-file checkpoint contains 23,402 physical lines, 52 external
+Mathlib imports, and 783 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.

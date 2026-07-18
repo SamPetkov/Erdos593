@@ -49,10 +49,12 @@ finite-linear and embedded-source endpoint layers are also present as checked
 Lean modules. Do not spend new work on re-proving these layers unless a
 regression appears in CI.
 
-The active remaining mathematical gap for the global classical route is the
-countably-coloured Erdos--Rado pair-partition theorem for
-`ErdosRadoCarrier`. Locally, `ErdosRado/EndhomogeneousLift.lean` now exposes
-the exact sufficient trace-construction interface:
+The countably-coloured Erdos--Rado pair-partition theorem for
+`ErdosRadoCarrier` is now complete. The checked endpoint in
+`TriangleHostRamseyUnconditional.lean` applies it to the universe-exact host
+transport and closes the non-linear obstruction branch. The remaining global
+classification work is the finite-trace/reconstruction route and the
+infinitary avoidance direction.
 
 ~~~lean
 Erdos593.TripleSystem.TriangleHost.ErdosRado.FullEndhomogeneousTraceForEveryColoring
@@ -64,12 +66,11 @@ and proves that this interface implies:
 Erdos593.TripleSystem.TriangleHost.ErdosRado.erdosRadoUncountableHomogeneousPairSet_of_fullEndhomogeneousTrace
 ~~~
 
-The next proof campaign should therefore target the full-height
-endhomogeneous trace construction, not the positive atom or finite
-sequence-lift wrappers. Aristotle request O40
-`a38acccf-92a5-41c1-ae37-c4cd1e90afed` has been submitted for this exact
-N24 endpoint. Any Aristotle patch must still be validated locally under Lean
-4.32 before committing.
+The full-height endhomogeneous trace construction and its downstream
+triangle-host instantiation are now checked. Future work should target the
+remaining large-odd-girth avoidance and final classification assembly rather
+than reopening this branch. Aristotle outputs remain independent audit inputs
+and must still be validated locally under Lean 4.32 before committing.
 
 ## Proof dependency graph
 
@@ -604,10 +605,10 @@ this campaign in three separately checked layers.
    partition theorem is a named proof obligation, not an axiom or a claimed
    consequence of the host definition.
 
-Only after all three layers are checked may the result instantiate
-`not_isObligatory_of_not_linear_of_linear_highChromatic`. No tracked Lean
-Erdős--Rado or partition-calculus theorem currently supplies layer 3; this is
-the principal remaining nonlinearity branch.
+All three layers are now checked: the finite host is in
+`TriangleHostLinearity.lean`, the Ramsey witness is in
+`ErdosRado/Theorem.lean`, and the unconditional composition is in
+`TriangleHostRamseyUnconditional.lean`.
 
 **N19 status (2026-07-16).** Layers 1--2 are now implemented independently in
 `Erdos593/TripleSystem/TriangleHostLinearity.lean`.  The module defines the
@@ -618,10 +619,10 @@ It passes the strict source command and focused Lake build for that module.
 Its `#print axioms` audit reports only `propext`, `Classical.choice`, and
 `Quot.sound`.
 
-This discharges only the finite host and linearity layer.  The Ramsey/high
-chromaticity layer is still open, and an explicit universe-lifting or
-reindexing bridge is still required before an arbitrary source can use this
-same-universe host in the generic nonlinearity endpoint.
+The downstream Ramsey witness and reindexing bridge are checked in
+`ErdosRado/Theorem.lean` and `TriangleHostRamseyTransport.lean`; the
+unconditional endpoint is packaged separately in
+`TriangleHostRamseyUnconditional.lean`.
 
 ### N20 -- natural-colour Ramsey interface
 
@@ -640,7 +641,8 @@ the host has chromatic cardinal strictly above aleph-zero.
 lemmas are implemented and strict-clean in
 `Erdos593/TripleSystem/TriangleHostRamsey.lean`. The module does not prove
 `PairRamseyTriangle`, a Ramsey partition relation, a cardinal lower bound,
-or a cross-universe host bridge. Those remain separate proof obligations.
+or a cross-universe host bridge. Those are deliberately discharged in the
+downstream Erdos--Rado and transport modules.
 
 ### N21 -- conditional chromatic-cardinal bridge
 
@@ -657,9 +659,10 @@ a host in arbitrary vertex and edge universes.
 
 **N21 status (2026-07-16).** The conditional cardinal bridge is implemented
 and strict-clean in
-`Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean`. The outstanding
-work is the explicit Ramsey witness and the separately scoped reindexing
-bridge for the generic nonlinearity obstruction.
+`Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean`. The witness and
+reindexing bridge are now discharged downstream by `ErdosRado/Theorem.lean`,
+`TriangleHostRamseyTransport.lean`, and
+`TriangleHostRamseyUnconditional.lean`.
 
 ### N22 -- exact lifted-host obstruction bridge
 
@@ -670,18 +673,28 @@ module proves that the lifted host is linear and has chromatic cardinal
 strictly above aleph-zero. It then applies the generic nonlinearity obstruction
 to show that every non-linear source is not obligatory.
 
-**N22 status (2026-07-16).** Implemented and strict-clean in
-`Erdos593/TripleSystem/TriangleHostRamseyTransport.lean`. This remains a
-conditional negative route: it does not construct `kappa`, prove the
-Erdos--Rado input, or settle the full classical positive-atom theorem.
+**N22 status (completed 2026-07-18).** The conditional transport remains
+strict-clean in `Erdos593/TripleSystem/TriangleHostRamseyTransport.lean`.
+`Erdos593/TripleSystem/TriangleHostRamseyUnconditional.lean` now instantiates
+it with `ErdosRadoCarrier` and the checked pair-Ramsey theorem, proving
+`not_isObligatory_of_not_linear` for arbitrary vertex and edge universes.
+This closes the negative nonlinearity route but does not settle the full
+positive classification.
 
-### N23 -- explicit Erdos--Rado witness (Terra handoff)
+### N23 -- explicit Erdos--Rado witness (complete)
 
-This is the remaining theorem-level combinatorial input currently identified
-for the unconditional N22 route, subject to separately checked carrier and
-transport integration. It is a real partition-calculus formalization, not a
-library import or a permissible axiom. The pinned Mathlib snapshot has no
-usable theorem that supplies the required countably-coloured pair relation.
+**Completion note (2026-07-18).** The source-canonical construction is now
+strict-clean in `ErdosRado/SourceSystem.lean`, and
+`ErdosRado/Theorem.lean` proves both
+`erdosRadoUncountableHomogeneousPairSet` and
+`pairRamseyTriangle_erdosRadoCarrier`. The historical execution constraints
+below record how the theorem was developed; they are no longer open proof
+obligations.
+
+This was the final theorem-level combinatorial input for the unconditional
+N22 route. It is a real partition-calculus formalization, not a library import
+or a project axiom. The carrier and transport integration is now checked in
+`TriangleHostRamseyUnconditional.lean`.
 
 **Exact target.** Use the existing base-universe carrier
 `ErdosRadoCarrier`, its supplied noncomputable `DecidableEq`, and its
@@ -768,20 +781,17 @@ constructs, inspect `#print axioms` for the Ramsey witness and final endpoint,
 run `git diff --check`, regenerate/check the self-contained file, and monitor
 the targeted GitHub Action after the isolated commit is pushed to `main`.
 
-### N24 -- direct countably-coloured Erdos--Rado formalization
+### N24 -- direct countably-coloured Erdos--Rado formalization (complete)
 
-**Status and hard boundary.** This is an execution plan, not a claim that
-the partition theorem is present. The checked repository contains the finite
-extraction bridge, successor-of-continuum carrier interface, and
-same-universe pair-transport layer, but it does not prove:
+**Status and hard boundary (historical).** This was the execution plan before
+the partition theorem was completed. The checked repository now proves:
 
 ~~~lean
 ErdosRadoUncountableHomogeneousPairSet
 PairRamseyTriangle ErdosRadoCarrier
 ~~~
 
-or the unconditional N22 negative endpoint. No stage below may assume any
-of those statements.
+The staged constraints below remain useful as an audit trail for the proof.
 
 **Fixed theorem target.** In namespace
 `Erdos593.TripleSystem.TriangleHost`, the final module must prove:

@@ -20,7 +20,10 @@ isolated-vertex reduction for obligatoriness, the all-parameter theorem that
 every balanced complete-bipartite expansion atom is obligatory, the resulting
 theorem that every constructible triple system is obligatory, the finite
 intrinsic-isolated-reduction obligatoriness corollary, exact `Kₙ,ₙ` edge
-coordinates, a finite rainbow-bipartite lemma, a non-induced graph-factor
+coordinates, the countably-coloured Erdos--Rado pair-partition theorem, the
+universe-exact host transport, and the unconditional theorem
+`not_isObligatory_of_not_linear`. It also contains a finite
+rainbow-bipartite lemma, a non-induced graph-factor
 interface, a finite selected-edge endpoint/factor construction, rooted abundance
 and obligatory one-point-amalgamation closure, and
 the one-apex sequence lift with its countable-colouring obstruction and local
@@ -120,11 +123,11 @@ against the Lean and Mathlib versions pinned by `lean-toolchain` and
 provisioned pinned environment. Routine release validation uses the focused
 module checks recorded below.
 
-## Recorded verification (16 July 2026)
+## Recorded verification (18 July 2026)
 
-- Deterministic regeneration check: passed for 113 source modules, 44 external
-  Mathlib imports, 16,254 physical lines, and SHA-256
-  `456b6055d025b8e0b98ecff953326149a80f24d7b266d740caec48c402034dc0`.
+- Deterministic regeneration check: passed for 162 source modules, 52 external
+  Mathlib imports, 23,402 physical lines, and SHA-256
+  `cc447019e2b493e37c4125698062583b1f6febcda0fba0a027e549dadf111fa7`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.Graph.FiniteEdgeFactor`,
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
