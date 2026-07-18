@@ -24,6 +24,20 @@ theorem isolatedReduction_evenBergeCycles_of_linear_of_embedding
     (isolatedReduction_bergeCycleTraceTo_of_linear_of_embedding f hlinear)
     hG
 
+/-- A finite linear source whose isolated reduction has an odd Berge cycle
+cannot embed in a sequence lift over a host graph with no sufficiently short
+odd closed walk. -/
+theorem not_nonempty_embedding_of_not_isolatedReduction_evenBergeCycles
+    [Fintype I] [Fintype F.isolatedReduction.levi.edgeSet]
+    (hlinear : F.Linear)
+    (hno : ¬ F.isolatedReduction.EvenBergeCycles)
+    (hG : ∀ ⦃v : V⦄ (q : G.Walk v v),
+      q.length ≤ F.isolatedReduction.levi.edgeFinset.card → ¬ Odd q.length) :
+    ¬ Nonempty (F.Embedding (system G)) := by
+  rintro ⟨f⟩
+  exact hno (isolatedReduction_evenBergeCycles_of_linear_of_embedding
+    f hlinear hG)
+
 /-- A finite linear source embedded in a two-colourable sequence lift has an
 intrinsic isolated reduction. -/
 theorem isolatedReduction_intrinsic_of_linear_of_embedding
