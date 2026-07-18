@@ -3,6 +3,7 @@ import Erdos593.TripleSystem.DisjointUnionForward
 import Erdos593.TripleSystem.ForwardExpansion
 import Erdos593.TripleSystem.IsomorphIntrinsic
 import Erdos593.TripleSystem.OnePointAmalgamationIntrinsic
+import Erdos593.Graph.OddClosedWalk
 
 /-!
 # Berge-cycle traces in a host graph
@@ -30,6 +31,22 @@ def BergeCycleTraceTo (G : _root_.SimpleGraph V) (K : TripleSystem X I) : Prop :
     ∃ (v : V) (q : G.Walk v v), c.length = 2 * q.length
 
 namespace BergeCycleTraceTo
+
+/-- A bounded odd-closed-walk exclusion in the host blocks odd Berge cycles
+whose Levi length is at most twice the host cutoff. -/
+theorem evenBergeCycles_up_to
+    (G : _root_.SimpleGraph V) {K : TripleSystem X I}
+    (htrace : BergeCycleTraceTo G K) (m : ℕ)
+    (hodd : ∀ ⦃v : V⦄ (q : G.Walk v v), q.length ≤ m → ¬ Odd q.length) :
+    ∀ ⦃z : X ⊕ I⦄ (c : K.levi.Walk z z), c.IsCycle →
+      c.length ≤ 2 * m → 4 ∣ c.length := by
+  intro z c hc hclen
+  obtain ⟨v, q, hlen⟩ := htrace c hc
+  have hqle : q.length ≤ m := by omega
+  have hqeven : Even q.length := Nat.not_odd_iff_even.mp (hodd q hqle)
+  obtain ⟨k, hk⟩ := hqeven
+  use k
+  omega
 
 /-- If Berge cycles in `K` trace to closed walks in `G`, and `G` has no odd
 closed walk up to the finite Levi-edge bound for `K`, then `K` has only even

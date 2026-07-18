@@ -20,6 +20,7 @@ import Erdos593.Graph.RootedTree
 import Erdos593.Graph.ShiftGraph
 import Erdos593.Graph.ShiftGraphChromatic
 import Erdos593.Graph.ShiftGraphOddGirth
+import Erdos593.Graph.ShiftGraphHost
 import Erdos593.TripleSystem.Embedding
 import Erdos593.TripleSystem.EmbeddingLinearity
 import Erdos593.TripleSystem.Expansion
@@ -147,6 +148,8 @@ import Erdos593.TripleSystem.SequenceLiftShiftObstruction
 import Erdos593.TripleSystem.SequenceLiftEmbeddedSourceBridge
 import Erdos593.TripleSystem.SequenceLiftMissingBridgeObstruction
 import Erdos593.TripleSystem.SequenceLiftMissingBridgeUnconditional
+import Erdos593.TripleSystem.ShiftGraphBergeObstruction
+import Erdos593.TripleSystem.ObligatoryClassification
 import Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine
 import Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality
 import Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum

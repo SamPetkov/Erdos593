@@ -29,7 +29,7 @@ theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shif
     (hlinear : F.Linear)
     (hno : ¬ F.isolatedReduction.EvenBergeCycles) :
     ¬ F.IsObligatory := by
-  exact not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+  exact not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_of_host
     (G := ShiftGraph.graph κ r) hcolor hlinear hno
     (ShiftGraph.no_odd_closedWalk_up_to κ hgirth)
 

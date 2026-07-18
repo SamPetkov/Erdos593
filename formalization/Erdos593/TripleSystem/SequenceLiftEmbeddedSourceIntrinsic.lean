@@ -43,7 +43,7 @@ theorem not_nonempty_embedding_of_not_isolatedReduction_evenBergeCycles
 is not obligatory whenever a host graph has no countable colouring and no odd
 closed walk up to the finite Levi-edge bound.  The later shift-graph package
 will instantiate these two host hypotheses simultaneously. -/
-theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_of_host
     [Fintype I] [Fintype F.isolatedReduction.levi.edgeSet]
     (hGcolor : ¬ Nonempty (G.Coloring ℕ))
     (hlinear : F.Linear)

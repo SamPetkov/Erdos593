@@ -3114,7 +3114,7 @@ END SOURCE MODULE: Erdos593.Graph.ShiftGraph
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.Graph.ShiftGraphChromatic
 Source: Erdos593/Graph/ShiftGraphChromatic.lean
-Normalized SHA-256: f9edf1ffb2502ae2b4ed69a8fc049fa045dddacea4a18ab2ba3604a066fbdc8b
+Normalized SHA-256: d49585ccb77dce937b8efa90ef2feadfcf00a1eac15b66a3de41a4f8b05713d5
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_Graph_ShiftGraphChromatic
 
@@ -3128,6 +3128,8 @@ construction reduces to the complete graph on increasing one-tuples.
 -/
 
 namespace Erdos593
+
+open scoped Cardinal
 
 universe u v
 
@@ -3221,6 +3223,66 @@ noncomputable def lowerColoring {C : Type v} {r : ℕ} (hr : 0 < r)
     rcases hxy with hxy | hyx
     · exact extensionColors_ne_of_shift hr c hxy
     · exact (extensionColors_ne_of_shift hr c hyx).symm
+
+/-- A coloring of the one-dimensional shift graph is injective, since that
+shift graph is complete. -/
+theorem coloring_one_injective {C : Type v}
+    (c : (graph κ 1).Coloring C) : Function.Injective c := by
+  intro x y hxy
+  by_contra hne
+  exact c.valid (by rw [graph_one_eq_completeGraph]; simpa) hxy
+
+/-- The type obtained by iterating the powerset operation `n` times. -/
+def IteratedSet (C : Type v) : ℕ → Type v
+  | 0 => C
+  | n + 1 => IteratedSet (Set C) n
+
+/-- Iterating coloring descent reaches the complete one-dimensional shift
+graph, with an iterated powerset as color type. -/
+noncomputable def lowerToOne {C : Type v} :
+    ∀ n : ℕ, (graph κ (n + 1)).Coloring C →
+      (graph κ 1).Coloring (IteratedSet C n)
+  | 0, c => c
+  | n + 1, c => lowerToOne n (lowerColoring (Nat.succ_pos n) c)
+
+/-- Moving one successor outside the iterated-powerset definition. -/
+theorem iteratedSet_succ (C : Type v) (n : ℕ) :
+    IteratedSet C (n + 1) = Set (IteratedSet C n) := by
+  induction n generalizing C with
+  | zero => rfl
+  | succ n ih => simpa only [IteratedSet] using ih (Set C)
+
+/-- The cardinality of the `n`-fold powerset of `ℕ` is `ℶ_n`. -/
+theorem mk_iteratedSet_nat (n : ℕ) :
+    #(IteratedSet ℕ n) = ℶ_ (n : Ordinal) := by
+  induction n with
+  | zero => simp [IteratedSet, Cardinal.beth_zero]
+  | succ n ih =>
+    rw [iteratedSet_succ, Cardinal.mk_set, ih, ← Cardinal.beth_succ]
+    change ℶ_ ((n : Ordinal) + 1) = ℶ_ (((n + 1 : ℕ) : Ordinal))
+    rw [Nat.cast_succ]
+
+/-- Increasing one-tuples are canonically equivalent to their entries. -/
+def tupleOneEquiv : Tuple κ 1 ≃ κ where
+  toFun x := x.1 0
+  invFun x := ⟨fun _ => x, by simp [StrictMono]⟩
+  left_inv x := by ext i; fin_cases i; rfl
+  right_inv _ := rfl
+
+/-- If `κ` is larger than `ℶ_(r-1)`, the `r`th shift graph admits no coloring
+by natural numbers. -/
+theorem not_nonempty_coloring_nat_of_beth_lt {r : ℕ} (hr : 0 < r)
+    (hκ : ℶ_ ((r - 1 : ℕ) : Ordinal) < #κ) :
+    ¬ Nonempty ((graph κ r).Coloring ℕ) := by
+  rintro ⟨c⟩
+  obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hr)
+  have hinj : Function.Injective (lowerToOne n c) := coloring_one_injective _
+  have hle0 := Cardinal.lift_mk_le_lift_mk_of_injective hinj
+  have hle : #κ ≤ ℶ_ (n : Ordinal) := by
+    rw [mk_iteratedSet_nat, Cardinal.lift_beth, Ordinal.lift_natCast] at hle0
+    simpa only [Cardinal.lift_uzero, Cardinal.mk_congr tupleOneEquiv] using hle0
+  rw [Nat.succ_sub_one] at hκ
+  exact (not_lt_of_ge hle) hκ
 
 end ShiftGraph
 
@@ -3412,6 +3474,78 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_Graph_ShiftGraphOddGirth
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.Graph.ShiftGraphOddGirth
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.ShiftGraphHost
+Source: Erdos593/Graph/ShiftGraphHost.lean
+Normalized SHA-256: 0d7fea1dd5198eb91f1ad5ead887a1a5d80727e4ac4143d646d96d8ae9b3f2f8
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_ShiftGraphHost
+
+/-!
+# High-chromatic host graphs with controlled odd closed walks
+
+This packages the two shift-graph estimates into a single reusable host.
+-/
+
+namespace Erdos593
+
+open scoped Cardinal
+
+namespace ShiftGraph
+
+universe u
+
+/-- A canonical well-order whose cardinality is the successor of the beth
+number needed for the `r`-dimensional coloring obstruction. -/
+def HostOrder (r : ℕ) : Type u :=
+  (Order.succ (ℶ_ ((r - 1 : ℕ) : Ordinal.{u}))).ord.ToType
+
+noncomputable instance (r : ℕ) : LinearOrder (HostOrder r) :=
+  linearOrder_toType _
+
+/-- The canonical host graph for an odd-closed-walk cutoff `m`. -/
+noncomputable def hostGraph (m : ℕ) : SimpleGraph (Tuple (HostOrder (m + 1)) (m + 1)) :=
+  graph (HostOrder (m + 1)) (m + 1)
+
+/-- The canonical host has no odd closed walk of length at most `m`. -/
+theorem hostGraph_no_odd_closedWalk_up_to (m : ℕ) :
+    ∀ ⦃v⦄ (w : (hostGraph m).Walk v v), w.length ≤ m → ¬ Odd w.length := by
+  exact no_odd_closedWalk_up_to (HostOrder (m + 1)) (by omega)
+
+/-- The canonical host has no coloring by natural numbers. -/
+theorem hostGraph_not_nonempty_coloring_nat (m : ℕ) :
+    ¬ Nonempty ((hostGraph m).Coloring ℕ) := by
+  apply not_nonempty_coloring_nat_of_beth_lt (Nat.succ_pos m)
+  simp only [HostOrder, Cardinal.mk_ord_toType]
+  exact Order.lt_succ _
+
+/-- In particular, the canonical host cannot be colored with any prescribed
+finite palette. -/
+theorem hostGraph_not_nonempty_coloring_fin (m chromaticBound : ℕ) :
+    ¬ Nonempty ((hostGraph m).Coloring (Fin chromaticBound)) := by
+  rintro ⟨c⟩
+  apply hostGraph_not_nonempty_coloring_nat m
+  exact ⟨SimpleGraph.Coloring.mk (fun v => (c v : ℕ)) (fun h hEq => by
+    exact c.valid h (Fin.ext hEq))⟩
+
+/-- Existential packaging for a prescribed odd-walk cutoff and finite palette. -/
+theorem exists_graph_no_short_odd_closedWalk_and_not_colorable
+    (m chromaticBound : ℕ) :
+    ∃ (V : Type) (G : SimpleGraph V),
+      (∀ ⦃v⦄ (w : G.Walk v v), w.length ≤ m → ¬ Odd w.length) ∧
+      ¬ Nonempty (G.Coloring (Fin chromaticBound)) := by
+  exact ⟨_, hostGraph m, hostGraph_no_odd_closedWalk_up_to m,
+    hostGraph_not_nonempty_coloring_fin m chromaticBound⟩
+
+end ShiftGraph
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_ShiftGraphHost
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.ShiftGraphHost
 ========================================================================== -/
 
 /- ==========================================================================
@@ -21610,7 +21744,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.FiniteLiftGeneratedBridge
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.FiniteLiftGeneratedBergeCycleTrace
 Source: Erdos593/TripleSystem/FiniteLiftGeneratedBergeCycleTrace.lean
-Normalized SHA-256: 4826701a64cb271dcf7900a152daccddca3c1e4408c8eff393f11fcf60e8dc12
+Normalized SHA-256: 6ed8247f2925486424aea939a9fdbadb2839e4db6ec69bf300c866f9954705bb
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_FiniteLiftGeneratedBergeCycleTrace
 
@@ -21640,6 +21774,22 @@ def BergeCycleTraceTo (G : _root_.SimpleGraph V) (K : TripleSystem X I) : Prop :
     ∃ (v : V) (q : G.Walk v v), c.length = 2 * q.length
 
 namespace BergeCycleTraceTo
+
+/-- A bounded odd-closed-walk exclusion in the host blocks odd Berge cycles
+whose Levi length is at most twice the host cutoff. -/
+theorem evenBergeCycles_up_to
+    (G : _root_.SimpleGraph V) {K : TripleSystem X I}
+    (htrace : BergeCycleTraceTo G K) (m : ℕ)
+    (hodd : ∀ ⦃v : V⦄ (q : G.Walk v v), q.length ≤ m → ¬ Odd q.length) :
+    ∀ ⦃z : X ⊕ I⦄ (c : K.levi.Walk z z), c.IsCycle →
+      c.length ≤ 2 * m → 4 ∣ c.length := by
+  intro z c hc hclen
+  obtain ⟨v, q, hlen⟩ := htrace c hc
+  have hqle : q.length ≤ m := by omega
+  have hqeven : Even q.length := Nat.not_odd_iff_even.mp (hodd q hqle)
+  obtain ⟨k, hk⟩ := hqeven
+  use k
+  omega
 
 /-- If Berge cycles in `K` trace to closed walks in `G`, and `G` has no odd
 closed walk up to the finite Levi-edge bound for `K`, then `K` has only even
@@ -23416,7 +23566,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceEndpoints
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
 Source: Erdos593/TripleSystem/SequenceLiftEmbeddedSourceIntrinsic.lean
-Normalized SHA-256: 1185ea008adefa749f732ed1b3a16280c94b09c74bfce10eed6ece90008f8d28
+Normalized SHA-256: 284902dccffa9ba5701f6efe00abfe05424f35b155d5635b49841d2debe34b6f
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftEmbeddedSourceIntrinsic
 
@@ -23461,7 +23611,7 @@ theorem not_nonempty_embedding_of_not_isolatedReduction_evenBergeCycles
 is not obligatory whenever a host graph has no countable colouring and no odd
 closed walk up to the finite Levi-edge bound.  The later shift-graph package
 will instantiate these two host hypotheses simultaneously. -/
-theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_of_host
     [Fintype I] [Fintype F.isolatedReduction.levi.edgeSet]
     (hGcolor : ¬ Nonempty (G.Coloring ℕ))
     (hlinear : F.Linear)
@@ -23496,7 +23646,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftShiftObstruction
 Source: Erdos593/TripleSystem/SequenceLiftShiftObstruction.lean
-Normalized SHA-256: 9e740339184c4b3c8545bc2db5b19a914b43c681ec7996c2e819e8903948d8b5
+Normalized SHA-256: cd3ed754f72db76ce69393820eaf45c7cae99e1a8c7ab82d744d46efd08c0c33
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftShiftObstruction
 
@@ -23528,7 +23678,7 @@ theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shif
     (hlinear : F.Linear)
     (hno : ¬ F.isolatedReduction.EvenBergeCycles) :
     ¬ F.IsObligatory := by
-  exact not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+  exact not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_of_host
     (G := ShiftGraph.graph κ r) hcolor hlinear hno
     (ShiftGraph.no_odd_closedWalk_up_to κ hgirth)
 
@@ -23743,6 +23893,130 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftMissingBridgeUnconditional
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftMissingBridgeUnconditional
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ShiftGraphBergeObstruction
+Source: Erdos593/TripleSystem/ShiftGraphBergeObstruction.lean
+Normalized SHA-256: 01d56260707205cf32e9158579d1d0d4dd441e481fd99df97cf5c45bb1e71a33
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ShiftGraphBergeObstruction
+
+/-!
+# Odd Berge-cycle obstruction from shift-graph hosts
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace SequenceLift
+
+variable {X I : Type u} {F : TripleSystem X I}
+
+/-- A specified odd Berge cycle in the isolated reduction prevents embedding
+into the corresponding shift-graph sequence lift. -/
+theorem not_nonempty_embedding_shiftHost_of_oddBergeCycle
+    [Fintype I] (hlinear : F.Linear)
+    {z : F.NonIsolatedPoint ⊕ I}
+    (c : F.isolatedReduction.levi.Walk z z) (hc : c.IsCycle)
+    (hodd : ¬ 4 ∣ c.length) :
+    ¬ Nonempty (F.Embedding (system (ShiftGraph.hostGraph.{u} c.length))) := by
+  rintro ⟨f⟩
+  have hgenerated :=
+    isolatedReduction_finiteLiftGenerated_of_linear_of_embedding f hlinear
+  have htrace := TripleSystem.FiniteLiftGenerated.bergeCycleTraceTo
+    (ShiftGraph.hostGraph.{u} c.length) hgenerated
+  have heven := TripleSystem.BergeCycleTraceTo.evenBergeCycles_up_to
+    (ShiftGraph.hostGraph.{u} c.length) htrace c.length
+    (ShiftGraph.hostGraph_no_odd_closedWalk_up_to c.length)
+    c hc (by omega)
+  exact hodd heven
+
+/-- A finite linear triple system whose isolated reduction has an odd Berge
+cycle is not obligatory. -/
+theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+    (F : TripleSystem X I) [Fintype I]
+    (hlinear : F.Linear)
+    (hno : ¬ F.isolatedReduction.EvenBergeCycles) :
+    ¬ F.IsObligatory := by
+  classical
+  rw [TripleSystem.EvenBergeCycles] at hno
+  push Not at hno
+  obtain ⟨z, c, hc, hodd⟩ := hno
+  intro hF
+  have hembedding := hF _ _
+    (system (ShiftGraph.hostGraph.{u} c.length))
+    (aleph0_lt_chromaticCardinal
+      (ShiftGraph.hostGraph_not_nonempty_coloring_nat c.length))
+  exact not_nonempty_embedding_shiftHost_of_oddBergeCycle hlinear c hc hodd
+    hembedding
+
+end SequenceLift
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ShiftGraphBergeObstruction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ShiftGraphBergeObstruction
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ObligatoryClassification
+Source: Erdos593/TripleSystem/ObligatoryClassification.lean
+Normalized SHA-256: 8c7c536c2468841ba308f81fd2841bca2ad78e991c7aa8ccaecaaaae693fda7b
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryClassification
+
+/-!
+# Finite obligatory triple-system classification
+
+The theorem is deliberately stated through the isolated reduction.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace TripleSystem
+
+/-- A finite triple system is obligatory exactly when its isolated reduction
+satisfies the intrinsic structural conditions. -/
+theorem isObligatory_iff_isolatedReduction_intrinsic
+    {V E : Type u} (F : TripleSystem V E) [Fintype V] [Fintype E] :
+    F.IsObligatory ↔ F.isolatedReduction.Intrinsic := by
+  constructor
+  · intro hF
+    have hlinear : F.Linear := by
+      by_contra hn
+      exact (not_isObligatory_of_not_linear F hn) hF
+    refine ⟨F.isolatedReduction_linear hlinear, ?_, ?_⟩
+    · by_contra hbridge
+      exact (not_isObligatory_of_linear_of_not_isolatedReduction_bridgeAtEveryEdge
+        F hlinear hbridge) hF
+    · by_contra hberge
+      exact (SequenceLift.not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+        F hlinear hberge) hF
+  · exact intrinsic_isolatedReduction_isObligatory F
+
+/-- Equivalent constructive form, still correctly phrased on the isolated
+reduction. -/
+theorem isObligatory_iff_constructible_isolatedReduction
+    {V E : Type u} (F : TripleSystem V E) [Fintype V] [Fintype E] :
+    F.IsObligatory ↔ Constructible F.isolatedReduction := by
+  rw [isObligatory_iff_isolatedReduction_intrinsic]
+  classical
+  letI : DecidableEq V := Classical.decEq V
+  letI : DecidableEq E := Classical.decEq E
+  exact (BridgeBlock.isolatedReduction_constructible_iff_intrinsic F).symm
+
+end TripleSystem
+
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ObligatoryClassification
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ObligatoryClassification
 ========================================================================== -/
 
 /- ==========================================================================
@@ -24357,7 +24631,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: d75d71ff8071270ab204b6db3298124781c732a2eee0016c5ee0e67ce0cde30c
+Normalized SHA-256: 24500c8c6ae0d86a7f598dc3fc70512b5da33854b642f9beb976a41dcfc82663
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

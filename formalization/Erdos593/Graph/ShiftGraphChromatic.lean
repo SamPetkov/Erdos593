@@ -15,6 +15,8 @@ construction reduces to the complete graph on increasing one-tuples.
 
 namespace Erdos593
 
+open scoped Cardinal
+
 universe u v
 
 namespace ShiftGraph
@@ -107,6 +109,66 @@ noncomputable def lowerColoring {C : Type v} {r : ℕ} (hr : 0 < r)
     rcases hxy with hxy | hyx
     · exact extensionColors_ne_of_shift hr c hxy
     · exact (extensionColors_ne_of_shift hr c hyx).symm
+
+/-- A coloring of the one-dimensional shift graph is injective, since that
+shift graph is complete. -/
+theorem coloring_one_injective {C : Type v}
+    (c : (graph κ 1).Coloring C) : Function.Injective c := by
+  intro x y hxy
+  by_contra hne
+  exact c.valid (by rw [graph_one_eq_completeGraph]; simpa) hxy
+
+/-- The type obtained by iterating the powerset operation `n` times. -/
+def IteratedSet (C : Type v) : ℕ → Type v
+  | 0 => C
+  | n + 1 => IteratedSet (Set C) n
+
+/-- Iterating coloring descent reaches the complete one-dimensional shift
+graph, with an iterated powerset as color type. -/
+noncomputable def lowerToOne {C : Type v} :
+    ∀ n : ℕ, (graph κ (n + 1)).Coloring C →
+      (graph κ 1).Coloring (IteratedSet C n)
+  | 0, c => c
+  | n + 1, c => lowerToOne n (lowerColoring (Nat.succ_pos n) c)
+
+/-- Moving one successor outside the iterated-powerset definition. -/
+theorem iteratedSet_succ (C : Type v) (n : ℕ) :
+    IteratedSet C (n + 1) = Set (IteratedSet C n) := by
+  induction n generalizing C with
+  | zero => rfl
+  | succ n ih => simpa only [IteratedSet] using ih (Set C)
+
+/-- The cardinality of the `n`-fold powerset of `ℕ` is `ℶ_n`. -/
+theorem mk_iteratedSet_nat (n : ℕ) :
+    #(IteratedSet ℕ n) = ℶ_ (n : Ordinal) := by
+  induction n with
+  | zero => simp [IteratedSet, Cardinal.beth_zero]
+  | succ n ih =>
+    rw [iteratedSet_succ, Cardinal.mk_set, ih, ← Cardinal.beth_succ]
+    change ℶ_ ((n : Ordinal) + 1) = ℶ_ (((n + 1 : ℕ) : Ordinal))
+    rw [Nat.cast_succ]
+
+/-- Increasing one-tuples are canonically equivalent to their entries. -/
+def tupleOneEquiv : Tuple κ 1 ≃ κ where
+  toFun x := x.1 0
+  invFun x := ⟨fun _ => x, by simp [StrictMono]⟩
+  left_inv x := by ext i; fin_cases i; rfl
+  right_inv _ := rfl
+
+/-- If `κ` is larger than `ℶ_(r-1)`, the `r`th shift graph admits no coloring
+by natural numbers. -/
+theorem not_nonempty_coloring_nat_of_beth_lt {r : ℕ} (hr : 0 < r)
+    (hκ : ℶ_ ((r - 1 : ℕ) : Ordinal) < #κ) :
+    ¬ Nonempty ((graph κ r).Coloring ℕ) := by
+  rintro ⟨c⟩
+  obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hr)
+  have hinj : Function.Injective (lowerToOne n c) := coloring_one_injective _
+  have hle0 := Cardinal.lift_mk_le_lift_mk_of_injective hinj
+  have hle : #κ ≤ ℶ_ (n : Ordinal) := by
+    rw [mk_iteratedSet_nat, Cardinal.lift_beth, Ordinal.lift_natCast] at hle0
+    simpa only [Cardinal.lift_uzero, Cardinal.mk_congr tupleOneEquiv] using hle0
+  rw [Nat.succ_sub_one] at hκ
+  exact (not_lt_of_ge hle) hκ
 
 end ShiftGraph
 
