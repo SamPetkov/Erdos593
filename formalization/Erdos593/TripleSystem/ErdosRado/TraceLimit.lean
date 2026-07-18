@@ -71,7 +71,8 @@ noncomputable def ofPrefix {α : TraceCarrier} (p : TracePrefix α)
     apply congrArg p.node
     apply (Ordinal.ToType.mk (o := p.length)).symm.injective
     apply Subtype.ext
-    simp only [TracePrefix.restrictIndex_toOrd]
+    rw [p.restrictIndex_toOrd, p.restrictIndex_toOrd]
+    exact (p.restrict θ.toOrd hθ).restrictIndex_toOrd hlen ξ
 
 /-- The stage immediately after an index, available because the target
 ordinal is a successor-limit ordinal. -/
