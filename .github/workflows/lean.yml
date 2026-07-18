@@ -39,8 +39,10 @@ jobs:
           lake build Erdos593.TripleSystem.ErdosRado.PairTransport
           lake build Erdos593.TripleSystem.ErdosRadoCarrier
           lake build Erdos593.TripleSystem.ErdosRado.CanonicalTrace
+          lake build Erdos593.TripleSystem.ErdosRado.TransfiniteIteration
           lake build Erdos593.TripleSystem.ErdosRado.TraceExtension
           lake build Erdos593.TripleSystem.ErdosRado.TraceLimit
+          lake build Erdos593.TripleSystem.ErdosRado.TraceGraph
           lake build Erdos593.TripleSystem.ErdosRado.CanonicalTree
           lake build Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode
           lake build Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
@@ -100,8 +102,10 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/PairTransport.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRadoCarrier.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/CanonicalTrace.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/TransfiniteIteration.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/TraceExtension.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/TraceLimit.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/TraceGraph.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/CanonicalTree.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/CanonicalLevelCode.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/ErdosRadoCardinalArithmetic.lean

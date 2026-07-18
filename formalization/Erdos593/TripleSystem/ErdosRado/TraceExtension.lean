@@ -307,6 +307,48 @@ theorem valueSet_atCandidate {c : TraceColoring} {a : TraceCarrier}
   simpa only [TracePrefix.atCandidate_length, q.live, true_and] using
     eligible_atCandidate_iff p q β
 
+/-- A candidate is least when its carrier value is below the value of every
+other candidate for the same prefix.  Keeping the witness itself, rather than
+only its value, is what makes canonical choices transportable across changed
+anchors later in the source recursion. -/
+def IsLeast {c : TraceColoring} {a : TraceCarrier} {p : TracePrefix a}
+    (q : TraceCandidate c p) : Prop :=
+  ∀ r : TraceCandidate c p, q.value ≤ r.value
+
+/-- The existing well-founded minimum is least in the explicit sense used by
+the source recursion. -/
+theorem least_isLeast {c : TraceColoring} {a : TraceCarrier}
+    {p : TracePrefix a} (hp : Nonempty (TraceCandidate c p)) :
+    (least hp).IsLeast := by
+  intro r
+  exact least_value_le hp r
+
+/-- Least candidates for one prefix have the same carrier value. -/
+theorem IsLeast.value_eq {c : TraceColoring} {a : TraceCarrier}
+    {p : TracePrefix a} {q r : TraceCandidate c p}
+    (hq : q.IsLeast) (hr : r.IsLeast) : q.value = r.value := by
+  exact le_antisymm (hq r) (hr q)
+
+/-- Reanchoring a prefix at any least candidate is terminal immediately. -/
+theorem not_nonempty_at_isLeast {c : TraceColoring}
+    {a : TraceCarrier} {p : TracePrefix a} {q : TraceCandidate c p}
+    (hq : q.IsLeast) :
+    ¬ Nonempty (TraceCandidate c (p.atCandidate q)) := by
+  intro hat
+  rcases (nonempty_atCandidate_iff_exists_lt p q).1 hat with ⟨r, hr⟩
+  exact (not_lt_of_ge (hq r)) hr
+
+/-- A least candidate remains least after reanchoring above its value.  This
+is the valid replacement for arbitrary same-anchor candidate persistence,
+which is false in general. -/
+theorem IsLeast.atCandidateOfLt {c : TraceColoring} {a : TraceCarrier}
+    {p : TracePrefix a} {q r : TraceCandidate c p}
+    (hr : r.IsLeast) (hrq : r.value < q.value) :
+    (atCandidateOfLt p q r hrq).IsLeast := by
+  intro s
+  simpa only [atCandidateOfLt_value, ofAtCandidate_value] using
+    hr (ofAtCandidate p q s)
+
 /-- The least old candidate remains least whenever the reanchored prefix has
 a candidate. -/
 theorem least_atCandidate_value_eq {c : TraceColoring}

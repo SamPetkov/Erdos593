@@ -63,6 +63,7 @@ import Erdos593.TripleSystem.ErdosRado.CanonicalTrace
 import Erdos593.TripleSystem.ErdosRado.TransfiniteIteration
 import Erdos593.TripleSystem.ErdosRado.TraceExtension
 import Erdos593.TripleSystem.ErdosRado.TraceLimit
+import Erdos593.TripleSystem.ErdosRado.TraceGraph
 import Erdos593.TripleSystem.ErdosRado.CanonicalTree
 import Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode
 import Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
