@@ -137,6 +137,23 @@ The positive direction has two parts. Section~3 proves directly that the private
 
 For the converse, Sections~6--8 construct explicit avoidance hosts. A one-apex sequence lift transfers uncountable chromatic number from a graph to a triple system while rigidly controlling every finite linear trace. Nonlinearity is excluded by an Erd\H{o}s--Rado host, failure of the bridge condition by a sequence lift of \(K_{\omega_1}\), and an odd Berge cycle by a sequence lift of an uncountably chromatic graph of sufficiently large odd girth. This proves all three implications needed for Theorem~A.
 
+\paragraph{A reading map for the converse.}
+The converse has one reusable mechanism and three short applications.  The
+mechanism is Theorem~6.3: a finite linear trace in a sequence lift breaks
+into graph-expansion atoms, joined only at cut points.  Consequently, a
+bridge-free hyperedge-node or a Berge cycle cannot be created by crossing
+between atoms.  Section~8 then uses this observation in the following order:
+
+\begin{enumerate}
+\item a linear triangle host excludes nonlinearity;
+\item the trace theorem excludes a hyperedge-node with no incident bridge;
+\item the same trace theorem sends an odd Berge cycle to an odd cycle in the
+chosen graph host, where large odd girth rules it out.
+\end{enumerate}
+
+Thus the only role of the shift graph in the final step is to provide a graph
+that is simultaneously uncountably chromatic and free of short odd cycles.
+
 \paragraph{Set-theoretic scope.}
 All arguments are in ZFC. The only non-elementary external results used as
 black boxes are the de Bruijn--Erd\H{o}s compactness theorem
@@ -768,18 +785,21 @@ is a monochromatic hyperedge. Therefore the colours \(k_{s_\alpha}\), \(\alpha<\
 \label{theorem-6.3-exact-finite-linear-trace-theorem}
 \begin{theorembox}{Theorem 6.3: exact finite linear trace theorem}
 
-Every finite linear subhypergraph \(K\) of \(\mathcal L(G)\) is obtainable, by finite disjoint unions and one-point amalgamations, from systems \(J^+\) where \(J\) is a finite subgraph of \(G\).
+Every finite, not necessarily induced, linear subhypergraph \(K\) of
+\(\mathcal L(G)\) is obtainable, by finite disjoint unions and one-point
+amalgamations, from systems \(J^+\) where \(J\) is a finite subgraph of
+\(G\).
 
 \end{theorembox}
-\textit{Proof.} We first give a short dictionary for the objects used below.
-A \emph{base node} is a sequence \(s\) at which a lift hyperedge begins.  Its
-two vertices with sequence coordinate \(s\) are the \emph{core vertices}, and
-its third vertex, whose coordinate properly extends \(s\), is the
-\emph{apex}.  The \emph{base fibre} \(K_s\) consists of all hyperedges of
-\(K\) based at \(s\), together with their incident vertices.  Finally, an
-\emph{active base node} is a base node whose fibre is nonempty.  These names
-correspond respectively to the local expansion pieces, their overlap data,
-and the running-intersection assembly in the formalisation.
+\textit{Proof.} The following dictionary records the three local objects used
+in the assembly.  A \emph{base node} is a sequence \(s\) at which a lift
+hyperedge begins.  Its two vertices with sequence coordinate \(s\) are the
+\emph{core vertices}; its third vertex, whose coordinate properly extends
+\(s\), is the \emph{apex}.  The \emph{base fibre} \(K_s\) consists of all
+hyperedges of \(K\) based at \(s\), together with their incident vertices.
+An \emph{active base node} is one whose fibre is nonempty.  The proof first
+identifies each fibre with one expansion atom and then shows that the fibres
+are attached along a forest of one-point overlaps.
 
 First set aside every isolated vertex of \(K\). Each is a one-vertex
 edgeless factor, hence isomorphic to \(J^+\) for a one-vertex edgeless
@@ -832,7 +852,10 @@ immediately after \(s\).  Consequently, every point in
 \(K_s\cap K_u\) would be the apex attached to that same base edge of
 \(K_s\).  Claim 6.3.1 gives only one such apex. \(\square\)
 
-Construct a bipartite incidence graph \(Q\) whose one class is the set of active base nodes \(s\), and whose other class consists of points lying in at least two of the \(K_s\); join \(s\) to \(p\) when \(p\in K_s\).
+Let \(Q\) be the bipartite incidence graph of the base fibres.  Its left
+class is the set of active base nodes.  Its right class consists of points
+that lie in at least two fibres.  Join a base node \(s\) to a point \(p\)
+exactly when \(p\in V(K_s)\).
 
 \medskip
 \noindent\textbf{Claim 6.3.3 (the overlap graph is a forest).}
@@ -849,13 +872,13 @@ and their distinctness means that they arise from two distinct graph edges
 lie in different immediate branches below \(s\), one beginning with \(a\)
 and the other with \(a'\).
 
-Starting from one neighbour of \(s\), every base node on the remaining
-part of the cycle lies in the same immediate branch below \(s\). Indeed,
-consecutive base nodes share a point and are therefore comparable, and two
-comparable proper descendants of \(s\) cannot lie in different immediate
-branches. Induction along the remaining path therefore keeps every base
-node in the first branch, contradicting that its final node lies in the
-other branch. \(\square\)
+Starting from one neighbour of \(s\), every base node on the remaining part
+of the cycle lies in the same immediate branch below \(s\).  By
+Claim~6.3.2, consecutive base nodes on this path are comparable in the
+prefix order.  Two comparable proper descendants of \(s\) cannot lie in
+different immediate branches.  Induction therefore keeps every base node in
+the first branch, whereas the final node lies in the other branch.  This is
+the required contradiction. \(\square\)
 
 Root each component of \(Q\) at a base node, and order its base nodes by
 nondecreasing even distance from the root. For a nonroot base node \(s\), let
@@ -927,12 +950,13 @@ For a positive integer \(r\) and an infinite cardinal \(\kappa\), define the dir
 \begin{itemize}
 \tightlist
 \item
-  its vertices are increasing \(r\)-tuples \[(\alpha_0,\ldots,\alpha_{r-1}),\qquad
-    \alpha_0<\cdots<\alpha_{r-1}<\kappa;\]
+  its vertices are increasing \(r\)-tuples
+  \((\alpha_0,\ldots,\alpha_{r-1})\) with
+  \(\alpha_0<\cdots<\alpha_{r-1}<\kappa\);
 \item
-  it has an arc \[(\alpha_0,\ldots,\alpha_{r-1})
-    \longrightarrow
-    (\alpha_1,\ldots,\alpha_r)\] whenever \(\alpha_0<\cdots<\alpha_r\).
+  it has an arc from \((\alpha_0,\ldots,\alpha_{r-1})\) to
+  \((\alpha_1,\ldots,\alpha_r)\) whenever
+  \(\alpha_0<\cdots<\alpha_r\).
 \end{itemize}
 
 Let \(S_r(\kappa)\) be its underlying graph. Write

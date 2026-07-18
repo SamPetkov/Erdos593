@@ -23646,7 +23646,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftShiftObstruction
 Source: Erdos593/TripleSystem/SequenceLiftShiftObstruction.lean
-Normalized SHA-256: cd3ed754f72db76ce69393820eaf45c7cae99e1a8c7ab82d744d46efd08c0c33
+Normalized SHA-256: 9af1a23c36fe65892a0bc4d4befc9965fbc9e36c2d6db082fbf029943cc686b0
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftShiftObstruction
 
@@ -23654,8 +23654,9 @@ section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftShiftObst
 # Shift-graph odd-Berge obstruction
 
 This file packages the odd-girth estimates for shift graphs with the generic
-sequence-lift obstruction.  The only remaining hard host input is the
-chromatic obstruction for the chosen shift graph.
+sequence-lift obstruction.  Together with `ShiftGraphChromatic`, it supplies
+both host properties used by the avoidance argument: no countable colouring
+and no sufficiently short odd closed walk.
 -/
 
 namespace Erdos593

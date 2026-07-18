@@ -5,8 +5,9 @@ import Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
 # Shift-graph odd-Berge obstruction
 
 This file packages the odd-girth estimates for shift graphs with the generic
-sequence-lift obstruction.  The only remaining hard host input is the
-chromatic obstruction for the chosen shift graph.
+sequence-lift obstruction.  Together with `ShiftGraphChromatic`, it supplies
+both host properties used by the avoidance argument: no countable colouring
+and no sufficiently short odd closed walk.
 -/
 
 namespace Erdos593
