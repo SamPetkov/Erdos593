@@ -62,9 +62,10 @@ Implement it in four layers:
    is the corresponding restriction of the parent's run.  The local algebra
    is provided by `TracePrefix.atCandidate`, `valueSet_atCandidate`, and
    `restrict_atCandidate_node`.
-4. **System packaging (next).** Use the terminal source-canonical prefixes as
-   `CoherentTraceSystem.height` and `.node`; prove strictness, coherent heights,
-   coherent prefixes, endhomogeneity, and the stopping property.
+4. **System packaging (in progress).** Terminal extraction, reanchoring at an
+   internal node, and source endhomogeneity are complete.  Use these terminal
+   source-canonical prefixes as `CoherentTraceSystem.height` and `.node`; prove
+   strictness, coherent heights, coherent prefixes, and the stopping property.
 
 The highest-risk obligation is cross-anchor coherence.  It must not be
 replaced by same-anchor candidate persistence: that statement is false.
@@ -72,9 +73,11 @@ replaced by same-anchor candidate persistence: that statement is false.
 This obligation is now discharged in `SourceCoherence.lean`.  Its stronger
 `sourceRun_at_candidate` theorem replays a canonical prefix below any
 candidate above it; `sourceRun_at_node_stage` then specializes this to every
-earlier stage below a selected node.  The remaining work begins with terminal
-prefix extraction and reanchoring, followed by endhomogeneity and coherent
-system packaging.
+earlier stage below a selected node.  `SourceTerminal.lean` now extracts the
+terminal prefix and proves that reanchoring below any internal node is exactly
+the terminal source run there.  `SourceEndhomogeneous.lean` proves directly
+from the canonical-candidate invariant that every such prefix is
+endhomogeneous.  Coherent-system packaging is the remaining construction task.
 
 The first frozen theorem in this layer is:
 
@@ -102,10 +105,10 @@ which an arbitrary old candidate may fail.  The proof must instead use the
 exact identity
 `valueSet c (p.atCandidate q) = valueSet c p ∩ Set.Iio q.value`.
 
-After the bounded theorem, prove terminality at `ξ.toOrd` from the least
-candidate witness, then use stopped-run persistence to obtain the later-stage
-corollary.  Only then should terminal prefixes be packaged as a coherent
-trace system.
+Terminality at `ξ.toOrd` is now obtained from the least-candidate witness, and
+stopped-run persistence gives `sourceRun_at_node_traceHeight`.  The identity
+`terminalPrefix_at_node` is the frozen input for the coherent height and
+coherent prefix fields.
 
 ## Automated proof-search protocol
 

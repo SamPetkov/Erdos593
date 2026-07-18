@@ -68,6 +68,8 @@ import Erdos593.TripleSystem.ErdosRado.SourceRecursion
 import Erdos593.TripleSystem.ErdosRado.SourceCanonical
 import Erdos593.TripleSystem.ErdosRado.SourceRunInvariant
 import Erdos593.TripleSystem.ErdosRado.SourceCoherence
+import Erdos593.TripleSystem.ErdosRado.SourceTerminal
+import Erdos593.TripleSystem.ErdosRado.SourceEndhomogeneous
 import Erdos593.TripleSystem.ErdosRado.CanonicalTree
 import Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode
 import Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic

@@ -47,6 +47,8 @@ jobs:
           lake build Erdos593.TripleSystem.ErdosRado.SourceCanonical
           lake build Erdos593.TripleSystem.ErdosRado.SourceRunInvariant
           lake build Erdos593.TripleSystem.ErdosRado.SourceCoherence
+          lake build Erdos593.TripleSystem.ErdosRado.SourceTerminal
+          lake build Erdos593.TripleSystem.ErdosRado.SourceEndhomogeneous
           lake build Erdos593.TripleSystem.ErdosRado.CanonicalTree
           lake build Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode
           lake build Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic
@@ -114,6 +116,8 @@ jobs:
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/SourceCanonical.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/SourceRunInvariant.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/SourceCoherence.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/SourceTerminal.lean
+          lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/SourceEndhomogeneous.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/CanonicalTree.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/CanonicalLevelCode.lean
           lake env lean -DwarningAsError=true Erdos593/TripleSystem/ErdosRado/ErdosRadoCardinalArithmetic.lean
