@@ -62,8 +62,8 @@ theorem tracePrefix_node (a : TraceCarrier) (eta : (T.height a).ToType) :
 /-- Every earlier supplied node sees every later supplied node in the same
 colour as it sees the endpoint. -/
 def IsEndhomogeneous : Prop :=
-  ∀ (a : TraceCarrier) {eta zeta : Ordinal},
-    (heta : eta < T.height a) (hzeta : zeta < T.height a) (h : eta < zeta),
+  ∀ (a : TraceCarrier) {eta zeta : Ordinal}
+      (heta : eta < T.height a) (hzeta : zeta < T.height a) (h : eta < zeta),
       c (tracePair (T.node a heta) (T.node a hzeta)
         (ne_of_lt (T.node_strict a heta hzeta h))) =
         c (tracePair (T.node a heta) a
