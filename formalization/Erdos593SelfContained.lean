@@ -23416,7 +23416,7 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceEndpoints
 /- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic
 Source: Erdos593/TripleSystem/SequenceLiftEmbeddedSourceIntrinsic.lean
-Normalized SHA-256: f418b6939d8fc75967ad28680e74556b44092510ed41b92e965acb361c66b1cc
+Normalized SHA-256: 1185ea008adefa749f732ed1b3a16280c94b09c74bfce10eed6ece90008f8d28
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftEmbeddedSourceIntrinsic
 
@@ -23456,6 +23456,24 @@ theorem not_nonempty_embedding_of_not_isolatedReduction_evenBergeCycles
   rintro ⟨f⟩
   exact hno (isolatedReduction_evenBergeCycles_of_linear_of_embedding
     f hlinear hG)
+
+/-- A finite linear source whose isolated reduction has an odd Berge cycle
+is not obligatory whenever a host graph has no countable colouring and no odd
+closed walk up to the finite Levi-edge bound.  The later shift-graph package
+will instantiate these two host hypotheses simultaneously. -/
+theorem not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles
+    [Fintype I] [Fintype F.isolatedReduction.levi.edgeSet]
+    (hGcolor : ¬ Nonempty (G.Coloring ℕ))
+    (hlinear : F.Linear)
+    (hno : ¬ F.isolatedReduction.EvenBergeCycles)
+    (hGwalk : ∀ ⦃v : V⦄ (q : G.Walk v v),
+      q.length ≤ F.isolatedReduction.levi.edgeFinset.card → ¬ Odd q.length) :
+    ¬ F.IsObligatory := by
+  classical
+  intro hF
+  exact not_nonempty_embedding_of_not_isolatedReduction_evenBergeCycles
+    hlinear hno hGwalk
+    (hF _ _ (system G) (aleph0_lt_chromaticCardinal hGcolor))
 
 /-- A finite linear source embedded in a two-colourable sequence lift has an
 intrinsic isolated reduction. -/
