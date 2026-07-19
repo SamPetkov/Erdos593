@@ -1255,9 +1255,24 @@ All embeddings are non-induced: additional host hyperedges on the image vertices
 
 \section*{Formalisation}
 
-A partial Lean~4 formalisation developed using ChatGPT-5.6 and Aristotle
-\citep{achim-et-al-2025} is available in a self-contained source file on
+The complete finite classification in Theorem~A has been machine-checked in
+Lean~4.  The self-contained source closure, developed with ChatGPT-5.6 and
+Aristotle \citep{achim-et-al-2025}, is available on
 \href{https://github.com/SamPetkov/Erdos593/blob/main/formalization/Erdos593SelfContained.lean}{GitHub}.
+For every finite triple system \(F\), its final public theorems establish
+\[
+\begin{aligned}
+\mathtt{F.IsObligatory}
+&\Longleftrightarrow \mathtt{F.isolatedReduction.Intrinsic},\\
+\mathtt{F.IsObligatory}
+&\Longleftrightarrow \mathtt{Constructible\ F.isolatedReduction}.
+\end{aligned}
+\]
+Thus the Lean development checks both directions of the finite obligatoriness
+classification stated in this paper, including the isolated-vertex reduction.
+Here ``finite'' refers to the systems \(F\) being classified; the host triple
+systems quantified over in the definition of obligatoriness are unrestricted,
+exactly as in Theorem~A.
 
 \section*{AI assistance}
 

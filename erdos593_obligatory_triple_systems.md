@@ -787,6 +787,25 @@ Therefore $F$ is obligatory if and only if $F\in\mathcal B$. Equivalently:
 
 All embeddings are non-induced: additional host hyperedges on the image vertices are irrelevant throughout. The proof uses only ZFC, the displayed successor cardinals, graph-colouring compactness, and the standard Erdős--Rado relation (8.1). It assumes neither CH nor GCH, and no forcing axiom or large-cardinal hypothesis.
 
+# Formalisation
+
+The complete finite classification in Theorem A has been machine-checked in
+Lean 4. The self-contained source closure, developed with ChatGPT-5.6 and
+Aristotle, is available in
+[`formalization/Erdos593SelfContained.lean`](https://github.com/SamPetkov/Erdos593/blob/main/formalization/Erdos593SelfContained.lean).
+For every finite triple system `F`, its final public theorems establish
+
+```text
+F.IsObligatory ↔ F.isolatedReduction.Intrinsic
+F.IsObligatory ↔ Constructible F.isolatedReduction
+```
+
+Thus the Lean development checks both directions of the finite obligatoriness
+classification stated in this paper, including the isolated-vertex reduction.
+Here “finite” refers to the systems `F` being classified; the host triple
+systems quantified over in the definition of obligatoriness are unrestricted,
+exactly as in Theorem A.
+
 # Ethics and AI-assistance statement
 
 This manuscript was completed with assistance from OpenAI's ChatGPT-5.6 Pro for proof development, adversarial checking, and analysis of Li's arguments. Samuil Petkov is the sole author and accepts responsibility for the verification of all mathematical arguments, citations, and conclusions. The AI system is not an author.
