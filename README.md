@@ -8,17 +8,16 @@
 
 **Manuscript date:** 11 July 2026
 
-This repository contains the manuscript source package and a Lean development of
-the finite structural kernel.  It does not claim a complete machine-checked
-proof of the full obligatoriness/avoidance classification.  The checked
-structural endpoint is
-`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`.  The
-development also proves that every balanced complete-bipartite
-private-vertex-expansion atom is obligatory, hence that every constructible
-triple system is obligatory; for finite `F`, it proves the corollary
-`F.isolatedReduction.Intrinsic → F.IsObligatory`.
-It also proves the countably-coloured Erdos--Rado pair-partition witness and
-the unconditional obstruction `¬ F.Linear → ¬ F.IsObligatory`.
+This repository contains the manuscript source package and a complete Lean
+formalization of the finite obligatoriness classification.  For every finite
+triple system `F`, the final checked endpoints are
+`F.IsObligatory ↔ F.isolatedReduction.Intrinsic` and, equivalently,
+`F.IsObligatory ↔ Constructible F.isolatedReduction`.  The positive direction
+uses obligatory balanced complete-bipartite private-vertex-expansion atoms and
+the constructive closure operations.  The avoidance direction covers
+nonlinearity, failure of the edge-bridge condition, and odd Berge cycles via
+the shift-graph and Erdős--Rado machinery.  Exact invariance under deleting
+isolated vertices completes the classification.
 
 The typesetting is monochrome and Annals-inspired, using `amsart` with New TX text and mathematics. It is an original presentation and is not the official *Annals of Mathematics* class or submission template.
 
@@ -78,9 +77,8 @@ The author reports developing the proof independently, without consulting Eric L
   now packaged as a finite active-base-fibre partition with that local
   factor/isomorphism data at each index; it does not glue those factors or
   identify the selected system with a disjoint union.
-  Reconstruction across isolated vertices,
-  the remaining finite-trace decomposition, and the infinitary avoidance
-  direction remain open.
+  The resulting modules culminate in the two finite classification theorems
+  stated above.
 - `formalization/Erdos593SelfContained.lean` — deterministic one-file copy of
   the current Lean source closure, with no project-local imports.
 
@@ -103,24 +101,19 @@ lake build
 
 ## Lean checkpoint size and scope
 
-The exact imported Lean closure currently contains 162 source modules. The
-generated one-file checkpoint contains 23,402 physical lines, 52 external
-Mathlib imports, and 783 `theorem`/`lemma` declarations; its additional lines
+The exact imported Lean closure currently contains 171 source modules. The
+generated one-file checkpoint contains 24,641 physical lines, 54 external
+Mathlib imports, and 830 `theorem`/`lemma` declarations; its additional lines
 record generation status, module boundaries, and source hashes. See
 [`formalization/SELF_CONTAINED_BUILD.md`](formalization/SELF_CONTAINED_BUILD.md)
 for exact reproduction and verification instructions.
 
-The finite structural endpoint is complete on isolated-point reductions:
-private-vertex expansion generators, disjoint union, one-point amalgamation,
-and isomorphism preserve the intrinsic conditions; every intrinsic bridge block
-is reconstructed exactly as an active or degree-zero constructible restriction;
-and the rooted quotient forest gives the full running-intersection induction.
-The checked headline is
-`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`. This is
-not yet a theorem that `Constructible F` and `F.Intrinsic` are equivalent for
-arbitrary `F`, nor a full obligatoriness classification.  It does now include
-`completeBipartiteExpansionAtom_isObligatory`, `Constructible.isObligatory`,
-and the finite corollary `intrinsic_isolatedReduction_isObligatory`.
+The finite structural theorem on isolated-point reductions combines the
+private-vertex expansion generators, closure under disjoint union,
+one-point amalgamation and isomorphism, exact bridge-block reconstruction, and
+the rooted quotient-forest running-intersection induction.  Together with the
+three avoidance obstructions and exact isolated-reduction invariance, it yields
+the full finite obligatoriness classification stated above.
 
 The development also proves the chromatic-cardinal characterization, finite
 vertex-deletion lemma, obligatory disjoint-union closure, exact isolated-vertex

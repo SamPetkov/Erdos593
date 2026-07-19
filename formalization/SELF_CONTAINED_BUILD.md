@@ -6,15 +6,14 @@ the local source bodies appear in dependency order, while the external Mathlib
 imports remain at the top. Every source boundary records a repository-relative
 path and the SHA-256 of the normalized UTF-8 source.
 
-The generated file is the current verified **partial formalization**, not yet a
-full formal proof of Erdős Problem 593. Its finite structural endpoint is
-exactly
-`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`: generator
-and intrinsic-operation preservation, exact active and degree-zero bridge
-blocks, the rooted quotient-forest running intersection, and reverse
-reconstruction after isolated vertices are removed. It does not yet prove
-`Constructible F ↔ F.Intrinsic` for arbitrary `F`, nor a full
-obligatoriness classification. It also contains the chromatic-cardinal
+The generated file is the complete source closure of the formal proof of the
+finite classification in Erdős Problem 593. For every finite triple system
+`F`, its final public endpoints are
+`F.IsObligatory ↔ F.isolatedReduction.Intrinsic` and
+`F.IsObligatory ↔ Constructible F.isolatedReduction`. It contains the
+constructive positive direction and all three avoidance cases: nonlinearity,
+failure of the edge-bridge condition, and odd Berge cycles. It also contains
+the chromatic-cardinal
 interface, finite-deletion and obligatory closure facts, the exact
 isolated-vertex reduction for obligatoriness, the all-parameter theorem that
 every balanced complete-bipartite expansion atom is obligatory, the resulting
@@ -71,9 +70,8 @@ source-edge type, with the separate canonical-apex images of their active
 base fibres. The active base-node tag remains present throughout; these
 interfaces create neither an untagged global
 union nor a cross-fibre identification, and make no cardinality, trace, or
-atom claim. The global finite-trace decomposition remains open alongside
-reconstruction across isolated vertices and the remaining infinitary avoidance
-direction.
+atom claim. These interfaces feed the completed finite-trace and avoidance
+endpoints used by the final classification theorem.
 
 The local factor spine also records the exact base-pair-or-apex incidence
 normal form of every lift edge. A selected canonical base-letter set now
@@ -119,15 +117,14 @@ The first command is the only supported way to update the generated file. The
 second command exits unsuccessfully if the checked-in artifact differs by even
 one byte from deterministic regeneration. The third checks the combined source
 against the Lean and Mathlib versions pinned by `lean-toolchain` and
-`lake-manifest.json`; run that aggregate command only in a sufficiently
-provisioned pinned environment. Routine release validation uses the focused
-module checks recorded below.
+`lake-manifest.json`. GitHub Actions runs this aggregate command with warnings
+treated as errors, in parallel with the focused module checks recorded below.
 
-## Recorded verification (18 July 2026)
+## Recorded verification (19 July 2026)
 
-- Deterministic regeneration check: passed for 162 source modules, 52 external
-  Mathlib imports, 23,402 physical lines, and SHA-256
-  `cc447019e2b493e37c4125698062583b1f6febcda0fba0a027e549dadf111fa7`.
+- Deterministic regeneration check: passed for 171 source modules, 54 external
+  Mathlib imports, 24,641 physical lines, and SHA-256
+  `14518afb4b96b8c71f0c6d430e6a0f8b0f8ec6caa212b6ca2fdf1a237e2d5c97`.
 - Canonical focused checks: strict source checks and targeted builds for
   `Erdos593.Graph.FiniteEdgeFactor`,
   `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
