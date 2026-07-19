@@ -11,6 +11,27 @@ permissions:
   contents: read
 
 jobs:
+  self-contained:
+    name: Full self-contained proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: formalization
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Lean and fetch Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formalization
+          auto-config: false
+          use-mathlib-cache: true
+      - name: Check deterministic generation
+        run: python scripts/generate_self_contained.py --check
+      - name: Compile the complete one-file formalization
+        run: lake env lean -DwarningAsError=true Erdos593SelfContained.lean
+
   focused:
     runs-on: ubuntu-latest
     defaults:
