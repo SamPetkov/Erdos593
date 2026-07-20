@@ -1,277 +1,77 @@
-# Erdős Problem 593: Lean Formalization
+# Erdős Problem 593: complete Lean formalisation
 
-This Lean 4/mathlib project formalizes the complete finite classification of
-obligatory triple systems.
+This Lean 4/mathlib project machine-checks the complete finite classification
+of obligatory triple systems in the alternative proof implementation contained
+in this repository.
 
-The completed finite structural endpoint is the equivalence between
-constructibility of an isolated-point reduction and these intrinsic
-conditions:
+For every finite triple system `F`, the final public endpoints are
 
-1. linearity;
-2. a bridge incident with every hyperedge-node;
-3. even length of every Berge cycle.
+```lean
+Erdos593.TripleSystem.isObligatory_iff_isolatedReduction_intrinsic
+Erdos593.TripleSystem.isObligatory_iff_constructible_isolatedReduction
+```
 
-The structural equivalence is
-`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`.  The two
-final public classification endpoints are
-`F.IsObligatory ↔ F.isolatedReduction.Intrinsic` and
-`F.IsObligatory ↔ Constructible F.isolatedReduction` for finite `F`.
+They state, respectively,
 
-The sequence-lift development now goes beyond local rigidity. In particular,
-`edgeRestriction_finiteLiftGenerated_of_linear` proves the finite-linear
-trace decomposition for every finite selected restriction;
-`isolatedReduction_finiteLiftGenerated_of_linear_of_embedding` transports
-that result to an arbitrary embedded finite linear source; and
-`not_isObligatory_of_linear_of_not_isolatedReduction_bridgeAtEveryEdge`
-packages the missing-bridge obstruction under a host graph with no countable
-colouring. The concrete Erdős--Rado partition endpoint is now machine checked:
-the source-canonical recursion produces stopped coherent endhomogeneous
-systems, the counting layer extracts a full trace, and
-`erdosRadoUncountableHomogeneousPairSet` supplies the required uncountable
-homogeneous pair set. Its pair-Ramsey corollary feeds the universe-exact host
-transport, yielding `not_isObligatory_of_not_linear`: every non-linear triple
-system is not obligatory. The large-odd-girth shift-host construction supplies
-the odd-Berge-cycle avoidance case; together with the nonlinearity and
-missing-bridge obstructions, it completes the reverse implication of the
-finite classification.
+```lean
+F.IsObligatory ↔ F.isolatedReduction.Intrinsic
+F.IsObligatory ↔ Constructible F.isolatedReduction
+```
 
-For finite linear base fibres over a two-colourable host, the imported
-sequence-lift bridge now proves each individual fibre constructible and hence
-obligatory.  A separate running-assembly bridge glues an explicitly ordered
-finite family only when its stated edge-disjoint and total-support
-running-intersection hypotheses hold.  Its exact fibre-cover equality can be
-discharged by the simpler condition that the list contains the canonical base
-node of every selected edge; for a finite selected family, a canonical active
-base-node enumeration now supplies that cover automatically.  The cross-fibre
-support hypotheses are deliberately not inferred from the existing edge-fibre
-partition.  A coherent newest-first support order is now a concrete sufficient
-condition: under linearity, it feeds the same constructible and obligatory
-endpoints in exact-cover, base-node-cover, and canonical-active-list forms.
-An even stronger tail-degree condition, in which each new fibre has at most
-one overlapping tail neighbour, now implies that coherence directly and feeds
-the same constructible and obligatory endpoints in exact-cover,
-base-node-cover, and canonical-active-list forms.  Both remain explicit
-ordering hypotheses rather than consequences of linearity.  An explicitly
-acyclic active support-overlap graph now discharges the existential ordering
-requirement by a finite forest leaf-elimination order.  This is an existential
-order, not a claim that the canonical active-base enumeration has that
-property, and acyclicity is not inferred from linearity alone.
+## Relationship to Eric Li's proof
 
-The host-relative `FiniteLiftGenerated` class separately records finite
-generation from finite non-induced host factors, private-vertex expansions,
-disjoint unions, one-point amalgamations, and isomorphisms.  A finite linear
-base fibre is one such atom, and the explicitly acyclic support-overlap order
-now supplies a finite-generation certificate for the whole restriction.  This
-does not assert constructibility, obligatoriness, or an unrestricted trace
-decomposition.
+Eric Li's preprint arXiv:2606.24882, posted on 23 June 2026, contains the first
+publicly posted complete proof of the classification and introduces the
+complete-rank one-apex lift and exact bridge-trace framework. The Lean project
+makes no priority or independent-discovery claim for those ingredients.
 
-If the host graph is two-colourable, the factor maps in that certificate pull
-the colouring back to every atom.  The generic closure therefore proves the
-restriction constructible and then obligatory through the completed positive
-constructible theorem.  This conditional consequence does not remove the
-explicit host-colourability or support-overlap hypotheses.
+The code formalises the implementation developed in this repository: the
+selected-incidence and bridge-block structure, explicit base-fibre and
+support-incidence trace decomposition, positive closure theory, and three
+avoidance cases. It is not a line-by-line encoding of Li's manuscript. See
+`PROVENANCE.md` for the detailed attribution boundary.
 
-## Current status
+The written manuscript invokes the classical Erdős--Hajnal high-odd-girth
+theorem directly. The Lean development retains an explicit shift-graph
+realisation of the required high-odd-girth host so that this input is checked
+inside the project rather than introduced as a project axiom.
 
-The imported source closure contains no `sorry`, `admit`, project `axiom`,
-`unsafe`, or `sorryAx`; the relevant focused builds pass under Lean/mathlib
-`v4.32.0`. It includes the triple-system
-representation, isolated-point reduction, embeddings and isomorphisms, Levi
-graphs, private-vertex expansions, binary disjoint unions, one-point
-amalgamations, bridge deletion, cycle parity, and the complete bridge-block
-reconstruction. All generators and operations preserve the intrinsic
-conditions. Active and degree-zero bridge-free components are exact
-constructible edge restrictions; the quotient forest and rooted-depth ordering
-give the literal running-intersection assembly. The checked finite headline is
-`Constructible F.isolatedReduction ↔ F.isolatedReduction.Intrinsic`.
+## Verified scope
 
-The project also contains the exact chromatic-cardinal characterization,
-finite-deletion lemma, obligatory disjoint-union closure, isolated-vertex
-reduction for obligatoriness, the finite reduction from arbitrary bipartite
-expansions to the `Kₙ,ₙ⁺` atoms, the reusable conditional API
-`Constructible.isObligatory_of_completeBipartiteNN`, its discharged
-all-parameter premise `completeBipartiteExpansionAtom_isObligatory`, the
-unconditional theorem `Constructible.isObligatory`, and the finite
-intrinsic-isolated-reduction obligatoriness corollary. A bounded execution
-brief for independently auditing and maintaining the classical positive-atom
-route is in
-[`CLASSICAL_POSITIVE_ATOM_PLAN.md`](CLASSICAL_POSITIVE_ATOM_PLAN.md); it
-does not enlarge the remaining global reconstruction or infinitary-avoidance
-scope. It also includes a
-machine-checked countably-coloured Erdos--Rado pair-partition theorem and its
-universe-exact triangle-host transport. Together they prove the unconditional
-endpoint `not_isObligatory_of_not_linear`: every non-linear triple system is
-not obligatory. This closes the nonlinearity branch without closing the
-remaining finite-trace/reconstruction or infinitary-avoidance directions. The
-project also includes a
-finite union-bound rainbow-bipartite lemma, rooted abundance and obligatory
-one-point-amalgamation closure, a non-induced graph-factor interface, exact
-complete-bipartite edge coordinates, and a one-apex sequence lift with a
-formal proof that it has no proper countable colouring and a local
-linear-trace rigidity package. The `SequenceLiftBaseNode` module supplies the
-canonical grouping index needed for the next trace step: `BasedAt q e` means
-that `q` contains two distinct points of `e`, `basedAt_unique` proves that
-such a node is unique, `baseNode e` selects it classically, and
-`baseNode_mkEdge` identifies the selector on every displayed lift edge. The
-following `SequenceLiftBaseNormalForm` module normalizes every arbitrary edge
-at that selector, identifies its exact two-point graph-base fibre, and shows
-that every other fibre is singleton-or-empty. `SequenceLiftBaseLetter` then
-selects the unique unordered graph-edge letter at that base and proves that the
-canonical `(baseNode, baseLetter)` trace key is injective on every linear edge
-restriction. On every specified linear restriction its key image preserves
-`encard`; it is finite exactly when the restriction is finite and then has the
-same `Set.ncard`, so a finite linear no-isolated embedded source has exactly
-one key per edge. `SequenceLiftBaseFiber` further restricts this statement to
-one selected canonical base node: its base letter is injective within that
-fibre, the fibre's `encard` is preserved, and an embedded source fibre is
-identified with its precise source-edge index subtype.
-`SequenceLiftBaseFiberIndex` turns that range-level identification into a
-cardinality interface: the fibre and, under linearity, its base-letter image
-have the full `ENat.card` of exactly that source-edge subtype, with matching
-`Nat.card` statements; for a finite source, the explicitly chosen finite
-subtype cardinal gives the same count. `SequenceLiftBaseFiberPartition` then
-records the separate set-theoretic fact that the base fibres are pairwise
-disjoint and recover a selected family over its active base support, which is
-finite whenever the selected family is finite. It gives no cardinality sum or
-finite-trace decomposition. `SequenceLiftBaseApex` adds the complementary
-local geometry: every lifted edge has one unique point away from its canonical
-base, and under linearity this apex is private and injective inside a fixed
-base fibre. It remains factor-local and makes no global cardinality or
-trace-decomposition claim. `SequenceLiftBaseFiberSupportIndex` reindexes the
-partition by the active-base subtype and, for finite embedded sources, gives a
-source-edge surjection and cardinal bound for that index. It still proves no
-fibre-cardinality sum or global trace decomposition.
-`SequenceLiftBaseFiberSupportIncidenceForestOrder` supplies the generic
-finite bipartite-incidence-forest elimination theorem needed by the next
-sequence-lift bridge: it recomputes the right-side carrier at each deletion,
-so common-apex stars are allowed while each selected left vertex has at most
-one shared right point with its remaining tail. It does not yet instantiate
-that order for canonical base fibres. `SequenceLiftBaseFiberCardinality`
-now proves the exact finite selected-edge fibre sum and the corresponding
-source-index sigma/cardinality identities. It deliberately does not sum global
-base-letter images or traces. `SequenceLiftBaseFiberTraceSum` expresses that
-same finite sum using the distinct base-letter image within each separate
-active fibre, and therefore also counts the trace-key image. It neither
-identifies base letters across fibres nor supplies a global base-letter union
-or trace decomposition. `SequenceLiftBaseFiberEquiv` packages the same
-within-fibre injectivity as an explicit equivalence with that fibre's own
-base-letter image; it still neither joins different fibres nor supplies a
-global trace equivalence. `SequenceLiftTaggedBaseLetterEquiv` combines the
-selected-edge/base-fibre sigma equivalence with these local maps, retaining
-the active base-node tag and therefore never identifying letters from
-different fibres. `SequenceLiftTaggedBaseLetterSourceEquiv` composes that
-tagged selected-edge equivalence with an embedded source's edge-index/image
-equivalence, so source-edge indices are identified with the same tagged local
-base-letter sigma under a linear image. It introduces no global untagged
-base-letter union or trace decomposition. `SequenceLiftBaseApexEquiv`
-independently packages each linear base fibre as its own canonical-apex
-image. It neither identifies apexes across fibres nor asserts a global union,
-cardinality statement, or trace decomposition. These local equivalences are
-supporting interfaces for the completed finite-linear endpoints named in the
-opening summary; none of them alone is the global trace theorem.
-`SequenceLiftTaggedBaseApexEquiv`
-combines the tagged selected-edge/base-fibre equivalence with the local
-canonical-apex image maps, retaining the active base-node tag and therefore
-introducing no untagged apex union, cross-fibre identification, cardinality
-statement, trace decomposition, or atom claim.
-`SequenceLiftTaggedBaseApexSourceEquiv` transports that same tagged
-apex-image equivalence through an embedding back to the source-edge type
-under a linear image; it introduces no untagged union, cross-fibre
-identification, cardinality statement, trace decomposition, or atom claim.
-`SequenceLiftBaseFiberIndexApexEquiv` keeps a single chosen base node fixed
-and identifies only that source-indexed base fibre with its own
-canonical-apex image; it introduces no cross-fibre identification, global
-union, cardinality statement, trace decomposition, or atom claim.
-`SequenceLiftBaseIncidence` gives the exact base-pair-or-apex incidence normal
-form of one arbitrary lift edge. `SequenceLiftBaseLetterSubgraph` turns any
-selected canonical base-letter set into a host subgraph with exactly those
-edges, finite endpoint support for a finite selection, and a canonical edge
-equivalence. `SequenceLiftBaseFiberFactor` specializes this to one finite
-selected base fibre, giving its selected graph a finite carrier and explicit
-non-induced factor into the host, including an existential `Fintype` factor
-prefix; under linearity its graph edges are equivalent to that precise fibre.
-These are local factor spines only: they do not yet prove a
-private-vertex-expansion isomorphism.
-Their dependency order is
-recorded in
-`FORMALIZATION_MAP.md`.
+The imported closure includes:
+
+- exact isolated-vertex reduction;
+- obligatory complete-bipartite private-vertex-expansion atoms;
+- closure under finite disjoint unions and one-point amalgamation;
+- bridge-block decomposition, quotient forest, and running intersection;
+- the Erdős--Rado linear host excluding nonlinear systems;
+- the one-apex sequence lift and its uncountable chromatic obstruction;
+- the global finite-linear trace decomposition into expansion fibres joined at
+  cut points;
+- the missing-bridge obstruction;
+- the high-odd-girth odd-Berge-cycle obstruction; and
+- assembly of the final intrinsic and constructive classification theorems.
+
+There are no remaining theorem-level gaps in the finite classification.
 
 ## Build
 
 ```bash
 lake build
-```
-
-## Continuous integration
-
-GitHub Actions compiles the complete generated one-file formalization with
-warnings treated as errors. In parallel it runs strict source checks and
-targeted builds for the current
-public obligatory endpoints, sequence-trace rigidity lemmas, and the
-`Graph.FiniteEdgeFactor` /
-`SequenceLiftBaseNode` / `SequenceLiftBaseNormalForm` /
-`SequenceLiftBaseLetter` / `SequenceLiftFiniteTrace` /
-`SequenceLiftBaseFiber` / `SequenceLiftBaseFiberIndex` /
-`SequenceLiftBaseFiberPartition` / `SequenceLiftBaseApex` /
-`SequenceLiftBaseIncidence` / `SequenceLiftBaseLetterSubgraph` /
-`SequenceLiftBaseFiberFactor` /
-`SequenceLiftBaseFiberSupportIndex` / `SequenceLiftBaseFiberSupportIncidenceGraph` /
-`SequenceLiftBaseFiberSupportIncidenceForestOrder` /
-`SequenceLiftBaseFiberCardinality` /
-`SequenceLiftBaseFiberTraceSum` / `SequenceLiftBaseFiberEquiv` /
-`SequenceLiftTaggedBaseLetterEquiv` /
-`SequenceLiftTaggedBaseLetterSourceEquiv` / `SequenceLiftBaseApexEquiv` /
-`SequenceLiftBaseFiberIndexApexEquiv` /
-`SequenceLiftTaggedBaseApexEquiv` /
-`SequenceLiftTaggedBaseApexSourceEquiv`
-canonical trace-key and fibre modules on
-every pull request and
-push to `main`. The aggregate and focused checks are recorded in
-[`SELF_CONTAINED_BUILD.md`](SELF_CONTAINED_BUILD.md).
-
-## One-file checkpoint
-
-[`Erdos593SelfContained.lean`](Erdos593SelfContained.lean) is generated from
-the exact transitive closure of the local modules imported by `Erdos593.lean`.
-It contains 24,641 physical lines, 171 source modules, and 54 external Mathlib
-imports. It is a portable checkpoint of the exact source closure and does not
-enlarge the verified mathematical scope described above. Exact generated byte
-and checksum metrics are recorded in
-[`SELF_CONTAINED_BUILD.md`](SELF_CONTAINED_BUILD.md).
-
-Regenerate or byte-check it with:
-
-```bash
-python scripts/generate_self_contained.py
 python scripts/generate_self_contained.py --check
+lake env lean Erdos593.lean
+lake env lean Erdos593SelfContained.lean
 ```
 
-The generation format, source provenance, and separate axiom-audit procedure
-are documented in [`SELF_CONTAINED_BUILD.md`](SELF_CONTAINED_BUILD.md).
+The project is pinned to Lean/mathlib `v4.32.0`. GitHub Actions treats warnings
+as errors, checks deterministic regeneration, runs focused modules, and audits
+for proof placeholders and project-specific axioms.
 
-## Verification policy
+## Trust boundary
 
-- The source module appropriate to a change must build under the pinned
-  Lean/mathlib toolchain; the generated aggregate is checked separately in a
-  sufficiently provisioned pinned environment.
-- No `sorry`, `admit`, `axiom`, `unsafe`, or `sorryAx` is accepted in a
-  completed milestone.
-- Generated source is deterministically byte-checked and its axioms are
-  audited separately.
-- Aristotle is used through the CLI first on a complete, fixed theorem or lemma
-  statement. An obligation is decomposed only after a concrete failure or an
-  adversarial audit shows that the proposed statement is unsound; independent
-  obligations may run in parallel.
-- Aristotle receives only a minimal sanitized project directory, not manuscript
-  metadata or personal information. A returned proof is accepted only after it
-  builds in the canonical pinned Lean/mathlib project and passes the source-gap,
-  secret, and axiom audits.
-- Each remote task and its disposition is recorded in `ARISTOTLE_LOG.md`.
-
-## Citation and license
-
-The original repository material is licensed under
-[CC BY 4.0](../LICENSE). When the license requires attribution, credit
-**Samuil Petkov** and follow the repository-level
-[scope and attribution notice](../LICENSE_SCOPE.md). Scholarly citation
-metadata are provided in [`CITATION.cff`](../CITATION.cff).
+The local source closure and generated artifact contain no `sorry`, `admit`,
+project-defined `axiom`, `unsafe`, or `sorryAx`. Representative endpoint audits
+report only the standard Mathlib foundations `propext`, `Classical.choice`, and
+`Quot.sound`. The machine check verifies the formal statements and proofs in
+this repository; it does not establish historical priority or informational
+independence.
