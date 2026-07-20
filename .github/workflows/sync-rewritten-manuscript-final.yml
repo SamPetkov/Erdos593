@@ -1,3 +1,4 @@
+# Final synchronization trigger
 name: Finalize rewritten manuscript on branch
 
 on:
