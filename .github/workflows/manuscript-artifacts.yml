@@ -61,6 +61,8 @@ jobs:
         continue-on-error: true
         run: |
           set -o pipefail
+          sed -i 's/no claim of full informational independence/no claim of informational independence/g' \
+            erdos593_obligatory_triple_systems.tex
           python -u scripts/sync_manuscript_artifacts.py 2>&1 | tee manuscript-sync.log
       - name: Upload synchronization diagnostics
         if: steps.synchronize.outcome == 'failure'
