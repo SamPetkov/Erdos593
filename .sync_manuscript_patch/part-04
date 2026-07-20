@@ -1,0 +1,55 @@
+-The graph analogue was proved by Erdős and Hajnal: the obligatory finite graphs are exactly the bipartite graphs [3, Corollary 5.6 and Theorem 7.4]. The classical nonlinearity obstruction for uniform hypergraphs is due to Erdős, Hajnal, and Rothschild [4, Theorem 2, p. 532]. Obligatory triple systems were studied further by Erdős et al. [5], Komjáth [6], Hajnal and Komjáth [7], and Komjáth [8]; the expansion theorem of Reiher [9, Theorem 1.2] supplies the positive atoms used below. Independent work of Li [10, Theorems 1.1 and 4.6] gives the same classification by a related sequence-lift argument. The proof here is self-contained and does not use that manuscript.
++Theorem A, including both the constructive and intrinsic formulations, was first proved by Li [3, Theorem 1.1]. Li also introduced the complete-rank one-apex sequence lift and exact bridge-trace theorem that organise the negative half of the proof [3, Sections 3–4 and Theorem 4.6]. The author began developing the present argument before becoming aware of Li's preprint, but, for the provenance reasons stated at the end of the paper, no claim of informational independence is made. This paper presents an alternative proof and a Lean formalisation of the finite classification. Its main expository difference is to replace the bridge-selector derivative theorem by an explicit base-fibre decomposition and support-incidence forest suited to machine checking.
++
++The graph analogue was proved by Erdős and Hajnal: the obligatory finite graphs are exactly the bipartite graphs [4, Corollary 5.6 and Theorem 7.4]. The classical nonlinearity obstruction for uniform hypergraphs is due to Erdős, Hajnal, and Rothschild [5, Theorem 2, p. 532]. Obligatory triple systems were studied further by Erdős et al. [6], Komjáth [7], Hajnal and Komjáth [8], and Komjáth [9]; the expansion theorem of Reiher [10, Theorem 1.2] supplies the positive atoms used below.
++
++#### Relation to Li's proof.
++
++The classification theorem, complete-rank one-apex lift, bridge-trace architecture, selected-incidence decomposition, quotient forest, and running-intersection assembly all appear in Li's preprint [3, Sections 3–5]. The present paper makes no priority claim for those ingredients. Its alternative implementation gives direct proofs of the positive expansion atoms and closure statements in the notation used here, replaces the bridge-selector derivative formalism by an explicit base-fibre and support-incidence analysis, invokes the older Erdős–Hajnal high-odd-girth theorem directly, and supplies a complete Lean formalisation of this implementation.
+ 
+ The proof separates the positive and negative directions. First, a probabilistic rainbow lemma provides the local injectivity needed to force complete bipartite expansions. A rooted-abundance lemma then proves closure under one-point amalgamation, including at singular uncountable cardinals. Deleting the bridges of the Levi graph identifies each remaining active component with the expansion of a finite bipartite graph; the quotient graph is a forest, and its running-intersection property gives the required amalgamation order.
+ 
+-For the converse, a one-apex sequence lift transfers uncountable chromatic number from a graph to a triple system while controlling every finite linear trace. Such a trace decomposes into finite graph expansions joined only at cut points. This prevents a bridge-free hyperedge-node or a Berge cycle from being assembled across different fibres. The three possible failures of the intrinsic conditions are then excluded respectively by an Erdős–Rado linear host, the lift of $K_{\omega_1}$, and the lift of an uncountably chromatic shift graph with sufficiently large odd girth.
++For the converse, we use Li's one-apex sequence-lift strategy [3, Sections 3–4]. The lift transfers uncountable chromatic number from a graph to a triple system while controlling every finite linear trace. We prove the required trace statement through expansion fibres and a support-incidence forest, so that the fibres are joined only at cut points. This prevents a bridge-free hyperedge-node or a Berge cycle from being assembled across different fibres. The three failures of the intrinsic conditions are excluded respectively by an Erdős–Rado linear host, the lift of $K_{\omega_1}$, and a classical Erdős–Hajnal graph of uncountable chromatic number and prescribed odd girth.
+ 
+-All embeddings are injective and non-induced. The argument is carried out in ZFC. The only non-elementary results used as black boxes are the de Bruijn–Erdős compactness theorem [11, Theorem 1, pp. 371–373] and the pair case of the Erdős–Rado partition theorem [12, Theorem 4(i), formula (95), p. 471].
++All embeddings are injective and non-induced. The argument is carried out in ZFC. The imported results used as black boxes are the de Bruijn–Erdős compactness theorem [11, Theorem 1, pp. 371–373], the Erdős–Hajnal high-odd-girth theorem [4, Theorem 7.4, p. 76], and the pair case of the Erdős–Rado partition theorem [12, Theorem 4(i), formula (95), p. 471].
+ 
+ # Preliminaries
+ 
+@@ -114,7 +120,7 @@
+ 
+ # A bipartite subgraph lemma
+ 
+-The next lemma is the finite complete-bipartite consequence of Erdős and Hajnal [3, Corollary 5.6, p. 72]. We include its short closure-chain proof because the same construction is used later.
++The next lemma is the finite complete-bipartite consequence of Erdős and Hajnal [4, Corollary 5.6, p. 72]. We include its short closure-chain proof because the same construction is used later.
+ 
+ **Lemma 2.1** (Uncountable chromatic number forces complete bipartite graphs).
+ 
+@@ -245,11 +251,11 @@
+ 
+ *Proof.* Embed the two vertex classes of $J$ in the two classes of some $K_{n,n}$. Then $J^+$ is a subhypergraph of $K_{n,n}^+$. Obligatoriness is downward closed under non-induced containment: a copy of the larger finite system contains a copy of the smaller one. Apply Proposition 3.2. ◻
+ 
+-Corollary 3.3 is also a consequence of Reiher [9, Theorem 1.2]; the preceding argument gives a direct proof in the present notation.
++Corollary 3.3 is also a consequence of Reiher [10, Theorem 1.2]; the preceding argument gives a direct proof in the present notation.
+ 
+ # Closure properties
+ 
+-Closure under disjoint unions and one-point amalgamations is part of the established theory; see Komjáth [6, pp. 233–238] and the summary in Reiher [9, p. 1]. We include complete proofs because the rooted abundance argument is used below.
++Closure under disjoint unions and one-point amalgamations is part of the established theory; see Komjáth [7, pp. 233–238] and the summary in Reiher [10, p. 1]. We include complete proofs because the rooted abundance argument is used below.
+ 
+ #### Disjoint-union closure.
+ 
+@@ -313,6 +319,8 @@
+ 
+ # The intrinsic decomposition
+ 
++The selected-incidence decomposition, quotient forest, and running-intersection architecture in this section follow the positive structural framework of Li [3, Sections 4–5]. We give the full argument in the present notation because its explicit assembly order is also used by the Lean development.
++
+ We prove $(2)\Longleftrightarrow(3)$. Isolated vertices may be ignored by Lemma 1.1.
+ 
+ #### Forward preservation.
+@@ -391,6 +399,8 @@
+ 
+ # The sequence lift
+ 
