@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/revise-erdos593-manuscript
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
