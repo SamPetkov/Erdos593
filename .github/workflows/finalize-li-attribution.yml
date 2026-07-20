@@ -60,13 +60,17 @@ jobs:
           ! grep -Eq 'Independent work|does not use that manuscript' "$tex" "$md" README.md SOURCE_LEDGER.md
           ! grep -Eq '\\address|\\email|École|Ecole|samuil\.petkov' "$tex" "$md"
 
-          test "$(pdfinfo "$pdf" | awk '/^Pages:/ {print $2}')" = 15
-          pdfinfo "$pdf" | grep -Fq 'A4'
-          pdftotext "$pdf" - | grep -Fq 'first publicly posted complete proof'
-          pdftotext "$pdf" - | grep -Fq 'Eric Li for a productive discussion'
-          pdftotext "$pdf" - | grep -Fq '[3] Eric Li'
-          ! pdftotext "$pdf" - | grep -Eq 'École|Ecole|samuil\.petkov|Email address'
-          awk 'NR > 2 && $4 != "yes" {exit 1}' < <(pdffonts "$pdf")
+          pdfinfo "$pdf" > /tmp/erdos593-pdfinfo.txt
+          pdftotext "$pdf" /tmp/erdos593-paper.txt
+          pdffonts "$pdf" > /tmp/erdos593-fonts.txt
+
+          test "$(awk '/^Pages:/ {print $2}' /tmp/erdos593-pdfinfo.txt)" = 15
+          grep -Fq 'A4' /tmp/erdos593-pdfinfo.txt
+          grep -Fq 'first publicly posted complete proof' /tmp/erdos593-paper.txt
+          grep -Fq 'Eric Li for a productive discussion' /tmp/erdos593-paper.txt
+          grep -Fq '[3] Eric Li' /tmp/erdos593-paper.txt
+          ! grep -Eq 'École|Ecole|samuil\.petkov|Email address' /tmp/erdos593-paper.txt
+          awk 'NR > 2 && $4 != "yes" {exit 1}' /tmp/erdos593-fonts.txt
 
           if grep -E 'LaTeX Warning|Package .* Warning|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox|Underfull \\vbox|undefined references|Citation.*undefined|Rerun to get' "$log"; then
             exit 1
