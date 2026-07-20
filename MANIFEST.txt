@@ -2,6 +2,7 @@
 .github/workflows/lean.yml
 .gitignore
 CITATION.cff
+Erdos593_revised.tex
 LICENSE
 LICENSE_SCOPE.md
 MANIFEST.txt
@@ -9,6 +10,9 @@ README.md
 REVISION_NOTES.md
 SHA256SUMS
 SOURCE_LEDGER.md
+arxiv/main.md
+arxiv/main.pdf
+arxiv/main.tex
 build.sh
 create-private-repo.sh
 erdos593_obligatory_triple_systems.md
@@ -191,6 +195,7 @@ formalization/Erdos593/TripleSystem/TriangleHostRamseyTransport.lean
 formalization/Erdos593/TripleSystem/TriangleHostRamseyUnconditional.lean
 formalization/Erdos593SelfContained.lean
 formalization/FORMALIZATION_MAP.md
+formalization/PROVENANCE.md
 formalization/README.md
 formalization/SELF_CONTAINED_BUILD.md
 formalization/lake-manifest.json
@@ -224,6 +229,7 @@ formalization/tmp/ErdosRadoCarrierPrototype.lean
 formalization/tmp/ErdosRadoCarrierPrototype2.lean
 formalization/tmp/ErdosRadoUncountableTargetScratch.lean
 formalization/tmp/FiniteClosureLayeringConstructionScratch.lean
+formalization/tmp/GraphInitialScratch.lean
 formalization/tmp/HighPairAtomBridgeProbe.lean
 formalization/tmp/HighPairAtomBridgeScratch.lean
 formalization/tmp/HighPairPositiveAtomBridgeScratch.lean
@@ -249,6 +255,7 @@ formalization/tmp/N23PairRamseyInterfaceScratch.lean
 formalization/tmp/N24UncountableInterfaceAxiomAudit.lean
 formalization/tmp/NextTraceRangeScout_20260717.lean
 formalization/tmp/NonlinearObstructionAxiomAudit.lean
+formalization/tmp/NonlinearUnconditionalAxioms.lean
 formalization/tmp/OrdinalApiProbe_20260717.lean
 formalization/tmp/PairTransportAxiomAudit.lean
 formalization/tmp/PairTransportVerify.lean
@@ -269,6 +276,14 @@ formalization/tmp/SnocLastApi2_20260717.lean
 formalization/tmp/SnocLastApi_20260717.lean
 formalization/tmp/SnocLastResearch2_20260717.lean
 formalization/tmp/SnocLastResearch_20260717.lean
+formalization/tmp/SourceCoherenceScratch.lean
+formalization/tmp/SourceEndhomAgentScratch.lean
+formalization/tmp/SourcePublicAxioms.lean
+formalization/tmp/SourceRunLimitScratch.lean
+formalization/tmp/SourceRunSuccScratch.lean
+formalization/tmp/SourceSystemAgentScratch.lean
+formalization/tmp/SourceSystemPublicAxioms.lean
+formalization/tmp/SourceTerminalAgentScratch.lean
 formalization/tmp/TraceBridgeResearch_20260717.lean
 formalization/tmp/TraceSnocResearch_20260717.lean
 formalization/tmp/UncountableToInfiniteAPITest.lean
@@ -284,6 +299,7 @@ formalization/tmp/carrier_api_research4_20260717.lean
 formalization/tmp/carrier_api_research5_20260717.lean
 formalization/tmp/carrier_api_research6_20260717.lean
 formalization/tmp/carrier_api_research_20260717.lean
+formalization/tmp_check.lean
 references.bib
 tmp/ARISTOTLE_LOG.proposed.md
 tmp/AgentN22EndpointFix.patch
