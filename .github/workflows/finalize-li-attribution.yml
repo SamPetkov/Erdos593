@@ -1,15 +1,16 @@
 name: Finalize Problem 593 attribution revision
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/update-self-contained-build-status
+      - main
 
 permissions:
   contents: write
 
 jobs:
   finalize:
+    if: github.head_ref == 'agent/update-self-contained-build-status'
     runs-on: ubuntu-latest
     steps:
       - name: Check out revision branch
@@ -50,9 +51,9 @@ jobs:
 
           grep -Fq '\documentclass[a4paper,11pt,reqno]{amsart}' "$tex"
           grep -Fq '\usepackage[numbers,sort&compress]{natbib}' "$tex"
-          grep -Fq "first publicly posted complete proof" "$tex"
+          grep -Fq 'first publicly posted complete proof' "$tex"
           grep -Fq "Relation to Li's proof" "$tex"
-          grep -Fq "Eric Li for a productive discussion" "$tex"
+          grep -Fq 'Eric Li for a productive discussion' "$tex"
           grep -Fq 'AI assistance and provenance' "$tex"
           grep -Fq 'formalization/PROVENANCE.md' README.md
           grep -Fq 'complete machine-checked finite' formalization/SELF_CONTAINED_BUILD.md
