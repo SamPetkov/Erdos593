@@ -9,41 +9,22 @@ permissions:
 
 jobs:
   finalize:
-    if: github.event.issue.title == 'Finalize rewritten Problem 593 manuscript'
+    if: github.event.issue.title == 'Finalize clean Problem 593 manuscript'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: agent/revise-erdos593-manuscript
+          ref: agent/sync-final-manuscript-20260720
 
-      - name: Restore manuscript
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Restore verified manuscript
         run: |
           set -euo pipefail
+          git fetch origin agent/revise-erdos593-manuscript
           : > /tmp/manuscript.tar.gz
-          for sha in \
-            b45d4f640b70a949cb3e8bfbd120d8447d18e301 \
-            adec86bbb0907958b617721084b062215ceae2d4 \
-            739b801ef24fc542e609858ff20df8692810553e \
-            8357a193f5d9f0b3ad4617a9a33a51838015a423 \
-            e3b492961ff48d2b7dd6d56bdd2a34dc2c99b020 \
-            0926016060ecd8a47204bb29879e85147786410c \
-            76149fcf7410057889e7128c85b6b345c1324eb7 \
-            43d4b97620eb2d9f7a90eafda246713873968a1b \
-            80a26be19d6ea19b59b0d5efa61096f644a3ec7c \
-            33c2acfd8ed5ffe3b1b22aaf5214a6a8a692e397 \
-            a512ad81a39e3cca2624f327e9d7daeb180c6143 \
-            e9a510b53585502686457389204f7fb6ca5f78e0
-          do
-            curl -fsSL \
-              -H "Authorization: Bearer ${GH_TOKEN}" \
-              -H 'Accept: application/vnd.github+json' \
-              "https://api.github.com/repos/${GITHUB_REPOSITORY}/git/blobs/${sha}" \
-            | python3 -c 'import base64,json,sys; d=json.load(sys.stdin); sys.stdout.buffer.write(base64.b64decode(d["content"]))' \
-            >> /tmp/manuscript.tar.gz
-          done
+          while IFS= read -r file; do
+            git show "FETCH_HEAD:${file}" >> /tmp/manuscript.tar.gz
+          done < <(git ls-tree -r --name-only FETCH_HEAD .sync_payload | sort)
           echo 'a0203c5b69e5c80d7255efa601950f4c1bcea2f303b6d4aef108b9b7c7065d06  /tmp/manuscript.tar.gz' | sha256sum -c --strict
           tar -xzf /tmp/manuscript.tar.gz -C .
 
@@ -56,7 +37,7 @@ jobs:
         with:
           root_file: erdos593_obligatory_triple_systems.tex
 
-      - name: Verify and commit
+      - name: Verify and commit final files
         run: |
           set -euo pipefail
           sudo apt-get update -qq
@@ -71,6 +52,12 @@ jobs:
           test "$(pdfinfo "$base.pdf" | awk '/^Pages:/ {print $2}')" = 16
           pdfinfo "$base.pdf" | grep -Fq 'A4'
           if grep -E 'LaTeX Warning|Package .* Warning|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox|Underfull \\vbox|undefined references|Citation.*undefined' "$base.log"; then exit 1; fi
+
+          mkdir -p arxiv
+          cp "$base.tex" arxiv/main.tex
+          cp "$base.md" arxiv/main.md
+          cp "$base.pdf" arxiv/main.pdf
+          cp "$base.tex" Erdos593_revised.tex
 
           cat > build.sh <<'SH'
           #!/usr/bin/env bash
@@ -87,37 +74,30 @@ jobs:
           SH
           chmod +x build.sh
 
-          sed -i 's/reproducible LuaLaTeX\/Biber build/reproducible pdfLaTeX\/latexmk build/' README.md
-          sed -i 's/A TeX Live installation containing LuaLaTeX, Biber, `amsart`, `newtx`, `biblatex`, `microtype`, and the AMS packages is required./A TeX Live installation containing pdfLaTeX, `latexmk`, `amsart`, `newtx`, `natbib`, `microtype`, and the AMS packages is required./' README.md
+          sed -i 's/reproducible LuaLaTeX\/Biber build/reproducible pdfLaTeX\/latexmk build/' README.md || true
+          sed -i 's/A TeX Live installation containing LuaLaTeX, Biber, `amsart`, `newtx`, `biblatex`, `microtype`, and the AMS packages is required./A TeX Live installation containing pdfLaTeX, `latexmk`, `amsart`, `newtx`, `natbib`, `microtype`, and the AMS packages is required./' README.md || true
           if ! grep -Fq '## Final synchronized manuscript' README.md; then
             cat >> README.md <<'MD'
 
-## Final synchronized manuscript
+          ## Final synchronized manuscript
 
-The principal LaTeX, PDF, and Markdown files are synchronized with the rewritten arXiv manuscript. Citations are numeric and the bibliography is numbered. The visible author affiliation and email are intentionally omitted. The acknowledgment reads: “The author thanks Tom de Groot for his advice on how to revise the manuscript for greater clarity.”
-MD
-          fi
-          if ! grep -Fq '## Synchronized publication manuscript (20 July 2026)' REVISION_NOTES.md; then
-            cat >> REVISION_NOTES.md <<'MD'
-
-## Synchronized publication manuscript (20 July 2026)
-
-- Replaced the principal LaTeX, PDF, and Markdown manuscript with the final rewritten proof.
-- Standardized the paper as `amsart` on A4 paper with one-inch margins and standard theorem environments.
-- Converted all citations and bibliography labels to numeric form.
-- Removed the visible affiliation and institutional email from the manuscript.
-- Rephrased the acknowledgment to thank Tom de Groot for advice on how to revise the manuscript for greater clarity.
-MD
+          The principal LaTeX, PDF, and Markdown files are synchronized with the rewritten arXiv manuscript. Citations are numeric and the bibliography is numbered. The visible author affiliation and email are intentionally omitted. The acknowledgment thanks Tom de Groot for his advice on how to revise the manuscript for greater clarity.
+          MD
           fi
 
+          rm -rf .sync_payload
+          rm -f .github/workflows/finalize-rewritten-manuscript.yml
           rm -f .github/workflows/sync-rewritten-manuscript.yml .github/workflows/sync-rewritten-manuscript-v2.yml .github/workflows/sync-rewritten-manuscript-final.yml
           rm -f "$base".{aux,log,out,fls,fdb_latexmk}
-          tmp="$(mktemp)"
-          while IFS= read -r file; do [ "$file" = SHA256SUMS ] || sha256sum "$file"; done < MANIFEST.txt > "$tmp"
-          mv "$tmp" SHA256SUMS
+
+          if [ -f MANIFEST.txt ]; then
+            tmp="$(mktemp)"
+            while IFS= read -r file; do [ "$file" = SHA256SUMS ] || sha256sum "$file"; done < MANIFEST.txt > "$tmp"
+            mv "$tmp" SHA256SUMS
+          fi
 
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'Synchronize rewritten Problem 593 manuscript'
-          git push origin HEAD:agent/revise-erdos593-manuscript
+          git commit -m 'Synchronize final Problem 593 manuscript'
+          git push origin HEAD:agent/sync-final-manuscript-20260720
