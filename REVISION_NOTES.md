@@ -1,19 +1,14 @@
-# Final revision notes
+# Revision notes: priority, attribution, and formalisation
 
-**Author:** Samuil Petkov
-**Manuscript date:** 11 July 2026
+**Revision date:** 20 July 2026
 
-1. Corrected the author's name to **Samuil Petkov** in the title block, PDF metadata, Markdown source, running heads, citation metadata, and repository documentation.
-2. Removed the Keywords line and the 2020 Mathematics Subject Classification from the paper.
-3. Reworked the typography into a restrained, monochrome, Annals-inspired journal design based on `amsart`, New TX text and mathematics, traditional running heads, and unboxed theorem statements.
-4. Replaced the bibliographic-only note on arXiv:2606.24882v1 with a substantive comparison: the author reports independent development without consulting the preprint, followed by later discovery of Li's same classification, same sequence lift in greater generality, and related structural arguments.
-5. Added an end-of-paper **Ethics and AI-use disclosure** stating that the work was completed with the assistance of OpenAI’s ChatGPT-5.6 Pro, while assigning full responsibility to the named author.
-6. Preserved citation numbering in order of first appearance and retained the complete proof, the non-induced containment convention, and the ZFC scope.
-7. Added repository support files: `README.md`, `.gitignore`, `CITATION.cff`, and `create-private-repo.sh`.
-8. Preserved the reproducible PDF timestamp of 11 July 2026, 12:00 UTC.
-9. Added the author's ENS--PSL affiliation and institutional email directly beneath the author name, and corrected the de Bruijn--Erdos page range to 371--373.
-10. Repaired the scope of Lemma 1.4, supplied the missing formal definitions, completed the quotient-forest and finite-trace bookkeeping, and made the auxiliary colouring and odd-girth arguments explicit.
-11. Narrowed the ethics statement to proof development, adversarial checking, and analysis of Li's arguments.
-12. Made the Erdős Problem 593 identification explicit in the title and opening sentence of the abstract, introduced fifteen descriptive subsections, and moved the ethics and AI-assistance statement before the references.
-13. Licensed original repository material under CC BY 4.0, with a separate scope and attribution notice and updated citation metadata.
-14. Added a deterministic 2,898-line one-file Lean checkpoint, its generator and build record, and verified both the modular project and the combined file under the pinned Lean/mathlib 4.32 toolchain.
+1. Retitled the manuscript *Obligatory Triple Systems: An Alternative Proof*.
+2. Credited Eric Li's 23 June 2026 preprint as the first publicly posted complete proof of the classification.
+3. Removed the former claim that the manuscript was independent of, or did not use, Li's work.
+4. Added point-of-use citations for the one-apex sequence lift, bridge-trace architecture, selected-incidence decomposition, quotient forest, running-intersection assembly, and three-part avoidance strategy.
+5. Added a direct comparison paragraph explaining that the present work is an alternative implementation and complete Lean verification, not a competing priority claim or a line-by-line formalisation of Li's manuscript.
+6. Replaced the written shift-graph section by the older Erdős--Hajnal high-odd-girth theorem, cited through Erdős--Hajnal (1966), Theorem 7.4, and Erdős--Galvin--Hajnal (1975), Theorem C.
+7. Expanded the AI-use statement: the author began development before learning of Li's preprint, but an instruction to work without further internet access is not treated as proof of informational independence.
+8. Added thanks to Eric Li for a productive discussion that improved the attribution and clarified the relationship between the two proofs.
+9. Retained the complete proof, numeric citations, A4 `amsart` layout, one-inch margins, embedded fonts, populated metadata, and omission of the visible affiliation and email address.
+10. Updated the Lean documentation to describe a complete machine-checked finite classification and to distinguish formal verification from priority or independent-discovery claims.
