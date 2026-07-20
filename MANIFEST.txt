@@ -1,5 +1,6 @@
 .gitattributes
 .github/workflows/lean.yml
+.github/workflows/manuscript-artifacts.yml
 .gitignore
 CITATION.cff
 Erdos593_revised.tex
@@ -301,6 +302,7 @@ formalization/tmp/carrier_api_research6_20260717.lean
 formalization/tmp/carrier_api_research_20260717.lean
 formalization/tmp_check.lean
 references.bib
+scripts/sync_manuscript_artifacts.py
 tmp/ARISTOTLE_LOG.proposed.md
 tmp/AgentN22EndpointFix.patch
 tmp/AgentN22EndpointFix2.patch
