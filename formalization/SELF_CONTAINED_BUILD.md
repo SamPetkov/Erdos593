@@ -1,417 +1,136 @@
-# Self-Contained Lean Checkpoint
+# Self-Contained Lean Build and Verification
 
-`Erdos593SelfContained.lean` is generated from the exact transitive closure of
-the local modules imported by `Erdos593.lean`. It has no project-local imports:
-the local source bodies appear in dependency order, while the external Mathlib
-imports remain at the top. Every source boundary records a repository-relative
-path and the SHA-256 of the normalized UTF-8 source.
+## Status
 
-The generated file is the complete source closure of the formal proof of the
-finite classification in Erdős Problem 593. For every finite triple system
-`F`, its final public endpoints are
-`F.IsObligatory ↔ F.isolatedReduction.Intrinsic` and
-`F.IsObligatory ↔ Constructible F.isolatedReduction`. It contains the
-constructive positive direction and all three avoidance cases: nonlinearity,
-failure of the edge-bridge condition, and odd Berge cycles. It also contains
-the chromatic-cardinal
-interface, finite-deletion and obligatory closure facts, the exact
-isolated-vertex reduction for obligatoriness, the all-parameter theorem that
-every balanced complete-bipartite expansion atom is obligatory, the resulting
-theorem that every constructible triple system is obligatory, the finite
-intrinsic-isolated-reduction obligatoriness corollary, exact `Kₙ,ₙ` edge
-coordinates, the countably-coloured Erdos--Rado pair-partition theorem, the
-universe-exact host transport, and the unconditional theorem
-`not_isObligatory_of_not_linear`. It also contains a finite
-rainbow-bipartite lemma, a non-induced graph-factor
-interface, a finite selected-edge endpoint/factor construction, rooted abundance
-and obligatory one-point-amalgamation closure, and
-the one-apex sequence lift with its countable-colouring obstruction and local
-linear-trace rigidity package: extension-letter determinacy, apex-to-edge-letter
-collision, and lifted-edge uniqueness up to base-edge orientation. It also
-contains the canonical base-node interface: `BasedAt q e` records that `q`
-carries two distinct points of `e`, `basedAt_unique` proves uniqueness, the
-noncomputable `baseNode e` selects the witness, and `baseNode_mkEdge` recovers
-the displayed base of every lift edge. The normal-form bridge additionally
-normalizes an arbitrary lift edge at that selector, identifies its exact
-two-point graph-base fibre, and proves every non-base fibre is
-singleton-or-empty. The canonical base-letter bridge now selects the unique
-unordered graph-edge letter at that base and packages `(baseNode, baseLetter)`
-as a key injective on every linear edge restriction. On every specified such
-restriction, the key image preserves `encard`, is finite exactly when the
-restriction is finite, and then has the same `Set.ncard`; a finite linear
-no-isolated embedded source consequently has exactly one key per edge. The
-base-fibre layer further makes a chosen canonical base node local: its base
-letter is injective within that fibre, preserves the fibre's `encard` under
-linearity, and identifies an embedded source fibre with its exact source-edge
-index subtype. Its source-index layer proves that the fibre, and under
-linearity its base-letter image, have the full `ENat.card` of that exact
-subtype; it also provides `Nat.card` and, for a finite source, the
-corresponding explicit finite cardinal. The support layer proves separately
-that canonical base fibres are pairwise disjoint and set-theoretically recover
-a selected family over exactly its active base nodes, with finite active
-support for finite selected families. The complementary apex layer identifies
-the unique point of every lifted edge away from its canonical base and proves
-that, inside a linear canonical base fibre, it is private to its edge and
-apex-injective. Its fibre-local equivalence layer identifies that same fibre
-with its own canonical-apex image, without identifying apexes across fibres
-or asserting a global union, cardinality, or trace theorem. The support-index
-layer reindexes this partition by the exact
-active-base subtype and, for a finite embedded source, supplies a source-edge
-surjection and the corresponding active-index cardinal upper bounds. The
-finite fibre-cardinality layer proves the exact selected-edge and source-index
-sum; its local-letter-sum refinement rewrites that sum as the distinct
-base-letter images in separate active fibres and as the trace-key image. It
-does not identify base letters across fibres or prove a global finite-trace
-decomposition. The tagged base-letter sigma equivalences identify a selected
-edge family, and then an embedded source-edge type, with separate local
-base-letter images only under a linearity hypothesis. The companion tagged
-apex-image sigma equivalence identifies selected edges, and then an embedded
-source-edge type, with the separate canonical-apex images of their active
-base fibres. The active base-node tag remains present throughout; these
-interfaces create neither an untagged global
-union nor a cross-fibre identification, and make no cardinality, trace, or
-atom claim. These interfaces feed the completed finite-trace and avoidance
-endpoints used by the final classification theorem.
+`Erdos593SelfContained.lean` is the deterministic, self-contained source
+closure of the Lean formalization of Erdős Problem 593.  The development is no
+longer a partial checkpoint: all proof obligations needed for the finite
+classification theorem are closed, and the two final classification endpoints
+are part of the public `Erdos593` API.
 
-The local factor spine also records the exact base-pair-or-apex incidence
-normal form of every lift edge. A selected canonical base-letter set now
-defines a host subgraph with exactly those selected edges, finite endpoint
-support when the selection is finite, and a canonical edge equivalence. This
-specializes to each finite base fibre as a finite carrier with an explicit
-non-induced factor into the host (also packaged with a `Fintype` carrier);
-under linearity its graph edges are equivalent to that exact fibre. The direct
-local theorem now identifies that fibre with the private-vertex expansion of
-this same base-letter subgraph; the finite wrapper packages the unchanged
-finite carrier, the canonical non-induced graph factor, and the isomorphism.
-This is local to one chosen fibre and neither compares fibres nor yields a
-global trace decomposition, bipartiteness, constructibility, or atom
-classification.
+For every finite triple system `F`, Lean proves
 
-For a finite linear selected family, the next spine packages its finite
-active-base index, the exact union of its pairwise edge-disjoint nonempty
-canonical fibres, and this finite local factor/isomorphism package at every
-index. It deliberately does not glue the local graph factors or expansions,
-identify the selected system with a disjoint union, or compare vertex supports
-or base-letter images across fibres.
+```lean
+Erdos593.TripleSystem.isObligatory_iff_isolatedReduction_intrinsic
+  (F : TripleSystem V E) :
+  F.IsObligatory ↔ F.isolatedReduction.Intrinsic
 
-With an explicit two-colourability hypothesis on a chosen fibre's canonical
-base-letter subgraph, that finite linear fibre is now constructible. The
-canonical non-induced factor also pulls a two-colouring of the ambient host
-graph back to that subgraph. The existing classical positive-atom/constructible
-closure then proves the same fibre obligatory. These are intentionally
-conditional, fibre-local bridges: linearity alone supplies no such
-two-colourability hypothesis, and the result does not glue fibres into a
-constructibility or atom theorem for the whole selected family.
+Erdos593.TripleSystem.isObligatory_iff_constructible_isolatedReduction
+  (F : TripleSystem V E) :
+  F.IsObligatory ↔ Constructible F.isolatedReduction
+```
 
-## Reproduction and exactness check
+Thus the formalization checks both the intrinsic and constructive forms of the
+classification, including the exact treatment of isolated vertices.  Here
+“finite” refers to the triple system being classified; the host triple systems
+quantified over by `IsObligatory` remain unrestricted.
 
-From the `formalization` directory:
+## What is proved
+
+The imported closure contains the complete positive and negative directions.
+In particular, it formalizes:
+
+- the probabilistic rainbow lemma and the obligatory private-vertex expansion
+  atoms;
+- closure of obligatoriness under finite disjoint unions and one-point
+  amalgamation, including the rooted-abundance argument;
+- the Levi-graph bridge-block decomposition, the quotient forest and
+  running-intersection assembly, and the equivalence between the intrinsic and
+  constructive descriptions;
+- the exact isolated-reduction equivalence for obligatoriness;
+- the Erdős--Rado linear host excluding every finite nonlinear triple system;
+- the one-apex sequence lift, including its uncountable chromatic obstruction;
+- the finite linear-trace theorem: canonical base fibres are expansion pieces,
+  their overlap incidence graph is acyclic, and the pieces assemble along cut
+  points;
+- the missing-bridge avoidance theorem derived from the finite trace
+  decomposition;
+- the shift-graph host with uncountable chromatic number and the required
+  odd-girth bound, together with the localization and parity transfer for
+  Berge cycles; and
+- the final assembly of these three avoidance cases into the two classification
+  theorems displayed above.
+
+The finite-trace layer is global, not merely fibre-local.  The completed
+support-incidence and forest-order modules provide the running-intersection
+order, the `FiniteLiftGenerated` decomposition and its constructibility and
+obligatoriness consequences.  The earlier local base-node, base-letter, apex,
+cardinality and factor interfaces are retained as the lemmas from which this
+global theorem is built; they should not be read as remaining gaps.
+
+## Meaning of “self-contained”
+
+The generated file has no project-local imports.  It consists of the exact
+transitive closure of the local modules imported by `Erdos593.lean`, placed in
+dependency order, with the external Mathlib imports retained at the top.  Each
+source boundary records the repository-relative source path and a SHA-256 hash
+of the normalized UTF-8 source.
+
+“Self-contained” therefore means self-contained relative to the pinned Lean
+and Mathlib environment.  It does not mean that Mathlib has been copied into
+the repository or that foundational principles supplied by Mathlib have been
+reproved.
+
+## Reproduction
+
+From the `formalization` directory, run
 
 ```text
 python scripts/generate_self_contained.py
 python scripts/generate_self_contained.py --check
+lake env lean Erdos593.lean
 lake env lean Erdos593SelfContained.lean
 ```
 
-The first command is the only supported way to update the generated file. The
-second command exits unsuccessfully if the checked-in artifact differs by even
-one byte from deterministic regeneration. The third checks the combined source
-against the Lean and Mathlib versions pinned by `lean-toolchain` and
-`lake-manifest.json`. GitHub Actions runs this aggregate command with warnings
-treated as errors, in parallel with the focused module checks recorded below.
+The first command is the only supported way to regenerate the combined file.
+The `--check` command fails if the checked-in artifact differs by even one byte
+from deterministic regeneration.  The two Lean commands check, respectively,
+the ordinary module entry point and the generated source closure against the
+versions pinned by `lean-toolchain` and `lake-manifest.json`.
 
-## Recorded verification (19 July 2026)
+The current toolchain is Lean `v4.32.0`.  GitHub Actions performs the aggregate
+self-contained build together with focused module checks and treats build
+warnings as errors.
 
-- Deterministic regeneration check: passed for 171 source modules, 54 external
-  Mathlib imports, 24,641 physical lines, and SHA-256
-  `14518afb4b96b8c71f0c6d430e6a0f8b0f8ec6caa212b6ca2fdf1a237e2d5c97`.
-- Canonical focused checks: strict source checks and targeted builds for
-  `Erdos593.Graph.FiniteEdgeFactor`,
-  `Erdos593.TripleSystem.CompleteBipartiteAtomObligatory` (1,512 Lake jobs)
-  and `Erdos593.TripleSystem.ConstructiblePositiveObligatory` (1,566 Lake
-  jobs), plus `Erdos593.TripleSystem.SequenceLiftTrace` (976 Lake jobs),
-  `Erdos593.TripleSystem.SequenceLiftBaseNode` (975 Lake jobs),
-  `Erdos593.TripleSystem.SequenceLiftBaseNormalForm` (976 Lake jobs), and
-  `Erdos593.TripleSystem.SequenceLiftBaseLetter` (979 Lake jobs),
-  `Erdos593.TripleSystem.SequenceLiftFiniteTrace` (1,224 Lake jobs), and
-  `Erdos593.TripleSystem.SequenceLiftBaseFiber` (1,225 Lake jobs), and
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberIndex` (1,226 Lake jobs),
-  and `Erdos593.TripleSystem.SequenceLiftBaseFiberPartition` (1,227 Lake
-  jobs), and `Erdos593.TripleSystem.SequenceLiftBaseApex` (1,226 Lake jobs),
-  and `Erdos593.TripleSystem.SequenceLiftBaseIncidence` (1,227 Lake jobs),
-  and `Erdos593.TripleSystem.SequenceLiftBaseLetterSubgraph` (1,227 Lake
-  jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberFactor` (1,230 Lake
-  jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberExpansion` (1,233
-  Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberConstructible`
-  (1,251 Lake jobs), and
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberObligatory` (1,584 Lake jobs),
-  and
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupport` (1,228 Lake jobs),
-  and
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberAssembly` (1,589 Lake jobs),
-  and
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportRunningOrder` (1,590
-  Lake jobs), and
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportRunningOrderEndpoints`
-  (1,591 Lake jobs), and
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportTailDegree` (1,591 Lake
-  jobs), and
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrder`,
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportOverlapGraph`,
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderBridge`, and
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderEndpoints`,
-  and
-  `Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex` (1,228 Lake jobs),
-  and `Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine` (1,237 Lake
-  jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality` (1,289
-  Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum` (1,290
-  Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv` (1,226
-  Lake jobs), and
-  `Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterEquiv` (1,230 Lake
-  jobs), and
-  `Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv` (1,231
-  Lake jobs), and `Erdos593.TripleSystem.SequenceLiftBaseApexEquiv` (1,227
-  Lake jobs), and `Erdos593.TripleSystem.SequenceLiftTaggedBaseApexEquiv`
-  (1,233 Lake jobs), and
-  `Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv` (1,234
-  Lake jobs),
-  passed under the pinned Lean/mathlib `v4.32.0` toolchain.
-- Source audit: the complete imported closure, including
-  `FiniteEdgeFactor`, `SequenceLiftBaseNode`, `SequenceLiftBaseNormalForm`, and
-  `SequenceLiftBaseLetter`, `SequenceLiftFiniteTrace`, and
-  `SequenceLiftBaseFiber`, `SequenceLiftBaseFiberIndex`,
-  `SequenceLiftBaseFiberPartition`, `SequenceLiftBaseApex`,
-  `SequenceLiftBaseIncidence`, `SequenceLiftBaseLetterSubgraph`,
-  `SequenceLiftBaseFiberFactor`, `SequenceLiftBaseFiberExpansion`,
-  `SequenceLiftBaseFiberConstructible`, `SequenceLiftBaseFiberObligatory`,
-  `SequenceLiftBaseFiberSupport`, `SequenceLiftBaseFiberAssembly`,
-  `SequenceLiftBaseFiberSupportRunningOrder`,
-  `SequenceLiftBaseFiberSupportRunningOrderEndpoints`,
-  `SequenceLiftBaseFiberSupportTailDegree`,
-  `SequenceLiftBaseFiberSupportForestOrder`,
-  `SequenceLiftBaseFiberSupportOverlapGraph`,
-  `SequenceLiftBaseFiberSupportForestOrderBridge`,
-  `SequenceLiftBaseFiberSupportForestOrderEndpoints`,
-  `SequenceLiftBaseFiberSupportIndex`, `SequenceLiftBaseFiberGlobalSpine`,
-  `SequenceLiftBaseFiberCardinality`,
-  `SequenceLiftBaseFiberTraceSum`, `SequenceLiftBaseFiberEquiv`,
-  `SequenceLiftTaggedBaseLetterEquiv`,
-  `SequenceLiftTaggedBaseLetterSourceEquiv`, `SequenceLiftBaseApexEquiv`,
-  `SequenceLiftTaggedBaseApexEquiv`,
-  `SequenceLiftTaggedBaseApexSourceEquiv`, and
-  the generated
-  artifact are clear of `sorry`, `admit`, project `axiom`, `unsafe`, and
-  `sorryAx`; the repository secret scan is also clear.
-- Axiom audit: the representative central declarations and the new public
-  endpoint declarations listed below report only `propext`, `Classical.choice`,
-  and `Quot.sound`.
+## Source and axiom audits
 
-## Separate axiom audit
+The local source closure and generated artifact are audited for `sorry`,
+`admit`, project-defined `axiom`, `unsafe` declarations and `sorryAx`.  The
+completed development contains none of these proof placeholders or
+project-specific axioms.
 
-No `#print axioms` commands are embedded in the generated artifact. This keeps
-packaging separate from audit output and avoids changing the compiled program
-merely to select a reporting set. After compiling the generated file, create a
-temporary Lean file that imports `Erdos593` and run `#print axioms` for the
-central declarations, for example:
+A compact audit of the final public endpoints can be run with a temporary file:
 
 ```lean
 import Erdos593
 
-#print axioms Erdos593.SimpleGraph.two_colorable_iff_every_cycle_even
-#print axioms Erdos593.TripleSystem.privateVertexExpansion_linear
-#print axioms Erdos593.TripleSystem.OnePointAmalgamation.amalgam
-#print axioms Erdos593.TripleSystem.OnePointAmalgamation.isoOfMaps
-#print axioms Erdos593.TripleSystem.BridgeBlock.contractedGraph_colorable_two
-#print axioms Erdos593.SimpleGraph.bridgeQuotient_isAcyclic
-#print axioms Erdos593.TripleSystem.BridgeBlock.activeComponent_privateVertexExpansionData
-#print axioms Erdos593.TripleSystem.disjointUnion_intrinsic
-#print axioms Erdos593.SimpleGraph.closedStar_earlier_direction
-#print axioms Erdos593.TripleSystem.OnePointAmalgamation.amalgam_intrinsic
-#print axioms Erdos593.TripleSystem.Constructible.intrinsic
+#print axioms Erdos593.TripleSystem.isObligatory_iff_isolatedReduction_intrinsic
+#print axioms Erdos593.TripleSystem.isObligatory_iff_constructible_isolatedReduction
 #print axioms Erdos593.TripleSystem.BridgeBlock.isolatedReduction_constructible_iff_intrinsic
-#print axioms Erdos593.TripleSystem.IsObligatory.disjointUnion
-#print axioms Erdos593.TripleSystem.isObligatory_iff_isolatedReduction
-#print axioms Erdos593.RainbowBipartite.exists_rainbow_bipartite_submatrix
-#print axioms Erdos593.TripleSystem.IsObligatory.rootedAbundance
-#print axioms Erdos593.TripleSystem.IsObligatory.onePointAmalgamation
-#print axioms Erdos593.SequenceLift.not_isProperColoring_nat
-#print axioms Erdos593.SequenceLift.aleph0_lt_chromaticCardinal
-#print axioms Erdos593.SimpleGraph.NonInducedFactor.trans
-#print axioms Erdos593.CompleteBipartiteEdges.coords_edge
-#print axioms Erdos593.TripleSystem.Constructible.isObligatory_of_completeBipartiteNN
-#print axioms Erdos593.TripleSystem.completeBipartiteExpansionAtom_positive_isObligatory
-#print axioms Erdos593.TripleSystem.completeBipartiteExpansionAtom_isObligatory
 #print axioms Erdos593.TripleSystem.Constructible.isObligatory
-#print axioms Erdos593.TripleSystem.intrinsic_isolatedReduction_isObligatory
-#print axioms Erdos593.SequenceLift.Node.letter_eq_of_extendsBy_same_target
-#print axioms Erdos593.SequenceLift.edgeLetter_eq_of_apex_eq
-#print axioms Erdos593.SequenceLift.mkEdge_eq_of_same_basePair_of_linearTrace
-#print axioms Erdos593.SequenceLift.mkEdge_eq_of_same_edgeLetter_of_linearTrace
-#print axioms Erdos593.SequenceLift.basedAt_unique
-#print axioms Erdos593.SequenceLift.baseNode_eq_of_mkEdge_eq
-#print axioms Erdos593.SequenceLift.baseNode
-#print axioms Erdos593.SequenceLift.baseNode_basedAt
-#print axioms Erdos593.SequenceLift.baseNode_mkEdge
-#print axioms Erdos593.SequenceLift.exists_mkEdge_at_baseNode
-#print axioms Erdos593.SequenceLift.eq_baseNode_iff_exists_distinct_incident
-#print axioms Erdos593.SequenceLift.point_eq_of_inc_of_ne_baseNode
-#print axioms Erdos593.SequenceLift.exists_basePair_at_baseNode
-#print axioms Erdos593.SequenceLift.isBaseLetter_unique
-#print axioms Erdos593.SequenceLift.baseLetter_mkEdge
-#print axioms Erdos593.SequenceLift.eq_of_traceKey_eq_of_mem_of_linear
-#print axioms Erdos593.SequenceLift.traceKey_injOn_of_linear
-#print axioms Erdos593.SequenceLift.traceKey_image_finite_iff_of_linear
-#print axioms Erdos593.SequenceLift.traceKey_image_encard_eq_of_linear
-#print axioms Erdos593.SequenceLift.ncard_traceKey_image_eq_of_linear
-#print axioms Erdos593.SequenceLift.finiteLinear_traceKey_image
-#print axioms Erdos593.SequenceLift.baseLetter_injOn_baseFiber_of_linear
-#print axioms Erdos593.SequenceLift.baseLetter_image_encard_eq_on_baseFiber_of_linear
-#print axioms Erdos593.SequenceLift.baseFiber_edgeImage_eq_range
-#print axioms Erdos593.SequenceLift.finiteLinear_baseFiber_baseLetter_image
-#print axioms Erdos593.SequenceLift.ncard_baseFiber_edgeImage_eq_natCard_baseFiberIndex
-#print axioms Erdos593.SequenceLift.encard_baseFiber_edgeImage_eq_baseFiberIndex
-#print axioms Erdos593.SequenceLift.encard_baseLetter_image_eq_baseFiberIndex_of_linear
-#print axioms Erdos593.SequenceLift.baseFiber_edgeImage_ncard_eq_baseFiberIndex_card
-#print axioms Erdos593.SequenceLift.finiteLinear_baseLetter_image_ncard_eq_baseFiberIndex_card
-#print axioms Erdos593.SequenceLift.existsUnique_isBaseApex
-#print axioms Erdos593.SequenceLift.baseApex
-#print axioms Erdos593.SequenceLift.inc_baseApex
-#print axioms Erdos593.SequenceLift.isBaseApex_iff_eq_baseApex
-#print axioms Erdos593.SequenceLift.baseApex_mkEdge
-#print axioms Erdos593.SequenceLift.baseApex_inc_iff_eq_of_linear
-#print axioms Erdos593.SequenceLift.baseApex_injOn_baseFiber_of_linear
-#print axioms Erdos593.finiteEdgeFactor
-#print axioms Erdos593.SequenceLift.inc_iff_baseNode_baseLetter_or_baseApex
-#print axioms Erdos593.SequenceLift.baseLetterSubgraph
-#print axioms Erdos593.SequenceLift.baseLetterSubgraph_edgeSet
-#print axioms Erdos593.SequenceLift.baseLetterSubgraph_finite_verts
-#print axioms Erdos593.SequenceLift.baseLetterSubgraphEdgeEquiv
-#print axioms Erdos593.SequenceLift.baseFiberLetterSubgraph_finite
-#print axioms Erdos593.SequenceLift.baseFiberLetterSubgraphFactor
-#print axioms Erdos593.SequenceLift.baseFiberLetterSubgraphEdgeEquiv_of_linear
-#print axioms Erdos593.SequenceLift.exists_fintype_baseFiberLetterSubgraphFactor
-#print axioms Erdos593.SequenceLift.baseFiber_privateVertexExpansionIso_of_linear
-#print axioms Erdos593.SequenceLift.exists_fintype_baseFiberLetterSubgraphFactorExpansionIso_of_linear
-#print axioms Erdos593.SequenceLift.finite_baseFiberExpansionFactorSpine_of_linear
-#print axioms Erdos593.SequenceLift.baseFiber_constructible_of_linear_of_colorable
-#print axioms Erdos593.SequenceLift.baseFiber_isObligatory_of_linear_of_colorable
-#print axioms Erdos593.SequenceLift.baseFiber_support_inter_subsingleton_of_linear
-#print axioms Erdos593.SequenceLift.baseFiberSupportTailOverlapCoherent
-#print axioms Erdos593.SequenceLift.baseFiberAssemblyCompatible_of_linear_of_nodup_of_supportTailOverlapCoherent
-#print axioms Erdos593.SequenceLift.activeBaseNodeList_nodup
-#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_coherentBaseFiberAssembly
-#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_coherentBaseNodeCover
-#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_activeBaseNodeSupportTailOverlapCoherent
-#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_coherentBaseFiberAssembly
-#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_coherentBaseNodeCover
-#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_activeBaseNodeSupportTailOverlapCoherent
-#print axioms Erdos593.SequenceLift.baseFiberSupportTailAtMostOneNeighbor
-#print axioms Erdos593.SequenceLift.baseFiberSupportTailOverlapCoherent_of_tailAtMostOneNeighbor
-#print axioms Erdos593.SequenceLift.baseFiberAssemblyCompatible_of_linear_of_nodup_of_tailAtMostOneNeighbor
-#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_tailDegreeBaseFiberAssembly
-#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_tailDegreeBaseNodeCover
-#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_activeBaseNodeSupportTailAtMostOneNeighbor
-#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_tailDegreeBaseFiberAssembly
-#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_tailDegreeBaseNodeCover
-#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_activeBaseNodeSupportTailAtMostOneNeighbor
-#print axioms SimpleGraph.IsAcyclic.exists_finset_tailAtMostOneNeighborOrder
-#print axioms Erdos593.SequenceLift.baseFiberSupportOverlapGraph
-#print axioms Erdos593.SequenceLift.baseFiberSupportOverlapGraph_adj_iff
-#print axioms Erdos593.SequenceLift.baseFiberSupportTailAtMostOneNeighbor_of_overlapGraphTailOrder
-#print axioms Erdos593.SequenceLift.exists_baseFiberSupportTailAtMostOneNeighbor_order_of_supportOverlapAcyclic
-#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_supportOverlapAcyclic
-#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_supportOverlapAcyclic
-#print axioms Erdos593.TripleSystem.FiniteLiftGenerated
-#print axioms Erdos593.TripleSystem.FiniteLiftGenerated.ofRunningEdgeAssemblyGeometry
-#print axioms Erdos593.SequenceLift.baseFiber_finiteLiftGenerated_of_linear
-#print axioms Erdos593.SequenceLift.edgeRestriction_finiteLiftGenerated_of_linear_of_baseFiberAssembly
-#print axioms Erdos593.SequenceLift.edgeRestriction_finiteLiftGenerated_of_linear_of_supportOverlapAcyclic
-#print axioms Erdos593.TripleSystem.FiniteLiftGenerated.constructible_of_hostColorable
-#print axioms Erdos593.TripleSystem.FiniteLiftGenerated.isObligatory_of_hostColorable
-#print axioms Erdos593.SequenceLift.mem_edgePieceUnion_baseFiberList
-#print axioms Erdos593.SequenceLift.edgePieceUnion_baseFiber_eq_of_baseNode_mem
-#print axioms Erdos593.SequenceLift.activeBaseNodeList
-#print axioms Erdos593.SequenceLift.edgePieceUnion_activeBaseNodeList
-#print axioms Erdos593.SequenceLift.activeBaseNodeList_pairwise_support_inter_subsingleton_of_linear
-#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_baseFiberAssembly
-#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_baseNodeCover
-#print axioms Erdos593.SequenceLift.edgeRestriction_constructible_of_linear_of_hostColorable_of_activeBaseNodeAssembly
-#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseFiberAssembly
-#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_baseNodeCover
-#print axioms Erdos593.SequenceLift.edgeRestriction_isObligatory_of_linear_of_hostColorable_of_activeBaseNodeAssembly
-#print axioms Erdos593.SequenceLift.finite_activeBaseNodeIndex
-#print axioms Erdos593.SequenceLift.iUnion_baseFiber_activeBaseNodeIndex
-#print axioms Erdos593.SequenceLift.surjective_baseNodeIndexMap
-#print axioms Erdos593.SequenceLift.activeBaseNodeIndex_natCard_le_edge_card
-#print axioms Erdos593.SequenceLift.activeBaseNodeIndex_card_le_edge_card
-#print axioms Erdos593.SequenceLift.ncard_eq_sum_baseFiber_activeBaseNodeIndex
-#print axioms Erdos593.SequenceLift.edgeIndexEquiv_sigmaBaseFiberIndex
-#print axioms Erdos593.SequenceLift.edgeImage_ncard_eq_sum_baseFiberIndex
-#print axioms Erdos593.SequenceLift.edge_card_eq_sum_baseFiberIndex_card
+#print axioms Erdos593.TripleSystem.not_isObligatory_of_not_linear
+#print axioms Erdos593.TripleSystem.not_isObligatory_of_linear_of_not_isolatedReduction_bridgeAtEveryEdge
+#print axioms Erdos593.SequenceLift.not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftHost
 ```
 
-For the fibre-local O22 endpoint, a focused audit need not rely on rebuilding
-the umbrella module; import its focused module directly:
+The audited declarations report only the standard foundations used through
+Mathlib, namely propositional extensionality, classical choice and quotient
+soundness (`propext`, `Classical.choice` and `Quot.sound`).
 
-```lean
-import Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum
+## Recorded verification
 
-#print axioms Erdos593.SequenceLift.ncard_eq_sum_baseLetter_image_activeBaseNodeIndex_of_linear
-#print axioms Erdos593.SequenceLift.edgeImage_ncard_eq_sum_baseLetter_image_ncard
-#print axioms Erdos593.SequenceLift.edge_card_eq_sum_baseLetter_image_ncard
-#print axioms Erdos593.SequenceLift.traceKey_image_ncard_eq_sum_baseLetter_image_ncard
-```
+As of 20 July 2026:
 
-The fibre-local O23 equivalence can likewise be audited directly:
+- deterministic regeneration of `Erdos593SelfContained.lean` passes;
+- the ordinary `Erdos593.lean` entry point and the self-contained artifact both
+  compile under the pinned toolchain;
+- the focused checks for the positive atoms, bridge-block decomposition,
+  Erdős--Rado host, sequence-lift trace decomposition, missing-bridge host,
+  shift-graph odd-cycle host and final classification pass;
+- the source-placeholder and repository secret scans are clear; and
+- the final intrinsic and constructive classification theorems are included in
+  the generated closure and in the public module entry point.
 
-```lean
-import Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv
-
-#print axioms Erdos593.SequenceLift.baseFiberEquivBaseLetterImage_of_linear
-```
-
-The tagged O24 sigma equivalences can be audited independently:
-
-```lean
-import Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterEquiv
-
-#print axioms Erdos593.SequenceLift.sigmaBaseFiberEquivSelectedEdge
-#print axioms Erdos593.SequenceLift.selectedEdgeEquiv_sigmaBaseLetterImage_of_linear
-```
-
-The embedded-source O25 tagged equivalence can also be audited directly:
-
-```lean
-import Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv
-
-#print axioms Erdos593.SequenceLift.edgeIndexEquiv_sigmaBaseLetterImage_of_linear
-```
-
-The local O26 apex-image equivalence can also be audited directly:
-
-```lean
-import Erdos593.TripleSystem.SequenceLiftBaseApexEquiv
-
-#print axioms Erdos593.SequenceLift.baseFiberEquivBaseApexImage_of_linear
-```
-
-The O27 tagged apex-image equivalence can also be audited directly:
-
-```lean
-import Erdos593.TripleSystem.SequenceLiftTaggedBaseApexEquiv
-
-#print axioms Erdos593.SequenceLift.selectedEdgeEquiv_sigmaBaseApexImage_of_linear
-```
-
-The O28 embedded-source tagged apex-image equivalence can also be audited directly:
-
-```lean
-import Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
-
-#print axioms Erdos593.SequenceLift.edgeIndexEquiv_sigmaBaseApexImage_of_linear
-```
-
-In addition to this declaration-level check, scan every source in the local
-closure for proof placeholders such as `sorry`, `admit`, `axiom`, `unsafe`, and
-`sorryAx`. Standard Mathlib foundations such as propositional extensionality,
-classical choice, and quotient soundness are not project-specific axioms.
+The authoritative status is therefore **complete machine-checked finite
+classification**, rather than “partial formalization”, “checkpoint”, or a list
+of unresolved local interfaces.
