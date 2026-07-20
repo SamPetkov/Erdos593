@@ -29,7 +29,7 @@ The author reports developing the proof independently, without consulting Eric L
 - `references.bib` — bibliography in first-citation order.
 - `erdos593_obligatory_triple_systems.pdf` — reproducibly compiled paper.
 - `erdos593_obligatory_triple_systems.md` — Markdown source of the manuscript.
-- `build.sh` — reproducible LuaLaTeX/Biber build.
+- `build.sh` — reproducible pdfLaTeX/latexmk build.
 - `CITATION.cff` — citation metadata.
 - `SOURCE_LEDGER.md` — source and proof-dependency record.
 - `REVISION_NOTES.md` — record of the final editorial revision.
@@ -84,7 +84,7 @@ The author reports developing the proof independently, without consulting Eric L
 
 ## Build
 
-A TeX Live installation containing LuaLaTeX, Biber, `amsart`, `newtx`, `biblatex`, `microtype`, and the AMS packages is required.
+A TeX Live installation containing pdfLaTeX, `latexmk`, `amsart`, `newtx`, `natbib`, `microtype`, and the AMS packages is required.
 
 ```bash
 ./build.sh
@@ -259,3 +259,7 @@ made. Scholarly users are also asked to cite the project using
 See [`LICENSE_SCOPE.md`](LICENSE_SCOPE.md) for a ready-to-use attribution and
 the exclusions for third-party literature, source scans, dependencies, and
 files carrying their own notices.
+
+## Final synchronized manuscript
+
+The principal LaTeX, PDF, and Markdown files are synchronized with the rewritten arXiv manuscript. Citations are numeric and the bibliography is numbered. The visible author affiliation and email are intentionally omitted. The acknowledgment thanks Tom de Groot for his advice on how to revise the manuscript for greater clarity.
