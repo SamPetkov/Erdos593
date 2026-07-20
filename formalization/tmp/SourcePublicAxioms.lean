@@ -1,0 +1,10 @@
+import Erdos593.TripleSystem.ErdosRado.SourceEndhomogeneous
+
+open Erdos593 TripleSystem TriangleHost ErdosRado
+
+#print axioms Erdos593.TripleSystem.TriangleHost.ErdosRado.TracePrefix.beforeAtNode
+#print axioms Erdos593.TripleSystem.TriangleHost.ErdosRado.TraceIteration.terminalPrefix_stopped
+#print axioms Erdos593.TripleSystem.TriangleHost.ErdosRado.TraceIteration.sourceRun_at_node_traceHeight
+#print axioms Erdos593.TripleSystem.TriangleHost.ErdosRado.TraceIteration.terminalPrefix_at_node
+#print axioms Erdos593.TripleSystem.TriangleHost.ErdosRado.TracePrefix.IsSourceCanonicalFor.endhomogeneousTo
+#print axioms Erdos593.TripleSystem.TriangleHost.ErdosRado.TraceIteration.terminalPrefix_endhomogeneous

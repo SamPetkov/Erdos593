@@ -1,0 +1,14 @@
+import Erdos593.TripleSystem.ErdosRado.Theorem
+
+open Erdos593 TripleSystem TriangleHost
+open Erdos593.TripleSystem.TriangleHost.ErdosRado
+
+#print axioms TraceIteration.sourceCoherentTraceSystem
+#print axioms TraceIteration.sourceCoherentTraceSystem_isEndhomogeneous
+#print axioms TraceIteration.sourceCoherentTraceSystem_levelTracePrefix
+#print axioms TraceIteration.sourceCoherentTraceSystem_stopped
+#print axioms TraceIteration.stoppedCoherentTraceSystemsForEveryColoring
+#print axioms fullEndhomogeneousLimitChainForEveryColoring
+#print axioms fullEndhomogeneousTraceForEveryColoring
+#print axioms erdosRadoUncountableHomogeneousPairSet
+#print axioms pairRamseyTriangle_erdosRadoCarrier
