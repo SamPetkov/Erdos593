@@ -1,5 +1,4 @@
 .gitattributes
-.github/workflows/bootstrap-manuscript-artifacts.yml
 .github/workflows/lean.yml
 .github/workflows/manuscript-artifacts.yml
 .gitignore
