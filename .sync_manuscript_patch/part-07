@@ -1,0 +1,34 @@
++OpenAI's GPT-5.6 Pro through ChatGPT and Aristotle [13] were used for proof development, adversarial checking, editorial restructuring, and the Lean formalisation. The author began developing the argument before becoming aware of Li's preprint. During substantial proof and formalisation stages, the models were instructed to work without further internet access after an initial source-retrieval stage. That instruction is not an auditable guarantee that every model-generated suggestion was produced without external retrieval, and it does not establish informational independence. Accordingly, the paper makes no claim of full informational independence and credits Li's 23 June 2026 preprint as the first publicly posted complete proof. After the preprint was brought to the author's attention, the manuscript was revised to identify the shared one-apex sequence-lift, bridge-trace, selected-incidence, quotient-forest, and running-intersection architecture at the points where it is used. The Lean development verifies the implementation presented here; it is not a line-by-line formalisation of Li's manuscript. The author reviewed all incorporated suggestions and assumes full responsibility for the arguments, citations, and final manuscript.
+ 
+ # Funding
+ 
+@@ -711,21 +622,21 @@
+ 
+ [2] Thomas F. Bloom. Erdős problem 593. <https://www.erdosproblems.com/593>, 2026. Accessed 11 July 2026.
+ 
+-[3] Paul Erdős and András Hajnal. On chromatic number of graphs and set-systems. *Acta Mathematica Academiae Scientiarum Hungaricae*, 17 (1–2): 61–99, 1966. doi: 10.1007/BF02020444.
++[3] Eric Li. A resolution of Erdős Problems 593 and 1177: Obligatory triple systems and exact spectra. arXiv:2606.24882, submitted 23 June 2026. doi: 10.48550/arXiv.2606.24882. URL <https://arxiv.org/abs/2606.24882>.
+ 
+-[4] Paul Erdős, András Hajnal, and Bruce L. Rothschild. On chromatic number of graphs and set-systems. In *Cambridge Summer School in Mathematical Logic (Cambridge, 1971)*, volume 337 of *Lecture Notes in Mathematics*, pages 531–538. Springer, Berlin and New York, 1973.
++[4] Paul Erdős and András Hajnal. On chromatic number of graphs and set-systems. *Acta Mathematica Academiae Scientiarum Hungaricae*, 17 (1–2): 61–99, 1966. doi: 10.1007/BF02020444.
+ 
+-[5] Paul Erdős, Fred Galvin, and András Hajnal. On set-systems having large chromatic number and not containing prescribed subsystems. In *Infinite and Finite Sets (Keszthely, 1973)*, volume 10 of *Colloquia Mathematica Societatis János Bolyai*, pages 425–513. North-Holland, 1975.
++[5] Paul Erdős, András Hajnal, and Bruce L. Rothschild. On chromatic number of graphs and set-systems. In *Cambridge Summer School in Mathematical Logic (Cambridge, 1971)*, volume 337 of *Lecture Notes in Mathematics*, pages 531–538. Springer, Berlin and New York, 1973.
+ 
+-[6] Péter Komjáth. Some remarks on obligatory subsystems of uncountably chromatic triple systems. *Combinatorica*, 21 (2): 233–238, 2001. doi: 10.1007/s004930100021.
++[6] Paul Erdős, Fred Galvin, and András Hajnal. On set-systems having large chromatic number and not containing prescribed subsystems. In *Infinite and Finite Sets (Keszthely, 1973)*, volume 10 of *Colloquia Mathematica Societatis János Bolyai*, pages 425–513. North-Holland, 1975.
+ 
+-[7] András Hajnal and Péter Komjáth. Obligatory subsystems of triple systems. *Acta Mathematica Hungarica*, 119 (1–2): 1–13, 2008. doi: 10.1007/s10474-007-6231-2.
++[7] Péter Komjáth. Some remarks on obligatory subsystems of uncountably chromatic triple systems. *Combinatorica*, 21 (2): 233–238, 2001. doi: 10.1007/s004930100021.
+ 
+-[8] Péter Komjáth. An uncountably chromatic triple system. *Acta Mathematica Hungarica*, 121 (1–2): 79–92, 2008. doi: 10.1007/s10474-008-7179-6.
++[8] András Hajnal and Péter Komjáth. Obligatory subsystems of triple systems. *Acta Mathematica Hungarica*, 119 (1–2): 1–13, 2008. doi: 10.1007/s10474-007-6231-2.
+ 
+-[9] Christian Reiher. Obligatory hypergraphs. *Proceedings of the American Mathematical Society*, 2024. doi: 10.1090/proc/17021. URL <https://arxiv.org/abs/2403.11223>. Accepted for publication; arXiv:2403.11223.
++[9] Péter Komjáth. An uncountably chromatic triple system. *Acta Mathematica Hungarica*, 121 (1–2): 79–92, 2008. doi: 10.1007/s10474-008-7179-6.
+ 
+-[10] Eric Li. A resolution of Erdős Problems 593 and 1177: Obligatory triple systems and exact spectra, June 2026. URL <https://arxiv.org/abs/2606.24882>. arXiv:2606.24882.
++[10] Christian Reiher. Obligatory hypergraphs. *Proceedings of the American Mathematical Society*, 2024. doi: 10.1090/proc/17021. URL <https://arxiv.org/abs/2403.11223>. Accepted for publication; arXiv:2403.11223.
+ 
+ [11] Nicolaas Govert de Bruijn and Paul Erdős. A colour problem for infinite graphs and a problem in the theory of relations. *Nederl. Akad. Wetensch. Proc. Ser. A*, 54 (5): 371–373, 1951. doi: 10.1016/S1385-7258(51)50053-7.
+ 
