@@ -15,6 +15,7 @@ on:
       - 'SHA256SUMS'
       - 'scripts/sync_manuscript_artifacts.py'
       - '.github/workflows/manuscript-artifacts.yml'
+      - '.github/workflows/bootstrap-manuscript-artifacts.yml'
   push:
     branches: [main]
     paths:
@@ -29,6 +30,7 @@ on:
       - 'SHA256SUMS'
       - 'scripts/sync_manuscript_artifacts.py'
       - '.github/workflows/manuscript-artifacts.yml'
+      - '.github/workflows/bootstrap-manuscript-artifacts.yml'
   workflow_dispatch:
 
 permissions:
@@ -88,19 +90,36 @@ jobs:
       - name: Require committed synchronization
         run: git diff --exit-code -- .
       - name: Verify PDF typography and mirrors
+        id: verify_pdf
+        continue-on-error: true
         run: |
-          set -euo pipefail
-          pdf=erdos593_obligatory_triple_systems.pdf
-          pdfinfo "$pdf" > /tmp/erdos593-pdfinfo.txt
-          pdftotext "$pdf" /tmp/erdos593-text.txt
-          pdffonts "$pdf" > /tmp/erdos593-fonts.txt
-          grep -Fq 'A4' /tmp/erdos593-pdfinfo.txt
-          grep -Fq 'Obligatory Triple Systems: An Alternative Proof' /tmp/erdos593-text.txt
-          grep -Fq 'Samuil Petkov' /tmp/erdos593-text.txt
-          grep -Fq 'Eric Li' /tmp/erdos593-text.txt
-          ! grep -Eq 'Samuil Pekov|Samuil Petkob|Samuil Petkov (&|and) ChatGPT' /tmp/erdos593-text.txt
-          ! grep -Eq '[[:space:]]no[[:space:]]' /tmp/erdos593-fonts.txt
-          cmp -s "$pdf" arxiv/main.pdf
-          cmp -s erdos593_obligatory_triple_systems.tex arxiv/main.tex
-          cmp -s erdos593_obligatory_triple_systems.tex Erdos593_revised.tex
-          cmp -s erdos593_obligatory_triple_systems.md arxiv/main.md
+          set -o pipefail
+          {
+            pdf=erdos593_obligatory_triple_systems.pdf
+            pdfinfo "$pdf" | tee /tmp/erdos593-pdfinfo.txt
+            pdftotext "$pdf" /tmp/erdos593-text.txt
+            pdffonts "$pdf" | tee /tmp/erdos593-fonts.txt
+            grep -Fq 'A4' /tmp/erdos593-pdfinfo.txt
+            grep -Fq 'Obligatory Triple Systems: An Alternative Proof' /tmp/erdos593-pdfinfo.txt
+            grep -Fq 'Samuil Petkov' /tmp/erdos593-pdfinfo.txt
+            grep -Fq 'Eric Li' /tmp/erdos593-text.txt
+            ! grep -Eq 'Samuil Pekov|Samuil Petkob|Samuil Petkov (&|and) ChatGPT' /tmp/erdos593-text.txt
+            ! grep -Eq '[[:space:]]no[[:space:]]' /tmp/erdos593-fonts.txt
+            cmp -s "$pdf" arxiv/main.pdf
+            cmp -s erdos593_obligatory_triple_systems.tex arxiv/main.tex
+            cmp -s erdos593_obligatory_triple_systems.tex Erdos593_revised.tex
+            cmp -s erdos593_obligatory_triple_systems.md arxiv/main.md
+          } 2>&1 | tee manuscript-verify.log
+      - name: Upload generated PDF and verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: erdos593-manuscript-preview
+          path: |
+            erdos593_obligatory_triple_systems.pdf
+            manuscript-verify.log
+            /tmp/erdos593-pdfinfo.txt
+            /tmp/erdos593-fonts.txt
+      - name: Stop after PDF verification failure
+        if: steps.verify_pdf.outcome == 'failure'
+        run: exit 1
