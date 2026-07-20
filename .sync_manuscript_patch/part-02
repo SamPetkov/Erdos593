@@ -1,0 +1,155 @@
+-\end{proof}
+-
+-\begin{corollary}[ZFC graphs with uncountable chromatic number and prescribed odd girth]\label{corollary-7.3-zfc-graphs-with-uncountable-chromatic-number-and-prescribed-odd-girth}
++\section{A classical high-odd-girth input}\label{uncountably-chromatic-graphs-of-large-odd-girth}
+ 
+-For every finite \(m\) there is a graph \(G\) with \(\chi(G)>\aleph_0\) and no odd cycle of length at most \(m\).
+-
+-\end{corollary}
+-\begin{proof}
+-Choose \(r\) with \(2r+1>m\), and let
++For the odd-cycle obstruction we use the following older graph theorem
++directly, rather than a shift-graph surrogate.
+ 
++\begin{theorem}[Erdős--Hajnal]\label{theorem-7.1-high-odd-girth}
++For every positive integer $m$ there is a graph $G$ such that
+ \[
+-G=S_r\bigl(\beth_{r-1}(\aleph_0)^+\bigr).
++\chi(G)>\aleph_0
+ \]
++and $G$ contains no odd cycle of length at most $m$.
++\end{theorem}
+ 
+-Apply Lemmas 7.1 and 7.2.
++\begin{proof}[Source]
++Theorem~7.4 of \citet[p.~76]{erdoshajnal1966}, as quoted in
++\citet[Theorem~C, p.~428]{egh1975}, gives for every positive integer $i$ an
++uncountably chromatic graph containing no cycle $C_{2j+1}$ for $0<j<i$.
++Choose $i$ so that $2i-1\ge m$.
+ \end{proof}
+ 
+ \section{Avoidance hosts}\label{the-avoidance-hosts}
+ 
++The division into nonlinear, missing-bridge, and odd-cycle hosts follows the
++negative-half architecture of \citet[Sections~2--4]{li2026}.  The first two
++hosts are written out in the present notation; for the third we invoke the
++older Erdős--Hajnal theorem from Section~7 directly.
++
+ We prove
+ 
+ \[
+@@ -1163,7 +1071,10 @@
+ 
+ \end{proposition}
+ \begin{proof}
+-By Lemma 1.1 it is enough to avoid \(F^\circ\), so assume that \(F\) has no isolated vertices. Take \(G=K_{\omega_1}\). Then \(\chi(G)>\aleph_0\), and Lemma 6.2 gives
++This is the $K_{\omega_1}$ specialisation of Li's sequence-lift
++missing-bridge obstruction \citep[Section~4]{li2026}.  By Lemma 1.1 it is
++enough to avoid \(F^\circ\), so assume that \(F\) has no isolated vertices.
++Take \(G=K_{\omega_1}\). Then \(\chi(G)>\aleph_0\), and Lemma 6.2 gives
+ 
+ \[
+ \chi(\mathcal L(G))>\aleph_0.
+@@ -1180,70 +1091,17 @@
+ 
+ \end{proposition}
+ \begin{proof}
+-Again suppress isolated vertices. The following dictionary
+-separates the three kinds of cycles in the argument. A \emph{Berge cycle} in
+-a triple system is a simple cycle in its Levi graph, with Levi length twice
+-its Berge length. A \emph{factor cycle} is the corresponding cycle inside one
+-expansion atom \(J_s^+\). Its \emph{host trace} is the ordinary cycle in the
+-graph \(J_s\subseteq G\) obtained by deleting the private vertices. Berge
+-length and host-cycle length are equal.
+-
+-Put \(m=|E(F)|\). Choose \(r\) with \(2r+1>m\), and set
+-
+-\[
+-G=S_r\bigl(\beth_{r-1}(\aleph_0)^+\bigr).
+-\]
+-
+-\medskip
+-\noindent\textbf{Claim 8.3.1 (the chosen host is large-chromatic and has the
+-required odd-girth bound).}
+-By Lemmas 7.1 and 7.2, \(\chi(G)>\aleph_0\), and \(G\) has no odd cycle of
+-length at most \(m\). Lemma 6.2 then gives
+-
+-\[
+-\chi(\mathcal L(G))>\aleph_0.\tag*{\(\square\)}
+-\]
+-
+-\medskip
+-\noindent\textbf{Claim 8.3.2 (cycle localisation).}
+-If \(F\) embeds in \(\mathcal L(G)\), every Berge cycle in its selected
+-image is contained in a single factor \(J_s^+\).
+-
+-\smallskip
+-\begin{proof}[Proof of Claim 8.3.2]
+-Retain exactly the host hyperedges corresponding to the hyperedges of \(F\).
+-Injectivity of the embedding and linearity of \(F\) make them a finite linear
+-trace isomorphic to \(F\). Theorem 6.3 assembles this trace by one-point
+-amalgamations. The amalgamation point is a cut vertex of the Levi graph. A
+-simple cycle cannot enter a component through that cut vertex and later leave
+-through it without repeating the vertex. Hence a simple Levi cycle, and
+-therefore a Berge cycle, cannot cross from one factor to another. This is
+-precisely the localisation assertion in Corollary 6.4.
+-\end{proof}
+-
+-\medskip
+-\noindent\textbf{Claim 8.3.3 (length and parity are preserved).}
+-A Berge cycle of length \(\ell\) localised in \(J_s^+\) gives an ordinary
+-cycle of length \(\ell\) in \(J_s\subseteq G\).
+-
+-\smallskip
+-\begin{proof}[Proof of Claim 8.3.3]
+-Write the local Berge cycle in alternating form as core vertices and
+-hyperedges. In a private-vertex expansion, each hyperedge contains exactly
+-two core vertices; consecutive hyperedges of the Berge cycle meet at their
+-common core vertex, so their graph edges are consecutive in \(J_s\).
+-Simplicity of the Levi cycle makes both the core vertices and the hyperedges
+-distinct; consequently the resulting closed graph walk is a simple graph
+-cycle. There is one graph edge for each hyperedge of the Berge cycle. Thus the
+-graph cycle has length \(\ell\), not the Levi length \(2\ell\), and in
+-particular has the same parity.
+-\end{proof}
+-
+-Now suppose that \(F\) embeds in \(\mathcal L(G)\). Its given odd Berge
+-cycle uses distinct hyperedges, so its length \(\ell\) satisfies \(\ell\le m\).
+-Claims 8.3.2 and 8.3.3 produce an odd graph cycle of length \(\ell\) in
+-\(G\), contradicting Claim 8.3.1. Therefore \(\mathcal L(G)\) is an
+-uncountably chromatic \(F\)-free host, and \(F\) is non-obligatory.
++Suppress isolated vertices and put $m=|E(F)|$.  By Theorem~7.1 choose a graph
++$G$ with $\chi(G)>\aleph_0$ and no odd cycle of length at most $m$.  Lemma~6.2
++gives $\chi(\mathcal L(G))>\aleph_0$.
++
++Suppose that $F$ embeds in $\mathcal L(G)$ and retain exactly the host
++hyperedges corresponding to the edges of $F$.  The selected trace is finite
++and linear.  Corollary~6.4 localises every Berge cycle in one expansion fibre
++and sends a Berge cycle of length $\ell$ to an ordinary cycle of the same
++length in $G$.  The given odd Berge cycle has $\ell\le m$, contradicting the
++choice of $G$.  Thus $\mathcal L(G)$ is an uncountably chromatic $F$-free
++host.
+ \end{proof}
+ 
+ The three propositions cover every failure of the intrinsic conditions, and prove
+@@ -1277,12 +1135,16 @@
+ \]
+ \endgroup
+ 
+-All embeddings are non-induced: additional host hyperedges on the image vertices are irrelevant throughout. The proof uses only ZFC, the displayed successor cardinals, graph-colouring compactness, and the standard Erd\H{o}s--Rado relation (8.1). It assumes neither CH nor GCH, and no forcing axiom or large-cardinal hypothesis.
++All embeddings are non-induced: additional host hyperedges on the image vertices are irrelevant throughout. The proof uses only ZFC, graph-colouring compactness, the classical Erd\H{o}s--Hajnal high-odd-girth theorem, and the standard Erd\H{o}s--Rado relation (8.1). It assumes neither CH nor GCH, and no forcing axiom or large-cardinal hypothesis.
+ 
+ \section*{Formal verification and reproducibility}
+ 
+-The complete finite classification in Theorem~A has been machine-checked in
+-Lean~4.  Its self-contained source file is available in the public
++Li's preprint, posted on 23 June 2026, contains the first publicly posted
++complete proof of Theorem~A \citep[Theorem~1.1]{li2026}.  The present Lean
++development is a separate formal verification of the alternative proof
++organised in this paper; it is not a line-by-line formalisation of Li's
++manuscript and carries no priority claim.  The
++self-contained Lean~4 source is available in the public
+ \href{https://github.com/SamPetkov/Erdos593/blob/main/formalization/Erdos593SelfContained.lean}{\texttt{Erdos593} repository}.
+ For every finite triple system $F$, the exported theorems establish
+ \[
+@@ -1293,25 +1155,38 @@
