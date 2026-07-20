@@ -1,0 +1,58 @@
+name: Bootstrap synchronized manuscript artifacts
+
+on:
+  push:
+    branches: [agent/synchronize-manuscript-artifacts]
+
+permissions:
+  contents: write
+
+jobs:
+  synchronize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/synchronize-manuscript-artifacts
+          fetch-depth: 0
+      - name: Install TeX, Pandoc, and PDF verification tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq \
+            latexmk \
+            pandoc \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-science \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            poppler-utils
+      - name: Generate and verify all manuscript mirrors
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/bootstrap-manuscript-artifacts.yml
+          python scripts/sync_manuscript_artifacts.py
+          pdfinfo erdos593_obligatory_triple_systems.pdf > /tmp/pdfinfo.txt
+          pdftotext erdos593_obligatory_triple_systems.pdf /tmp/paper.txt
+          pdffonts erdos593_obligatory_triple_systems.pdf > /tmp/fonts.txt
+          grep -Fq 'A4' /tmp/pdfinfo.txt
+          grep -Fq 'Obligatory Triple Systems: An Alternative Proof' /tmp/paper.txt
+          grep -Fq 'Samuil Petkov' /tmp/paper.txt
+          grep -Fq 'Eric Li' /tmp/paper.txt
+          ! grep -Eq 'Samuil Pekov|Samuil Petkob|Samuil Petkov (&|and) ChatGPT' /tmp/paper.txt
+          ! grep -Eq '[[:space:]]no[[:space:]]' /tmp/fonts.txt
+          cmp -s erdos593_obligatory_triple_systems.pdf arxiv/main.pdf
+          cmp -s erdos593_obligatory_triple_systems.tex arxiv/main.tex
+          cmp -s erdos593_obligatory_triple_systems.tex Erdos593_revised.tex
+          cmp -s erdos593_obligatory_triple_systems.md arxiv/main.md
+      - name: Commit generated artifacts
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Synchronize Erdős 593 manuscript artifacts'
+          git push origin HEAD:agent/synchronize-manuscript-artifacts
