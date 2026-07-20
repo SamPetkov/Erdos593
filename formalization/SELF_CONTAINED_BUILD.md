@@ -1,79 +1,49 @@
 # Self-Contained Lean Build and Verification
 
-## Status
+## Authoritative status
 
-`Erdos593SelfContained.lean` is the deterministic, self-contained source
-closure of the Lean formalization of Erdős Problem 593.  The development is no
-longer a partial checkpoint: all proof obligations needed for the finite
-classification theorem are closed, and the two final classification endpoints
-are part of the public `Erdos593` API.
-
-For every finite triple system `F`, Lean proves
+`Erdos593SelfContained.lean` is the deterministic one-file source closure of
+the complete Lean formalisation of the finite classification in Erdős Problem
+593. It is not a partial checkpoint. For every finite triple system `F`, the
+public endpoints are
 
 ```lean
-Erdos593.TripleSystem.isObligatory_iff_isolatedReduction_intrinsic
-  (F : TripleSystem V E) :
-  F.IsObligatory ↔ F.isolatedReduction.Intrinsic
-
-Erdos593.TripleSystem.isObligatory_iff_constructible_isolatedReduction
-  (F : TripleSystem V E) :
-  F.IsObligatory ↔ Constructible F.isolatedReduction
+F.IsObligatory ↔ F.isolatedReduction.Intrinsic
+F.IsObligatory ↔ Constructible F.isolatedReduction
 ```
 
-Thus the formalization checks both the intrinsic and constructive forms of the
-classification, including the exact treatment of isolated vertices.  Here
-“finite” refers to the triple system being classified; the host triple systems
-quantified over by `IsObligatory` remain unrestricted.
+The host triple systems quantified over by `IsObligatory` remain unrestricted;
+only the classified system `F` is finite.
 
-## What is proved
+## Relationship to prior work
 
-The imported closure contains the complete positive and negative directions.
-In particular, it formalizes:
+Eric Li's preprint arXiv:2606.24882, posted on 23 June 2026, contains the first
+publicly posted complete proof and introduces the complete-rank one-apex lift
+and exact bridge-trace framework. This Lean artifact carries no priority or
+independent-discovery claim. It verifies the alternative implementation in this
+repository, including its base-fibre/support-incidence organisation; it is not
+a line-by-line formalisation of Li's manuscript.
 
-- the probabilistic rainbow lemma and the obligatory private-vertex expansion
-  atoms;
-- closure of obligatoriness under finite disjoint unions and one-point
-  amalgamation, including the rooted-abundance argument;
-- the Levi-graph bridge-block decomposition, the quotient forest and
-  running-intersection assembly, and the equivalence between the intrinsic and
-  constructive descriptions;
-- the exact isolated-reduction equivalence for obligatoriness;
-- the Erdős--Rado linear host excluding every finite nonlinear triple system;
-- the one-apex sequence lift, including its uncountable chromatic obstruction;
-- the finite linear-trace theorem: canonical base fibres are expansion pieces,
-  their overlap incidence graph is acyclic, and the pieces assemble along cut
-  points;
-- the missing-bridge avoidance theorem derived from the finite trace
-  decomposition;
-- the shift-graph host with uncountable chromatic number and the required
-  odd-girth bound, together with the localization and parity transfer for
-  Berge cycles; and
-- the final assembly of these three avoidance cases into the two classification
-  theorems displayed above.
+The written paper uses the classical Erdős--Hajnal high-odd-girth theorem as an
+external mathematical input. The Lean project instead gives an explicit
+shift-graph construction of a host with the required chromatic and odd-girth
+properties, thereby avoiding a project axiom for that input.
 
-The finite-trace layer is global, not merely fibre-local.  The completed
-support-incidence and forest-order modules provide the running-intersection
-order, the `FiniteLiftGenerated` decomposition and its constructibility and
-obligatoriness consequences.  The earlier local base-node, base-letter, apex,
-cardinality and factor interfaces are retained as the lemmas from which this
-global theorem is built; they should not be read as remaining gaps.
+## What “self-contained” means
 
-## Meaning of “self-contained”
+The generated file has no project-local imports. It places the exact transitive
+closure of the modules imported by `Erdos593.lean` in dependency order and
+retains only the external Mathlib imports at the top. Each source boundary
+records the repository-relative path and the SHA-256 of the normalized UTF-8
+source.
 
-The generated file has no project-local imports.  It consists of the exact
-transitive closure of the local modules imported by `Erdos593.lean`, placed in
-dependency order, with the external Mathlib imports retained at the top.  Each
-source boundary records the repository-relative source path and a SHA-256 hash
-of the normalized UTF-8 source.
-
-“Self-contained” therefore means self-contained relative to the pinned Lean
-and Mathlib environment.  It does not mean that Mathlib has been copied into
-the repository or that foundational principles supplied by Mathlib have been
-reproved.
+Self-contained is therefore relative to the Lean and Mathlib versions pinned by
+`lean-toolchain` and `lake-manifest.json`; Mathlib itself is not copied into the
+repository.
 
 ## Reproduction
 
-From the `formalization` directory, run
+From `formalization/`:
 
 ```text
 python scripts/generate_self_contained.py
@@ -82,24 +52,29 @@ lake env lean Erdos593.lean
 lake env lean Erdos593SelfContained.lean
 ```
 
-The first command is the only supported way to regenerate the combined file.
-The `--check` command fails if the checked-in artifact differs by even one byte
-from deterministic regeneration.  The two Lean commands check, respectively,
-the ordinary module entry point and the generated source closure against the
-versions pinned by `lean-toolchain` and `lake-manifest.json`.
+The generator is the only supported way to update the combined file. The
+`--check` command fails on any byte difference from deterministic regeneration.
+The two Lean commands check the ordinary module entry point and the generated
+source closure under the pinned Lean/mathlib `v4.32.0` toolchain.
 
-The current toolchain is Lean `v4.32.0`.  GitHub Actions performs the aggregate
-self-contained build together with focused module checks and treats build
-warnings as errors.
+## Proof coverage
+
+The closure checks the constructive positive direction, the intrinsic
+bridge-block equivalence, isolated reduction, and all three avoidance cases:
+nonlinearity, failure of the edge-bridge condition, and odd Berge cycles. Its
+sequence-lift layer proves the global finite-linear trace theorem, not merely
+fibre-local interfaces: finite traces decompose into private-vertex expansion
+pieces whose support-incidence graph is a forest and which assemble by disjoint
+unions and one-point amalgamations.
 
 ## Source and axiom audits
 
-The local source closure and generated artifact are audited for `sorry`,
-`admit`, project-defined `axiom`, `unsafe` declarations and `sorryAx`.  The
-completed development contains none of these proof placeholders or
-project-specific axioms.
+The source closure and generated artifact are scanned for `sorry`, `admit`,
+project-defined `axiom`, `unsafe`, and `sorryAx`; none occurs. Representative
+central declarations, including both final classification endpoints, report
+only `propext`, `Classical.choice`, and `Quot.sound`.
 
-A compact audit of the final public endpoints can be run with a temporary file:
+A compact endpoint audit is:
 
 ```lean
 import Erdos593
@@ -107,30 +82,20 @@ import Erdos593
 #print axioms Erdos593.TripleSystem.isObligatory_iff_isolatedReduction_intrinsic
 #print axioms Erdos593.TripleSystem.isObligatory_iff_constructible_isolatedReduction
 #print axioms Erdos593.TripleSystem.BridgeBlock.isolatedReduction_constructible_iff_intrinsic
-#print axioms Erdos593.TripleSystem.Constructible.isObligatory
 #print axioms Erdos593.TripleSystem.not_isObligatory_of_not_linear
 #print axioms Erdos593.TripleSystem.not_isObligatory_of_linear_of_not_isolatedReduction_bridgeAtEveryEdge
 #print axioms Erdos593.SequenceLift.not_isObligatory_of_linear_of_not_isolatedReduction_evenBergeCycles_shiftHost
 ```
 
-The audited declarations report only the standard foundations used through
-Mathlib, namely propositional extensionality, classical choice and quotient
-soundness (`propext`, `Classical.choice` and `Quot.sound`).
+## Recorded build
 
-## Recorded verification
+The checked-in closure contains 171 local source modules, 54 external Mathlib
+imports, and 24,641 physical lines. Deterministic regeneration, the aggregate
+entry point, the one-file build, focused module checks, the placeholder scan,
+and the repository secret scan passed under the pinned toolchain before this
+documentation revision.
 
-As of 20 July 2026:
-
-- deterministic regeneration of `Erdos593SelfContained.lean` passes;
-- the ordinary `Erdos593.lean` entry point and the self-contained artifact both
-  compile under the pinned toolchain;
-- the focused checks for the positive atoms, bridge-block decomposition,
-  Erdős--Rado host, sequence-lift trace decomposition, missing-bridge host,
-  shift-graph odd-cycle host and final classification pass;
-- the source-placeholder and repository secret scans are clear; and
-- the final intrinsic and constructive classification theorems are included in
-  the generated closure and in the public module entry point.
-
-The authoritative status is therefore **complete machine-checked finite
-classification**, rather than “partial formalization”, “checkpoint”, or a list
-of unresolved local interfaces.
+The authoritative description is **complete machine-checked finite
+classification**. “Self-contained” and “machine-checked” describe the formal
+artifact; they do not imply independent discovery, historical priority, or
+external peer review.
