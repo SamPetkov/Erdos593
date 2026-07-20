@@ -70,7 +70,9 @@ jobs:
           grep -Fq 'Eric Li for a productive discussion' /tmp/erdos593-paper.txt
           grep -Fq '[3] Eric Li' /tmp/erdos593-paper.txt
           ! grep -Eq 'École|Ecole|samuil\.petkov|Email address' /tmp/erdos593-paper.txt
-          awk 'NR > 2 && $4 != "yes" {exit 1}' /tmp/erdos593-fonts.txt
+          if grep -Eq '[[:space:]]no[[:space:]]' /tmp/erdos593-fonts.txt; then
+            exit 1
+          fi
 
           if grep -E 'LaTeX Warning|Package .* Warning|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox|Underfull \\vbox|undefined references|Citation.*undefined|Rerun to get' "$log"; then
             exit 1
