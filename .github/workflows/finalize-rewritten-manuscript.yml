@@ -1,20 +1,22 @@
 name: Finalize rewritten manuscript
 
 on:
-  pull_request:
-    branches: [main]
+  workflow_run:
+    workflows: [Lean focused checks]
+    types: [completed]
 
 permissions:
   contents: write
 
 jobs:
   finalize:
+    if: github.event.workflow_run.head_branch == 'agent/revise-erdos593-manuscript'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Restore manuscript
         env:
@@ -57,7 +59,7 @@ jobs:
 
       - name: Verify and commit
         env:
-          TARGET_BRANCH: ${{ github.head_ref }}
+          TARGET_BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
           set -euo pipefail
           sudo apt-get update -qq
@@ -111,7 +113,7 @@ MD
 MD
           fi
 
-          rm -f .github/workflows/sync-rewritten-manuscript.yml .github/workflows/sync-rewritten-manuscript-v2.yml
+          rm -f .github/workflows/sync-rewritten-manuscript.yml .github/workflows/sync-rewritten-manuscript-v2.yml .github/workflows/sync-rewritten-manuscript-final.yml
           rm -f "$base".{aux,log,out,fls,fdb_latexmk}
           tmp="$(mktemp)"
           while IFS= read -r file; do [ "$file" = SHA256SUMS ] || sha256sum "$file"; done < MANIFEST.txt > "$tmp"
