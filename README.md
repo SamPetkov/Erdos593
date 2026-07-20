@@ -81,3 +81,18 @@ responsibility for the mathematics, citations, attribution, and conclusions.
 
 Original repository material is licensed under CC BY 4.0. Third-party results
 and references retain their own rights and attribution requirements.
+
+## Manuscript synchronization
+
+`erdos593_obligatory_triple_systems.tex` is the sole authoritative manuscript
+source.  The root PDF and Markdown file, the `arxiv/main.*` mirrors, and
+`Erdos593_revised.tex` are deterministic generated artifacts.  Regenerate them
+with:
+
+```bash
+python scripts/sync_manuscript_artifacts.py
+```
+
+CI reruns the same synchronization and fails when a committed mirror differs
+from the canonical TeX source.  The synchronization script does not modify the
+Lean formalization.
