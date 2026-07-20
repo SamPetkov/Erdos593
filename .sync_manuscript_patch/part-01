@@ -1,0 +1,195 @@
++in ZFC.  The imported results used as black boxes are the de Bruijn--Erdős
++compactness theorem \citep[Theorem~1, pp.~371--373]{debruijn1951}, the
++Erdős--Hajnal high-odd-girth theorem
++\citep[Theorem~7.4, p.~76]{erdoshajnal1966}, and the pair case of the
+ Erdős--Rado partition theorem
+ \citep[Theorem~4(i), formula~(95), p.~471]{erdosrado1956}.
+ 
+@@ -583,6 +612,12 @@
+ 
+ \section{The intrinsic decomposition}\label{equivalence-of-the-constructive-and-intrinsic-descriptions}
+ 
++The selected-incidence decomposition, quotient forest, and running-intersection
++architecture in this section follow the positive structural framework of
++\citet[Sections~4--5]{li2026}.  We give the full argument in the present
++notation because its explicit assembly order is also used by the Lean
++development.
++
+ We prove \((2)\Longleftrightarrow(3)\). Isolated vertices may be ignored by Lemma 1.1.
+ 
+ \paragraph{Forward preservation.}\label{forward-preservation}
+@@ -726,6 +761,13 @@
+ 
+ \section{The sequence lift}\label{the-sequence-lift-used-in-the-avoidance-constructions}
+ 
++The one-apex construction and bridge-trace strategy were introduced by Li
++\citep[Sections~3--4 and Theorem~4.6]{li2026}.  We specialise the lift to
++$\omega_1$ and replace Li's bridge-selector derivative formulation by a
++base-fibre and support-incidence decomposition convenient for formalisation.
++The detailed proof below is self-contained as an exposition, but it is not a
++claim of independent discovery.
++
+ \paragraph{The one-apex construction.}\label{the-one-apex-construction}
+ 
+ Let \(G=(X,A)\) be an arbitrary graph, where \(A=E(G)\) is also regarded as an alphabet. Let
+@@ -794,7 +836,10 @@
+ is a monochromatic hyperedge. Therefore the colours \(k_{s_\alpha}\), \(\alpha<\omega_1\), are pairwise distinct, impossible in \(\omega\).
+ \end{proof}
+ 
+-\begin{theorem}[Exact finite linear trace theorem]\label{theorem-6.3-exact-finite-linear-trace-theorem}
++The next result is the fibre-decomposition form of Li's bridge-trace theorem
++needed in this paper \citep[Theorem~4.6]{li2026}.
++
++\begin{theorem}[Finite linear trace decomposition]\label{theorem-6.3-exact-finite-linear-trace-theorem}
+ 
+ Every finite, not necessarily induced, linear subhypergraph \(K\) of
+ \(\mathcal L(G)\) is obtainable, by finite disjoint unions and one-point
+@@ -952,170 +997,33 @@
+ In every \(J_s^+\) the incidence with the private vertex is a bridge. Bridgehood is preserved by one-point amalgamation. A simple Levi cycle cannot cross a one-point cut, so every Berge cycle lies in one factor. Berge cycles in \(J_s^+\) are exactly ordinary graph cycles in \(J_s\).
+ \end{proof}
+ 
+-\section{Shift graphs of large odd girth}\label{uncountably-chromatic-graphs-of-large-odd-girth}
+-
+-The shift-graph mechanism used here is classical; compare
+-\citet[Section~7, especially Theorem~7.4]{erdoshajnal1966}. We include
+-proofs of the precise cardinal and odd-girth bounds needed below.
+-
+-\paragraph{Chromatic growth of shift graphs.}\label{chromatic-growth-of-shift-graphs}
+-
+-For a positive integer \(r\) and an infinite cardinal \(\kappa\), define the directed shift graph \(D_r(\kappa)\) as follows:
+-
+-\begin{itemize}
+-\tightlist
+-\item
+-  its vertices are increasing \(r\)-tuples \[(\alpha_0,\ldots,\alpha_{r-1}),\qquad
+-    \alpha_0<\cdots<\alpha_{r-1}<\kappa;\]
+-\item
+-  it has an arc \[(\alpha_0,\ldots,\alpha_{r-1})
+-    \longrightarrow
+-    (\alpha_1,\ldots,\alpha_r)\] whenever \(\alpha_0<\cdots<\alpha_r\).
+-\end{itemize}
+-
+-Let \(S_r(\kappa)\) be its underlying graph. Write
+-
+-\[
+-\beth_0(\aleph_0)=\aleph_0,
+-\qquad
+-\beth_{j+1}(\aleph_0)=2^{\beth_j(\aleph_0)}.
+-\]
+-
+-\begin{lemma}[Chromatic number of shift graphs]\label{lemma-7.1-chromatic-number-of-shift-graphs}
+-
+-If
+-
+-\[
+-\kappa>\beth_{r-1}(\aleph_0),
+-\]
+-
+-then
+-
+-\[
+-\chi(S_r(\kappa))>\aleph_0.
+-\]
+-
+-\end{lemma}
+-\begin{proof}
+-The case \(r=1\) is immediate because \(S_1(\kappa)=K_\kappa\). Assume \(r\ge2\). Suppose \(S_r(\kappa)\) has a proper colouring \(c\) with \(\lambda\) colours. For every increasing \((r-1)\)-tuple \(u\), define
+-
+-\[
+-C(u)=\{c(u^\frown\beta):\beta>\max u\}\subseteq\lambda.
+-\]
+-
+-If
+-
+-\[
+-u=(\alpha_0,\ldots,\alpha_{r-2}),
+-\qquad
+-v=(\alpha_1,\ldots,\alpha_{r-1})
+-\]
+-
+-are adjacent in \(S_{r-1}(\kappa)\), then
+-
+-\[
+-c(\alpha_0,\ldots,\alpha_{r-1})\in C(u).
+-\]
+-
+-It cannot belong to \(C(v)\), since that would give some \(\beta>\alpha_{r-1}\) for which the adjacent \(r\)-tuples
+-
+-\[
+-(\alpha_0,\ldots,\alpha_{r-1}),
+-\qquad
+-(\alpha_1,\ldots,\alpha_{r-1},\beta)
+-\]
+-
+-have the same colour. Hence \(C(u)\ne C(v)\). Thus a \(\lambda\)-colouring of \(S_r(\kappa)\) yields a \(2^\lambda\)-colouring of \(S_{r-1}(\kappa)\).
+-
+-Starting with a countable colouring of \(S_r(\kappa)\) and iterating \(r-1\) times would give a colouring of
+-
+-\[
+-S_1(\kappa)=K_\kappa
+-\]
+-
+-with at most \(\beth_{r-1}(\aleph_0)\) colours, impossible when \(\kappa\) is larger.
+-\end{proof}
+-
+-\paragraph{Odd-girth growth.}\label{odd-girth-growth}
+-
+-\begin{lemma}[Odd girth of shift graphs]\label{lemma-7.2-odd-girth-of-shift-graphs}
+-
+-The odd girth of \(S_r(\kappa)\) is at least
+-
+-\[
+-2r+1.
+-\]
+-
+-\end{lemma}
+-\begin{proof}
+-For a digraph \(D\), let \(\delta D\) be its arc digraph: the vertices of \(\delta D\) are the arcs of \(D\), and
+-
+-\[
+-(u,v)\longrightarrow(v,w)
+-\]
+-
+-is an arc of \(\delta D\). We have
+-
+-\[
+-D_{r+1}(\kappa)\cong\delta D_r(\kappa).
+-\]
+-
+-We use the following fact: if \(D\) is acyclic and the underlying graph of \(D\) has odd girth \(g\), then the underlying graph of \(\delta D\) has odd girth at least \(g+2\). Indeed, a directed cycle in \(\delta D\) would concatenate to a directed closed walk in \(D\), which would contain a directed cycle; hence \(\delta D\) is also acyclic.
+-
+-Take an odd cycle \(a_0,\ldots,a_{m-1}\) in the underlying graph of
+-\(\delta D\), with indices modulo \(m\). For the adjacency of \(a_{i-1}\)
+-and \(a_i\), put \(\varepsilon_i=+\) when
+-\(\operatorname{head}(a_{i-1})=\operatorname{tail}(a_i)\), and put
+-\(\varepsilon_i=-\) in the reverse case. Since \(\delta D\) is acyclic, the
+-cyclic sign sequence is not constant. Its number \(c\) of sign changes is
+-therefore a positive even integer, so \(c\ge2\).
+-
+-Let \(v_i\) be the common endpoint in \(D\) of the consecutive arcs
+-\(a_{i-1}\) and \(a_i\). If
+-\(\varepsilon_i=\varepsilon_{i+1}\), then \(v_i\) and \(v_{i+1}\) are the
+-two endpoints of \(a_i\), in one order or the other. If
+-\(\varepsilon_i\ne\varepsilon_{i+1}\), then \(v_i=v_{i+1}\): both are the
+-tail of \(a_i\) in the \(+,-\) case and both are its head in the \(-,+\)
+-case. Thus \(v_0,\ldots,v_{m-1},v_0\) is a closed walk in the underlying
+-graph of \(D\) with exactly \(c\) stationary steps. Deleting those steps
+-gives a closed walk of length \(m-c\). Since \(m\) is odd and \(c\) is
+-even, \(c\ne m\). Together with \(c\ge2\), this gives
+-\[
+- 1\le m-c\le m-2,
+-\]
+-and \(m-c\) is odd.
+-
+-Every odd closed walk contains an odd cycle. Indeed, if a vertex occurs
+-twice internally, split the walk at two consecutive occurrences; one of
+-the two resulting closed walks has odd length. Repeating this reduction
+-produces an odd closed walk with no repeated internal vertex, hence an odd
+-cycle. Therefore \(m-c\ge g\), and so \(m\ge g+2\).
+-
+-Now \(D_1(\kappa)\) is the transitive tournament; it is acyclic and its underlying graph \(K_\kappa\) has odd girth \(3\). Iterating the preceding observation gives odd girth at least
+-
+-\[
+-3+2(r-1)=2r+1.
+-\]
+-
