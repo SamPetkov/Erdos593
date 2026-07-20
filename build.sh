@@ -6,6 +6,6 @@ BUILD_DIR="$(mktemp -d "${TMPDIR:-/tmp}/erdos593.XXXXXX")"
 trap 'rm -rf "$BUILD_DIR"' EXIT
 cp "$ROOT/$BASE.tex" "$BUILD_DIR/"
 cd "$BUILD_DIR"
-export TZ=UTC SOURCE_DATE_EPOCH=1783771200 FORCE_SOURCE_DATE=1
+export TZ=UTC SOURCE_DATE_EPOCH=1784548800 FORCE_SOURCE_DATE=1
 latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error "$BASE.tex"
 cp "$BASE.pdf" "$ROOT/$BASE.pdf"
