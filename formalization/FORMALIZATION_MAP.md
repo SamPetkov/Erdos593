@@ -136,13 +136,18 @@ individual fibre's local base-letter map is now also packaged as an explicit
 equivalence. The local factor spine now also identifies each linear chosen
 base fibre with the private-vertex expansion of its canonical base-letter
 subgraph, with finite factor packaging when the selected family is finite.
-These interfaces still do not identify base letters across distinct base
-fibres or assemble them into a global trace decomposition. The
-remaining project work lies in reconstruction of a constructible system across
-isolated vertices, the global finite-trace decomposition beyond the local
-rigidity, grouping, and key steps,
-and the infinitary avoidance direction; it is not a gap in the verified
-bridge-block reconstruction or one-point closure.
+The later sequence-lift modules complete the global step that these local APIs
+intentionally did not claim.  In particular,
+`SequenceLiftBaseFiberSupportIncidenceAcyclic.lean` and its endpoint module
+establish the support-incidence forest, `SequenceLiftEmbeddedSourceEndpoints.lean`
+packages the finite embedded-source trace, and the missing-bridge and
+odd-Berge-cycle obstructions are discharged by
+`SequenceLiftMissingBridgeUnconditional.lean` and
+`ShiftGraphBergeObstruction.lean`.  `ObligatoryClassification.lean` then
+assembles the unconditional finite classification, including isolated
+vertices.  Thus there is no remaining theorem-level gap; the limitations in
+the table above describe the scope of those intermediate declarations, not the
+status of the completed import closure.
 
 The underlying O9 transfer remains a reusable conditional API, but
 `completeBipartiteExpansionAtom_isObligatory` now discharges its premise;

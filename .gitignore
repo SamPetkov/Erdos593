@@ -18,5 +18,9 @@
 *.swp
 *.swo
 
+# Generated Python caches
+__pycache__/
+*.py[cod]
+
 # Lean/Lake build artifacts
 formalization/.lake/

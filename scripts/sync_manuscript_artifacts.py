@@ -17,6 +17,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_BASENAME = "erdos593_obligatory_triple_systems"
@@ -30,13 +31,17 @@ TEX_MIRRORS = [
 ]
 PDF_MIRRORS = [ROOT / "arxiv" / "main.pdf"]
 MD_MIRRORS = [ROOT / "arxiv" / "main.md"]
+ARXIV_ZIP = ROOT / "arxiv" / "Erdos593_arxiv_source.zip"
+PANDOC = os.environ.get("PANDOC", "pandoc")
+EXPECTED_PANDOC_VERSION = "3.1.3"
 
 SYNC_NOTE = """## Manuscript synchronization
 
 `erdos593_obligatory_triple_systems.tex` is the sole authoritative manuscript
-source.  The root PDF and Markdown file, the `arxiv/main.*` mirrors, and
-`Erdos593_revised.tex` are deterministic generated artifacts.  Regenerate them
-with:
+source.  The root PDF and Markdown file, the `arxiv/main.*` mirrors,
+`Erdos593_revised.tex`, and `arxiv/Erdos593_arxiv_source.zip` are deterministic
+generated artifacts.  The arXiv ZIP contains only `main.tex`, since the
+bibliography is embedded in that file.  Regenerate everything with:
 
 ```bash
 python scripts/sync_manuscript_artifacts.py
@@ -44,7 +49,9 @@ python scripts/sync_manuscript_artifacts.py
 
 CI reruns the same synchronization and fails when a committed mirror differs
 from the canonical TeX source.  The synchronization script does not modify the
-Lean formalization.
+Lean formalization.  Markdown generation is pinned to Pandoc 3.1.3; set the
+`PANDOC` environment variable to a compatible executable when another version
+is first on `PATH`.
 """
 
 
@@ -90,11 +97,17 @@ def normalize_tex(text: str) -> str:
 
 def generate_markdown(tex_path: Path, output_path: Path) -> None:
     """Generate a readable GitHub Markdown rendering from the canonical TeX."""
+    pandoc_version = subprocess.check_output([PANDOC, "--version"], text=True).splitlines()[0]
+    if pandoc_version.rsplit(maxsplit=1)[-1] != EXPECTED_PANDOC_VERSION:
+        raise RuntimeError(
+            f"deterministic Markdown generation requires Pandoc {EXPECTED_PANDOC_VERSION}; "
+            f"found {pandoc_version}. Set PANDOC to a compatible executable."
+        )
     with tempfile.TemporaryDirectory(prefix="erdos593-pandoc-") as tmp:
         raw = Path(tmp) / "raw.md"
         run(
             [
-                "pandoc",
+                PANDOC,
                 str(tex_path),
                 "--from=latex",
                 "--to=gfm+tex_math_dollars",
@@ -112,9 +125,10 @@ def generate_markdown(tex_path: Path, output_path: Path) -> None:
     header = """# Obligatory Triple Systems: An Alternative Proof
 
 **Samuil Petkov**  
-20 July 2026
+21 July 2026
 
-**2020 Mathematics Subject Classification.** Primary 05C65; Secondary 05C15, 05C63, 03E05  
+**2020 Mathematics Subject Classification.** Primary 05C65; Secondary 05C15, 05C63, 03E05
+
 **Keywords.** obligatory triple system; hypergraph colouring; Levi graph; Berge cycle; uncountable chromatic number; Erdős Problem 593
 
 """
@@ -132,7 +146,7 @@ def compile_pdf(tex_path: Path, output_path: Path) -> None:
         env.update(
             {
                 "TZ": "UTC",
-                "SOURCE_DATE_EPOCH": "1784548800",
+                "SOURCE_DATE_EPOCH": "1784635200",
                 "FORCE_SOURCE_DATE": "1",
             }
         )
@@ -140,6 +154,7 @@ def compile_pdf(tex_path: Path, output_path: Path) -> None:
             [
                 "latexmk",
                 "-pdf",
+                f"-outdir={build}",
                 "-interaction=nonstopmode",
                 "-halt-on-error",
                 "-file-line-error",
@@ -155,6 +170,26 @@ def compile_pdf(tex_path: Path, output_path: Path) -> None:
 def copy_file(source: Path, destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, destination)
+
+
+def make_arxiv_archive() -> None:
+    """Write a cross-platform deterministic arXiv source ZIP."""
+    ARXIV_ZIP.parent.mkdir(parents=True, exist_ok=True)
+    info = zipfile.ZipInfo("main.tex", date_time=(2026, 7, 21, 12, 0, 0))
+    info.create_system = 3
+    info.external_attr = 0o100644 << 16
+    info.compress_type = zipfile.ZIP_STORED
+    with zipfile.ZipFile(ARXIV_ZIP, "w") as archive:
+        archive.writestr(info, CANONICAL_TEX.read_bytes())
+
+
+def validate_arxiv_archive() -> None:
+    with zipfile.ZipFile(ARXIV_ZIP) as archive:
+        names = archive.namelist()
+        if names != ["main.tex"]:
+            raise RuntimeError(f"arXiv ZIP has unexpected members: {names}")
+        if archive.read("main.tex") != CANONICAL_TEX.read_bytes():
+            raise RuntimeError("arXiv ZIP main.tex differs from the canonical TeX source")
 
 
 def update_readme() -> None:
@@ -189,7 +224,8 @@ def validate_public_text_files() -> None:
 
 
 def update_manifest_and_hashes() -> None:
-    tracked = subprocess.check_output(["git", "ls-files"], cwd=ROOT, text=True).splitlines()
+    tracked = set(subprocess.check_output(["git", "ls-files"], cwd=ROOT, text=True).splitlines())
+    tracked.add(ARXIV_ZIP.relative_to(ROOT).as_posix())
     tracked = sorted(path for path in tracked if path)
     (ROOT / "MANIFEST.txt").write_text("\n".join(tracked) + "\n", encoding="utf-8", newline="\n")
 
@@ -219,8 +255,10 @@ def synchronize() -> None:
     for destination in MD_MIRRORS:
         copy_file(CANONICAL_MD, destination)
 
+    make_arxiv_archive()
     update_readme()
     validate_public_text_files()
+    validate_arxiv_archive()
     update_manifest_and_hashes()
 
 
