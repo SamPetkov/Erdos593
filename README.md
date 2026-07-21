@@ -1,7 +1,7 @@
 # Obligatory Triple Systems: Alternative Proof and Lean Verification
 
 **Author:** Samuil Petkov  
-**Manuscript revision:** 20 July 2026
+**Manuscript revision:** 21 July 2026
 
 This repository contains an alternative proof of the finite classification in
 Erdős Problem 593 and a complete Lean 4 formal verification of the proof
@@ -42,9 +42,10 @@ one-point amalgamations.
 - `erdos593_obligatory_triple_systems.tex` — canonical A4 `amsart` source.
 - `erdos593_obligatory_triple_systems.pdf` — compiled manuscript.
 - `erdos593_obligatory_triple_systems.md` — readable Markdown version.
+- `arxiv/Erdos593_arxiv_source.zip` — submission-ready source archive containing only `main.tex`.
 - `references.bib` — bibliography maintenance file.
 - `SOURCE_LEDGER.md` — source, priority, and proof-dependency record.
-- `REVISION_NOTES.md` — record of the 20 July attribution revision.
+- `REVISION_NOTES.md` — record of the attribution and release-readiness revisions through 21 July.
 - `formalization/` — complete Lean project and generated one-file source closure.
 
 The manuscript uses numeric citations, A4 paper, one-inch margins, standard AMS
@@ -85,9 +86,10 @@ and references retain their own rights and attribution requirements.
 ## Manuscript synchronization
 
 `erdos593_obligatory_triple_systems.tex` is the sole authoritative manuscript
-source.  The root PDF and Markdown file, the `arxiv/main.*` mirrors, and
-`Erdos593_revised.tex` are deterministic generated artifacts.  Regenerate them
-with:
+source.  The root PDF and Markdown file, the `arxiv/main.*` mirrors,
+`Erdos593_revised.tex`, and `arxiv/Erdos593_arxiv_source.zip` are deterministic
+generated artifacts.  The arXiv ZIP contains only `main.tex`, since the
+bibliography is embedded in that file.  Regenerate everything with:
 
 ```bash
 python scripts/sync_manuscript_artifacts.py
@@ -95,4 +97,6 @@ python scripts/sync_manuscript_artifacts.py
 
 CI reruns the same synchronization and fails when a committed mirror differs
 from the canonical TeX source.  The synchronization script does not modify the
-Lean formalization.
+Lean formalization.  Markdown generation is pinned to Pandoc 3.1.3; set the
+`PANDOC` environment variable to a compatible executable when another version
+is first on `PATH`.

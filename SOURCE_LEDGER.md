@@ -1,7 +1,7 @@
 # Source, priority, and dependency ledger
 
 **Author:** Samuil Petkov  
-**Revision date:** 20 July 2026
+**Revision date:** 21 July 2026
 
 ## Priority and relationship to Eric Li's preprint
 

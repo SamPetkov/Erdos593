@@ -9,8 +9,8 @@ type: article
 authors:
   - family-names: Petkov
     given-names: Samuil
-version: 1.1.0
-date-released: 2026-07-20
+version: 1.2.0
+date-released: 2026-07-21
 url: "https://github.com/SamPetkov/Erdos593"
 repository-code: "https://github.com/SamPetkov/Erdos593"
 license: CC-BY-4.0

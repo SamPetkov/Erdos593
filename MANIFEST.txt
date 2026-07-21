@@ -11,6 +11,7 @@ README.md
 REVISION_NOTES.md
 SHA256SUMS
 SOURCE_LEDGER.md
+arxiv/Erdos593_arxiv_source.zip
 arxiv/main.md
 arxiv/main.pdf
 arxiv/main.tex
