@@ -1,0 +1,69 @@
+name: Materialize finite consequences revision
+
+on:
+  push:
+    branches:
+      - agent/finite-consequences-and-chronology
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/finite-consequences-and-chronology
+          fetch-depth: 0
+
+      - name: Validate and apply the one-shot revision
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/apply_finite_consequences_revision.py
+          python scripts/apply_finite_consequences_revision.py
+
+      - name: Install TeX, Pandoc, and PDF verification tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq \
+            latexmk \
+            pandoc \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-science \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            poppler-utils
+
+      - name: Regenerate and verify manuscript artifacts
+        run: |
+          set -euo pipefail
+          python scripts/sync_manuscript_artifacts.py
+          pdfinfo erdos593_obligatory_triple_systems.pdf | grep -F 'A4'
+          pdftotext erdos593_obligatory_triple_systems.pdf /tmp/erdos593-text.txt
+          grep -Fq 'Exact finite order--size--component spectrum' /tmp/erdos593-text.txt
+          grep -Fq 'earliest complete public Lean formalisation' /tmp/erdos593-text.txt
+          grep -Fq 'Tom de Groot' /tmp/erdos593-text.txt
+
+      - name: Remove bootstrap files and refresh inventory
+        run: |
+          set -euo pipefail
+          git rm scripts/apply_finite_consequences_revision.py
+          git rm .github/workflows/bootstrap-finite-consequences.yml
+          python - <<'PY'
+          from scripts.sync_manuscript_artifacts import update_manifest_and_hashes
+          update_manifest_and_hashes()
+          PY
+
+      - name: Commit materialized revision
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Add finite consequences and public Lean chronology'
+          git push origin HEAD:agent/finite-consequences-and-chronology
