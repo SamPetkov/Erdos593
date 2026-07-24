@@ -1,4 +1,5 @@
 .gitattributes
+.github/workflows/fix-spectrum-square-root-proof.yml
 .github/workflows/lean.yml
 .github/workflows/manuscript-artifacts.yml
 .gitignore
