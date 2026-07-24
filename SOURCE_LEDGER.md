@@ -1,63 +1,63 @@
 # Source, priority, and dependency ledger
 
 **Author:** Samuil Petkov  
-**Revision date:** 21 July 2026
+**Revision date:** 24 July 2026
 
-## Priority and relationship to Eric Li's preprint
+## Classification priority
 
-Eric Li's preprint *A Resolution of Erdős Problems 593 and 1177: Obligatory
-Triple Systems and Exact Spectra* (arXiv:2606.24882), posted on 23 June 2026,
+Eric Li's *A Resolution of Erdős Problems 593 and 1177: Obligatory Triple
+Systems and Exact Spectra* (arXiv:2606.24882v1), submitted on 23 June 2026,
 contains the first publicly posted complete proof of the finite classification
 in Erdős Problem 593.
 
-The following structural ingredients used here already appear in Li's proof and
-are cited at their points of use:
+The present proof cites Li where it uses the complete-rank one-apex lift,
+bridge-trace strategy, selected-incidence decomposition, quotient forest, and
+running-intersection architecture.  It does not claim mathematical priority
+for those ingredients.
 
-- the complete-rank one-apex sequence lift;
-- the exact bridge-trace strategy for finite linear traces;
-- the selected-incidence decomposition;
-- the quotient forest and running-intersection assembly; and
-- the division of the negative direction into nonlinear, missing-bridge, and
-  odd-cycle avoidance hosts.
+## Public Lean chronology
 
-The present manuscript is an alternative implementation and exposition, not a
-priority claim. Its detailed differences are the direct positive-atom and
-closure proofs in the paper's notation, the base-fibre/support-incidence
-formulation used for machine checking, direct invocation of the older
-Erdős--Hajnal high-odd-girth theorem in the written proof, and a complete Lean
-formal verification of this implementation. The Lean project is not a
-line-by-line formalisation of Li's manuscript.
+The public repository history records:
+
+- a verified Lean scaffold on 15 July 2026;
+- the complete finite constructive/intrinsic classification later on 15 July;
+- the complete Problem 593 endpoints by 19 July;
+- Li's separate public formalisation and arXiv v2 announcement on 23 July.
+
+On those public timestamps, this repository is the earliest complete public
+Lean formalisation located in the present audit.  The precise commits and UTC
+conversion are recorded in `PUBLIC_CHRONOLOGY.md`.  No inference about private
+development or influence is made.
+
+## Additional finite deductions
+
+The 24 July revision derives an exact order--size--component spectrum, an exact
+Levi cycle-rank spectrum, lower-endpoint rigidity, a forbidden-Levi-subgraph
+criterion, a balanced-hypergraph consequence, and weak/strong
+colouring-polynomial factorisations.  Detailed proofs and the novelty search
+are recorded in `FURTHER_FINITE_RESULTS.md`.
 
 ## Imported proof interfaces
 
 | Source | Role in the manuscript |
 |---|---|
-| Erdős--Hajnal (1966), Theorem 7.4, p. 76 | Existence of uncountably chromatic graphs with prescribed odd-girth bound. The exact formulation is also quoted as Theorem C on p. 428 of Erdős--Galvin--Hajnal (1975). |
-| de Bruijn--Erdős (1951), Theorem 1 | Graph-colouring compactness used for the finite-outdegree colouring lemma. |
-| Erdős--Rado (1956), Theorem 4(i), formula (95) | Pair partition relation used to construct the uncountably chromatic linear host. |
-
-The classical nonlinearity result of Erdős--Hajnal--Rothschild, Reiher's
-private-vertex-expansion theorem, and the papers of Komjáth and
-Hajnal--Komjáth are cited for historical context and comparison. The manuscript
-includes the specific proofs it uses rather than treating those results as
-unmarked premises.
+| Erdős--Hajnal (1966), Theorem 7.4 | Uncountably chromatic graphs with prescribed odd-girth bound. |
+| de Bruijn--Erdős (1951), Theorem 1 | Graph-colouring compactness. |
+| Erdős--Rado (1956), Theorem 4(i), formula (95) | Pair partition relation for the linear avoidance host. |
+| Berge--Las Vergnas (1970); Berge (1972) | Hereditary König property of balanced hypergraphs. |
+| White (2011); Sokal (2005) | Chromatic-polynomial and Potts/Tutte interfaces. |
 
 ## Public source access
 
-- Li (2026): <https://arxiv.org/abs/2606.24882>
+- Li v1/v2: <https://arxiv.org/abs/2606.24882>
 - Erdős--Hajnal (1966): <https://combinatorica.hu/~p_erdos/1966-07.pdf>
-- Erdős--Galvin--Hajnal (1975): <https://combinatorica.hu/~p_erdos/1975-24.pdf>
 - de Bruijn--Erdős (1951): <https://users.renyi.hu/~p_erdos/1951-01.pdf>
 - Erdős--Rado (1956): <https://users.renyi.hu/~p_erdos/1956-02.pdf>
 - Reiher (2024): <https://arxiv.org/abs/2403.11223>
+- Sokal (2005): <https://arxiv.org/abs/math/0503607>
 
-## AI-use and provenance record
+## AI-use record
 
-The author reports beginning development before becoming aware of Li's
-preprint. OpenAI's GPT-5.6 Pro through ChatGPT and Aristotle assisted with proof
-development, checking, editing, and Lean formalisation. During substantial
-stages the models were instructed not to use further internet access after an
-initial source-retrieval stage. Such an instruction cannot independently prove
-the provenance of every generated suggestion or guarantee informational
-independence. The repository therefore makes no claim of full informational
-independence and gives Li explicit priority and point-of-use attribution.
+OpenAI's GPT-5.6 Pro through ChatGPT and Aristotle assisted with proof
+development, checking, editing, and Lean formalisation.  The author reviewed
+all incorporated material and assumes responsibility for the final work.

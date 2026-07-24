@@ -1,26 +1,40 @@
-# Obligatory Triple Systems: Alternative Proof and Lean Verification
+# Obligatory Triple Systems: An Alternative Proof, Lean Formalisation, and Finite Consequences
 
 **Author:** Samuil Petkov  
-**Manuscript revision:** 21 July 2026
+**Manuscript revision:** 24 July 2026
 
 This repository contains an alternative proof of the finite classification in
-Erdős Problem 593 and a complete Lean 4 formal verification of the proof
-implementation presented here.
+Erdős Problem 593, a complete Lean 4 verification of the implementation, and
+new finite consequences of the classification.
 
-Eric Li's preprint, posted on 23 June 2026, contains the first publicly posted
-complete proof of the classification. It also introduces the complete-rank
-one-apex sequence lift and exact bridge-trace architecture used in the negative
-half of the theorem. This repository makes no competing priority claim for the
-classification or those ingredients. The manuscript cites Li at the points
-where the one-apex lift, bridge-trace, selected-incidence, quotient-forest, and
-running-intersection architecture is used.
+## Priority and public chronology
 
-The present implementation differs in its detailed organisation: it gives
-explicit direct proofs of the positive expansion atoms and closure statements,
-uses a base-fibre and support-incidence formulation of the finite trace theorem,
-invokes the older Erdős--Hajnal high-odd-girth theorem in the written proof, and
-supplies a complete machine-checked Lean development of this implementation.
-The Lean project is not a line-by-line formalisation of Li's manuscript.
+Eric Li's arXiv:2606.24882v1, submitted on 23 June 2026, contains the first
+publicly posted complete mathematical proof of the classification and
+introduces the one-apex and bridge-trace framework used in the negative half.
+Those dependencies are cited at their points of use.
+
+The public Lean history here begins on 15 July 2026.  The complete finite
+structural classification was public later that day, and the complete Problem
+593 endpoints were public by 19 July.  Li's v2 and separate public Lean
+formalisation followed on 23 July.  On those timestamps, this is the earliest
+complete public Lean formalisation located in the present audit.  This is a
+statement about public records only, not private development or influence.  See
+[`PUBLIC_CHRONOLOGY.md`](PUBLIC_CHRONOLOGY.md) for the dated commits.
+
+## Further finite results
+
+The revised manuscript derives:
+
+- the exact order--size--component spectrum for reduced obligatory systems;
+- the exact Levi cycle-rank spectrum and endpoint rigidity;
+- a forbidden-Levi-subgraph formulation using four-cycles, cycles of length
+  `2 mod 4`, and full thetas rooted at hyperedge-nodes;
+- hereditary matching--transversal equality through balanced-hypergraph theory;
+- canonical weak and strong colouring-polynomial factorisations.
+
+The full proof ledger is in
+[`FURTHER_FINITE_RESULTS.md`](FURTHER_FINITE_RESULTS.md).
 
 ## Main theorem
 
@@ -32,7 +46,7 @@ F.IsObligatory ↔ Constructible F.isolatedReduction
 ```
 
 The intrinsic predicate consists of linearity, a bridge incident with every
-hyperedge-node of the Levi graph, and even length of every Berge cycle. The
+hyperedge-node of the Levi graph, and even length of every Berge cycle.  The
 constructive class is generated from private-vertex expansions of finite
 bipartite graphs and finite edgeless systems under finite disjoint unions and
 one-point amalgamations.
@@ -42,15 +56,13 @@ one-point amalgamations.
 - `erdos593_obligatory_triple_systems.tex` — canonical A4 `amsart` source.
 - `erdos593_obligatory_triple_systems.pdf` — compiled manuscript.
 - `erdos593_obligatory_triple_systems.md` — readable Markdown version.
-- `arxiv/Erdos593_arxiv_source.zip` — submission-ready source archive containing only `main.tex`.
+- `arxiv/Erdos593_arxiv_source.zip` — submission-ready source archive.
+- `FURTHER_FINITE_RESULTS.md` — detailed derivation of the new finite results.
+- `PUBLIC_CHRONOLOGY.md` — timestamped mathematical and Lean chronology.
 - `references.bib` — bibliography maintenance file.
 - `SOURCE_LEDGER.md` — source, priority, and proof-dependency record.
-- `REVISION_NOTES.md` — record of the attribution and release-readiness revisions through 21 July.
+- `REVISION_NOTES.md` — record of the 24 July revision.
 - `formalization/` — complete Lean project and generated one-file source closure.
-
-The manuscript uses numeric citations, A4 paper, one-inch margins, standard AMS
-theorem environments, embedded fonts, and populated PDF metadata. The visible
-institutional address and email are intentionally omitted.
 
 ## Build
 
@@ -64,23 +76,18 @@ lake env lean Erdos593SelfContained.lean
 
 See `formalization/SELF_CONTAINED_BUILD.md` for exact scope and verification
 instructions, and `formalization/PROVENANCE.md` for the relationship between the
-formalised proof and Li's preprint.
+formalised proof and Li's v1.
 
-## AI-use and provenance statement
+## AI-use statement
 
 OpenAI's GPT-5.6 Pro through ChatGPT and Aristotle were used for proof
 development, adversarial checking, editorial restructuring, and Lean
-formalisation. The author began developing the argument before becoming aware
-of Li's preprint. During substantial stages the models were instructed to work
-without further internet access after initial source retrieval, but that
-instruction is not an auditable guarantee of informational independence.
-Accordingly, neither the manuscript nor this repository claims full
-informational independence. Samuil Petkov is the sole named author and accepts
+formalisation.  Samuil Petkov reviewed the incorporated material and accepts
 responsibility for the mathematics, citations, attribution, and conclusions.
 
 ## License
 
-Original repository material is licensed under CC BY 4.0. Third-party results
+Original repository material is licensed under CC BY 4.0.  Third-party results
 and references retain their own rights and attribution requirements.
 
 ## Manuscript synchronization
