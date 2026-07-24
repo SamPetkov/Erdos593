@@ -10,11 +10,20 @@ on:
       - 'Erdos593_revised.tex'
       - 'arxiv/**'
       - 'README.md'
+      - 'FURTHER_FINITE_RESULTS.md'
+      - 'PUBLIC_CHRONOLOGY.md'
+      - 'SOURCE_LEDGER.md'
+      - 'REVISION_NOTES.md'
+      - 'formalization/PROVENANCE.md'
+      - 'references.bib'
       - 'CITATION.cff'
       - 'MANIFEST.txt'
       - 'SHA256SUMS'
       - 'scripts/sync_manuscript_artifacts.py'
+      - 'scripts/apply_finite_consequences_revision.py'
+      - 'scripts/manuscript-artifacts-final.yml'
       - '.github/workflows/manuscript-artifacts.yml'
+      - '.github/workflows/bootstrap-finite-consequences.yml'
       - '.github/workflows/bootstrap-manuscript-artifacts.yml'
   push:
     branches: [main]
@@ -25,6 +34,12 @@ on:
       - 'Erdos593_revised.tex'
       - 'arxiv/**'
       - 'README.md'
+      - 'FURTHER_FINITE_RESULTS.md'
+      - 'PUBLIC_CHRONOLOGY.md'
+      - 'SOURCE_LEDGER.md'
+      - 'REVISION_NOTES.md'
+      - 'formalization/PROVENANCE.md'
+      - 'references.bib'
       - 'CITATION.cff'
       - 'MANIFEST.txt'
       - 'SHA256SUMS'
@@ -39,12 +54,26 @@ permissions:
 jobs:
   synchronize-and-verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
           fetch-depth: 0
+      - name: Apply the one-shot finite consequences revision
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/apply_finite_consequences_revision.py
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/apply_finite_consequences_revision.py')
+          text = path.read_text(encoding='utf-8')
+          needle = '    patch_manuscript_workflow()\n'
+          if needle not in text:
+              raise SystemExit('one-shot script no longer contains the workflow patch call')
+          path.write_text(text.replace(needle, '', 1), encoding='utf-8', newline='\n')
+          PY
+          python scripts/apply_finite_consequences_revision.py
       - name: Install TeX, Pandoc, and PDF verification tools
         run: |
           sudo apt-get update -qq
@@ -63,8 +92,6 @@ jobs:
         continue-on-error: true
         run: |
           set -o pipefail
-          sed -i 's/no claim of full informational independence/no claim of informational independence/g' \
-            erdos593_obligatory_triple_systems.tex
           python -u scripts/sync_manuscript_artifacts.py 2>&1 | tee manuscript-sync.log
       - name: Upload synchronization diagnostics
         if: steps.synchronize.outcome == 'failure'
@@ -75,6 +102,17 @@ jobs:
       - name: Stop after synchronization failure
         if: steps.synchronize.outcome == 'failure'
         run: exit 1
+      - name: Finalize workflow and repository inventory
+        run: |
+          set -euo pipefail
+          cp scripts/manuscript-artifacts-final.yml .github/workflows/manuscript-artifacts.yml
+          git rm scripts/apply_finite_consequences_revision.py
+          git rm scripts/manuscript-artifacts-final.yml
+          git rm .github/workflows/bootstrap-finite-consequences.yml
+          python - <<'PY'
+          from scripts.sync_manuscript_artifacts import update_manifest_and_hashes
+          update_manifest_and_hashes()
+          PY
       - name: Commit synchronized artifacts on same-repository PRs
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         run: |
@@ -85,7 +123,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'Synchronize Erdős 593 manuscript artifacts'
+          git commit -m 'Add finite consequences and public Lean chronology'
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
       - name: Require committed synchronization
         run: git diff --exit-code -- .
@@ -100,9 +138,12 @@ jobs:
             pdftotext "$pdf" /tmp/erdos593-text.txt
             pdffonts "$pdf" | tee /tmp/erdos593-fonts.txt
             grep -Fq 'A4' /tmp/erdos593-pdfinfo.txt
-            grep -Fq 'Obligatory Triple Systems: An Alternative Proof' /tmp/erdos593-pdfinfo.txt
+            grep -Fq 'Obligatory Triple Systems: An Alternative Proof, Lean Formalisation, and Finite Consequences' /tmp/erdos593-pdfinfo.txt
             grep -Fq 'Samuil Petkov' /tmp/erdos593-pdfinfo.txt
             grep -Fq 'Eric Li' /tmp/erdos593-text.txt
+            grep -Fq 'Exact finite order--size--component spectrum' /tmp/erdos593-text.txt
+            grep -Fq 'earliest complete public Lean formalisation' /tmp/erdos593-text.txt
+            grep -Fq 'Tom de Groot' /tmp/erdos593-text.txt
             ! grep -Eq 'Samuil Pekov|Samuil Petkob|Samuil Petkov (&|and) ChatGPT' /tmp/erdos593-text.txt
             ! grep -Eq '[[:space:]]no[[:space:]]' /tmp/erdos593-fonts.txt
             cmp -s "$pdf" arxiv/main.pdf
