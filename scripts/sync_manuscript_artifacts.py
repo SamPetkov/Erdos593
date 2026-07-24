@@ -74,7 +74,8 @@ def normalize_tex(text: str) -> str:
     required = [
         r"\title[Obligatory triple systems]{Obligatory Triple Systems: An Alternative Proof}",
         r"\author{Samuil Petkov}",
-        "first publicly posted complete mathematical proof",
+        "first publicly posted",
+        "complete mathematical proof of Theorem",
         "first publicly timestamped Lean",
         "Exact order--size--component spectrum",
     ]
