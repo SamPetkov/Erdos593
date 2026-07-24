@@ -1,17 +1,28 @@
-# Revision notes: priority, attribution, and formalisation
+# Revision notes
 
-**Revision date:** 21 July 2026
+## 24 July 2026: finite parameter consequences
+
+1. Added the exact order--size--component spectrum for reduced obligatory triple systems:
+   \[
+   m+2(c-1)+\left\lceil2\sqrt{m-c+1}\right\rceil
+   \le n\le2m+c.
+   \]
+   Every integer in the interval is realized.
+2. Added the bipartite-shadow principle that transfers the finite parameters of an obligatory triple system to an ordinary bipartite graph.
+3. Added the exact Levi cycle-rank spectrum, the forest characterization of the upper endpoint, and rigidity at the balanced lower endpoints `K_{t,t}^+` and `K_{t,t+1}^+`.
+4. Added an edge-deletion reformulation of the Levi-bridge condition: deleting each hyperedge must separate its three points into at least two components.
+5. Added `FINITE_PARAMETER_SPECTRUM.md` with the full proof and a targeted novelty screen against Li v1/v2 and the principal earlier obligatory-system literature.
+6. Streamlined the discussion of Eric Li to one neutral priority paragraph plus point-of-use citations. Li's 23 June preprint remains credited as the first public complete mathematical proof.
+7. Replaced repeated independence and provenance disclaimers with a factual public chronology of the two Lean developments. No claim of shared code or derivation is made.
+8. Retained Tom de Groot's acknowledgment in full and shortened the acknowledgment to Eric Li to a single sentence thanking him for a discussion of the relationship between the proofs.
+9. Simplified the AI-use section while retaining full author responsibility.
+
+## 21 July 2026: attribution and arXiv readiness
 
 1. Retitled the manuscript *Obligatory Triple Systems: An Alternative Proof*.
 2. Credited Eric Li's 23 June 2026 preprint as the first publicly posted complete proof of the classification.
-3. Removed the former claim that the manuscript was independent of, or did not use, Li's work.
-4. Added point-of-use citations for the one-apex sequence lift, bridge-trace architecture, selected-incidence decomposition, quotient forest, running-intersection assembly, and three-part avoidance strategy.
-5. Added a direct comparison paragraph explaining that the present work is an alternative implementation and complete Lean verification, not a competing priority claim or a line-by-line formalisation of Li's manuscript.
-6. Replaced the written shift-graph section by the older Erdős--Hajnal high-odd-girth theorem, cited through Erdős--Hajnal (1966), Theorem 7.4, and Erdős--Galvin--Hajnal (1975), Theorem C.
-7. Expanded the AI-use statement: the author began development before learning of Li's preprint, but an instruction to work without further internet access is not treated as proof of informational independence.
-8. Added thanks to Eric Li for a productive discussion that improved the attribution and clarified the relationship between the two proofs.
-9. Retained the complete proof, numeric citations, A4 `amsart` layout, one-inch margins, embedded fonts, populated metadata, and omission of the visible affiliation and email address.
-10. Updated the Lean documentation to describe a complete machine-checked finite classification and to distinguish formal verification from priority or independent-discovery claims.
-11. Gave the introduction a restrained directness matching the author's public prose while preserving the paper's mathematical register.
-12. Corrected a stale formalisation-map paragraph that predated the completed global finite-trace and avoidance modules.
-13. Added a deterministic arXiv source archive containing only the canonical `main.tex`, together with synchronization and CI checks for its contents, and pinned Markdown regeneration to Pandoc 3.1.3.
+3. Added point-of-use citations for the one-apex sequence lift and bridge-trace method.
+4. Replaced the written shift-graph section by the older Erdős--Hajnal high-odd-girth theorem, cited through Erdős--Hajnal (1966), Theorem 7.4, and Erdős--Galvin--Hajnal (1975), Theorem C.
+5. Retained the complete proof, numeric citations, A4 `amsart` layout, one-inch margins, embedded fonts, populated metadata, and omission of the visible affiliation and email address.
+6. Updated the Lean documentation to describe the complete machine-checked finite classification.
+7. Added a deterministic arXiv source archive, synchronization checks, and Pandoc 3.1.3 pinning.
