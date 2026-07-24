@@ -10,9 +10,15 @@ on:
       - 'Erdos593_revised.tex'
       - 'arxiv/**'
       - 'README.md'
+      - 'SOURCE_LEDGER.md'
+      - 'REVISION_NOTES.md'
       - 'CITATION.cff'
+      - 'formalization/README.md'
+      - 'formalization/PROVENANCE.md'
+      - 'formalization/SELF_CONTAINED_BUILD.md'
       - 'MANIFEST.txt'
       - 'SHA256SUMS'
+      - 'scripts/apply_finite_parameter_spectrum_revision.py'
       - 'scripts/sync_manuscript_artifacts.py'
       - '.github/workflows/manuscript-artifacts.yml'
       - '.github/workflows/bootstrap-manuscript-artifacts.yml'
@@ -25,9 +31,15 @@ on:
       - 'Erdos593_revised.tex'
       - 'arxiv/**'
       - 'README.md'
+      - 'SOURCE_LEDGER.md'
+      - 'REVISION_NOTES.md'
       - 'CITATION.cff'
+      - 'formalization/README.md'
+      - 'formalization/PROVENANCE.md'
+      - 'formalization/SELF_CONTAINED_BUILD.md'
       - 'MANIFEST.txt'
       - 'SHA256SUMS'
+      - 'scripts/apply_finite_parameter_spectrum_revision.py'
       - 'scripts/sync_manuscript_artifacts.py'
       - '.github/workflows/manuscript-artifacts.yml'
       - '.github/workflows/bootstrap-manuscript-artifacts.yml'
@@ -58,13 +70,12 @@ jobs:
             texlive-fonts-recommended \
             texlive-fonts-extra \
             poppler-utils
-      - name: Synchronize generated artifacts
+      - name: Apply finite-spectrum revision and synchronize artifacts
         id: synchronize
         continue-on-error: true
         run: |
           set -o pipefail
-          sed -i 's/no claim of full informational independence/no claim of informational independence/g' \
-            erdos593_obligatory_triple_systems.tex
+          python -u scripts/apply_finite_parameter_spectrum_revision.py
           python -u scripts/sync_manuscript_artifacts.py 2>&1 | tee manuscript-sync.log
       - name: Upload synchronization diagnostics
         if: steps.synchronize.outcome == 'failure'
@@ -89,7 +100,7 @@ jobs:
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
       - name: Require committed synchronization
         run: git diff --exit-code -- .
-      - name: Verify PDF typography and mirrors
+      - name: Verify PDF typography, new theorem, and mirrors
         id: verify_pdf
         continue-on-error: true
         run: |
@@ -100,9 +111,12 @@ jobs:
             pdftotext "$pdf" /tmp/erdos593-text.txt
             pdffonts "$pdf" | tee /tmp/erdos593-fonts.txt
             grep -Fq 'A4' /tmp/erdos593-pdfinfo.txt
-            grep -Fq 'Obligatory Triple Systems: An Alternative Proof' /tmp/erdos593-pdfinfo.txt
+            grep -Fq 'Obligatory Triple Systems: An Alternative Proof, Finite Parameter Spectra, and Lean Verification' /tmp/erdos593-pdfinfo.txt
             grep -Fq 'Samuil Petkov' /tmp/erdos593-pdfinfo.txt
+            grep -Fq 'Finite parameter spectra' /tmp/erdos593-text.txt
+            grep -Fq 'Exact finite order' /tmp/erdos593-text.txt
             grep -Fq 'Eric Li' /tmp/erdos593-text.txt
+            grep -Fq 'Tom de Groot' /tmp/erdos593-text.txt
             ! grep -Eq 'Samuil Pekov|Samuil Petkob|Samuil Petkov (&|and) ChatGPT' /tmp/erdos593-text.txt
             ! grep -Eq '[[:space:]]no[[:space:]]' /tmp/erdos593-fonts.txt
             cmp -s "$pdf" arxiv/main.pdf
