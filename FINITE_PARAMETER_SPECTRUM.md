@@ -124,6 +124,51 @@ n\ge m+\left\lceil2\sqrt m\right\rceil,
 
 because isolated vertices can be added freely.
 
+### Size spectrum at fixed order
+
+For integers `c >= 1` and `n >= 3c`, the possible numbers of hyperedges are
+exactly the integers in
+
+\[
+\boxed{
+\left\lceil\frac{n-c}{2}\right\rceil
+\le m\le
+n-2c+4-\left\lceil2\sqrt{n-3c+4}\right\rceil.
+}
+\]
+
+To invert the lower-order inequality, put
+`M=m-c+1` and `N=n-3c+3`.  For `N >= 3`, the largest positive integer `M`
+with
+
+\[
+M+\left\lceil2\sqrt M\right\rceil\le N
+\]
+
+is
+
+\[
+N+2-\left\lceil2\sqrt{N+1}\right\rceil.
+\]
+
+If `k=ceil(2 sqrt(N+1))` and `U=N+2-k`, then
+`k^2 >= 4(N+1)` implies `ceil(2 sqrt U) <= k-2`, while
+`(k-1)^2 < 4(N+1)` implies `ceil(2 sqrt(U+1)) >= k-2`.  Thus `U` works and
+`U+1` does not; monotonicity completes the inversion.
+
+In particular, the possible reduced orders with exactly `c` connected
+components are
+
+\[
+\boxed{n=3c,\qquad n=3c+2,\qquad\text{or}\qquad n\ge3c+4.}
+\]
+
+A connected component has order `3`, order `5`, or any order at least `7`.
+After subtracting the baseline `3` per component, the available increments are
+`0`, `2`, and every integer at least `4`, whose `c`-fold sum has the same form.
+Hence `3c+1` and `3c+3` are the only missing reduced orders for a fixed
+component count.
+
 ### Exact Levi cycle rank
 
 For a reduced obligatory system with `m` hyperedges, `n` vertices, and `c`
