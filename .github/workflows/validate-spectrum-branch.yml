@@ -1,0 +1,101 @@
+name: Validate finite parameter spectrum branch
+
+on:
+  push:
+    branches: [agent/finite-parameter-spectrum]
+    paths:
+      - '.github/workflows/validate-spectrum-branch.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-synchronize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/finite-parameter-spectrum
+          fetch-depth: 0
+      - name: Install TeX, Pandoc, and PDF tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq \
+            latexmk \
+            pandoc \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-science \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            poppler-utils
+      - name: Synchronize and validate
+        id: validation
+        shell: bash
+        run: |
+          set +e
+          python -u scripts/sync_manuscript_artifacts.py > manuscript-sync.log 2>&1
+          sync_status=$?
+
+          pdf_status=1
+          if [ "$sync_status" -eq 0 ]; then
+            pdf=erdos593_obligatory_triple_systems.pdf
+            pdfinfo "$pdf" > pdfinfo.txt 2>&1
+            pdftotext "$pdf" manuscript-text.txt
+            pdffonts "$pdf" > pdffonts.txt 2>&1
+            {
+              grep -Fq 'A4' pdfinfo.txt &&
+              grep -Fq 'Obligatory Triple Systems: An Alternative Proof' pdfinfo.txt &&
+              grep -Fq 'Samuil Petkov' pdfinfo.txt &&
+              grep -Fq 'Exact order–size–component spectrum' manuscript-text.txt &&
+              grep -Fq 'first publicly timestamped Lean' manuscript-text.txt &&
+              grep -Fq 'Tom de Groot' manuscript-text.txt &&
+              grep -Fq 'Eric Li' manuscript-text.txt &&
+              ! grep -Eq '[[:space:]]no[[:space:]]' pdffonts.txt &&
+              cmp -s "$pdf" arxiv/main.pdf &&
+              cmp -s erdos593_obligatory_triple_systems.tex arxiv/main.tex &&
+              cmp -s erdos593_obligatory_triple_systems.tex Erdos593_revised.tex &&
+              cmp -s erdos593_obligatory_triple_systems.md arxiv/main.md
+            }
+            pdf_status=$?
+          fi
+
+          {
+            echo '# Finite parameter spectrum branch validation'
+            echo
+            echo "- synchronization exit status: $sync_status"
+            echo "- PDF and mirror verification exit status: $pdf_status"
+            echo "- Pandoc: $(pandoc --version | head -n 1)"
+            echo "- TeX: $(pdflatex --version | head -n 1)"
+            echo
+            echo '## Synchronization log tail'
+            echo '```text'
+            tail -n 120 manuscript-sync.log
+            echo '```'
+            if [ -f pdfinfo.txt ]; then
+              echo
+              echo '## PDF metadata'
+              echo '```text'
+              cat pdfinfo.txt
+              echo '```'
+            fi
+          } > PR_VALIDATION.md
+
+          echo "sync_status=$sync_status" >> "$GITHUB_OUTPUT"
+          echo "pdf_status=$pdf_status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/validate-spectrum-branch.yml
+      - name: Commit synchronized artifacts and report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Synchronize and validate finite parameter manuscript'
+          git push origin HEAD:agent/finite-parameter-spectrum
+      - name: Enforce validation result
+        if: steps.validation.outputs.sync_status != '0' || steps.validation.outputs.pdf_status != '0'
+        run: exit 1
