@@ -1,7 +1,6 @@
 .gitattributes
 .github/workflows/lean.yml
 .github/workflows/manuscript-artifacts.yml
-.github/workflows/resync-spectrum-after-correction.yml
 .gitignore
 CITATION.cff
 Erdos593_revised.tex
