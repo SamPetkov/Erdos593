@@ -1,0 +1,377 @@
+{
+  "configuration": {
+    "max_edges": 6,
+    "random_max_edges": 10,
+    "random_min_edges": 7,
+    "random_trials_per_size": 2500,
+    "seed": 593,
+    "uniformities": [
+      3,
+      4,
+      5
+    ]
+  },
+  "elapsed_seconds": 32.553,
+  "exhaustive": [
+    {
+      "connected": 1,
+      "edge_count": 1,
+      "families": 1,
+      "intrinsic": 1,
+      "observed_connected_orders": [
+        3
+      ],
+      "predicted_connected_orders": [
+        3
+      ],
+      "recognized": 1,
+      "uniformity": 3
+    },
+    {
+      "connected": 1,
+      "edge_count": 2,
+      "families": 2,
+      "intrinsic": 1,
+      "observed_connected_orders": [
+        5
+      ],
+      "predicted_connected_orders": [
+        5
+      ],
+      "recognized": 1,
+      "uniformity": 3
+    },
+    {
+      "connected": 5,
+      "edge_count": 3,
+      "families": 9,
+      "intrinsic": 4,
+      "observed_connected_orders": [
+        7
+      ],
+      "predicted_connected_orders": [
+        7
+      ],
+      "recognized": 4,
+      "uniformity": 3
+    },
+    {
+      "connected": 67,
+      "edge_count": 4,
+      "families": 97,
+      "intrinsic": 32,
+      "observed_connected_orders": [
+        8,
+        9
+      ],
+      "predicted_connected_orders": [
+        8,
+        9
+      ],
+      "recognized": 32,
+      "uniformity": 3
+    },
+    {
+      "connected": 1753,
+      "edge_count": 5,
+      "families": 2214,
+      "intrinsic": 426,
+      "observed_connected_orders": [
+        10,
+        11
+      ],
+      "predicted_connected_orders": [
+        10,
+        11
+      ],
+      "recognized": 426,
+      "uniformity": 3
+    },
+    {
+      "connected": 75851,
+      "edge_count": 6,
+      "families": 89105,
+      "intrinsic": 7981,
+      "observed_connected_orders": [
+        11,
+        12,
+        13
+      ],
+      "predicted_connected_orders": [
+        11,
+        12,
+        13
+      ],
+      "recognized": 7981,
+      "uniformity": 3
+    },
+    {
+      "connected": 1,
+      "edge_count": 1,
+      "families": 1,
+      "intrinsic": 1,
+      "observed_connected_orders": [
+        4
+      ],
+      "predicted_connected_orders": [
+        4
+      ],
+      "recognized": 1,
+      "uniformity": 4
+    },
+    {
+      "connected": 1,
+      "edge_count": 2,
+      "families": 2,
+      "intrinsic": 1,
+      "observed_connected_orders": [
+        7
+      ],
+      "predicted_connected_orders": [
+        7
+      ],
+      "recognized": 1,
+      "uniformity": 4
+    },
+    {
+      "connected": 5,
+      "edge_count": 3,
+      "families": 9,
+      "intrinsic": 4,
+      "observed_connected_orders": [
+        10
+      ],
+      "predicted_connected_orders": [
+        10
+      ],
+      "recognized": 4,
+      "uniformity": 4
+    },
+    {
+      "connected": 67,
+      "edge_count": 4,
+      "families": 97,
+      "intrinsic": 32,
+      "observed_connected_orders": [
+        12,
+        13
+      ],
+      "predicted_connected_orders": [
+        12,
+        13
+      ],
+      "recognized": 32,
+      "uniformity": 4
+    },
+    {
+      "connected": 2164,
+      "edge_count": 5,
+      "families": 2625,
+      "intrinsic": 431,
+      "observed_connected_orders": [
+        15,
+        16
+      ],
+      "predicted_connected_orders": [
+        15,
+        16
+      ],
+      "recognized": 431,
+      "uniformity": 4
+    },
+    {
+      "connected": 155351,
+      "edge_count": 6,
+      "families": 171071,
+      "intrinsic": 8341,
+      "observed_connected_orders": [
+        17,
+        18,
+        19
+      ],
+      "predicted_connected_orders": [
+        17,
+        18,
+        19
+      ],
+      "recognized": 8341,
+      "uniformity": 4
+    },
+    {
+      "connected": 1,
+      "edge_count": 1,
+      "families": 1,
+      "intrinsic": 1,
+      "observed_connected_orders": [
+        5
+      ],
+      "predicted_connected_orders": [
+        5
+      ],
+      "recognized": 1,
+      "uniformity": 5
+    },
+    {
+      "connected": 1,
+      "edge_count": 2,
+      "families": 2,
+      "intrinsic": 1,
+      "observed_connected_orders": [
+        9
+      ],
+      "predicted_connected_orders": [
+        9
+      ],
+      "recognized": 1,
+      "uniformity": 5
+    },
+    {
+      "connected": 5,
+      "edge_count": 3,
+      "families": 9,
+      "intrinsic": 4,
+      "observed_connected_orders": [
+        13
+      ],
+      "predicted_connected_orders": [
+        13
+      ],
+      "recognized": 4,
+      "uniformity": 5
+    },
+    {
+      "connected": 67,
+      "edge_count": 4,
+      "families": 97,
+      "intrinsic": 32,
+      "observed_connected_orders": [
+        16,
+        17
+      ],
+      "predicted_connected_orders": [
+        16,
+        17
+      ],
+      "recognized": 32,
+      "uniformity": 5
+    },
+    {
+      "connected": 2164,
+      "edge_count": 5,
+      "families": 2625,
+      "intrinsic": 431,
+      "observed_connected_orders": [
+        20,
+        21
+      ],
+      "predicted_connected_orders": [
+        20,
+        21
+      ],
+      "recognized": 431,
+      "uniformity": 5
+    },
+    {
+      "connected": 169801,
+      "edge_count": 6,
+      "families": 185521,
+      "intrinsic": 8347,
+      "observed_connected_orders": [
+        23,
+        24,
+        25
+      ],
+      "predicted_connected_orders": [
+        23,
+        24,
+        25
+      ],
+      "recognized": 8347,
+      "uniformity": 5
+    }
+  ],
+  "interpretation": "Finite evidence only. Every tested candidate satisfying the intrinsic condition was recognized by the recursively generated expansion class.",
+  "random": [
+    {
+      "edge_count": 7,
+      "intrinsic": 61,
+      "recognized": 61,
+      "samples": 2500,
+      "uniformity": 3
+    },
+    {
+      "edge_count": 8,
+      "intrinsic": 17,
+      "recognized": 17,
+      "samples": 2500,
+      "uniformity": 3
+    },
+    {
+      "edge_count": 9,
+      "intrinsic": 5,
+      "recognized": 5,
+      "samples": 2500,
+      "uniformity": 3
+    },
+    {
+      "edge_count": 10,
+      "samples": 2500,
+      "uniformity": 3
+    },
+    {
+      "edge_count": 7,
+      "intrinsic": 80,
+      "recognized": 80,
+      "samples": 2500,
+      "uniformity": 4
+    },
+    {
+      "edge_count": 8,
+      "intrinsic": 37,
+      "recognized": 37,
+      "samples": 2500,
+      "uniformity": 4
+    },
+    {
+      "edge_count": 9,
+      "intrinsic": 9,
+      "recognized": 9,
+      "samples": 2500,
+      "uniformity": 4
+    },
+    {
+      "edge_count": 10,
+      "samples": 2500,
+      "uniformity": 4
+    },
+    {
+      "edge_count": 7,
+      "intrinsic": 103,
+      "recognized": 103,
+      "samples": 2500,
+      "uniformity": 5
+    },
+    {
+      "edge_count": 8,
+      "intrinsic": 18,
+      "recognized": 18,
+      "samples": 2500,
+      "uniformity": 5
+    },
+    {
+      "edge_count": 9,
+      "intrinsic": 3,
+      "recognized": 3,
+      "samples": 2500,
+      "uniformity": 5
+    },
+    {
+      "edge_count": 10,
+      "intrinsic": 3,
+      "recognized": 3,
+      "samples": 2500,
+      "uniformity": 5
+    }
+  ],
+  "status": "passed"
+}
