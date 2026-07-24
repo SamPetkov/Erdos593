@@ -1,5 +1,4 @@
 .gitattributes
-.github/workflows/bootstrap-finite-consequences.yml
 .github/workflows/lean.yml
 .github/workflows/manuscript-artifacts.yml
 .gitignore
