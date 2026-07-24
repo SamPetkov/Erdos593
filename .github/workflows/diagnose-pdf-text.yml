@@ -1,0 +1,51 @@
+name: Diagnose PDF text validation
+
+on:
+  push:
+    branches: [agent/finite-parameter-spectrum]
+    paths:
+      - '.github/workflows/diagnose-pdf-text.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/finite-parameter-spectrum
+          fetch-depth: 0
+      - name: Record individual validation checks
+        shell: bash
+        run: |
+          set +e
+          : > PDF_TEXT_DIAGNOSTIC.md
+          echo '# PDF text validation diagnostics' >> PDF_TEXT_DIAGNOSTIC.md
+          echo >> PDF_TEXT_DIAGNOSTIC.md
+          for phrase in \
+            'Exact order' \
+            'component spectrum' \
+            'first publicly timestamped' \
+            'Tom de Groot' \
+            'Eric Li'; do
+            if grep -Fq "$phrase" manuscript-text.txt; then
+              echo "- PASS: \`$phrase\`" >> PDF_TEXT_DIAGNOSTIC.md
+            else
+              echo "- FAIL: \`$phrase\`" >> PDF_TEXT_DIAGNOSTIC.md
+            fi
+          done
+          echo >> PDF_TEXT_DIAGNOSTIC.md
+          echo '## Matching lines' >> PDF_TEXT_DIAGNOSTIC.md
+          echo '```text' >> PDF_TEXT_DIAGNOSTIC.md
+          grep -n -E 'order|spectrum|publicly timestamped|Tom de Groot|Eric Li' manuscript-text.txt | tail -n 80 >> PDF_TEXT_DIAGNOSTIC.md
+          echo '```' >> PDF_TEXT_DIAGNOSTIC.md
+      - name: Remove one-shot workflow and commit report
+        run: |
+          rm .github/workflows/diagnose-pdf-text.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Record PDF text validation diagnostics'
+          git push origin HEAD:agent/finite-parameter-spectrum
