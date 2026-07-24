@@ -1,0 +1,35 @@
+name: Apply fixed-order spectrum refinement
+
+on:
+  push:
+    branches: [agent/finite-parameter-spectrum]
+    paths:
+      - 'scripts/apply_spectrum_refinement.py'
+      - '.github/workflows/apply-spectrum-refinement.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply-refinement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/finite-parameter-spectrum
+          fetch-depth: 0
+      - name: Apply refinement
+        run: python scripts/apply_spectrum_refinement.py
+      - name: Remove one-shot bootstrap files
+        run: |
+          rm scripts/apply_spectrum_refinement.py
+          rm .github/workflows/apply-spectrum-refinement.yml
+      - name: Commit refinement
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Add fixed-order spectrum and order gaps'
+          git push origin HEAD:agent/finite-parameter-spectrum
