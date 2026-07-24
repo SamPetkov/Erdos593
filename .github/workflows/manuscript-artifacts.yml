@@ -18,7 +18,6 @@ on:
       - 'formalization/SELF_CONTAINED_BUILD.md'
       - 'MANIFEST.txt'
       - 'SHA256SUMS'
-      - 'scripts/apply_finite_parameter_spectrum_revision.py'
       - 'scripts/sync_manuscript_artifacts.py'
       - '.github/workflows/manuscript-artifacts.yml'
       - '.github/workflows/bootstrap-manuscript-artifacts.yml'
@@ -39,7 +38,6 @@ on:
       - 'formalization/SELF_CONTAINED_BUILD.md'
       - 'MANIFEST.txt'
       - 'SHA256SUMS'
-      - 'scripts/apply_finite_parameter_spectrum_revision.py'
       - 'scripts/sync_manuscript_artifacts.py'
       - '.github/workflows/manuscript-artifacts.yml'
       - '.github/workflows/bootstrap-manuscript-artifacts.yml'
@@ -70,14 +68,11 @@ jobs:
             texlive-fonts-recommended \
             texlive-fonts-extra \
             poppler-utils
-      - name: Apply finite-spectrum revision and synchronize artifacts
+      - name: Synchronize finite-spectrum manuscript artifacts
         id: synchronize
         continue-on-error: true
         run: |
           set -o pipefail
-          python -u scripts/apply_finite_parameter_spectrum_revision.py
-          sed -i 's/"complete Lean formalisation"/"formalisation of the finite classification"/' \
-            scripts/sync_manuscript_artifacts.py
           python -u scripts/sync_manuscript_artifacts.py 2>&1 | tee manuscript-sync.log
       - name: Upload synchronization diagnostics
         if: steps.synchronize.outcome == 'failure'
