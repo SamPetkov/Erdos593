@@ -1,0 +1,36 @@
+name: Uniformity extension experiments
+
+on:
+  pull_request:
+    paths:
+      - 'UNIFORMITY_EXTENSION_EXPERIMENTS.md'
+      - 'experiments/uniformity_conjecture.py'
+      - 'experiments/uniformity_results.json'
+      - '.github/workflows/uniformity-experiments.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Compile the experiment script
+        run: python -m py_compile experiments/uniformity_conjecture.py
+      - name: Reproduce the checked result
+        run: |
+          python experiments/uniformity_conjecture.py \
+            --uniformities 3,4,5 \
+            --max-edges 6 \
+            --random-min-edges 7 \
+            --random-max-edges 10 \
+            --random-trials 2500 \
+            --seed 593 \
+            --check experiments/uniformity_results.json \
+            --output /tmp/uniformity_results.json
