@@ -15,14 +15,14 @@ F.IsObligatory ↔ Constructible F.isolatedReduction
 The host triple systems quantified over by `IsObligatory` remain unrestricted;
 only the classified system `F` is finite.
 
-## Relationship to prior work
+## Mathematical source and public chronology
 
-Eric Li's preprint arXiv:2606.24882, posted on 23 June 2026, contains the first
-publicly posted complete proof and introduces the complete-rank one-apex lift
-and exact bridge-trace framework. This Lean artifact carries no priority or
-independent-discovery claim. It verifies the alternative implementation in this
-repository, including its base-fibre/support-incidence organisation; it is not
-a line-by-line formalisation of Li's manuscript.
+Li's 23 June 2026 v1 is the first publicly posted complete mathematical proof
+and introduces the complete-rank one-apex lift and exact bridge-trace framework.
+This repository records the complete finite structural Lean classification on
+15 July 2026, before the separate repository accompanying Li's broader v2
+formalisation. The artefacts use different formal representations and theorem
+interfaces; see `PROVENANCE.md` for the dated record.
 
 The written paper uses the classical Erdős--Hajnal high-odd-girth theorem as an
 external mathematical input. The Lean project instead gives an explicit
@@ -97,5 +97,5 @@ documentation revision.
 
 The authoritative description is **complete machine-checked finite
 classification**. “Self-contained” and “machine-checked” describe the formal
-artifact; they do not imply independent discovery, historical priority, or
-external peer review.
+artifact. The separate dated commit history records public chronology; neither
+label substitutes for external mathematical review.

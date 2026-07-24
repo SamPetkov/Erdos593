@@ -18,18 +18,15 @@ F.IsObligatory ↔ F.isolatedReduction.Intrinsic
 F.IsObligatory ↔ Constructible F.isolatedReduction
 ```
 
-## Relationship to Eric Li's proof
+## Mathematical source and public chronology
 
-Eric Li's preprint arXiv:2606.24882, posted on 23 June 2026, contains the first
-publicly posted complete proof of the classification and introduces the
-complete-rank one-apex lift and exact bridge-trace framework. The Lean project
-makes no priority or independent-discovery claim for those ingredients.
-
-The code formalises the implementation developed in this repository: the
-selected-incidence and bridge-block structure, explicit base-fibre and
-support-incidence trace decomposition, positive closure theory, and three
-avoidance cases. It is not a line-by-line encoding of Li's manuscript. See
-`PROVENANCE.md` for the detailed attribution boundary.
+Li's 23 June 2026 v1 is the first publicly posted complete mathematical proof
+of the classification and is cited for the one-apex lift and bridge-trace
+framework. This repository records its Lean scaffold and complete finite
+structural classification on 15 July 2026, before the separate repository
+accompanying Li's broader v2 formalisation. The two projects use different
+representations and theorem interfaces. See `PROVENANCE.md` for commit links and
+the precise attribution boundary.
 
 The written manuscript invokes the classical Erdős--Hajnal high-odd-girth
 theorem directly. The Lean development retains an explicit shift-graph
@@ -73,5 +70,5 @@ The local source closure and generated artifact contain no `sorry`, `admit`,
 project-defined `axiom`, `unsafe`, or `sorryAx`. Representative endpoint audits
 report only the standard Mathlib foundations `propext`, `Classical.choice`, and
 `Quot.sound`. The machine check verifies the formal statements and proofs in
-this repository; it does not establish historical priority or informational
-independence.
+this repository. Historical priority for the public formal artefacts is recorded
+by the dated commit history; the kernel check itself does not establish provenance.

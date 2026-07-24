@@ -1,25 +1,36 @@
-# Formalisation provenance and attribution
+# Formalisation provenance and chronology
 
-Eric Li's preprint arXiv:2606.24882 was posted on 23 June 2026 and contains the
-first publicly posted complete proof of Erdős Problem 593. It introduces the
-complete-rank one-apex sequence lift and exact bridge-trace theorem, and its
-positive proof uses the selected-incidence decomposition, quotient forest, and
-running-intersection assembly.
+Eric Li's arXiv:2606.24882v1, posted on 23 June 2026, contains the first publicly
+posted complete mathematical proof of Erdős Problem 593. It introduces the
+complete-rank one-apex sequence lift and exact bridge-trace theorem, and uses a
+selected-incidence/quotient-forest reconstruction. Those mathematical overlaps
+are cited in the manuscript.
 
-The Lean development in this repository formalises a separate implementation
-of that classification. Shared architecture is credited to Li. The code's
-principal implementation choices are:
+The public history of this repository records:
 
+- a verified Lean scaffold on 15 July 2026 (`ba37b8c`);
+- the complete finite structural classification later on 15 July 2026
+  (`6fd00a7`); and
+- the complete finite obligatoriness classification in the public status
+  interface on 19 July 2026 (`901af24`).
+
+The separate repository accompanying Li's v2 first records its broader joint
+Problem 593/1177 formalisation on 22--23 July 2026. Thus this repository is the
+earlier publicly timestamped Lean formalisation of the finite Problem 593
+classification, while Li's later project has broader Problem 1177 scope.
+
+The code here formalises the implementation developed in this repository. Its
+principal choices are:
+
+- an edge-indexed incidence representation of finite triple systems;
+- an all-bridges bridge-block reconstruction;
 - an explicit base-node, base-letter, base-fibre, and canonical-apex API;
 - a support-incidence forest proof of the global finite-linear trace theorem;
-- direct finite graph-factor and private-vertex-expansion interfaces;
-- a machine-checked rooted-abundance and one-point-amalgamation closure route;
+- direct positive closure and complete-bipartite expansion interfaces;
 - a machine-checked Erdős--Rado nonlinear host; and
-- an explicit shift-graph realisation of the classical high-odd-girth input.
+- an explicit shift-graph high-odd-girth obstruction.
 
-The project is not a line-by-line formalisation of Li's manuscript, but neither
-its separate code structure nor an instruction to AI systems to work without
-internet access establishes informational independence. The repository makes no
-such claim and assigns Li priority for the first publicly posted complete proof.
-The formalisation's contribution is a reproducible kernel check of the
-implementation presented here.
+The projects are not line-by-line translations of one another and use different
+representations and theorem interfaces. The dated chronology is a priority
+record for the public formal artefacts; no assertion is made that either
+formal development was derived from the other.
