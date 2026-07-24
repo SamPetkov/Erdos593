@@ -1,9 +1,11 @@
 .gitattributes
+.github/workflows/fix-spectrum-square-root-proof.yml
 .github/workflows/lean.yml
 .github/workflows/manuscript-artifacts.yml
 .gitignore
 CITATION.cff
 Erdos593_revised.tex
+FINITE_PARAMETER_SPECTRUM.md
 LICENSE
 LICENSE_SCOPE.md
 MANIFEST.txt

@@ -1,0 +1,110 @@
+name: Fix finite-spectrum square-root proof
+
+on:
+  push:
+    branches: [agent/finite-parameter-spectrum]
+    paths:
+      - '.github/workflows/fix-spectrum-square-root-proof.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-and-synchronize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/finite-parameter-spectrum
+          fetch-depth: 0
+
+      - name: Install manuscript toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq \
+            latexmk \
+            pandoc \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-science \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            poppler-utils
+
+      - name: Correct the proof and add a regression guard
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: Path, old: str, new: str, label: str) -> None:
+              text = path.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected one occurrence, found {count}')
+              path.write_text(text.replace(old, new, 1), encoding='utf-8', newline='\n')
+
+          tex = Path('erdos593_obligatory_triple_systems.tex')
+          replace_once(
+              tex,
+              '''because, after squaring, the assertion reduces to
+$(a-1)(b-1)\\ge0$; taking ceilings gives (10.5).''',
+              '''because
+\\[
+(\\sqrt a+\\sqrt b-1)^2-(a+b-1)
+=2(\\sqrt a-1)(\\sqrt b-1)\\ge0.
+\\]
+Taking ceilings gives (10.5).''',
+              'canonical TeX square-root proof',
+          )
+
+          note = Path('FINITE_PARAMETER_SPECTRUM.md')
+          replace_once(
+              note,
+              '''which is equivalent after squaring to
+`(a-1)(b-1) >= 0`.''',
+              '''because
+
+\\[
+(\\sqrt a+\\sqrt b-1)^2-(a+b-1)
+=2(\\sqrt a-1)(\\sqrt b-1)\\ge0.
+\\]''',
+              'finite-spectrum note square-root proof',
+          )
+
+          sync = Path('scripts/sync_manuscript_artifacts.py')
+          text = sync.read_text(encoding='utf-8')
+          anchor = '        "No statement or argument from Li\'s preprint is used in the proof",\n'
+          guard = '        "$(a-1)(b-1)\\\\ge0$",\n'
+          if guard not in text:
+              if anchor not in text:
+                  raise SystemExit('sync-script guard anchor not found')
+              text = text.replace(anchor, anchor + guard, 1)
+              sync.write_text(text, encoding='utf-8', newline='\n')
+          PY
+
+      - name: Remove this one-shot workflow and synchronize artifacts
+        run: |
+          git rm .github/workflows/fix-spectrum-square-root-proof.yml
+          python -u scripts/sync_manuscript_artifacts.py
+
+      - name: Validate the corrected argument
+        run: |
+          set -euo pipefail
+          grep -Fq '2(\sqrt a-1)(\sqrt b-1)\ge0' erdos593_obligatory_triple_systems.tex
+          ! grep -Fq '$(a-1)(b-1)\ge0$' erdos593_obligatory_triple_systems.tex
+          ! grep -Fq '(a-1)(b-1) >= 0' FINITE_PARAMETER_SPECTRUM.md
+          cmp -s erdos593_obligatory_triple_systems.tex arxiv/main.tex
+          cmp -s erdos593_obligatory_triple_systems.pdf arxiv/main.pdf
+          pdfinfo erdos593_obligatory_triple_systems.pdf | grep -Fq 'Pages:'
+          git diff --check
+
+      - name: Commit corrected synchronized artifacts
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Correct finite-spectrum square-root proof'
+          git push origin HEAD:agent/finite-parameter-spectrum
