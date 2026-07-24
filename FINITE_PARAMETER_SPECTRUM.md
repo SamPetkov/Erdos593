@@ -84,7 +84,7 @@ This follows from
 \]
 
 which is equivalent after squaring to
-`(sqrt(a)-1)(sqrt(b)-1) >= 0`.  Repeatedly merging component sizes gives
+`(a-1)(b-1) >= 0`.  Repeatedly merging component sizes gives
 
 \[
 \sum_{i=1}^c q(m_i)
