@@ -76,6 +76,8 @@ jobs:
         run: |
           set -o pipefail
           python -u scripts/apply_finite_parameter_spectrum_revision.py
+          sed -i 's/"complete Lean formalisation"/"formalisation of the finite classification"/' \
+            scripts/sync_manuscript_artifacts.py
           python -u scripts/sync_manuscript_artifacts.py 2>&1 | tee manuscript-sync.log
       - name: Upload synchronization diagnostics
         if: steps.synchronize.outcome == 'failure'
