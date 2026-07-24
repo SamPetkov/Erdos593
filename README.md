@@ -109,15 +109,17 @@ and references retain their own rights and attribution requirements.
 ## Manuscript synchronization
 
 `erdos593_obligatory_triple_systems.tex` is the sole authoritative manuscript
-source. The root PDF and Markdown file, the `arxiv/main.*` mirrors,
+source.  The root PDF and Markdown file, the `arxiv/main.*` mirrors,
 `Erdos593_revised.tex`, and `arxiv/Erdos593_arxiv_source.zip` are deterministic
-generated artifacts. Regenerate everything with:
+generated artifacts.  The arXiv ZIP contains only `main.tex`, since the
+bibliography is embedded in that file.  Regenerate everything with:
 
 ```bash
 python scripts/sync_manuscript_artifacts.py
 ```
 
-CI reruns the same synchronization and commits generated artifacts back to
-same-repository pull-request branches when necessary. Markdown generation is
-pinned to Pandoc 3.1.3; set the `PANDOC` environment variable to a compatible
-executable when another version is first on `PATH`.
+CI reruns the same synchronization and commits regenerated artifacts back to
+same-repository pull-request branches when necessary.  The synchronization
+script does not modify the Lean formalization.  Markdown generation is pinned to Pandoc 3.1.3; set the
+`PANDOC` environment variable to a compatible executable when another version
+is first on `PATH`.

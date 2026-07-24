@@ -1,0 +1,17 @@
+name                                 type              encoding         emb sub uni object ID
+------------------------------------ ----------------- ---------------- --- --- --- ---------
+VYDKCL+TeXGyreTermesX-Bold           Type 1            Custom           yes yes yes     19  0
+BMGXES+TeXGyreTermesX-Regular        Type 1            Custom           yes yes yes     20  0
+BMGXES+TeXGyreTermesX-Regular        Type 1            Custom           yes yes yes     21  0
+CBUFHB+NewTXMI                       Type 1            Builtin          yes yes yes     22  0
+WJBCZX+txsys                         Type 1            Builtin          yes yes yes     23  0
+BMGXES+TeXGyreTermesX-Regular        Type 1            Custom           yes yes yes     24  0
+FMORCO+txexs                         Type 1            Builtin          yes yes yes     25  0
+IWVPQC+TeXGyreTermesX-Italic         Type 1            Custom           yes yes yes     27  0
+EBKNLD+NewTXMI7                      Type 1            Builtin          yes yes yes     50  0
+HJNAUA+txmiaX                        Type 1            Builtin          yes yes yes     52  0
+YLKCUR+txsym                         Type 1            Builtin          yes yes yes     63  0
+IAQFDH+NewTXMI5                      Type 1            Builtin          yes yes yes     79  0
+WDPGPG+stxscr                        Type 1            Builtin          yes yes yes    119  0
+VYFONL+txsyc                         Type 1            Builtin          yes yes yes    123  0
+LTIMAC+t1xtt                         Type 1            Builtin          yes yes yes    233  0

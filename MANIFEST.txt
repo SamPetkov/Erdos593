@@ -1,12 +1,15 @@
 .gitattributes
 .github/workflows/lean.yml
 .github/workflows/manuscript-artifacts.yml
+.github/workflows/validate-spectrum-branch.yml
 .gitignore
 CITATION.cff
 Erdos593_revised.tex
+FINITE_PARAMETER_SPECTRUM.md
 LICENSE
 LICENSE_SCOPE.md
 MANIFEST.txt
+PR_VALIDATION.md
 README.md
 REVISION_NOTES.md
 SHA256SUMS
