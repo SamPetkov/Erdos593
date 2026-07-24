@@ -47,9 +47,9 @@ bibliography is embedded in that file.  Regenerate everything with:
 python scripts/sync_manuscript_artifacts.py
 ```
 
-CI reruns the same synchronization and fails when a committed mirror differs
-from the canonical TeX source.  The synchronization script does not modify the
-Lean formalization.  Markdown generation is pinned to Pandoc 3.1.3; set the
+CI reruns the same synchronization and commits regenerated artifacts back to
+same-repository pull-request branches when necessary.  The synchronization
+script does not modify the Lean formalization.  Markdown generation is pinned to Pandoc 3.1.3; set the
 `PANDOC` environment variable to a compatible executable when another version
 is first on `PATH`.
 """
@@ -74,9 +74,9 @@ def normalize_tex(text: str) -> str:
     required = [
         r"\title[Obligatory triple systems]{Obligatory Triple Systems: An Alternative Proof}",
         r"\author{Samuil Petkov}",
-        "first publicly posted complete classification",
-        "no claim of informational independence",
-        "complete Lean formalisation",
+        "first publicly posted complete mathematical proof",
+        "first publicly timestamped Lean",
+        "Exact order--size--component spectrum",
     ]
     missing = [needle for needle in required if needle not in text]
     if missing:
@@ -125,7 +125,7 @@ def generate_markdown(tex_path: Path, output_path: Path) -> None:
     header = """# Obligatory Triple Systems: An Alternative Proof
 
 **Samuil Petkov**  
-21 July 2026
+24 July 2026
 
 **2020 Mathematics Subject Classification.** Primary 05C65; Secondary 05C15, 05C63, 03E05
 
@@ -146,7 +146,7 @@ def compile_pdf(tex_path: Path, output_path: Path) -> None:
         env.update(
             {
                 "TZ": "UTC",
-                "SOURCE_DATE_EPOCH": "1784635200",
+                "SOURCE_DATE_EPOCH": "1784894400",
                 "FORCE_SOURCE_DATE": "1",
             }
         )
@@ -175,7 +175,7 @@ def copy_file(source: Path, destination: Path) -> None:
 def make_arxiv_archive() -> None:
     """Write a cross-platform deterministic arXiv source ZIP."""
     ARXIV_ZIP.parent.mkdir(parents=True, exist_ok=True)
-    info = zipfile.ZipInfo("main.tex", date_time=(2026, 7, 21, 12, 0, 0))
+    info = zipfile.ZipInfo("main.tex", date_time=(2026, 7, 24, 12, 0, 0))
     info.create_system = 3
     info.external_attr = 0o100644 << 16
     info.compress_type = zipfile.ZIP_STORED
