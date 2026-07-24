@@ -18,22 +18,30 @@ F.IsObligatory ↔ F.isolatedReduction.Intrinsic
 F.IsObligatory ↔ Constructible F.isolatedReduction
 ```
 
-## Relationship to Eric Li's proof
+## Mathematical source and public chronology
 
 Eric Li's preprint arXiv:2606.24882, posted on 23 June 2026, contains the first
-publicly posted complete proof of the classification and introduces the
-complete-rank one-apex lift and exact bridge-trace framework. The Lean project
-makes no priority or independent-discovery claim for those ingredients.
+publicly posted complete mathematical proof of the classification and
+introduces the complete-rank one-apex lift and bridge-trace method used in the
+negative direction.
 
-The code formalises the implementation developed in this repository: the
-selected-incidence and bridge-block structure, explicit base-fibre and
-support-incidence trace decomposition, positive closure theory, and three
-avoidance cases. It is not a line-by-line encoding of Li's manuscript. See
-`PROVENANCE.md` for the detailed attribution boundary.
+This project formalises the different implementation developed in this
+repository: the selected-incidence and bridge-block structure, explicit
+base-fibre and support-incidence trace decomposition, positive closure theory,
+and the three avoidance cases. It is not a line-by-line encoding of Li's
+manuscript.
+
+The public history records the checked scaffold in commit `ba37b8c` and the
+complete finite constructive/intrinsic theorem in commit `6fd00a7`, both on
+15 July 2026. To the author's knowledge, this is the first publicly timestamped
+Lean formalisation of the finite structural classification. Li's arXiv v2,
+submitted on 23 July 2026, contains a separate formal verification of the
+broader paper. This is a chronology statement only; no claim of shared code or
+derivation is made. See `PROVENANCE.md` for details.
 
 The written manuscript invokes the classical Erdős--Hajnal high-odd-girth
 theorem directly. The Lean development retains an explicit shift-graph
-realisation of the required high-odd-girth host so that this input is checked
+realization of the required high-odd-girth host so that this input is checked
 inside the project rather than introduced as a project axiom.
 
 ## Verified scope
@@ -73,5 +81,5 @@ The local source closure and generated artifact contain no `sorry`, `admit`,
 project-defined `axiom`, `unsafe`, or `sorryAx`. Representative endpoint audits
 report only the standard Mathlib foundations `propext`, `Classical.choice`, and
 `Quot.sound`. The machine check verifies the formal statements and proofs in
-this repository; it does not establish historical priority or informational
-independence.
+this repository; it does not adjudicate historical questions beyond the public
+commit record stated above.
