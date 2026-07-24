@@ -837,7 +837,7 @@ Take one-point sums of the ordinary graphs $J_1,\ldots,J_k$ along any tree on th
 
 Apply Lemma <a href="#lemma-bipartite-shadow" data-reference-type="ref" data-reference="lemma-bipartite-shadow">24</a>. Let the $c$ connected components of the shadow have positive edge counts $m_1,\ldots,m_c$, where $\sum_i m_i=m$. If their orders are $s_i$, then (10.3) gives $$\sum_{i=1}^c q(m_i)\le \sum_{i=1}^c s_i\le m+c.
 \tag{10.4}$$ For positive integers $a,b$, $$q(a)+q(b)\ge q(a+b-1)+2.
-\tag{10.5}$$ To see this, note that $$\sqrt a+\sqrt b\ge\sqrt{a+b-1}+1,$$ because, after squaring, the assertion reduces to $(\sqrt a-1)(\sqrt b-1)\ge0$; taking ceilings gives (10.5). Repeatedly applying (10.5) to the left side of (10.4) yields $$\sum_{i=1}^c q(m_i)
+\tag{10.5}$$ To see this, note that $$\sqrt a+\sqrt b\ge\sqrt{a+b-1}+1,$$ because, after squaring, the assertion reduces to $(a-1)(b-1)\ge0$; taking ceilings gives (10.5). Repeatedly applying (10.5) to the left side of (10.4) yields $$\sum_{i=1}^c q(m_i)
 \ge q(m-c+1)+2(c-1).$$ The shadow has $n-m$ vertices, so these inequalities give (10.2).
 
 For sharpness put $M=m-c+1$. Take $c-1$ components equal to $K_2$. By (10.3), a final connected bipartite component with $M$ edges can have every order from $q(M)$ through $M+1$. Their disjoint union therefore realises every shadow order from $q(M)+2(c-1)$ through $m+c$. Expanding it adds exactly $m$ private vertices and proves attainability of every integer in (10.2). ◻
