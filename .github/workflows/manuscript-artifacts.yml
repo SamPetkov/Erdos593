@@ -102,13 +102,11 @@ jobs:
       - name: Stop after synchronization failure
         if: steps.synchronize.outcome == 'failure'
         run: exit 1
-      - name: Finalize workflow and repository inventory
+      - name: Remove one-shot non-workflow files and refresh inventory
         run: |
           set -euo pipefail
-          cp scripts/manuscript-artifacts-final.yml .github/workflows/manuscript-artifacts.yml
           git rm -f scripts/apply_finite_consequences_revision.py
           git rm scripts/manuscript-artifacts-final.yml
-          git rm .github/workflows/bootstrap-finite-consequences.yml
           python - <<'PY'
           from scripts.sync_manuscript_artifacts import update_manifest_and_hashes
           update_manifest_and_hashes()
