@@ -25,6 +25,17 @@ tex = replace_once(
     'abstract component range',
 )
 
+# The current cycle-rank displays are the only tagged equations 10.6 and 10.7.
+# Move them before inserting four new tagged displays.
+tex = replace_once(tex, r'\tag{10.6}', r'\tag{10.10}', 'cycle-rank equation tag')
+tex = replace_once(tex, r'\tag{10.7}', r'\tag{10.11}', 'cycle-rank range tag')
+tex = replace_once(
+    tex,
+    'which gives (10.6).  Substitution of the two endpoints in (10.2) gives\n(10.7),',
+    'which gives (10.10).  Substitution of the two endpoints in (10.2) gives\n(10.11),',
+    'cycle-rank proof references',
+)
+
 tex_insert = r'''\begin{corollary}[Size spectrum at fixed order]
 \label{corollary-fixed-order-size-spectrum}
 Let $c\ge1$ and $n\ge3c$.  A reduced obligatory triple system with exactly
@@ -98,9 +109,6 @@ tex = replace_once(
     tex_insert + r'\begin{corollary}[Exact Levi cycle-rank spectrum]',
     'fixed-order TeX insertion',
 )
-# Shift the two later manually tagged equation numbers.
-tex = replace_once(tex, r'\tag{10.6}', r'\tag{10.8}', 'cycle-rank equation tag')
-tex = replace_once(tex, r'\tag{10.7}', r'\tag{10.9}', 'cycle-rank range tag')
 TEX.write_text(tex, encoding='utf-8')
 
 note = NOTE.read_text(encoding='utf-8')
