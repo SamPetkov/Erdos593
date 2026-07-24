@@ -106,7 +106,7 @@ jobs:
         run: |
           set -euo pipefail
           cp scripts/manuscript-artifacts-final.yml .github/workflows/manuscript-artifacts.yml
-          git rm scripts/apply_finite_consequences_revision.py
+          git rm -f scripts/apply_finite_consequences_revision.py
           git rm scripts/manuscript-artifacts-final.yml
           git rm .github/workflows/bootstrap-finite-consequences.yml
           python - <<'PY'
