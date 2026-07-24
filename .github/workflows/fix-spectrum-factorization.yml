@@ -1,0 +1,31 @@
+name: Correct spectrum factorization
+
+on:
+  push:
+    branches: [agent/finite-parameter-spectrum]
+    paths:
+      - 'scripts/fix_merge_inequality_factor.py'
+      - '.github/workflows/fix-spectrum-factorization.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  correct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/finite-parameter-spectrum
+          fetch-depth: 0
+      - run: python scripts/fix_merge_inequality_factor.py
+      - run: |
+          rm scripts/fix_merge_inequality_factor.py
+          rm .github/workflows/fix-spectrum-factorization.yml
+      - run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Correct merge-inequality factorization'
+          git push origin HEAD:agent/finite-parameter-spectrum
