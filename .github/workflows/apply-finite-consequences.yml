@@ -6,6 +6,12 @@ on:
       - agent/finite-consequences-v1-baseline
     paths:
       - '.github/workflows/apply-finite-consequences.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/apply-finite-consequences.yml'
+      - 'tmp/finite_consequences_payload.b64'
 
 permissions:
   contents: write
