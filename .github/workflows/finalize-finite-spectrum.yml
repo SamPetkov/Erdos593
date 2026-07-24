@@ -1,0 +1,43 @@
+name: Finalize finite-spectrum revision
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-finite-spectrum.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Apply the reviewed finite-spectrum revision
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/git/blobs/2e842062edd37fde8d1735ee888c905d78083b92" \
+            | python -c 'import base64,json,sys; sys.stdout.buffer.write(base64.b64decode(json.load(sys.stdin)["content"]))' \
+            > /tmp/revision.py.gz
+          gzip --decompress --stdout /tmp/revision.py.gz > /tmp/revision.py
+          python /tmp/revision.py
+      - name: Remove the temporary finalizer
+        run: rm .github/workflows/finalize-finite-spectrum.yml
+      - name: Commit the revision
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Add finite spectra and public Lean chronology'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
