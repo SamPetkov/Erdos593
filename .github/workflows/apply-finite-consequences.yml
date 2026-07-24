@@ -1,5 +1,6 @@
 name: Apply finite consequences revision
 
+# This post-PR edit deliberately triggers the pull_request synchronize event.
 on:
   push:
     branches:
