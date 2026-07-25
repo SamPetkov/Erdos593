@@ -5,7 +5,7 @@ import Mathlib.SetTheory.Cardinal.Aleph
 # Uniform one-apex sequence lifts
 
 This is the uniformity-parametric analogue of the graph-to-triple sequence
-lift.  The base and edge-index types are kept in one universe in this first
+lift. The base and edge-index types are kept in one universe in this first
 kernel so that the transfinite node type and the lift point type stay simple.
 -/
 
@@ -51,28 +51,28 @@ theorem ne_of_extendsBy {q t : Node E} {e : E}
 
 end Node
 
-variable {s : ℕ} {V E : Type u} (H : UniformSystem s V E)
+variable {s : ℕ} {V E : Type u}
 
 /-- Vertices of the one-apex lift. -/
-abbrev Point : Type u := Node E × V
+abbrev Point (H : UniformSystem s V E) : Type u := Node E × V
 
 /-- The base copy of one indexed edge at a sequence node. -/
-def baseSet (q : Node E) (e : E) : Set (Point H) :=
+def baseSet (H : UniformSystem s V E) (q : Node E) (e : E) : Set (Point H) :=
   (fun x : V => (q, x)) '' H.edgeSet e
 
 /-- Extensional edge sets admitted by the uniform one-apex construction. -/
-def IsEdgeSet (S : Set (Point H)) : Prop :=
+def IsEdgeSet (H : UniformSystem s V E) (S : Set (Point H)) : Prop :=
   ∃ (q t : Node E) (e : E) (z : V),
-    q.ExtendsBy e t ∧ S = insert (t, z) (H.baseSet q e)
+    q.ExtendsBy e t ∧ S = insert (t, z) (baseSet H q e)
 
 /-- Lift edge indices are their extensional point sets. -/
-abbrev Edge : Type u :=
-  {S : Set (Point H) // H.IsEdgeSet S}
+abbrev Edge (H : UniformSystem s V E) : Type u :=
+  {S : Set (Point H) // IsEdgeSet H S}
 
 /-- The lift edge determined by explicit base and apex data. -/
-def mkEdge (q t : Node E) (e : E) (z : V)
+def mkEdge (H : UniformSystem s V E) (q t : Node E) (e : E) (z : V)
     (hext : q.ExtendsBy e t) : Edge H :=
-  ⟨insert (t, z) (H.baseSet q e), ⟨q, t, e, z, hext, rfl⟩⟩
+  ⟨insert (t, z) (baseSet H q e), ⟨q, t, e, z, hext, rfl⟩⟩
 
 private theorem baseMap_injective (q : Node E) :
     Function.Injective (fun x : V => (q, x)) := by
@@ -80,22 +80,22 @@ private theorem baseMap_injective (q : Node E) :
   exact congrArg Prod.snd h
 
 /-- The apex is not one of the base points. -/
-theorem apex_not_mem_base {q t : Node E} {e : E} {z : V}
-    (hext : q.ExtendsBy e t) :
-    (t, z) ∉ H.baseSet q e := by
+theorem apex_not_mem_base (H : UniformSystem s V E)
+    {q t : Node E} {e : E} {z : V} (hext : q.ExtendsBy e t) :
+    (t, z) ∉ baseSet H q e := by
   rintro ⟨x, -, hxt⟩
   exact Node.ne_of_extendsBy hext (congrArg Prod.fst hxt)
 
 /-- The uniform one-apex lift of `H`. -/
-noncomputable def system (hs : s ≠ 0) :
+noncomputable def system (H : UniformSystem s V E) (hs : s ≠ 0) :
     UniformSystem (s + 1) (Point H) (Edge H) where
   Inc p e := p ∈ e.1
   edge_ncard e := by
     rcases e.2 with ⟨q, t, a, z, hext, hset⟩
     simp only [Set.setOf_mem_eq]
     rw [hset]
-    have hnot : (t, z) ∉ H.baseSet q a := H.apex_not_mem_base hext
-    have hfinite : (H.baseSet q a).Finite :=
+    have hnot : (t, z) ∉ baseSet H q a := apex_not_mem_base H hext
+    have hfinite : (baseSet H q a).Finite :=
       (H.edgeSet_finite hs a).image (fun x : V => (q, x))
     rw [Set.ncard_insert_of_notMem hnot hfinite]
     rw [baseSet, Set.ncard_image_of_injective _ (baseMap_injective q)]
@@ -106,9 +106,10 @@ noncomputable def system (hs : s ≠ 0) :
     simpa only [Set.setOf_mem_eq] using h
 
 @[simp]
-theorem inc_mkEdge_iff {q t : Node E} {e : E} {z : V}
-    {hext : q.ExtendsBy e t} {p : Point H} (hs : s ≠ 0) :
-    (H.system hs).Inc p (H.mkEdge q t e z hext) ↔
+theorem inc_mkEdge_iff (H : UniformSystem s V E)
+    {q t : Node E} {e : E} {z : V} {hext : q.ExtendsBy e t}
+    {p : Point H} (hs : s ≠ 0) :
+    (system H hs).Inc p (mkEdge H q t e z hext) ↔
       p = (t, z) ∨ ∃ x : V, H.Inc x e ∧ p = (q, x) := by
   simp [system, mkEdge, baseSet, eq_comm]
 
