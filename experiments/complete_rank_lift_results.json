@@ -1,0 +1,101 @@
+{
+  "configuration": {
+    "depth": 2,
+    "target_linear_per_random_host": 2500
+  },
+  "elapsed_seconds": 9.057,
+  "exhaustive": [
+    {
+      "base": "K3",
+      "checked_traces": 27324,
+      "cycles": 1809,
+      "edge_subsets": 39711,
+      "failures": 0,
+      "host": "FullLift_2(K3)",
+      "host_edges": 63,
+      "linear_traces": 27324,
+      "minimum_bridge_count": 1,
+      "odd_cycles": 1809,
+      "uniformity": 3
+    },
+    {
+      "base": "C4",
+      "checked_traces": 375040,
+      "cycles": 0,
+      "edge_subsets": 487344,
+      "failures": 0,
+      "host": "FullLift_2(C4)",
+      "host_edges": 144,
+      "linear_traces": 375040,
+      "minimum_bridge_count": 3,
+      "odd_cycles": 0,
+      "uniformity": 3
+    }
+  ],
+  "hosts": [
+    {
+      "base": "K3",
+      "edges": 63,
+      "name": "FullLift_2(K3)",
+      "nodes": 13,
+      "uniformity": 3,
+      "vertices": 39
+    },
+    {
+      "base": "C4",
+      "edges": 144,
+      "name": "FullLift_2(C4)",
+      "nodes": 21,
+      "uniformity": 3,
+      "vertices": 84
+    },
+    {
+      "base": "C3^(3)",
+      "edges": 126,
+      "name": "FullLift_2(C3^(3))",
+      "nodes": 13,
+      "uniformity": 4,
+      "vertices": 78
+    },
+    {
+      "base": "C4^(3)",
+      "edges": 288,
+      "name": "FullLift_2(C4^(3))",
+      "nodes": 21,
+      "uniformity": 4,
+      "vertices": 168
+    }
+  ],
+  "interpretation": "Finite complete-rank evidence only. Every tested linear trace had a bridge at its selected apex incidence, all connector nodes on each Berge cycle collapsed to one base node, and every cycle projected length-preservingly to the base hypergraph.",
+  "random": [
+    {
+      "attempts": 7992,
+      "base": "C3^(3)",
+      "cycles": 563,
+      "failures": 0,
+      "host": "FullLift_2(C3^(3))",
+      "host_edges": 126,
+      "linear_traces": 2500,
+      "minimum_bridge_count": 2,
+      "odd_cycles": 563,
+      "seed": 59333,
+      "target_linear_traces": 2500,
+      "uniformity": 4
+    },
+    {
+      "attempts": 5963,
+      "base": "C4^(3)",
+      "cycles": 98,
+      "failures": 0,
+      "host": "FullLift_2(C4^(3))",
+      "host_edges": 288,
+      "linear_traces": 2500,
+      "minimum_bridge_count": 2,
+      "odd_cycles": 0,
+      "seed": 59344,
+      "target_linear_traces": 2500,
+      "uniformity": 4
+    }
+  ],
+  "status": "passed"
+}
