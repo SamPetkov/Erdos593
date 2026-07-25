@@ -14,9 +14,9 @@ The new namespace `Erdos593.UniformSystem` provides:
 - the Levi graph and the exact `r`-neighbour count at every hyperedge-node;
 - the set and number of incident Levi bridges;
 - the bridge lower bound `r - 2`;
-- the residual incidence count;
-- a proved arithmetic implication that the residual count is at most two;
-- a proved `0/2` dichotomy once the graph-theoretic no-singleton lemma is supplied;
+- the residual incidence count and the arithmetic bound `residualCount <= 2`;
+- the generic theorem that an actual bridge-free Levi degree cannot equal one;
+- the actual bridge-free `0/2` dichotomy whenever that degree is at most two;
 - the even-Berge-cycle and intrinsic predicates; and
 - cycle-rank arithmetic showing why the attainable nullity interval is
   independent of the uniformity.
@@ -42,9 +42,10 @@ self-contained source generator. The safer route is additive:
 
 The main missing declarations are:
 
-1. **No singleton residual degree.** If an incidence is not a bridge, it lies on
-   a Levi cycle, so a hyperedge-node cannot have exactly one nonbridge
-   incidence after all bridges are deleted.
+1. **Bridge-count accounting.** Identify the arithmetic residual count
+   `r - bridgeCount e` with the degree of the hyperedge-node in the graph
+   obtained by deleting every actual Levi bridge. This turns the checked bridge
+   lower bound directly into the checked actual-degree `0/2` theorem.
 2. **Active block suppression.** A bridge-free active component has every
    hyperedge-node of degree two and therefore suppresses to an ordinary graph.
 3. **Simplicity and bipartiteness.** Source linearity makes the suppressed graph
@@ -68,14 +69,14 @@ UniformSystem/Constructive.lean
 UniformSystem/Classification.lean
 ```
 
-The first target should be the no-singleton residual-degree theorem. It closes
-the only graph-theoretic premise currently exposed by
-`residualCount_eq_zero_or_two`.
+The next target is the bridge-count accounting identity. The no-singleton graph
+lemma and the zero-or-two actual-degree endpoint are already imported and
+checked from the general finite-graph bridge kernel.
 
 ## Separation from the infinitary problem
 
 This route formalises the finite theorem about the generated class `B_r`. It
-makes no assertion that every obligatory `r`-uniform hypergraph belongs to
-`B_r` for `r >= 4`. The proposed iterated-lift avoidance construction is a
-separate research direction and should be formalised only after its ordinary
-proof has been independently checked.
+does not depend on the candidate all-uniformity obligatoriness theorem. The
+iterated-lift avoidance construction is maintained in a separate research PR
+and should be formalised only after its ordinary proof has been independently
+checked under issue #20.
