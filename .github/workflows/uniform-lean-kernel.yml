@@ -35,13 +35,16 @@ jobs:
           lake-package-directory: formalization
           auto-config: false
           use-mathlib-cache: true
-      - name: Compile the uniform kernel
-        run: |
-          lake env lean -DwarningAsError=true Erdos593/UniformSystem/Basic.lean
-          lake env lean -DwarningAsError=true Erdos593/UniformSystem/Levi.lean
-          lake env lean -DwarningAsError=true Erdos593/UniformSystem/BridgeCount.lean
-          lake env lean -DwarningAsError=true Erdos593/UniformSystem/Arithmetic.lean
-          lake env lean -DwarningAsError=true Erdos593/UniformSystem.lean
+      - name: Compile Basic
+        run: lake env lean -DwarningAsError=true Erdos593/UniformSystem/Basic.lean
+      - name: Compile Levi
+        run: lake env lean -DwarningAsError=true Erdos593/UniformSystem/Levi.lean
+      - name: Compile BridgeCount
+        run: lake env lean -DwarningAsError=true Erdos593/UniformSystem/BridgeCount.lean
+      - name: Compile Arithmetic
+        run: lake env lean -DwarningAsError=true Erdos593/UniformSystem/Arithmetic.lean
+      - name: Compile entry point
+        run: lake env lean -DwarningAsError=true Erdos593/UniformSystem.lean
       - name: Audit the new source
         run: |
           ! grep -R -n -E '\bsorry\b|\badmit\b|^[[:space:]]*axiom[[:space:]]' Erdos593/UniformSystem Erdos593/UniformSystem.lean
