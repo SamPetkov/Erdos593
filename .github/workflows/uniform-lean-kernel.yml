@@ -2,7 +2,9 @@ name: Uniform Lean kernel
 
 on:
   push:
-    branches: [agent/uniform-lean-kernel]
+    branches:
+      - agent/uniform-lean-kernel
+      - agent/uniform-one-apex-lift-lean
     paths:
       - 'formalization/Erdos593/UniformSystem/**'
       - 'formalization/Erdos593/UniformSystem.lean'
@@ -47,6 +49,9 @@ jobs:
             lake env lean -DwarningAsError=true Erdos593/UniformSystem/Levi.lean
             lake env lean -DwarningAsError=true Erdos593/UniformSystem/BridgeCount.lean
             lake env lean -DwarningAsError=true Erdos593/UniformSystem/Arithmetic.lean
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem/Coloring.lean
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem/SequenceLift.lean
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem/SequenceLiftChromatic.lean
             lake env lean -DwarningAsError=true Erdos593/UniformSystem.lean
           } 2>&1 | tee ../uniform-strict.log
       - name: Audit the new source
