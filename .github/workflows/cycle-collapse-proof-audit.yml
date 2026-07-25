@@ -1,0 +1,52 @@
+name: Cycle-collapse proof audit
+
+on:
+  push:
+    branches: [agent/audit-cycle-collapse]
+    paths:
+      - 'audits/CYCLE_COLLAPSE_AUDIT.md'
+      - 'experiments/cycle_collapse_adversary.py'
+      - 'experiments/cycle_collapse_results.json'
+      - 'experiments/cycle_collapse_assumption_audit.py'
+      - 'experiments/cycle_collapse_assumption_results.json'
+      - '.github/workflows/cycle-collapse-proof-audit.yml'
+  pull_request:
+    paths:
+      - 'audits/CYCLE_COLLAPSE_AUDIT.md'
+      - 'experiments/cycle_collapse_adversary.py'
+      - 'experiments/cycle_collapse_results.json'
+      - 'experiments/cycle_collapse_assumption_audit.py'
+      - 'experiments/cycle_collapse_assumption_results.json'
+      - '.github/workflows/cycle-collapse-proof-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile audit programs
+        run: |
+          python -m py_compile experiments/cycle_collapse_adversary.py
+          python -m py_compile experiments/cycle_collapse_assumption_audit.py
+      - name: Reproduce the pairwise-linear cycle search
+        run: |
+          python experiments/cycle_collapse_adversary.py \
+            --check experiments/cycle_collapse_results.json
+      - name: Reproduce assumption and boundary certificates
+        run: |
+          python experiments/cycle_collapse_assumption_audit.py \
+            --baseline experiments/cycle_collapse_results.json \
+            --check experiments/cycle_collapse_assumption_results.json
+      - name: Enforce the audit gate markers
+        run: |
+          grep -Fq 'C1. Consecutive connector nodes are comparable' audits/CYCLE_COLLAPSE_AUDIT.md
+          grep -Fq 'C6. Pull the common base back to the source' audits/CYCLE_COLLAPSE_AUDIT.md
+          grep -Fq 'internally passed but externally open' audits/CYCLE_COLLAPSE_AUDIT.md
