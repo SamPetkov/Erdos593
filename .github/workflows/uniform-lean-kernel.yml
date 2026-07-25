@@ -36,15 +36,10 @@ jobs:
           auto-config: false
           use-mathlib-cache: true
       - name: Build the uniform import closure
-        id: build
-        continue-on-error: true
         run: |
           set -o pipefail
           lake build Erdos593.UniformSystem 2>&1 | tee ../uniform-build.log
       - name: Run strict source checks
-        id: strict
-        if: steps.build.outcome == 'success'
-        continue-on-error: true
         run: |
           set -o pipefail
           {
@@ -54,18 +49,13 @@ jobs:
             lake env lean -DwarningAsError=true Erdos593/UniformSystem/Arithmetic.lean
             lake env lean -DwarningAsError=true Erdos593/UniformSystem.lean
           } 2>&1 | tee ../uniform-strict.log
+      - name: Audit the new source
+        run: |
+          ! grep -R -n -E '\bsorry\b|\badmit\b|^[[:space:]]*axiom[[:space:]]' Erdos593/UniformSystem Erdos593/UniformSystem.lean
       - name: Upload compile diagnostics
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: uniform-lean-kernel-logs
           path: uniform-*.log
           if-no-files-found: ignore
-      - name: Require successful compilation
-        if: always()
-        run: |
-          test '${{ steps.build.outcome }}' = success
-          test '${{ steps.strict.outcome }}' = success
-      - name: Audit the new source
-        run: |
-          ! grep -R -n -E '\bsorry\b|\badmit\b|^[[:space:]]*axiom[[:space:]]' Erdos593/UniformSystem Erdos593/UniformSystem.lean
