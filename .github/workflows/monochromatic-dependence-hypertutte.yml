@@ -1,0 +1,52 @@
+name: Monochromatic dependence and hypergraph Tutte
+
+on:
+  push:
+    branches: [agent/monochromatic-dependence-hypertutte]
+    paths:
+      - 'MONOCHROMATIC_DEPENDENCE_AND_HYPERTUTTE.md'
+      - 'JOINT_MONOCHROMATIC_LAW.md'
+      - 'HIGH_GIRTH_MONOCHROMATIC_LIMITS.md'
+      - 'experiments/monochromatic_dependence_hypertutte.py'
+      - 'experiments/monochromatic_dependence_hypertutte_results.json'
+      - '.github/workflows/monochromatic-dependence-hypertutte.yml'
+  pull_request:
+    paths:
+      - 'MONOCHROMATIC_DEPENDENCE_AND_HYPERTUTTE.md'
+      - 'JOINT_MONOCHROMATIC_LAW.md'
+      - 'HIGH_GIRTH_MONOCHROMATIC_LIMITS.md'
+      - 'experiments/monochromatic_dependence_hypertutte.py'
+      - 'experiments/monochromatic_dependence_hypertutte_results.json'
+      - '.github/workflows/monochromatic-dependence-hypertutte.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile the verification program
+        run: python -m py_compile experiments/monochromatic_dependence_hypertutte.py
+      - name: Reproduce the checked identities
+        run: |
+          python experiments/monochromatic_dependence_hypertutte.py \
+            --state-limit 2000000 \
+            --check experiments/monochromatic_dependence_hypertutte_results.json
+      - name: Enforce theorem markers
+        run: |
+          grep -F 'probabilistic dependence matroid' MONOCHROMATIC_DEPENDENCE_AND_HYPERTUTTE.md
+          grep -F 'automatically 3-wise independent' MONOCHROMATIC_DEPENDENCE_AND_HYPERTUTTE.md
+          grep -F 'A Hypergraph Tutte Polynomial' MONOCHROMATIC_DEPENDENCE_AND_HYPERTUTTE.md
+          grep -F 'ferromagnetic Ising' MONOCHROMATIC_DEPENDENCE_AND_HYPERTUTTE.md
+          grep -F 'complete joint law' JOINT_MONOCHROMATIC_LAW.md
+          grep -F 'Möbius inversion' JOINT_MONOCHROMATIC_LAW.md
+          grep -F 'Poisson regime' HIGH_GIRTH_MONOCHROMATIC_LIMITS.md
+          grep -F 'Gaussian regime' HIGH_GIRTH_MONOCHROMATIC_LIMITS.md
+          grep -F 'first non-binomial factorial moment' HIGH_GIRTH_MONOCHROMATIC_LIMITS.md
