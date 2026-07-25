@@ -1,13 +1,13 @@
 import Erdos593.Graph.Bridge
+import Erdos593.Graph.BridgeFree
 import Erdos593.UniformSystem.Levi
-import Mathlib.Tactic.Omega
 
 /-!
 # Bridge-count interface for uniform systems
 
 This module isolates the local arithmetic behind the uniform bridge-block
-proof.  The remaining graph-theoretic obligation is to show that the residual
-nonbridge degree of a hyperedge-node cannot equal one.
+proof. The graph-theoretic no-singleton fact is inherited from the existing
+general bridge-free graph kernel.
 -/
 
 namespace Erdos593
@@ -73,6 +73,13 @@ theorem residualCount_eq_zero_or_two (hr : 2 ≤ r)
   have hle := F.residualCount_le_two hr hbridge e
   have hne := hno e
   omega
+
+/-- The existing graph kernel proves directly that the actual bridge-free
+Levi degree of a hyperedge-node is never one. -/
+theorem bridgeFree_degree_ne_one [Fintype (V ⊕ E)] [DecidableEq (V ⊕ E)]
+    [DecidableRel F.levi.Adj] (e : E) :
+    (SimpleGraph.bridgeFree F.levi).degree (.inr e) ≠ 1 :=
+  SimpleGraph.bridgeFree_degree_ne_one F.levi (.inr e)
 
 /-- Every Berge cycle has even length, represented by divisibility of its Levi
 cycle length by four. -/
