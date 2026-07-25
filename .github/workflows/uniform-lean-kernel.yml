@@ -35,40 +35,25 @@ jobs:
           lake-package-directory: formalization
           auto-config: false
           use-mathlib-cache: true
-      - name: Compile Basic
-        id: basic
+      - name: Build the uniform import closure
+        id: build
         continue-on-error: true
         run: |
           set -o pipefail
-          lake env lean -DwarningAsError=true Erdos593/UniformSystem/Basic.lean 2>&1 | tee ../uniform-basic.log
-      - name: Compile Levi
-        id: levi
-        if: steps.basic.outcome == 'success'
+          lake build Erdos593.UniformSystem 2>&1 | tee ../uniform-build.log
+      - name: Run strict source checks
+        id: strict
+        if: steps.build.outcome == 'success'
         continue-on-error: true
         run: |
           set -o pipefail
-          lake env lean -DwarningAsError=true Erdos593/UniformSystem/Levi.lean 2>&1 | tee ../uniform-levi.log
-      - name: Compile BridgeCount
-        id: bridges
-        if: steps.levi.outcome == 'success'
-        continue-on-error: true
-        run: |
-          set -o pipefail
-          lake env lean -DwarningAsError=true Erdos593/UniformSystem/BridgeCount.lean 2>&1 | tee ../uniform-bridges.log
-      - name: Compile Arithmetic
-        id: arithmetic
-        if: steps.bridges.outcome == 'success'
-        continue-on-error: true
-        run: |
-          set -o pipefail
-          lake env lean -DwarningAsError=true Erdos593/UniformSystem/Arithmetic.lean 2>&1 | tee ../uniform-arithmetic.log
-      - name: Compile entry point
-        id: entry
-        if: steps.arithmetic.outcome == 'success'
-        continue-on-error: true
-        run: |
-          set -o pipefail
-          lake env lean -DwarningAsError=true Erdos593/UniformSystem.lean 2>&1 | tee ../uniform-entry.log
+          {
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem/Basic.lean
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem/Levi.lean
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem/BridgeCount.lean
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem/Arithmetic.lean
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem.lean
+          } 2>&1 | tee ../uniform-strict.log
       - name: Upload compile diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -79,11 +64,8 @@ jobs:
       - name: Require successful compilation
         if: always()
         run: |
-          test '${{ steps.basic.outcome }}' = success
-          test '${{ steps.levi.outcome }}' = success
-          test '${{ steps.bridges.outcome }}' = success
-          test '${{ steps.arithmetic.outcome }}' = success
-          test '${{ steps.entry.outcome }}' = success
+          test '${{ steps.build.outcome }}' = success
+          test '${{ steps.strict.outcome }}' = success
       - name: Audit the new source
         run: |
           ! grep -R -n -E '\bsorry\b|\badmit\b|^[[:space:]]*axiom[[:space:]]' Erdos593/UniformSystem Erdos593/UniformSystem.lean
