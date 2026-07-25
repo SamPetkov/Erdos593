@@ -1,0 +1,376 @@
+{
+  "baseline_linear_cycle_search": {
+    "collapsed_and_projected": 2818435,
+    "cycles": 2818435,
+    "cycles_using_nonimmediate_prefix_jump": 2795352,
+    "failures": 0
+  },
+  "drop_linearity_audit": {
+    "first_counterexample": {
+      "boundary_edges": [
+        0,
+        1
+      ],
+      "boundary_intersection_size": 2,
+      "conclusion": "The two boundary edges share the complete two-point base. This is exactly the contradiction excluded by source linearity.",
+      "connector_node_lengths": [
+        1,
+        0,
+        1
+      ],
+      "connectors": [
+        {
+          "coordinate": 0,
+          "encoded": 3,
+          "node": [
+            0
+          ],
+          "node_index": 1
+        },
+        {
+          "coordinate": 0,
+          "encoded": 0,
+          "node": [],
+          "node_index": 0
+        },
+        {
+          "coordinate": 1,
+          "encoded": 4,
+          "node": [
+            0
+          ],
+          "node_index": 1
+        }
+      ],
+      "edge_cycle": [
+        0,
+        1,
+        36
+      ],
+      "edges": [
+        {
+          "apex": {
+            "coordinate": 0,
+            "encoded": 3,
+            "node": [
+              0
+            ],
+            "node_index": 1
+          },
+          "apex_node": [
+            0
+          ],
+          "base_edge_coordinates": [
+            0,
+            1
+          ],
+          "base_edge_index": 0,
+          "base_node": [],
+          "edge_index": 0,
+          "vertices": [
+            {
+              "coordinate": 0,
+              "encoded": 0,
+              "node": [],
+              "node_index": 0
+            },
+            {
+              "coordinate": 1,
+              "encoded": 1,
+              "node": [],
+              "node_index": 0
+            },
+            {
+              "coordinate": 0,
+              "encoded": 3,
+              "node": [
+                0
+              ],
+              "node_index": 1
+            }
+          ]
+        },
+        {
+          "apex": {
+            "coordinate": 1,
+            "encoded": 4,
+            "node": [
+              0
+            ],
+            "node_index": 1
+          },
+          "apex_node": [
+            0
+          ],
+          "base_edge_coordinates": [
+            0,
+            1
+          ],
+          "base_edge_index": 0,
+          "base_node": [],
+          "edge_index": 1,
+          "vertices": [
+            {
+              "coordinate": 0,
+              "encoded": 0,
+              "node": [],
+              "node_index": 0
+            },
+            {
+              "coordinate": 1,
+              "encoded": 1,
+              "node": [],
+              "node_index": 0
+            },
+            {
+              "coordinate": 1,
+              "encoded": 4,
+              "node": [
+                0
+              ],
+              "node_index": 1
+            }
+          ]
+        },
+        {
+          "apex": {
+            "coordinate": 0,
+            "encoded": 12,
+            "node": [
+              0,
+              0
+            ],
+            "node_index": 4
+          },
+          "apex_node": [
+            0,
+            0
+          ],
+          "base_edge_coordinates": [
+            0,
+            1
+          ],
+          "base_edge_index": 0,
+          "base_node": [
+            0
+          ],
+          "edge_index": 36,
+          "vertices": [
+            {
+              "coordinate": 0,
+              "encoded": 3,
+              "node": [
+                0
+              ],
+              "node_index": 1
+            },
+            {
+              "coordinate": 1,
+              "encoded": 4,
+              "node": [
+                0
+              ],
+              "node_index": 1
+            },
+            {
+              "coordinate": 0,
+              "encoded": 12,
+              "node": [
+                0,
+                0
+              ],
+              "node_index": 4
+            }
+          ]
+        }
+      ],
+      "minimum_positions": [
+        1
+      ],
+      "pair_intersection_sizes": [
+        2,
+        1,
+        1
+      ],
+      "pairwise_linear": false
+    },
+    "host": "FullLift_2(K3)",
+    "noncollapsed_berge_triangles": 162,
+    "pairwise_linear_failures": 0,
+    "whose_two_boundary_edges_share_the_full_base": 162,
+    "with_unique_minimum_occurrence": 162
+  },
+  "drop_s_ge_two_audit": {
+    "base_uniformity": 1,
+    "conclusion": "The three complete-rank lift edges form a linear graph triangle whose three connector nodes are distinct. Thus s >= 2 is essential.",
+    "connector_nodes": [
+      [
+        0
+      ],
+      [],
+      [
+        0,
+        0
+      ]
+    ],
+    "connectors": [
+      {
+        "coordinate": 0,
+        "encoded": 1,
+        "node": [
+          0
+        ],
+        "node_index": 1
+      },
+      {
+        "coordinate": 0,
+        "encoded": 0,
+        "node": [],
+        "node_index": 0
+      },
+      {
+        "coordinate": 0,
+        "encoded": 2,
+        "node": [
+          0,
+          0
+        ],
+        "node_index": 2
+      }
+    ],
+    "edge_cycle": [
+      {
+        "apex": {
+          "coordinate": 0,
+          "encoded": 1,
+          "node": [
+            0
+          ],
+          "node_index": 1
+        },
+        "apex_node": [
+          0
+        ],
+        "base_edge_coordinates": [
+          0
+        ],
+        "base_edge_index": 0,
+        "base_node": [],
+        "edge_index": 0,
+        "vertices": [
+          {
+            "coordinate": 0,
+            "encoded": 0,
+            "node": [],
+            "node_index": 0
+          },
+          {
+            "coordinate": 0,
+            "encoded": 1,
+            "node": [
+              0
+            ],
+            "node_index": 1
+          }
+        ]
+      },
+      {
+        "apex": {
+          "coordinate": 0,
+          "encoded": 2,
+          "node": [
+            0,
+            0
+          ],
+          "node_index": 2
+        },
+        "apex_node": [
+          0,
+          0
+        ],
+        "base_edge_coordinates": [
+          0
+        ],
+        "base_edge_index": 0,
+        "base_node": [],
+        "edge_index": 1,
+        "vertices": [
+          {
+            "coordinate": 0,
+            "encoded": 0,
+            "node": [],
+            "node_index": 0
+          },
+          {
+            "coordinate": 0,
+            "encoded": 2,
+            "node": [
+              0,
+              0
+            ],
+            "node_index": 2
+          }
+        ]
+      },
+      {
+        "apex": {
+          "coordinate": 0,
+          "encoded": 2,
+          "node": [
+            0,
+            0
+          ],
+          "node_index": 2
+        },
+        "apex_node": [
+          0,
+          0
+        ],
+        "base_edge_coordinates": [
+          0
+        ],
+        "base_edge_index": 0,
+        "base_node": [
+          0
+        ],
+        "edge_index": 2,
+        "vertices": [
+          {
+            "coordinate": 0,
+            "encoded": 1,
+            "node": [
+              0
+            ],
+            "node_index": 1
+          },
+          {
+            "coordinate": 0,
+            "encoded": 2,
+            "node": [
+              0,
+              0
+            ],
+            "node_index": 2
+          }
+        ]
+      }
+    ],
+    "lift_uniformity": 2,
+    "source_is_pairwise_linear": true
+  },
+  "generated_from": {
+    "audit_host": "FullLift_2(K3)",
+    "baseline": "experiments/cycle_collapse_results.json"
+  },
+  "minimal_hypothesis_findings": {
+    "base_simplicity": "used to make the extensional lift simple and to recover edge indices, but not in the minimum-node contradiction itself",
+    "complete_rank": "not used by the local collapse argument once every target edge has the full-base-plus-one-apex form",
+    "distinct_cycle_edge_indices": "essential in the unique-minimum case to distinguish the two boundary edges",
+    "global_source_finiteness": "not used by cycle collapse; only the displayed Berge cycle is finite",
+    "global_source_linearity": "can be weakened to pairwise linearity of the edges on the displayed cycle",
+    "infinite_kappa": "not used by cycle collapse; it is used by chromatic preservation",
+    "s_ge_two": "essential, as certified by the explicit linear s=1 triangle",
+    "vertex_injectivity_and_exact_edge_mapping": "essential to pull the common target base back to the same source vertices"
+  },
+  "status": "passed"
+}
