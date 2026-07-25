@@ -1,0 +1,56 @@
+name: Uniform bridge-block certificate
+
+on:
+  push:
+    branches: [agent/uniform-bridge-block-theorem]
+    paths:
+      - 'UNIFORM_BRIDGE_BLOCK_THEOREM.md'
+      - 'experiments/uniform_bridge_certificate.py'
+      - 'experiments/uniformity_conjecture.py'
+      - '.github/workflows/uniform-bridge-certificate.yml'
+  pull_request:
+    paths:
+      - 'UNIFORM_BRIDGE_BLOCK_THEOREM.md'
+      - 'experiments/uniform_bridge_certificate.py'
+      - 'experiments/uniformity_conjecture.py'
+      - '.github/workflows/uniform-bridge-certificate.yml'
+  workflow_dispatch:
+
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile both independent recognizers
+        run: |
+          python -m py_compile experiments/uniformity_conjecture.py
+          python -m py_compile experiments/uniform_bridge_certificate.py
+      - name: Run certificate fixtures
+        run: python experiments/uniform_bridge_certificate.py
+      - name: Cross-check all labelled incidence types through six edges
+        run: |
+          python experiments/uniform_bridge_certificate.py \
+            --cross-check \
+            --uniformities 3,4,5 \
+            --max-edges 6 \
+            --output /tmp/uniform-bridge-cross-check.json
+      - name: Validate aggregate totals
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('/tmp/uniform-bridge-cross-check.json').read_text())
+          totals = data['cross_check']['totals']
+          assert totals['connected'] == 407306, totals
+          assert totals['accepted'] == 26071, totals
+          print(json.dumps(totals, indent=2, sort_keys=True))
+          PY
+      - name: Upload certificate report
+        uses: actions/upload-artifact@v4
+        with:
+          name: uniform-bridge-certificate-report
+          path: /tmp/uniform-bridge-cross-check.json
