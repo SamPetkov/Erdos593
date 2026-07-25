@@ -1,0 +1,39 @@
+name: Iterated lift avoidance experiment
+
+on:
+  push:
+    branches: [agent/iterated-lift-avoidance]
+    paths:
+      - 'ITERATED_LIFT_AVOIDANCE.md'
+      - 'experiments/iterated_lift_trace.py'
+      - 'experiments/iterated_lift_results.json'
+      - '.github/workflows/iterated-lift-avoidance.yml'
+  pull_request:
+    paths:
+      - 'ITERATED_LIFT_AVOIDANCE.md'
+      - 'experiments/iterated_lift_trace.py'
+      - 'experiments/iterated_lift_results.json'
+      - '.github/workflows/iterated-lift-avoidance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile the experiment
+        run: python -m py_compile experiments/iterated_lift_trace.py
+      - name: Reproduce the checked trace results
+        run: |
+          python experiments/iterated_lift_trace.py \
+            --target-linear 2500 \
+            --minimum-size 3 \
+            --maximum-size 7 \
+            --check experiments/iterated_lift_results.json
