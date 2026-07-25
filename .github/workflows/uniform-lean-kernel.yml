@@ -1,0 +1,61 @@
+name: Uniform Lean kernel
+
+on:
+  push:
+    branches: [agent/uniform-lean-kernel]
+    paths:
+      - 'formalization/Erdos593/UniformSystem/**'
+      - 'formalization/Erdos593/UniformSystem.lean'
+      - 'UNIFORM_LEAN_FORMALIZATION.md'
+      - '.github/workflows/uniform-lean-kernel.yml'
+  pull_request:
+    paths:
+      - 'formalization/Erdos593/UniformSystem/**'
+      - 'formalization/Erdos593/UniformSystem.lean'
+      - 'UNIFORM_LEAN_FORMALIZATION.md'
+      - '.github/workflows/uniform-lean-kernel.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: formalization
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Lean and fetch Mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formalization
+          auto-config: false
+          use-mathlib-cache: true
+      - name: Build the uniform import closure
+        run: |
+          set -o pipefail
+          lake build Erdos593.UniformSystem 2>&1 | tee ../uniform-build.log
+      - name: Run strict source checks
+        run: |
+          set -o pipefail
+          {
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem/Basic.lean
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem/Levi.lean
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem/BridgeCount.lean
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem/Arithmetic.lean
+            lake env lean -DwarningAsError=true Erdos593/UniformSystem.lean
+          } 2>&1 | tee ../uniform-strict.log
+      - name: Audit the new source
+        run: |
+          ! grep -R -n -E '\bsorry\b|\badmit\b|^[[:space:]]*axiom[[:space:]]' Erdos593/UniformSystem Erdos593/UniformSystem.lean
+      - name: Upload compile diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uniform-lean-kernel-logs
+          path: uniform-*.log
+          if-no-files-found: ignore
