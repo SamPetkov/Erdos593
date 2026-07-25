@@ -36,15 +36,54 @@ jobs:
           auto-config: false
           use-mathlib-cache: true
       - name: Compile Basic
-        run: lake env lean -DwarningAsError=true Erdos593/UniformSystem/Basic.lean
+        id: basic
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          lake env lean -DwarningAsError=true Erdos593/UniformSystem/Basic.lean 2>&1 | tee ../uniform-basic.log
       - name: Compile Levi
-        run: lake env lean -DwarningAsError=true Erdos593/UniformSystem/Levi.lean
+        id: levi
+        if: steps.basic.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          lake env lean -DwarningAsError=true Erdos593/UniformSystem/Levi.lean 2>&1 | tee ../uniform-levi.log
       - name: Compile BridgeCount
-        run: lake env lean -DwarningAsError=true Erdos593/UniformSystem/BridgeCount.lean
+        id: bridges
+        if: steps.levi.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          lake env lean -DwarningAsError=true Erdos593/UniformSystem/BridgeCount.lean 2>&1 | tee ../uniform-bridges.log
       - name: Compile Arithmetic
-        run: lake env lean -DwarningAsError=true Erdos593/UniformSystem/Arithmetic.lean
+        id: arithmetic
+        if: steps.bridges.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          lake env lean -DwarningAsError=true Erdos593/UniformSystem/Arithmetic.lean 2>&1 | tee ../uniform-arithmetic.log
       - name: Compile entry point
-        run: lake env lean -DwarningAsError=true Erdos593/UniformSystem.lean
+        id: entry
+        if: steps.arithmetic.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          lake env lean -DwarningAsError=true Erdos593/UniformSystem.lean 2>&1 | tee ../uniform-entry.log
+      - name: Upload compile diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uniform-lean-kernel-logs
+          path: uniform-*.log
+          if-no-files-found: ignore
+      - name: Require successful compilation
+        if: always()
+        run: |
+          test '${{ steps.basic.outcome }}' = success
+          test '${{ steps.levi.outcome }}' = success
+          test '${{ steps.bridges.outcome }}' = success
+          test '${{ steps.arithmetic.outcome }}' = success
+          test '${{ steps.entry.outcome }}' = success
       - name: Audit the new source
         run: |
           ! grep -R -n -E '\bsorry\b|\badmit\b|^[[:space:]]*axiom[[:space:]]' Erdos593/UniformSystem Erdos593/UniformSystem.lean
