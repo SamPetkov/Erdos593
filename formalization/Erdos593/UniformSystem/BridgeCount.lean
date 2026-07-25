@@ -68,7 +68,7 @@ theorem residualCount_le_two (hr : 2 ≤ r)
   omega
 
 /-- Combining the arithmetic upper bound with the no-singleton graph lemma
-produces the decisive `0/2` residual-degree dichotomy. -/
+produces the decisive `0/2` residual-count dichotomy. -/
 theorem residualCount_eq_zero_or_two (hr : 2 ≤ r)
     (hbridge : F.BridgeLowerBound) (hno : F.NoSingletonResidual) (e : E) :
     F.residualCount e = 0 ∨ F.residualCount e = 2 := by
@@ -82,6 +82,17 @@ theorem bridgeFree_degree_ne_one [Fintype (V ⊕ E)] [DecidableEq (V ⊕ E)]
     [DecidableRel F.levi.Adj] (e : E) :
     (SimpleGraph.bridgeFree F.levi).degree (.inr e) ≠ 1 :=
   SimpleGraph.bridgeFree_degree_ne_one F.levi (.inr e)
+
+/-- Once the actual bridge-free degree is known to be at most two, the generic
+finite-graph kernel closes the decisive zero-or-two alternative. -/
+theorem bridgeFree_degree_eq_zero_or_two_of_le_two
+    [Fintype (V ⊕ E)] [DecidableEq (V ⊕ E)] [DecidableRel F.levi.Adj]
+    (e : E)
+    (hle : (SimpleGraph.bridgeFree F.levi).degree (.inr e) ≤ 2) :
+    (SimpleGraph.bridgeFree F.levi).degree (.inr e) = 0 ∨
+      (SimpleGraph.bridgeFree F.levi).degree (.inr e) = 2 := by
+  have hne := F.bridgeFree_degree_ne_one e
+  omega
 
 /-- Every Berge cycle has even length, represented by divisibility of its Levi
 cycle length by four. -/
