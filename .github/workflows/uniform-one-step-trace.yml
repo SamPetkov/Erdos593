@@ -1,0 +1,36 @@
+name: Uniform one-step trace adversary
+
+on:
+  push:
+    branches: [agent/uniform-one-step-trace]
+    paths:
+      - 'UNIFORM_ONE_STEP_TRACE_THEOREM.md'
+      - 'experiments/cycle_collapse_adversary.py'
+      - 'experiments/cycle_collapse_results.json'
+      - '.github/workflows/uniform-one-step-trace.yml'
+  pull_request:
+    paths:
+      - 'UNIFORM_ONE_STEP_TRACE_THEOREM.md'
+      - 'experiments/cycle_collapse_adversary.py'
+      - 'experiments/cycle_collapse_results.json'
+      - '.github/workflows/uniform-one-step-trace.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile the adversarial search
+        run: python -m py_compile experiments/cycle_collapse_adversary.py
+      - name: Reproduce the checked cycle enumeration
+        run: |
+          python experiments/cycle_collapse_adversary.py \
+            --check experiments/cycle_collapse_results.json
