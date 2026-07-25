@@ -4,7 +4,7 @@ import Erdos593.UniformSystem.SequenceLift
 /-!
 # Countable-colouring obstruction for the uniform one-apex lift
 
-The proof is the uniform analogue of the graph-to-triple branch argument.  It
+The proof is the uniform analogue of the graph-to-triple branch argument. It
 is stated at `ℵ₁`, which is sufficient for the non-obligatoriness witnesses.
 -/
 
@@ -56,7 +56,7 @@ uniform one-apex lift. -/
 theorem not_isProperColoring_nat (hs : s ≠ 0)
     (hH : ∀ d : V → ℕ, ¬ H.IsProperColoring d)
     (c : Point H → ℕ) :
-    ¬ (H.system hs).IsProperColoring c := by
+    ¬ (system H hs).IsProperColoring c := by
   intro hc
   let M : (q : Node E) → MonoEdgeAt c q :=
     fun q => chosenMonoEdge hs hH c q
@@ -72,13 +72,13 @@ theorem not_isProperColoring_nat (hs : s ≠ 0)
       rw [← ha]
       exact branchNode_extendsBy a hαβ
     let e : Edge H :=
-      H.mkEdge (q α) (q β) (M (q α)).edge (M (q β)).point hext
+      mkEdge H (q α) (q β) (M (q α)).edge (M (q β)).point hext
     rcases hc e with ⟨p, hp, p', hp', hne⟩
-    have hmono : ∀ {w : Point H}, (H.system hs).Inc w e → c w = k α := by
+    have hmono : ∀ {w : Point H}, (system H hs).Inc w e → c w = k α := by
       intro w hw
-      change (H.system hs).Inc w
-        (H.mkEdge (q α) (q β) (M (q α)).edge (M (q β)).point hext) at hw
-      rcases (H.inc_mkEdge_iff hs).mp hw with hapex | ⟨x, hx, hbase⟩
+      change (system H hs).Inc w
+        (mkEdge H (q α) (q β) (M (q α)).edge (M (q β)).point hext) at hw
+      rcases (inc_mkEdge_iff H hs).mp hw with hapex | ⟨x, hx, hbase⟩
       · subst w
         simpa [k] using hk.symm
       · subst w
