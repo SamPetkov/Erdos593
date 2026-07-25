@@ -1,0 +1,43 @@
+name: Berge-cycle matroid and coloring identities
+
+on:
+  push:
+    branches: [agent/berge-cycle-matroid-potts]
+    paths:
+      - 'BERGE_CYCLE_MATROID_AND_COLORING.md'
+      - 'experiments/berge_matroid_coloring.py'
+      - 'experiments/berge_matroid_coloring_results.json'
+      - '.github/workflows/berge-matroid-coloring.yml'
+  pull_request:
+    paths:
+      - 'BERGE_CYCLE_MATROID_AND_COLORING.md'
+      - 'experiments/berge_matroid_coloring.py'
+      - 'experiments/berge_matroid_coloring_results.json'
+      - '.github/workflows/berge-matroid-coloring.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile the verification program
+        run: python -m py_compile experiments/berge_matroid_coloring.py
+      - name: Reproduce the checked identities
+        run: |
+          python experiments/berge_matroid_coloring.py \
+            --check experiments/berge_matroid_coloring_results.json
+      - name: Enforce theorem markers
+        run: |
+          grep -Fq 'Theorem 2.1' BERGE_CYCLE_MATROID_AND_COLORING.md
+          grep -Fq 'Theorem 3.3: Potts representation' BERGE_CYCLE_MATROID_AND_COLORING.md
+          grep -Fq 'Theorem 4.1' BERGE_CYCLE_MATROID_AND_COLORING.md
+          grep -Fq '"rank_failures": 0' experiments/berge_matroid_coloring_results.json
+          grep -Fq '"nullity_failures": 0' experiments/berge_matroid_coloring_results.json

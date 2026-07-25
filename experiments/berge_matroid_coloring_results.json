@@ -1,0 +1,839 @@
+{
+  "interpretation": "Finite verification only. Every generated B_r case had the same edge-subset rank and nullity as its independently glued bipartite shadow; weak coloring polynomials agreed with the matroid/Potts formula, and strong coloring counts agreed with the shadow chromatic-polynomial formula.",
+  "records": [
+    {
+      "closed_form": {
+        "type": "forest"
+      },
+      "components": 1,
+      "hyperedges": 1,
+      "matroid_nullity": 0,
+      "matroid_rank": 1,
+      "name": "edge_r3",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 2,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 6,
+        "4": 24,
+        "5": 60
+      },
+      "subsets_checked": 2,
+      "uniformity": 3,
+      "vertices": 3,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 3
+        },
+        {
+          "coefficient": -1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 6,
+        "3": 24,
+        "4": 60,
+        "5": 120
+      }
+    },
+    {
+      "closed_form": {
+        "type": "forest"
+      },
+      "components": 1,
+      "hyperedges": 2,
+      "matroid_nullity": 0,
+      "matroid_rank": 2,
+      "name": "path_r3",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 3,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 12,
+        "4": 144,
+        "5": 720
+      },
+      "subsets_checked": 4,
+      "uniformity": 3,
+      "vertices": 5,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 5
+        },
+        {
+          "coefficient": -2,
+          "exponent": 3
+        },
+        {
+          "coefficient": 1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 18,
+        "3": 192,
+        "4": 900,
+        "5": 2880
+      }
+    },
+    {
+      "closed_form": {
+        "circuit_length": 4,
+        "type": "connected_unicyclic"
+      },
+      "components": 1,
+      "hyperedges": 4,
+      "matroid_nullity": 1,
+      "matroid_rank": 3,
+      "name": "cycle4_r3",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 4,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 18,
+        "4": 1344,
+        "5": 21060
+      },
+      "subsets_checked": 16,
+      "uniformity": 3,
+      "vertices": 8,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 8
+        },
+        {
+          "coefficient": -4,
+          "exponent": 6
+        },
+        {
+          "coefficient": 6,
+          "exponent": 4
+        },
+        {
+          "coefficient": -4,
+          "exponent": 2
+        },
+        {
+          "coefficient": 1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 82,
+        "3": 4098,
+        "4": 50628,
+        "5": 331780
+      }
+    },
+    {
+      "closed_form": {
+        "type": "forest"
+      },
+      "components": 1,
+      "hyperedges": 1,
+      "matroid_nullity": 0,
+      "matroid_rank": 1,
+      "name": "edge_r4",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 2,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 0,
+        "4": 24,
+        "5": 120
+      },
+      "subsets_checked": 2,
+      "uniformity": 4,
+      "vertices": 4,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 4
+        },
+        {
+          "coefficient": -1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 14,
+        "3": 78,
+        "4": 252,
+        "5": 620
+      }
+    },
+    {
+      "closed_form": {
+        "type": "forest"
+      },
+      "components": 1,
+      "hyperedges": 2,
+      "matroid_nullity": 0,
+      "matroid_rank": 2,
+      "name": "path_r4",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 3,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 0,
+        "4": 144,
+        "5": 2880
+      },
+      "subsets_checked": 4,
+      "uniformity": 4,
+      "vertices": 7,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 7
+        },
+        {
+          "coefficient": -2,
+          "exponent": 4
+        },
+        {
+          "coefficient": 1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 98,
+        "3": 2028,
+        "4": 15876,
+        "5": 76880
+      }
+    },
+    {
+      "closed_form": {
+        "circuit_length": 4,
+        "type": "connected_unicyclic"
+      },
+      "components": 1,
+      "hyperedges": 4,
+      "matroid_nullity": 1,
+      "matroid_rank": 3,
+      "name": "cycle4_r4",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 4,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 0,
+        "4": 1344,
+        "5": 336960
+      },
+      "subsets_checked": 16,
+      "uniformity": 4,
+      "vertices": 12,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 12
+        },
+        {
+          "coefficient": -4,
+          "exponent": 9
+        },
+        {
+          "coefficient": 6,
+          "exponent": 6
+        },
+        {
+          "coefficient": -4,
+          "exponent": 3
+        },
+        {
+          "coefficient": 1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 2402,
+        "3": 456978,
+        "4": 15752964,
+        "5": 236421380
+      }
+    },
+    {
+      "closed_form": {
+        "type": "forest"
+      },
+      "components": 1,
+      "hyperedges": 1,
+      "matroid_nullity": 0,
+      "matroid_rank": 1,
+      "name": "edge_r5",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 2,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 120
+      },
+      "subsets_checked": 2,
+      "uniformity": 5,
+      "vertices": 5,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 5
+        },
+        {
+          "coefficient": -1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 30,
+        "3": 240,
+        "4": 1020,
+        "5": 3120
+      }
+    },
+    {
+      "closed_form": {
+        "type": "forest"
+      },
+      "components": 1,
+      "hyperedges": 2,
+      "matroid_nullity": 0,
+      "matroid_rank": 2,
+      "name": "path_r5",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 3,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 2880
+      },
+      "subsets_checked": 4,
+      "uniformity": 5,
+      "vertices": 9,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 9
+        },
+        {
+          "coefficient": -2,
+          "exponent": 5
+        },
+        {
+          "coefficient": 1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 450,
+        "3": 19200,
+        "4": 260100,
+        "5": 1946880
+      }
+    },
+    {
+      "closed_form": {
+        "circuit_length": 4,
+        "type": "connected_unicyclic"
+      },
+      "components": 1,
+      "hyperedges": 4,
+      "matroid_nullity": 1,
+      "matroid_rank": 3,
+      "name": "cycle4_r5",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 4,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 336960
+      },
+      "subsets_checked": 16,
+      "uniformity": 5,
+      "vertices": 16,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 16
+        },
+        {
+          "coefficient": -4,
+          "exponent": 12
+        },
+        {
+          "coefficient": 6,
+          "exponent": 8
+        },
+        {
+          "coefficient": -4,
+          "exponent": 4
+        },
+        {
+          "coefficient": 1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 50626,
+        "3": 40960002,
+        "4": 4228250628,
+        "5": 151613669380
+      }
+    },
+    {
+      "closed_form": {
+        "type": "forest"
+      },
+      "components": 1,
+      "hyperedges": 3,
+      "matroid_nullity": 0,
+      "matroid_rank": 3,
+      "name": "private_attachment_r3",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 4,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 24,
+        "4": 864,
+        "5": 8640
+      },
+      "subsets_checked": 8,
+      "uniformity": 3,
+      "vertices": 7,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 7
+        },
+        {
+          "coefficient": -3,
+          "exponent": 5
+        },
+        {
+          "coefficient": 3,
+          "exponent": 3
+        },
+        {
+          "coefficient": -1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 54,
+        "3": 1536,
+        "4": 13500,
+        "5": 69120
+      }
+    },
+    {
+      "closed_form": {
+        "type": "forest"
+      },
+      "components": 1,
+      "hyperedges": 4,
+      "matroid_nullity": 0,
+      "matroid_rank": 4,
+      "name": "multi_attachment_edge_r3",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 5,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 48,
+        "4": 5184,
+        "5": 103680
+      },
+      "subsets_checked": 16,
+      "uniformity": 3,
+      "vertices": 9,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 9
+        },
+        {
+          "coefficient": -4,
+          "exponent": 7
+        },
+        {
+          "coefficient": 6,
+          "exponent": 5
+        },
+        {
+          "coefficient": -4,
+          "exponent": 3
+        },
+        {
+          "coefficient": 1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 162,
+        "3": 12288,
+        "4": 202500,
+        "5": 1658880
+      }
+    },
+    {
+      "closed_form": {
+        "circuit_length": 4,
+        "type": "connected_unicyclic"
+      },
+      "components": 1,
+      "hyperedges": 6,
+      "matroid_nullity": 1,
+      "matroid_rank": 5,
+      "name": "unicyclic_attachment_r3",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 6,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 72,
+        "4": 48384,
+        "5": 3032640
+      },
+      "subsets_checked": 64,
+      "uniformity": 3,
+      "vertices": 12,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 12
+        },
+        {
+          "coefficient": -6,
+          "exponent": 10
+        },
+        {
+          "coefficient": 15,
+          "exponent": 8
+        },
+        {
+          "coefficient": -20,
+          "exponent": 6
+        },
+        {
+          "coefficient": 1,
+          "exponent": 5
+        },
+        {
+          "coefficient": 14,
+          "exponent": 4
+        },
+        {
+          "coefficient": -2,
+          "exponent": 3
+        },
+        {
+          "coefficient": -4,
+          "exponent": 2
+        },
+        {
+          "coefficient": 1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 738,
+        "3": 262272,
+        "4": 11391300,
+        "5": 191105280
+      }
+    },
+    {
+      "closed_form": {
+        "type": "forest"
+      },
+      "components": 1,
+      "hyperedges": 3,
+      "matroid_nullity": 0,
+      "matroid_rank": 3,
+      "name": "private_attachment_r4",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 4,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 0,
+        "4": 864,
+        "5": 69120
+      },
+      "subsets_checked": 8,
+      "uniformity": 4,
+      "vertices": 10,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 10
+        },
+        {
+          "coefficient": -3,
+          "exponent": 7
+        },
+        {
+          "coefficient": 3,
+          "exponent": 4
+        },
+        {
+          "coefficient": -1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 686,
+        "3": 52728,
+        "4": 1000188,
+        "5": 9533120
+      }
+    },
+    {
+      "closed_form": {
+        "type": "forest"
+      },
+      "components": 1,
+      "hyperedges": 4,
+      "matroid_nullity": 0,
+      "matroid_rank": 4,
+      "name": "multi_attachment_edge_r4",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 5,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 0,
+        "4": 5184,
+        "5": 1658880
+      },
+      "subsets_checked": 16,
+      "uniformity": 4,
+      "vertices": 13,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 13
+        },
+        {
+          "coefficient": -4,
+          "exponent": 10
+        },
+        {
+          "coefficient": 6,
+          "exponent": 7
+        },
+        {
+          "coefficient": -4,
+          "exponent": 4
+        },
+        {
+          "coefficient": 1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 4802,
+        "3": 1370928,
+        "4": 63011844,
+        "5": 1182106880
+      }
+    },
+    {
+      "closed_form": {
+        "circuit_length": 4,
+        "type": "connected_unicyclic"
+      },
+      "components": 1,
+      "hyperedges": 6,
+      "matroid_nullity": 1,
+      "matroid_rank": 5,
+      "name": "unicyclic_attachment_r4",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 6,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 0,
+        "4": 48384,
+        "5": 194088960
+      },
+      "subsets_checked": 64,
+      "uniformity": 4,
+      "vertices": 18,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 18
+        },
+        {
+          "coefficient": -6,
+          "exponent": 15
+        },
+        {
+          "coefficient": 15,
+          "exponent": 12
+        },
+        {
+          "coefficient": -20,
+          "exponent": 9
+        },
+        {
+          "coefficient": 1,
+          "exponent": 7
+        },
+        {
+          "coefficient": 14,
+          "exponent": 6
+        },
+        {
+          "coefficient": -2,
+          "exponent": 4
+        },
+        {
+          "coefficient": -4,
+          "exponent": 3
+        },
+        {
+          "coefficient": 1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 117698,
+        "3": 308917128,
+        "4": 62523514116,
+        "5": 3635215138880
+      }
+    },
+    {
+      "closed_form": null,
+      "components": 1,
+      "hyperedges": 6,
+      "matroid_nullity": 2,
+      "matroid_rank": 4,
+      "name": "k23_r3",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 5,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 30,
+        "4": 13056,
+        "5": 626940
+      },
+      "subsets_checked": 64,
+      "uniformity": 3,
+      "vertices": 11,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 11
+        },
+        {
+          "coefficient": -6,
+          "exponent": 9
+        },
+        {
+          "coefficient": 15,
+          "exponent": 7
+        },
+        {
+          "coefficient": -20,
+          "exponent": 5
+        },
+        {
+          "coefficient": 3,
+          "exponent": 4
+        },
+        {
+          "coefficient": 12,
+          "exponent": 3
+        },
+        {
+          "coefficient": -6,
+          "exponent": 2
+        },
+        {
+          "coefficient": 1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 378,
+        "3": 87510,
+        "4": 2848164,
+        "5": 38221980
+      }
+    },
+    {
+      "closed_form": {
+        "type": "forest"
+      },
+      "components": 1,
+      "hyperedges": 3,
+      "matroid_nullity": 0,
+      "matroid_rank": 3,
+      "name": "path4_r4",
+      "nullity_failures": 0,
+      "rank_failures": 0,
+      "shadow_vertices": 4,
+      "strong_values_q2_to_q5": {
+        "2": 0,
+        "3": 0,
+        "4": 864,
+        "5": 69120
+      },
+      "subsets_checked": 8,
+      "uniformity": 4,
+      "vertices": 10,
+      "weak_polynomial": [
+        {
+          "coefficient": 1,
+          "exponent": 10
+        },
+        {
+          "coefficient": -3,
+          "exponent": 7
+        },
+        {
+          "coefficient": 3,
+          "exponent": 4
+        },
+        {
+          "coefficient": -1,
+          "exponent": 1
+        }
+      ],
+      "weak_values_q2_to_q5": {
+        "2": 686,
+        "3": 52728,
+        "4": 1000188,
+        "5": 9533120
+      }
+    }
+  ],
+  "status": "passed",
+  "summary": {
+    "cases": 17,
+    "edge_subsets_checked": 314,
+    "forest_cases": 11,
+    "nullity_failures": 0,
+    "rank_failures": 0,
+    "unicyclic_cases": 5
+  }
+}
