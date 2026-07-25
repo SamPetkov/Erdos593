@@ -1,0 +1,38 @@
+{
+  "acyclic_base_checks": [
+    {
+      "expect_acyclic": true,
+      "host_edges": 6,
+      "linear_traces": 14,
+      "minimum_required_bridges": 1,
+      "rank": 3,
+      "subsets_examined": 56
+    },
+    {
+      "expect_acyclic": true,
+      "host_edges": 36,
+      "linear_traces": 324,
+      "minimum_required_bridges": 2,
+      "rank": 4,
+      "subsets_examined": 7806
+    }
+  ],
+  "cycle_collapse_checks": [
+    {
+      "all_connector_nodes_collapsed": true,
+      "all_projected_to_source_triangles": true,
+      "berge_triangles_checked": 1809,
+      "rank": 3,
+      "source": "C3"
+    },
+    {
+      "all_connector_nodes_collapsed": true,
+      "all_projected_to_source_triangles": true,
+      "berge_triangles_checked": 216,
+      "rank": 4,
+      "source": "C3^(3)"
+    }
+  ],
+  "interpretation": "Finite truncation checks only. They validate the local bridge accumulation and cycle-collapse mechanisms used by the arbitrary-rank proof.",
+  "status": "passed"
+}
