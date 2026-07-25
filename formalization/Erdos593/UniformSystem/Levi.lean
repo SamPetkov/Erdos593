@@ -54,6 +54,18 @@ theorem levi_edge_neighbor_ncard (e : E) :
   rw [Set.ncard_image_of_injective _ Sum.inl_injective]
   exact F.edgeSet_ncard e
 
+/-- In a finite uniform system, the Levi degree of a hyperedge-node is the
+uniformity. -/
+theorem levi_edge_degree [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E] [DecidableRel F.levi.Adj] (e : E) :
+    F.levi.degree (.inr e) = r := by
+  rw [(_root_.SimpleGraph.card_neighborFinset_eq_degree
+        F.levi (.inr e)).symm,
+    _root_.SimpleGraph.neighborFinset_def,
+    (Set.ncard_eq_toFinset_card'
+      (F.levi.neighborSet (.inr e))).symm]
+  exact F.levi_edge_neighbor_ncard e
+
 end UniformSystem
 
 end Erdos593
