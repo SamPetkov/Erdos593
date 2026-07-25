@@ -53,8 +53,9 @@ end Node
 
 variable {s : ℕ} {V E : Type u}
 
-/-- Vertices of the one-apex lift. -/
-abbrev Point (H : UniformSystem s V E) : Type u := Node E × V
+/-- Vertices of the one-apex lift. The system parameter fixes the implicit
+uniformity, vertex type, and edge-index type. -/
+abbrev Point (_H : UniformSystem s V E) : Type u := Node E × V
 
 /-- The base copy of one indexed edge at a sequence node. -/
 def baseSet (H : UniformSystem s V E) (q : Node E) (e : E) : Set (Point H) :=
