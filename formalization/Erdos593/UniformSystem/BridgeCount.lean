@@ -30,11 +30,11 @@ theorem bridgeIncidences_subset_edgeSet (e : E) :
   exact hx.1
 
 /-- Number of bridge incidences at a hyperedge-node. -/
-def bridgeCount (e : E) : ℕ :=
+noncomputable def bridgeCount (e : E) : ℕ :=
   (F.bridgeIncidences e).ncard
 
 /-- Arithmetic residual degree after removing the bridge incidences. -/
-def residualCount (e : E) : ℕ :=
+noncomputable def residualCount (e : E) : ℕ :=
   r - F.bridgeCount e
 
 /-- The uniform bridge lower bound appearing in the proposed intrinsic
@@ -50,10 +50,12 @@ def NoSingletonResidual : Prop :=
 /-- The number of bridge incidences cannot exceed the uniformity. -/
 theorem bridgeCount_le_uniformity (hr : r ≠ 0) (e : E) :
     F.bridgeCount e ≤ r := by
-  unfold bridgeCount
-  rw [← F.edgeSet_ncard e]
-  exact Set.ncard_le_ncard
-    (F.bridgeIncidences_subset_edgeSet e) (F.edgeSet_finite hr e)
+  calc
+    F.bridgeCount e = (F.bridgeIncidences e).ncard := rfl
+    _ ≤ (F.edgeSet e).ncard :=
+      Set.ncard_le_ncard
+        (F.bridgeIncidences_subset_edgeSet e) (F.edgeSet_finite hr e)
+    _ = r := F.edgeSet_ncard e
 
 /-- Under the bridge lower bound, at most two incidences remain. -/
 theorem residualCount_le_two (hr : 2 ≤ r)
