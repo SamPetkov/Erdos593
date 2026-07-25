@@ -1,0 +1,93 @@
+{
+  "elapsed_seconds": 16.467,
+  "interpretation": "Finite adversarial evidence only. Every exhaustively enumerated pairwise-linear Berge cycle collapsed to one connector node, projected length-preservingly to the base, and avoided every selected apex incidence.",
+  "records": [
+    {
+      "base": "K3",
+      "base_uniformity": 2,
+      "collapsed_and_projected": 1809,
+      "cycles": 1809,
+      "cycles_using_nonimmediate_prefix_jump": 1701,
+      "depth": 2,
+      "edges": 63,
+      "failures": 0,
+      "host": "FullLift_2(K3)",
+      "length_3": 1809,
+      "lift_uniformity": 3,
+      "maximum_cycle_length": 3,
+      "nodes": 13,
+      "vertices": 39
+    },
+    {
+      "base": "K3",
+      "base_uniformity": 2,
+      "collapsed_and_projected": 64746,
+      "cycles": 64746,
+      "cycles_using_nonimmediate_prefix_jump": 64395,
+      "depth": 3,
+      "edges": 306,
+      "failures": 0,
+      "host": "FullLift_3(K3)",
+      "length_3": 64746,
+      "lift_uniformity": 3,
+      "maximum_cycle_length": 3,
+      "nodes": 40,
+      "vertices": 120
+    },
+    {
+      "base": "C4",
+      "base_uniformity": 2,
+      "collapsed_and_projected": 161024,
+      "cycles": 161024,
+      "cycles_using_nonimmediate_prefix_jump": 159744,
+      "depth": 2,
+      "edges": 144,
+      "failures": 0,
+      "host": "FullLift_2(C4)",
+      "length_4": 161024,
+      "lift_uniformity": 3,
+      "maximum_cycle_length": 4,
+      "nodes": 21,
+      "vertices": 84
+    },
+    {
+      "base": "C3^(3)",
+      "base_uniformity": 3,
+      "collapsed_and_projected": 14472,
+      "cycles": 14472,
+      "cycles_using_nonimmediate_prefix_jump": 13608,
+      "depth": 2,
+      "edges": 126,
+      "failures": 0,
+      "host": "FullLift_2(C3^(3))",
+      "length_3": 14472,
+      "lift_uniformity": 4,
+      "maximum_cycle_length": 3,
+      "nodes": 13,
+      "vertices": 78
+    },
+    {
+      "base": "C4^(3)",
+      "base_uniformity": 3,
+      "collapsed_and_projected": 2576384,
+      "cycles": 2576384,
+      "cycles_using_nonimmediate_prefix_jump": 2555904,
+      "depth": 2,
+      "edges": 288,
+      "failures": 0,
+      "host": "FullLift_2(C4^(3))",
+      "length_4": 2576384,
+      "lift_uniformity": 4,
+      "maximum_cycle_length": 4,
+      "nodes": 21,
+      "vertices": 168
+    }
+  ],
+  "status": "passed",
+  "totals": {
+    "collapsed_and_projected": 2818435,
+    "cycles": 2818435,
+    "cycles_using_nonimmediate_prefix_jump": 2795352,
+    "failures": 0
+  }
+}
