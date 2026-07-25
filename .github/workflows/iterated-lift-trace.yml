@@ -1,0 +1,42 @@
+name: Iterated one-apex trace checks
+
+on:
+  push:
+    branches: [agent/iterated-lift-classification]
+    paths:
+      - 'UNIFORM_OBLIGATORY_CLASSIFICATION.md'
+      - 'experiments/iterated_lift_trace.py'
+      - 'experiments/iterated_lift_trace_results.json'
+      - '.github/workflows/iterated-lift-trace.yml'
+  pull_request:
+    paths:
+      - 'UNIFORM_OBLIGATORY_CLASSIFICATION.md'
+      - 'experiments/iterated_lift_trace.py'
+      - 'experiments/iterated_lift_trace_results.json'
+      - '.github/workflows/iterated-lift-trace.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile the finite trace checker
+        run: python -m py_compile experiments/iterated_lift_trace.py
+      - name: Reproduce bridge accumulation and cycle collapse
+        run: |
+          python experiments/iterated_lift_trace.py \
+            --check experiments/iterated_lift_trace_results.json
+      - name: Check theorem-note interfaces
+        run: |
+          grep -Fq 'Theorem A (uniform obligatory-hypergraph classification)' UNIFORM_OBLIGATORY_CLASSIFICATION.md
+          grep -Fq 'Theorem 4.3 (arbitrary-rank bridge-trace theorem)' UNIFORM_OBLIGATORY_CLASSIFICATION.md
+          grep -Fq 'Theorem 5.2 (iterated trace theorem)' UNIFORM_OBLIGATORY_CLASSIFICATION.md
+          grep -Fq 'complete ordinary-mathematics proof draft' UNIFORM_OBLIGATORY_CLASSIFICATION.md
