@@ -1,5 +1,5 @@
 import Erdos593.UniformSystem.Basic
-import Mathlib.Combinatorics.SimpleGraph.Basic
+import Mathlib.Combinatorics.SimpleGraph.Acyclic
 
 /-!
 # Levi graphs of uniform systems
