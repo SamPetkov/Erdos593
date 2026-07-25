@@ -1,0 +1,43 @@
+name: Exact arbitrary-rank bridge-trace constructor
+
+on:
+  push:
+    branches: [agent/uniform-exact-bridge-trace]
+    paths:
+      - 'UNIFORM_EXACT_BRIDGE_TRACE.md'
+      - 'experiments/exact_bridge_trace_constructor.py'
+      - 'experiments/exact_bridge_trace_results.json'
+      - '.github/workflows/exact-bridge-trace.yml'
+  pull_request:
+    paths:
+      - 'UNIFORM_EXACT_BRIDGE_TRACE.md'
+      - 'experiments/exact_bridge_trace_constructor.py'
+      - 'experiments/exact_bridge_trace_results.json'
+      - '.github/workflows/exact-bridge-trace.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile the constructor
+        run: python -m py_compile experiments/exact_bridge_trace_constructor.py
+      - name: Reproduce all constructive certificates
+        run: |
+          python experiments/exact_bridge_trace_constructor.py \
+            --trials-per-rank 2000 \
+            --seed 593 \
+            --check experiments/exact_bridge_trace_results.json
+      - name: Check exact-theorem interfaces
+        run: |
+          grep -Fq 'Theorem A (exact arbitrary-rank bridge trace)' UNIFORM_EXACT_BRIDGE_TRACE.md
+          grep -Fq 'Corollary 8.1 (hierarchical bridge-trace certificate)' UNIFORM_EXACT_BRIDGE_TRACE.md
+          grep -Fq '8,000 certificates total' UNIFORM_EXACT_BRIDGE_TRACE.md

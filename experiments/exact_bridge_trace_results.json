@@ -1,0 +1,41 @@
+{
+  "interpretation": "Finite constructive checks only. Every generated bridge-selector and derivative-embedding certificate produced an explicit injective lift embedding.",
+  "seed": 593,
+  "status": "passed",
+  "summaries": [
+    {
+      "cases": 2000,
+      "maximum_components": 10,
+      "maximum_word_length": 9,
+      "rank_of_base": 2,
+      "rank_of_lift": 3,
+      "source_edges_checked": 10273
+    },
+    {
+      "cases": 2000,
+      "maximum_components": 10,
+      "maximum_word_length": 9,
+      "rank_of_base": 3,
+      "rank_of_lift": 4,
+      "source_edges_checked": 9931
+    },
+    {
+      "cases": 2000,
+      "maximum_components": 10,
+      "maximum_word_length": 9,
+      "rank_of_base": 4,
+      "rank_of_lift": 5,
+      "source_edges_checked": 9875
+    },
+    {
+      "cases": 2000,
+      "maximum_components": 10,
+      "maximum_word_length": 9,
+      "rank_of_base": 5,
+      "rank_of_lift": 6,
+      "source_edges_checked": 9725
+    }
+  ],
+  "total_certificates": 8000,
+  "trials_per_rank": 2000
+}
