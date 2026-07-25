@@ -7,12 +7,16 @@ on:
       - 'ITERATED_LIFT_AVOIDANCE.md'
       - 'experiments/iterated_lift_trace.py'
       - 'experiments/iterated_lift_results.json'
+      - 'experiments/complete_rank_lift_trace.py'
+      - 'experiments/complete_rank_lift_results.json'
       - '.github/workflows/iterated-lift-avoidance.yml'
   pull_request:
     paths:
       - 'ITERATED_LIFT_AVOIDANCE.md'
       - 'experiments/iterated_lift_trace.py'
       - 'experiments/iterated_lift_results.json'
+      - 'experiments/complete_rank_lift_trace.py'
+      - 'experiments/complete_rank_lift_results.json'
       - '.github/workflows/iterated-lift-avoidance.yml'
   workflow_dispatch:
 
@@ -28,12 +32,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Compile the experiment
-        run: python -m py_compile experiments/iterated_lift_trace.py
-      - name: Reproduce the checked trace results
+      - name: Compile the experiments
+        run: |
+          python -m py_compile experiments/iterated_lift_trace.py
+          python -m py_compile experiments/complete_rank_lift_trace.py
+      - name: Reproduce the iterated trace results
         run: |
           python experiments/iterated_lift_trace.py \
             --target-linear 2500 \
             --minimum-size 3 \
             --maximum-size 7 \
             --check experiments/iterated_lift_results.json
+      - name: Reproduce the complete-rank trace results
+        run: |
+          python experiments/complete_rank_lift_trace.py \
+            --target-linear 2500 \
+            --check experiments/complete_rank_lift_results.json
