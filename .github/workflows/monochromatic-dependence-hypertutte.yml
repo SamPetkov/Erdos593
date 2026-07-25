@@ -5,12 +5,14 @@ on:
     branches: [agent/monochromatic-dependence-hypertutte]
     paths:
       - 'MONOCHROMATIC_DEPENDENCE_AND_HYPERTUTTE.md'
+      - 'JOINT_MONOCHROMATIC_LAW.md'
       - 'experiments/monochromatic_dependence_hypertutte.py'
       - 'experiments/monochromatic_dependence_hypertutte_results.json'
       - '.github/workflows/monochromatic-dependence-hypertutte.yml'
   pull_request:
     paths:
       - 'MONOCHROMATIC_DEPENDENCE_AND_HYPERTUTTE.md'
+      - 'JOINT_MONOCHROMATIC_LAW.md'
       - 'experiments/monochromatic_dependence_hypertutte.py'
       - 'experiments/monochromatic_dependence_hypertutte_results.json'
       - '.github/workflows/monochromatic-dependence-hypertutte.yml'
@@ -41,3 +43,5 @@ jobs:
           grep -F 'automatically 3-wise independent' MONOCHROMATIC_DEPENDENCE_AND_HYPERTUTTE.md
           grep -F 'A Hypergraph Tutte Polynomial' MONOCHROMATIC_DEPENDENCE_AND_HYPERTUTTE.md
           grep -F 'ferromagnetic Ising' MONOCHROMATIC_DEPENDENCE_AND_HYPERTUTTE.md
+          grep -F 'complete joint law' JOINT_MONOCHROMATIC_LAW.md
+          grep -F 'Möbius inversion' JOINT_MONOCHROMATIC_LAW.md
