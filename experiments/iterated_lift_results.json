@@ -1,0 +1,130 @@
+{
+  "configuration": {
+    "maximum_trace_size": 7,
+    "minimum_trace_size": 3,
+    "target_linear_per_random_host": 2500
+  },
+  "elapsed_seconds": 5.766,
+  "exhaustive": {
+    "certificate_failures": 0,
+    "certified_traces": 46656,
+    "cycles": 46656,
+    "edge_subsets": 204156,
+    "host": "L4(K3)",
+    "linear_traces": 46656,
+    "minimum_bridge_count": 2,
+    "odd_cycles": 46656,
+    "projection_failures": 0,
+    "uniformity": 4
+  },
+  "hosts": [
+    {
+      "edges": 3,
+      "name": "K3",
+      "uniformity": 2,
+      "vertices": 3
+    },
+    {
+      "edges": 9,
+      "name": "L3(K3)",
+      "uniformity": 3,
+      "vertices": 12
+    },
+    {
+      "edges": 108,
+      "name": "L4(K3)",
+      "uniformity": 4,
+      "vertices": 120
+    },
+    {
+      "edges": 12960,
+      "name": "L5(K3)",
+      "uniformity": 5,
+      "vertices": 13080
+    },
+    {
+      "edges": 4,
+      "name": "C4",
+      "uniformity": 2,
+      "vertices": 4
+    },
+    {
+      "edges": 16,
+      "name": "L3(C4)",
+      "uniformity": 3,
+      "vertices": 20
+    },
+    {
+      "edges": 320,
+      "name": "L4(C4)",
+      "uniformity": 4,
+      "vertices": 340
+    },
+    {
+      "edges": 108800,
+      "name": "L5(C4)",
+      "uniformity": 5,
+      "vertices": 109140
+    }
+  ],
+  "interpretation": "Finite immediate-extension evidence only. Every tested finite linear trace had r-2 recursively certified bridge incidences per edge, and every enumerated Berge cycle projected length-preservingly to the base graph.",
+  "random": [
+    {
+      "attempts": 53739,
+      "certificate_failures": 0,
+      "certified_traces": 2500,
+      "cycles": 2500,
+      "host": "L4(K3)",
+      "linear_traces": 2500,
+      "minimum_bridge_count": 2,
+      "odd_cycles": 2500,
+      "projection_failures": 0,
+      "seed": 5934,
+      "target_linear_traces": 2500,
+      "uniformity": 4
+    },
+    {
+      "attempts": 56548,
+      "certificate_failures": 0,
+      "certified_traces": 2500,
+      "cycles": 2500,
+      "host": "L5(K3)",
+      "linear_traces": 2500,
+      "minimum_bridge_count": 3,
+      "odd_cycles": 2500,
+      "projection_failures": 0,
+      "seed": 5935,
+      "target_linear_traces": 2500,
+      "uniformity": 5
+    },
+    {
+      "attempts": 26431,
+      "certificate_failures": 0,
+      "certified_traces": 2500,
+      "cycles": 483,
+      "host": "L4(C4)",
+      "linear_traces": 2500,
+      "minimum_bridge_count": 2,
+      "odd_cycles": 0,
+      "projection_failures": 0,
+      "seed": 5944,
+      "target_linear_traces": 2500,
+      "uniformity": 4
+    },
+    {
+      "attempts": 26392,
+      "certificate_failures": 0,
+      "certified_traces": 2500,
+      "cycles": 507,
+      "host": "L5(C4)",
+      "linear_traces": 2500,
+      "minimum_bridge_count": 3,
+      "odd_cycles": 0,
+      "projection_failures": 0,
+      "seed": 5945,
+      "target_linear_traces": 2500,
+      "uniformity": 5
+    }
+  ],
+  "status": "passed"
+}
