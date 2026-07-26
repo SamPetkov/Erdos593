@@ -1,12 +1,6 @@
 name: Materialize consolidated matroid-Potts paper
 
 on:
-  push:
-    branches: [agent/consolidated-matroid-potts-paper]
-    paths:
-      - 'scripts/materialize_consolidated_matroid_potts.py'
-      - 'scripts/materialize_chunks/**'
-      - '.github/workflows/materialize-consolidated-matroid-potts.yml'
   pull_request:
     branches: [agent/monochromatic-dependence-hypertutte]
     paths:
@@ -14,6 +8,10 @@ on:
       - 'scripts/materialize_chunks/**'
       - '.github/workflows/materialize-consolidated-matroid-potts.yml'
   workflow_dispatch:
+
+concurrency:
+  group: consolidated-paper-materialization-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -51,7 +49,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
+          git add -A -- . ':(exclude).github/workflows/**'
           git diff --cached --stat
           git commit -m 'Consolidate matroid Potts follow-up paper'
           git push origin HEAD:agent/consolidated-matroid-potts-paper
