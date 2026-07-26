@@ -2,6 +2,7 @@
 """Materialize the consolidated matroid--Potts follow-up paper."""
 from __future__ import annotations
 import base64
+import binascii
 import io
 from pathlib import Path
 import shutil
@@ -30,10 +31,28 @@ EXPECTED = [
 parts = sorted(CHUNKS.glob("*.txt"))
 if not parts:
     raise SystemExit("materializer chunks are missing")
-payload = "".join(path.read_text(encoding="ascii").strip() for path in parts)
-raw = base64.b64decode(payload, validate=True)
-with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+texts: list[str] = []
+for path in parts:
+    text = path.read_text(encoding="ascii").strip()
+    texts.append(text)
+    print(
+        f"chunk {path.name}: chars={len(text)} "
+        f"head={text[:24]!r} tail={text[-24:]!r}"
+    )
+payload = "".join(texts)
+print(f"combined payload chars={len(payload)}")
+try:
+    raw = base64.b64decode(payload, validate=True)
+except binascii.Error as exc:
+    raise SystemExit(f"base64 decode failed: {exc}") from exc
+print(f"decoded payload bytes={len(raw)} head={raw[:8]!r} tail={raw[-22:]!r}")
+try:
+    archive_context = zipfile.ZipFile(io.BytesIO(raw))
+except zipfile.BadZipFile as exc:
+    raise SystemExit(f"ZIP decode failed: {exc}") from exc
+with archive_context as archive:
     names = archive.namelist()
+    print(f"archive names={names}")
     if sorted(names) != sorted(EXPECTED):
         raise SystemExit(f"archive manifest mismatch: {names}")
     for name in names:
