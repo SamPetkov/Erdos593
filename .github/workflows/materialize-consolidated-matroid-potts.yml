@@ -32,6 +32,13 @@ jobs:
           python-version: '3.12'
       - name: Materialize the paper sources
         run: python scripts/materialize_consolidated_matroid_potts.py
+      - name: Upload payload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: consolidated-paper-payload-diagnostics
+          path: payload-diagnostics.txt
+          if-no-files-found: ignore
       - name: Validate manuscript and all reproducibility checks
         run: |
           python scripts/check_matroid_potts_followup.py
