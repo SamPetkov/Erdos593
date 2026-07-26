@@ -7,6 +7,12 @@ on:
       - 'scripts/materialize_consolidated_matroid_potts.py'
       - 'scripts/materialize_chunks/**'
       - '.github/workflows/materialize-consolidated-matroid-potts.yml'
+  pull_request:
+    branches: [agent/monochromatic-dependence-hypertutte]
+    paths:
+      - 'scripts/materialize_consolidated_matroid_potts.py'
+      - 'scripts/materialize_chunks/**'
+      - '.github/workflows/materialize-consolidated-matroid-potts.yml'
   workflow_dispatch:
 
 permissions:
