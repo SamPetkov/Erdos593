@@ -8,9 +8,9 @@ from pathlib import Path
 import shutil
 import zipfile
 
-# The materializer is intentionally one-shot and self-removing.
 ROOT = Path(__file__).resolve().parents[1]
 CHUNKS = ROOT / "scripts/materialize_chunks"
+DIAGNOSTICS = ROOT / "payload-diagnostics.txt"
 EXPECTED = [
     "followup/matroid_potts/README.md",
     "followup/matroid_potts/00_structure_matroid_polytope.md",
@@ -28,6 +28,12 @@ EXPECTED = [
     ".github/workflows/consolidated-matroid-potts-paper.yml",
 ]
 
+records: list[str] = []
+def log(message: str) -> None:
+    records.append(message)
+    print(message)
+    DIAGNOSTICS.write_text("\n".join(records) + "\n", encoding="utf-8")
+
 parts = sorted(CHUNKS.glob("*.txt"))
 if not parts:
     raise SystemExit("materializer chunks are missing")
@@ -35,24 +41,26 @@ texts: list[str] = []
 for path in parts:
     text = path.read_text(encoding="ascii").strip()
     texts.append(text)
-    print(
+    log(
         f"chunk {path.name}: chars={len(text)} "
-        f"head={text[:24]!r} tail={text[-24:]!r}"
+        f"head={text[:40]!r} tail={text[-40:]!r}"
     )
 payload = "".join(texts)
-print(f"combined payload chars={len(payload)}")
+log(f"combined payload chars={len(payload)}")
 try:
     raw = base64.b64decode(payload, validate=True)
 except binascii.Error as exc:
-    raise SystemExit(f"base64 decode failed: {exc}") from exc
-print(f"decoded payload bytes={len(raw)} head={raw[:8]!r} tail={raw[-22:]!r}")
+    log(f"base64 decode failed: {exc}")
+    raise
+log(f"decoded payload bytes={len(raw)} head={raw[:8]!r} tail={raw[-22:]!r}")
 try:
     archive_context = zipfile.ZipFile(io.BytesIO(raw))
 except zipfile.BadZipFile as exc:
-    raise SystemExit(f"ZIP decode failed: {exc}") from exc
+    log(f"ZIP decode failed: {exc}")
+    raise
 with archive_context as archive:
     names = archive.namelist()
-    print(f"archive names={names}")
+    log(f"archive names={names}")
     if sorted(names) != sorted(EXPECTED):
         raise SystemExit(f"archive manifest mismatch: {names}")
     for name in names:
@@ -70,4 +78,6 @@ Path(__file__).unlink()
 workflow = ROOT / ".github/workflows/materialize-consolidated-matroid-potts.yml"
 if workflow.exists():
     workflow.unlink()
+if DIAGNOSTICS.exists():
+    DIAGNOSTICS.unlink()
 print(f"materialized {len(EXPECTED)} consolidated paper files from {len(parts)} chunks")
