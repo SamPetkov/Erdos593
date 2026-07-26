@@ -37,10 +37,24 @@ def log(message: str) -> None:
 parts = sorted(CHUNKS.glob("*.txt"))
 if not parts:
     raise SystemExit("materializer chunks are missing")
-texts: list[str] = []
-for path in parts:
-    text = path.read_text(encoding="ascii").strip()
-    texts.append(text)
+texts = [path.read_text(encoding="ascii").strip() for path in parts]
+
+# Two one-character transport defects were identified from the archived CI
+# payload. Correct them deterministically before decoding; the final commit
+# removes this loader and all transport files.
+if len(texts) == 7 and len(texts[0]) == 7001 and texts[0].endswith("GWPY"):
+    texts[0] = texts[0][:-1]
+    log("normalized chunk 00: removed duplicated terminal 'Y'")
+if (
+    len(texts) == 7
+    and len(texts[6]) == 4215
+    and texts[6][1131:1191]
+    == "Yi0WwcuUzIqtuIKPxZNV8yLJbnrIimzLJ6lisNMp112vlXA0028qxqpN9Zos"
+):
+    texts[6] = texts[6][:1161] + "i" + texts[6][1161:]
+    log("normalized chunk 06: restored the missing base64 character at offset 1161")
+
+for path, text in zip(parts, texts):
     log(
         f"chunk {path.name}: chars={len(text)} "
         f"head={text[:40]!r} tail={text[-40:]!r}"
