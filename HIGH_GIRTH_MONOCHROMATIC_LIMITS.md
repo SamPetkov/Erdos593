@@ -129,7 +129,7 @@ tightness; the normal law is moment determinate. This proves (3.1).
 Thus large Berge girth removes every fixed-order cyclic correction before the
 thermodynamic limit is taken.
 
-## 4. First correction when the girth is finite
+## 4. The first non-binomial factorial moment at finite girth
 
 Let \(g_n<\infty\), and let \(N_{g_n}(F_n)\) be the number of shortest
 Berge-circuit edge sets. The first factorial moment that differs from the
@@ -177,6 +177,3 @@ The finite verifier in PR #28 checks (1.1) through the first circuit order on
 all directly enumerable examples. The asymptotic theorems are exact deductions
 from (1.1) and the classical binomial Poisson and normal limits; they do not
 require additional simulation.
-
-These corollaries should remain in the follow-up research branch pending review
-of the underlying canonical rank theorem.
