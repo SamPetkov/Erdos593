@@ -1,0 +1,85 @@
+name: Consolidated matroid-Potts follow-up
+
+on:
+  push:
+    branches: [agent/consolidated-matroid-potts-paper]
+    paths:
+      - 'followup/matroid_potts/**'
+      - 'MATROID_POTTS_FOLLOWUP_MANUSCRIPT.md'
+      - 'MATROID_POTTS_FOLLOWUP_REFERENCES.bib'
+      - 'MATROID_POTTS_PAPER_BUILD.md'
+      - 'JOINT_MONOCHROMATIC_LAW.md'
+      - 'HIGH_GIRTH_MONOCHROMATIC_LIMITS.md'
+      - 'scripts/check_matroid_potts_followup.py'
+      - 'experiments/matroid_polytope_check.py'
+      - 'experiments/matroid_polytope_results.json'
+      - 'experiments/berge_matroid_coloring.py'
+      - 'experiments/berge_matroid_coloring_results.json'
+      - 'experiments/monochromatic_dependence_hypertutte.py'
+      - 'experiments/monochromatic_dependence_hypertutte_results.json'
+      - '.github/workflows/consolidated-matroid-potts-paper.yml'
+  pull_request:
+    paths:
+      - 'followup/matroid_potts/**'
+      - 'MATROID_POTTS_FOLLOWUP_MANUSCRIPT.md'
+      - 'MATROID_POTTS_FOLLOWUP_REFERENCES.bib'
+      - 'MATROID_POTTS_PAPER_BUILD.md'
+      - 'JOINT_MONOCHROMATIC_LAW.md'
+      - 'HIGH_GIRTH_MONOCHROMATIC_LIMITS.md'
+      - 'scripts/check_matroid_potts_followup.py'
+      - 'experiments/matroid_polytope_check.py'
+      - 'experiments/matroid_polytope_results.json'
+      - 'experiments/berge_matroid_coloring.py'
+      - 'experiments/berge_matroid_coloring_results.json'
+      - 'experiments/monochromatic_dependence_hypertutte.py'
+      - 'experiments/monochromatic_dependence_hypertutte_results.json'
+      - '.github/workflows/consolidated-matroid-potts-paper.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile verification programs
+        run: |
+          python -m py_compile scripts/check_matroid_potts_followup.py
+          python -m py_compile experiments/matroid_polytope_check.py
+          python -m py_compile experiments/berge_matroid_coloring.py
+          python -m py_compile experiments/monochromatic_dependence_hypertutte.py
+
+      - name: Check manuscript, citations, and text integrity
+        run: python scripts/check_matroid_potts_followup.py
+
+      - name: Reproduce the polytope translation checks
+        run: |
+          python experiments/matroid_polytope_check.py \
+            --check experiments/matroid_polytope_results.json
+
+      - name: Reproduce the Berge-matroid and coloring checks
+        run: |
+          python experiments/berge_matroid_coloring.py \
+            --check experiments/berge_matroid_coloring_results.json
+
+      - name: Reproduce dependence, hypergraph-Tutte, and Ising checks
+        run: |
+          python experiments/monochromatic_dependence_hypertutte.py \
+            --state-limit 2000000 \
+            --check experiments/monochromatic_dependence_hypertutte_results.json
+
+      - name: Enforce central theorem markers
+        run: |
+          grep -Fq 'Theorem 3.2. Base-polytope translation' followup/matroid_potts/00_structure_matroid_polytope.md
+          grep -Fq 'Theorem 7.1. Hypergraph-Tutte specialization' followup/matroid_potts/01_coloring_tutte.md
+          grep -Fq 'Theorem 8.2. Probabilistic dependence matroid' followup/matroid_potts/02_dependence_limits_ising.md
+          grep -Fq 'Theorem 10.1. Poisson transfer' followup/matroid_potts/02_dependence_limits_ising.md
+          grep -Fq 'Property B and ferromagnetic Ising' followup/matroid_potts/02_dependence_limits_ising.md
+          grep -Fq '"failures": 0' experiments/matroid_polytope_results.json
