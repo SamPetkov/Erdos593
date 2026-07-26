@@ -7,6 +7,7 @@ from pathlib import Path
 import shutil
 import zipfile
 
+# The materializer is intentionally one-shot and self-removing.
 ROOT = Path(__file__).resolve().parents[1]
 CHUNKS = ROOT / "scripts/materialize_chunks"
 EXPECTED = [
