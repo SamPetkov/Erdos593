@@ -8,32 +8,44 @@ Berge-cycle matroid, and color \(V(F)\) independently and uniformly with
 \(q\ge2\) colors. Write
 
 \[
-X_e=\mathbf 1_{\{e	ext{ is monochromatic}\}}\qquad(e\in E(F)).
+X_e=\mathbf 1_{\{e\text{ is monochromatic}\}}
+\qquad(e\in E(F)).
 \]
 
 For every \(A\subseteq E(F)\), the preceding note proves
 
 \[
-\Pr(X_e=1	ext{ for all }e\in A)
+\Pr(X_e=1\text{ for all }e\in A)
 =
 q^{-(r-2)|A|-r_{\mathrm B}(A)}.
-	ag{1}
+\tag{1}
 \]
 
 The upper-set probabilities in (1) determine the complete joint law of the
-binary vector \((X_e)_{e\in E(F)}\). Möbius inversion gives, for every
-\(S\subseteq E(F)\),
+binary vector \((X_e)_{e\in E(F)}\). Möbius inversion on the Boolean lattice
+gives, for every \(S\subseteq E(F)\),
 
 \[
-oxed{
-\Prigl(\{e:X_e=1\}=Sigr)
+\boxed{
+\Pr\!\left(\{e:X_e=1\}=S\right)
 =
 \sum_{A:\,S\subseteq A\subseteq E(F)}
 (-1)^{|A|-|S|}
 q^{-(r-2)|A|-r_{\mathrm B}(A)}.
 }
-	ag{2}
+\tag{2}
 \]
+
+Indeed,
+
+\[
+\mathbf 1_{\{\{e:X_e=1\}=S\}}
+=
+\prod_{e\in S}X_e
+\prod_{e\notin S}(1-X_e),
+\]
+
+and expanding the second product gives (2).
 
 Consequently:
 
@@ -44,8 +56,8 @@ Consequently:
 3. the distribution of the total number
    \(M_F=\sum_eX_e\) depends only on \(r\), \(q\), and the ordinary Tutte
    polynomial of \(M_{\mathrm B}(F)\);
-4. every mixed moment, factorial moment, cumulant, and exact-set probability is
-   recoverable from the matroid rank function;
+4. every mixed moment, factorial moment, joint cumulant, and exact-set
+   probability is recoverable from the matroid rank function;
 5. attachment geometry outside the Berge-cycle matroid is statistically
    invisible to the entire monochromatic-edge process.
 
@@ -63,8 +75,8 @@ so the Potts--Tutte formula from the main note gives
 \mathbb E[t^{M_F}]
 =
 q^{-n+(r-2)m}
-Z_J\!\left(q,(t-1)q^{-(r-2)}ight).
-	ag{3}
+Z_J\!\left(q,(t-1)q^{-(r-2)}\right).
+\tag{3}
 \]
 
 Equation (2) is stronger than equality of weak chromatic polynomials or of the
