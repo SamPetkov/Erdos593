@@ -1,0 +1,132 @@
+% Reader-first, claim-preserving front matter for the Problem 593 manuscript.
+% This fragment is not included automatically.  It is written for the
+% publication branch containing the finite parameter spectrum.
+
+\begin{abstract}
+A finite triple system is \emph{obligatory} if it embeds in every triple system
+of uncountable chromatic number.  We give an alternative proof of the complete
+classification.  After isolated vertices are removed, obligatoriness is
+equivalent to the following three finite conditions: the system is linear,
+every hyperedge-node of its Levi graph is incident with a bridge, and every
+Berge cycle has even length.  Equivalently, the obligatory systems are obtained
+from private-vertex expansions of finite bipartite graphs and finite edgeless
+systems by finite disjoint unions and one-point amalgamations.  The proof
+separates the finite bridge-block decomposition from the infinitary host
+constructions: deleting the Levi bridges produces bipartite expansion pieces
+attached along a quotient forest, while a one-apex lift supplies avoiding hosts
+for the missing-bridge and odd-cycle obstructions.  The same decomposition gives
+sharp finite parameter consequences.  A reduced obligatory system with
+$m\ge1$ hyperedges and $1\le c\le m$ connected components has order $n$ if and
+only if
+\[
+  m+2(c-1)+\left\lceil2\sqrt{m-c+1}\right\rceil
+  \le n\le 2m+c.
+\]
+A Lean~4 development verifies both directions of the finite classification and
+the isolated-vertex reduction.  All arguments are in ZFC.
+\end{abstract}
+
+\section*{Introduction}\label{introduction-reader-first}
+
+The hosts in Erd\H{o}s Problem~593 are infinite, but the answer is governed by a
+finite incidence graph.  A finite triple system $F$ is \emph{obligatory} if
+every triple system of uncountable chromatic number contains an injective,
+not-necessarily-induced copy of $F$.  Erd\H{o}s asked for a characterisation of
+these systems~\citep{erdos1995}; the problem is catalogued as Erd\H{o}s
+Problem~593~\citep{bloom593}.
+
+For a finite graph $J$, let $J^+$ be its private-vertex expansion: each graph
+edge $uv$ is replaced by the triple $\{u,v,p_{uv}\}$, where the points $p_{uv}$
+are new and pairwise distinct.  Let $\mathcal B$ be the smallest class
+containing $J^+$ for every finite bipartite graph $J$, together with every
+finite edgeless triple system, and closed under finite disjoint unions and
+one-point amalgamations.  For a triple system $F$, write $F^\circ$ for the
+system obtained by deleting its isolated vertices, and write $I(F)$ for its
+Levi graph.
+
+\begin{theoremA}\label{theorem-a-reader-first}
+For every finite triple system $F$, the following are equivalent.
+\begin{enumerate}
+\item $F$ is obligatory;
+\item $F^\circ\in\mathcal B$;
+\item $F^\circ$ is linear, every hyperedge-node of $I(F^\circ)$ is incident
+with a bridge, and every Berge cycle of $F^\circ$ has even length.
+\end{enumerate}
+\end{theoremA}
+
+The proof is best understood as three independent implications:
+\[
+  \mathcal B\Longrightarrow\text{obligatory},
+  \qquad
+  \mathcal B\Longleftrightarrow\text{intrinsic},
+  \qquad
+  \neg\text{intrinsic}\Longrightarrow\neg\text{obligatory}.
+\]
+The middle equivalence is the finite geometric core.  Delete every bridge from
+the Levi graph.  A hyperedge-node has degree three and, by hypothesis, loses at
+least one incidence; its remaining degree is therefore zero or two.  Each
+active bridge-free component suppresses to a simple graph.  Linearity rules out
+parallel edges, and evenness of Berge cycles makes the graph bipartite.  The
+removed incidences supply the private points, so each component is an expansion
+$J^+$.  Contracting the bridge-free components turns the original bridges into
+a forest, whose rooted order reconstructs $F^\circ$ by disjoint unions and
+one-point amalgamations.
+
+The positive implication shows that these pieces and attachment operations are
+forced in every uncountably chromatic host.  The expansion theorem of
+Reiher~\citep[Theorem~1.2]{reiher2024} supplies the basic atoms; we also include
+a direct proof in the notation of this paper.  Closure under disjoint union is
+immediate after finite deletion.  Closure under one-point amalgamation follows
+from a rooted-abundance lemma: in an uncountably chromatic host, the set of
+vertices supporting arbitrarily many almost-disjoint rooted copies of an
+obligatory system remains uncountably chromatic.
+
+For necessity, the intrinsic test can fail in exactly three ways.  A classical
+Erd\H{o}s--Rado construction gives an uncountably chromatic linear triple system
+and therefore excludes every nonlinear $F$.  The remaining two obstructions
+are controlled by the complete-rank one-apex lift.  A finite linear trace in the
+lift decomposes into base fibres, each isomorphic to an expansion $J_s^+$; two
+fibres meet in at most one point, and their support-incidence graph is a forest.
+Consequently every hyperedge-node in the trace is incident with a bridge, and
+every Berge cycle projects with the same length to the base graph.  Taking the
+base graph to be $K_{\omega_1}$ excludes a missing bridge, while an
+uncountably chromatic graph of sufficiently large odd girth excludes an odd
+Berge cycle.
+
+Li's preprint contains the first publicly posted complete proof of
+Theorem~\ref{theorem-a-reader-first} and introduces the complete-rank one-apex
+lift and bridge-trace method used in the negative direction
+\citep[Theorem~1.1, Sections~3--4]{li2026}.  The present paper gives an
+alternative implementation, a direct all-bridges decomposition of the finite
+structure, sharp finite parameter consequences, and a Lean formalisation of
+this implementation.  No competing priority claim is made for the
+classification or the shared lift architecture.
+
+The bridge-block argument retains numerical information.  It produces an
+ordinary bipartite shadow $J$ with the same number of edges and connected
+components as $F^\circ$ and with
+\[
+  |V(J)|=|V(F^\circ)|-|E(F^\circ)|.
+\]
+Combining this identity with the exact order--size range for finite bipartite
+graphs gives the following sharp spectrum.
+
+\begin{theorem}[Order--size--component spectrum]\label{theorem-spectrum-reader-first}
+Let $m\ge1$ and $1\le c\le m$.  A reduced obligatory triple system with
+$m$ hyperedges, $n$ vertices, and exactly $c$ connected components exists if
+and only if
+\[
+  m+2(c-1)+\left\lceil2\sqrt{m-c+1}\right\rceil
+  \le n\le 2m+c.
+\]
+Every integer in this interval occurs.
+\end{theorem}
+
+The manuscript is organised to keep the finite geometry visible.  After the
+preliminaries, we prove the bridge-block equivalence between the constructive
+and intrinsic descriptions.  We then establish the positive direction, define
+the one-apex lift, and prove the finite trace theorem used by the three avoiding
+hosts.  The final mathematical section derives the bipartite shadow and its
+finite parameter consequences.  The Lean scope, reproducibility information,
+and provenance statements are collected at the end rather than repeated inside
+the proofs.
