@@ -1,0 +1,42 @@
+name: Materialize consolidated matroid-Potts paper
+
+on:
+  push:
+    branches: [agent/consolidated-matroid-potts-paper]
+    paths:
+      - 'scripts/materialize_consolidated_matroid_potts.py'
+      - 'scripts/materialize_chunks/**'
+      - '.github/workflows/materialize-consolidated-matroid-potts.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/consolidated-matroid-potts-paper
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Materialize the paper sources
+        run: python scripts/materialize_consolidated_matroid_potts.py
+      - name: Validate manuscript and all reproducibility checks
+        run: |
+          python scripts/check_matroid_potts_followup.py
+          python experiments/matroid_polytope_check.py --check experiments/matroid_polytope_results.json
+          python experiments/berge_matroid_coloring.py --check experiments/berge_matroid_coloring_results.json
+          python experiments/monochromatic_dependence_hypertutte.py --state-limit 2000000 --check experiments/monochromatic_dependence_hypertutte_results.json
+      - name: Commit the materialized paper
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --stat
+          git commit -m 'Consolidate matroid Potts follow-up paper'
+          git push origin HEAD:agent/consolidated-matroid-potts-paper
