@@ -37,7 +37,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: consolidated-paper-payload-diagnostics
-          path: payload-diagnostics.txt
+          path: |
+            payload-diagnostics.txt
+            scripts/materialize_chunks
           if-no-files-found: ignore
       - name: Validate manuscript and all reproducibility checks
         run: |
