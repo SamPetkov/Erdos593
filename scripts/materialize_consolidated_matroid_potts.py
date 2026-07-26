@@ -5,7 +5,6 @@ import base64
 import binascii
 import io
 from pathlib import Path
-import shutil
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,8 +39,8 @@ if not parts:
 texts = [path.read_text(encoding="ascii").strip() for path in parts]
 
 # Two one-character transport defects were identified from the archived CI
-# payload. Correct them deterministically before decoding; the final commit
-# removes this loader and all transport files.
+# payload. Correct them deterministically before decoding. The staging files
+# are removed by a connector cleanup commit after the validated paper lands.
 if len(texts) == 7 and len(texts[0]) == 7001 and texts[0].endswith("GWPY"):
     texts[0] = texts[0][:-1]
     log("normalized chunk 00: removed duplicated terminal 'Y'")
@@ -87,11 +86,6 @@ for rel in EXPECTED:
     if not (ROOT / rel).is_file():
         raise SystemExit(f"failed to materialize {rel}")
 
-shutil.rmtree(CHUNKS)
-Path(__file__).unlink()
-workflow = ROOT / ".github/workflows/materialize-consolidated-matroid-potts.yml"
-if workflow.exists():
-    workflow.unlink()
 if DIAGNOSTICS.exists():
     DIAGNOSTICS.unlink()
 print(f"materialized {len(EXPECTED)} consolidated paper files from {len(parts)} chunks")
