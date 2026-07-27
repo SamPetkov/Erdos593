@@ -112,7 +112,7 @@ def main() -> None:
 
     # Construction terminology.
     require(
-        r"Its \emph{private-vertex expansion} \(J^+\)",
+        r"\emph{private-vertex expansion} \(J^+\)",
         flat,
         "private-vertex expansion",
     )
