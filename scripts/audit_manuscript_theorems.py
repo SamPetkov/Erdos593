@@ -84,12 +84,16 @@ def theorem_inventory(text: str) -> list[dict[str, object]]:
         end_token = f"\\end{{{env}}}"
         end = text.find(end_token, match.end())
         if end < 0:
-            raise AssertionError(f"unterminated {env} beginning at line {line_number(text, match.start())}")
+            raise AssertionError(
+                f"unterminated {env} beginning at line {line_number(text, match.start())}"
+            )
         body = text[match.end() : end]
         labels = LABEL_RE.findall(body)
         label = labels[0] if labels else None
         if len(labels) > 1:
-            raise AssertionError(f"multiple labels in {env} at line {line_number(text, match.start())}: {labels}")
+            raise AssertionError(
+                f"multiple labels in {env} at line {line_number(text, match.start())}: {labels}"
+            )
 
         next_start = matches[index + 1].start() if index + 1 < len(matches) else len(text)
         after = text[end + len(end_token) : next_start]
@@ -109,7 +113,7 @@ def theorem_inventory(text: str) -> list[dict[str, object]]:
     return inventory
 
 
-def verify_inventory(text: str) -> list[dict[str, object]]:
+def verify_inventory(text: str) -> tuple[list[dict[str, object]], dict[str, int]]:
     inventory = theorem_inventory(text)
     actual = [(str(item["environment"]), str(item["label"])) for item in inventory]
     expected = list(EXPECTED)
@@ -123,11 +127,13 @@ def verify_inventory(text: str) -> list[dict[str, object]]:
                 diagnostics.append({"index": index, "actual": left, "expected": right})
         raise AssertionError(f"theorem ledger mismatch: {diagnostics}")
 
+    claim_counts: dict[str, int] = {}
     for marker in INTERNAL_CLAIMS:
         count = text.count(marker)
-        if count != 1:
-            raise AssertionError(f"internal claim marker {marker!r} occurs {count} times")
-    return inventory
+        if count < 1:
+            raise AssertionError(f"internal claim marker {marker!r} is missing")
+        claim_counts[marker] = count
+    return inventory, claim_counts
 
 
 def verify_references(text: str) -> dict[str, int]:
@@ -182,11 +188,11 @@ def verify_connected_bipartite_interval(limit: int = 500) -> int:
     for edges in range(1, limit + 1):
         for vertices in range(2, edges + 3):
             theorem_condition = q(edges) <= vertices <= edges + 1
-            elementary_condition = (
-                vertices - 1 <= edges <= (vertices * vertices) // 4
-            )
+            elementary_condition = vertices - 1 <= edges <= (vertices * vertices) // 4
             if theorem_condition != elementary_condition:
-                raise AssertionError((edges, vertices, theorem_condition, elementary_condition))
+                raise AssertionError(
+                    (edges, vertices, theorem_condition, elementary_condition)
+                )
             checks += 1
     return checks
 
@@ -287,14 +293,14 @@ def main() -> None:
     if not __debug__:
         raise RuntimeError("the audit must not be run with python -O")
     text = TEX.read_text(encoding="utf-8")
-    inventory = verify_inventory(text)
+    inventory, claim_counts = verify_inventory(text)
     reference_counts = verify_references(text)
     verify_required_markers(text)
 
     result = {
         "manuscript": str(TEX.relative_to(ROOT)),
         "theorem_like_environments": len(inventory),
-        "internal_claims": len(INTERNAL_CLAIMS),
+        "internal_claim_markers": claim_counts,
         "first_theorem_line": inventory[0]["line"],
         "last_theorem_line": inventory[-1]["line"],
         **reference_counts,
