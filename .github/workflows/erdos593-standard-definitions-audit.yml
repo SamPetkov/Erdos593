@@ -1,0 +1,33 @@
+name: Erdős 593 standard definitions audit
+
+on:
+  pull_request:
+    paths:
+      - "erdos593_obligatory_triple_systems.tex"
+      - "audits/STANDARD_DEFINITIONS_AND_CONVENTIONS_AUDIT.md"
+      - "audits/STANDARD_DEFINITION_LINE_PATCHES.md"
+      - "scripts/audit_standard_definitions.py"
+      - ".github/workflows/erdos593-standard-definitions-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  standard-definitions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile terminology audit
+        run: python -m py_compile scripts/audit_standard_definitions.py
+      - name: Check standard field definitions and conventions
+        run: python scripts/audit_standard_definitions.py
+      - name: Enforce audit conclusion and publication patches
+        run: |
+          grep -F "STANDARD-COMPATIBLE" audits/STANDARD_DEFINITIONS_AND_CONVENTIONS_AUDIT.md >/dev/null
+          grep -F "weak vertex chromatic number" audits/STANDARD_DEFINITIONS_AND_CONVENTIONS_AUDIT.md >/dev/null
+          grep -F "The length of a Berge cycle" audits/STANDARD_DEFINITIONS_AND_CONVENTIONS_AUDIT.md >/dev/null
+          grep -F "## Patch 8:" audits/STANDARD_DEFINITION_LINE_PATCHES.md >/dev/null
