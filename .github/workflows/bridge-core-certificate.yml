@@ -1,0 +1,31 @@
+name: Erdős 593 bridge-core certificate
+
+on:
+  pull_request:
+    paths:
+      - "reader-first/BRIDGE_CORE_MASTER_LEMMA.md"
+      - "experiments/verify_bridge_core_certificate.py"
+      - ".github/workflows/bridge-core-certificate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bridge-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile checker
+        run: python -m py_compile experiments/verify_bridge_core_certificate.py
+      - name: Reproduce certificates
+        run: python experiments/verify_bridge_core_certificate.py
+      - name: Check theorem and scope markers
+        run: |
+          grep -F "residual degree" reader-first/BRIDGE_CORE_MASTER_LEMMA.md >/dev/null
+          grep -F "quotient" reader-first/BRIDGE_CORE_MASTER_LEMMA.md >/dev/null
+          grep -F "one-point amalgamation" reader-first/BRIDGE_CORE_MASTER_LEMMA.md >/dev/null
+          grep -F "not a new priority claim" reader-first/BRIDGE_CORE_MASTER_LEMMA.md >/dev/null
