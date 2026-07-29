@@ -1,0 +1,97 @@
+% Copy-ready finite assembly lemma for the Problem 593 manuscript.
+% Suggested location: after the preliminaries and before the first application.
+% This file is not included automatically.
+
+\begin{lemma}[Forest assembly]\label{lemma-forest-assembly}
+Let $K$ be a finite hypergraph and let $(P_i)_{i\in I}$ be finitely many
+subhypergraphs such that
+\[
+ E(K)=\mathop{\dot\bigcup}_{i\in I}E(P_i),
+ \qquad
+ V(K)=\bigcup_{i\in I}V(P_i),
+\]
+and
+\[
+ |V(P_i)\cap V(P_j)|\le1
+ \qquad(i\ne j).
+ \tag{2.1}
+\]
+Let $S$ be the set of points lying in at least two pieces, and let $Q$ be the
+bipartite graph with classes $I$ and $S$, where $i$ is adjacent to $p$ exactly
+when $p\in V(P_i)$.  The following are equivalent.
+\begin{enumerate}
+\item $Q$ is a forest.
+\item In each connected component, the pieces admit an order in which every
+new piece meets the union of the earlier pieces in at most one point.
+\item $K$ is obtainable from the pieces $P_i$, with no additional vertex
+identifications, by finite disjoint unions and one-point amalgamations.
+\end{enumerate}
+When these conditions hold, every Berge cycle of $K$ is contained in one piece,
+and every bridge of $I(P_i)$ remains a bridge of $I(K)$.
+\end{lemma}
+
+\begin{proof}
+Assume first that $Q$ is a forest.  Root each component at a piece-node and
+order the piece-nodes by nondecreasing distance from the root.  Let $i$ be a
+nonroot piece-node at distance $2d$, and let $p_i$ be the point-node preceding
+$i$ on the path to the root.  If an earlier piece $j$ meets $P_i$ at a point
+$p$, then $i-p-j$ is a path of length two in $Q$.  The distance of $p$ from the
+root is either $2d-1$ or $2d+1$.  In the latter case every piece-neighbour of
+$p$ other than $i$ has distance $2d+2$, so none is earlier.  Hence $p$ has
+distance $2d-1$, and uniqueness of the root path gives $p=p_i$.  By (2.1),
+\[
+ V(P_i)\cap\bigcup_{j\text{ earlier}}V(P_j)\subseteq\{p_i\}.
+\]
+Root pieces have empty earlier intersection.  This proves the second assertion.
+
+Given such an order, add the pieces successively.  Use a disjoint union when
+the next intersection is empty and a one-point amalgamation when it is a
+singleton.  The edge sets are disjoint and the intersection condition shows
+that the construction makes exactly the identifications already present in
+$K$.  Induction gives an incidence isomorphism from the assembled hypergraph to
+$K$, proving the third assertion.
+
+Conversely, build $K$ from its pieces by the operations in the third assertion.
+The incidence graph of one piece has no shared-point node.  Disjoint union
+preserves acyclicity.  Suppose a new piece $P_i$ is amalgamated at a point $p$.
+If $p$ already belongs to at least two old pieces, the update adds the new
+piece-node as a leaf adjacent to the existing point-node $p$.  If $p$ belongs
+to exactly one old piece $P_j$, the update creates the pendant path
+\[
+ j-p-i.
+\]
+In either case no cycle is created, so $Q$ is a forest.
+
+It remains to record the two consequences.  In a one-point amalgamation
+$A\vee_pB$, the Levi graph is the vertex-sum of $I(A)$ and $I(B)$ at the
+point-node $p$.  A simple cycle using edges from both factors would have to
+visit $p$ twice, so every Levi cycle, and hence every Berge cycle, lies in one
+factor.  Likewise, an excursion into the other factor enters and leaves at
+$p$; deleting such excursions from a putative alternative path shows that a
+bridge in either factor remains a bridge after amalgamation.  Induction over
+the assembly proves both conclusions.
+\end{proof}
+
+% ---------------------------------------------------------------------------
+% Replacement at the end of Proposition 5.2
+% ---------------------------------------------------------------------------
+%
+% The quotient-forest depth order proved above has the running-intersection
+% property.  Lemma~\ref{lemma-forest-assembly} therefore reconstructs $F$ from
+% the bipartite expansion pieces by disjoint unions and one-point
+% amalgamations.  Hence $F\in\mathcal B$.
+
+% ---------------------------------------------------------------------------
+% Replacement after Claims 6.3.1--6.3.3
+% ---------------------------------------------------------------------------
+%
+% Claims 6.3.1--6.3.3 identify the base fibres as expansions, show that two
+% fibres meet in at most one point, and show that their support-incidence graph
+% is a forest.  Lemma~\ref{lemma-forest-assembly} therefore assembles the trace
+% by disjoint unions and one-point amalgamations.  This proves the finite linear
+% trace theorem.
+%
+% The final two conclusions of Lemma~\ref{lemma-forest-assembly} also give the
+% trace corollary directly: private-point incidences remain bridges, and every
+% Berge cycle lies in one fibre and projects with the same length to the
+% corresponding subgraph of the base graph.
