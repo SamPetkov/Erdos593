@@ -10,6 +10,10 @@ on:
       - ".github/workflows/erdos593-standard-definitions-audit.yml"
   workflow_dispatch:
 
+concurrency:
+  group: erdos593-definitions-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
