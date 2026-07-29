@@ -18,6 +18,10 @@ on:
       - ".github/workflows/erdos593-external-lean-alignment.yml"
   workflow_dispatch:
 
+concurrency:
+  group: erdos593-interface-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
