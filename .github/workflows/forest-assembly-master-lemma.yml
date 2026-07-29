@@ -1,0 +1,33 @@
+name: Erdős 593 forest-assembly master lemma
+
+on:
+  pull_request:
+    paths:
+      - "reader-first/FOREST_ASSEMBLY_MASTER_LEMMA.md"
+      - "reader-first/FOREST_ASSEMBLY_MASTER_LEMMA.tex"
+      - "experiments/verify_forest_assembly_master_lemma.py"
+      - ".github/workflows/forest-assembly-master-lemma.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  forest-assembly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile exact verifier
+        run: python -m py_compile experiments/verify_forest_assembly_master_lemma.py
+      - name: Run finite forest-assembly audit
+        run: python experiments/verify_forest_assembly_master_lemma.py
+      - name: Enforce mathematical and scope markers
+        run: |
+          grep -F "Theorem 2.1 (forest assembly)" reader-first/FOREST_ASSEMBLY_MASTER_LEMMA.md >/dev/null
+          grep -F "every Berge cycle" reader-first/FOREST_ASSEMBLY_MASTER_LEMMA.md >/dev/null
+          grep -F "remains a bridge" reader-first/FOREST_ASSEMBLY_MASTER_LEMMA.md >/dev/null
+          grep -F "No novelty claim" reader-first/FOREST_ASSEMBLY_MASTER_LEMMA.md >/dev/null
+          grep -F '\label{lemma-forest-assembly}' reader-first/FOREST_ASSEMBLY_MASTER_LEMMA.tex >/dev/null
