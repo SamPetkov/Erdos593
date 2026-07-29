@@ -1,0 +1,39 @@
+name: Erdős 593 external theorem and Lean alignment audit
+
+on:
+  pull_request:
+    paths:
+      - "erdos593_obligatory_triple_systems.tex"
+      - "audits/EXTERNAL_THEOREM_INTERFACE_AUDIT.md"
+      - "audits/MANUSCRIPT_LEAN_ALIGNMENT_AUDIT.md"
+      - "audits/INTERFACE_ALIGNMENT_LINE_PATCHES.md"
+      - "scripts/audit_external_lean_alignment.py"
+      - "formalization/Erdos593/TripleSystem/Basic.lean"
+      - "formalization/Erdos593/TripleSystem/Embedding.lean"
+      - "formalization/Erdos593/TripleSystem/Obligatory.lean"
+      - "formalization/Erdos593/TripleSystem/Intrinsic.lean"
+      - "formalization/Erdos593/TripleSystem/Constructive.lean"
+      - "formalization/Erdos593/TripleSystem/ObligatoryClassification.lean"
+      - ".github/workflows/erdos593-external-lean-alignment.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  external-lean-alignment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile alignment audit
+        run: python -m py_compile scripts/audit_external_lean_alignment.py
+      - name: Check imported interfaces and Lean statement alignment
+        run: python scripts/audit_external_lean_alignment.py
+      - name: Enforce audit conclusions
+        run: |
+          grep -F "No imported theorem is used outside its verified interface" audits/EXTERNAL_THEOREM_INTERFACE_AUDIT.md >/dev/null
+          grep -F "PASS with explicit surface qualifications" audits/MANUSCRIPT_LEAN_ALIGNMENT_AUDIT.md >/dev/null
+          grep -F "Membership in $\\mathcal B$ is understood up to triple-system isomorphism" audits/INTERFACE_ALIGNMENT_LINE_PATCHES.md >/dev/null
