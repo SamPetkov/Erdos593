@@ -6,6 +6,7 @@ on:
       - "erdos593_obligatory_triple_systems.tex"
       - "audits/EXTERNAL_THEOREM_INTERFACE_AUDIT.md"
       - "audits/MANUSCRIPT_LEAN_ALIGNMENT_AUDIT.md"
+      - "audits/HYPOTHESIS_AND_QUANTIFIER_AUDIT.md"
       - "audits/INTERFACE_ALIGNMENT_LINE_PATCHES.md"
       - "scripts/audit_external_lean_alignment.py"
       - "formalization/Erdos593/TripleSystem/Basic.lean"
@@ -36,4 +37,5 @@ jobs:
         run: |
           grep -F "No imported theorem is used outside its verified interface" audits/EXTERNAL_THEOREM_INTERFACE_AUDIT.md >/dev/null
           grep -F "PASS with explicit surface qualifications" audits/MANUSCRIPT_LEAN_ALIGNMENT_AUDIT.md >/dev/null
+          grep -F "No theorem loses or acquires a mathematical hypothesis" audits/HYPOTHESIS_AND_QUANTIFIER_AUDIT.md >/dev/null
           grep -F "Membership in $\\mathcal B$ is understood up to triple-system isomorphism" audits/INTERFACE_ALIGNMENT_LINE_PATCHES.md >/dev/null
