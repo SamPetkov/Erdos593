@@ -1,0 +1,46 @@
+name: Erdős 593 theorem-by-theorem manuscript audit
+
+on:
+  pull_request:
+    paths:
+      - "erdos593_obligatory_triple_systems.tex"
+      - "audits/MANUSCRIPT_THEOREM_BY_THEOREM_AUDIT.md"
+      - "scripts/audit_manuscript_theorems.py"
+      - "experiments/verify_bridge_core_certificate.py"
+      - ".github/workflows/erdos593-manuscript-theorem-audit.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: erdos593-theorem-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  manuscript-theorem-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile exact audit programs
+        run: |
+          python -m py_compile scripts/audit_manuscript_theorems.py
+          python -m py_compile experiments/verify_bridge_core_certificate.py
+
+      - name: Check theorem ledger and finite parameter arithmetic
+        run: python scripts/audit_manuscript_theorems.py
+
+      - name: Reproduce the bridge-core certificate audit
+        run: python experiments/verify_bridge_core_certificate.py
+
+      - name: Enforce audit conclusions and scope markers
+        run: |
+          grep -F "No theorem-level blocker was found" audits/MANUSCRIPT_THEOREM_BY_THEOREM_AUDIT.md >/dev/null
+          grep -F "The classification proof is mathematically complete" audits/MANUSCRIPT_THEOREM_BY_THEOREM_AUDIT.md >/dev/null
+          grep -F "NOT YET FORMALISED" audits/MANUSCRIPT_THEOREM_BY_THEOREM_AUDIT.md >/dev/null
+          grep -F "written odd-cycle proof" audits/MANUSCRIPT_THEOREM_BY_THEOREM_AUDIT.md >/dev/null
