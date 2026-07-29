@@ -10,6 +10,10 @@ on:
       - ".github/workflows/erdos593-manuscript-theorem-audit.yml"
   workflow_dispatch:
 
+concurrency:
+  group: erdos593-theorem-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
