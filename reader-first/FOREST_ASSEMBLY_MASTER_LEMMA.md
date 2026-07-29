@@ -2,24 +2,24 @@
 
 ## Scope
 
-This note isolates a finite combinatorial lemma that is used twice in the
-Problem 593 proof:
+This note isolates a finite combinatorial lemma used twice in the Problem 593
+proof:
 
 1. in the bridge-block reconstruction of the intrinsic finite structure;
 2. in the base-fibre decomposition of a finite trace in the one-apex lift.
 
 The current manuscript proves the two running-intersection statements
-separately.  The common mechanism is simpler: pieces whose shared-point
+separately. The common mechanism is simpler: pieces whose shared-point
 incidence graph is a forest can be assembled, and only assembled, by disjoint
-unions and one-point amalgamations.  Simple cycles remain inside one piece, and
+unions and one-point amalgamations. Simple cycles remain inside one piece, and
 bridges already present in a piece remain bridges after assembly.
 
-This is a proof compression, not a new classification claim.  No novelty claim
+This is a proof compression, not a new classification claim. No novelty claim
 is made for the abstract finite lemma.
 
 ## 1. Piece systems
 
-Let \(K\) be a finite hypergraph.  A **piece decomposition** of \(K\) is a finite
+Let \(K\) be a finite hypergraph. A **piece decomposition** of \(K\) is a finite
 family
 
 \[
@@ -29,45 +29,34 @@ family
 of subhypergraphs such that
 
 \[
-  E(K)=\mathop{\dotigcup}_{i\in I}E(P_i)
-  \qquad	ext{and}\qquad
-  V(K)=igcup_{i\in I}V(P_i).
+  E(K)=\mathop{\dot\bigcup}_{i\in I}E(P_i),
+  \qquad
+  V(K)=\bigcup_{i\in I}V(P_i).
 \]
 
 Assume throughout that distinct pieces meet in at most one point:
 
 \[
   |V(P_i)\cap V(P_j)|\le 1
-  \qquad(i
-e j).
-  	ag{1.1}
+  \qquad(i\ne j).
+  \tag{1.1}
 \]
 
 Let
 
 \[
-  S=\{p\in V(K):p	ext{ belongs to at least two pieces}\}.
+  S=\{p\in V(K):p\text{ belongs to at least two pieces}\}.
 \]
 
 The **piece--point incidence graph** is the finite bipartite graph
-
-\[
-  Q(\mathscr P)
-\]
-
-with classes \(I\) and \(S\), where \(i\) is adjacent to \(p\) exactly when
-\(p\in V(P_i)\).
+\(Q(\mathscr P)\) with classes \(I\) and \(S\), where \(i\) is adjacent to \(p\)
+exactly when \(p\in V(P_i)\).
 
 A **running-intersection order** on one connected group of pieces is an order
+\(i_1,\ldots,i_t\) such that, for every \(r\ge2\),
 
 \[
-  i_1,\ldots,i_t
-\]
-
-such that, for every \(r\ge2\),
-
-\[
-  V(P_{i_r})\capigcup_{q<r}V(P_{i_q})
+  V(P_{i_r})\cap\bigcup_{q<r}V(P_{i_q})
 \]
 
 is empty or a singleton.
@@ -97,85 +86,74 @@ Problem 593 manuscript.
 #### \(1\Rightarrow2\)
 
 Root each component of \(Q(\mathscr P)\) at a piece-node and order the
-piece-nodes by nondecreasing distance from the root.  Piece-nodes occur at even
+piece-nodes by nondecreasing distance from the root. Piece-nodes occur at even
 distance and shared-point nodes at odd distance.
 
 Let \(i\) be a nonroot piece-node at distance \(2d\), and let \(p_i\) be the
 shared-point node immediately preceding \(i\) on the unique path to the root.
-Suppose an earlier piece \(j\) meets \(P_i\) in a point \(p\).  Then
-
-\[
-  i-p-j
-\]
-
-is a length-two path in \(Q(\mathscr P)\).  The point-node \(p\) has distance
-either \(2d-1\) or \(2d+1\) from the root.  In the second case, every piece
-neighbor of \(p\) other than \(i\) has distance \(2d+2\), so it cannot be
-earlier.  Therefore \(p\) has distance \(2d-1\).  Uniqueness of the root path in
+Suppose an earlier piece \(j\) meets \(P_i\) in a point \(p\). Then
+\(i-p-j\) is a length-two path in \(Q(\mathscr P)\). The point-node \(p\) has
+distance either \(2d-1\) or \(2d+1\) from the root. In the second case, every
+piece neighbor of \(p\) other than \(i\) has distance \(2d+2\), so it cannot be
+earlier. Therefore \(p\) has distance \(2d-1\). Uniqueness of the root path in
 a tree gives \(p=p_i\).
 
 Thus every earlier piece meeting \(P_i\) meets it at the same point \(p_i\), and
 (1.1) gives
 
 \[
-  V(P_i)\capigcup_{j	ext{ earlier}}V(P_j)\subseteq\{p_i\}.
+  V(P_i)\cap\bigcup_{j\text{ earlier}}V(P_j)\subseteq\{p_i\}.
 \]
 
-A root piece has empty earlier intersection.  This is the required order.
+A root piece has empty earlier intersection. This is the required order.
 
 #### \(2\Rightarrow3\)
 
-Add the pieces in a running-intersection order.  If the next piece has empty
-intersection with the previous union, use a disjoint union.  If the intersection
+Add the pieces in a running-intersection order. If the next piece has empty
+intersection with the previous union, use a disjoint union. If the intersection
 is the singleton \(\{p\}\), use a one-point amalgamation at \(p\).
 
 The edge sets of the pieces are disjoint, and the running-intersection condition
 shows that the construction identifies exactly the vertices already equal in
-\(K\).  Induction therefore gives an incidence isomorphism from the assembled
+\(K\). Induction therefore gives an incidence isomorphism from the assembled
 hypergraph onto \(K\).
 
 #### \(3\Rightarrow1\)
 
-Proceed by induction over an assembly of the pieces.  The incidence graph of one
-piece has no shared-point node and is a forest.  Disjoint union preserves this
+Proceed by induction over an assembly of the pieces. The incidence graph of one
+piece has no shared-point node and is a forest. Disjoint union preserves this
 property.
 
-Suppose a new piece is amalgamated to the previous union at a point \(p\).  If
+Suppose a new piece is amalgamated to the previous union at a point \(p\). If
 \(p\) already belongs to at least two old pieces, its shared-point node is
 already present in \(Q\), and the new piece-node is added as a leaf adjacent to
-\(p\).  If \(p\) belongs to exactly one old piece \(j\), then \(p\) was not yet a
-shared-point node; the update adds the path
-
-\[
-  j-p-i.
-\]
-
-In either case a tree is enlarged by a leaf or by a two-edge pendant path, so no
-cycle is created.  Hence \(Q(\mathscr P)\) is a forest.
+\(p\). If \(p\) belongs to exactly one old piece \(j\), then \(p\) was not yet a
+shared-point node; the update adds the pendant path \(j-p-i\). In either case a
+tree is enlarged by a leaf or by a two-edge pendant path, so no cycle is
+created. Hence \(Q(\mathscr P)\) is a forest.
 
 #### Cycle localization
 
-It is enough to consider one one-point amalgamation \(Aee_p B\).  Its Levi
-graph is the vertex-sum of \(I(A)\) and \(I(B)\) at the point-node \(p\).  A
+It is enough to consider one one-point amalgamation \(A\vee_p B\). Its Levi
+graph is the vertex-sum of \(I(A)\) and \(I(B)\) at the point-node \(p\). A
 simple cycle using edges from both sides would have to enter and leave each side
-through \(p\), and would therefore visit \(p\) twice.  This is impossible for a
-simple cycle.  Hence every Levi cycle, equivalently every Berge cycle, lies in
-one factor.  Induction over the assembly proves assertion 4.
+through \(p\), and would therefore visit \(p\) twice. This is impossible for a
+simple cycle. Hence every Levi cycle, equivalently every Berge cycle, lies in
+one factor. Induction over the assembly proves assertion 4.
 
 #### Bridge preservation
 
-Again consider \(Aee_p B\).  Let \(e\) be a bridge of \(I(A)\).  If an
+Again consider \(A\vee_p B\). Let \(e\) be a bridge of \(I(A)\). If an
 alternative path in the amalgamated Levi graph joined the endpoints of \(e\)
 after \(e\) was deleted, every excursion into \(I(B)\) would enter and leave at
-\(p\).  Removing such excursions would give an alternative path in
-\(I(A)-e\), contradicting that \(e\) is a bridge.  Thus bridges in \(A\) remain
-bridges, and the same argument applies to \(B\).  Induction proves assertion 5.
-\(\square\)
+\(p\). Removing such excursions would give an alternative path in \(I(A)-e\),
+contradicting that \(e\) is a bridge. Thus bridges in \(A\) remain bridges, and
+the same argument applies to \(B\). Induction proves assertion 5. \(\square\)
 
 ## 3. First application: the bridge-block reconstruction
 
 In Proposition 5.2 of the manuscript, delete all Levi bridges and form the
-expansion pieces \(P_C\) indexed by active bridge-free components \(C\).  The
+expansion pieces \(P_C\) indexed by active bridge-free components \(C\). The
 local part of the proof establishes:
 
 - every hyperedge belongs to exactly one piece;
@@ -184,11 +162,11 @@ local part of the proof establishes:
 - the quotient of bridge-free components is a forest;
 - the depth order in that quotient has the running-intersection property.
 
-At this point Theorem 2.1 applies directly.  The final manual assembly paragraph
+At this point Theorem 2.1 applies directly. The final manual assembly paragraph
 can be replaced by one sentence:
 
 > The active pieces have the running-intersection order supplied by the quotient
-> forest.  The forest-assembly lemma therefore reconstructs \(F\) from the
+> forest. The forest-assembly lemma therefore reconstructs \(F\) from the
 > bipartite expansion pieces by disjoint unions and one-point amalgamations.
 
 This keeps the genuinely problem-specific work visible: residual degree
@@ -198,13 +176,13 @@ bridge quotient.
 ## 4. Second application: finite traces in the one-apex lift
 
 For a finite linear trace \(K\subseteq\mathcal L(G)\), let \(K_s\) be the base
-fibres.  The current proof establishes:
+fibres. The current proof establishes:
 
 1. every fibre \(K_s\) is an expansion \(J_s^+\);
 2. two distinct fibres meet in at most one point;
 3. the support-incidence graph of fibres and shared points is a forest.
 
-These are precisely the hypotheses of Theorem 2.1.  Therefore Claims 6.3.4 and
+These are precisely the hypotheses of Theorem 2.1. Therefore Claims 6.3.4 and
 6.3.5 can be replaced by a direct invocation of the master lemma:
 
 > The support-incidence graph is a forest, so the fibres admit a
@@ -251,8 +229,8 @@ The copy-ready TeX is in `reader-first/FOREST_ASSEMBLY_MASTER_LEMMA.tex`.
 
 Several inequivalent notions of hypergraph acyclicity occur in the literature.
 The manuscript should therefore avoid labelling the piece family simply
-`acyclic`.  The precise standard graph statement is that the bipartite
-piece--point incidence graph is a forest.  The conclusion is then stated in the
+`acyclic`. The precise standard graph statement is that the bipartite
+piece--point incidence graph is a forest. The conclusion is then stated in the
 manuscript's existing language of disjoint unions and one-point amalgamations.
 
 ## 7. Exact finite audit
@@ -270,9 +248,9 @@ checks.
    ```
 
 2. For every accepted incidence graph it builds a synthetic graph assembly with
-   one internal cycle per piece and bridge attachments at the shared points.  It
+   one internal cycle per piece and bridge attachments at the shared points. It
    checks that all attachment bridges remain bridges after the pieces are
-   identified.
+   identified and that every surviving cycle component uses one piece.
 
 Cyclic incidence graphs are retained as negative controls: the final piece in
 any proposed order must meet the earlier union in at least two distinct shared
@@ -280,7 +258,7 @@ points.
 
 ## 8. Claim boundary
 
-This lemma simplifies two existing arguments.  It does not change:
+This lemma simplifies two existing arguments. It does not change:
 
 - the definition of obligatory triple system;
 - the classification theorem;
