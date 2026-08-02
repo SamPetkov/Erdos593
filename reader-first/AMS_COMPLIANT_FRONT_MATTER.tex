@@ -1,0 +1,112 @@
+% Copy-ready AMS-style front matter for the Problem 593 manuscript.
+% This file is not included automatically.  It preserves the mathematical
+% claims while normalising title metadata, abstract structure, theorem prose,
+% attribution, and the proof roadmap.
+
+\title[Obligatory triple systems]
+  {Obligatory Triple Systems: Bridge Decompositions and Exact Finite Spectra}
+\author{Samuil Petkov}
+\address{École normale supérieure--PSL, 45 rue d'Ulm, 75005 Paris, France}
+\email{samuil.petkov@ens.psl.eu}
+\subjclass[2020]{Primary 05C65; Secondary 05C15, 05C63, 03E05}
+\keywords{obligatory triple system, weak hypergraph coloring, Levi graph,
+  Berge cycle, uncountable chromatic number, Erdős Problem 593}
+
+\begin{abstract}
+We give an alternative proof of the classification of finite obligatory triple
+systems.  After isolated vertices are removed, obligatoriness is equivalent to
+linearity, the presence of a bridge incident with every hyperedge-node of the
+Levi graph, and evenness of every Berge cycle.  Equivalently, the system is
+obtained from private-vertex expansions of finite bipartite graphs and finite
+edgeless systems by disjoint unions and one-point amalgamations.  The proof
+separates a finite bridge-block decomposition from the infinitary avoiding-host
+construction based on a one-apex sequence lift.  We also determine the exact
+order--size--component spectrum: a reduced obligatory system with $m\ge1$
+hyperedges and $c$ connected components has $n$ vertices exactly when
+$m+2(c-1)+\lceil2\sqrt{m-c+1}\rceil\le n\le2m+c$.  A Lean~4 development verifies
+the finite classification.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{introduction-ams}
+
+The hosts in Erdős Problem~593 are infinite, but the classification is governed
+by a finite incidence structure.  A finite triple system is \emph{obligatory}
+if it embeds in every triple system of uncountable weak chromatic number.
+Erdős asked for a characterization of these systems~\citep{erdos1995}; the
+problem is catalogued as Erdős Problem~593~\citep{bloom593}.
+
+For a finite graph $J$, let $J^+$ denote its private-vertex expansion: every
+edge $uv$ is replaced by a triple $\{u,v,p_{uv}\}$, where the points $p_{uv}$
+are new and pairwise distinct.  Let $\mathcal B$ be the smallest class that
+contains $J^+$ for every finite bipartite graph $J$, contains every finite
+edgeless triple system, and is closed under finite disjoint unions and
+one-point amalgamations.  Membership in $\mathcal B$ is understood up to
+triple-system isomorphism.  For a triple system $F$, let $F^\circ$ be the system
+obtained by deleting all isolated vertices, and let $I(F)$ denote its Levi, or
+incidence, graph.
+
+\begin{theoremA}\label{theorem-a-ams}
+For every finite triple system $F$, the following assertions are equivalent.
+\begin{enumerate}
+\item $F$ is obligatory.
+\item $F\in\mathcal B$.
+\item The system $F^\circ$ is linear, every hyperedge-node of $I(F^\circ)$ is
+incident with a bridge, and every Berge cycle of $F^\circ$ has even length.
+\end{enumerate}
+\end{theoremA}
+
+Li's preprint contains the first publicly posted complete proof of this
+classification and introduces the complete-rank one-apex lift and bridge-trace
+method used in the negative direction
+\citep[Theorem~1.1 and Sections~3--4]{li2026}.  The present paper gives an
+alternative implementation, a direct all-bridges decomposition of the finite
+structure, exact finite parameter consequences, and a Lean formalization of
+this implementation.  No competing priority claim is made for the
+classification or the shared lift architecture.  The positive expansion atoms
+also follow from Reiher's theorem on obligatory hypergraphs
+\citep[Theorem~1.2]{reiher2024}; we include a direct proof in the present
+notation.
+
+The proof separates into three implications:
+\[
+\mathcal B\Longrightarrow\text{obligatory},\qquad
+\mathcal B\Longleftrightarrow\text{intrinsic},\qquad
+\neg\text{intrinsic}\Longrightarrow\neg\text{obligatory}.
+\]
+The middle equivalence is the finite geometric core.  Delete all bridges from
+the Levi graph.  Every hyperedge-node then has residual degree zero or two.
+Each active component suppresses to a simple bipartite graph, and the deleted
+incidences become distinct private points.  Contracting the bridge-deleted
+components produces a forest, whose rooted order reconstructs the triple system
+by disjoint unions and one-point amalgamations.
+
+For the positive implication, complete bipartite expansions are obligatory, and
+obligatoriness is preserved by finite disjoint unions and one-point
+amalgamations.  The direct proof of the expansion atom uses a locally bounded
+rainbow lemma, while the amalgamation argument uses rooted abundance.
+
+For necessity, the intrinsic condition can fail in exactly three ways.
+A classical Erdős--Rado construction supplies an uncountably chromatic linear
+triple system and excludes every nonlinear source.  A one-apex lift of
+$K_{\omega_1}$ excludes a linear source whose Levi graph has a hyperedge-node
+without an incident bridge.  Finally, lifting an uncountably chromatic graph
+whose odd girth exceeds a prescribed finite bound excludes a source containing
+an odd Berge cycle.
+
+The bridge-block proof also retains exact numerical information.  It associates
+to every reduced obligatory system $F$ a finite bipartite shadow $J$ with the
+same numbers of hyperedges and connected components and with
+\[
+|V(J)|=|V(F)|-|E(F)|.
+\]
+Ordinary extremal bounds for finite bipartite graphs then give the complete
+order--size--component spectrum and its fixed-order and cycle-rank corollaries.
+
+The paper is organized as follows.  The preliminaries fix the coloring,
+embedding, incidence, and cycle conventions and record the external inputs.
+We then prove the finite bridge-block theorem, the positive implication, the
+one-apex trace theorem, and the three avoiding-host propositions.  The final
+mathematical section derives the exact finite spectra.  The last section states
+the formal verification and reproducibility boundary.

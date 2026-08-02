@@ -1,0 +1,40 @@
+name: Erdős 593 AMS writing and style audit
+
+on:
+  pull_request:
+    paths:
+      - "erdos593_obligatory_triple_systems.tex"
+      - "reader-first/AMS_COMPLIANT_FRONT_MATTER.tex"
+      - "audits/AMS_WRITING_AND_STYLE_AUDIT.md"
+      - "audits/AMS_WRITING_LINE_PATCHES.md"
+      - "scripts/audit_ams_writing.py"
+      - ".github/workflows/erdos593-ams-writing-audit.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: erdos593-ams-writing-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ams-writing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile the AMS writing audit
+        run: python -m py_compile scripts/audit_ams_writing.py
+      - name: Audit the current manuscript and verify the copy-ready fragment
+        run: python scripts/audit_ams_writing.py --mode audit | tee ams-writing-audit.json
+      - name: Enforce audit and patch-ledger markers
+        run: |
+          grep -F 'AUDIT_FINDINGS_RECORDED' ams-writing-audit.json >/dev/null
+          grep -F '"abstract_has_citations": false' ams-writing-audit.json >/dev/null
+          grep -F '"abstract_has_display_math": false' ams-writing-audit.json >/dev/null
+          grep -F '"copy_ready_patches": 24' ams-writing-audit.json >/dev/null
+          grep -F 'MATHEMATICALLY WELL WRITTEN, BUT NOT YET AMS-SUBMISSION CLEAN' audits/AMS_WRITING_AND_STYLE_AUDIT.md >/dev/null
+          grep -F '## Patch 24:' audits/AMS_WRITING_LINE_PATCHES.md >/dev/null
