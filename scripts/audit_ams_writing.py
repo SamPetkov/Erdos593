@@ -120,8 +120,8 @@ def check_front_matter(front: str) -> dict[str, object]:
     theorem = extract_environment(front, "theoremA")
     if "the following assertions are equivalent." not in theorem:
         failures.append("Theorem A is not introduced as a complete sentence")
-    if theorem.rstrip()[-1:] != ".":
-        failures.append("Theorem A does not end with punctuation")
+    if re.search(r"even length\.\s*\\end\{enumerate\}\s*$", theorem) is None:
+        failures.append("Theorem A's final assertion does not end with punctuation")
 
     if failures:
         raise AssertionError("; ".join(failures))
