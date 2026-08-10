@@ -1,0 +1,9 @@
+{
+  "bipartite_graphs": 5598,
+  "connected_bipartite_graphs": 4935,
+  "deterministic_forest_assemblies": 2000,
+  "indecomposable_expansions": 523,
+  "labelled_nonempty_graphs": 33861,
+  "nonbipartite_graphs": 28263,
+  "status": "PASS"
+}
