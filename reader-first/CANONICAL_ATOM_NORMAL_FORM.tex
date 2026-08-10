@@ -1,0 +1,105 @@
+% Copy-ready manuscript fragment. It should replace duplicated assembly prose
+% rather than be inserted in addition to it.
+
+\begin{theorem}[Canonical atom normal form]
+\label{theorem-canonical-atom-normal-form}
+Let $F$ be a finite triple system without isolated points. Suppose that $F$
+is linear, every hyperedge-node of $I(F)$ is incident with a bridge, and every
+Berge cycle of $F$ has even length. Then $E(F)$ has a canonical partition into
+subsystems of the following two types:
+\begin{enumerate}
+\item a single triple;
+\item $J^+$, where $J$ is a finite $2$-connected bipartite graph.
+\end{enumerate}
+Two distinct subsystems meet in at most one point, and the incidence graph
+between the subsystems and the points lying in at least two of them is a
+forest. Conversely, every forest assembly of such subsystems by disjoint
+unions and one-point amalgamations satisfies the three displayed intrinsic
+conditions.
+\end{theorem}
+
+\begin{proof}
+Let $L=I(F)$ and let $B$ be the set of bridges of $L$. A hyperedge-node has
+degree three in $L$ and is incident with a member of $B$. Its degree in $L-B$
+is therefore at most two. Residual degree one is impossible, because every
+nonbridge edge lies on a cycle and a cycle enters and leaves a
+hyperedge-node through two distinct incidences. Thus every hyperedge-node has
+residual degree zero or two.
+
+Let $C$ be a cyclic block of $L$. Every hyperedge-node in $C$ has degree two
+in $C$. Suppressing these nodes gives a graph $J_C$ on the point-nodes of
+$C$. The graph has neither loops nor parallel edges: the former are excluded
+because a triple has three distinct points, and the latter by linearity of
+$F$. Since $C$ is a subdivision of $J_C$, the graph $J_C$ is $2$-connected.
+Moreover, cycles of $J_C$ correspond to Berge cycles contained in $C$.
+Consequently, every cycle of $J_C$ is even, and $J_C$ is bipartite.
+
+For a hyperedge-node $e\in C$, its third incidence is a bridge. Its point
+$p_e$ does not lie in $C$, since otherwise that incidence, together with a
+path in $C$, would lie on a cycle. The points $p_e$ are pairwise distinct:
+if $p_e=p_f$, a path in $C$ from $e$ to $f$, completed through their common
+point, would put both bridge incidences on a cycle. The hyperedges represented
+in $C$ therefore form a subsystem isomorphic to $J_C^+$.
+
+A hyperedge-node outside every cyclic block cannot have residual degree two,
+for its two surviving incidences would lie on a cycle. It has residual degree
+zero and contributes a single-triple subsystem. These subsystems partition
+$E(F)$.
+
+Two distinct subsystems cannot share two points. Otherwise, Levi paths within
+the two subsystems between the shared points would contain a cycle crossing
+the two subsystems, whereas every Levi cycle belongs to one cyclic block. The
+same argument shows that the subsystem--shared-point incidence graph is
+acyclic: a cycle in that incidence graph expands to a closed Levi walk crossing
+subsystem boundaries, and deleting spurs produces a Levi cycle with the same
+property. It is therefore a forest. The cyclic blocks and the remaining
+all-bridge hyperedges are canonical, and suppressing the degree-two
+hyperedge-nodes determines each $J_C$ up to isomorphism.
+
+Conversely, every listed subsystem is linear, every hyperedge-node has its
+private incidence as a bridge, and every Berge cycle comes from a cycle of a
+bipartite core. Forest assembly preserves linearity, localizes Berge cycles in
+one subsystem, and preserves the private bridges. Hence the assembled system
+satisfies the intrinsic conditions.
+\end{proof}
+
+\begin{corollary}[Minimal generators]
+\label{corollary-minimal-obligatory-generators}
+The class $\mathcal B$ is the smallest isomorphism-closed class containing
+finite edgeless systems, one triple, and $J^+$ for every finite $2$-connected
+bipartite graph $J$, and closed under finite disjoint unions and one-point
+amalgamations.
+\end{corollary}
+
+\begin{proof}
+Every listed generator belongs to the original definition of $\mathcal B$.
+Conversely, apply Theorem~\ref{theorem-canonical-atom-normal-form} to the
+isolated reduction and restore the isolated points by adjoining an edgeless
+system.
+\end{proof}
+
+\begin{corollary}[One-point-indecomposable systems]
+\label{corollary-indecomposable-obligatory-systems}
+A finite reduced connected obligatory triple system with at least one
+hyperedge is one-point indecomposable if and only if it is one triple or is
+isomorphic to $J^+$ for a finite $2$-connected bipartite graph $J$.
+\end{corollary}
+
+\begin{proof}
+If the canonical atom forest has more than one atom, a leaf atom separates at
+its unique shared point. Thus an indecomposable system consists of one atom.
+A single triple is indecomposable. Let $J$ be $2$-connected. Deleting a
+private point from $I(J^+)$ removes only a leaf. Deleting a core point $v$
+does not separate the hyperedge-nodes, because $J-v$ is connected and every
+edge-node formerly incident with $v$ remains attached through its other core
+endpoint. Hence $J^+$ admits no nontrivial one-point decomposition.
+\end{proof}
+
+\begin{remark}[Rooted-theta form of the bridge condition]
+Let a hyperedge-node $e$ have point-neighbours $x,y,z$. None of the three
+incidences at $e$ is a bridge if and only if $x,y,z$ lie in one component of
+$I(F)-e$; equivalently, $I(F)$ contains a theta subgraph with branch vertex
+$e$ whose three branches begin with the three incidences at $e$. Thus the
+intrinsic bridge condition excludes a rooted theta using all incidences of a
+hyperedge-node.
+\end{remark}
