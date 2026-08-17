@@ -1,0 +1,100 @@
+% Integration-ready fragment.  Requires amsmath/amsthm and the manuscript's
+% definitions of reduced, obligatory, one-point amalgamation, and J^+.
+
+\subsection{The indecomposability spectrum}
+
+Let $F$ be connected and reduced, write
+\[
+  m=|E(F)|,\qquad n=|V(F)|,\qquad s=n-m,
+\]
+and, for $s\ge3$, set
+\[
+\alpha(s)=
+\begin{cases}
+ s,&s\text{ even},\\
+ s+1,&s\text{ odd},
+\end{cases}
+\qquad
+\delta(s)=\left\lfloor\frac{(s-1)^2}{4}\right\rfloor+1.
+\]
+
+\begin{theorem}[Exact indecomposable spectrum]\label{thm:indecomposable-spectrum}
+There exists a connected reduced one-point-indecomposable obligatory triple
+system with $m\ge1$ hyperedges and $n$ vertices if and only if either
+$(m,n)=(1,3)$, or
+\[
+ s=n-m\ge4,
+ \qquad
+ \alpha(s)\le m\le\left\lfloor\frac{s^2}{4}\right\rfloor.
+\]
+\end{theorem}
+
+\begin{proof}
+By the canonical atom normal form, an indecomposable system is either one
+triple or $J^+$ for a finite $2$-connected simple bipartite graph $J$.  In the
+second case $|V(J)|=s$ and $|E(J)|=m$.  If the bipartition sizes are $a,b$, then
+$m\le ab\le\lfloor s^2/4\rfloor$.  Since $J$ is $2$-connected, its minimum
+degree is at least two, so $m\ge s$.  Equality forces every degree to be two,
+hence $J$ is a cycle; bipartiteness then forces $s$ to be even.  Thus an odd
+$s$ requires $m\ge s+1$.
+
+Conversely, if $s=2t$, start with the spanning cycle $C_{2t}\subset K_{t,t}$.
+If $s=2t+1$, start with $C_{2t}$ and add the extra vertex in one bipartition
+class with two neighbours in the other class.  The resulting graph is
+$2$-connected and has $s+1$ edges.  In either parity, adding missing edges
+preserves $2$-connectivity and realizes every edge count up to the complete
+bipartite bound.  Private-vertex expansion gives the required systems.
+\end{proof}
+
+\begin{theorem}[Exact decomposable spectrum]\label{thm:decomposable-spectrum}
+There exists a connected reduced one-point-decomposable obligatory triple
+system with $m$ hyperedges and $n$ vertices if and only if
+\[
+ s=n-m\ge3,
+ \qquad
+ s-1\le m\le
+ \delta(s)=\left\lfloor\frac{(s-1)^2}{4}\right\rfloor+1.
+\]
+\end{theorem}
+
+\begin{proof}
+A nontrivial canonical atom forest yields a connected bipartite shadow $J$
+with $s$ vertices, $m$ edges, and a cut vertex.  Suppose a cut vertex $x$ lies
+in a bipartition class of size $a$, with the other class of size $b$.  After
+deleting $x$, write the component part sizes as $(a_i,b_i)$.  At least two
+$b_i$ are positive.  Hence
+\[
+ m\le b+\sum_i a_i b_i
+   \le b+(a-1)(b-1)=ab-a+1.
+\]
+The symmetric bound holds when the cut vertex lies in the other class, so
+\[
+ m\le ab-\min\{a,b\}+1
+ \le \left\lfloor\frac{(s-1)^2}{4}\right\rfloor+1.
+\]
+Connectedness gives $m\ge s-1$.
+
+Conversely, if $s-1\le m\le\delta(s)$, then
+$s-2\le m-1\le\lfloor (s-1)^2/4\rfloor$.  Choose a connected bipartite graph
+$H$ on $s-1$ vertices with $m-1$ edges and attach one new leaf.  Its expansion
+is the one-point amalgamation of $H^+$ with one triple.
+\end{proof}
+
+\begin{corollary}[Sharp parameter phase diagram]\label{cor:indecomposable-phase}
+For a feasible connected pair $(m,n)$, put $s=n-m$.  Apart from the single
+triple $(s,m)=(2,1)$, the parameter space splits into
+\[
+\begin{array}{rcll}
+ s-1\le m<\alpha(s)
+   &:& \text{every system is decomposable},\\[2mm]
+ \alpha(s)\le m\le\delta(s)
+   &:& \text{both behaviours occur},\\[2mm]
+ \delta(s)<m\le\lfloor s^2/4\rfloor
+   &:& \text{every system is indecomposable}.
+\end{array}
+\]
+For $m\ge2$, the last condition is equivalently
+\[
+ n-m\le\left\lceil2\sqrt{m-1}\right\rceil.
+\]
+\end{corollary}
