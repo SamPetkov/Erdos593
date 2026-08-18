@@ -85,6 +85,12 @@ jobs:
           if git diff --quiet --exit-code -- .; then
             exit 0
           fi
+          # Workflow files are reviewed and committed separately; do not include
+          # generated workflow-title normalization in the bot artifact commit.
+          git restore -- .github/workflows/manuscript-artifacts.yml
+          if git diff --quiet --exit-code -- .; then
+            exit 0
+          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           branch='${{ github.event.pull_request.head.ref }}'
