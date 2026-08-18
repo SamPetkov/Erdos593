@@ -69,6 +69,12 @@ def patch_tex() -> None:
         )
         text = replace_once(
             text,
+            r"\keywords{obligatory triple system, hypergraph colouring, Levi graph, Berge cycle, uncountable chromatic number, Erdős Problem 593}",
+            r"\keywords{obligatory triple system, canonical atom, hypergraph colouring, Levi graph, Berge cycle, exact finite spectrum, Erdős Problem 593}",
+            "visible manuscript keywords",
+        )
+        text = replace_once(
+            text,
             r"\title[Obligatory triple systems]{Obligatory Triple Systems: An Alternative Proof}",
             r"\title[Obligatory triple systems]{Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra}",
             "document title",
@@ -140,6 +146,7 @@ direction uses a one-apex sequence lift; all arguments are in ZFC.
             r"\label{theorem-exact-canonical-atom-count-spectrum}",
             r"\label{theorem-indecomposability-phase-diagram}",
             r"\label{proposition-componentwise-atom-count-spectrum}",
+            r"\keywords{obligatory triple system, canonical atom, hypergraph colouring, Levi graph, Berge cycle, exact finite spectrum, Erdős Problem 593}",
         ]
         missing = [needle for needle in required if needle not in text]
         if missing:
@@ -210,6 +217,19 @@ def patch_sync_script() -> None:
         text = text.replace(old_header, new_header, 1)
     elif "École normale supérieure--PSL" not in text:
         raise RuntimeError("Markdown header anchor missing")
+
+    old_keywords = (
+        "**Keywords.** obligatory triple system; hypergraph colouring; Levi graph; "
+        "Berge cycle; uncountable chromatic number; Erdős Problem 593"
+    )
+    new_keywords = (
+        "**Keywords.** obligatory triple system; canonical atom; hypergraph colouring; "
+        "Levi graph; Berge cycle; exact finite spectrum; Erdős Problem 593"
+    )
+    if old_keywords in text:
+        text = text.replace(old_keywords, new_keywords, 1)
+    elif new_keywords not in text:
+        raise RuntimeError("Markdown keyword anchor missing")
 
     SYNC.write_text(text, encoding="utf-8", newline="\n")
 
@@ -288,7 +308,7 @@ def patch_revision_notes() -> None:
     text = REVISION.read_text(encoding="utf-8")
     marker = "## 18 August 2026 -- canonical atoms and exact structural spectra"
     if marker not in text:
-        entry = f"""\n\n{marker}\n\n- changed the manuscript title to *{NEW_TITLE}*;\n- integrated the canonical atom normal form and minimal-generator corollary;\n- added the exact connected and componentwise atom-count spectra;\n- added the indecomposability phase diagram and boundary-rigidity corolary;\n- replaced the displayed abstract formula by a self-contained AMS-style abstract;\n- added the ENS--PSL address and author email; and\n- regenerated all public TeX, Markdown, PDF, arXiv, manifest, and checksum artifacts.\n"""
+        entry = f"""\n\n{marker}\n\n- changed the manuscript title to *{NEW_TITLE}*;\n- integrated the canonical atom normal form and minimal-generator corollary;\n- added the exact connected and componentwise atom-count spectra;\n- added the indecomposability phase diagram and boundary-rigidity corollary;\n- replaced the displayed abstract formula by a self-contained AMS-style abstract;\n- added the ENS--PSL address and author email; and\n- regenerated all public TeX, Markdown, PDF, arXiv, manifest, and checksum artifacts.\n"""
         text = text.rstrip() + entry
     REVISION.write_text(text.rstrip() + "\n", encoding="utf-8", newline="\n")
 
