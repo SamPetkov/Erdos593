@@ -1,17 +1,17 @@
-# Obligatory Triple Systems: An Alternative Proof
+# Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra
 
 **Samuil Petkov**  
-24 July 2026
+École normale supérieure--PSL
 
 **2020 Mathematics Subject Classification.** Primary 05C65; Secondary 05C15, 05C63, 03E05
 
-**Keywords.** obligatory triple system; hypergraph colouring; Levi graph; Berge cycle; uncountable chromatic number; Erdős Problem 593
+**Keywords.** obligatory triple system; canonical atom; hypergraph colouring; Levi graph; Berge cycle; exact finite spectrum; Erdős Problem 593
 
 # Introduction
 
 The hosts in this problem are infinite, but the answer is decided by a small piece of finite geometry. A finite triple system is *obligatory* if it occurs in every triple system of uncountable chromatic number. Erdős asked for a characterization of these finite systems ; the question is catalogued as Erdős Problem 593 . The answer has both a constructive form and an intrinsic form.
 
-For a finite graph $J$, write $J^+$ for its private-vertex expansion. Let $\mathcal B$ be the smallest class containing $J^+$ for every finite bipartite graph $J$ and every finite edgeless triple system, and closed under finite disjoint unions and one-point amalgamations. If $F$ is a triple system, let $F^\circ$ denote the system obtained by deleting its isolated vertices.
+For a finite graph $J$, write $J^+$ for its private-vertex expansion. Let $\mathcal B$ be the smallest class containing $J^+$ for every finite bipartite graph $J$ and every finite edgeless triple system, and closed under finite disjoint unions and one-point amalgamations. Membership in $\mathcal B$ is understood up to triple-system isomorphism. If $F$ is a triple system, let $F^\circ$ denote the system obtained by deleting its isolated vertices.
 
 <div id="theorem-a-exact-characterisation" class="theoremA">
 
@@ -25,7 +25,7 @@ For a finite graph $J$, write $J^+$ for its private-vertex expansion. Let $\math
 
 </div>
 
-Li’s preprint, posted on 23 June 2026, contains the first publicly posted complete mathematical proof of Theorem A . It also introduced the complete-rank one-apex lift and bridge-trace method used in the negative direction . The present paper gives a different implementation, direct positive arguments, sharp finite parameter consequences, and a Lean formalisation of this implementation.
+Li’s preprint, posted on 23 June 2026, contains the first publicly posted complete mathematical proof of Theorem A . It also introduced the complete-rank one-apex lift and bridge-trace method used in the negative direction . The present paper gives a different implementation, direct positive arguments, a canonical atom normal form, exact finite structural spectra, and a Lean formalisation of the finite classification.
 
 The graph analogue was proved by Erdős and Hajnal: the obligatory finite graphs are exactly the bipartite graphs . The classical nonlinearity obstruction for uniform hypergraphs is due to Erdős, Hajnal, and Rothschild . Obligatory triple systems were studied further by , , , and ; the expansion theorem of supplies the positive atoms used below.
 
@@ -510,6 +510,44 @@ Combining (5.1) and (5.2),
 
 $$(2)\Longleftrightarrow(3). \tag{5.3}$$
 
+<div id="theorem-canonical-atom-normal-form" class="theorem">
+
+**Theorem 15** (Canonical atom normal form). *Let $F$ be a finite triple system without isolated points satisfying the three intrinsic conditions in Theorem A. Its hyperedges admit a canonical partition into *atoms* with the following properties.*
+
+1.  *Every atom is either one triple or $J^+$ for a finite $2$-connected simple bipartite graph $J$.*
+
+2.  *Two distinct atoms meet in at most one point. The bipartite incidence graph between atoms and points belonging to at least two atoms is a forest.*
+
+3.  *The atom partition, the nontrivial cores $J$ up to graph isomorphism, and the atom–point forest are determined by $F$.*
+
+*Conversely, every forest assembly of these atoms by disjoint unions and one-point amalgamations satisfies the intrinsic conditions.*
+
+</div>
+
+<div class="proof">
+
+*Proof.* Let $L=I(F)$. A *cyclic block* is a maximal $2$-connected subgraph of $L$ containing a cycle. Since every hyperedge-node has degree three and is incident with a bridge, its degree inside a cyclic block is two. Suppressing the hyperedge-nodes in such a block $C$ gives a finite graph $J_C$ on the point-nodes of $C$. It is simple by linearity and $2$-connected by standard block theory. Its cycles correspond to Berge cycles of the same lengths, so $J_C$ is bipartite.
+
+For a hyperedge-node $e\in C$, the third incidence is a bridge. Its point endpoint lies outside $C$, since otherwise that incidence would lie on a cycle. These third points are pairwise distinct as $e$ varies in $C$; otherwise a path inside $C$ between two hyperedge-nodes, completed through the common third point, would put both bridge incidences on a cycle. The hyperedges represented in $C$ therefore form exactly $J_C^+$.
+
+A hyperedge-node outside every cyclic block has no nonbridge incidence and contributes one single-triple atom. Thus the atoms partition the hyperedges. Two atoms cannot share two points, since paths inside the two atoms would produce a Levi cycle crossing two cyclic blocks. Similarly, a cycle in the atom–shared-point incidence graph expands to a closed Levi walk and hence to a Levi cycle crossing atom boundaries. The incidence graph is therefore a forest. Cyclic blocks and the block–cut forest are canonical, proving the forward statement. The converse follows because an atomic expansion is linear, has a private bridge at each hyperedge-node, and has only even Berge cycles, while a forest of one-point sums preserves these properties. ◻
+
+</div>
+
+Call a connected triple system with at least one hyperedge *one-point indecomposable* if it cannot be written as a one-point amalgamation of two systems that both contain a hyperedge.
+
+<div id="corollary-minimal-generators-indecomposables" class="corollary">
+
+**Corollary 16** (Minimal generators and one-point indecomposables). *The class $\mathcal B$ is generated, up to isomorphism, by finite edgeless systems, one triple, and $J^+$ for finite $2$-connected simple bipartite graphs $J$, under finite disjoint unions and one-point amalgamations. Moreover, a connected reduced obligatory system with at least one hyperedge is one-point indecomposable if and only if it is one triple or $J^+$ for a finite $2$-connected simple bipartite graph $J$.*
+
+</div>
+
+<div class="proof">
+
+*Proof.* The theorem decomposes every reduced member of $\mathcal B$ into the displayed atoms; isolated points are restored by an edgeless factor. If the atom forest has at least two atom-nodes, a leaf atom separates from the rest at its unique shared point. Conversely, one triple is indecomposable, and if $J$ is $2$-connected then deleting any point of $J^+$ cannot separate its hyperedge-nodes into two nonempty classes: a private point is a leaf, while a core point leaves $J$ connected. Hence $J^+$ is indecomposable. ◻
+
+</div>
+
 # The sequence lift
 
 We use the one-apex construction and bridge-trace strategy of , specialised to $\omega_1$ and written as a base-fibre and support-incidence decomposition convenient for formalisation.
@@ -524,7 +562,7 @@ be the tree of all sequences of graph edges of countable ordinal length. For $s\
 
 <div id="definition-6.1-the-one-apex-lift" class="definition">
 
-**Definition 15** (The one-apex lift).
+**Definition 17** (The one-apex lift).
 
 Define the triple system $\mathcal L(G)$ by
 
@@ -542,7 +580,7 @@ The two vertices $x_s,y_s$ form the base pair and $z_t$ is the apex. Since $t$ p
 
 <div id="lemma-6.2-chromatic-lower-bound" class="lemma">
 
-**Lemma 16** (Chromatic lower bound).
+**Lemma 18** (Chromatic lower bound).
 
 *If $\chi(G)>\aleph_0$, then*
 
@@ -579,7 +617,7 @@ The next result is the fibre-decomposition form of Li’s bridge-trace theorem n
 
 <div id="theorem-6.3-exact-finite-linear-trace-theorem" class="theorem">
 
-**Theorem 17** (Finite linear trace decomposition).
+**Theorem 19** (Finite linear trace decomposition).
 
 *Every finite, not necessarily induced, linear subhypergraph $K$ of $\mathcal L(G)$ is obtainable, by finite disjoint unions and one-point amalgamations, from systems $J^+$ where $J$ is a finite subgraph of $G$.*
 
@@ -645,7 +683,7 @@ Root each component of $Q$ at a base node, and order its base nodes by nondecrea
 
 <div id="corollary-6.4-restrictions-on-finite-linear-traces" class="corollary">
 
-**Corollary 18** (Restrictions on finite linear traces).
+**Corollary 20** (Restrictions on finite linear traces).
 
 *Every finite linear $K\subseteq\mathcal L(G)$ satisfies:*
 
@@ -669,7 +707,7 @@ For the odd-cycle obstruction we use the following older graph theorem directly,
 
 <div id="theorem-7.1-high-odd-girth" class="theorem">
 
-**Theorem 19** (Erdős–Hajnal). *For every positive integer $m$ there is a graph $G$ such that $$\chi(G)>\aleph_0$$ and $G$ contains no odd cycle of length at most $m$.*
+**Theorem 21** (Erdős–Hajnal). *For every positive integer $m$ there is a graph $G$ such that $$\chi(G)>\aleph_0$$ and $G$ contains no odd cycle of length at most $m$.*
 
 </div>
 
@@ -691,7 +729,7 @@ $$\neg(3)\Longrightarrow\neg(1).$$
 
 <div id="proposition-8.1-avoidance-of-every-nonlinear-finite-triple-system" class="proposition">
 
-**Proposition 20** (Avoidance of every nonlinear finite triple system).
+**Proposition 22** (Avoidance of every nonlinear finite triple system).
 
 *There is an uncountably chromatic linear triple system. Consequently, every finite nonlinear triple system is non-obligatory.*
 
@@ -724,7 +762,7 @@ If a finite triple system $F$ is nonlinear, it has two distinct edges sharing at
 
 <div id="proposition-8.2-avoidance-when-the-bridge-condition-fails" class="proposition">
 
-**Proposition 21** (Avoidance when the bridge condition fails).
+**Proposition 23** (Avoidance when the bridge condition fails).
 
 *Let $F$ be finite and linear, and suppose some hyperedge-node of $I(F^\circ)$ is incident with no bridge. Then $F$ is non-obligatory.*
 
@@ -744,7 +782,7 @@ If $F$ appeared in $\mathcal L(G)$, retain exactly the host hyperedges correspon
 
 <div id="proposition-8.3-avoidance-of-an-odd-berge-cycle" class="proposition">
 
-**Proposition 22** (Avoidance of an odd Berge cycle).
+**Proposition 24** (Avoidance of an odd Berge cycle).
 
 *Let $F$ be finite and linear, and suppose $F^\circ$ has an odd Berge cycle. Then $F$ is non-obligatory.*
 
@@ -788,7 +826,7 @@ In this section a triple system is *connected* when its Levi graph is connected.
 
 <div id="proposition-edge-deletion-bridge-condition" class="proposition">
 
-**Proposition 23** (Edge-deletion form of the bridge condition). *Let $F$ be a finite triple system and let $e=\{x,y,z\}\in E(F)$. The hyperedge-node $e$ has no incident bridge in $I(F)$ if and only if $x,y,z$ lie in one connected component after the hyperedge $e$ is deleted and all points are retained. Consequently the bridge condition in Theorem A is equivalent to the following hypergraph-native condition: $$\text{for every }e\in E(F^\circ),\text{ deleting }e\text{ separates its
+**Proposition 25** (Edge-deletion form of the bridge condition). *Let $F$ be a finite triple system and let $e=\{x,y,z\}\in E(F)$. The hyperedge-node $e$ has no incident bridge in $I(F)$ if and only if $x,y,z$ lie in one connected component after the hyperedge $e$ is deleted and all points are retained. Consequently the bridge condition in Theorem A is equivalent to the following hypergraph-native condition: $$\text{for every }e\in E(F^\circ),\text{ deleting }e\text{ separates its
 three points into at least two components.}$$*
 
 </div>
@@ -803,7 +841,7 @@ If all three incidences at $e$ are non-bridging, no one of $x,y,z$ can form a si
 
 <div id="lemma-bipartite-shadow" class="lemma">
 
-**Lemma 24** (Bipartite shadow). *Let $F$ be an obligatory finite triple system with no isolated vertices and at least one hyperedge. There is a finite bipartite graph $J$, without isolated vertices, such that $$|E(J)|=|E(F)|,\qquad |V(J)|=|V(F)|-|E(F)|,$$ and $J$ has the same number of connected components as $F$. Conversely, for every finite bipartite graph $J$ without isolated vertices, the expansion $J^+$ is obligatory and has these parameter relations.*
+**Lemma 26** (Bipartite shadow). *Let $F$ be an obligatory finite triple system with no isolated vertices and at least one hyperedge. There is a finite bipartite graph $J$, without isolated vertices, such that $$|E(J)|=|E(F)|,\qquad |V(J)|=|V(F)|-|E(F)|,$$ and $J$ has the same number of connected components as $F$. Conversely, for every finite bipartite graph $J$ without isolated vertices, the expansion $J^+$ is obligatory and has these parameter relations.*
 
 </div>
 
@@ -822,7 +860,7 @@ Take one-point sums of the ordinary graphs $J_1,\ldots,J_k$ along any tree on th
 
 <div id="theorem-order-size-component-spectrum" class="theorem">
 
-**Theorem 25** (Exact order–size–component spectrum). *Let $m\ge1$, $1\le c\le m$, and $n$ be integers. There exists an obligatory triple system $F$ with no isolated vertices, exactly $m$ hyperedges, exactly $n$ vertices, and exactly $c$ connected components if and only if $$\boxed{
+**Theorem 27** (Exact order–size–component spectrum). *Let $m\ge1$, $1\le c\le m$, and $n$ be integers. There exists an obligatory triple system $F$ with no isolated vertices, exactly $m$ hyperedges, exactly $n$ vertices, and exactly $c$ connected components if and only if $$\boxed{
  m+2(c-1)+\left\lceil2\sqrt{m-c+1}\right\rceil
  \le n\le 2m+c.
 }
@@ -835,7 +873,7 @@ Take one-point sums of the ordinary graphs $J_1,\ldots,J_k$ along any tree on th
 *Proof.* We first record the corresponding elementary graph fact. A connected simple bipartite graph with $r\ge1$ edges and $s$ vertices exists if and only if $$q(r)\le s\le r+1.
 \tag{10.3}$$ Indeed, connectedness gives $r\ge s-1$. If the bipartition has sizes $a,b$, then $$r\le ab\le\left\lfloor\frac{s^2}{4}\right\rfloor,$$ which is equivalent to $s\ge q(r)$. Conversely, $K_{\lfloor s/2\rfloor,\lceil s/2\rceil}$ contains a spanning tree, and starting with that tree and adding arbitrary unused edges realises every edge count between $s-1$ and $\lfloor s^2/4\rfloor$.
 
-Apply Lemma <a href="#lemma-bipartite-shadow" data-reference-type="ref" data-reference="lemma-bipartite-shadow">24</a>. Let the $c$ connected components of the shadow have positive edge counts $m_1,\ldots,m_c$, where $\sum_i m_i=m$. If their orders are $s_i$, then (10.3) gives $$\sum_{i=1}^c q(m_i)\le \sum_{i=1}^c s_i\le m+c.
+Apply Lemma <a href="#lemma-bipartite-shadow" data-reference-type="ref" data-reference="lemma-bipartite-shadow">26</a>. Let the $c$ connected components of the shadow have positive edge counts $m_1,\ldots,m_c$, where $\sum_i m_i=m$. If their orders are $s_i$, then (10.3) gives $$\sum_{i=1}^c q(m_i)\le \sum_{i=1}^c s_i\le m+c.
 \tag{10.4}$$ For positive integers $a,b$, $$q(a)+q(b)\ge q(a+b-1)+2.
 \tag{10.5}$$ To see this, note that $$\sqrt a+\sqrt b\ge\sqrt{a+b-1}+1,$$ because, after squaring, the assertion reduces to $(a-1)(b-1)\ge0$; taking ceilings gives (10.5). Repeatedly applying (10.5) to the left side of (10.4) yields $$\sum_{i=1}^c q(m_i)
 \ge q(m-c+1)+2(c-1).$$ The shadow has $n-m$ vertices, so these inequalities give (10.2).
@@ -846,7 +884,7 @@ For sharpness put $M=m-c+1$. Take $c-1$ components equal to $K_2$. By (10.3), a 
 
 <div id="corollary-connected-order-size-spectrum" class="corollary">
 
-**Corollary 26** (Connected and unrestricted spectra). *For $m\ge1$:*
+**Corollary 28** (Connected and unrestricted spectra). *For $m\ge1$:*
 
 1.  *a connected obligatory triple system without isolated vertices has $m$ hyperedges and $n$ vertices if and only if $$m+\left\lceil2\sqrt m\right\rceil\le n\le2m+1;$$*
 
@@ -858,13 +896,13 @@ For sharpness put $M=m-c+1$. Take $c-1$ components equal to $K_2$. By (10.3), a 
 
 <div class="proof">
 
-*Proof.* The first assertion is Theorem <a href="#theorem-order-size-component-spectrum" data-reference-type="ref" data-reference="theorem-order-size-component-spectrum">25</a> with $c=1$. For the second, the connected interval covers through $2m+1$; for $n>2m+1$, take $c=n-2m$ and use the upper endpoint $n=2m+c$ of (10.2). The largest possible value is obtained from $m$ disjoint triples. The final assertion follows by adjoining arbitrary isolated vertices. ◻
+*Proof.* The first assertion is Theorem <a href="#theorem-order-size-component-spectrum" data-reference-type="ref" data-reference="theorem-order-size-component-spectrum">27</a> with $c=1$. For the second, the connected interval covers through $2m+1$; for $n>2m+1$, take $c=n-2m$ and use the upper endpoint $n=2m+c$ of (10.2). The largest possible value is obtained from $m$ disjoint triples. The final assertion follows by adjoining arbitrary isolated vertices. ◻
 
 </div>
 
 <div id="corollary-fixed-order-size-spectrum" class="corollary">
 
-**Corollary 27** (Size spectrum at fixed order). *Let $c\ge1$ and $n\ge3c$. A reduced obligatory triple system with exactly $n$ vertices, $c$ connected components, and $m$ hyperedges exists if and only if $$\boxed{
+**Corollary 29** (Size spectrum at fixed order). *Let $c\ge1$ and $n\ge3c$. A reduced obligatory triple system with exactly $n$ vertices, $c$ connected components, and $m$ hyperedges exists if and only if $$\boxed{
 \left\lceil\frac{n-c}{2}\right\rceil
 \le m\le
 n-2c+4-\left\lceil2\sqrt{n-3c+4}\right\rceil.
@@ -880,13 +918,13 @@ n-2c+4-\left\lceil2\sqrt{n-3c+4}\right\rceil.
 \tag{10.8}$$ For integers $N\ge3$ and $M\ge1$, the largest $M$ satisfying (10.8) is $$U=N+2-\left\lceil2\sqrt{N+1}\right\rceil.
 \tag{10.9}$$ Indeed, write $k=\lceil2\sqrt{N+1}\rceil$. Since $k^2\ge4(N+1)$, $$4U=4N+8-4k\le(k-2)^2,$$ so $\lceil2\sqrt U\rceil\le k-2$ and $U+\lceil2\sqrt U\rceil\le N$. On the other hand, $(k-1)^2<4(N+1)$ gives $$(k-3)^2<4(N+3-k)=4(U+1),$$ so $\lceil2\sqrt{U+1}\rceil\ge k-2$ and $(U+1)+\lceil2\sqrt{U+1}\rceil\ge N+1$. The left side of (10.8) is strictly increasing in $M$, proving (10.9). Translating back to $m$ gives (10.6).
 
-For (10.7), Corollary <a href="#corollary-connected-order-size-spectrum" data-reference-type="ref" data-reference="corollary-connected-order-size-spectrum">26</a> shows that a connected reduced obligatory system has order $3$, order $5$, or any order at least $7$. The first two statements come from $m=1,2$. For $m\ge3$, the connected intervals have no gaps because $\lceil2\sqrt{m+1}\rceil\le m+1$ for $m+1\ge4$. Thus every component has order $$3+r,\qquad r\in\{0,2\}\cup[4,\infty).$$ The sum of $c$ such increments is again $0$, $2$, or any integer at least $4$: use one nonzero increment and take all remaining increments to be zero. The increments $1$ and $3$ are impossible. This proves (10.7). ◻
+For (10.7), Corollary <a href="#corollary-connected-order-size-spectrum" data-reference-type="ref" data-reference="corollary-connected-order-size-spectrum">28</a> shows that a connected reduced obligatory system has order $3$, order $5$, or any order at least $7$. The first two statements come from $m=1,2$. For $m\ge3$, the connected intervals have no gaps because $\lceil2\sqrt{m+1}\rceil\le m+1$ for $m+1\ge4$. Thus every component has order $$3+r,\qquad r\in\{0,2\}\cup[4,\infty).$$ The sum of $c$ such increments is again $0$, $2$, or any integer at least $4$: use one nonzero increment and take all remaining increments to be zero. The increments $1$ and $3$ are impossible. This proves (10.7). ◻
 
 </div>
 
 <div id="corollary-levi-cycle-rank-spectrum" class="corollary">
 
-**Corollary 28** (Exact Levi cycle-rank spectrum). *Let $F$ be reduced and obligatory, with $m$ hyperedges, $n$ vertices, and $c$ connected components. The cyclomatic number of its Levi graph is $$\beta(I(F))=|E(I(F))|-|V(I(F))|+c=2m-n+c.
+**Corollary 30** (Exact Levi cycle-rank spectrum). *Let $F$ be reduced and obligatory, with $m$ hyperedges, $n$ vertices, and $c$ connected components. The cyclomatic number of its Levi graph is $$\beta(I(F))=|E(I(F))|-|V(I(F))|+c=2m-n+c.
 \tag{10.10}$$ For fixed $m,c$, every integer in the interval $$0\le\beta(I(F))\le
 m-c+2-\left\lceil2\sqrt{m-c+1}\right\rceil
 \tag{10.11}$$ occurs, and no other value occurs. In particular, $$|V(F)|=2|E(F)|+c
@@ -903,7 +941,7 @@ I(F)\text{ is a forest}.$$*
 
 <div id="corollary-balanced-endpoint-rigidity" class="corollary">
 
-**Corollary 29** (Rigidity at balanced lower endpoints). *Let $F$ be connected, reduced, and obligatory.*
+**Corollary 31** (Rigidity at balanced lower endpoints). *Let $F$ be connected, reduced, and obligatory.*
 
 1.  *If $|E(F)|=t^2$ and $|V(F)|=t^2+2t$, then $F\cong K_{t,t}^+$.*
 
@@ -915,9 +953,137 @@ I(F)\text{ is a forest}.$$*
 
 <div class="proof">
 
-*Proof.* In either case the shadow from Lemma <a href="#lemma-bipartite-shadow" data-reference-type="ref" data-reference="lemma-bipartite-shadow">24</a> attains $|E(J)|=\lfloor|V(J)|^2/4\rfloor$. Equality forces every possible cross edge to be present and the two bipartition classes to be balanced, so the shadow is $K_{t,t}$ or $K_{t,t+1}$, respectively.
+*Proof.* In either case the shadow from Lemma <a href="#lemma-bipartite-shadow" data-reference-type="ref" data-reference="lemma-bipartite-shadow">26</a> attains $|E(J)|=\lfloor|V(J)|^2/4\rfloor$. Equality forces every possible cross edge to be present and the two bipartition classes to be balanced, so the shadow is $K_{t,t}$ or $K_{t,t+1}$, respectively.
 
 For $t\ge2$ these complete bipartite graphs have no cut vertex. On the other hand, the shadow built from two or more connected expansion pieces is a nontrivial one-point sum and has a cut vertex. Hence the bridge-block reconstruction has only one piece, and $F$ is the expansion of the displayed complete bipartite graph. The cases $t=1$ are immediate. ◻
+
+</div>
+
+## Canonical atoms and structural spectra
+
+For a connected reduced obligatory system $F$, put $$s=|V(F)|-|E(F)|,
+\qquad
+\beta=2|E(F)|-|V(F)|+1.$$ Thus $s$ is the order of a connected bipartite shadow and $\beta$ is its cycle rank. Let $a(F)$ denote the number of canonical atoms from Theorem <a href="#theorem-canonical-atom-normal-form" data-reference-type="ref" data-reference="theorem-canonical-atom-normal-form">15</a>.
+
+<div id="lemma-minimum-order-fixed-cyclic-rank" class="lemma">
+
+**Lemma 32** (Minimum order at fixed cyclic rank). *Let $J$ be a finite $2$-connected simple bipartite graph of cycle rank $r=|E(J)|-|V(J)|+1\ge1$. Then $$|V(J)|\ge 2+q(r).
+\tag{10.12}$$ For $r\ge2$, every order $v\ge2+q(r)$ occurs. For $r=1$, the possible orders are exactly the even integers $v\ge4$.*
+
+</div>
+
+<div class="proof">
+
+*Proof.* Writing $v=|V(J)|$, the bipartite extremal bound gives $$r\le\left\lfloor\frac{v^2}{4}\right\rfloor-v+1
+ =\left\lfloor\frac{(v-2)^2}{4}\right\rfloor,$$ which is equivalent to (10.12). If $v$ is even, start with the spanning cycle $C_v$ in the balanced complete bipartite graph and add edges until the desired rank is reached. If $v$ is odd, start with $C_{v-1}$ and add the remaining vertex with two neighbours in the opposite bipartition class; this is $2$-connected and has rank two. Add arbitrary missing cross-edges. These constructions realise every allowed $r\ge2$. A $2$-connected graph of rank one is a cycle, which is bipartite exactly when its order is even. ◻
+
+</div>
+
+<div id="theorem-exact-canonical-atom-count-spectrum" class="theorem">
+
+**Theorem 33** (Exact canonical atom-count spectrum). *Let $F$ range over connected reduced obligatory systems with fixed shadow order $s$ and cycle rank $\beta$. The possible values $k=a(F)$ are exactly $$\begin{array}{ll}
+\beta=0:
+  & k=s-1,\\[1mm]
+\beta=1:
+  & 1\le k\le s-3,\quad k\equiv s+1\pmod 2,\\[1mm]
+\beta\ge2:
+  & 1\le k\le s-1-q(\beta).
+\end{array}
+\tag{10.13}$$ For $\beta\ge1$, the maximum is $$a_{\max}(s,\beta)=s-1-q(\beta).
+\tag{10.14}$$ Every maximiser has one minimum-order cyclic atom carrying the full rank $\beta$, and every other atom is one triple. The parity obstruction in the rank-one line is the only gap in any atom-count spectrum.*
+
+</div>
+
+<div class="proof">
+
+*Proof.* Let the atom cores be $J_i$, with $v_i=|V(J_i)|$, $e_i=|E(J_i)|$, and $r_i=e_i-v_i+1$. Since a tree of $k$ atoms makes $k-1$ one-point identifications, $$s=1+\sum_i(v_i-1),
+\qquad
+\beta=\sum_i r_i.
+\tag{10.15}$$ If $\beta=0$, every atom is one triple and (10.15) gives $k=s-1$. If $\beta=1$, there is one cyclic atom, whose core is an even cycle of order $v\ge4$; the remaining atoms are single triples, so $s=k+v-1$. This is exactly the middle line of (10.13).
+
+Suppose $\beta\ge2$. For positive integers $a,b$, the inequality $\sqrt a+\sqrt b\ge\sqrt{a+b-1}+1$ follows after squaring from $(a-1)(b-1)\ge0$. Hence $q(a)+q(b)\ge q(a+b-1)+2\ge q(a+b)+1$, where the second inequality uses that $q$ increases by at most one between consecutive integers. Together with Lemma <a href="#lemma-minimum-order-fixed-cyclic-rank" data-reference-type="ref" data-reference="lemma-minimum-order-fixed-cyclic-rank">32</a>, repeated application gives $$s\ge1+k+q(\beta),$$ so $k\le s-1-q(\beta)$. Conversely, for every integer in the displayed interval choose one cyclic core of rank $\beta$ and order $s-k+1$, supplied by the lemma, and attach $k-1$ single-triple atoms. Equality in (10.14) forces one positive-rank atom and minimum order, proving the rigidity statement. ◻
+
+</div>
+
+For $s\ge3$, define $$\alpha(s)=
+\begin{cases}
+s,&s\text{ even},\\
+s+1,&s\text{ odd},
+\end{cases}
+\qquad
+\delta(s)=\left\lfloor\frac{(s-1)^2}{4}\right\rfloor+1.$$
+
+<div id="theorem-indecomposability-phase-diagram" class="theorem">
+
+**Theorem 34** (Indecomposability phase diagram). *Apart from the single triple $(|E(F)|,|V(F)|)=(1,3)$, a connected reduced one-point-indecomposable obligatory system with shadow order $s$ and $m$ hyperedges exists if and only if $$s\ge4,
+\qquad
+\alpha(s)\le m\le\left\lfloor\frac{s^2}{4}\right\rfloor.
+\tag{10.16}$$ A connected reduced one-point-decomposable obligatory system exists if and only if $$s\ge3,
+\qquad
+s-1\le m\le\delta(s).
+\tag{10.17}$$ Consequently the feasible connected parameters split into three exact zones: $$\begin{array}{rcl}
+s-1\le m<\alpha(s)
+ &\Longrightarrow& \text{every system is decomposable},\\
+\alpha(s)\le m\le\delta(s)
+ &\Longrightarrow& \text{both behaviours occur},\\
+\delta(s)<m\le\lfloor s^2/4\rfloor
+ &\Longrightarrow& \text{every system is indecomposable}.
+\end{array}
+\tag{10.18}$$ For $m\ge2$, the last zone is equivalently $$s\le\left\lceil2\sqrt{m-1}\right\rceil.
+\tag{10.19}$$*
+
+</div>
+
+<div class="proof">
+
+*Proof.* By Corollary <a href="#corollary-minimal-generators-indecomposables" data-reference-type="ref" data-reference="corollary-minimal-generators-indecomposables">16</a>, the nontrivial indecomposable systems are $J^+$ with $J$ finite, simple, bipartite and $2$-connected. If $|V(J)|=s$ and $|E(J)|=m$, minimum degree two gives $m\ge s$; equality makes $J$ a cycle and therefore forces $s$ even. The upper bound is the usual $m\le\lfloor s^2/4\rfloor$. Even cycles, and for odd $s$ a cycle on $s-1$ vertices plus one new vertex with two neighbours, give the lower endpoints; adding cross-edges fills the intervals.
+
+A decomposable system admits a connected bipartite shadow with a cut vertex. If its bipartition sizes are $a+b=s$ and the cut vertex lies in the $a$-side, then deleting it gives components with sizes $(a_i,b_i)$ and $$m\le b+\sum_i a_i b_i
+ \le b+(a-1)(b-1)=ab-a+1.$$ The symmetric estimate gives $m\le ab-\min(a,b)+1\le\delta(s)$. The bound is sharp: take a connected bipartite graph on $s-1$ vertices with $m-1$ edges and adjoin one leaf. This also fills every value in (10.17). The three zones and the elementary inversion (10.19) follow. ◻
+
+</div>
+
+<div id="corollary-structural-boundary-rigidity" class="corollary">
+
+**Corollary 35** (Rigidity on the structural boundaries). *Let $F$ be connected, reduced and obligatory, with shadow order $s$.*
+
+1.  *If $F$ is indecomposable, $s$ is even and $m=s$, then $F\cong C_s^+$.*
+
+2.  *If $F$ is indecomposable, $s$ is odd and $m=s+1$, then $F\cong\Theta(2a,2b,2c)^+$ for positive $a\le b\le c$ with $a+b+c=(s+1)/2$.*
+
+3.  *If $F$ is indecomposable and $m=\lfloor s^2/4\rfloor$, then $F\cong K_{\lfloor s/2\rfloor,\lceil s/2\rceil}^+$.*
+
+4.  *If $F$ is decomposable and $m=\delta(s)$, then $F$ is a one-point amalgamation of $K_{a,b}^+$ and one triple, where $a+b=s-1$ and $|a-b|\le1$.*
+
+*Here $\Theta(p,q,r)$ is the theta graph with three internally disjoint paths of lengths $p,q,r$ and common endpoints.*
+
+</div>
+
+<div class="proof">
+
+*Proof.* The first and third assertions are the equality cases of minimum degree and the bipartite extremal bound. In the second case $\sum_v(\deg v-2)=2$. A single degree-four vertex would be a cut vertex, so there are exactly two degree-three vertices and all others have degree two; the three resulting paths have the same parity, hence are all even. Equality in the cut-vertex estimate used above forces a balanced complete bipartite graph on $s-1$ vertices plus one leaf, which translates to the fourth assertion. ◻
+
+</div>
+
+<div id="proposition-componentwise-atom-count-spectrum" class="proposition">
+
+**Proposition 36** (Componentwise atom-count spectrum). *Let $F$ be reduced and obligatory with at least one hyperedge and $c\ge1$ connected components, shadow order $s=|V(F)|-|E(F)|$, cycle rank $\beta=2|E(F)|-|V(F)|+c$, and $k$ canonical atoms. For every feasible $(s,\beta,c)$, the possible values of $k$ are exactly $$\begin{array}{ll}
+\beta=0:
+  & k=s-c,\\[1mm]
+\beta=1:
+  & c\le k\le s-c-2,\quad k\equiv s-c\pmod2,\\[1mm]
+\beta\ge2:
+  & c\le k\le s-c-q(\beta).
+\end{array}
+\tag{10.20}$$ The parameters themselves are feasible exactly when $s\ge2c$ for $\beta=0$ and $s\ge2c+q(\beta)$ for $\beta\ge1$.*
+
+</div>
+
+<div class="proof">
+
+*Proof.* If the atom cores are $J_i$, a forest with $k$ atom-nodes and $c$ components makes $k-c$ identifications. Hence $$s=c+\sum_i(|V(J_i)|-1),
+\qquad
+\beta=\sum_i\bigl(|E(J_i)|-|V(J_i)|+1\bigr).$$ The connected proof applies componentwise. Necessity gives the lower atom floor $k\ge c$ and the three upper formulas. For sufficiency, take $c-1$ single-triple components and realise the corresponding connected atom count in the remaining component. The feasibility thresholds follow by concentrating all positive rank in one minimum-order cyclic atom. ◻
 
 </div>
 

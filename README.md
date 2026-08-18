@@ -1,11 +1,11 @@
-# Obligatory Triple Systems: Alternative Proof and Lean Verification
+# Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra
 
 **Author:** Samuil Petkov  
-**Manuscript revision:** 24 July 2026
+**Manuscript revision:** 18 August 2026
 
 This repository contains an alternative proof of the finite classification in
 Erdős Problem 593, a complete Lean 4 verification of the implementation used
-here, and sharp finite consequences of the classification.
+here, a canonical atom normal form, and exact finite structural spectra.
 
 For every finite triple system `F`, the checked public endpoints are
 
@@ -48,6 +48,33 @@ contains the bipartite-shadow proof, the exact Levi cycle-rank spectrum,
 balanced-endpoint rigidity, and an edge-deletion reformulation of the bridge
 condition.
 
+## Canonical atoms and structural spectra
+
+Every reduced obligatory system has a canonical forest decomposition into
+atoms.  Each atom is either one triple or the private-vertex expansion `J⁺` of
+a finite 2-connected bipartite graph `J`.  This gives exact
+indecomposability, atom-rank, and atom-count spectra.
+
+For a connected system, put `s=n-m` and `β=2m-n+1`.  The possible total
+numbers `k` of canonical atoms are
+
+\[
+\beta=0:\ k=s-1;
+\qquad
+\beta=1:\ 1\le k\le s-3,\ k\equiv s+1\pmod2;
+\]
+
+and, for `β≥2`,
+
+\[
+1\le k\le s-1-\left\lceil2\sqrt\beta\right\rceil.
+\]
+
+The rank-one parity obstruction is the only gap phenomenon.  The companion
+reader-first notes contain the indecomposability phase diagram, boundary
+rigidity, prescribed atom-rank partitions, and the exact componentwise
+extension.
+
 ## Relationship to Eric Li's preprint
 
 Eric Li's preprint, posted on 23 June 2026, was the first publicly posted
@@ -77,8 +104,8 @@ derivation between the two Lean developments is made.
 - `formalization/` — complete Lean project and generated one-file source closure.
 
 The manuscript uses numeric citations, A4 paper, one-inch margins, standard AMS
-theorem environments, embedded fonts, and populated PDF metadata. The visible
-institutional address and email are intentionally omitted.
+theorem environments, embedded fonts, and populated PDF metadata. The manuscript includes the author's institutional address and email in standard
+AMS form.
 
 ## Build
 
