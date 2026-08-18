@@ -1,0 +1,527 @@
+{
+  "arithmetic": {
+    "max_rank": 4096,
+    "minimum_order_checks": 4096,
+    "square_root_pair_checks": 516160,
+    "strict_pair_checks": 516160
+  },
+  "constructions": {
+    "cyclic_atom_count_witnesses": 17728,
+    "max_full_partition_shadow_order": 16,
+    "max_shadow_order": 40,
+    "rank_partition_witnesses": 807,
+    "total_atom_count_witnesses": 47767
+  },
+  "exhaustive": {
+    "max_shadow_order": 8,
+    "rows": [
+      {
+        "connected_graphs": 1,
+        "cycle_rank_rows": [
+          {
+            "cycle_rank": 0,
+            "cyclic_atom_counts": [
+              0
+            ],
+            "rank_partitions": [
+              []
+            ],
+            "total_atom_counts": [
+              1
+            ]
+          }
+        ],
+        "cyclic_blocks": 0,
+        "edge_blocks": 1,
+        "graphs_examined": 2,
+        "shadow_order": 2
+      },
+      {
+        "connected_graphs": 1,
+        "cycle_rank_rows": [
+          {
+            "cycle_rank": 0,
+            "cyclic_atom_counts": [
+              0
+            ],
+            "rank_partitions": [
+              []
+            ],
+            "total_atom_counts": [
+              2
+            ]
+          }
+        ],
+        "cyclic_blocks": 0,
+        "edge_blocks": 2,
+        "graphs_examined": 4,
+        "shadow_order": 3
+      },
+      {
+        "connected_graphs": 6,
+        "cycle_rank_rows": [
+          {
+            "cycle_rank": 0,
+            "cyclic_atom_counts": [
+              0
+            ],
+            "rank_partitions": [
+              []
+            ],
+            "total_atom_counts": [
+              3
+            ]
+          },
+          {
+            "cycle_rank": 1,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                1
+              ]
+            ],
+            "total_atom_counts": [
+              1
+            ]
+          }
+        ],
+        "cyclic_blocks": 1,
+        "edge_blocks": 16,
+        "graphs_examined": 24,
+        "shadow_order": 4
+      },
+      {
+        "connected_graphs": 20,
+        "cycle_rank_rows": [
+          {
+            "cycle_rank": 0,
+            "cyclic_atom_counts": [
+              0
+            ],
+            "rank_partitions": [
+              []
+            ],
+            "total_atom_counts": [
+              4
+            ]
+          },
+          {
+            "cycle_rank": 1,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                1
+              ]
+            ],
+            "total_atom_counts": [
+              2
+            ]
+          },
+          {
+            "cycle_rank": 2,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                2
+              ]
+            ],
+            "total_atom_counts": [
+              1
+            ]
+          }
+        ],
+        "cyclic_blocks": 7,
+        "edge_blocks": 65,
+        "graphs_examined": 80,
+        "shadow_order": 5
+      },
+      {
+        "connected_graphs": 271,
+        "cycle_rank_rows": [
+          {
+            "cycle_rank": 0,
+            "cyclic_atom_counts": [
+              0
+            ],
+            "rank_partitions": [
+              []
+            ],
+            "total_atom_counts": [
+              5
+            ]
+          },
+          {
+            "cycle_rank": 1,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                1
+              ]
+            ],
+            "total_atom_counts": [
+              1,
+              3
+            ]
+          },
+          {
+            "cycle_rank": 2,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                2
+              ]
+            ],
+            "total_atom_counts": [
+              1,
+              2
+            ]
+          },
+          {
+            "cycle_rank": 3,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                3
+              ]
+            ],
+            "total_atom_counts": [
+              1
+            ]
+          },
+          {
+            "cycle_rank": 4,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                4
+              ]
+            ],
+            "total_atom_counts": [
+              1
+            ]
+          }
+        ],
+        "cyclic_blocks": 157,
+        "edge_blocks": 945,
+        "graphs_examined": 800,
+        "shadow_order": 6
+      },
+      {
+        "connected_graphs": 2007,
+        "cycle_rank_rows": [
+          {
+            "cycle_rank": 0,
+            "cyclic_atom_counts": [
+              0
+            ],
+            "rank_partitions": [
+              []
+            ],
+            "total_atom_counts": [
+              6
+            ]
+          },
+          {
+            "cycle_rank": 1,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                1
+              ]
+            ],
+            "total_atom_counts": [
+              2,
+              4
+            ]
+          },
+          {
+            "cycle_rank": 2,
+            "cyclic_atom_counts": [
+              1,
+              2
+            ],
+            "rank_partitions": [
+              [
+                2
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "total_atom_counts": [
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "cycle_rank": 3,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                3
+              ]
+            ],
+            "total_atom_counts": [
+              1,
+              2
+            ]
+          },
+          {
+            "cycle_rank": 4,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                4
+              ]
+            ],
+            "total_atom_counts": [
+              1,
+              2
+            ]
+          },
+          {
+            "cycle_rank": 5,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                5
+              ]
+            ],
+            "total_atom_counts": [
+              1
+            ]
+          },
+          {
+            "cycle_rank": 6,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                6
+              ]
+            ],
+            "total_atom_counts": [
+              1
+            ]
+          }
+        ],
+        "cyclic_blocks": 1512,
+        "edge_blocks": 7332,
+        "graphs_examined": 5184,
+        "shadow_order": 7
+      },
+      {
+        "connected_graphs": 51204,
+        "cycle_rank_rows": [
+          {
+            "cycle_rank": 0,
+            "cyclic_atom_counts": [
+              0
+            ],
+            "rank_partitions": [
+              []
+            ],
+            "total_atom_counts": [
+              7
+            ]
+          },
+          {
+            "cycle_rank": 1,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                1
+              ]
+            ],
+            "total_atom_counts": [
+              1,
+              3,
+              5
+            ]
+          },
+          {
+            "cycle_rank": 2,
+            "cyclic_atom_counts": [
+              1,
+              2
+            ],
+            "rank_partitions": [
+              [
+                2
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "total_atom_counts": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "cycle_rank": 3,
+            "cyclic_atom_counts": [
+              1,
+              2
+            ],
+            "rank_partitions": [
+              [
+                3
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "total_atom_counts": [
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "cycle_rank": 4,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                4
+              ]
+            ],
+            "total_atom_counts": [
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "cycle_rank": 5,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                5
+              ]
+            ],
+            "total_atom_counts": [
+              1,
+              2
+            ]
+          },
+          {
+            "cycle_rank": 6,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                6
+              ]
+            ],
+            "total_atom_counts": [
+              1,
+              2
+            ]
+          },
+          {
+            "cycle_rank": 7,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                7
+              ]
+            ],
+            "total_atom_counts": [
+              1
+            ]
+          },
+          {
+            "cycle_rank": 8,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                8
+              ]
+            ],
+            "total_atom_counts": [
+              1
+            ]
+          },
+          {
+            "cycle_rank": 9,
+            "cyclic_atom_counts": [
+              1
+            ],
+            "rank_partitions": [
+              [
+                9
+              ]
+            ],
+            "total_atom_counts": [
+              1
+            ]
+          }
+        ],
+        "cyclic_blocks": 46084,
+        "edge_blocks": 178448,
+        "graphs_examined": 102528,
+        "shadow_order": 8
+      }
+    ],
+    "totals": {
+      "connected_graphs": 53510,
+      "cyclic_blocks": 47761,
+      "edge_blocks": 186809,
+      "graphs_examined": 108622
+    }
+  },
+  "formulas": {
+    "prescribed_rank_partition": "s >= 1 + sum_i (1+c(beta_i))",
+    "q_cyclic_atoms": "beta=0,q=0; otherwise 1<=q<=beta and s>=3q-1+c(beta-q+1)",
+    "total_atoms_beta_0": "k=s-1",
+    "total_atoms_beta_1": "1<=k<=s-3 and k congruent to s+1 mod 2",
+    "total_atoms_beta_ge_2": "1<=k<=s-1-c(beta)"
+  },
+  "notation": {
+    "cycle_rank": "beta=m-s+1=2m-n+1",
+    "rank_cost": "c(r)=ceil(2 sqrt(r))",
+    "shadow_order": "s=n-m"
+  },
+  "theorem": "canonical atom-rank, cyclic-atom-count, and total-atom-count spectra"
+}

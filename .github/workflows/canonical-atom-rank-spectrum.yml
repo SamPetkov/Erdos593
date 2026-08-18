@@ -1,0 +1,44 @@
+name: Erdős 593 canonical atom-rank spectrum
+
+on:
+  pull_request:
+    paths:
+      - 'reader-first/CANONICAL_ATOM_RANK_SPECTRUM.md'
+      - 'reader-first/CANONICAL_ATOM_RANK_SPECTRUM.tex'
+      - 'experiments/verify_canonical_atom_rank_spectrum.py'
+      - 'experiments/canonical_atom_rank_spectrum_results.json'
+      - '.github/workflows/canonical-atom-rank-spectrum.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: canonical-atom-rank-spectrum-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile verifier
+        run: python -m py_compile experiments/verify_canonical_atom_rank_spectrum.py
+      - name: Reproduce exact audit
+        run: |
+          python experiments/verify_canonical_atom_rank_spectrum.py \
+            --output /tmp/canonical_atom_rank_spectrum_results.json
+          diff -u \
+            experiments/canonical_atom_rank_spectrum_results.json \
+            /tmp/canonical_atom_rank_spectrum_results.json
+      - name: Check theorem interfaces
+        run: |
+          grep -F '## Additive rank law' reader-first/CANONICAL_ATOM_RANK_SPECTRUM.md
+          grep -F '## Exact prescribed atom-rank partition' reader-first/CANONICAL_ATOM_RANK_SPECTRUM.md
+          grep -F '## Exact number of cyclic atoms' reader-first/CANONICAL_ATOM_RANK_SPECTRUM.md
+          grep -F '## Exact total atom-count spectrum' reader-first/CANONICAL_ATOM_RANK_SPECTRUM.md
+          grep -F '\begin{theorem}[Prescribed canonical atom-rank partition]' reader-first/CANONICAL_ATOM_RANK_SPECTRUM.tex
+          grep -F '\begin{theorem}[Exact canonical atom-count spectrum]' reader-first/CANONICAL_ATOM_RANK_SPECTRUM.tex
