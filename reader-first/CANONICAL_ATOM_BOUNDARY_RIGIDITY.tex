@@ -1,0 +1,175 @@
+\section{Boundary rigidity for the canonical atom spectra}
+
+Let \(F\) be a connected reduced obligatory triple system with \(m\)
+hyperedges and \(n\) points, and put
+\[
+ s=n-m.
+\]
+Define
+\[
+ \alpha(s)=
+ \begin{cases}
+ s,& s\text{ even},\\
+ s+1,& s\text{ odd},
+ \end{cases}
+ \qquad
+ \delta(s)=
+ \left\lfloor\frac{(s-1)^2}{4}\right\rfloor+1.
+\]
+For positive integers \(p,q,r\), let \(\Theta(p,q,r)\) denote the graph
+formed by three internally disjoint paths of lengths \(p,q,r\) with common
+endpoints.
+
+\begin{theorem}[Atomic lower-bound rigidity]
+Let \(F\) be one-point indecomposable and not a single triple.  Then
+\(s\ge4\) and \(m\ge\alpha(s)\).  Equality is classified as follows.
+\begin{enumerate}
+\item If \(s\) is even, then \(m=s\) if and only if
+\[
+ F\cong C_s^+.
+\]
+\item If \(s\) is odd, then \(m=s+1\) if and only if
+\[
+ F\cong \Theta(2a,2b,2c)^+
+\]
+for positive integers \(a\le b\le c\) with
+\[
+ a+b+c=\frac{s+1}{2}.
+\]
+\end{enumerate}
+Hence, for odd \(s\ge5\), the number of isomorphism types at the atomic lower
+boundary is
+\[
+ \left\lfloor
+ \frac{\bigl((s+1)/2\bigr)^2+3}{12}
+ \right\rfloor.
+\]
+\end{theorem}
+
+\begin{proof}
+By the canonical atom theorem, \(F\cong J^+\) for a finite 2-connected simple
+bipartite graph \(J\) with \(|V(J)|=s\) and \(|E(J)|=m\).  Every vertex of
+\(J\) has degree at least two.
+
+If \(s\) is even and \(m=s\), every vertex has degree two, so \(J\) is the
+cycle \(C_s\).
+
+If \(s\) is odd and \(m=s+1\), then
+\[
+ \sum_{v\in V(J)}(\deg v-2)=2.
+\]
+The degree-excess pattern consisting of one degree-four vertex and all other
+vertices of degree two would make that degree-four vertex a cut vertex.
+Therefore \(J\) has exactly two degree-three vertices and every other vertex
+has degree two.  Suppressing the degree-two chains gives three internally
+disjoint paths between the degree-three vertices.  Bipartiteness forces their
+lengths to have the same parity, and their sum \(m=s+1\) is even, so all three
+lengths are even.  This gives \(\Theta(2a,2b,2c)\), and the converse is
+immediate.
+
+The isomorphism type is determined by the unordered triple
+\(\{a,b,c\}\).  The number of positive triples \(a\le b\le c\) with sum \(N\)
+is
+\[
+ \left\lfloor\frac{N^2+3}{12}\right\rfloor.
+\]
+Take \(N=(s+1)/2\).
+\end{proof}
+
+\begin{theorem}[Atomic upper-bound rigidity]
+Let \(F\) be as above.  Then
+\[
+ m\le \left\lfloor\frac{s^2}{4}\right\rfloor,
+\]
+with equality if and only if
+\[
+ F\cong K_{\lfloor s/2\rfloor,\lceil s/2\rceil}^{+}.
+\]
+\end{theorem}
+
+\begin{proof}
+If the bipartition sizes of the 2-connected core are \(a+b=s\), then
+\[
+ m\le ab\le\left\lfloor\frac{s^2}{4}\right\rfloor.
+\]
+Equality forces the balanced complete bipartite graph.
+\end{proof}
+
+\begin{lemma}[Cut-vertex extremisers]
+Let \(J\) be a connected simple bipartite graph on \(s\ge3\) vertices with a
+cut vertex.  Then
+\[
+ |E(J)|\le
+ \left\lfloor\frac{(s-1)^2}{4}\right\rfloor+1.
+\]
+Equality holds if and only if \(J\) is obtained from the balanced complete
+bipartite graph on \(s-1\) vertices by adjoining one leaf at an arbitrary
+vertex.
+\end{lemma}
+
+\begin{proof}
+Let the bipartition be \(A\sqcup B\), with \(|A|=a\), \(|B|=b\), and suppose
+a cut vertex \(x\) lies in \(A\).  If the components of \(J-x\) have
+bipartition sizes \((a_i,b_i)\), then every component contains a vertex of
+\(B\), and there are at least two components.  Hence
+\[
+ |E(J)|
+ \le b+\sum_i a_i b_i
+ \le b+(a-1)(b-1)
+ =ab-a+1.
+\]
+The symmetric estimate holds when the cut vertex lies in \(B\).  Thus
+\[
+ |E(J)|\le ab-\min(a,b)+1
+ \le \left\lfloor\frac{(s-1)^2}{4}\right\rfloor+1.
+\]
+Equality forces one opposite-side singleton component and a complete
+bipartite large component, except for the star cases \(s=3,4\), which have the
+same description after deleting one leaf.  The complete bipartite remainder
+must be balanced.  The converse is immediate.
+\end{proof}
+
+\begin{theorem}[Decomposable upper-bound rigidity]
+Let \(F\) be one-point decomposable.  Then
+\[
+ m\le\delta(s).
+\]
+Equality holds if and only if there exist \(a,b\ge1\) such that
+\[
+ a+b=s-1,\qquad |a-b|\le1,
+\]
+and \(F\) is a one-point amalgamation of \(K_{a,b}^+\) and one additional
+triple.  The amalgamation point may be any point of either system.
+\end{theorem}
+
+\begin{proof}
+The canonical atom forest gives a connected bipartite parameter shadow with a
+cut vertex.  The preceding lemma gives the bound and identifies the equality
+shadow as a balanced complete bipartite graph plus one leaf.  Translating its
+blocks through the canonical atom theorem gives \(K_{a,b}^+\) and one
+single-triple piece.  Conversely, such an amalgamation has
+\[
+ m=ab+1,\qquad s=a+b+1,
+\]
+and therefore attains \(\delta(s)\).
+\end{proof}
+
+\begin{corollary}[Boundary table]
+Excluding the single triple, the extremal connected boundaries are:
+\[
+\begin{array}{c|c|c}
+\text{regime} & \text{edge count} & \text{structure}\\ \hline
+\text{decomposable lower} & m=s-1
+  & \text{all atoms are single triples}\\
+\text{atomic lower, }s\text{ even} & m=s
+  & C_s^+\\
+\text{atomic lower, }s\text{ odd} & m=s+1
+  & \Theta(2a,2b,2c)^+\\
+\text{decomposable upper} & m=\delta(s)
+  & K_{a,b}^+\text{ plus one triple}\\
+\text{atomic upper} & m=\lfloor s^2/4\rfloor
+  & K_{\lfloor s/2\rfloor,\lceil s/2\rceil}^+
+\end{array}
+\]
+where \(a+b=s-1\) and \(|a-b|\le1\) in the decomposable upper row.
+\end{corollary}

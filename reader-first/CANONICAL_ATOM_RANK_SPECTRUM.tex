@@ -1,0 +1,86 @@
+% Integration-ready fragment.  Assumes amsmath, amsthm, and the manuscript's
+% notation J^+ for private-vertex expansion.
+
+\newcommand{\rankcost}[1]{\left\lceil 2\sqrt{#1}\right\rceil}
+
+\begin{proposition}[Additive canonical atom rank]
+Let $F$ be a connected reduced obligatory triple system with $m$ hyperedges
+and $n$ vertices, and put
+\[
+ s=n-m,
+ \qquad
+ \beta=2m-n+1.
+\]
+If the canonical atoms have bipartite cores $J_1,\dots,J_k$, where a
+single-triple atom is represented by $K_2$, then
+\[
+ s=1+\sum_{i=1}^k\bigl(|V(J_i)|-1\bigr),
+ \qquad
+ \beta=\sum_{i=1}^k
+ \bigl(|E(J_i)|-|V(J_i)|+1\bigr).
+\]
+The positive summands in the second identity form an intrinsic partition of
+$\beta$.
+\end{proposition}
+
+\begin{lemma}[Minimum order at fixed atom rank]
+A finite $2$-connected simple bipartite graph of cycle rank $r\ge1$ has at
+least
+\[
+ 2+\rankcost{r}
+\]
+vertices, and this bound is attained for every $r\ge1$.
+\end{lemma}
+
+\begin{theorem}[Prescribed canonical atom-rank partition]
+Let $r_1,\dots,r_q$ be positive integers.  There exists a connected reduced
+obligatory triple system of shadow order $s=n-m$ whose canonical cyclic atoms
+have ranks exactly $r_1,\dots,r_q$ if and only if
+\[
+ s\ge 1+\sum_{i=1}^q\bigl(1+\rankcost{r_i}\bigr).
+\]
+The slack above the right-hand side may be realized entirely by single-triple
+atoms.
+\end{theorem}
+
+\begin{corollary}[Number of cyclic atoms]
+Let $\beta=2m-n+1$.  If $\beta=0$, there are no cyclic atoms.  For
+$\beta\ge1$, exactly $q$ cyclic atoms are possible if and only if
+\[
+ 1\le q\le\beta,
+ \qquad
+ s\ge 3q-1+\rankcost{\beta-q+1}.
+\]
+\end{corollary}
+
+\begin{theorem}[Exact canonical atom-count spectrum]
+Let $k$ be the total number of canonical atoms.  For every feasible connected
+pair $(s,\beta)$, the possible values of $k$ are exactly
+\[
+\begin{array}{c|c}
+\beta & \text{possible values of }k\\ \hline
+0 & k=s-1,\\[2mm]
+1 & 1\le k\le s-3\text{ and }k\equiv s+1\pmod 2,\\[2mm]
+\beta\ge2 & 1\le k\le s-1-\rankcost{\beta}.
+\end{array}
+\]
+In particular, the unicyclic parity condition is the only gap in the atom-count
+spectrum.
+\end{theorem}
+
+\begin{corollary}[Extremal atom counts]
+For $\beta\ge1$,
+\[
+ k_{\max}=s-1-\rankcost{\beta}.
+\]
+Equality holds precisely when there is one minimum-order cyclic atom of rank
+$\beta$ and every remaining atom is a single triple.  Moreover,
+\[
+ k_{\min}=
+ \begin{cases}
+ s-1,&\beta=0,\\
+ 2,&\beta=1\text{ and }s\text{ is odd},\\
+ 1,&\text{otherwise}.
+ \end{cases}
+\]
+\end{corollary}

@@ -1,0 +1,44 @@
+name: Erdős 593 indecomposable parameter spectrum
+
+on:
+  pull_request:
+    paths:
+      - 'reader-first/INDECOMPOSABLE_PARAMETER_SPECTRUM.md'
+      - 'reader-first/INDECOMPOSABLE_PARAMETER_SPECTRUM.tex'
+      - 'experiments/verify_indecomposable_parameter_spectrum.py'
+      - 'experiments/indecomposable_parameter_spectrum_results.json'
+      - '.github/workflows/indecomposable-parameter-spectrum.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indecomposable-parameter-spectrum-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile verifier
+        run: python -m py_compile experiments/verify_indecomposable_parameter_spectrum.py
+      - name: Reproduce exact audit
+        run: |
+          python experiments/verify_indecomposable_parameter_spectrum.py \
+            --output /tmp/indecomposable_parameter_spectrum_results.json
+          diff -u \
+            experiments/indecomposable_parameter_spectrum_results.json \
+            /tmp/indecomposable_parameter_spectrum_results.json
+      - name: Check theorem interfaces
+        run: |
+          grep -F '## The exact indecomposable spectrum' reader-first/INDECOMPOSABLE_PARAMETER_SPECTRUM.md
+          grep -F '## The exact decomposable spectrum' reader-first/INDECOMPOSABLE_PARAMETER_SPECTRUM.md
+          grep -F '## A sharp three-zone phase diagram' reader-first/INDECOMPOSABLE_PARAMETER_SPECTRUM.md
+          grep -F '\begin{theorem}[Exact indecomposable spectrum]' reader-first/INDECOMPOSABLE_PARAMETER_SPECTRUM.tex
+          grep -F '\begin{theorem}[Exact decomposable spectrum]' reader-first/INDECOMPOSABLE_PARAMETER_SPECTRUM.tex
+          grep -F '\begin{corollary}[Sharp parameter phase diagram]' reader-first/INDECOMPOSABLE_PARAMETER_SPECTRUM.tex

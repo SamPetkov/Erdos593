@@ -1,0 +1,46 @@
+name: Erdős 593 canonical atom boundary rigidity
+
+on:
+  pull_request:
+    paths:
+      - 'reader-first/CANONICAL_ATOM_BOUNDARY_RIGIDITY.md'
+      - 'reader-first/CANONICAL_ATOM_BOUNDARY_RIGIDITY.tex'
+      - 'experiments/verify_canonical_atom_boundary_rigidity.py'
+      - 'experiments/canonical_atom_boundary_rigidity_results.json'
+      - '.github/workflows/canonical-atom-boundary-rigidity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: canonical-atom-boundary-rigidity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile verifier
+        run: python -m py_compile experiments/verify_canonical_atom_boundary_rigidity.py
+      - name: Reproduce exact audit
+        run: |
+          python experiments/verify_canonical_atom_boundary_rigidity.py \
+            --output /tmp/canonical_atom_boundary_rigidity_results.json
+          diff -u \
+            experiments/canonical_atom_boundary_rigidity_results.json \
+            /tmp/canonical_atom_boundary_rigidity_results.json
+      - name: Check theorem interfaces
+        run: |
+          grep -F '## Atomic lower-bound rigidity' reader-first/CANONICAL_ATOM_BOUNDARY_RIGIDITY.md
+          grep -F '## Atomic upper-bound rigidity' reader-first/CANONICAL_ATOM_BOUNDARY_RIGIDITY.md
+          grep -F '## The cut-vertex extremal lemma' reader-first/CANONICAL_ATOM_BOUNDARY_RIGIDITY.md
+          grep -F '## Decomposable upper-bound rigidity' reader-first/CANONICAL_ATOM_BOUNDARY_RIGIDITY.md
+          grep -F '## Complete boundary table' reader-first/CANONICAL_ATOM_BOUNDARY_RIGIDITY.md
+          grep -F '\begin{theorem}[Atomic lower-bound rigidity]' reader-first/CANONICAL_ATOM_BOUNDARY_RIGIDITY.tex
+          grep -F '\begin{lemma}[Cut-vertex extremisers]' reader-first/CANONICAL_ATOM_BOUNDARY_RIGIDITY.tex
+          grep -F '\begin{theorem}[Decomposable upper-bound rigidity]' reader-first/CANONICAL_ATOM_BOUNDARY_RIGIDITY.tex
