@@ -62,8 +62,28 @@ def run(command: list[str], *, cwd: Path | None = None, env: dict[str, str] | No
 def normalize_tex(text: str) -> str:
     """Apply idempotent publication metadata and citation cleanups."""
     text = re.sub(r"^\\author\{.*?\}\s*$", r"\\author{Samuil Petkov}", text, count=1, flags=re.MULTILINE)
-    text = re.sub(r"^\\address\{.*?\}\s*\n?", "", text, flags=re.MULTILINE)
-    text = re.sub(r"^\\email\{.*?\}\s*\n?", "", text, flags=re.MULTILINE)
+    text = re.sub(
+        r"^\\address\{.*?\}\s*$",
+        r"\\address{École normale supérieure--PSL, 45 rue d'Ulm, 75005 Paris, France}",
+        text,
+        count=1,
+        flags=re.MULTILINE,
+    )
+    text = re.sub(
+        r"^\\email\{.*?\}\s*$",
+        r"\\email{samuil.petkov@ens.psl.eu}",
+        text,
+        count=1,
+        flags=re.MULTILINE,
+    )
+    if r"\address{" not in text:
+        text = text.replace(
+            r"\author{Samuil Petkov}",
+            "\\author{Samuil Petkov}\n"
+            "\\address{École normale supérieure--PSL, 45 rue d'Ulm, 75005 Paris, France}\n"
+            "\\email{samuil.petkov@ens.psl.eu}",
+            1,
+        )
     text = text.replace(
         "\\newblock Accepted for publication; arXiv:2403.11223.\n",
         "\\newblock arXiv:2403.11223.\n",
@@ -72,12 +92,14 @@ def normalize_tex(text: str) -> str:
     text = text.replace("Samuil Petkob", "Samuil Petkov")
 
     required = [
-        r"\title[Obligatory triple systems]{Obligatory Triple Systems: An Alternative Proof}",
+        r"\title[Obligatory triple systems]{Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra}",
         r"\author{Samuil Petkov}",
         "first publicly posted",
         "complete mathematical proof of Theorem",
         "first publicly timestamped Lean",
         "Exact order--size--component spectrum",
+        "Canonical atom normal form",
+        "Exact canonical atom-count spectrum",
     ]
     missing = [needle for needle in required if needle not in text]
     if missing:
@@ -123,17 +145,17 @@ def generate_markdown(tex_path: Path, output_path: Path) -> None:
 
     # Pandoc deliberately omits \maketitle in non-standalone Markdown output.
     # Add a stable compact publication header, then retain the converted body.
-    header = """# Obligatory Triple Systems: An Alternative Proof
+    header = """# Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra
 
 **Samuil Petkov**  
-24 July 2026
+École normale supérieure--PSL
 
 **2020 Mathematics Subject Classification.** Primary 05C65; Secondary 05C15, 05C63, 03E05
 
-**Keywords.** obligatory triple system; hypergraph colouring; Levi graph; Berge cycle; uncountable chromatic number; Erdős Problem 593
+**Keywords.** obligatory triple system; canonical atom; hypergraph colouring; Levi graph; Berge cycle; exact finite spectrum; Erdős Problem 593
 
 """
-    body = re.sub(r"^#?\s*Obligatory Triple Systems: An Alternative Proof\s*\n+", "", body, count=1)
+    body = re.sub(r"^#?\s*Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra\s*\n+", "", body, count=1)
     body = body.replace("Samuil Pekov", "Samuil Petkov").replace("Samuil Petkob", "Samuil Petkov")
     output_path.write_text(header + body.lstrip(), encoding="utf-8", newline="\n")
 

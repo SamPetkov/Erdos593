@@ -26,3 +26,13 @@
 5. Retained the complete proof, numeric citations, A4 `amsart` layout, one-inch margins, embedded fonts, populated metadata, and omission of the visible affiliation and email address.
 6. Updated the Lean documentation to describe the complete machine-checked finite classification.
 7. Added a deterministic arXiv source archive, synchronization checks, and Pandoc 3.1.3 pinning.
+
+## 18 August 2026 -- canonical atoms and exact structural spectra
+
+- changed the manuscript title to *Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra*;
+- integrated the canonical atom normal form and minimal-generator corollary;
+- added the exact connected and componentwise atom-count spectra;
+- added the indecomposability phase diagram and boundary-rigidity corollary;
+- replaced the displayed abstract formula by a self-contained AMS-style abstract;
+- added the ENS--PSL address and author email; and
+- regenerated all public TeX, Markdown, PDF, arXiv, manifest, and checksum artifacts.

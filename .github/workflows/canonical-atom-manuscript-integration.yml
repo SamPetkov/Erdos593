@@ -1,0 +1,125 @@
+name: Erdős 593 canonical atom manuscript integration
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/integrate_canonical_atom_manuscript.py'
+      - 'reader-first/CANONICAL_ATOM_MANUSCRIPT_SECTION.tex'
+      - 'audits/CANONICAL_ATOM_MANUSCRIPT_INTEGRATION.md'
+      - '.github/workflows/canonical-atom-manuscript-integration.yml'
+      - 'erdos593_obligatory_triple_systems.tex'
+      - 'erdos593_obligatory_triple_systems.md'
+      - 'erdos593_obligatory_triple_systems.pdf'
+      - 'Erdos593_revised.tex'
+      - 'arxiv/**'
+      - 'README.md'
+      - 'CITATION.cff'
+      - 'REVISION_NOTES.md'
+      - 'MANIFEST.txt'
+      - 'SHA256SUMS'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: canonical-atom-manuscript-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrate-build-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install TeX, Pandoc, and PDF verification tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq \
+            latexmk \
+            pandoc \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-science \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            poppler-utils
+      - name: Apply deterministic manuscript integration
+        run: |
+          python -m py_compile scripts/integrate_canonical_atom_manuscript.py
+          python scripts/integrate_canonical_atom_manuscript.py
+      - name: Synchronize all publication artifacts
+        run: python scripts/sync_manuscript_artifacts.py
+      - name: Verify manuscript and mirrors
+        run: |
+          set -euo pipefail
+          pdf=erdos593_obligatory_triple_systems.pdf
+          pdfinfo "$pdf" | tee /tmp/erdos593-pdfinfo.txt
+          pdftotext "$pdf" /tmp/erdos593-text.txt
+          pdffonts "$pdf" | tee /tmp/erdos593-fonts.txt
+          grep -Fq 'A4' /tmp/erdos593-pdfinfo.txt
+          grep -Fq 'Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra' /tmp/erdos593-pdfinfo.txt
+          grep -Fq 'Canonical atom normal form' /tmp/erdos593-text.txt
+          grep -Fq 'Exact canonical atom-count spectrum' /tmp/erdos593-text.txt
+          grep -Fq 'Indecomposability phase diagram' /tmp/erdos593-text.txt
+          grep -Fq 'Componentwise atom-count spectrum' /tmp/erdos593-text.txt
+          grep -Fq 'École normale supérieure' /tmp/erdos593-text.txt
+          ! grep -Eq '[[:space:]]no[[:space:]]' /tmp/erdos593-fonts.txt
+          cmp -s "$pdf" arxiv/main.pdf
+          cmp -s erdos593_obligatory_triple_systems.tex arxiv/main.tex
+          cmp -s erdos593_obligatory_triple_systems.tex Erdos593_revised.tex
+          cmp -s erdos593_obligatory_triple_systems.md arxiv/main.md
+          grep -Fq 'Canonical atom normal form' erdos593_obligatory_triple_systems.md
+          grep -Fq 'Canonical atoms and structural spectra' README.md
+      - name: Commit synchronized publication artifacts
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          set -euo pipefail
+          if git diff --quiet --exit-code -- .; then
+            exit 0
+          fi
+          # Workflow files are reviewed and committed separately; do not include
+          # generated workflow-title normalization in the bot artifact commit.
+          git restore -- .github/workflows/manuscript-artifacts.yml
+          if git diff --quiet --exit-code -- .; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          branch='${{ github.event.pull_request.head.ref }}'
+          source_sha=$(git rev-parse HEAD)
+          git add -A
+          git commit -m 'Integrate canonical atom spectra into manuscript'
+          git fetch origin "$branch"
+          remote_sha=$(git rev-parse "origin/$branch")
+          if [ "$remote_sha" != "$source_sha" ]; then
+            echo "Branch advanced from $source_sha to $remote_sha; skipping stale artifact push."
+            exit 0
+          fi
+          if ! git push origin HEAD:"$branch"; then
+            git fetch origin "$branch"
+            remote_sha=$(git rev-parse "origin/$branch")
+            if [ "$remote_sha" != "$source_sha" ]; then
+              echo "Branch advanced during push; a newer workflow run will publish artifacts."
+              exit 0
+            fi
+            exit 1
+          fi
+      - name: Require a clean synchronized tree
+        run: git diff --exit-code -- .
+      - name: Upload manuscript preview
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: erdos593-canonical-atom-manuscript-preview
+          path: |
+            erdos593_obligatory_triple_systems.pdf
+            /tmp/erdos593-pdfinfo.txt
+            /tmp/erdos593-fonts.txt
