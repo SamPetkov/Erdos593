@@ -1,0 +1,108 @@
+{
+  "arithmetic": {
+    "cut_partition_checks": 16773118,
+    "max_shadow_order": 4096,
+    "theta_partition_formula_checks": 2046
+  },
+  "constructions": {
+    "max_shadow_order": 64,
+    "maximum_atomic_witnesses": 61,
+    "maximum_cut_vertex_witnesses": 62,
+    "minimum_atomic_witnesses": 981,
+    "odd_minimum_theta_isomorphism_types": 950
+  },
+  "exhaustive": {
+    "max_shadow_order": 8,
+    "rows": [
+      {
+        "connected_graphs": 1,
+        "graphs_examined": 2,
+        "maximum_atomic_graphs": 0,
+        "maximum_cut_vertex_graphs": 0,
+        "minimum_atomic_graphs": 0,
+        "odd_minimum_theta_half_length_signatures": [],
+        "shadow_order": 2
+      },
+      {
+        "connected_graphs": 1,
+        "graphs_examined": 4,
+        "maximum_atomic_graphs": 0,
+        "maximum_cut_vertex_graphs": 1,
+        "minimum_atomic_graphs": 0,
+        "odd_minimum_theta_half_length_signatures": [],
+        "shadow_order": 3
+      },
+      {
+        "connected_graphs": 6,
+        "graphs_examined": 24,
+        "maximum_atomic_graphs": 1,
+        "maximum_cut_vertex_graphs": 5,
+        "minimum_atomic_graphs": 1,
+        "odd_minimum_theta_half_length_signatures": [],
+        "shadow_order": 4
+      },
+      {
+        "connected_graphs": 20,
+        "graphs_examined": 80,
+        "maximum_atomic_graphs": 1,
+        "maximum_cut_vertex_graphs": 6,
+        "minimum_atomic_graphs": 1,
+        "odd_minimum_theta_half_length_signatures": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "shadow_order": 5
+      },
+      {
+        "connected_graphs": 271,
+        "graphs_examined": 800,
+        "maximum_atomic_graphs": 1,
+        "maximum_cut_vertex_graphs": 26,
+        "minimum_atomic_graphs": 6,
+        "odd_minimum_theta_half_length_signatures": [],
+        "shadow_order": 6
+      },
+      {
+        "connected_graphs": 2007,
+        "graphs_examined": 5184,
+        "maximum_atomic_graphs": 1,
+        "maximum_cut_vertex_graphs": 12,
+        "minimum_atomic_graphs": 36,
+        "odd_minimum_theta_half_length_signatures": [
+          [
+            1,
+            1,
+            2
+          ]
+        ],
+        "shadow_order": 7
+      },
+      {
+        "connected_graphs": 51204,
+        "graphs_examined": 102528,
+        "maximum_atomic_graphs": 1,
+        "maximum_cut_vertex_graphs": 47,
+        "minimum_atomic_graphs": 72,
+        "odd_minimum_theta_half_length_signatures": [],
+        "shadow_order": 8
+      }
+    ],
+    "totals": {
+      "connected_graphs": 53510,
+      "graphs_examined": 108622,
+      "maximum_atomic_graphs": 5,
+      "maximum_cut_vertex_graphs": 97,
+      "minimum_atomic_graphs": 116
+    }
+  },
+  "formulas": {
+    "maximum_atomic_edges": "floor(s^2/4)",
+    "maximum_decomposable_edges": "delta(s)=floor((s-1)^2/4)+1",
+    "minimum_atomic_edges": "alpha(s)=s for even s and s+1 for odd s",
+    "odd_minimum_type_count": "floor((((s+1)/2)^2+3)/12)"
+  },
+  "theorem": "canonical atom boundary rigidity"
+}
