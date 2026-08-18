@@ -1,0 +1,290 @@
+% Canonical atom manuscript integration fragment.
+% === STRUCTURAL BLOCK ===
+\begin{theorem}[Canonical atom normal form]
+\label{theorem-canonical-atom-normal-form}
+Let $F$ be a finite triple system without isolated points satisfying the three
+intrinsic conditions in Theorem~A.  Its hyperedges admit a canonical partition
+into \emph{atoms} with the following properties.
+\begin{enumerate}
+\item Every atom is either one triple or $J^+$ for a finite $2$-connected
+simple bipartite graph $J$.
+\item Two distinct atoms meet in at most one point.  The bipartite incidence
+graph between atoms and points belonging to at least two atoms is a forest.
+\item The atom partition, the nontrivial cores $J$ up to graph isomorphism, and
+the atom--point forest are determined by $F$.
+\end{enumerate}
+Conversely, every forest assembly of these atoms by disjoint unions and
+one-point amalgamations satisfies the intrinsic conditions.
+\end{theorem}
+\begin{proof}
+Let $L=I(F)$.  A \emph{cyclic block} is a maximal $2$-connected subgraph of
+$L$ containing a cycle.  Since every hyperedge-node has degree three and is
+incident with a bridge, its degree inside a cyclic block is two.  Suppressing
+the hyperedge-nodes in such a block $C$ gives a finite graph $J_C$ on the
+point-nodes of $C$.  It is simple by linearity and $2$-connected by standard
+block theory.  Its cycles correspond to Berge cycles of the same lengths, so
+$J_C$ is bipartite.
+
+For a hyperedge-node $e\in C$, the third incidence is a bridge.  Its point
+endpoint lies outside $C$, since otherwise that incidence would lie on a
+cycle.  These third points are pairwise distinct as $e$ varies in $C$;
+otherwise a path inside $C$ between two hyperedge-nodes, completed through the
+common third point, would put both bridge incidences on a cycle.  The
+hyperedges represented in $C$ therefore form exactly $J_C^+$.
+
+A hyperedge-node outside every cyclic block has no nonbridge incidence and
+contributes one single-triple atom.  Thus the atoms partition the hyperedges.
+Two atoms cannot share two points, since paths inside the two atoms would
+produce a Levi cycle crossing two cyclic blocks.  Similarly, a cycle in the
+atom--shared-point incidence graph expands to a closed Levi walk and hence to
+a Levi cycle crossing atom boundaries.  The incidence graph is therefore a
+forest.  Cyclic blocks and the block--cut forest are canonical, proving the
+forward statement.  The converse follows because an atomic expansion is
+linear, has a private bridge at each hyperedge-node, and has only even Berge
+cycles, while a forest of one-point sums preserves these properties.
+\end{proof}
+
+\begin{corollary}[Minimal generators and one-point indecomposables]
+\label{corollary-minimal-generators-indecomposables}
+The class $\mathcal B$ is generated, up to isomorphism, by finite edgeless
+systems, one triple, and $J^+$ for finite $2$-connected bipartite graphs $J$,
+under finite disjoint unions and one-point amalgamations.  Moreover, a
+connected reduced obligatory system with at least one hyperedge is
+one-point indecomposable if and only if it is one triple or $J^+$ for a finite
+$2$-connected bipartite graph $J$.
+\end{corollary}
+\begin{proof}
+The theorem decomposes every reduced member of $\mathcal B$ into the displayed
+atoms; isolated points are restored by an edgeless factor.  If the atom forest
+has at least two atom-nodes, a leaf atom separates from the rest at its unique
+shared point.  Conversely, one triple is indecomposable, and if $J$ is
+$2$-connected then deleting any point of $J^+$ cannot separate its
+hyperedge-nodes into two nonempty classes: a private point is a leaf, while a
+core point leaves $J$ connected.  Hence $J^+$ is indecomposable.
+\end{proof}
+% === FINITE SPECTRA BLOCK ===
+\subsection{Canonical atoms and structural spectra}
+\label{canonical-atoms-and-structural-spectra}
+
+For a connected reduced obligatory system $F$, put
+\[
+s=|V(F)|-|E(F)|,
+\qquad
+\beta=2|E(F)|-|V(F)|+1.
+\]
+Thus $s$ is the order of a connected bipartite shadow and $\beta$ is its
+cycle rank.  Let $a(F)$ denote the number of canonical atoms from
+Theorem~\ref{theorem-canonical-atom-normal-form}.
+
+\begin{lemma}[Minimum order at fixed cyclic rank]
+\label{lemma-minimum-order-fixed-cyclic-rank}
+Let $J$ be a finite $2$-connected simple bipartite graph of cycle rank
+$r=|E(J)|-|V(J)|+1\ge1$.  Then
+\[
+|V(J)|\ge 2+q(r).
+\tag{10.12}
+\]
+For $r\ge2$, every order $v\ge2+q(r)$ occurs.  For $r=1$, the possible orders
+are exactly the even integers $v\ge4$.
+\end{lemma}
+\begin{proof}
+Writing $v=|V(J)|$, the bipartite extremal bound gives
+\[
+r\le\left\lfloor\frac{v^2}{4}\right\rfloor-v+1
+ =\left\lfloor\frac{(v-2)^2}{4}\right\rfloor,
+\]
+which is equivalent to (10.12).  If $v$ is even, start with the spanning cycle
+$C_v$ in the balanced complete bipartite graph and add edges until the desired
+rank is reached.  If $v$ is odd, start with $C_{v-1}$ and add the remaining
+vertex with two neighbours in the opposite bipartition class; this is
+$2$-connected and has rank two.  Add arbitrary missing cross-edges.  These
+constructions realise every allowed $r\ge2$.  A $2$-connected graph of rank one
+is a cycle, which is bipartite exactly when its order is even.
+\end{proof}
+
+\begin{theorem}[Exact canonical atom-count spectrum]
+\label{theorem-exact-canonical-atom-count-spectrum}
+Let $F$ range over connected reduced obligatory systems with fixed shadow
+order $s$ and cycle rank $\beta$.  The possible values $k=a(F)$ are exactly
+\[
+\begin{array}{ll}
+\beta=0:
+  & k=s-1,\\[1mm]
+\beta=1:
+  & 1\le k\le s-3,\quad k\equiv s+1\pmod 2,\\[1mm]
+\beta\ge2:
+  & 1\le k\le s-1-q(\beta).
+\end{array}
+\tag{10.13}
+\]
+For $\beta\ge1$, the maximum is
+\[
+a_{\max}(s,\beta)=s-1-q(\beta).
+\tag{10.14}
+\]
+Every maximiser has one minimum-order cyclic atom carrying the full rank
+$\beta$, and every other atom is one triple.  The parity obstruction in the
+rank-one line is the only gap in any atom-count spectrum.
+\end{theorem}
+\begin{proof}
+Let the atom cores be $J_i$, with $v_i=|V(J_i)|$,
+$e_i=|E(J_i)|$, and $r_i=e_i-v_i+1$.  Since a tree of $k$ atoms makes
+$k-1$ one-point identifications,
+\[
+s=1+\sum_i(v_i-1),
+\qquad
+\beta=\sum_i r_i.
+\tag{10.15}
+\]
+If $\beta=0$, every atom is one triple and (10.15) gives $k=s-1$.
+If $\beta=1$, there is one cyclic atom, whose core is an even cycle of order
+$v\ge4$; the remaining atoms are single triples, so
+$s=k+v-1$.  This is exactly the middle line of (10.13).
+
+Suppose $\beta\ge2$.  Lemma~\ref{lemma-minimum-order-fixed-cyclic-rank} and
+\[
+q(r_1)+q(r_2)\ge q(r_1+r_2)+1
+\]
+give
+\[
+s\ge1+k+q(\beta),
+\]
+so $k\le s-1-q(\beta)$.  Conversely, for every integer in the displayed
+interval choose one cyclic core of rank $\beta$ and order $s-k+1$, supplied by
+the lemma, and attach $k-1$ single-triple atoms.  Equality in (10.14) forces
+one positive-rank atom and minimum order, proving the rigidity statement.
+\end{proof}
+
+For $s\ge3$, define
+\[
+\alpha(s)=
+\begin{cases}
+s,&s\text{ even},\\
+s+1,&s\text{ odd},
+\end{cases}
+\qquad
+\delta(s)=\left\lfloor\frac{(s-1)^2}{4}\right\rfloor+1.
+\]
+
+\begin{theorem}[Indecomposability phase diagram]
+\label{theorem-indecomposability-phase-diagram}
+Apart from the single triple $(|E(F)|,|V(F)|)=(1,3)$, a connected reduced
+one-point-indecomposable obligatory system with shadow order $s$ and $m$
+hyperedges exists if and only if
+\[
+s\ge4,
+\qquad
+\alpha(s)\le m\le\left\lfloor\frac{s^2}{4}\right\rfloor.
+\tag{10.16}
+\]
+A connected reduced one-point-decomposable obligatory system exists if and
+only if
+\[
+s\ge3,
+\qquad
+s-1\le m\le\delta(s).
+\tag{10.17}
+\]
+Consequently the feasible connected parameters split into three exact zones:
+\[
+\begin{array}{rcl}
+s-1\le m<\alpha(s)
+ &\Longrightarrow& \text{every system is decomposable},\\
+\alpha(s)\le m\le\delta(s)
+ &\Longrightarrow& \text{both behaviours occur},\\
+\delta(s)<m\le\lfloor s^2/4\rfloor
+ &\Longrightarrow& \text{every system is indecomposable}.
+\end{array}
+\tag{10.18}
+\]
+For $m\ge2$, the last zone is equivalently
+\[
+s\le\left\lceil2\sqrt{m-1}\right\rceil.
+\tag{10.19}
+\]
+\end{theorem}
+\begin{proof}
+By Corollary~\ref{corollary-minimal-generators-indecomposables}, the nontrivial
+indecomposable systems are $J^+$ with $J$ finite, simple, bipartite and
+$2$-connected.  If $|V(J)|=s$ and $|E(J)|=m$, minimum degree two gives
+$m\ge s$; equality makes $J$ a cycle and therefore forces $s$ even.  The
+upper bound is the usual $m\le\lfloor s^2/4\rfloor$.  Even cycles, and for odd
+$s$ a cycle on $s-1$ vertices plus one new vertex with two neighbours, give
+the lower endpoints; adding cross-edges fills the intervals.
+
+A decomposable system admits a connected bipartite shadow with a cut vertex.
+If its bipartition sizes are $a+b=s$ and the cut vertex lies in the $a$-side,
+then deleting it gives components with sizes $(a_i,b_i)$ and
+\[
+m\le b+\sum_i a_i b_i
+ \le b+(a-1)(b-1)=ab-a+1.
+\]
+The symmetric estimate gives $m\le ab-\min(a,b)+1\le\delta(s)$.  The bound is
+sharp: take a connected bipartite graph on $s-1$ vertices with $m-1$ edges and
+adjoin one leaf.  This also fills every value in (10.17).  The three zones and
+the elementary inversion (10.19) follow.
+\end{proof}
+
+\begin{corollary}[Rigidity on the structural boundaries]
+\label{corollary-structural-boundary-rigidity}
+Let $F$ be connected, reduced and obligatory, with shadow order $s$.
+\begin{enumerate}
+\item If $F$ is indecomposable, $s$ is even and $m=s$, then
+$F\cong C_s^+$.
+\item If $F$ is indecomposable, $s$ is odd and $m=s+1$, then
+$F\cong\Theta(2a,2b,2c)^+$ for positive $a\le b\le c$ with
+$a+b+c=(s+1)/2$.
+\item If $F$ is indecomposable and $m=\lfloor s^2/4\rfloor$, then
+$F\cong K_{\lfloor s/2\rfloor,\lceil s/2\rceil}^+$.
+\item If $F$ is decomposable and $m=\delta(s)$, then $F$ is a one-point
+amalgamation of $K_{a,b}^+$ and one triple, where
+$a+b=s-1$ and $|a-b|\le1$.
+\end{enumerate}
+Here $\Theta(p,q,r)$ is the theta graph with three internally disjoint paths
+of lengths $p,q,r$ and common endpoints.
+\end{corollary}
+\begin{proof}
+The first and third assertions are the equality cases of minimum degree and
+the bipartite extremal bound.  In the second case
+$\sum_v(\deg v-2)=2$.  A single degree-four vertex would be a cut vertex, so
+there are exactly two degree-three vertices and all others have degree two;
+the three resulting paths have the same parity, hence are all even.  Equality
+in the cut-vertex estimate used above forces a balanced complete bipartite
+graph on $s-1$ vertices plus one leaf, which translates to the fourth
+assertion.
+\end{proof}
+
+\begin{proposition}[Componentwise atom-count spectrum]
+\label{proposition-componentwise-atom-count-spectrum}
+Let $F$ be reduced and obligatory with $c$ connected components, shadow order
+$s=|V(F)|-|E(F)|$, cycle rank
+$\beta=2|E(F)|-|V(F)|+c$, and $k$ canonical atoms.  For every feasible
+$(s,\beta,c)$, the possible values of $k$ are exactly
+\[
+\begin{array}{ll}
+\beta=0:
+  & k=s-c,\\[1mm]
+\beta=1:
+  & c\le k\le s-c-2,\quad k\equiv s-c\pmod2,\\[1mm]
+\beta\ge2:
+  & c\le k\le s-c-q(\beta).
+\end{array}
+\tag{10.20}
+\]
+The parameters themselves are feasible exactly when $s\ge2c$ for $\beta=0$
+and $s\ge2c+q(\beta)$ for $\beta\ge1$.
+\end{proposition}
+\begin{proof}
+If the atom cores are $J_i$, a forest with $k$ atom-nodes and $c$ components
+makes $k-c$ identifications.  Hence
+\[
+s=c+\sum_i(|V(J_i)|-1),
+\qquad
+\beta=\sum_i\bigl(|E(J_i)|-|V(J_i)|+1\bigr).
+\]
+The connected proof applies componentwise.  Necessity gives the lower atom
+floor $k\ge c$ and the three upper formulas.  For sufficiency, take $c-1$
+single-triple components and realise the corresponding connected atom count
+in the remaining component.  The feasibility thresholds follow by
+concentrating all positive rank in one minimum-order cyclic atom.
+\end{proof}
