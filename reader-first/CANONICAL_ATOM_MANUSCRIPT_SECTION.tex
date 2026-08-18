@@ -44,14 +44,18 @@ linear, has a private bridge at each hyperedge-node, and has only even Berge
 cycles, while a forest of one-point sums preserves these properties.
 \end{proof}
 
+Call a connected triple system with at least one hyperedge \emph{one-point
+indecomposable} if it cannot be written as a one-point amalgamation of two
+systems that both contain a hyperedge.
+
 \begin{corollary}[Minimal generators and one-point indecomposables]
 \label{corollary-minimal-generators-indecomposables}
 The class $\mathcal B$ is generated, up to isomorphism, by finite edgeless
-systems, one triple, and $J^+$ for finite $2$-connected bipartite graphs $J$,
+systems, one triple, and $J^+$ for finite $2$-connected simple bipartite graphs $J$,
 under finite disjoint unions and one-point amalgamations.  Moreover, a
 connected reduced obligatory system with at least one hyperedge is
 one-point indecomposable if and only if it is one triple or $J^+$ for a finite
-$2$-connected bipartite graph $J$.
+$2$-connected simple bipartite graph $J$.
 \end{corollary}
 \begin{proof}
 The theorem decomposes every reduced member of $\mathcal B$ into the displayed
@@ -141,11 +145,13 @@ If $\beta=1$, there is one cyclic atom, whose core is an even cycle of order
 $v\ge4$; the remaining atoms are single triples, so
 $s=k+v-1$.  This is exactly the middle line of (10.13).
 
-Suppose $\beta\ge2$.  Lemma~\ref{lemma-minimum-order-fixed-cyclic-rank} and
-\[
-q(r_1)+q(r_2)\ge q(r_1+r_2)+1
-\]
-give
+Suppose $\beta\ge2$.  For positive integers $a,b$, the inequality
+$\sqrt a+\sqrt b\ge\sqrt{a+b-1}+1$ follows after squaring from
+$(a-1)(b-1)\ge0$.  Hence
+$q(a)+q(b)\ge q(a+b-1)+2\ge q(a+b)+1$, where the second
+inequality uses that $q$ increases by at most one between consecutive integers.
+Together with Lemma~\ref{lemma-minimum-order-fixed-cyclic-rank}, repeated
+application gives
 \[
 s\ge1+k+q(\beta),
 \]
@@ -256,7 +262,8 @@ assertion.
 
 \begin{proposition}[Componentwise atom-count spectrum]
 \label{proposition-componentwise-atom-count-spectrum}
-Let $F$ be reduced and obligatory with $c$ connected components, shadow order
+Let $F$ be reduced and obligatory with at least one hyperedge and $c\ge1$
+connected components, shadow order
 $s=|V(F)|-|E(F)|$, cycle rank
 $\beta=2|E(F)|-|V(F)|+c$, and $k$ canonical atoms.  For every feasible
 $(s,\beta,c)$, the possible values of $k$ are exactly
