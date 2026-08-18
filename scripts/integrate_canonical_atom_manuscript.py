@@ -122,13 +122,21 @@ direction uses a one-apex sequence lift; all arguments are in ZFC.
             "contribution paragraph",
         )
 
-        canonical_anchor = "Hence \\(F\\in\\mathcal B\\).\n\\end{proof}\n\nThis proves"
+        classification_conclusion = r"""This proves
+
+\[
+(3)\Longrightarrow(2). \tag{5.2}
+\]
+
+Combining (5.1) and (5.2),
+
+\[
+(2)\Longleftrightarrow(3). \tag{5.3}
+\]"""
         text = replace_once(
             text,
-            canonical_anchor,
-            "Hence \\(F\\in\\mathcal B\\).\n\\end{proof}\n\n"
-            + canonical_atom_block
-            + "\n\nThis proves",
+            classification_conclusion,
+            classification_conclusion + "\n\n" + canonical_atom_block,
             "canonical atom insertion",
         )
 

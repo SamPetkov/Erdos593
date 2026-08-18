@@ -87,9 +87,25 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          branch='${{ github.event.pull_request.head.ref }}'
+          source_sha=$(git rev-parse HEAD)
           git add -A
           git commit -m 'Integrate canonical atom spectra into manuscript'
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          git fetch origin "$branch"
+          remote_sha=$(git rev-parse "origin/$branch")
+          if [ "$remote_sha" != "$source_sha" ]; then
+            echo "Branch advanced from $source_sha to $remote_sha; skipping stale artifact push."
+            exit 0
+          fi
+          if ! git push origin HEAD:"$branch"; then
+            git fetch origin "$branch"
+            remote_sha=$(git rev-parse "origin/$branch")
+            if [ "$remote_sha" != "$source_sha" ]; then
+              echo "Branch advanced during push; a newer workflow run will publish artifacts."
+              exit 0
+            fi
+            exit 1
+          fi
       - name: Require a clean synchronized tree
         run: git diff --exit-code -- .
       - name: Upload manuscript preview
