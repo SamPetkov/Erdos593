@@ -1,0 +1,164 @@
+\section{Global componentwise canonical atom spectra}
+
+Let \(F\) be a finite reduced obligatory triple system with \(m\) hyperedges,
+\(n\) points, and \(c\ge1\) connected components.  Put
+\[
+ s=n-m,\qquad
+ \beta=2m-n+c=m-s+c,
+ \qquad
+ \kappa(r)=\left\lceil2\sqrt r\right\rceil.
+\]
+
+\begin{theorem}[Forest-additive law]
+Let the canonical atoms have bipartite cores \(J_1,\ldots,J_k\), and write
+\[
+ v_i=|V(J_i)|,\qquad
+ e_i=|E(J_i)|,\qquad
+ r_i=e_i-v_i+1.
+\]
+Then
+\[
+ m=\sum_{i=1}^k e_i,\qquad
+ s=c+\sum_{i=1}^k(v_i-1),\qquad
+ \beta=\sum_{i=1}^k r_i.
+\]
+\end{theorem}
+
+\begin{proof}
+The atoms partition the hyperedges.  A forest with \(k\) atom nodes and \(c\)
+connected components makes exactly \(k-c\) one-point identifications, so
+\[
+ n=\sum_i(e_i+v_i)-(k-c).
+\]
+The formulas follow by subtraction.
+\end{proof}
+
+\begin{corollary}[Global feasibility]
+A reduced obligatory system with parameters \((s,\beta,c)\) exists if and only
+if
+\[
+ \begin{array}{ll}
+ \beta=0:&s\ge2c,\\
+ \beta\ge1:&s\ge2c+\kappa(\beta).
+ \end{array}
+\]
+\end{corollary}
+
+\begin{theorem}[Prescribed global atom-rank partition]
+Let \(r_1,\ldots,r_q\) be positive integers, with \(q=0\) allowed.  There is a
+reduced obligatory system with \(c\) connected components, shadow order \(s\),
+and cyclic-atom rank multiset \(\{r_1,\ldots,r_q\}\) if and only if
+\[
+ s\ge
+ c+\sum_{i=1}^q\bigl(1+\kappa(r_i)\bigr)
+ +\max(0,c-q).
+\]
+\end{theorem}
+
+\begin{proof}
+A rank-\(r_i\) cyclic atom costs at least \(1+\kappa(r_i)\) in the
+forest-additive formula.  If \(q<c\), at least \(c-q\) single-triple atoms are
+needed to cover the remaining forest components.  Conversely, take
+minimum-order cyclic cores, distribute them among the components, add
+single-triple components where necessary, and absorb every unit of slack by
+one additional single-triple atom.
+\end{proof}
+
+Define
+\[
+ g(r)=
+ \begin{cases}
+ 2,&r=0,\\
+ 2+\kappa(r),&r\ge1.
+ \end{cases}
+\]
+
+\begin{corollary}[Prescribed component-rank profile]
+For nonnegative integers \(\beta_1,\ldots,\beta_c\), there exists a reduced
+obligatory system whose component cycle ranks are exactly
+\(\beta_1,\ldots,\beta_c\) and whose total shadow order is \(s\) if and only if
+\[
+ s\ge\sum_{j=1}^c g(\beta_j).
+\]
+\end{corollary}
+
+\begin{corollary}[Number of cyclic components]
+Let \(\beta\ge1\).  Exactly \(h\) components have positive cycle rank if and
+only if
+\[
+ 1\le h\le\min(c,\beta),
+ \qquad
+ s\ge2c+2h-2+\kappa(\beta-h+1).
+\]
+The extremal component profile is
+\[
+ (\beta-h+1,1,\ldots,1,0,\ldots,0).
+\]
+\end{corollary}
+
+\begin{corollary}[Number of cyclic atoms]
+Let \(\beta\ge1\).  Exactly \(q\) cyclic atoms occur if and only if
+\[
+ 1\le q\le\beta,
+ \qquad
+ s\ge
+ c+3q-2+\kappa(\beta-q+1)+\max(0,c-q).
+\]
+\end{corollary}
+
+\begin{theorem}[Global canonical atom-count spectrum]
+Let \(k\) be the total number of canonical atoms.  For every feasible
+\((s,\beta,c)\), the possible values are exactly
+\[
+ \begin{array}{ll}
+ \beta=0:
+   &k=s-c,\\[1mm]
+ \beta=1:
+   &c\le k\le s-c-2,\quad k\equiv s-c\pmod2,\\[1mm]
+ \beta\ge2:
+   &c\le k\le s-c-\kappa(\beta).
+ \end{array}
+\]
+For \(\beta\ge1\),
+\[
+ k_{\max}=s-c-\kappa(\beta),
+\]
+and every maximizer has one minimum-order cyclic atom carrying the full rank
+\(\beta\), with every other atom a single triple.
+\end{theorem}
+
+\begin{proof}
+For \(\beta=0\), every atom is a single triple, and the forest-additive law
+gives \(s=c+k\).
+
+For \(\beta=1\), there is one cyclic atom whose core is an even cycle of order
+\(v\ge4\).  Hence
+\[
+ s=c+(k-1)+(v-1)=c+k+v-2,
+\]
+which gives the interval and parity condition.
+
+For \(\beta\ge2\), if the positive atom ranks are \(r_1,\ldots,r_q\), then
+\[
+ s\ge c+k+\sum_i\kappa(r_i)
+   \ge c+k+\kappa(\beta).
+\]
+Thus \(k\le s-c-\kappa(\beta)\), while \(k\ge c\) because the atom incidence
+graph has \(c\) nonempty forest components.  Every intermediate value is
+obtained by taking \(c-1\) single-triple components and applying the connected
+atom-count theorem to the remaining component.  Equality in the upper bound
+forces one positive-rank atom by the strict rank-concentration inequality.
+\end{proof}
+
+\begin{corollary}[Minimum total atom count]
+For every feasible \((s,\beta,c)\),
+\[
+ k_{\min}=
+ \begin{cases}
+ s-c,&\beta=0,\\
+ c,&\beta=1\text{ and }s\text{ even},\\
+ c+1,&\beta=1\text{ and }s\text{ odd},\\
+ c,&\beta\ge2.
+ \end{cases}
+\]
+\end{corollary}

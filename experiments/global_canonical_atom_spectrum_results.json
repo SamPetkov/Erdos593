@@ -1,0 +1,89 @@
+{
+  "arithmetic": {
+    "feasibility_checks": 1048832,
+    "max_components": 128,
+    "max_rank": 4096,
+    "monotonicity_checks": 8386560
+  },
+  "constructions": {
+    "component_profile_witnesses": 540,
+    "cyclic_atom_count_witnesses": 20656,
+    "cyclic_component_count_witnesses": 13759,
+    "max_components": 6,
+    "max_full_partition_shadow_order": 14,
+    "max_shadow_order": 30,
+    "rank_partition_witnesses": 767,
+    "total_atom_count_witnesses": 45650
+  },
+  "exhaustive": {
+    "max_shadow_order": 8,
+    "parameter_triples_compared": 46,
+    "rows": [
+      {
+        "cyclic_blocks": 0,
+        "edge_blocks": 1,
+        "graphs_examined": 2,
+        "reduced_graphs": 1,
+        "shadow_order": 2
+      },
+      {
+        "cyclic_blocks": 0,
+        "edge_blocks": 2,
+        "graphs_examined": 4,
+        "reduced_graphs": 1,
+        "shadow_order": 3
+      },
+      {
+        "cyclic_blocks": 1,
+        "edge_blocks": 20,
+        "graphs_examined": 24,
+        "reduced_graphs": 8,
+        "shadow_order": 4
+      },
+      {
+        "cyclic_blocks": 7,
+        "edge_blocks": 83,
+        "graphs_examined": 80,
+        "reduced_graphs": 26,
+        "shadow_order": 5
+      },
+      {
+        "cyclic_blocks": 166,
+        "edge_blocks": 1217,
+        "graphs_examined": 800,
+        "reduced_graphs": 345,
+        "shadow_order": 6
+      },
+      {
+        "cyclic_blocks": 1614,
+        "edge_blocks": 9060,
+        "graphs_examined": 5184,
+        "reduced_graphs": 2403,
+        "shadow_order": 7
+      },
+      {
+        "cyclic_blocks": 49391,
+        "edge_blocks": 212176,
+        "graphs_examined": 102528,
+        "reduced_graphs": 58312,
+        "shadow_order": 8
+      }
+    ],
+    "totals": {
+      "cyclic_blocks": 51179,
+      "edge_blocks": 222559,
+      "graphs_examined": 108622,
+      "reduced_graphs": 61096
+    }
+  },
+  "formulas": {
+    "cyclic_atoms": "s>=c+3q-2+ceil(2sqrt(beta-q+1))+max(0,c-q)",
+    "cyclic_components": "s>=2c+2h-2+ceil(2sqrt(beta-h+1))",
+    "global_feasibility": "beta=0: s>=2c; beta>=1: s>=2c+ceil(2sqrt(beta))",
+    "prescribed_rank_partition": "s>=c+sum(1+ceil(2sqrt(r_i)))+max(0,c-q)",
+    "total_atoms_beta0": "k=s-c",
+    "total_atoms_beta1": "c<=k<=s-c-2 and k==s-c (mod 2)",
+    "total_atoms_beta_ge_2": "c<=k<=s-c-ceil(2sqrt(beta))"
+  },
+  "theorem": "global componentwise canonical atom spectra"
+}
