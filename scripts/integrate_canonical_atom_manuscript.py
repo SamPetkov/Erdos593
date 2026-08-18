@@ -45,7 +45,6 @@ def load_blocks() -> tuple[str, str]:
     finite = text.split(FINITE_MARKER, 1)[1].strip()
     return structural, finite
 
-
 def patch_tex() -> None:
     canonical_atom_block, finite_atom_block = load_blocks()
     text = TEX.read_text(encoding="utf-8")
@@ -104,12 +103,6 @@ direction uses a one-apex sequence lift; all arguments are in ZFC.
         if count != 1:
             raise RuntimeError(f"abstract: expected one block, found {count}")
 
-        text = replace_once(
-            text,
-            r"\section*{Introduction}\label{introduction}",
-            r"\section{Introduction}\label{introduction}",
-            "numbered introduction",
-        )
         text = replace_once(
             text,
             "finite disjoint unions and one-point amalgamations.  If $F$ is a triple\nsystem, let $F^\\circ$ denote the system obtained by deleting its isolated\nvertices.",
@@ -295,7 +288,7 @@ def patch_revision_notes() -> None:
     text = REVISION.read_text(encoding="utf-8")
     marker = "## 18 August 2026 -- canonical atoms and exact structural spectra"
     if marker not in text:
-        entry = f"""\n\n{marker}\n\n- changed the manuscript title to *{NEW_TITLE}*;\n- integrated the canonical atom normal form and minimal-generator corollary;\n- added the exact connected and componentwise atom-count spectra;\n- added the indecomposability phase diagram and boundary-rigidity corollary;\n- replaced the displayed abstract formula by a self-contained AMS-style abstract;\n- added the ENS--PSL address and author email; and\n- regenerated all public TeX, Markdown, PDF, arXiv, manifest, and checksum artifacts.\n"""
+        entry = f"""\n\n{marker}\n\n- changed the manuscript title to *{NEW_TITLE}*;\n- integrated the canonical atom normal form and minimal-generator corollary;\n- added the exact connected and componentwise atom-count spectra;\n- added the indecomposability phase diagram and boundary-rigidity corolary;\n- replaced the displayed abstract formula by a self-contained AMS-style abstract;\n- added the ENS--PSL address and author email; and\n- regenerated all public TeX, Markdown, PDF, arXiv, manifest, and checksum artifacts.\n"""
         text = text.rstrip() + entry
     REVISION.write_text(text.rstrip() + "\n", encoding="utf-8", newline="\n")
 
