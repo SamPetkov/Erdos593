@@ -1,0 +1,49 @@
+name: Erdős 593 shared-point multiplicity spectrum
+
+on:
+  pull_request:
+    paths:
+      - 'SHARED_POINT_MULTIPLICITY_SPECTRUM.md'
+      - 'reader-first/SHARED_POINT_MULTIPLICITY_EXTENSION.tex'
+      - 'audits/SHARED_POINT_MULTIPLICITY_AUDIT.md'
+      - 'experiments/verify_shared_point_multiplicity_spectrum.py'
+      - 'experiments/shared_point_multiplicity_audit.json'
+      - '.github/workflows/shared-point-multiplicity-spectrum.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-shared-point-spectrum:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile verifier
+        run: python -m py_compile experiments/verify_shared_point_multiplicity_spectrum.py
+      - name: Reproduce finite audit
+        run: |
+          python experiments/verify_shared_point_multiplicity_spectrum.py \
+            --output /tmp/shared-point-audit.json
+          cmp -s /tmp/shared-point-audit.json \
+            experiments/shared_point_multiplicity_audit.json
+          cat /tmp/shared-point-audit.json
+      - name: Check theorem markers
+        run: |
+          grep -Fq 'Forest excess identity' SHARED_POINT_MULTIPLICITY_SPECTRUM.md
+          grep -Fq 'Exact multiplicity profiles' SHARED_POINT_MULTIPLICITY_SPECTRUM.md
+          grep -Fq 'Full incidence degree sequences' SHARED_POINT_MULTIPLICITY_SPECTRUM.md
+          grep -Fq 'Exact shared-point excess profile' \
+            reader-first/SHARED_POINT_MULTIPLICITY_EXTENSION.tex
+          grep -Fq 'Prüfer count' \
+            reader-first/SHARED_POINT_MULTIPLICITY_EXTENSION.tex
+      - name: Upload audit result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: erdos593-shared-point-multiplicity-audit
+          path: /tmp/shared-point-audit.json
