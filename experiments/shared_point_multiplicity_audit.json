@@ -1,0 +1,10 @@
+{
+  "degree_formula_checks": 697,
+  "degree_sequence_realizations": 120,
+  "exhaustive_labelled_bipartite_trees": 5140,
+  "fixed_length_maximum_spectra": 300,
+  "integer_partitions_checked": 7338,
+  "profile_formula_checks": 6,
+  "profile_realizations": 556,
+  "status": "PASS"
+}

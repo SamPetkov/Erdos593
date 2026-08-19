@@ -1,0 +1,120 @@
+% Copy-ready extension following the componentwise canonical atom spectrum.
+% This fragment does not modify the authoritative manuscript automatically.
+
+\subsection{Shared-point multiplicity spectra}
+\label{shared-point-multiplicity-spectra}
+
+Let $F$ be reduced and obligatory with at least one hyperedge, let
+$A_1,\ldots,A_k$ be its canonical atoms, and let $c$ be its number of
+connected components.  Write $P_{\rm sh}(F)$ for the points belonging to at
+least two atoms and
+\[
+\mu(p)=|\{i:p\in V(A_i)\}|.
+\]
+The atom--shared-point incidence graph has the atoms and $P_{\rm sh}(F)$ as
+its two classes.  By Theorem~\ref{theorem-canonical-atom-normal-form}, it is a
+forest, and its components are precisely the components of $F$.
+
+\begin{theorem}[Exact shared-point excess profile]
+\label{theorem-exact-shared-point-excess-profile}
+For every such $F$,
+\[
+\sum_{p\in P_{\rm sh}(F)}(\mu(p)-1)=k-c.
+\]
+Consequently the nonincreasing multiset
+\[
+\lambda(F)=\{\mu(p)-1:p\in P_{\rm sh}(F)\}
+\]
+is an integer partition of $k-c$.  Conversely, for any fixed list of $k$
+canonical atom types and any $1\le c\le k$, every partition
+$\lambda\vdash k-c$ occurs as the shared-point excess profile of a forest
+assembly into $c$ components.  The assembly preserves all atom isomorphism
+types.
+\end{theorem}
+\begin{proof}
+If $t=|P_{\rm sh}(F)|$, the incidence forest has $k+t$ vertices, $c$
+components, and therefore $k+t-c$ edges.  Summing degrees over the
+shared-point class gives
+\[
+\sum_p\mu(p)=k+t-c,
+\]
+which proves the identity.
+
+For the converse, reserve $c-1$ atoms as isolated components.  If
+$\lambda=(\lambda_1,\ldots,\lambda_t)$, start with one of the remaining
+atoms.  At step $j$, identify a fresh point of the current frontier atom with
+fresh points of $\lambda_j$ unused atoms, and choose one of the new atoms as
+the next frontier.  The resulting shared point has multiplicity
+$\lambda_j+1$.  Since $\sum_j\lambda_j=k-c$, all remaining atoms are used.
+Each atom is incident with at most two distinct shared points, so the
+construction is valid for every canonical atom.  Its incidence graph is a
+forest and the original atoms remain its canonical atoms.
+\end{proof}
+
+\begin{corollary}[Shared-point count and largest multiplicity]
+\label{corollary-shared-point-count-largest-multiplicity}
+Put $N=k-c$.  If $N=0$, there is no shared point.  If $N>0$ and $t$ shared
+points are prescribed, then $1\le t\le N$, and the possible values of
+$M=\max_p\mu(p)$ are exactly
+\[
+1+\left\lceil\frac Nt\right\rceil
+\le M\le N-t+2.
+\]
+Every value in this interval occurs.  In particular, the number of
+multiplicity profiles for fixed $k,c$ is the partition number $p(k-c)$.
+\end{corollary}
+\begin{proof}
+A profile with $t$ shared points is a partition of $N$ into $t$ positive
+parts.  Its largest part lies between $\lceil N/t\rceil$ and $N-t+1$.
+Conversely, every integer in this interval is the largest part of such a
+partition: after fixing the largest part $r$, distribute $N-r$ among the
+remaining $t-1$ positive parts, each at most $r$.  Apply the theorem.
+\end{proof}
+
+\begin{proposition}[Capacity-aware incidence degrees and Prüfer count]
+\label{proposition-capacity-aware-incidence-degrees}
+Suppose $F$ is connected, $k\ge2$, and its $t$ shared points are labelled.
+Let $d_i$ be the degree of atom $A_i$ in the incidence tree and let
+$\mu_j$ be the degree of the $j$th shared point.  Then
+\[
+\sum_i(d_i-1)=t-1,
+\qquad
+\sum_j(\mu_j-1)=k-1.
+\]
+Conversely, let $1\le d_i\le |V(A_i)|$ and $2\le\mu_j$ satisfy
+\[
+\sum_i d_i=\sum_j\mu_j=k+t-1.
+\]
+There is a forest assembly with these incidence degrees.  For labelled atom
+and point nodes, the number of incidence trees with the prescribed degree
+sequences is
+\[
+\frac{(t-1)!(k-1)!}
+ {\prod_i(d_i-1)!\prod_j(\mu_j-1)!}.
+\]
+\end{proposition}
+\begin{proof}
+The identities are the two degree sums in a bipartite tree.  Positive
+bipartite degree sequences with common sum $k+t-1$ are realised by a tree;
+this follows either by leaf deletion or from the bipartite Prüfer code.
+Choose $d_i$ distinct vertices in atom $A_i$ and use them for its incident
+shared-point nodes.  The tree condition prevents unintended identifications.
+The Prüfer code consists of a word of length $t-1$ on the atom labels and a
+word of length $k-1$ on the point labels.  Prescribing the occurrence counts
+gives the displayed product of multinomial coefficients.
+\end{proof}
+
+Let $\mathcal K(s,\beta,c)$ be the exact atom-count set from
+Proposition~\ref{proposition-componentwise-atom-count-spectrum}.  Combining
+that proposition with the exact profile theorem gives
+\[
+\{\lambda(F):F\text{ has fixed }(s,\beta,c)\}
+=
+\bigcup_{k\in\mathcal K(s,\beta,c)}
+\{\lambda:\lambda\vdash k-c\}.
+\]
+Thus the exact number of shared-point multiplicity profiles at fixed global
+invariants is
+\[
+\sum_{k\in\mathcal K(s,\beta,c)}p(k-c).
+\]
