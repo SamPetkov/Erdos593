@@ -1,0 +1,16 @@
+{
+  "exhaustive_bipartite_tree_cases": 18,
+  "exhaustive_bipartite_trees": 1437,
+  "explicit_quotient_assemblies": 6759,
+  "explicit_quotient_cases": 6,
+  "first_correction_identities": 144,
+  "ordinary_pruefer_words": 4323,
+  "partition_sum_cases": 300,
+  "partitions_examined": 7337,
+  "profile_formula_cases": 18,
+  "restricted_maximum_cases": 42,
+  "status": "PASS",
+  "strict_log_concavity_inequalities": 15015,
+  "strict_log_concavity_rows": 390,
+  "weighted_cayley_cases": 15
+}
