@@ -1,0 +1,146 @@
+% Copy-ready supplementary extension for the canonical-atom manuscript.
+% This file is not included automatically.
+
+\subsection{Enumerating canonical atom attachments}
+\label{subsection-canonical-attachment-enumeration}
+
+Fix pairwise disjoint labelled canonical atoms
+$A_1,\ldots,A_k$, with every atom vertex labelled, and put
+\[
+w_i=|V(A_i)|,\qquad
+P=\prod_{i=1}^kw_i,\qquad
+R=\sum_{i=1}^k(w_i-1).
+\]
+We count quotient assemblies, not construction histories.  Shared points are
+the actual non-singleton vertex classes and carry no external labels.
+The atom labels and internal vertex labels are retained.
+
+An admissible connected attachment is an equivalence relation on the disjoint
+union of the atom vertex sets such that every non-singleton class contains at
+most one vertex from each atom and the atom--shared-point incidence graph is a
+tree.  Let $N_t(\mathbf A)$ denote the number of such attachments with exactly
+$t$ shared points, and write $(x)_r=x(x-1)\cdots(x-r+1)$.
+
+\begin{theorem}[Exact canonical attachment count]
+\label{theorem-exact-canonical-attachment-count}
+For $k\ge2$ and $1\le t\le k-1$,
+\[
+\boxed{
+N_t(\mathbf A)
+=
+\left(\prod_{i=1}^kw_i\right)
+S(k-1,t)
+\left(\sum_{i=1}^k(w_i-1)\right)_{t-1},
+}
+\]
+where $S(n,t)$ is a Stirling number of the second kind.  The count is zero
+outside this range.  For $k=1$, the unique attachment has no shared point.
+\end{theorem}
+
+\begin{proof}
+Temporarily label the $t$ shared-point nodes.  Write
+$x_i=d_i-1$ for the atom excess degrees and
+$y_j=\mu_j-1$ for the shared-point excess degrees.  The incidence tree gives
+\[
+\sum_i x_i=t-1,\qquad
+\sum_j y_j=k-1,\qquad
+x_i\ge0,\quad y_j\ge1.
+\]
+The fixed-degree bipartite Prüfer formula, including the injections of incident
+point nodes into distinct atom vertices, is
+\[
+\frac{(t-1)!(k-1)!}
+{\prod_i x_i!\prod_j y_j!}
+\prod_i(w_i)_{x_i+1}.
+\]
+Vandermonde's identity gives
+\[
+\sum_{\sum x_i=t-1}
+\prod_i\frac{(w_i)_{x_i+1}}{x_i!}
+=
+\left(\prod_iw_i\right)\binom{R}{t-1},
+\]
+while the surjection identity gives
+\[
+(k-1)!\sum_{\substack{y_j\ge1\\\sum y_j=k-1}}
+\frac1{\prod_jy_j!}
+=t!S(k-1,t).
+\]
+The resulting count with labelled point nodes is $t!$ times the displayed
+answer.  Forgetting those labels is exactly $t!$-to-one.
+\end{proof}
+
+If the quotient has $n$ vertices, then every connected attachment makes
+$k-1$ identifications, so $R=n-1$.  Hence
+\[
+N_t(\mathbf A)
+=
+\left(\prod_iw_i\right)S(k-1,t)(n-1)_{t-1}.
+\tag{10.20}
+\]
+
+\begin{corollary}[Profile-refined count]
+\label{corollary-profile-refined-attachment-count}
+Let $\lambda=(\lambda_1,\ldots,\lambda_t)\vdash k-1$ be the unordered
+shared-point excess profile, and let $m_r$ be the multiplicity of the part $r$.
+Then the number of attachments with profile $\lambda$ is
+\[
+\boxed{
+\left(\prod_iw_i\right)(R)_{t-1}
+\frac{(k-1)!}{\prod_j\lambda_j!\prod_rm_r!}.
+}
+\]
+\end{corollary}
+
+Let $S_{\le q}(n,t)$ be the number of partitions of an $n$-set into $t$
+nonempty blocks of size at most $q$.  Summing the preceding corollary gives
+\[
+N_{t,\le M}(\mathbf A)
+=
+\left(\prod_iw_i\right)(R)_{t-1}
+S_{\le M-1}(k-1,t),
+\tag{10.21}
+\]
+for the number of attachments whose largest shared-point multiplicity is at
+most $M$.
+
+\begin{corollary}[Injective-port Cayley identity]
+\label{corollary-injective-port-cayley}
+For labelled trees on the atom labels,
+\[
+\boxed{
+\sum_{T\in\mathcal T_k}\prod_{i=1}^k(w_i)_{\deg_T(i)}
+=
+\left(\prod_iw_i\right)(R)_{k-2}.
+}
+\]
+\end{corollary}
+
+Indeed, this is the endpoint $t=k-1$, where all shared points have
+multiplicity two and suppress to the edges of an ordinary tree.
+
+The attachment polynomial
+\[
+\Phi_{\mathbf A}(z)
+=
+\left(\prod_iw_i\right)
+\sum_{t=1}^{k-1}S(k-1,t)(R)_{t-1}z^t
+\]
+depends on the size vector only through $k$, $\prod_iw_i$, and
+$\sum_i(w_i-1)$.  Its positive coefficients are strictly log-concave, hence
+unimodal: the Stirling row is strictly log-concave by the real-rootedness of
+the Touchard polynomial, and the falling-factorial row is strictly
+log-concave because
+\[
+\frac{(R)_{t-1}^2}{(R)_{t-2}(R)_t}
+=
+\frac{R-t+2}{R-t+1}>1.
+\]
+
+For fixed $k$ and $R\to\infty$, the binary endpoint dominates.  More precisely,
+\[
+\frac{N_{k-2}}{N_{k-1}}
+=
+\frac{\binom{k-1}{2}}{R-k+3},
+\]
+and all lower terms are $O_k(R^{-2})$ relative to $N_{k-1}$.

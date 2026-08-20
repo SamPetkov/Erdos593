@@ -1,0 +1,52 @@
+name: Erdős 593 canonical attachment enumeration
+
+on:
+  pull_request:
+    paths:
+      - 'CANONICAL_ATTACHMENT_ENUMERATION.md'
+      - 'reader-first/CANONICAL_ATTACHMENT_ENUMERATION.tex'
+      - 'audits/CANONICAL_ATTACHMENT_ENUMERATION_AUDIT.md'
+      - 'experiments/verify_canonical_attachment_enumeration.py'
+      - 'experiments/canonical_attachment_enumeration_audit.json'
+      - '.github/workflows/canonical-attachment-enumeration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-attachment-enumeration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile verifier
+        run: python -m py_compile experiments/verify_canonical_attachment_enumeration.py
+      - name: Reproduce exact audit
+        run: |
+          python experiments/verify_canonical_attachment_enumeration.py \
+            --output /tmp/canonical-attachment-audit.json
+          cmp -s /tmp/canonical-attachment-audit.json \
+            experiments/canonical_attachment_enumeration_audit.json
+          cat /tmp/canonical-attachment-audit.json
+      - name: Check theorem markers
+        run: |
+          grep -Fq 'canonical attachment formula' \
+            CANONICAL_ATTACHMENT_ENUMERATION.md
+          grep -Fq 'profile-refined attachment formula' \
+            CANONICAL_ATTACHMENT_ENUMERATION.md
+          grep -Fq 'restricted-Stirling refinement' \
+            CANONICAL_ATTACHMENT_ENUMERATION.md
+          grep -Fq 'weighted injective-port Cayley identity' \
+            CANONICAL_ATTACHMENT_ENUMERATION.md
+          grep -Fq 'Exact canonical attachment count' \
+            reader-first/CANONICAL_ATTACHMENT_ENUMERATION.tex
+      - name: Upload audit result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: erdos593-canonical-attachment-enumeration-audit
+          path: /tmp/canonical-attachment-audit.json
