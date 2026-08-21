@@ -1,0 +1,143 @@
+\subsection{Occupancy collapse of the attachment polynomial}
+\label{subsection-attachment-occupancy-collapse}
+
+Fix labelled canonical atoms $A_1,\ldots,A_k$, retain all labels on their
+vertices, and put
+\[
+w_i=|V(A_i)|,
+\qquad
+P=\prod_iw_i,
+\qquad
+v=\sum_iw_i-k+1.
+\]
+Thus $v$ is the order of every connected quotient assembly.  Let $N_t$ count
+capacity-respecting connected attachment quotients with exactly $t$ shared
+points.  The preceding enumeration gives
+\[
+N_t=P\,S(k-1,t)(v-1)_{t-1}.
+\]
+
+\begin{theorem}[Attachment occupancy collapse]
+\label{theorem-attachment-occupancy-collapse}
+For $k\ge2$,
+\[
+N_t=\frac Pv(v)_tS(k-1,t),
+\qquad
+\sum_{t=1}^{k-1}N_t=Pv^{k-2}.
+\tag{A.1}
+\]
+Consequently, under the uniform distribution on attachment quotients, the
+number $T$ of shared points satisfies
+\[
+\Pr(T=t)=\frac{(v)_tS(k-1,t)}{v^{k-1}}.
+\tag{A.2}
+\]
+This is the occupancy law for $k-1$ labelled balls placed uniformly into $v$
+labelled boxes.
+\end{theorem}
+\begin{proof}
+Use $(v-1)_{t-1}=(v)_t/v$ and
+$x^n=\sum_tS(n,t)(x)_t$.  Equivalently, normalize the bipartite Prüfer code by
+choosing one anchor vertex in each atom.  The remaining code alphabet has
+$1+\sum_i(w_i-1)=v$ symbols, and one code position may be fixed, leaving
+$v^{k-2}$ words.
+\end{proof}
+
+For an excess profile
+$\lambda=(\lambda_1,\ldots,\lambda_t)\vdash k-1$, let $m_r$ count its parts
+equal to $r$.  The full profile law is
+\[
+\Pr(\lambda(F)=\lambda)
+=
+\frac{(v)_t(k-1)!}
+ {v^{k-1}\prod_j\lambda_j!\prod_rm_r!}.
+\tag{A.3}
+\]
+Thus the complete shared-point multiplicity profile is the load profile in the
+same occupancy model.  If $C_r$ counts shared points of multiplicity $r+1$,
+then
+\[
+\mathbb EC_r
+=v\binom{k-1}{r}v^{-r}
+ \left(1-\frac1v\right)^{k-1-r}.
+\tag{A.4}
+\]
+
+Put
+\[
+a=\left(1-\frac1v\right)^{k-1},
+\qquad
+b=\left(1-\frac2v\right)^{k-1}.
+\]
+Then
+\[
+\mathbb ET=v(1-a),
+\qquad
+\operatorname{Var}(T)=va+v(v-1)b-v^2a^2.
+\tag{A.5}
+\]
+More generally,
+\[
+\mathbb E(T)_j
+=(v)_j\sum_{\ell=0}^j(-1)^\ell\binom j\ell
+\left(1-\frac\ell v\right)^{k-1}.
+\tag{A.6}
+\]
+
+\begin{theorem}[Real-rooted attachment polynomial]
+\label{theorem-real-rooted-attachment-polynomial}
+The polynomial
+\[
+\Phi_{\mathbf A}(z)=\sum_{t=1}^{k-1}N_tz^t
+\]
+has one simple zero at $0$ and all its other zeros are simple and negative.
+The positive coefficients are strictly ultra log-concave.  Moreover, there
+exist independent Bernoulli variables $B_1,\ldots,B_{k-2}$ such that
+\[
+T\stackrel d=1+\sum_{j=1}^{k-2}B_j.
+\tag{A.7}
+\]
+\end{theorem}
+\begin{proof}
+Set
+\[
+\Omega_{h,v}(z)=\sum_t(v)_tS(h,t)z^t.
+\]
+The Stirling recurrence gives
+\[
+\Omega_{h+1,v}=vz\Omega_{h,v}+z(1-z)\Omega'_{h,v}.
+\tag{A.8}
+\]
+Starting from $\Omega_{1,v}=vz$, evaluation at the old negative zeros shows
+alternating signs, while the signs just left of zero and at negative infinity
+supply the two endpoint intervals.  Induction gives simple negative zeros and
+strict interlacing.  Newton's inequalities give strict ultra log-concavity.
+Factoring the normalized probability generating polynomial over its negative
+zeros gives (A.7).
+\end{proof}
+
+The occupancy interpretation distinguishes two asymptotic regimes.  For fixed
+$k$ and $v\to\infty$, binary attachments dominate and
+\[
+\Pr(T=k-1)=\frac{(v)_{k-1}}{v^{k-1}}
+=1-\frac{\binom{k-1}{2}}v+O_k(v^{-2}).
+\tag{A.9}
+\]
+If instead $h=k-1\to\infty$ and $v/h\to\gamma\ge1$, then
+\[
+\frac{\mathbb ET}{h}\to\gamma(1-e^{-1/\gamma}),
+\qquad
+\frac{\operatorname{Var}(T)}h
+\to\gamma e^{-1/\gamma}-(\gamma+1)e^{-2/\gamma},
+\tag{A.10}
+\]
+and the centered, variance-normalized $T$ is asymptotically Gaussian.  For
+fixed $r$,
+\[
+\frac{C_r}{h}
+\xrightarrow{\Pr}
+\frac{e^{-1/\gamma}}{r!\gamma^{r-1}}.
+\tag{A.11}
+\]
+Hence binary dominance for fixed $k$ and large atom orders does not persist
+when the number of fixed-size atoms tends to infinity.
