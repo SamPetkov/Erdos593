@@ -1,0 +1,50 @@
+name: Erdős 593 attachment occupancy collapse
+
+on:
+  pull_request:
+    paths:
+      - 'ATTACHMENT_OCCUPANCY_COLLAPSE.md'
+      - 'reader-first/ATTACHMENT_OCCUPANCY_COLLAPSE.tex'
+      - 'audits/ATTACHMENT_OCCUPANCY_COLLAPSE_AUDIT.md'
+      - 'experiments/verify_attachment_occupancy_collapse.py'
+      - 'experiments/attachment_occupancy_collapse_audit.json'
+      - '.github/workflows/attachment-occupancy-collapse.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-occupancy-collapse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile verifier
+        run: python -m py_compile experiments/verify_attachment_occupancy_collapse.py
+      - name: Reproduce exact audit
+        run: |
+          python experiments/verify_attachment_occupancy_collapse.py \
+            --output /tmp/attachment-occupancy-audit.json
+          cmp -s /tmp/attachment-occupancy-audit.json \
+            experiments/attachment_occupancy_collapse_audit.json
+          cat /tmp/attachment-occupancy-audit.json
+      - name: Check theorem markers
+        run: |
+          grep -Fq 'Exact occupancy collapse' ATTACHMENT_OCCUPANCY_COLLAPSE.md
+          grep -Fq 'Full shared-point multiplicity law' ATTACHMENT_OCCUPANCY_COLLAPSE.md
+          grep -Fq 'Real-rooted attachment polynomial' ATTACHMENT_OCCUPANCY_COLLAPSE.md
+          grep -Fq 'Two different asymptotic regimes' ATTACHMENT_OCCUPANCY_COLLAPSE.md
+          grep -Fq 'Attachment occupancy collapse' \
+            reader-first/ATTACHMENT_OCCUPANCY_COLLAPSE.tex
+          grep -Fq 'Real-rooted attachment polynomial' \
+            reader-first/ATTACHMENT_OCCUPANCY_COLLAPSE.tex
+      - name: Upload exact audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: erdos593-attachment-occupancy-audit
+          path: /tmp/attachment-occupancy-audit.json

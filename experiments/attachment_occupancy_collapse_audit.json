@@ -1,0 +1,16 @@
+{
+  "certified_negative_roots": 2470,
+  "coefficient_identity_cases": 260,
+  "coefficient_terms": 2730,
+  "component_partition_checks": 275,
+  "factorial_moment_checks": 1170,
+  "moment_cases": 260,
+  "normalized_functions": 29372,
+  "normalized_profile_cases": 76,
+  "profile_expectation_checks": 1365,
+  "recurrence_cases": 247,
+  "status": "PASS",
+  "sturm_cases": 260,
+  "total_count_cases": 260,
+  "ultra_log_concavity_checks": 2223
+}
