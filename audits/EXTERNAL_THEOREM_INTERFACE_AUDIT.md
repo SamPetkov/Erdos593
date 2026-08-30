@@ -23,9 +23,9 @@ The principal comparison sources are:
 - E. Li, *A Resolution of Erdős Problems 593 and 1177*, arXiv:2606.24882v2,
   Theorem 1.1 and Sections 3--5.
 
-Li's v2 contains an explicit external-interface section and is useful as an
-independent modern check of the older theorem substitutions.  Reiher's theorem
-is checked from his own paper.
+Li's v2 contains an explicit external-interface section and provides a useful
+parallel point of comparison for the older theorem substitutions.  Reiher's
+theorem is checked from his own paper.
 
 ## Verdict
 
@@ -197,7 +197,7 @@ positive atoms.  The manuscript then gives a separate direct proof of
 
 ---
 
-## 6. Li's classification and bridge-trace architecture
+## 6. Li's parallel classification and bridge-trace formulation
 
 ### Source interfaces
 
@@ -210,29 +210,31 @@ derivatives.
 
 The manuscript:
 
-- credits Li with the first publicly posted complete classification;
-- credits the one-apex lift and bridge-trace strategy at point of use;
-- proves a specialised forward finite-trace theorem in base-fibre language;
-- does not invoke Li's classification as a premise in its own proof;
-- does not claim the converse bridge-trace theorem in its base-fibre section.
+- records the 23 June 2026 posting date for chronology;
+- cites Li's alternative complete-rank one-apex and bridge-trace formulation
+  at the relevant points;
+- states that the present proof and Lean implementation were developed
+  independently, in parallel with Li's work;
+- proves its forward finite-trace theorem in base-fibre language; and
+- does not invoke Li's classification or bridge-trace theorem as a premise.
 
 ### Check
 
-The theorem called `Finite linear trace decomposition` is the forward
-consequence needed for the two lift-based avoiding hosts.  It is not presented
-as an independent rediscovery, and it does not silently claim Li's full exact
-converse.
+The theorem called `Finite linear trace decomposition` is the forward statement
+needed for the two lift-based avoiding hosts, and the manuscript supplies its
+proof.  Li's theorem is cited as a parallel formulation.  The manuscript does
+not claim Li's full exact converse in base-fibre language.
 
-**Status: attribution and logical dependence are correct.**
+**Status: chronology, comparison, and the absence of logical dependence are
+stated explicitly.**
 
-Recommended wording before Theorem 6.3:
+Current wording before Theorem 6.3:
 
-> The next theorem is the forward finite-trace consequence of Li's exact
-> bridge-trace theorem, specialised to the present lift and rewritten in
-> base-fibre language.
+> The following trace theorem uses the fibre decomposition described above.
+> Li gives a parallel bridge-trace formulation (Theorem 4.6).
 
-This is more precise than `the fibre-decomposition form`, which can sound as if
-the full equivalence is being restated.
+This wording distinguishes a comparison citation from a proof dependency and
+does not suggest that Li's full equivalence is being restated.
 
 ---
 
@@ -268,9 +270,9 @@ existing line-edit ledger.
    Replace `a graph ... of prescribed odd girth` by
    `a graph ... with odd girth exceeding a prescribed finite bound`.
 
-3. **Clarify Li's theorem interface.**
-   Before Theorem 6.3, say `forward finite-trace consequence` rather than the
-   potentially ambiguous `fibre-decomposition form`.
+3. **Retain the Li dependency boundary.**
+   Keep the present point-of-use comparison citation and the explicit statement
+   that no result of Li is used as a black box.
 
 4. **State that Reiher is not a hidden premise.**
    After the direct expansion proof, retain the present sentence that it also

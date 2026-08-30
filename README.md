@@ -1,11 +1,12 @@
 # Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra
 
 **Author:** Samuil Petkov  
-**Manuscript revision:** 18 August 2026
+**Manuscript revision:** 30 August 2026
 
-This repository contains an alternative proof of the finite classification in
-Erdős Problem 593, a complete Lean 4 verification of the implementation used
-here, a canonical atom normal form, and exact finite structural spectra.
+This repository contains an independently developed proof of the finite
+classification in Erdős Problem 593, a complete Lean 4 verification of its
+finite structural core, a canonical atom normal form, and exact finite
+structural spectra.
 
 For every finite triple system `F`, the checked public endpoints are
 
@@ -77,11 +78,12 @@ extension.
 
 ## Relationship to Eric Li's preprint
 
-Eric Li's preprint, posted on 23 June 2026, was the first publicly posted
-complete mathematical proof of the classification and introduced the
-complete-rank one-apex lift and bridge-trace method used in the negative
-direction. This repository gives a different proof implementation and retains
-point-of-use citations to that work.
+Eric Li's preprint, posted on 23 June 2026, gives a closely related treatment
+of the classification through an alternative complete-rank one-apex lift and
+bridge-trace formulation.  The proof and Lean implementation in this
+repository were developed independently, in parallel with that work.  The
+manuscript cites Li's preprint for chronology and comparison and does not use
+its results as black boxes.
 
 The public commit history records a checked Lean scaffold on 15 July 2026 and
 the complete finite structural classification later that day in commit

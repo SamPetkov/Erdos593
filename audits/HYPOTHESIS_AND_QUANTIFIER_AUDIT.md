@@ -332,8 +332,8 @@ The theorem does not claim that each `J_s` is bipartite for an arbitrary base
 graph `G`.  Bipartiteness is obtained later by choosing a high-odd-girth base or
 is irrelevant for the bridge obstruction.
 
-The manuscript uses only the forward consequence of Li's exact bridge-trace
-theorem.
+The manuscript proves the forward trace statement it uses.  Li's exact
+bridge-trace theorem is cited as a parallel formulation, not as a premise.
 
 **Status: theorem scope is neither too weak nor overstated.**
 

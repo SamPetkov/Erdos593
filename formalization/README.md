@@ -1,8 +1,8 @@
 # Erdős Problem 593: complete Lean formalisation
 
 This Lean 4/mathlib project machine-checks the complete finite classification
-of obligatory triple systems in the alternative proof implementation contained
-in this repository.
+of obligatory triple systems in the independently developed implementation
+contained in this repository.
 
 For every finite triple system `F`, the final public endpoints are
 
@@ -20,16 +20,13 @@ F.IsObligatory ↔ Constructible F.isolatedReduction
 
 ## Mathematical source and public chronology
 
-Eric Li's preprint arXiv:2606.24882, posted on 23 June 2026, contains the first
-publicly posted complete mathematical proof of the classification and
-introduces the complete-rank one-apex lift and bridge-trace method used in the
-negative direction.
-
-This project formalises the different implementation developed in this
-repository: the selected-incidence and bridge-block structure, explicit
-base-fibre and support-incidence trace decomposition, positive closure theory,
-and the three avoidance cases. It is not a line-by-line encoding of Li's
-manuscript.
+Eric Li's preprint arXiv:2606.24882, posted on 23 June 2026, gives a closely
+related treatment through an alternative complete-rank one-apex lift and
+bridge-trace formulation.  This project was developed independently, in
+parallel with that work, and formalises the selected-incidence and bridge-block
+structure, the explicit base-fibre and support-incidence trace decomposition,
+the positive closure theory, and the three avoidance cases.  Li's preprint is
+not a dependency of the Lean development.
 
 The public history records the checked scaffold in commit `ba37b8c` and the
 complete finite constructive/intrinsic theorem in commit `6fd00a7`, both on

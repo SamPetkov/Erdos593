@@ -1,12 +1,14 @@
 # Formalisation provenance and public chronology
 
-Eric Li's preprint arXiv:2606.24882 was posted on 23 June 2026 and contains the
-first publicly posted complete mathematical proof of Erdős Problem 593. It
-introduces the complete-rank one-apex lift and bridge-trace method used in the
-negative direction of the classification.
+Eric Li's preprint arXiv:2606.24882 was posted on 23 June 2026 and gives a
+closely related treatment of Erdős Problem 593 through an alternative
+complete-rank one-apex lift and bridge-trace formulation.  The proof and Lean
+implementation in this repository were developed independently, in parallel
+with that work.  Li's preprint is cited for chronology and comparison; it is
+not a dependency of the Lean development.
 
-The Lean development in this repository verifies a separate implementation of
-the finite classification. Its principal design choices are:
+This Lean development verifies the finite classification through the
+following principal design choices:
 
 - an edge-indexed incidence representation of finite triple systems;
 - an explicit base-node, base-letter, base-fibre, and canonical-apex API;

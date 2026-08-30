@@ -77,32 +77,24 @@ it does not assert that the odd girth is exactly a prescribed value.
 
 ---
 
-## Patch 4: identify the exact Li interface
+## Patch 4: identify the exact Li comparison boundary
 
 ### Location
 
 Immediately before Theorem 6.3.
 
-### Replace
+### Use
 
 ```tex
-The next result is the fibre-decomposition form of Li's bridge-trace theorem
-needed in this paper \citep[Theorem~4.6]{li2026}.
-```
-
-by
-
-```tex
-The next result is the forward finite-trace consequence of Li's exact
-bridge-trace theorem, specialised to the present lift and rewritten in
-base-fibre language \citep[Theorem~4.6]{li2026}.  We do not use or restate the
-converse direction here.
+The following trace theorem uses the fibre decomposition described above.
+Li gives a parallel bridge-trace formulation \citep[Theorem~4.6]{li2026}.
 ```
 
 ### Reason
 
-This states the logical interface exactly and avoids suggesting that the
-manuscript has reproduced Li's full equivalence in different notation.
+This distinguishes comparison from dependency.  The manuscript proves the
+forward trace theorem it uses and does not claim Li's full equivalence in
+base-fibre language.
 
 ---
 

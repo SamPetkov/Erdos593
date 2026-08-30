@@ -35,6 +35,8 @@ EXPECTED: tuple[tuple[str, str], ...] = (
     ("proposition", "proposition-4.4-one-point-amalgamation-closure"),
     ("proposition", "proposition-5.1-the-intrinsic-conditions-are-preserved-by-the-generators-and-operations"),
     ("proposition", "proposition-5.2-bridge-block-decomposition"),
+    ("theorem", "theorem-canonical-atom-normal-form"),
+    ("corollary", "corollary-minimal-generators-indecomposables"),
     ("definition", "definition-6.1-the-one-apex-lift"),
     ("lemma", "lemma-6.2-chromatic-lower-bound"),
     ("theorem", "theorem-6.3-exact-finite-linear-trace-theorem"),
@@ -50,6 +52,11 @@ EXPECTED: tuple[tuple[str, str], ...] = (
     ("corollary", "corollary-fixed-order-size-spectrum"),
     ("corollary", "corollary-levi-cycle-rank-spectrum"),
     ("corollary", "corollary-balanced-endpoint-rigidity"),
+    ("lemma", "lemma-minimum-order-fixed-cyclic-rank"),
+    ("theorem", "theorem-exact-canonical-atom-count-spectrum"),
+    ("theorem", "theorem-indecomposability-phase-diagram"),
+    ("corollary", "corollary-structural-boundary-rigidity"),
+    ("proposition", "proposition-componentwise-atom-count-spectrum"),
 )
 
 INTERNAL_CLAIMS: tuple[str, ...] = (
