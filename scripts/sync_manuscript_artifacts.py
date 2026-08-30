@@ -94,8 +94,9 @@ def normalize_tex(text: str) -> str:
     required = [
         r"\title[Obligatory triple systems]{Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra}",
         r"\author{Samuil Petkov}",
-        "first publicly posted",
-        "complete mathematical proof of Theorem",
+        "developed independently",
+        "chronology and comparison",
+        "none of its results is used below as a",
         "first publicly timestamped Lean",
         "Exact order--size--component spectrum",
         "Canonical atom normal form",
@@ -109,6 +110,8 @@ def normalize_tex(text: str) -> str:
         "The proof here is self-contained and does not use that manuscript",
         "The proof presented here was developed without consulting Li's manuscript",
         "No statement or argument from Li's preprint is used in the proof",
+        "contains the first publicly posted complete mathematical proof",
+        "method used in the negative direction",
         "Samuil Petkov & ChatGPT",
         "Samuil Petkov and ChatGPT",
     ]
@@ -236,6 +239,8 @@ def validate_public_text_files() -> None:
         "The proof here is self-contained and does not use that manuscript",
         "The proof presented here was developed without consulting Li's manuscript",
         "No statement or argument from Li's preprint is used in the proof",
+        "contains the first publicly posted complete mathematical proof",
+        "method used in the negative direction",
     ]
     for path in public_files:
         if not path.exists():

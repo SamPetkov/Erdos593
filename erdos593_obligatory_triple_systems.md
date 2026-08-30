@@ -9,7 +9,7 @@
 
 # Introduction
 
-The hosts in this problem are infinite, but the answer is decided by a small piece of finite geometry. A finite triple system is *obligatory* if it occurs in every triple system of uncountable chromatic number. Erdős asked for a characterization of these finite systems ; the question is catalogued as Erdős Problem 593 . The answer has both a constructive form and an intrinsic form.
+Although the host systems are infinite, the classification is determined by finite structure. A finite triple system is *obligatory* if it occurs in every triple system of uncountable chromatic number. Erdős asked for a characterisation of these finite systems ; the question is catalogued as Erdős Problem 593 . We give both constructive and intrinsic descriptions of the answer.
 
 For a finite graph $J$, write $J^+$ for its private-vertex expansion. Let $\mathcal B$ be the smallest class containing $J^+$ for every finite bipartite graph $J$ and every finite edgeless triple system, and closed under finite disjoint unions and one-point amalgamations. Membership in $\mathcal B$ is understood up to triple-system isomorphism. If $F$ is a triple system, let $F^\circ$ denote the system obtained by deleting its isolated vertices.
 
@@ -25,15 +25,15 @@ For a finite graph $J$, write $J^+$ for its private-vertex expansion. Let $\math
 
 </div>
 
-Li’s preprint, posted on 23 June 2026, contains the first publicly posted complete mathematical proof of Theorem A . It also introduced the complete-rank one-apex lift and bridge-trace method used in the negative direction . The present paper gives a different implementation, direct positive arguments, a canonical atom normal form, exact finite structural spectra, and a Lean formalisation of the finite classification.
+The present proof and Lean implementation were developed independently, in parallel with closely related work by Li. Li’s preprint, posted on 23 June 2026, gives the same classification and an alternative complete-rank one-apex lift and bridge-trace formulation . We cite this work for chronology and comparison; none of its results is used below as a black box. Our approach supplies direct positive arguments, a separate fibre-decomposition proof for the negative direction, a canonical atom normal form, exact finite structural spectra, and a Lean formalisation of the finite classification.
 
 The graph analogue was proved by Erdős and Hajnal: the obligatory finite graphs are exactly the bipartite graphs . The classical nonlinearity obstruction for uniform hypergraphs is due to Erdős, Hajnal, and Rothschild . Obligatory triple systems were studied further by , , , and ; the expansion theorem of supplies the positive atoms used below.
 
-The proof is best read as two stories. On the positive side, a probabilistic rainbow lemma provides the local injectivity needed to force complete bipartite expansions. A rooted-abundance lemma then proves closure under one-point amalgamation, including at singular uncountable cardinals. Deleting the bridges of the Levi graph identifies each remaining active component with the expansion of a finite bipartite graph; the quotient graph is a forest, and its running-intersection property gives the required amalgamation order.
+The proof separates into positive and negative directions. For the positive direction, a probabilistic rainbow lemma provides the local injectivity needed to force complete bipartite expansions. A rooted-abundance lemma then establishes closure under one-point amalgamation, including at singular uncountable cardinals. After the bridges of the Levi graph are deleted, each remaining active component is the expansion of a finite bipartite graph. The quotient is a forest, whose running-intersection property determines a valid amalgamation order.
 
-On the negative side, we use the one-apex sequence-lift strategy of . The lift transfers uncountable chromatic number from a graph to a triple system while controlling every finite linear trace. We prove the required trace statement through expansion fibres and a support-incidence forest, so that the fibres are joined only at cut points. This prevents a bridge-free hyperedge-node or a Berge cycle from being assembled across different fibres. There are exactly three ways to fail the intrinsic test, and each has its own host: an Erdős–Rado linear host excludes nonlinearity, the lift of $K_{\omega_1}$ excludes a missing bridge, and a classical Erdős–Hajnal graph of uncountable chromatic number and prescribed odd girth excludes an odd Berge cycle.
+For the negative direction, we use an independently developed one-apex sequence lift; gives a parallel formulation. The lift transfers uncountable chromatic number from a graph to a triple system while controlling every finite linear trace. The trace theorem is proved by decomposing the trace into expansion fibres whose support-incidence graph is a forest, so distinct fibres can meet only at cut points. Consequently, neither a bridge-free hyperedge-node nor a Berge cycle can be assembled across fibres. Each of the three failures of the intrinsic criterion has a corresponding host: an Erdős–Rado linear host excludes nonlinearity, the lift of $K_{\omega_1}$ excludes a missing bridge, and a classical Erdős–Hajnal graph of uncountable chromatic number whose odd girth exceeds a prescribed finite bound excludes an odd Berge cycle.
 
-All embeddings are injective and non-induced. The argument is carried out in ZFC. The imported results used as black boxes are the de Bruijn–Erdős compactness theorem , the Erdős–Hajnal high-odd-girth theorem , and the pair case of the Erdős–Rado partition theorem .
+All embeddings are injective and non-induced, and the argument is carried out in ZFC. The only imported results used as black boxes are the de Bruijn–Erdős compactness theorem , the Erdős–Hajnal high-odd-girth theorem , and the pair case of the Erdős–Rado partition theorem .
 
 # Preliminaries
 
@@ -71,7 +71,7 @@ Suppose finally that $F$ is a one-point amalgamation of $F_0$ and $F_1$, identif
 
 </div>
 
-Thus isolated vertices may be suppressed throughout the substantive argument and restored at the end.
+We may therefore suppress isolated vertices in the substantive argument and restore them at the end.
 
 <div id="lemma-1.2-finite-deletion" class="lemma">
 
@@ -95,7 +95,7 @@ Thus isolated vertices may be suppressed throughout the substantive argument and
 
 **Lemma 3** (Two elementary colouring facts).
 
-*We shall use the following two facts repeatedly.*
+*We use the following two facts repeatedly.*
 
 1.  *If $E(H)=E_1\cup\cdots\cup E_r$ and every $(V(H),E_i)$ is countably chromatic, then $H$ is countably chromatic.*
 
@@ -149,7 +149,7 @@ Then $(I_i)_{i<\operatorname{cf}\kappa}$ partitions $\kappa$, and $M_i=\bigcup_{
 
 # A bipartite subgraph lemma
 
-The next lemma is the finite complete-bipartite consequence of . We include its short closure-chain proof because the same construction is used later.
+The following finite complete-bipartite lemma is a consequence of . We give a short closure-chain proof because the construction will also be used later.
 
 <div id="lemma-2.1-uncountable-chromatic-number-forces-complete-bipartite-graphs" class="lemma">
 
@@ -312,11 +312,11 @@ form $K_{n,n}^{+}$, the final contradiction. ◻
 
 </div>
 
-Corollary 3.3 is also a consequence of ; the preceding argument gives a direct proof in the present notation.
+Corollary 3.3 also follows from . The argument above gives a direct proof in the notation used here.
 
 # Closure properties
 
-Closure under disjoint unions and one-point amalgamations is part of the established theory; see and the summary in . We include complete proofs because the rooted abundance argument is used below.
+Closure under disjoint unions and one-point amalgamations is known; see and the summary in . We include complete proofs because the subsequent argument uses the rooted-abundance construction explicitly.
 
 #### Disjoint-union closure.
 
@@ -364,7 +364,7 @@ For each $v\in B$, consider the family of off-root vertex sets of all copies of 
 
 $$|S_v|\le(m-1)(|V(F)|-1)=:D.$$
 
-Moreover, $S_v$ meets the off-root part of every rooted copy at $v$: otherwise that off-root set would be disjoint from every member of the chosen subfamily and could be added to it, contradicting maximality.
+By maximality, $S_v$ meets the off-root part of every rooted copy at $v$. Otherwise that off-root set would be disjoint from every member of the chosen subfamily and could be added to it.
 
 Form a graph $D_B$ on $B$ by joining $v$ to each member of $S_v\cap B$. If an edge is generated in both directions, assign it to one of its generators, and orient it away from that generator. Every vertex has outdegree at most $D$, so Lemma 1.3 gives a finite proper colouring of $D_B$.
 
@@ -408,7 +408,7 @@ $$(2)\Longrightarrow(1). \tag{4.1}$$
 
 # The intrinsic decomposition
 
-We give the selected-incidence decomposition and running-intersection argument in the explicit form used by the Lean development; compare the structural framework in .
+We state the selected-incidence decomposition and its running-intersection argument in the explicit form used by the Lean development. For a distinct structural formulation, compare .
 
 We prove $(2)\Longleftrightarrow(3)$. Isolated vertices may be ignored by Lemma 1.1.
 
@@ -476,7 +476,7 @@ To see that $T$ is a forest, suppose that it contained a cycle. Within each cont
 
 A vertex $C\in V(T)=\mathscr C$ is called *active* if the bridge-deleted component $C$ contains a hyperedge-node. For an active $C$, the piece $P_C$ consists of the hyperedges represented in $C$, all point-nodes of $C$, and the point endpoints of bridge incidences leaving hyperedge-nodes in $C$. An inactive component contains no hyperedge-node and hence no incidence of $L-B(L)$, so it is a singleton point-node.
 
-At this stage every hyperedge already belongs to a bipartite expansion piece. The only remaining issue is global: the pieces must be ordered so that a new piece never meets the assembled system in two different points. The quotient forest records exactly the attachment geometry needed for this running intersection.
+Every hyperedge now belongs to a bipartite expansion piece. It remains to order the pieces so that each new piece meets the assembled system in at most one point. The quotient forest records the attachment geometry needed for this running-intersection property.
 
 <div class="claim">
 
@@ -498,7 +498,7 @@ For a root active component the intersection is empty. ◻
 
 Starting with the root piece in each component, add the active pieces in this order. If the new intersection is empty, use a disjoint union. If it is the singleton $\{p_C\}$, use a one-point amalgamation at that point. Several earlier pieces may already contain the same inactive attachment point, but the new step still identifies only that one existing vertex.
 
-For completeness, the identity maps from the pieces into $F$ assemble inductively to an incidence isomorphism from the constructed system onto the union of the pieces already added. Indeed, the running-intersection claim shows that the next piece and the preceding union have either no common vertex or exactly the one vertex used in the amalgamation; hence the construction makes no unintended identification. The piece hyperedge sets are disjoint and partition $E(F)$, while their vertex sets cover $V(F)$. After all active pieces have been added, the resulting subsystem is therefore all of $F$. Different components of $T$ are combined by disjoint union. Hence $F\in\mathcal B$. ◻
+The identity maps from the pieces into $F$ assemble inductively to an incidence isomorphism onto the union of the pieces already added. By the running-intersection claim, the next piece and the preceding union are either disjoint or meet exactly at the point used in the amalgamation, so no unintended identification is introduced. The piece hyperedge sets are disjoint and partition $E(F)$, and their vertex sets cover $V(F)$. After all active pieces have been added, the resulting subsystem is $F$. Different components of $T$ are combined by disjoint union, proving $F\in\mathcal B$. ◻
 
 </div>
 
@@ -538,7 +538,7 @@ Call a connected triple system with at least one hyperedge *one-point indecompos
 
 <div id="corollary-minimal-generators-indecomposables" class="corollary">
 
-**Corollary 16** (Minimal generators and one-point indecomposables). *The class $\mathcal B$ is generated, up to isomorphism, by finite edgeless systems, one triple, and $J^+$ for finite $2$-connected simple bipartite graphs $J$, under finite disjoint unions and one-point amalgamations. Moreover, a connected reduced obligatory system with at least one hyperedge is one-point indecomposable if and only if it is one triple or $J^+$ for a finite $2$-connected simple bipartite graph $J$.*
+**Corollary 16** (Minimal generators and one-point indecomposables). *Up to isomorphism, the class $\mathcal B$ is generated by finite edgeless systems, one triple, and $J^+$ for finite $2$-connected simple bipartite graphs $J$, under finite disjoint unions and one-point amalgamations. A connected reduced obligatory system with at least one hyperedge is one-point indecomposable if and only if it is one triple or $J^+$ for a finite $2$-connected simple bipartite graph $J$.*
 
 </div>
 
@@ -550,7 +550,7 @@ Call a connected triple system with at least one hyperedge *one-point indecompos
 
 # The sequence lift
 
-We use the one-apex construction and bridge-trace strategy of , specialised to $\omega_1$ and written as a base-fibre and support-incidence decomposition convenient for formalisation.
+We use a one-apex construction specialised to $\omega_1$, presented through base fibres and their support-incidence graph to match the formalisation. gives an alternative one-apex and bridge-trace formulation.
 
 #### The one-apex construction.
 
@@ -613,7 +613,7 @@ is a monochromatic hyperedge. Therefore the colours $k_{s_\alpha}$, $\alpha<\ome
 
 </div>
 
-The next result is the fibre-decomposition form of Li’s bridge-trace theorem needed in this paper .
+The following trace theorem uses the fibre decomposition described above. Li gives a parallel bridge-trace formulation .
 
 <div id="theorem-6.3-exact-finite-linear-trace-theorem" class="theorem">
 
@@ -625,7 +625,7 @@ The next result is the fibre-decomposition form of Li’s bridge-trace theorem n
 
 <div class="proof">
 
-*Proof.* The following dictionary records the three local objects used in the assembly. A *base node* is a sequence $s$ at which a lift hyperedge begins. Its two vertices with sequence coordinate $s$ are the *core vertices*; its third vertex, whose coordinate properly extends $s$, is the *apex*. The *base fibre* $K_s$ consists of all hyperedges of $K$ based at $s$, together with their incident vertices. An *active base node* is one whose fibre is nonempty. The proof first identifies each fibre with one expansion atom and then shows that the fibres are attached along a forest of one-point overlaps.
+*Proof.* We use three local objects in the assembly. A *base node* is a sequence $s$ at which a lift hyperedge begins. The two vertices with sequence coordinate $s$ are its *core vertices*; the third vertex, whose coordinate properly extends $s$, is its *apex*. The *base fibre* $K_s$ consists of all hyperedges of $K$ based at $s$, together with their incident vertices. A base node is *active* when its fibre is nonempty. We first identify each fibre with an expansion atom and then show that the fibres form a forest of one-point overlaps.
 
 First set aside every isolated vertex of $K$. Each is a one-vertex edgeless factor, hence isomorphic to $J^+$ for a one-vertex edgeless subgraph $J$ of $G$, and may be restored by disjoint union at the end. We may therefore assume that every vertex of $K$ lies in a hyperedge.
 
@@ -703,7 +703,7 @@ Root each component of $Q$ at a base node, and order its base nodes by nondecrea
 
 # A classical high-odd-girth input
 
-For the odd-cycle obstruction we use the following older graph theorem directly, rather than a shift-graph surrogate.
+For the odd-cycle obstruction we use the following classical graph theorem directly, without passing through a shift-graph surrogate.
 
 <div id="theorem-7.1-high-odd-girth" class="theorem">
 
@@ -719,7 +719,7 @@ For the odd-cycle obstruction we use the following older graph theorem directly,
 
 # Avoidance hosts
 
-The division into nonlinear, missing-bridge, and odd-cycle hosts follows the negative-half architecture of . The first two hosts are written out in the present notation; for the third we invoke the older Erdős–Hajnal theorem from Section 7 directly.
+The intrinsic criterion can fail in three ways: nonlinearity, a missing bridge, or an odd Berge cycle. organises the negative direction in a parallel way. We prove the first two avoidance constructions in our notation and apply the Erdős–Hajnal theorem from Section 7 to the third.
 
 We prove
 
@@ -770,7 +770,7 @@ If a finite triple system $F$ is nonlinear, it has two distinct edges sharing at
 
 <div class="proof">
 
-*Proof.* This is the $K_{\omega_1}$ specialisation of Li’s sequence-lift missing-bridge obstruction . By Lemma 1.1 it is enough to avoid $F^\circ$, so assume that $F$ has no isolated vertices. Take $G=K_{\omega_1}$. Then $\chi(G)>\aleph_0$, and Lemma 6.2 gives
+*Proof.* This is the $K_{\omega_1}$ specialisation of the sequence lift defined above. Li gives an alternative missing-bridge obstruction . By Lemma 1.1 it suffices to avoid $F^\circ$, so assume that $F$ has no isolated vertices. Take $G=K_{\omega_1}$. Then $\chi(G)>\aleph_0$, and Lemma 6.2 gives
 
 $$\chi(\mathcal L(G))>\aleph_0.$$
 
@@ -796,13 +796,13 @@ Suppose that $F$ embeds in $\mathcal L(G)$ and retain exactly the host hyperedge
 
 </div>
 
-The three propositions cover every failure of the intrinsic conditions, and prove
+The three propositions cover every failure of the intrinsic conditions and therefore prove
 
 $$\neg(3)\Longrightarrow\neg(1). \tag{8.2}$$
 
 # Proof of the classification
 
-Sections 3 and 4 prove $(2)\Longrightarrow(1)$. Section 5 proves $(2)\Longleftrightarrow(3)$, and Section 8 proves the contrapositive $\neg(3)\Longrightarrow\neg(1)$. These implications establish all equivalences in Theorem A. In particular,
+Sections 3 and 4 establish $(2)\Longrightarrow(1)$, Section 5 establishes $(2)\Longleftrightarrow(3)$, and Section 8 proves the contrapositive $\neg(3)\Longrightarrow\neg(1)$. Together these implications prove all equivalences in Theorem A. In particular,
 
 $$\begin{gathered}
 F\text{ is obligatory}
@@ -818,11 +818,11 @@ F^\circ\text{ is linear},\\[1mm]
 \end{array}
 \end{gathered}$$
 
-All embeddings are non-induced: additional host hyperedges on the image vertices are irrelevant throughout. The proof uses only ZFC, graph-colouring compactness, the classical Erdős–Hajnal high-odd-girth theorem, and the standard Erdős–Rado relation (8.1). It assumes neither CH nor GCH, and no forcing axiom or large-cardinal hypothesis.
+All embeddings are non-induced, so additional host hyperedges on the image vertices are irrelevant. The proof uses only ZFC, graph-colouring compactness, the classical Erdős–Hajnal high-odd-girth theorem, and the standard Erdős–Rado relation (8.1). It assumes neither CH nor GCH and uses no forcing axiom or large-cardinal hypothesis.
 
 # Finite parameter consequences
 
-In this section a triple system is *connected* when its Levi graph is connected. We work first without isolated vertices. For an integer $r\ge1$, put $$q(r)=\left\lceil2\sqrt r\right\rceil.$$
+In this section, a triple system is *connected* when its Levi graph is connected. We first exclude isolated vertices. For an integer $r\ge1$, set $$q(r)=\left\lceil2\sqrt r\right\rceil.$$
 
 <div id="proposition-edge-deletion-bridge-condition" class="proposition">
 
@@ -870,7 +870,7 @@ Take one-point sums of the ordinary graphs $J_1,\ldots,J_k$ along any tree on th
 
 <div class="proof">
 
-*Proof.* We first record the corresponding elementary graph fact. A connected simple bipartite graph with $r\ge1$ edges and $s$ vertices exists if and only if $$q(r)\le s\le r+1.
+*Proof.* We begin with the corresponding elementary graph fact. A connected simple bipartite graph with $r\ge1$ edges and $s$ vertices exists if and only if $$q(r)\le s\le r+1.
 \tag{10.3}$$ Indeed, connectedness gives $r\ge s-1$. If the bipartition has sizes $a,b$, then $$r\le ab\le\left\lfloor\frac{s^2}{4}\right\rfloor,$$ which is equivalent to $s\ge q(r)$. Conversely, $K_{\lfloor s/2\rfloor,\lceil s/2\rceil}$ contains a spanning tree, and starting with that tree and adding arbitrary unused edges realises every edge count between $s-1$ and $\lfloor s^2/4\rfloor$.
 
 Apply Lemma <a href="#lemma-bipartite-shadow" data-reference-type="ref" data-reference="lemma-bipartite-shadow">26</a>. Let the $c$ connected components of the shadow have positive edge counts $m_1,\ldots,m_c$, where $\sum_i m_i=m$. If their orders are $s_i$, then (10.3) gives $$\sum_{i=1}^c q(m_i)\le \sum_{i=1}^c s_i\le m+c.
@@ -1089,20 +1089,20 @@ A decomposable system admits a connected bipartite shadow with a cut vertex. If 
 
 # Formal verification and reproducibility
 
-The self-contained Lean 4 source is available in the public [`Erdos593` repository](https://github.com/SamPetkov/Erdos593/blob/main/formalization/Erdos593SelfContained.lean). The public commit history records a checked formalisation scaffold on [15 July 2026](https://github.com/SamPetkov/Erdos593/commit/ba37b8c511ab390c14a905110366d7cac1ffa08f) and the complete finite structural classification later that day in [commit `6fd00a7`](https://github.com/SamPetkov/Erdos593/commit/6fd00a76064401f3f10aabef474f59d3c6ecd6bf). To the author’s knowledge, this is the first publicly timestamped Lean formalisation of the finite structural theorem. Li’s arXiv v2, submitted on 23 July 2026, contains a separate formal verification of the broader results in his paper. No assertion of shared code or derivation between the two Lean developments is made. For every finite triple system $F$, the exported theorems establish $$\begin{aligned}
+The self-contained Lean 4 source is available in the public [`Erdos593` repository](https://github.com/SamPetkov/Erdos593/blob/main/formalization/Erdos593SelfContained.lean). The public commit history records a checked formalisation scaffold dated [15 July 2026](https://github.com/SamPetkov/Erdos593/commit/ba37b8c511ab390c14a905110366d7cac1ffa08f) and, later that day, the complete finite structural classification in [commit `6fd00a7`](https://github.com/SamPetkov/Erdos593/commit/6fd00a76064401f3f10aabef474f59d3c6ecd6bf). To the author’s knowledge, this is the first publicly timestamped Lean formalisation of the finite structural theorem. Li’s arXiv v2, submitted on 23 July 2026, contains a separate formal verification of the broader results in his paper. No assertion of shared code or derivation between the two Lean developments is made. For every finite triple system $F$, the exported theorems establish $$\begin{aligned}
 \mathtt{F.IsObligatory}
 &\Longleftrightarrow \mathtt{F.isolatedReduction.Intrinsic},\\
 \mathtt{F.IsObligatory}
 &\Longleftrightarrow \mathtt{Constructible\ F.isolatedReduction}.
-\end{aligned}$$ Thus the development verifies both directions of the classification, including the isolated-vertex reduction. Here “finite” refers to the system $F$ being classified; host triple systems are not assumed finite and are quantified within the formalisation’s documented ambient-universe convention. The formalisation supplements, rather than replaces, mathematical review.
+\end{aligned}$$ These exported theorems verify both directions of the classification, including the isolated-vertex reduction. Here “finite” describes the system $F$ being classified. The host triple systems are not assumed finite; they are quantified within the documented ambient-universe convention of the formalisation. The formalisation supplements rather than replaces mathematical review. Its exported endpoint covers Theorem A and the isolated-vertex reduction. The manuscript proves the canonical-atom normal form and the exact finite spectra, which are also supported by finite certificates, but does not claim them as additional Lean endpoints.
 
 # Acknowledgments
 
-The author thanks Tom de Groot for his advice on revising the manuscript for greater clarity. The author also thanks Eric Li for a discussion of the relationship between the two proofs.
+The author thanks Tom de Groot for his advice on revising the manuscript for greater clarity.
 
 # AI assistance
 
-OpenAI’s GPT-5.6 Pro through ChatGPT and Aristotle  were used for proof development, adversarial checking, editorial restructuring, and the Lean formalisation. The author reviewed all incorporated suggestions and assumes full responsibility for the arguments, citations, and final manuscript.
+OpenAI’s GPT-5.6 Pro through ChatGPT and Aristotle  were used in proof development, adversarial checking, editorial restructuring, and the Lean formalisation. The author reviewed every incorporated suggestion and takes full responsibility for the arguments, citations, and final manuscript.
 
 # Funding
 
@@ -1122,7 +1122,7 @@ Thomas F. Bloom. Erdős problem 593. `https://www.erdosproblems.com/593`, 2026.
 
 Eric Li. A resolution of Erdős Problems 593 and 1177: Obligatory triple systems and exact spectra. arXiv:2606.24882, submitted 23 June 2026. doi: 10.48550/arXiv.2606.24882. URL `https://arxiv.org/abs/2606.24882`.
 
-Paul Erdős and András Hajnal. On chromatic number of graphs and set-systems. *Acta Mathematica Academiae Scientiarum Hungaricae*, 17 (1–2): 61–99, 1966. doi: 10.1007/BF02020444.
+Paul Erdős and András Hajnal. On chromatic number of graphs and set-systems. *Acta Math. Acad. Sci. Hungar.*, 17 (1–2): 61–99, 1966. doi: 10.1007/BF02020444.
 
 Paul Erdős, András Hajnal, and Bruce L. Rothschild. On chromatic number of graphs and set-systems. In *Cambridge Summer School in Mathematical Logic (Cambridge, 1971)*, volume 337 of *Lecture Notes in Mathematics*, pages 531–538. Springer, Berlin and New York, 1973.
 
@@ -1130,15 +1130,15 @@ Paul Erdős, Fred Galvin, and András Hajnal. On set-systems having large chroma
 
 Péter Komjáth. Some remarks on obligatory subsystems of uncountably chromatic triple systems. *Combinatorica*, 21 (2): 233–238, 2001. doi: 10.1007/s004930100021.
 
-András Hajnal and Péter Komjáth. Obligatory subsystems of triple systems. *Acta Mathematica Hungarica*, 119 (1–2): 1–13, 2008. doi: 10.1007/s10474-007-6231-2.
+András Hajnal and Péter Komjáth. Obligatory subsystems of triple systems. *Acta Math. Hungar.*, 119 (1–2): 1–13, 2008. doi: 10.1007/s10474-007-6231-2.
 
-Péter Komjáth. An uncountably chromatic triple system. *Acta Mathematica Hungarica*, 121 (1–2): 79–92, 2008. doi: 10.1007/s10474-008-7179-6.
+Péter Komjáth. An uncountably chromatic triple system. *Acta Math. Hungar.*, 121 (1–2): 79–92, 2008. doi: 10.1007/s10474-008-7179-6.
 
-Christian Reiher. Obligatory hypergraphs. *Proceedings of the American Mathematical Society*, 2024. doi: 10.1090/proc/17021. URL `https://arxiv.org/abs/2403.11223`. arXiv:2403.11223.
+Christian Reiher. Obligatory hypergraphs. *Proc. Amer. Math. Soc.*, 2024. doi: 10.1090/proc/17021. URL `https://arxiv.org/abs/2403.11223`. arXiv:2403.11223.
 
 Nicolaas Govert de Bruijn and Paul Erdős. A colour problem for infinite graphs and a problem in the theory of relations. *Nederl. Akad. Wetensch. Proc. Ser. A*, 54 (5): 371–373, 1951. doi: 10.1016/S1385-7258(51)50053-7.
 
-Paul Erdős and Richard Rado. A partition calculus in set theory. *Bulletin of the American Mathematical Society*, 62 (5): 427–489, 1956. doi: 10.1090/S0002-9904-1956-10036-0.
+Paul Erdős and Richard Rado. A partition calculus in set theory. *Bull. Amer. Math. Soc.*, 62 (5): 427–489, 1956. doi: 10.1090/S0002-9904-1956-10036-0.
 
 Tudor Achim, Alex Best, Kevin Der, Mathïs Fédérico, Sergei Gukov, Daniel Halpern-Leistner, Kirsten Henningsgard, Yury Kudryashov, Alexander Meiburg, Martin Michelsen, Riley Patterson, Eric Rodriguez, Laura Scharff, Vikram Shanker, Vladimir Sicca, Hari Sowrirajan, Aidan Swope, Matyas Tamas, Vlad Tenev, Jonathan Thomm, Harold Williams, and Lawrence Wu. : IMO-level automated theorem proving, 2025. URL `https://arxiv.org/abs/2510.01346`. arXiv:2510.01346.
 

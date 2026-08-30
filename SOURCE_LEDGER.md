@@ -1,23 +1,23 @@
 # Source, priority, chronology, and dependency ledger
 
 **Author:** Samuil Petkov  
-**Revision date:** 24 July 2026
+**Revision date:** 30 August 2026
 
 ## Mathematical priority and relationship to Eric Li's preprint
 
 Eric Li's preprint *A Resolution of Erdős Problems 593 and 1177: Obligatory
 Triple Systems and Exact Spectra* (arXiv:2606.24882), posted on 23 June 2026,
-contains the first publicly posted complete mathematical proof of the finite
-classification in Erdős Problem 593. It also introduces the complete-rank
-one-apex lift and bridge-trace method used in the negative direction. Those
-facts are stated once in the introduction and cited again where the lift is
-used.
+gives a closely related treatment of the classification through an alternative
+complete-rank one-apex lift and bridge-trace formulation.  The present proof
+and Lean implementation were developed independently, in parallel with that
+work.  Li's preprint is cited for chronology and comparison and is not used as
+a black box.
 
-The present manuscript gives a different implementation: direct positive-atom
-and closure proofs, an explicit base-fibre/support-incidence formulation of the
-finite trace theorem, a separate Lean development, and the finite parameter
-consequences recorded in `FINITE_PARAMETER_SPECTRUM.md`. It is not a line-by-line
-reworking of Li's manuscript.
+The present manuscript gives direct positive-atom and closure proofs, an
+explicit base-fibre/support-incidence formulation of the finite trace theorem,
+a separate Lean development, and the finite parameter consequences recorded
+in `FINITE_PARAMETER_SPECTRUM.md`.  No assertion of shared code or derivation
+between the two developments is made.
 
 ## Public Lean chronology
 

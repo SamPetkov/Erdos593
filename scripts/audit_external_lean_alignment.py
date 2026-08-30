@@ -65,10 +65,17 @@ def check_manuscript_sources(tex: str) -> list[str]:
             "Erdos--Rado relation",
         ),
         (r"\citet[Theorem~1.2]{reiher2024}", "Reiher theorem locator"),
-        (r"\citep[Theorem~1.1]{li2026}", "Li classification locator"),
+        (
+            r"\citep[Theorem~1.1]{li2026}",
+            "Li classification locator",
+        ),
+        (
+            r"\citep[Sections~3--4 and Theorem~4.6]{li2026}",
+            "Li comparison locator",
+        ),
         ("Theorem~4.6]{li2026}", "Li bridge-trace locator"),
         (
-            "the preceding argument gives a direct proof in the present notation",
+            "The argument above gives a direct proof in the notation used here",
             "direct positive-atom proof",
         ),
         (
@@ -189,8 +196,8 @@ def check_endpoints(text: str) -> list[str]:
 
 def check_manuscript_scope(tex: str) -> list[str]:
     require(
-        "host triple systems are not assumed finite and are quantified within "
-        "the formalisation's documented ambient-universe convention",
+        "The host triple systems are not assumed finite; they are quantified within "
+        "the documented ambient-universe convention of the formalisation",
         tex,
         "ambient-universe disclosure",
     )
@@ -217,7 +224,7 @@ def check_ledgers(external: str, alignment: str, patches: str) -> None:
         "Erdős--Rado pair relation",
         "Erdős--Hajnal high odd girth",
         "Reiher's expansion theorem",
-        "Li's classification and bridge-trace architecture",
+        "Li's parallel classification and bridge-trace formulation",
     ):
         if marker not in external:
             raise AssertionError(f"external audit marker missing: {marker!r}")
@@ -271,7 +278,7 @@ def main() -> None:
             "Erdos--Hajnal high odd girth",
             "Erdos--Hajnal--Rothschild nonlinear obstruction",
             "Reiher complete-bipartite expansion atom",
-            "Li classification and forward bridge-trace consequence",
+            "Li parallel classification and bridge-trace formulation",
         ],
         "lean_surface": {
             "source": "finite simple edge-indexed 3-uniform hypergraph",

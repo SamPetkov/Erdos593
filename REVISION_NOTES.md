@@ -1,5 +1,21 @@
 # Revision notes
 
+## 30 August 2026: prose and attribution alignment
+
+1. Applied a medium-intensity academic prose pass without changing any
+   theorem, formula, citation key, equation tag, or formalisation endpoint.
+2. Replaced formulaic transitions by explicit logical dependencies and
+   tightened the abstract, introduction, decomposition overview, sequence-lift
+   exposition, classification summary, and formal-verification note.
+3. Aligned current manuscript and repository metadata with the neutral factual
+   account that the present proof and Lean implementation were developed
+   independently, in parallel with Li's related work.
+4. Retained Li's preprint as a point-of-use citation for chronology and an
+   alternative one-apex/bridge-trace formulation; no claim of shared code or
+   derivation is made.
+5. Updated the deterministic manuscript synchronizer and PDF-title check to
+   enforce the current canonical title and attribution boundary.
+
 ## 24 July 2026: finite parameter consequences
 
 1. Added the exact order--size--component spectrum for reduced obligatory triple systems:

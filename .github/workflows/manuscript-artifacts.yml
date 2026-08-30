@@ -100,7 +100,7 @@ jobs:
             pdftotext "$pdf" /tmp/erdos593-text.txt
             pdffonts "$pdf" | tee /tmp/erdos593-fonts.txt
             grep -Fq 'A4' /tmp/erdos593-pdfinfo.txt
-            grep -Fq 'Obligatory Triple Systems: An Alternative Proof' /tmp/erdos593-pdfinfo.txt
+            grep -Fq 'Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra' /tmp/erdos593-pdfinfo.txt
             grep -Fq 'Samuil Petkov' /tmp/erdos593-pdfinfo.txt
             grep -Fq 'Eric Li' /tmp/erdos593-text.txt
             ! grep -Eq 'Samuil Pekov|Samuil Petkob|Samuil Petkov (&|and) ChatGPT' /tmp/erdos593-text.txt
