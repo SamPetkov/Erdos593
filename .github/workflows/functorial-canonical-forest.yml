@@ -1,10 +1,12 @@
-name: Erdős 593 functorial canonical atom forest
+name: Erdős 593 canonical atom forest structure
 
 on:
   pull_request:
     paths:
       - 'research_extensions/01_canonical_atom_forest/**'
       - 'experiments/verify_functorial_canonical_forest.py'
+      - 'experiments/verify_point_separator_universality.py'
+      - 'experiments/point_separator_universality_results.json'
       - '.github/workflows/functorial-canonical-forest.yml'
   workflow_dispatch:
 
@@ -12,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  verify-functorial-forest:
+  verify-canonical-forest:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -20,8 +22,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Compile audit
-        run: python -m py_compile experiments/verify_functorial_canonical_forest.py
+
+      - name: Compile audits
+        run: |
+          python -m py_compile experiments/verify_functorial_canonical_forest.py
+          python -m py_compile experiments/verify_point_separator_universality.py
+
       - name: Recover canonical forests and test equivariance
         working-directory: experiments
         run: |
@@ -30,17 +36,34 @@ jobs:
             --seed 593 \
             --output /tmp/functorial-canonical-forest.json
           cat /tmp/functorial-canonical-forest.json
+
+      - name: Reproduce point-separator and universal-refinement audit
+        working-directory: experiments
+        run: |
+          python verify_point_separator_universality.py \
+            --assemblies 5000 \
+            --check point_separator_universality_results.json \
+            --output /tmp/point-separator-universality.json
+          cat /tmp/point-separator-universality.json
+
       - name: Check theorem markers
         run: |
           grep -Fq 'Theorem A — functorial canonical atom forest' \
             research_extensions/01_canonical_atom_forest/FUNCTORIAL_CANONICAL_FOREST.md
-          grep -Fq 'Theorem D — automorphism exact sequence' \
-            research_extensions/01_canonical_atom_forest/FUNCTORIAL_CANONICAL_FOREST.md
-          grep -Fq 'Functorial canonical atom forest' \
-            research_extensions/01_canonical_atom_forest/FUNCTORIAL_CANONICAL_FOREST_EXTENSION.tex
-      - name: Upload audit result
+          grep -Fq 'Theorem 2.2 — canonical atoms are the point-inseparability classes' \
+            research_extensions/01_canonical_atom_forest/POINT_SEPARATOR_UNIVERSALITY.md
+          grep -Fq 'Theorem 3.2 — canonical atoms refine every one-point forest decomposition' \
+            research_extensions/01_canonical_atom_forest/POINT_SEPARATOR_UNIVERSALITY.md
+          grep -Fq 'Theorem 5.1 — all one-point decompositions are connected atom partitions' \
+            research_extensions/01_canonical_atom_forest/POINT_SEPARATOR_UNIVERSALITY.md
+          grep -Fq 'Universal canonical one-point factorization' \
+            research_extensions/01_canonical_atom_forest/UNIVERSAL_ONE_POINT_FACTORIZATION_EXTENSION.tex
+
+      - name: Upload audit results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: erdos593-functorial-canonical-forest-audit
-          path: /tmp/functorial-canonical-forest.json
+          name: erdos593-canonical-atom-forest-audits
+          path: |
+            /tmp/functorial-canonical-forest.json
+            /tmp/point-separator-universality.json
