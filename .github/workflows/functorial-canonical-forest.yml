@@ -7,6 +7,8 @@ on:
       - 'experiments/verify_functorial_canonical_forest.py'
       - 'experiments/verify_point_separator_universality.py'
       - 'experiments/point_separator_universality_results.json'
+      - 'experiments/verify_decomposition_lattice_product.py'
+      - 'experiments/decomposition_lattice_product_results.json'
       - '.github/workflows/functorial-canonical-forest.yml'
   workflow_dispatch:
 
@@ -27,6 +29,7 @@ jobs:
         run: |
           python -m py_compile experiments/verify_functorial_canonical_forest.py
           python -m py_compile experiments/verify_point_separator_universality.py
+          python -m py_compile experiments/verify_decomposition_lattice_product.py
 
       - name: Recover canonical forests and test equivariance
         working-directory: experiments
@@ -46,6 +49,14 @@ jobs:
             --output /tmp/point-separator-universality.json
           cat /tmp/point-separator-universality.json
 
+      - name: Reproduce local decomposition-lattice product audit
+        working-directory: experiments
+        run: |
+          python verify_decomposition_lattice_product.py \
+            --check decomposition_lattice_product_results.json \
+            --output /tmp/decomposition-lattice-product.json
+          cat /tmp/decomposition-lattice-product.json
+
       - name: Check theorem markers
         run: |
           grep -Fq 'Theorem A — functorial canonical atom forest' \
@@ -56,6 +67,10 @@ jobs:
             research_extensions/01_canonical_atom_forest/POINT_SEPARATOR_UNIVERSALITY.md
           grep -Fq 'Theorem 5.1 — all one-point decompositions are connected atom partitions' \
             research_extensions/01_canonical_atom_forest/POINT_SEPARATOR_UNIVERSALITY.md
+          grep -Fq 'Theorem 1.1 — local partition product' \
+            research_extensions/01_canonical_atom_forest/LOCAL_DECOMPOSITION_LATTICE_PRODUCT.md
+          grep -Fq 'Theorem 5.1 — exact decomposition-lattice spectrum' \
+            research_extensions/01_canonical_atom_forest/LOCAL_DECOMPOSITION_LATTICE_PRODUCT.md
           grep -Fq 'Universal canonical one-point factorization' \
             research_extensions/01_canonical_atom_forest/UNIVERSAL_ONE_POINT_FACTORIZATION_EXTENSION.tex
 
@@ -67,3 +82,4 @@ jobs:
           path: |
             /tmp/functorial-canonical-forest.json
             /tmp/point-separator-universality.json
+            /tmp/decomposition-lattice-product.json
