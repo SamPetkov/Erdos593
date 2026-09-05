@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Integrate the audited block/factorization-lattice results into the manuscript.
 
-The script is deterministic and idempotent.  It patches the sole authoritative
-TeX manuscript plus the source bibliography.  The existing artifact
-synchronizer is then responsible for all PDF/Markdown/arXiv mirrors.
+The script is deterministic and idempotent. It patches the sole authoritative
+TeX manuscript, source bibliography, and fail-closed theorem inventory. The
+existing artifact synchronizer then regenerates all PDF/Markdown/arXiv mirrors.
 """
 
 from __future__ import annotations
@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TEX = ROOT / "erdos593_obligatory_triple_systems.tex"
 REFERENCES = ROOT / "references.bib"
+THEOREM_AUDIT = ROOT / "scripts" / "audit_manuscript_theorems.py"
 FRAGMENT = (
     ROOT
     / "research_extensions"
@@ -43,6 +44,7 @@ def manuscript_fragment() -> str:
     body = "\n".join(lines).strip()
     required = [
         r"\label{remark-komjath-block-reduction}",
+        r"\label{corollary-block-formulation}",
         r"\label{lemma-local-decomposition-lattice-product}",
         r"\label{lemma-capacity-safe-profile-realization}",
         SECTION_LABEL,
@@ -89,6 +91,15 @@ spectrum, and a Lean formalisation of the finite classification."""
             "block/lattice manuscript insertion",
         )
 
+        old_formal_scope = """The manuscript proves the canonical-atom normal
+form and the exact finite spectra, which are also supported by finite
+certificates, but does not claim them as additional Lean endpoints."""
+        new_formal_scope = """The manuscript proves the canonical-atom normal
+form and the exact finite spectra, including the one-point
+factorization-lattice spectrum; these statements are supported by finite
+certificates but are not claimed as additional Lean endpoints."""
+        text = replace_once(text, old_formal_scope, new_formal_scope, "Lean scope boundary")
+
         text = replace_once(
             text,
             r"\begin{thebibliography}{13}",
@@ -113,17 +124,18 @@ Frank Simon, Peter Tittmann, and Martin Trinks.
 """
         anchor = r"\bibitem[Achim et~al.(2025)Achim, Best, Der, F{\'e}d{\'e}rico, Gukov,"
         text = replace_once(text, anchor, bibitems + anchor, "embedded bibliography additions")
-
         TEX.write_text(text, encoding="utf-8", newline="\n")
     else:
         required = [
             "exact spectrum of one-point factorization lattices",
             "exact one-point factorization-lattice",
             r"\label{remark-komjath-block-reduction}",
+            r"\label{corollary-block-formulation}",
             r"\label{lemma-local-decomposition-lattice-product}",
             r"\label{lemma-capacity-safe-profile-realization}",
             r"\bibitem[Bahmanian and \v{S}ajna(2015)]{bahmanian2015}",
             r"{simon2011}",
+            "are not claimed as additional Lean endpoints",
         ]
         missing = [needle for needle in required if needle not in text]
         if missing:
@@ -146,6 +158,32 @@ def patch_references() -> None:
     REFERENCES.write_text(text, encoding="utf-8", newline="\n")
 
 
+def patch_theorem_audit() -> None:
+    text = THEOREM_AUDIT.read_text(encoding="utf-8")
+    new_entries = """    (\"corollary\", \"corollary-block-formulation\"),
+    (\"lemma\", \"lemma-local-decomposition-lattice-product\"),
+    (\"lemma\", \"lemma-capacity-safe-profile-realization\"),
+    (\"corollary\", \"corollary-factorization-lattice-spectrum\"),
+"""
+    if "corollary-factorization-lattice-spectrum" not in text:
+        anchor = '    ("proposition", "proposition-componentwise-atom-count-spectrum"),\n'
+        text = replace_once(
+            text,
+            anchor,
+            anchor + new_entries,
+            "theorem inventory extension",
+        )
+    required_marker = '        "K_{t,t+1}^+",\n'
+    if "factorization-lattice-spectrum" not in text.split("def verify_required_markers", 1)[-1]:
+        marker_insert = (
+            required_marker
+            + '        "\\\\label{corollary-factorization-lattice-spectrum}",\n'
+            + '        "\\\\mathcal D(F)\\\\cong\\\\prod_{p\\\\in S(F)}\\\\Pi_{\\\\mu(p)}",\n'
+        )
+        text = replace_once(text, required_marker, marker_insert, "theorem required markers")
+    THEOREM_AUDIT.write_text(text, encoding="utf-8", newline="\n")
+
+
 def validate() -> None:
     text = TEX.read_text(encoding="utf-8")
     required = [
@@ -162,12 +200,24 @@ def validate() -> None:
     if missing:
         raise RuntimeError(f"integrated TeX validation failed: {missing}")
 
+    refs = REFERENCES.read_text(encoding="utf-8")
     for key in ("bahmanian2015", "simon2011"):
-        if f"{{{key}," not in REFERENCES.read_text(encoding="utf-8"):
+        if f"{{{key}," not in refs:
             raise RuntimeError(f"references.bib missing {key}")
+
+    audit = THEOREM_AUDIT.read_text(encoding="utf-8")
+    for label in (
+        "corollary-block-formulation",
+        "lemma-local-decomposition-lattice-product",
+        "lemma-capacity-safe-profile-realization",
+        "corollary-factorization-lattice-spectrum",
+    ):
+        if label not in audit:
+            raise RuntimeError(f"theorem audit inventory missing {label}")
 
 
 if __name__ == "__main__":
     patch_tex()
     patch_references()
+    patch_theorem_audit()
     validate()
