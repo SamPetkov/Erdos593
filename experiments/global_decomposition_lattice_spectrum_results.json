@@ -1,0 +1,9 @@
+{
+  "characteristic_signature_injectivity_checks": 17,
+  "decomposition_envelope_checks": 7608,
+  "feasible_parameter_triples": 7608,
+  "lattice_type_count_checks": 7608,
+  "rank_spectrum_checks": 7608,
+  "secondary_invariant_envelope_checks": 7608,
+  "status": "PASS"
+}
