@@ -1,0 +1,46 @@
+name: Erdős 593 functorial canonical atom forest
+
+on:
+  pull_request:
+    paths:
+      - 'research_extensions/01_canonical_atom_forest/**'
+      - 'experiments/verify_functorial_canonical_forest.py'
+      - '.github/workflows/functorial-canonical-forest.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-functorial-forest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile audit
+        run: python -m py_compile experiments/verify_functorial_canonical_forest.py
+      - name: Recover canonical forests and test equivariance
+        working-directory: experiments
+        run: |
+          python verify_functorial_canonical_forest.py \
+            --assemblies 2000 \
+            --seed 593 \
+            --output /tmp/functorial-canonical-forest.json
+          cat /tmp/functorial-canonical-forest.json
+      - name: Check theorem markers
+        run: |
+          grep -Fq 'Theorem A — functorial canonical atom forest' \
+            research_extensions/01_canonical_atom_forest/FUNCTORIAL_CANONICAL_FOREST.md
+          grep -Fq 'Theorem D — automorphism exact sequence' \
+            research_extensions/01_canonical_atom_forest/FUNCTORIAL_CANONICAL_FOREST.md
+          grep -Fq 'Functorial canonical atom forest' \
+            research_extensions/01_canonical_atom_forest/FUNCTORIAL_CANONICAL_FOREST_EXTENSION.tex
+      - name: Upload audit result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: erdos593-functorial-canonical-forest-audit
+          path: /tmp/functorial-canonical-forest.json
