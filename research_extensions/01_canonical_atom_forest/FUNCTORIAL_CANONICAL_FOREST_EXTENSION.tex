@@ -1,0 +1,63 @@
+% Copy-ready compact extension for the Erdős 593 manuscript.
+% Intended placement: immediately after the canonical atom normal form.
+
+\begin{proposition}[Functorial canonical atom forest]
+\label{proposition-functorial-canonical-atom-forest}
+Let $F$ be a finite reduced obligatory triple system.  Let $\mathcal A(F)$
+be its canonical atoms and let $S(F)$ be the set of points belonging to at
+least two atoms.  Form the bipartite incidence forest $Q(F)$ on
+$\mathcal A(F)\sqcup S(F)$.
+
+Every isomorphism $\varphi:F\to G$ induces a unique forest isomorphism
+$Q(\varphi):Q(F)\to Q(G)$, with
+\[
+Q(\varphi)(A)=\varphi(A),\qquad Q(\varphi)(p)=\varphi(p).
+\]
+These induced maps respect identities and composition.
+
+Moreover, $F$ is recovered from the disjoint union of its atoms by identifying
+exactly the copies of each shared point prescribed by $Q(F)$.  If $F$ is
+presented as any forest assembly of connected one-point-indecomposable
+obligatory systems whose hyperedge sets partition $E(F)$, then those pieces
+are precisely the canonical atoms and the resulting piece--point incidence
+forest is $Q(F)$.
+\end{proposition}
+
+\begin{proof}
+An isomorphism of triple systems induces a bipartition-preserving isomorphism
+of Levi graphs.  Bridges and cyclic blocks are invariant under graph
+isomorphism, so the intrinsic construction of the canonical atom partition is
+carried to the corresponding partition of $G$.  Shared points and atom--point
+incidence are therefore preserved, proving functoriality.
+
+For reconstruction, distinct atoms meet in at most one point and every point
+appearing in more than one atom is represented by its unique shared-point node
+of $Q(F)$.  Thus the indicated quotient makes exactly the identifications
+already present in $F$ and no others.
+
+Finally, each one-point-indecomposable obligatory factor is, by
+Corollary~\ref{corollary-minimal-generators-indecomposables}, either one triple
+or $J^+$ for a finite $2$-connected simple bipartite graph $J$.  A simple Levi
+cycle cannot cross a one-point amalgamation, so cyclic Levi blocks remain
+inside the proposed factors, while a single-triple factor remains an
+all-bridge hyperedge.  Hence the canonical atom extraction recovers exactly
+those factors, and the shared-point forest is forced.
+\end{proof}
+
+\begin{corollary}[Decorated-forest isomorphism criterion]
+\label{corollary-decorated-forest-isomorphism}
+Two finite reduced obligatory triple systems $F$ and $G$ are isomorphic if and
+only if there is a bipartite forest isomorphism $\theta:Q(F)\to Q(G)$ together
+with, for every atom $A$ of $F$, an isomorphism
+\[
+f_A:A\longrightarrow\theta(A)
+\]
+that sends every shared point $p\in V(A)$ to $\theta(p)$.
+\end{corollary}
+
+\begin{proof}
+Necessity follows from the proposition.  Conversely, the local maps agree on
+every overlap because overlaps are precisely the shared points and their
+images are prescribed by $\theta$.  They therefore glue through the canonical
+reconstruction to a global triple-system isomorphism.
+\end{proof}

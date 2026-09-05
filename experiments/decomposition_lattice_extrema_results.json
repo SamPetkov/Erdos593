@@ -1,0 +1,9 @@
+{
+  "N_values": 12,
+  "profiles": 271,
+  "decomposition_count_extrema_checks": 12,
+  "mobius_extrema_checks": 12,
+  "maximal_chain_extrema_checks": 12,
+  "random_decomposition_moment_checks": 11,
+  "status": "PASS"
+}

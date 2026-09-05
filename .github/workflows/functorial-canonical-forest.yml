@@ -1,0 +1,131 @@
+name: Erdős 593 canonical atom forest structure
+
+on:
+  pull_request:
+    paths:
+      - 'research_extensions/01_canonical_atom_forest/**'
+      - 'experiments/verify_functorial_canonical_forest.py'
+      - 'experiments/verify_point_separator_universality.py'
+      - 'experiments/point_separator_universality_results.json'
+      - 'experiments/verify_decomposition_lattice_product.py'
+      - 'experiments/decomposition_lattice_product_results.json'
+      - 'experiments/verify_decomposition_lattice_extrema.py'
+      - 'experiments/decomposition_lattice_extrema_results.json'
+      - 'experiments/verify_global_decomposition_lattice_spectrum.py'
+      - 'experiments/global_decomposition_lattice_spectrum_results.json'
+      - 'experiments/verify_manuscript_block_lattice_fragment.py'
+      - 'experiments/manuscript_block_lattice_fragment_results.json'
+      - '.github/workflows/functorial-canonical-forest.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-canonical-forest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile audits
+        run: |
+          python -m py_compile experiments/verify_functorial_canonical_forest.py
+          python -m py_compile experiments/verify_point_separator_universality.py
+          python -m py_compile experiments/verify_decomposition_lattice_product.py
+          python -m py_compile experiments/verify_decomposition_lattice_extrema.py
+          python -m py_compile experiments/verify_global_decomposition_lattice_spectrum.py
+          python -m py_compile experiments/verify_manuscript_block_lattice_fragment.py
+
+      - name: Recover canonical forests and test equivariance
+        working-directory: experiments
+        run: |
+          python verify_functorial_canonical_forest.py \
+            --assemblies 2000 \
+            --seed 593 \
+            --output /tmp/functorial-canonical-forest.json
+          cat /tmp/functorial-canonical-forest.json
+
+      - name: Reproduce point-separator and universal-refinement audit
+        working-directory: experiments
+        run: |
+          python verify_point_separator_universality.py \
+            --assemblies 5000 \
+            --check point_separator_universality_results.json \
+            --output /tmp/point-separator-universality.json
+          cat /tmp/point-separator-universality.json
+
+      - name: Reproduce local decomposition-lattice product audit
+        working-directory: experiments
+        run: |
+          python verify_decomposition_lattice_product.py \
+            --check decomposition_lattice_product_results.json \
+            --output /tmp/decomposition-lattice-product.json
+          cat /tmp/decomposition-lattice-product.json
+
+      - name: Reproduce sharp decomposition-lattice extrema
+        working-directory: experiments
+        run: |
+          python verify_decomposition_lattice_extrema.py \
+            --check decomposition_lattice_extrema_results.json \
+            --output /tmp/decomposition-lattice-extrema.json
+          cat /tmp/decomposition-lattice-extrema.json
+
+      - name: Reproduce global decomposition-lattice spectrum
+        working-directory: experiments
+        run: |
+          python verify_global_decomposition_lattice_spectrum.py \
+            --check global_decomposition_lattice_spectrum_results.json \
+            --output /tmp/global-decomposition-lattice-spectrum.json
+          cat /tmp/global-decomposition-lattice-spectrum.json
+
+      - name: Reproduce manuscript-specific hostile audit
+        working-directory: experiments
+        run: |
+          python verify_manuscript_block_lattice_fragment.py \
+            --check manuscript_block_lattice_fragment_results.json \
+            --output /tmp/manuscript-block-lattice-fragment.json
+          cat /tmp/manuscript-block-lattice-fragment.json
+
+      - name: Check theorem and audit markers
+        run: |
+          grep -Fq 'Theorem A — functorial canonical atom forest' \
+            research_extensions/01_canonical_atom_forest/FUNCTORIAL_CANONICAL_FOREST.md
+          grep -Fq 'Theorem 2.2 — canonical atoms are the point-inseparability classes' \
+            research_extensions/01_canonical_atom_forest/POINT_SEPARATOR_UNIVERSALITY.md
+          grep -Fq 'Theorem 3.2 — canonical atoms refine every one-point forest decomposition' \
+            research_extensions/01_canonical_atom_forest/POINT_SEPARATOR_UNIVERSALITY.md
+          grep -Fq 'Theorem 5.1 — all one-point decompositions are connected atom partitions' \
+            research_extensions/01_canonical_atom_forest/POINT_SEPARATOR_UNIVERSALITY.md
+          grep -Fq 'Theorem 1.1 — local partition product' \
+            research_extensions/01_canonical_atom_forest/LOCAL_DECOMPOSITION_LATTICE_PRODUCT.md
+          grep -Fq 'Theorem 5.1 — exact decomposition-lattice spectrum' \
+            research_extensions/01_canonical_atom_forest/LOCAL_DECOMPOSITION_LATTICE_PRODUCT.md
+          grep -Fq 'Theorem 1.1 — sharp decomposition-count bounds' \
+            research_extensions/01_canonical_atom_forest/DECOMPOSITION_LATTICE_EXTREMA.md
+          grep -Fq 'Theorem 3.1 — complete decomposition-lattice spectrum' \
+            research_extensions/01_canonical_atom_forest/GLOBAL_DECOMPOSITION_LATTICE_SPECTRUM.md
+          grep -Fq 'Exact one-point factorization-lattice spectrum' \
+            research_extensions/01_canonical_atom_forest/MANUSCRIPT_BLOCK_AND_LATTICE_EXTENSION.tex
+          grep -Fq 'Status after repairs' \
+            research_extensions/01_canonical_atom_forest/BLOCK_LATTICE_MANUSCRIPT_HOSTILE_AUDIT.md
+          grep -Fq '@article{bahmanian2015' \
+            research_extensions/01_canonical_atom_forest/MANUSCRIPT_BLOCK_AND_LATTICE_BIBLIOGRAPHY.bib
+          grep -Fq '@article{simon2011' \
+            research_extensions/01_canonical_atom_forest/MANUSCRIPT_BLOCK_AND_LATTICE_BIBLIOGRAPHY.bib
+
+      - name: Upload audit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: erdos593-canonical-atom-forest-audits
+          path: |
+            /tmp/functorial-canonical-forest.json
+            /tmp/point-separator-universality.json
+            /tmp/decomposition-lattice-product.json
+            /tmp/decomposition-lattice-extrema.json
+            /tmp/global-decomposition-lattice-spectrum.json
+            /tmp/manuscript-block-lattice-fragment.json
