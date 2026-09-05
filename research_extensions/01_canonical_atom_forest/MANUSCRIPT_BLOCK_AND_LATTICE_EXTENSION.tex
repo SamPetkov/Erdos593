@@ -1,0 +1,95 @@
+% Candidate compact insertion for the Erdős 593 manuscript.
+% This file is not included automatically.
+% Integration requires adding a bibliography entry with key bahmanian2015.
+
+\begin{remark}[Blocks and the earlier reduction]
+\label{remark-komjath-block-reduction}
+Komj\'ath proved that a finite triple system is obligatory if and only if all
+of its $2$-connected components are obligatory
+\citep{komjath2001}.  In the standard language of hypergraph connectivity,
+these components are the blocks of the edge support; general block
+decomposition and its block--cut tree are classical
+\citep{bahmanian2015}.  Thus the content of
+Theorem~\ref{theorem-canonical-atom-normal-form} is not the existence of a
+block decomposition, but the exact identification of the blocks that can
+occur in an obligatory triple system.
+\end{remark}
+
+\begin{corollary}[Block formulation of the classification]
+\label{corollary-block-formulation}
+Let $F$ be a finite triple system and delete its isolated points.  Then $F$ is
+obligatory if and only if every block of $F^\circ$ is either one triple or
+$J^+$ for a finite $2$-connected simple bipartite graph $J$.
+\end{corollary}
+\begin{proof}
+If $F$ is obligatory, each block is obligatory by Komj\'ath's reduction and is
+one-point indecomposable.  Corollary~\ref{corollary-minimal-generators-indecomposables}
+therefore gives the displayed list.  Conversely every displayed block is
+obligatory, and Komj\'ath's reduction gives obligatoriness of $F$.
+\end{proof}
+
+% Optional quantitative corollary.  This is the genuinely new part of the
+% insertion; the partition-lattice algebra itself is classical.
+\begin{corollary}[Exact one-point factorization-lattice spectrum]
+\label{corollary-factorization-lattice-spectrum}
+Let $F$ be reduced and obligatory, with $c\ge1$ connected components, shadow
+order
+\[
+s=|V(F)|-|E(F)|,
+\]
+cycle rank
+\[
+\beta=2|E(F)|-|V(F)|+c,
+\]
+and $k$ canonical blocks.  Put
+\[
+N=k-c,
+\qquad
+q(r)=\left\lceil2\sqrt r\right\rceil.
+\]
+Let $\mathcal D(F)$ be the lattice, ordered by refinement, of decompositions
+of the hyperedge set into connected supported pieces that meet pairwise in at
+most one point and whose piece--shared-point incidence graph is a forest.
+
+The possible ranks $N$ at fixed $(s,\beta,c)$ are exactly
+\[
+\begin{array}{ll}
+\beta=0:&N=s-2c,\\[1mm]
+\beta=1:&0\le N\le s-2c-2,\quad N\equiv s-2c\pmod2,\\[1mm]
+\beta\ge2:&0\le N\le s-2c-q(\beta).
+\end{array}
+\tag{*}
+\]
+For every allowed $N$, the possible lattice isomorphism types are precisely
+\[
+\prod_{i=1}^t \Pi_{\lambda_i+1},
+\qquad
+\lambda=(\lambda_1,\ldots,\lambda_t)\vdash N,
+\tag{**}
+\]
+where $\Pi_r$ is the partition lattice of an $r$-element set.  Different
+partitions $\lambda$ give nonisomorphic lattices, and every lattice in
+\((**)\) occurs.
+\end{corollary}
+\begin{proof}
+The rank statement is the componentwise atom-count spectrum after subtracting
+$c$.  If the shared points have multiplicities $\mu(p)$, the canonical block
+forest gives
+\[
+N=\sum_p(\mu(p)-1).
+\]
+The bond lattice of the atom intersection block graph factors over its clique
+blocks, one clique on $\mu(p)$ atoms for every shared point.  Hence
+\[
+\mathcal D(F)\cong\prod_p\Pi_{\mu(p)}.
+\]
+Writing $\lambda_i=\mu(p_i)-1$ gives \((**)\).  The exact shared-point
+multiplicity theorem realises every partition $\lambda\vdash N$ without
+changing the block list or the global parameters.  Finally the characteristic
+polynomial of the product is
+\[
+\prod_i\prod_{j=1}^{\lambda_i}(x-j),
+\]
+whose root multiplicities recover $\lambda$, so distinct partitions give
+nonisomorphic lattices.
+\end{proof}
