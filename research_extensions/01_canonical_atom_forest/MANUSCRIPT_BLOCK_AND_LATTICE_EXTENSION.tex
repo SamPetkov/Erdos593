@@ -1,95 +1,198 @@
-% Candidate compact insertion for the Erdős 593 manuscript.
+% Audited candidate compact insertion for the Erdős 593 manuscript.
 % This file is not included automatically.
-% Integration requires adding a bibliography entry with key bahmanian2015.
+% Copy-ready bibliography additions are in
+% MANUSCRIPT_BLOCK_AND_LATTICE_BIBLIOGRAPHY.bib.
 
 \begin{remark}[Blocks and the earlier reduction]
 \label{remark-komjath-block-reduction}
 Komj\'ath proved that a finite triple system is obligatory if and only if all
-of its $2$-connected components are obligatory
-\citep{komjath2001}.  In the standard language of hypergraph connectivity,
-these components are the blocks of the edge support; general block
-decomposition and its block--cut tree are classical
-\citep{bahmanian2015}.  Thus the content of
-Theorem~\ref{theorem-canonical-atom-normal-form} is not the existence of a
-block decomposition, but the exact identification of the blocks that can
-occur in an obligatory triple system.
+of its $2$-connected components are obligatory \citep{komjath2001}.  General
+hypergraph block decomposition and its relation to the incidence graph are
+classical; see, for example, \citet{bahmanian2015}.  For the reduced
+$3$-uniform systems considered here, the canonical atoms in
+Theorem~\ref{theorem-canonical-atom-normal-form} are precisely these maximal
+nonseparable edge-supported blocks.  Thus the new content of the canonical
+atom theorem is not the existence of a block decomposition, but the exact
+identification of the block types that can occur in an obligatory triple
+system, together with the quantitative spectra derived from them.
 \end{remark}
 
 \begin{corollary}[Block formulation of the classification]
 \label{corollary-block-formulation}
-Let $F$ be a finite triple system and delete its isolated points.  Then $F$ is
-obligatory if and only if every block of $F^\circ$ is either one triple or
-$J^+$ for a finite $2$-connected simple bipartite graph $J$.
+Let $F$ be a finite triple system.  After isolated points are deleted, $F$ is
+obligatory if and only if every nonempty block of $F^\circ$ is either one
+triple or $J^+$ for a finite $2$-connected simple bipartite graph $J$.
 \end{corollary}
 \begin{proof}
-If $F$ is obligatory, each block is obligatory by Komj\'ath's reduction and is
-one-point indecomposable.  Corollary~\ref{corollary-minimal-generators-indecomposables}
-therefore gives the displayed list.  Conversely every displayed block is
-obligatory, and Komj\'ath's reduction gives obligatoriness of $F$.
+If $E(F^\circ)=\varnothing$, then $F^\circ$ is empty and the assertion follows
+from Lemma~\ref{lemma-1.1-isolated-vertex-reduction}.  Otherwise suppose first
+that $F$ is obligatory.  Lemma~\ref{lemma-1.1-isolated-vertex-reduction}
+gives that $F^\circ$ is obligatory, and Komj\'ath's reduction gives
+obligatoriness of each of its blocks.  A block is one-point indecomposable,
+so Corollary~\ref{corollary-minimal-generators-indecomposables} gives exactly
+the displayed list.
+
+Conversely, each displayed block is obligatory by the positive expansion
+result (the one-triple case included).  Komj\'ath's reduction therefore makes
+$F^\circ$ obligatory, and Lemma~\ref{lemma-1.1-isolated-vertex-reduction}
+restores the isolated points.
 \end{proof}
 
-% Optional quantitative corollary.  This is the genuinely new part of the
-% insertion; the partition-lattice algebra itself is classical.
+\begin{lemma}[Local product for one-point decompositions]
+\label{lemma-local-decomposition-lattice-product}
+Let $F$ be reduced and obligatory with at least one hyperedge.  Let
+$\mathcal A(F)$ be its canonical atoms, let $S(F)$ be the points belonging to
+at least two atoms, and put
+\[
+ \mu(p)=|\{A\in\mathcal A(F):p\in V(A)\}|.
+\]
+Let $\mathcal D(F)$ be the set of partitions of $E(F)$ into nonempty connected
+supported pieces such that two pieces meet in at most one point and the
+piece--shared-point incidence graph is a forest, ordered by refinement.  Then
+$\mathcal D(F)$ is a lattice and
+\[
+ \mathcal D(F)\cong\prod_{p\in S(F)}\Pi_{\mu(p)},
+ \tag{\dagger}
+\]
+where $\Pi_r$ denotes the partition lattice of an $r$-element set.  If $F$
+has $k$ canonical atoms and $c$ connected components, then
+\[
+ \operatorname{rk}\mathcal D(F)=k-c
+   =\sum_{p\in S(F)}(\mu(p)-1).
+ \tag{\ddagger}
+\]
+The empty product in \((\dagger)\) is the one-element lattice.
+\end{lemma}
+\begin{proof}
+A supported one-point forest decomposition cannot split a block: if two
+hyperedges of one block lay in different pieces, the unique path between
+those pieces in the piece--shared-point forest would contain a point whose
+deletion separates the two hyperedges, contradicting nonseparability of the
+block.  Thus every element of $\mathcal D(F)$ is a coarsening of the canonical
+atom decomposition.
+
+For a shared point $p$, restrict such a coarsening to the set of the
+$\mu(p)$ atoms through $p$; this gives an element of $\Pi_{\mu(p)}$.
+Conversely, choose independently a partition of the atoms through every
+shared point and take the equivalence relation on all atoms generated by
+these local identifications.  Because the atom--shared-point incidence graph
+is a forest, two local classes at the same shared point cannot become joined
+through the other shared points: such an alternative route would create a
+cycle in that incidence graph.  The resulting equivalence classes therefore
+give connected supported pieces, and their incidence graph is again a
+forest.  The two constructions are inverse and preserve refinement, proving
+\((\dagger)\).  This is the bond-lattice product in the present block-forest
+setting; compare \citet{simon2011}.
+
+Finally the canonical incidence forest has $k+|S(F)|$ vertices, $c$
+components and $\sum_p\mu(p)$ edges.  Hence
+\[
+ \sum_p(\mu(p)-1)=k-c,
+\]
+which is also the rank of the product lattice.
+\end{proof}
+
+\begin{lemma}[Capacity-safe realization of every attachment profile]
+\label{lemma-capacity-safe-profile-realization}
+Fix pairwise disjoint canonical atoms $A_1,\ldots,A_k$ and an integer
+$1\le c\le k$.  For every integer partition
+\[
+ \lambda=(\lambda_1,\ldots,\lambda_t)\vdash k-c
+\]
+(with the empty partition allowed when $k=c$), there is a forest assembly of
+the $A_i$ into exactly $c$ connected components whose shared-point excess
+profile is $\lambda$; that is, its nontrivial shared points have
+multiplicities $\lambda_i+1$.  Every atom is incident with at most two
+distinct shared points.  Consequently, for a fixed atom list and fixed $c$,
+all these assemblies have the same order, size, shadow order and cycle rank.
+\end{lemma}
+\begin{proof}
+Put $N=k-c$.  If $N=0$, take the $k=c$ atoms as separate components.  Assume
+$N>0$.  Use $N+1$ atoms in one nontrivial component and leave the remaining
+$c-1$ atoms as singleton components.
+
+If $t=1$, identify one chosen vertex from each of the $N+1=\lambda_1+1$
+active atoms to one common shared point.  If $t\ge2$, arrange shared points
+$p_1,\ldots,p_t$ in a chain.  Use $t-1$ atoms as connectors, the $i$th
+connector meeting $p_i$ and $p_{i+1}$.  The two endpoint shared points already
+have one incident connector and the internal shared points have two.  Supply
+the remaining incidences with leaf atoms so that
+$\deg(p_i)=\lambda_i+1$.  The number of required leaf atoms is
+\[
+ \lambda_1+\lambda_t+\sum_{i=2}^{t-1}(\lambda_i-1)
+   =N-t+2,
+\]
+so together with the $t-1$ connectors this uses exactly $N+1$ atoms.  Every
+connector atom uses two distinct vertices and every leaf atom one; canonical
+atoms have at least three vertices, so the identifications can be made with
+distinct ports inside each atom.  The atom--shared-point incidence graph is a
+tree and has the required multiplicities.
+
+Any forest assembly of the fixed $k$ atoms into $c$ components makes exactly
+$k-c$ vertex identifications.  Thus
+\[
+ |E(F)|=\sum_i|E(A_i)|,
+ \qquad
+ |V(F)|=\sum_i|V(A_i)|-(k-c),
+\]
+so the stated global parameters do not depend on the chosen profile.
+\end{proof}
+
 \begin{corollary}[Exact one-point factorization-lattice spectrum]
 \label{corollary-factorization-lattice-spectrum}
-Let $F$ be reduced and obligatory, with $c\ge1$ connected components, shadow
-order
+Fix a feasible triple $(s,\beta,c)$ for reduced obligatory systems with at
+least one hyperedge, where
 \[
-s=|V(F)|-|E(F)|,
+ s=|V(F)|-|E(F)|,
+ \qquad
+ \beta=2|E(F)|-|V(F)|+c,
+ \qquad
+ q(r)=\left\lceil2\sqrt r\right\rceil.
 \]
-cycle rank
-\[
-\beta=2|E(F)|-|V(F)|+c,
-\]
-and $k$ canonical blocks.  Put
-\[
-N=k-c,
-\qquad
-q(r)=\left\lceil2\sqrt r\right\rceil.
-\]
-Let $\mathcal D(F)$ be the lattice, ordered by refinement, of decompositions
-of the hyperedge set into connected supported pieces that meet pairwise in at
-most one point and whose piece--shared-point incidence graph is a forest.
-
-The possible ranks $N$ at fixed $(s,\beta,c)$ are exactly
+As $F$ ranges over all such systems with these fixed parameters, put $k$ for
+its number of canonical atoms and $N=k-c$.  The possible values of $N$ are
+exactly
 \[
 \begin{array}{ll}
 \beta=0:&N=s-2c,\\[1mm]
 \beta=1:&0\le N\le s-2c-2,\quad N\equiv s-2c\pmod2,\\[1mm]
 \beta\ge2:&0\le N\le s-2c-q(\beta).
 \end{array}
-\tag{*}
+\tag{\star}
 \]
-For every allowed $N$, the possible lattice isomorphism types are precisely
+For every allowed $N$, the possible lattice isomorphism types of
+$\mathcal D(F)$ are precisely
 \[
-\prod_{i=1}^t \Pi_{\lambda_i+1},
-\qquad
-\lambda=(\lambda_1,\ldots,\lambda_t)\vdash N,
-\tag{**}
+ \prod_{i=1}^t\Pi_{\lambda_i+1},
+ \qquad
+ \lambda=(\lambda_1,\ldots,\lambda_t)\vdash N,
+ \tag{\star\star}
 \]
-where $\Pi_r$ is the partition lattice of an $r$-element set.  Different
-partitions $\lambda$ give nonisomorphic lattices, and every lattice in
-\((**)\) occurs.
+where for $N=0$ the empty partition gives the one-element lattice.  Every
+lattice in \((\star\star)\) occurs, and different partitions $\lambda$ give
+nonisomorphic lattices.
 \end{corollary}
 \begin{proof}
-The rank statement is the componentwise atom-count spectrum after subtracting
-$c$.  If the shared points have multiplicities $\mu(p)$, the canonical block
-forest gives
+The rank spectrum \((\star)\) is
+Proposition~\ref{proposition-componentwise-atom-count-spectrum} after
+subtracting $c$ from the atom count $k$.  Fix an allowed $N$ and choose one
+system with $k=N+c$ atoms and the prescribed global parameters.  By
+Lemma~\ref{lemma-capacity-safe-profile-realization}, its fixed atom list can be
+reassembled with the same $c$ and the same global parameters to realize every
+partition $\lambda\vdash N$.  Lemma~\ref{lemma-local-decomposition-lattice-product}
+then gives exactly the product in \((\star\star)\).  Conversely every system
+has an excess profile partitioning $N$, so there are no other types.
+
+Finally
 \[
-N=\sum_p(\mu(p)-1).
+ \chi_{\Pi_{r}}(x)=\prod_{j=1}^{r-1}(x-j),
 \]
-The bond lattice of the atom intersection block graph factors over its clique
-blocks, one clique on $\mu(p)$ atoms for every shared point.  Hence
+and characteristic polynomials multiply under direct products.  Hence the
+multiplicity of the root $j$ in the characteristic polynomial of the lattice
+in \((\star\star)\) is
 \[
-\mathcal D(F)\cong\prod_p\Pi_{\mu(p)}.
+ |\{i:\lambda_i\ge j\}|.
 \]
-Writing $\lambda_i=\mu(p_i)-1$ gives \((**)\).  The exact shared-point
-multiplicity theorem realises every partition $\lambda\vdash N$ without
-changing the block list or the global parameters.  Finally the characteristic
-polynomial of the product is
-\[
-\prod_i\prod_{j=1}^{\lambda_i}(x-j),
-\]
-whose root multiplicities recover $\lambda$, so distinct partitions give
-nonisomorphic lattices.
+These multiplicities recover the partition $\lambda$, so distinct partitions
+give nonisomorphic lattices.
 \end{proof}
