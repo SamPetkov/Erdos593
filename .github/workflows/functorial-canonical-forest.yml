@@ -9,6 +9,10 @@ on:
       - 'experiments/point_separator_universality_results.json'
       - 'experiments/verify_decomposition_lattice_product.py'
       - 'experiments/decomposition_lattice_product_results.json'
+      - 'experiments/verify_decomposition_lattice_extrema.py'
+      - 'experiments/decomposition_lattice_extrema_results.json'
+      - 'experiments/verify_global_decomposition_lattice_spectrum.py'
+      - 'experiments/global_decomposition_lattice_spectrum_results.json'
       - '.github/workflows/functorial-canonical-forest.yml'
   workflow_dispatch:
 
@@ -30,6 +34,8 @@ jobs:
           python -m py_compile experiments/verify_functorial_canonical_forest.py
           python -m py_compile experiments/verify_point_separator_universality.py
           python -m py_compile experiments/verify_decomposition_lattice_product.py
+          python -m py_compile experiments/verify_decomposition_lattice_extrema.py
+          python -m py_compile experiments/verify_global_decomposition_lattice_spectrum.py
 
       - name: Recover canonical forests and test equivariance
         working-directory: experiments
@@ -57,6 +63,22 @@ jobs:
             --output /tmp/decomposition-lattice-product.json
           cat /tmp/decomposition-lattice-product.json
 
+      - name: Reproduce sharp decomposition-lattice extrema
+        working-directory: experiments
+        run: |
+          python verify_decomposition_lattice_extrema.py \
+            --check decomposition_lattice_extrema_results.json \
+            --output /tmp/decomposition-lattice-extrema.json
+          cat /tmp/decomposition-lattice-extrema.json
+
+      - name: Reproduce global decomposition-lattice spectrum
+        working-directory: experiments
+        run: |
+          python verify_global_decomposition_lattice_spectrum.py \
+            --check global_decomposition_lattice_spectrum_results.json \
+            --output /tmp/global-decomposition-lattice-spectrum.json
+          cat /tmp/global-decomposition-lattice-spectrum.json
+
       - name: Check theorem markers
         run: |
           grep -Fq 'Theorem A — functorial canonical atom forest' \
@@ -71,6 +93,10 @@ jobs:
             research_extensions/01_canonical_atom_forest/LOCAL_DECOMPOSITION_LATTICE_PRODUCT.md
           grep -Fq 'Theorem 5.1 — exact decomposition-lattice spectrum' \
             research_extensions/01_canonical_atom_forest/LOCAL_DECOMPOSITION_LATTICE_PRODUCT.md
+          grep -Fq 'Theorem 1.1 — sharp decomposition-count bounds' \
+            research_extensions/01_canonical_atom_forest/DECOMPOSITION_LATTICE_EXTREMA.md
+          grep -Fq 'Theorem 3.1 — complete decomposition-lattice spectrum' \
+            research_extensions/01_canonical_atom_forest/GLOBAL_DECOMPOSITION_LATTICE_SPECTRUM.md
           grep -Fq 'Universal canonical one-point factorization' \
             research_extensions/01_canonical_atom_forest/UNIVERSAL_ONE_POINT_FACTORIZATION_EXTENSION.tex
 
@@ -83,3 +109,5 @@ jobs:
             /tmp/functorial-canonical-forest.json
             /tmp/point-separator-universality.json
             /tmp/decomposition-lattice-product.json
+            /tmp/decomposition-lattice-extrema.json
+            /tmp/global-decomposition-lattice-spectrum.json
