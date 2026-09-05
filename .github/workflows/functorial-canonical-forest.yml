@@ -13,6 +13,8 @@ on:
       - 'experiments/decomposition_lattice_extrema_results.json'
       - 'experiments/verify_global_decomposition_lattice_spectrum.py'
       - 'experiments/global_decomposition_lattice_spectrum_results.json'
+      - 'experiments/verify_manuscript_block_lattice_fragment.py'
+      - 'experiments/manuscript_block_lattice_fragment_results.json'
       - '.github/workflows/functorial-canonical-forest.yml'
   workflow_dispatch:
 
@@ -36,6 +38,7 @@ jobs:
           python -m py_compile experiments/verify_decomposition_lattice_product.py
           python -m py_compile experiments/verify_decomposition_lattice_extrema.py
           python -m py_compile experiments/verify_global_decomposition_lattice_spectrum.py
+          python -m py_compile experiments/verify_manuscript_block_lattice_fragment.py
 
       - name: Recover canonical forests and test equivariance
         working-directory: experiments
@@ -79,7 +82,15 @@ jobs:
             --output /tmp/global-decomposition-lattice-spectrum.json
           cat /tmp/global-decomposition-lattice-spectrum.json
 
-      - name: Check theorem markers
+      - name: Reproduce manuscript-specific hostile audit
+        working-directory: experiments
+        run: |
+          python verify_manuscript_block_lattice_fragment.py \
+            --check manuscript_block_lattice_fragment_results.json \
+            --output /tmp/manuscript-block-lattice-fragment.json
+          cat /tmp/manuscript-block-lattice-fragment.json
+
+      - name: Check theorem and audit markers
         run: |
           grep -Fq 'Theorem A — functorial canonical atom forest' \
             research_extensions/01_canonical_atom_forest/FUNCTORIAL_CANONICAL_FOREST.md
@@ -97,8 +108,14 @@ jobs:
             research_extensions/01_canonical_atom_forest/DECOMPOSITION_LATTICE_EXTREMA.md
           grep -Fq 'Theorem 3.1 — complete decomposition-lattice spectrum' \
             research_extensions/01_canonical_atom_forest/GLOBAL_DECOMPOSITION_LATTICE_SPECTRUM.md
-          grep -Fq 'Universal canonical one-point factorization' \
-            research_extensions/01_canonical_atom_forest/UNIVERSAL_ONE_POINT_FACTORIZATION_EXTENSION.tex
+          grep -Fq 'Exact one-point factorization-lattice spectrum' \
+            research_extensions/01_canonical_atom_forest/MANUSCRIPT_BLOCK_AND_LATTICE_EXTENSION.tex
+          grep -Fq 'Status after repairs' \
+            research_extensions/01_canonical_atom_forest/BLOCK_LATTICE_MANUSCRIPT_HOSTILE_AUDIT.md
+          grep -Fq '@article{bahmanian2015' \
+            research_extensions/01_canonical_atom_forest/MANUSCRIPT_BLOCK_AND_LATTICE_BIBLIOGRAPHY.bib
+          grep -Fq '@article{simon2011' \
+            research_extensions/01_canonical_atom_forest/MANUSCRIPT_BLOCK_AND_LATTICE_BIBLIOGRAPHY.bib
 
       - name: Upload audit results
         if: always()
@@ -111,3 +128,4 @@ jobs:
             /tmp/decomposition-lattice-product.json
             /tmp/decomposition-lattice-extrema.json
             /tmp/global-decomposition-lattice-spectrum.json
+            /tmp/manuscript-block-lattice-fragment.json
