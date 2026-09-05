@@ -1,0 +1,71 @@
+% Candidate compact structural upgrade for the main Erdős 593 manuscript.
+% Intended placement immediately after the canonical atom normal form.
+
+\begin{proposition}[Universal canonical one-point factorization]
+\label{proposition-universal-canonical-one-point-factorization}
+Let $F$ be a finite reduced obligatory triple system.  For hyperedges $e,f$
+in the same connected component, write $e\sim f$ when for every point
+$p\in V(F)$ the hyperedge-nodes $e$ and $f$ remain in the same connected
+component of $I(F)-p$.
+
+Then $\sim$ is an equivalence relation, and its equivalence classes are
+exactly the hyperedge sets of the canonical atoms.  Moreover a point belongs
+to at least two canonical atoms if and only if deleting that point increases
+the number of Levi components containing hyperedge-nodes.
+
+Consequently the canonical atom decomposition is the unique finest
+decomposition of $E(F)$ into connected supported pieces that meet pairwise in
+at most one point and whose piece--shared-point incidence graph is a forest.
+Every other such decomposition is obtained by grouping whole canonical atoms.
+\end{proposition}
+
+\begin{proof}
+Each canonical atom is one-point indecomposable: it is either one triple or
+$J^+$ with $J$ finite, simple, bipartite and $2$-connected.  Hence deleting one
+point never separates two hyperedge-nodes belonging to the same atom.
+
+If two hyperedges belong to distinct atoms in one connected component, the
+unique path between their atom nodes in the canonical atom--shared-point
+forest contains a shared point $p$.  Removing $p$ separates the two branches,
+and exact reconstruction shows that the corresponding hyperedge-nodes lie in
+different components of $I(F)-p$.  This proves the first assertion and also
+shows that every shared point is detected by deletion.  Conversely, if a
+point lies in only one atom, one-point indecomposability keeps that atom's
+hyperedge support connected after deletion, while all attachments through the
+other shared points remain unchanged.  Thus such a point is not a separator.
+
+Finally consider any supported one-point forest decomposition.  If it split a
+canonical atom between two pieces, the unique path between those pieces in the
+piece--shared-point forest would contain a shared point whose deletion
+separates two hyperedges of that atom, contradicting the first part.  Hence
+every canonical atom is contained in one piece, proving the universal
+refinement statement.
+\end{proof}
+
+\begin{corollary}[Decomposition lattice]
+\label{corollary-canonical-decomposition-lattice}
+Let $B(F)$ be the graph whose vertices are the canonical atoms, with two atoms
+adjacent when they share a point.  Then $B(F)$ is a block graph; its maximal
+cliques of size at least two are precisely the sets of atoms through a fixed
+shared point.
+
+The supported one-point forest decompositions of $F$, ordered by refinement,
+are in canonical bijection with the set partitions of $V(B(F))$ in which
+each block induces a connected subgraph.  Equivalently, the decomposition
+poset is the bond lattice of $B(F)$.
+\end{corollary}
+
+\begin{proof}
+A shared point gives a clique of incident atoms.  A cycle in $B(F)$ using
+more than one shared point would lift to a cycle in the bipartite
+atom--shared-point incidence forest, so every graph block of $B(F)$ is one of
+these cliques.
+
+By the proposition, every supported one-point forest decomposition groups
+whole canonical atoms.  A piece is connected exactly when its atom set is
+connected in $B(F)$.  Conversely, unions over the blocks of any connected set
+partition are connected; two such unions cannot meet in two points, and a
+cycle in their piece--shared-point incidence graph would lift to a cycle in
+the canonical atom forest.  Thus they form a supported one-point forest
+decomposition.  The constructions are inverse and preserve refinement.
+\end{proof}

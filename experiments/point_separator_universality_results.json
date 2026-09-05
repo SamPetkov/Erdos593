@@ -1,0 +1,14 @@
+{
+  "block_graph_checks": 5000,
+  "connected_atom_partitions": 249,
+  "connected_partition_converse_checks": 249,
+  "exhaustive_edge_partitions": 9352,
+  "exhaustive_systems": 56,
+  "inseparability_checks": 745222,
+  "random_assemblies": 5000,
+  "random_atoms": 20231,
+  "random_hyperedges": 72807,
+  "separator_checks": 134425,
+  "universal_refinement_checks": 842,
+  "valid_one_point_decompositions": 249
+}
