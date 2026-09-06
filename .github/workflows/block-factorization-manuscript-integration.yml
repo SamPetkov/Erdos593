@@ -1,0 +1,148 @@
+name: Erdős 593 block-factorization manuscript integration
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/integrate_block_factorization_manuscript.py'
+      - 'research_extensions/01_canonical_atom_forest/MANUSCRIPT_BLOCK_AND_LATTICE_EXTENSION.tex'
+      - 'research_extensions/01_canonical_atom_forest/MANUSCRIPT_BLOCK_AND_LATTICE_BIBLIOGRAPHY.bib'
+      - 'research_extensions/01_canonical_atom_forest/BLOCK_LATTICE_MANUSCRIPT_HOSTILE_AUDIT.md'
+      - 'experiments/verify_manuscript_block_lattice_fragment.py'
+      - 'experiments/manuscript_block_lattice_fragment_results.json'
+      - 'erdos593_obligatory_triple_systems.tex'
+      - 'references.bib'
+      - 'scripts/audit_manuscript_theorems.py'
+      - 'scripts/audit_external_lean_alignment.py'
+      - 'scripts/audit_standard_definitions.py'
+      - 'scripts/sync_manuscript_artifacts.py'
+      - 'erdos593_obligatory_triple_systems.md'
+      - 'erdos593_obligatory_triple_systems.pdf'
+      - 'Erdos593_revised.tex'
+      - 'arxiv/**'
+      - 'README.md'
+      - 'CITATION.cff'
+      - 'MANIFEST.txt'
+      - 'SHA256SUMS'
+      - '.github/workflows/block-factorization-manuscript-integration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: erdos593-block-factorization-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrate-build-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install publication toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq \
+            latexmk pandoc \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-science texlive-fonts-recommended texlive-fonts-extra \
+            poppler-utils
+
+      - name: Apply audited source integration
+        run: |
+          python -m py_compile scripts/integrate_block_factorization_manuscript.py
+          python scripts/integrate_block_factorization_manuscript.py
+
+      - name: Run theorem and interface audits before artifact generation
+        run: |
+          python -m py_compile scripts/audit_manuscript_theorems.py
+          python -m py_compile scripts/audit_external_lean_alignment.py
+          python -m py_compile scripts/audit_standard_definitions.py
+          python scripts/audit_manuscript_theorems.py
+          python scripts/audit_external_lean_alignment.py
+          python scripts/audit_standard_definitions.py
+
+      - name: Reproduce manuscript-specific block/lattice audit
+        working-directory: experiments
+        run: |
+          python -m py_compile verify_manuscript_block_lattice_fragment.py
+          python verify_manuscript_block_lattice_fragment.py \
+            --check manuscript_block_lattice_fragment_results.json \
+            --output /tmp/manuscript-block-lattice-fragment.json
+          cat /tmp/manuscript-block-lattice-fragment.json
+
+      - name: Synchronize publication artifacts
+        run: python scripts/sync_manuscript_artifacts.py
+
+      - name: Verify PDF and synchronized mirrors
+        run: |
+          set -euo pipefail
+          pdf=erdos593_obligatory_triple_systems.pdf
+          pdfinfo "$pdf" | tee /tmp/erdos593-block-pdfinfo.txt
+          pdftotext "$pdf" /tmp/erdos593-block-text.txt
+          pdffonts "$pdf" | tee /tmp/erdos593-block-fonts.txt
+          grep -Fq 'A4' /tmp/erdos593-block-pdfinfo.txt
+          grep -Fq 'Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra' /tmp/erdos593-block-pdfinfo.txt
+          grep -Fq 'Block formulation of the classification' /tmp/erdos593-block-text.txt
+          grep -Fq 'Local product for one-point decompositions' /tmp/erdos593-block-text.txt
+          grep -Fq 'Capacity-safe realization of every attachment profile' /tmp/erdos593-block-text.txt
+          grep -Fq 'Exact one-point factorization-lattice spectrum' /tmp/erdos593-block-text.txt
+          grep -Fq 'Bahmanian' /tmp/erdos593-block-text.txt
+          grep -Fq 'Simon' /tmp/erdos593-block-text.txt
+          grep -Fq 'not claimed as additional Lean endpoints' /tmp/erdos593-block-text.txt
+          ! grep -Eq '[[:space:]]no[[:space:]]' /tmp/erdos593-block-fonts.txt
+          cmp -s "$pdf" arxiv/main.pdf
+          cmp -s erdos593_obligatory_triple_systems.tex arxiv/main.tex
+          cmp -s erdos593_obligatory_triple_systems.tex Erdos593_revised.tex
+          cmp -s erdos593_obligatory_triple_systems.md arxiv/main.md
+
+      - name: Commit synchronized integration artifacts
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          set -euo pipefail
+          if git diff --quiet --exit-code -- .; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          branch='${{ github.event.pull_request.head.ref }}'
+          source_sha=$(git rev-parse HEAD)
+          git add -A
+          git commit -m 'Integrate block-factorization spectrum into manuscript'
+          git fetch origin "$branch"
+          remote_sha=$(git rev-parse "origin/$branch")
+          if [ "$remote_sha" != "$source_sha" ]; then
+            echo "Branch advanced from $source_sha to $remote_sha; skipping stale artifact push."
+            exit 0
+          fi
+          if ! git push origin HEAD:"$branch"; then
+            git fetch origin "$branch"
+            remote_sha=$(git rev-parse "origin/$branch")
+            if [ "$remote_sha" != "$source_sha" ]; then
+              echo "Branch advanced during push; newer run will publish artifacts."
+              exit 0
+            fi
+            exit 1
+          fi
+
+      - name: Require synchronized clean tree
+        run: git diff --exit-code -- .
+
+      - name: Upload audited manuscript preview
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: erdos593-block-factorization-manuscript-preview
+          path: |
+            erdos593_obligatory_triple_systems.pdf
+            /tmp/manuscript-block-lattice-fragment.json
+            /tmp/erdos593-block-pdfinfo.txt
+            /tmp/erdos593-block-fonts.txt
