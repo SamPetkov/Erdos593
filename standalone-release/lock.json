@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "source_checkpoint": "130473e2f68e12492e088bcff107725cd4ff74ff",
+  "accepted_formalization_tree": "05dbbe7d27a9c701c451605c98300231d4cc2fb8",
+  "accepted_standalone_sha256": "a881970629d0c0924cce736b79e955f9611ad2585dc2571eb6d6ccbdf2b565ee",
+  "accepted_modules": 219,
+  "accepted_axiom_targets": 213,
+  "bundle": "erdos593-standalone-sync-20260923.zip",
+  "bundle_sha256": "7eeba509e47c900d4f9d13c514dfca70981f54f95b8ae806f3bb4b706744c58c",
+  "extension_modules": 50,
+  "extension_status": "CONSOLIDATED_NOT_COMPILED",
+  "live_proof_mirrors_synchronized": false,
+  "whole_extended_manuscript_complete": false
+}
