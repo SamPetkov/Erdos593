@@ -1,5 +1,12 @@
 import Erdos593.Graph.Bridge
 import Erdos593.Graph.BridgeFree
+import Erdos593.Graph.EdgeCycleSplice
+import Erdos593.Graph.EdgeCycleBlocks
+import Erdos593.Graph.EdgeCycleBlockIncidence
+import Erdos593.Graph.EdgeCycleBlockIntersection
+import Erdos593.Graph.EdgeCycleBlockIncidenceForest
+import Erdos593.Graph.TwoVertexCycleSplice
+import Erdos593.Graph.EdgeCycleChord
 import Erdos593.Graph.BridgeQuotient
 import Erdos593.Graph.CompleteBipartiteCopy
 import Erdos593.Graph.CompleteBipartiteEdges
@@ -31,6 +38,10 @@ import Erdos593.TripleSystem.BridgeBlockExpansion
 import Erdos593.TripleSystem.BridgeBlockPackaging
 import Erdos593.TripleSystem.BridgeBlockRestriction
 import Erdos593.TripleSystem.BridgeBlockRunningIntersection
+import Erdos593.TripleSystem.CanonicalAtomPartition
+import Erdos593.TripleSystem.CanonicalAtomTypeDichotomy
+import Erdos593.TripleSystem.CanonicalAtomCoreStructure
+import Erdos593.TripleSystem.CanonicalAtomForestReconstruction
 import Erdos593.TripleSystem.DegenerateBridgeBlock
 import Erdos593.TripleSystem.BridgeSelector
 import Erdos593.TripleSystem.Constructive
@@ -162,6 +173,36 @@ import Erdos593.TripleSystem.SequenceLiftTaggedBaseApexEquiv
 import Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 import Erdos593.TripleSystem.SingleEdgePiece
 import Erdos593.TripleSystem.SingleEdgePieceConstructible
+import Erdos593.TripleSystem.CanonicalAtomCanonicity
+
+import Erdos593.TripleSystem.CanonicalAtomMinimalGenerators
+import Erdos593.TripleSystem.SpanningEdgeDeletion
+import Erdos593.TripleSystem.BipartiteShadow
+import Erdos593.TripleSystem.CanonicalAtomCounting
+import Erdos593.TripleSystem.SpectrumNecessity
+import Erdos593.TripleSystem.SpectrumRealization
+import Erdos593.TripleSystem.SpectrumCorollaries
+import Erdos593.TripleSystem.CycleRankSpectrum
+import Erdos593.TripleSystem.BalancedEndpointRigidity
+import Erdos593.Graph.TwoConnectedBipartiteSpectrum
+import Erdos593.Graph.AtomRankConcentration
+import Erdos593.TripleSystem.CanonicalAtomRankInterpretation
+import Erdos593.TripleSystem.CanonicalAtomCoreRank
+import Erdos593.TripleSystem.CanonicalAtomExtremalCount
+import Erdos593.TripleSystem.CanonicalAtomContainment
+import Erdos593.TripleSystem.CanonicalAtomTransport
+import Erdos593.TripleSystem.EmbeddingRestrictionTransport
+import Erdos593.TripleSystem.CanonicalAtomAmalgamLabels
+import Erdos593.TripleSystem.CanonicalAtomAmalgamOption
+import Erdos593.TripleSystem.CanonicalAtomBaseCount
+import Erdos593.TripleSystem.OnePointAmalgamationGeometry
+import Erdos593.TripleSystem.CanonicalAtomFiniteAttachment
+import Erdos593.TripleSystem.CanonicalAtomCountSpectrum
+import Erdos593.TripleSystem.CanonicalAtomMaximizer
+import Erdos593.TripleSystem.CanonicalSeparatorApplication
+import Erdos593.TripleSystem.SupportedDecompositionProduct
+import Erdos593.TripleSystem.SupportedLatticeOperations
+import Erdos593.TripleSystem.SupportedClassicalBlockConverse
 
 /-!
 # Erdős Problem 593

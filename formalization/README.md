@@ -1,5 +1,9 @@
 # Erdős Problem 593: complete Lean formalisation
 
+For the current verified extension snapshot and remaining gaps, see
+[the formalization status](../CURRENT_FORMALIZATION_STATUS.md) and
+[the reproducible validation record](../FORMALIZATION_VALIDATION_2026-09-30.md).
+
 This Lean 4/mathlib project machine-checks the complete finite classification
 of obligatory triple systems in the alternative proof implementation contained
 in this repository.
