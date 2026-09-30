@@ -1,7 +1,10 @@
+import Init
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
 import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.Floor.Ring
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Combinatorics.Compactness
 import Mathlib.Combinatorics.Hall.Basic
 import Mathlib.Combinatorics.SimpleGraph.Acyclic
@@ -9,6 +12,8 @@ import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Combinatorics.SimpleGraph.Bipartite
 import Mathlib.Combinatorics.SimpleGraph.Coloring.Constructions
 import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
+import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
 import Mathlib.Combinatorics.SimpleGraph.Copy
 import Mathlib.Combinatorics.SimpleGraph.Finite
 import Mathlib.Combinatorics.SimpleGraph.Sum
@@ -28,10 +33,13 @@ import Mathlib.Data.Nat.Pairing
 import Mathlib.Data.Prod.Lex
 import Mathlib.Data.Set.Card
 import Mathlib.Data.Set.Card.Arithmetic
+import Mathlib.Data.Set.Finite.Lemmas
 import Mathlib.Data.Set.Finite.Range
 import Mathlib.Data.Set.PowersetCard
+import Mathlib.Data.Setoid.Basic
 import Mathlib.Logic.Embedding.Basic
 import Mathlib.Logic.Equiv.Fin.Basic
+import Mathlib.Logic.Equiv.Sum
 import Mathlib.Order.Fin.Basic
 import Mathlib.Order.TransfiniteIteration
 import Mathlib.Order.WellFounded
@@ -312,6 +320,1710 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_Graph_BridgeFree
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.Graph.BridgeFree
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.EdgeCycleSplice
+Source: Erdos593/Graph/EdgeCycleSplice.lean
+Normalized SHA-256: 6cfba30b8d21da122e55d0d2f1803bc0dee356f9687b47eba94755376f8ea3ac
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleSplice
+
+namespace Erdos593
+namespace SimpleGraph
+
+set_option autoImplicit false
+
+/-!
+# Publication refinement: common-cycle splicing kernel
+
+This is the substantive non-equality branch needed to prove that equality or
+membership in a common simple cycle is a transitive relation on graph edges.
+The quotient incidence and block-cut forest remain separate obligations.
+-/
+
+/-- If two simple cycles share an edge, then any chosen edge of the first and
+any chosen edge of the second lie on a common simple cycle. -/
+theorem edgeCycle_splice
+    {V : Type*} (G : _root_.SimpleGraph V)
+    {e f g : G.edgeSet} {v₁ v₂ : V}
+    {c₁ : G.Walk v₁ v₁} {c₂ : G.Walk v₂ v₂}
+    (hc₁ : c₁.IsCycle) (hc₂ : c₂.IsCycle)
+    (he : e.1 ∈ c₁.edges) (hf₁ : f.1 ∈ c₁.edges)
+    (hf₂ : f.1 ∈ c₂.edges) (hg : g.1 ∈ c₂.edges) :
+    ∃ v : V, ∃ c : G.Walk v v,
+      c.IsCycle ∧ e.1 ∈ c.edges ∧ g.1 ∈ c.edges := by
+  open _root_.SimpleGraph in
+  classical
+  by_cases he2 : e.1 ∈ c₂.edges
+  · exact ⟨v₂, c₂, hc₂, he2, hg⟩
+  -- A walk of length one consists of exactly one edge, joining its endpoints.
+  have hlen1 : ∀ {a b : V} (w : G.Walk a b), w.length = 1 → w.edges = [s(a, b)] := by
+    intro a b w hw
+    cases w with
+    | nil => simp at hw
+    | cons hadj w' =>
+      have hw' : w'.length = 0 := by simpa using hw
+      cases w' with
+      | nil => simp
+      | cons _ _ => simp at hw'
+  -- Two internally disjoint paths with the same endpoints glue to a cycle.
+  have glue : ∀ {a b : V} (q : G.Walk a b) (R : G.Walk b a), q.IsPath → R.IsPath → a ≠ b →
+      (∀ z ∈ q.support, z ∈ R.support → z = a ∨ z = b) → 3 ≤ q.length + R.length →
+      (q.append R).IsCycle := by
+    intro a b q R hq hR hab hdisj h3
+    cases q with
+    | nil => exact absurd rfl hab
+    | cons hadj q' =>
+      rw [Walk.cons_append, Walk.isCycle_iff_isPath_tail_and_le_length]
+      have hq' := (Walk.cons_isPath_iff _ _).mp hq
+      constructor
+      · have key : (q'.append R).IsPath := by
+          rw [Walk.isPath_def, Walk.support_append, List.nodup_append]
+          refine ⟨hq'.1.support_nodup, hR.support_nodup.tail, ?_⟩
+          intro z hz w hw
+          rintro rfl
+          have hzR : z ∈ R.support := by
+            rw [← R.cons_tail_support]
+            exact List.mem_cons_of_mem _ hw
+          have hzq : z ∈ (Walk.cons hadj q').support := by
+            rw [Walk.support_cons]
+            exact List.mem_cons_of_mem _ hz
+          rcases hdisj z hzq hzR with rfl | rfl
+          · exact hq'.2 hz
+          · have hnotin : z ∉ R.support.tail := by
+              have hnd := hR.support_nodup
+              rw [← R.cons_tail_support, List.nodup_cons] at hnd
+              exact hnd.1
+            exact hnotin hw
+        simpa using key
+      · simp only [Walk.length_cons, Walk.length_append] at h3 ⊢
+        omega
+  -- Extraction of a segment meeting the support of `c₂` only at its endpoints.
+  have extract : ∀ (n : ℕ) {a b : V} (p : G.Walk a b), p.length ≤ n → p.IsPath →
+      a ∈ c₂.support → b ∈ c₂.support → e.1 ∈ p.edges →
+      ∃ (a' b' : V) (q : G.Walk a' b'), q.IsPath ∧ a' ∈ c₂.support ∧ b' ∈ c₂.support ∧
+        e.1 ∈ q.edges ∧ ∀ z ∈ q.support, z ∈ c₂.support → z = a' ∨ z = b' := by
+    intro n
+    induction n using Nat.strong_induction_on with
+    | _ n ih =>
+      intro a b p hpn hp ha hb hep
+      by_cases hall : ∀ z ∈ p.support, z ∈ c₂.support → z = a ∨ z = b
+      · exact ⟨a, b, p, hp, ha, hb, hep, hall⟩
+      · replace hall : ∃ m, m ∈ p.support ∧ m ∈ c₂.support ∧ m ≠ a ∧ m ≠ b := by
+          by_contra hcon
+          refine hall (fun z hz hzS => ?_)
+          by_contra hz2
+          exact hcon ⟨z, hz, hzS, fun h => hz2 (Or.inl h), fun h => hz2 (Or.inr h)⟩
+        obtain ⟨m, hmp, hmS, hma, hmb⟩ := hall
+        have hspec := p.take_spec hmp
+        have hlen : (p.takeUntil m hmp).length + (p.dropUntil m hmp).length = p.length := by
+          rw [← Walk.length_append, hspec]
+        have ht1 : 1 ≤ (p.takeUntil m hmp).length := by
+          rcases Nat.eq_zero_or_pos (p.takeUntil m hmp).length with h0 | h0
+          · exact absurd (Walk.eq_of_length_eq_zero h0).symm hma
+          · exact h0
+        have hd1 : 1 ≤ (p.dropUntil m hmp).length := by
+          rcases Nat.eq_zero_or_pos (p.dropUntil m hmp).length with h0 | h0
+          · exact absurd (Walk.eq_of_length_eq_zero h0) hmb
+          · exact h0
+        have hedge : e.1 ∈ (p.takeUntil m hmp).edges ∨ e.1 ∈ (p.dropUntil m hmp).edges := by
+          rw [← hspec, Walk.edges_append, List.mem_append] at hep
+          exact hep
+        rcases hedge with h | h
+        · exact ih (p.takeUntil m hmp).length (by omega) _ le_rfl (hp.takeUntil hmp) ha hmS h
+        · exact ih (p.dropUntil m hmp).length (by omega) _ le_rfl (hp.dropUntil hmp) hmS hb h
+  -- The shared edge, with its endpoints.
+  obtain ⟨x, y, hxy⟩ : ∃ x y : V, f.1 = s(x, y) :=
+    Sym2.inductionOn (f : Sym2 V) (fun a b => ⟨a, b, rfl⟩)
+  rw [hxy] at hf₁ hf₂
+  have hadjxy : G.Adj x y := G.mem_edgeSet.mp (c₁.edges_subset_edgeSet hf₁)
+  have hxney : x ≠ y := hadjxy.ne
+  have hx1 : x ∈ c₁.support := c₁.fst_mem_support_of_mem_edges hf₁
+  have hy1 : y ∈ c₁.support := c₁.snd_mem_support_of_mem_edges hf₁
+  have hx2 : x ∈ c₂.support := c₂.fst_mem_support_of_mem_edges hf₂
+  have hy2 : y ∈ c₂.support := c₂.snd_mem_support_of_mem_edges hf₂
+  -- A path containing `e` whose endpoints lie on `c₂`.
+  obtain ⟨α, β, P, hP, hα, hβ, heP⟩ :
+      ∃ (α β : V) (P : G.Walk α β), P.IsPath ∧ α ∈ c₂.support ∧ β ∈ c₂.support ∧
+        e.1 ∈ P.edges := by
+    have hcr : (c₁.rotate x hx1).IsCycle := hc₁.rotate hx1
+    have her : e.1 ∈ (c₁.rotate x hx1).edges := ((c₁.rotate_edges x hx1).mem_iff).mpr he
+    have hyr : y ∈ (c₁.rotate x hx1).support := (Walk.mem_support_rotate_iff _ _ _).mpr hy1
+    have hspec := (c₁.rotate x hx1).take_spec hyr
+    have hedge : e.1 ∈ ((c₁.rotate x hx1).takeUntil y hyr).edges ∨
+        e.1 ∈ ((c₁.rotate x hx1).dropUntil y hyr).edges := by
+      rw [← hspec, Walk.edges_append, List.mem_append] at her
+      exact her
+    rcases hedge with h | h
+    · exact ⟨x, y, _, hcr.isPath_takeUntil hyr, hx2, hy2, h⟩
+    · refine ⟨y, x, _, ?_, hy2, hx2, h⟩
+      have hcr' : (((c₁.rotate x hx1).takeUntil y hyr).append
+          ((c₁.rotate x hx1).dropUntil y hyr)).IsCycle := by rw [hspec]; exact hcr
+      exact hcr'.isPath_of_append_right (Walk.not_nil_of_ne hxney)
+  obtain ⟨a, b, q, hq, ha, hb, heq, hqS⟩ := extract P.length P le_rfl hP hα hβ heP
+  have hqlen : 1 ≤ q.length := by
+    have h1 : q.edges ≠ [] := List.ne_nil_of_mem heq
+    have h2 : q.edges.length = q.length := q.length_edges
+    have h3 : q.edges.length ≠ 0 := fun h => h1 (List.eq_nil_of_length_eq_zero h)
+    omega
+  have hab : a ≠ b := by
+    rintro rfl
+    have h0 : q.length = 0 := (Walk.length_eq_zero_iff).mpr (Walk.isPath_iff_nil.mp hq)
+    omega
+  -- Gluing an arc of `c₂` through `g` onto the extracted segment.
+  have final : ∀ (R : G.Walk b a), R.IsPath → g.1 ∈ R.edges →
+      (∀ z ∈ R.support, z ∈ c₂.support) → (∀ z ∈ R.edges, z ∈ c₂.edges) →
+      ∃ v : V, ∃ c : G.Walk v v, c.IsCycle ∧ e.1 ∈ c.edges ∧ g.1 ∈ c.edges := by
+    intro R hR hgR hRS hRE
+    have hRlen : 1 ≤ R.length := by
+      rcases Nat.eq_zero_or_pos R.length with h0 | h0
+      · exact absurd (Walk.eq_of_length_eq_zero h0) (Ne.symm hab)
+      · exact h0
+    refine ⟨a, q.append R, glue q R hq hR hab (fun z hz hz2 => hqS z hz (hRS z hz2)) ?_, ?_, ?_⟩
+    · by_contra hcon
+      have hq1 : q.length = 1 := by omega
+      have hR1 : R.length = 1 := by omega
+      have hqe : q.edges = [s(a, b)] := hlen1 q hq1
+      have hRe : R.edges = [s(b, a)] := hlen1 R hR1
+      rw [hqe, List.mem_singleton] at heq
+      have : e.1 ∈ R.edges := by rw [hRe, heq, Sym2.eq_swap]; exact List.mem_singleton_self _
+      exact he2 (hRE _ this)
+    · rw [Walk.edges_append, List.mem_append]; exact Or.inl heq
+    · rw [Walk.edges_append, List.mem_append]; exact Or.inr hgR
+  have hcr : (c₂.rotate a ha).IsCycle := hc₂.rotate ha
+  have hgr : g.1 ∈ (c₂.rotate a ha).edges := ((c₂.rotate_edges a ha).mem_iff).mpr hg
+  have hbr : b ∈ (c₂.rotate a ha).support := (Walk.mem_support_rotate_iff _ _ _).mpr hb
+  have hsuppr : ∀ z ∈ (c₂.rotate a ha).support, z ∈ c₂.support :=
+    fun z hz => (Walk.mem_support_rotate_iff _ _ _).mp hz
+  have hedgesr : ∀ z ∈ (c₂.rotate a ha).edges, z ∈ c₂.edges :=
+    fun z hz => ((c₂.rotate_edges a ha).mem_iff).mp hz
+  have hspec := (c₂.rotate a ha).take_spec hbr
+  have hedge : g.1 ∈ ((c₂.rotate a ha).takeUntil b hbr).edges ∨
+      g.1 ∈ ((c₂.rotate a ha).dropUntil b hbr).edges := by
+    rw [← hspec, Walk.edges_append, List.mem_append] at hgr
+    exact hgr
+  rcases hedge with h | h
+  · refine final ((c₂.rotate a ha).takeUntil b hbr).reverse ?_ ?_ ?_ ?_
+    · exact (Walk.isPath_reverse_iff _).mpr (hcr.isPath_takeUntil hbr)
+    · rw [Walk.edges_reverse, List.mem_reverse]; exact h
+    · intro z hz
+      rw [Walk.support_reverse, List.mem_reverse] at hz
+      exact hsuppr z (Walk.support_takeUntil_subset_support _ _ hz)
+    · intro z hz
+      rw [Walk.edges_reverse, List.mem_reverse] at hz
+      exact hedgesr z (Walk.edges_takeUntil_subset_edges _ _ hz)
+  · refine final ((c₂.rotate a ha).dropUntil b hbr) ?_ ?_ ?_ ?_
+    · have hcr' : (((c₂.rotate a ha).takeUntil b hbr).append
+          ((c₂.rotate a ha).dropUntil b hbr)).IsCycle := by rw [hspec]; exact hcr
+      exact hcr'.isPath_of_append_right (Walk.not_nil_of_ne hab)
+    · exact h
+    · intro z hz
+      exact hsuppr z (Walk.support_dropUntil_subset_support _ _ hz)
+    · intro z hz
+      exact hedgesr z (Walk.edges_dropUntil_subset_edges _ _ hz)
+
+end SimpleGraph
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleSplice
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.EdgeCycleSplice
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.EdgeCycleBlocks
+Source: Erdos593/Graph/EdgeCycleBlocks.lean
+Normalized SHA-256: 23d9d86145595a038643e37e1e97508b46ff5cc764d18da827f82a5fc8e2febd
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleBlocks
+
+namespace Erdos593
+namespace SimpleGraph
+
+set_option autoImplicit false
+
+/-!
+# Publication refinement: cycle blocks of graph edges
+
+The relation is the reflexive closure of “the two actual graph edges occur on
+one common simple cycle”. Thus every bridge survives as a singleton class,
+while the welded cycle-splicing kernel supplies the only nontrivial
+transitivity branch.
+-/
+
+/-- Two actual graph edges occur on one common simple cycle. -/
+def EdgesOnCommonCycle {V : Type*} (G : _root_.SimpleGraph V)
+    (e f : G.edgeSet) : Prop :=
+  ∃ v : V, ∃ c : G.Walk v v,
+    c.IsCycle ∧ e.1 ∈ c.edges ∧ f.1 ∈ c.edges
+
+/-- Reflexive closure of common-cycle containment on all actual graph edges. -/
+def EdgeCycleLinked {V : Type*} (G : _root_.SimpleGraph V)
+    (e f : G.edgeSet) : Prop :=
+  e = f ∨ EdgesOnCommonCycle G e f
+
+theorem edgesOnCommonCycle_symm {V : Type*} (G : _root_.SimpleGraph V)
+    {e f : G.edgeSet} (h : EdgesOnCommonCycle G e f) :
+    EdgesOnCommonCycle G f e := by
+  rcases h with ⟨v, c, hc, he, hf⟩
+  exact ⟨v, c, hc, hf, he⟩
+
+theorem edgesOnCommonCycle_trans {V : Type*} (G : _root_.SimpleGraph V)
+    {e f g : G.edgeSet} (hef : EdgesOnCommonCycle G e f)
+    (hfg : EdgesOnCommonCycle G f g) : EdgesOnCommonCycle G e g := by
+  rcases hef with ⟨v₁, c₁, hc₁, he, hf₁⟩
+  rcases hfg with ⟨v₂, c₂, hc₂, hf₂, hg⟩
+  exact edgeCycle_splice G hc₁ hc₂ he hf₁ hf₂ hg
+
+theorem edgeCycleLinked_refl {V : Type*} (G : _root_.SimpleGraph V) :
+    ∀ e : G.edgeSet, EdgeCycleLinked G e e := by
+  intro e
+  exact Or.inl rfl
+
+theorem edgeCycleLinked_symm {V : Type*} (G : _root_.SimpleGraph V) :
+    ∀ ⦃e f : G.edgeSet⦄, EdgeCycleLinked G e f → EdgeCycleLinked G f e := by
+  intro e f h
+  rcases h with hEq | hCycle
+  · exact Or.inl hEq.symm
+  · exact Or.inr (edgesOnCommonCycle_symm G hCycle)
+
+theorem edgeCycleLinked_trans {V : Type*} (G : _root_.SimpleGraph V) :
+    ∀ ⦃e f g : G.edgeSet⦄,
+      EdgeCycleLinked G e f → EdgeCycleLinked G f g → EdgeCycleLinked G e g := by
+  intro e f g hef hfg
+  rcases hef with hEq | hef
+  · subst f
+    exact hfg
+  rcases hfg with hEq | hfg
+  · subst g
+    exact Or.inr hef
+  · exact Or.inr (edgesOnCommonCycle_trans G hef hfg)
+
+/-- Equality or common-simple-cycle containment is an equivalence relation on
+all actual graph edges. -/
+theorem edgeCycleLinked_equivalence {V : Type*} (G : _root_.SimpleGraph V) :
+    Equivalence (EdgeCycleLinked G) := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro e
+    exact edgeCycleLinked_refl G e
+  · intro e f h
+    exact edgeCycleLinked_symm G h
+  · intro e f g hef hfg
+    exact edgeCycleLinked_trans G hef hfg
+
+/-- Setoid of graph edges belonging to the same cycle block. -/
+def edgeCycleLinkedSetoid {V : Type*} (G : _root_.SimpleGraph V) :
+    Setoid G.edgeSet where
+  r := EdgeCycleLinked G
+  iseqv := edgeCycleLinked_equivalence G
+
+end SimpleGraph
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleBlocks
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.EdgeCycleBlocks
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.EdgeCycleBlockIncidence
+Source: Erdos593/Graph/EdgeCycleBlockIncidence.lean
+Normalized SHA-256: 866d985802a3753a94cdb7d5e643b82d6d107fddad3543cbd7c233f135145740
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleBlockIncidence
+
+namespace Erdos593
+namespace SimpleGraph
+
+set_option autoImplicit false
+
+/-!
+# Representative-independent cycle-block incidence
+
+Cycle blocks are quotient classes of actual graph edges. A vertex is incident
+to a block exactly when it is an endpoint of some edge in that class. The
+definition makes no representative choice and includes bridge singleton
+blocks automatically.
+-/
+
+/-- Quotient of actual graph edges by cycle-block equivalence. -/
+abbrev EdgeCycleBlock {V : Type*} (G : _root_.SimpleGraph V) :=
+  Quotient (edgeCycleLinkedSetoid G)
+
+namespace EdgeCycleBlock
+
+/-- The cycle block containing an actual graph edge. -/
+def ofEdge {V : Type*} (G : _root_.SimpleGraph V) (e : G.edgeSet) :
+    EdgeCycleBlock G :=
+  Quotient.mk (edgeCycleLinkedSetoid G) e
+
+/-- The literal set of graph edges belonging to a cycle block. -/
+def edges {V : Type*} (G : _root_.SimpleGraph V) (B : EdgeCycleBlock G) :
+    Set G.edgeSet :=
+  {e | ofEdge G e = B}
+
+/-- A vertex is incident to a block when it is an endpoint of some edge in it. -/
+def Incident {V : Type*} (G : _root_.SimpleGraph V) (v : V)
+    (B : EdgeCycleBlock G) : Prop :=
+  ∃ e : G.edgeSet, e ∈ edges G B ∧ (e : Sym2 V) ∈ G.incidenceSet v
+
+@[simp]
+theorem ofEdge_eq_iff {V : Type*} (G : _root_.SimpleGraph V)
+    {e f : G.edgeSet} :
+    ofEdge G e = ofEdge G f ↔ EdgeCycleLinked G e f := by
+  change Quotient.mk (edgeCycleLinkedSetoid G) e =
+      Quotient.mk (edgeCycleLinkedSetoid G) f ↔ EdgeCycleLinked G e f
+  exact Quotient.eq
+
+@[simp]
+theorem mem_edges_ofEdge {V : Type*} (G : _root_.SimpleGraph V)
+    {e f : G.edgeSet} :
+    f ∈ edges G (ofEdge G e) ↔ EdgeCycleLinked G f e := by
+  change ofEdge G f = ofEdge G e ↔ EdgeCycleLinked G f e
+  exact ofEdge_eq_iff G
+
+@[simp]
+theorem incident_ofEdge_iff {V : Type*} (G : _root_.SimpleGraph V)
+    {v : V} {e : G.edgeSet} :
+    Incident G v (ofEdge G e) ↔
+      ∃ f : G.edgeSet,
+        EdgeCycleLinked G f e ∧ (f : Sym2 V) ∈ G.incidenceSet v := by
+  constructor
+  · rintro ⟨f, hfB, hfv⟩
+    exact ⟨f, (mem_edges_ofEdge G).1 hfB, hfv⟩
+  · rintro ⟨f, hfe, hfv⟩
+    exact ⟨f, (mem_edges_ofEdge G).2 hfe, hfv⟩
+
+theorem incident_iff_exists_endpoint {V : Type*} (G : _root_.SimpleGraph V)
+    {v : V} {B : EdgeCycleBlock G} :
+    Incident G v B ↔
+      ∃ e : G.edgeSet, e ∈ edges G B ∧ v ∈ (e : Sym2 V) := by
+  constructor
+  · rintro ⟨e, heB, hev⟩
+    exact ⟨e, heB,
+      (_root_.SimpleGraph.edge_mem_incidenceSet_iff
+        (G := G) (a := v) (e := e)).1 hev⟩
+  · rintro ⟨e, heB, hve⟩
+    exact ⟨e, heB,
+      (_root_.SimpleGraph.edge_mem_incidenceSet_iff
+        (G := G) (a := v) (e := e)).2 hve⟩
+
+theorem exists_rep {V : Type*} (G : _root_.SimpleGraph V)
+    (B : EdgeCycleBlock G) : ∃ e : G.edgeSet, ofEdge G e = B := by
+  refine Quotient.inductionOn B ?_
+  intro e
+  exact ⟨e, rfl⟩
+
+theorem edges_nonempty {V : Type*} (G : _root_.SimpleGraph V)
+    (B : EdgeCycleBlock G) : (edges G B).Nonempty := by
+  obtain ⟨e, rfl⟩ := exists_rep G B
+  exact ⟨e, rfl⟩
+
+theorem incident_of_mem_endpoint {V : Type*} (G : _root_.SimpleGraph V)
+    {B : EdgeCycleBlock G} {e : G.edgeSet} (heB : e ∈ edges G B)
+    {v : V} (hve : v ∈ (e : Sym2 V)) : Incident G v B := by
+  refine ⟨e, heB, ?_⟩
+  exact (_root_.SimpleGraph.edge_mem_incidenceSet_iff
+    (G := G) (a := v) (e := e)).2 hve
+
+theorem eq_of_common_edge {V : Type*} (G : _root_.SimpleGraph V)
+    {B C : EdgeCycleBlock G} {e : G.edgeSet}
+    (heB : e ∈ edges G B) (heC : e ∈ edges G C) : B = C := by
+  change ofEdge G e = B at heB
+  change ofEdge G e = C at heC
+  exact heB.symm.trans heC
+
+/-- The vertex support of a cycle block. -/
+def vertices {V : Type*} (G : _root_.SimpleGraph V) (B : EdgeCycleBlock G) :
+    Set V :=
+  {v | Incident G v B}
+
+@[simp]
+theorem mem_vertices {V : Type*} (G : _root_.SimpleGraph V)
+    {B : EdgeCycleBlock G} {v : V} :
+    v ∈ vertices G B ↔ Incident G v B :=
+  Iff.rfl
+
+end EdgeCycleBlock
+
+end SimpleGraph
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleBlockIncidence
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.EdgeCycleBlockIncidence
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.TwoVertexCycleSplice
+Source: Erdos593/Graph/TwoVertexCycleSplice.lean
+Normalized SHA-256: 907a99a5e4fde20ef76723fe389efac32e331d88f7915cabbd8924162b8e1ff1
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_TwoVertexCycleSplice
+
+namespace Erdos593
+namespace SimpleGraph
+
+set_option autoImplicit false
+
+/-!
+# Publication refinement: two-vertex cycle splicing
+
+This module isolates the first missing kernel for the cycle-block intersection
+theorem.  It does not define quotient incidence, prove the singleton chord
+case, construct the block-cut forest, or specialize to a contracted graph.
+-/
+
+/-- If two simple cycles contain the same two distinct vertices, then any
+chosen edge of the first and any chosen edge of the second lie on a common
+simple cycle. -/
+theorem edgesOnCommonCycle_of_cycles_share_two_vertices
+    {V : Type*} (G : _root_.SimpleGraph V)
+    {e g : G.edgeSet} {x y v₁ v₂ : V}
+    {c₁ : G.Walk v₁ v₁} {c₂ : G.Walk v₂ v₂}
+    (hc₁ : c₁.IsCycle) (hc₂ : c₂.IsCycle)
+    (hxy : x ≠ y)
+    (hx₁ : x ∈ c₁.support) (hy₁ : y ∈ c₁.support)
+    (hx₂ : x ∈ c₂.support) (hy₂ : y ∈ c₂.support)
+    (he : e.1 ∈ c₁.edges) (hg : g.1 ∈ c₂.edges) :
+    EdgesOnCommonCycle G e g := by
+  open _root_.SimpleGraph in
+  classical
+  by_cases he2 : e.1 ∈ c₂.edges
+  · exact ⟨v₂, c₂, hc₂, he2, hg⟩
+  -- A walk of length one consists of exactly one edge, joining its endpoints.
+  have hlen1 : ∀ {a b : V} (w : G.Walk a b), w.length = 1 → w.edges = [s(a, b)] := by
+    intro a b w hw
+    cases w with
+    | nil => simp at hw
+    | cons hadj w' =>
+      have hw' : w'.length = 0 := by simpa using hw
+      cases w' with
+      | nil => simp
+      | cons _ _ => simp at hw'
+  -- Two internally disjoint paths with the same endpoints glue to a cycle.
+  have glue : ∀ {a b : V} (q : G.Walk a b) (R : G.Walk b a), q.IsPath → R.IsPath → a ≠ b →
+      (∀ z ∈ q.support, z ∈ R.support → z = a ∨ z = b) → 3 ≤ q.length + R.length →
+      (q.append R).IsCycle := by
+    intro a b q R hq hR hab hdisj h3
+    cases q with
+    | nil => exact absurd rfl hab
+    | cons hadj q' =>
+      rw [Walk.cons_append, Walk.isCycle_iff_isPath_tail_and_le_length]
+      have hq' := (Walk.cons_isPath_iff _ _).mp hq
+      constructor
+      · have key : (q'.append R).IsPath := by
+          rw [Walk.isPath_def, Walk.support_append, List.nodup_append]
+          refine ⟨hq'.1.support_nodup, hR.support_nodup.tail, ?_⟩
+          intro z hz w hw
+          rintro rfl
+          have hzR : z ∈ R.support := by
+            rw [← R.cons_tail_support]
+            exact List.mem_cons_of_mem _ hw
+          have hzq : z ∈ (Walk.cons hadj q').support := by
+            rw [Walk.support_cons]
+            exact List.mem_cons_of_mem _ hz
+          rcases hdisj z hzq hzR with rfl | rfl
+          · exact hq'.2 hz
+          · have hnotin : z ∉ R.support.tail := by
+              have hnd := hR.support_nodup
+              rw [← R.cons_tail_support, List.nodup_cons] at hnd
+              exact hnd.1
+            exact hnotin hw
+        simpa using key
+      · simp only [Walk.length_cons, Walk.length_append] at h3 ⊢
+        omega
+  -- Extraction of a segment meeting the support of `c₂` only at its endpoints.
+  have extract : ∀ (n : ℕ) {a b : V} (p : G.Walk a b), p.length ≤ n → p.IsPath →
+      a ∈ c₂.support → b ∈ c₂.support → e.1 ∈ p.edges →
+      ∃ (a' b' : V) (q : G.Walk a' b'), q.IsPath ∧ a' ∈ c₂.support ∧ b' ∈ c₂.support ∧
+        e.1 ∈ q.edges ∧ ∀ z ∈ q.support, z ∈ c₂.support → z = a' ∨ z = b' := by
+    intro n
+    induction n using Nat.strong_induction_on with
+    | _ n ih =>
+      intro a b p hpn hp ha hb hep
+      by_cases hall : ∀ z ∈ p.support, z ∈ c₂.support → z = a ∨ z = b
+      · exact ⟨a, b, p, hp, ha, hb, hep, hall⟩
+      · replace hall : ∃ m, m ∈ p.support ∧ m ∈ c₂.support ∧ m ≠ a ∧ m ≠ b := by
+          by_contra hcon
+          refine hall (fun z hz hzS => ?_)
+          by_contra hz2
+          exact hcon ⟨z, hz, hzS, fun h => hz2 (Or.inl h), fun h => hz2 (Or.inr h)⟩
+        obtain ⟨m, hmp, hmS, hma, hmb⟩ := hall
+        have hspec := p.take_spec hmp
+        have hlen : (p.takeUntil m hmp).length + (p.dropUntil m hmp).length = p.length := by
+          rw [← Walk.length_append, hspec]
+        have ht1 : 1 ≤ (p.takeUntil m hmp).length := by
+          rcases Nat.eq_zero_or_pos (p.takeUntil m hmp).length with h0 | h0
+          · exact absurd (Walk.eq_of_length_eq_zero h0).symm hma
+          · exact h0
+        have hd1 : 1 ≤ (p.dropUntil m hmp).length := by
+          rcases Nat.eq_zero_or_pos (p.dropUntil m hmp).length with h0 | h0
+          · exact absurd (Walk.eq_of_length_eq_zero h0) hmb
+          · exact h0
+        have hedge : e.1 ∈ (p.takeUntil m hmp).edges ∨ e.1 ∈ (p.dropUntil m hmp).edges := by
+          rw [← hspec, Walk.edges_append, List.mem_append] at hep
+          exact hep
+        rcases hedge with h | h
+        · exact ih (p.takeUntil m hmp).length (by omega) _ le_rfl (hp.takeUntil hmp) ha hmS h
+        · exact ih (p.dropUntil m hmp).length (by omega) _ le_rfl (hp.dropUntil hmp) hmS hb h
+  -- A path containing `e` whose endpoints lie on `c₂`.
+  obtain ⟨α, β, P, hP, hα, hβ, heP⟩ :
+      ∃ (α β : V) (P : G.Walk α β), P.IsPath ∧ α ∈ c₂.support ∧ β ∈ c₂.support ∧
+        e.1 ∈ P.edges := by
+    have hcr : (c₁.rotate x hx₁).IsCycle := hc₁.rotate hx₁
+    have her : e.1 ∈ (c₁.rotate x hx₁).edges := ((c₁.rotate_edges x hx₁).mem_iff).mpr he
+    have hyr : y ∈ (c₁.rotate x hx₁).support := (Walk.mem_support_rotate_iff _ _ _).mpr hy₁
+    have hspec := (c₁.rotate x hx₁).take_spec hyr
+    have hedge : e.1 ∈ ((c₁.rotate x hx₁).takeUntil y hyr).edges ∨
+        e.1 ∈ ((c₁.rotate x hx₁).dropUntil y hyr).edges := by
+      rw [← hspec, Walk.edges_append, List.mem_append] at her
+      exact her
+    rcases hedge with h | h
+    · exact ⟨x, y, _, hcr.isPath_takeUntil hyr, hx₂, hy₂, h⟩
+    · refine ⟨y, x, _, ?_, hy₂, hx₂, h⟩
+      have hcr' : (((c₁.rotate x hx₁).takeUntil y hyr).append
+          ((c₁.rotate x hx₁).dropUntil y hyr)).IsCycle := by rw [hspec]; exact hcr
+      exact hcr'.isPath_of_append_right (Walk.not_nil_of_ne hxy)
+  obtain ⟨a, b, q, hq, ha, hb, heq, hqS⟩ := extract P.length P le_rfl hP hα hβ heP
+  have hqlen : 1 ≤ q.length := by
+    have h1 : q.edges ≠ [] := List.ne_nil_of_mem heq
+    have h2 : q.edges.length = q.length := q.length_edges
+    have h3 : q.edges.length ≠ 0 := fun h => h1 (List.eq_nil_of_length_eq_zero h)
+    omega
+  have hab : a ≠ b := by
+    rintro rfl
+    have h0 : q.length = 0 := (Walk.length_eq_zero_iff).mpr (Walk.isPath_iff_nil.mp hq)
+    omega
+  -- Gluing an arc of `c₂` through `g` onto the extracted segment.
+  have final : ∀ (R : G.Walk b a), R.IsPath → g.1 ∈ R.edges →
+      (∀ z ∈ R.support, z ∈ c₂.support) → (∀ z ∈ R.edges, z ∈ c₂.edges) →
+      ∃ v : V, ∃ c : G.Walk v v, c.IsCycle ∧ e.1 ∈ c.edges ∧ g.1 ∈ c.edges := by
+    intro R hR hgR hRS hRE
+    have hRlen : 1 ≤ R.length := by
+      rcases Nat.eq_zero_or_pos R.length with h0 | h0
+      · exact absurd (Walk.eq_of_length_eq_zero h0) (Ne.symm hab)
+      · exact h0
+    refine ⟨a, q.append R, glue q R hq hR hab (fun z hz hz2 => hqS z hz (hRS z hz2)) ?_, ?_, ?_⟩
+    · by_contra hcon
+      have hq1 : q.length = 1 := by omega
+      have hR1 : R.length = 1 := by omega
+      have hqe : q.edges = [s(a, b)] := hlen1 q hq1
+      have hRe : R.edges = [s(b, a)] := hlen1 R hR1
+      rw [hqe, List.mem_singleton] at heq
+      have : e.1 ∈ R.edges := by rw [hRe, heq, Sym2.eq_swap]; exact List.mem_singleton_self _
+      exact he2 (hRE _ this)
+    · rw [Walk.edges_append, List.mem_append]; exact Or.inl heq
+    · rw [Walk.edges_append, List.mem_append]; exact Or.inr hgR
+  have hcr : (c₂.rotate a ha).IsCycle := hc₂.rotate ha
+  have hgr : g.1 ∈ (c₂.rotate a ha).edges := ((c₂.rotate_edges a ha).mem_iff).mpr hg
+  have hbr : b ∈ (c₂.rotate a ha).support := (Walk.mem_support_rotate_iff _ _ _).mpr hb
+  have hsuppr : ∀ z ∈ (c₂.rotate a ha).support, z ∈ c₂.support :=
+    fun z hz => (Walk.mem_support_rotate_iff _ _ _).mp hz
+  have hedgesr : ∀ z ∈ (c₂.rotate a ha).edges, z ∈ c₂.edges :=
+    fun z hz => ((c₂.rotate_edges a ha).mem_iff).mp hz
+  have hspec := (c₂.rotate a ha).take_spec hbr
+  have hedge : g.1 ∈ ((c₂.rotate a ha).takeUntil b hbr).edges ∨
+      g.1 ∈ ((c₂.rotate a ha).dropUntil b hbr).edges := by
+    rw [← hspec, Walk.edges_append, List.mem_append] at hgr
+    exact hgr
+  rcases hedge with h | h
+  · refine final ((c₂.rotate a ha).takeUntil b hbr).reverse ?_ ?_ ?_ ?_
+    · exact (Walk.isPath_reverse_iff _).mpr (hcr.isPath_takeUntil hbr)
+    · rw [Walk.edges_reverse, List.mem_reverse]; exact h
+    · intro z hz
+      rw [Walk.support_reverse, List.mem_reverse] at hz
+      exact hsuppr z (Walk.support_takeUntil_subset_support _ _ hz)
+    · intro z hz
+      rw [Walk.edges_reverse, List.mem_reverse] at hz
+      exact hedgesr z (Walk.edges_takeUntil_subset_edges _ _ hz)
+  · refine final ((c₂.rotate a ha).dropUntil b hbr) ?_ ?_ ?_ ?_
+    · have hcr' : (((c₂.rotate a ha).takeUntil b hbr).append
+          ((c₂.rotate a ha).dropUntil b hbr)).IsCycle := by rw [hspec]; exact hcr
+      exact hcr'.isPath_of_append_right (Walk.not_nil_of_ne hab)
+    · exact h
+    · intro z hz
+      exact hsuppr z (Walk.support_dropUntil_subset_support _ _ hz)
+    · intro z hz
+      exact hedgesr z (Walk.edges_dropUntil_subset_edges _ _ hz)
+
+end SimpleGraph
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_TwoVertexCycleSplice
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.TwoVertexCycleSplice
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.EdgeCycleChord
+Source: Erdos593/Graph/EdgeCycleChord.lean
+Normalized SHA-256: 4a4b0244eae07a4889e17f3d8510dd04844fc1af748310eb9929d70927a68cb2
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleChord
+
+namespace Erdos593
+namespace SimpleGraph
+
+set_option autoImplicit false
+
+/-!
+# Publication refinement: a literal edge as a cycle chord
+
+This module isolates the singleton-incidence case needed by the later
+quotient cycle-block intersection theorem.  It does not mention quotient
+blocks or construct the block-cut incidence forest.
+-/
+
+/-- If an actual edge is exactly the unordered pair of two distinct vertices
+on a simple cycle, then that edge and every selected cycle edge lie together
+on a simple cycle. -/
+theorem edgesOnCommonCycle_of_edge_endpoints_and_cycle
+    {V : Type*} (G : _root_.SimpleGraph V)
+    {e g : G.edgeSet} {x y v : V} {c : G.Walk v v}
+    (hc : c.IsCycle) (hxy : x ≠ y)
+    (hexy : e.1 = s(x, y))
+    (hx : x ∈ c.support) (hy : y ∈ c.support)
+    (hg : g.1 ∈ c.edges) :
+    EdgesOnCommonCycle G e g := by
+  open _root_.SimpleGraph in
+  classical
+  by_cases hec : e.1 ∈ c.edges
+  · exact ⟨v, c, hc, hec, hg⟩
+  have hadj : G.Adj x y := by
+    have he := e.2
+    rw [hexy] at he
+    exact he
+  obtain ⟨s, t, hst, hrot⟩ :
+      ∃ (s : G.Walk x v) (t : G.Walk v x), t.append s = c ∧ (s.append t).IsCycle :=
+    ⟨c.dropUntil x hx, c.takeUntil x hx, c.take_spec hx, hc.rotate hx⟩
+  have hedges : ∀ z : Sym2 V, z ∈ (s.append t).edges ↔ z ∈ c.edges := by
+    intro z
+    rw [← hst, Walk.edges_append, Walk.edges_append, List.mem_append, List.mem_append]
+    tauto
+  have hy' : y ∈ (s.append t).support := by
+    rw [← hst, Walk.mem_support_append_iff] at hy
+    rw [Walk.mem_support_append_iff]
+    tauto
+  have hec' : e.1 ∉ (s.append t).edges := fun h => hec ((hedges _).mp h)
+  have hgc' : g.1 ∈ (s.append t).edges := (hedges _).mpr hg
+  obtain ⟨p, q, hpq, hp⟩ :
+      ∃ (p : G.Walk x y) (q : G.Walk y x), p.append q = s.append t ∧ p.IsPath :=
+    ⟨(s.append t).takeUntil y hy', (s.append t).dropUntil y hy',
+      (s.append t).take_spec hy', hrot.isPath_takeUntil hy'⟩
+  have hcyc : (p.append q).IsCycle := by rw [hpq]; exact hrot
+  have hq : q.IsPath := hcyc.isPath_of_append_right (Walk.not_nil_of_ne hxy)
+  have hmem : ∀ z : Sym2 V, z ∈ (s.append t).edges ↔ z ∈ p.edges ∨ z ∈ q.edges := by
+    intro z
+    rw [← hpq, Walk.edges_append, List.mem_append]
+  rcases (hmem _).mp hgc' with hgp | hgq
+  · have hnot : s(y, x) ∉ p.edges := fun h =>
+      hec' ((hmem _).mpr (Or.inl (by rwa [hexy, Sym2.eq_swap])))
+    refine ⟨y, Walk.cons hadj.symm p, (Walk.cons_isCycle_iff _ _).mpr ⟨hp, hnot⟩, ?_, ?_⟩
+    · simp [Walk.edges_cons, hexy, Sym2.eq_swap]
+    · simp [Walk.edges_cons, hgp]
+  · have hnot : s(x, y) ∉ q.edges := fun h =>
+      hec' ((hmem _).mpr (Or.inr (by rwa [hexy])))
+    refine ⟨x, Walk.cons hadj q, (Walk.cons_isCycle_iff _ _).mpr ⟨hq, hnot⟩, ?_, ?_⟩
+    · simp [Walk.edges_cons, hexy]
+    · simp [Walk.edges_cons, hgq]
+
+end SimpleGraph
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleChord
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.EdgeCycleChord
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.EdgeCycleBlockIntersection
+Source: Erdos593/Graph/EdgeCycleBlockIntersection.lean
+Normalized SHA-256: a82cf315f0948d2be90b27e96b245cbda5947a3fa2cfbe688f2676eff16dc8c5
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleBlockIntersection
+
+namespace Erdos593
+namespace SimpleGraph
+
+set_option autoImplicit false
+
+/-!
+# Publication refinement: two cycle blocks meet in at most one vertex
+
+This module isolates only the quotient block-intersection theorem.  It does
+not exclude alternating block-incidence cycles, construct an incidence
+forest, specialize to a contracted graph, or package canonical atoms.
+-/
+
+namespace EdgeCycleBlock
+
+/-- Two edge-cycle blocks incident to the same two distinct vertices are
+equal. -/
+theorem eq_of_incident_two_vertices
+    {V : Type*} (G : _root_.SimpleGraph V)
+    {B C : EdgeCycleBlock G} {x y : V}
+    (hxy : x ≠ y)
+    (hxB : Incident G x B) (hyB : Incident G y B)
+    (hxC : Incident G x C) (hyC : Incident G y C) :
+    B = C := by
+  rcases (incident_iff_exists_endpoint G).1 hxB with ⟨eBx, heBxB, hxeBx⟩
+  rcases (incident_iff_exists_endpoint G).1 hyB with ⟨eBy, heByB, hyeBy⟩
+  rcases (incident_iff_exists_endpoint G).1 hxC with ⟨eCx, heCxC, hxeCx⟩
+  rcases (incident_iff_exists_endpoint G).1 hyC with ⟨eCy, heCyC, hyeCy⟩
+  change ofEdge G eBx = B at heBxB
+  change ofEdge G eBy = B at heByB
+  change ofEdge G eCx = C at heCxC
+  change ofEdge G eCy = C at heCyC
+  have hB : EdgeCycleLinked G eBx eBy :=
+    (ofEdge_eq_iff G).1 (heBxB.trans heByB.symm)
+  have hC : EdgeCycleLinked G eCx eCy :=
+    (ofEdge_eq_iff G).1 (heCxC.trans heCyC.symm)
+  have hCross : EdgeCycleLinked G eBx eCx := by
+    rcases hB with hBeq | ⟨vB, cB, hcB, heBx, heBy⟩
+    · subst eBy
+      have heBxy : eBx.1 = s(x, y) :=
+        (Sym2.mem_and_mem_iff hxy).1 ⟨hxeBx, hyeBy⟩
+      rcases hC with hCeq | ⟨vC, cC, hcC, heCx, heCy⟩
+      · subst eCy
+        have heCxy : eCx.1 = s(x, y) :=
+          (Sym2.mem_and_mem_iff hxy).1 ⟨hxeCx, hyeCy⟩
+        exact Or.inl (Subtype.ext (heBxy.trans heCxy.symm))
+      · have hxC' : x ∈ cC.support :=
+          cC.mem_support_of_mem_edges heCx hxeCx
+        have hyC' : y ∈ cC.support :=
+          cC.mem_support_of_mem_edges heCy hyeCy
+        exact Or.inr
+          (edgesOnCommonCycle_of_edge_endpoints_and_cycle G hcC hxy heBxy
+            hxC' hyC' heCx)
+    · have hxB' : x ∈ cB.support :=
+        cB.mem_support_of_mem_edges heBx hxeBx
+      have hyB' : y ∈ cB.support :=
+        cB.mem_support_of_mem_edges heBy hyeBy
+      rcases hC with hCeq | ⟨vC, cC, hcC, heCx, heCy⟩
+      · subst eCy
+        have heCxy : eCx.1 = s(x, y) :=
+          (Sym2.mem_and_mem_iff hxy).1 ⟨hxeCx, hyeCy⟩
+        exact Or.inr (edgesOnCommonCycle_symm G
+          (edgesOnCommonCycle_of_edge_endpoints_and_cycle G hcB hxy heCxy
+            hxB' hyB' heBx))
+      · have hxC' : x ∈ cC.support :=
+          cC.mem_support_of_mem_edges heCx hxeCx
+        have hyC' : y ∈ cC.support :=
+          cC.mem_support_of_mem_edges heCy hyeCy
+        exact Or.inr
+          (edgesOnCommonCycle_of_cycles_share_two_vertices G hcB hcC hxy
+            hxB' hyB' hxC' hyC' heBx heCx)
+  exact heBxB.symm.trans (((ofEdge_eq_iff G).2 hCross).trans heCxC)
+
+end EdgeCycleBlock
+
+end SimpleGraph
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleBlockIntersection
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.EdgeCycleBlockIntersection
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrder
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportForestOrder.lean
+Normalized SHA-256: fc44639585038e980516bcd2f5db9dc50d7a9f6d297fabef65b242905452afd8
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportForestOrder
+
+/-!
+# Leaf-elimination orders for finite forests
+
+This is the graph-theoretic core needed when a support-overlap graph is
+acyclic.  Every finite induced subgraph of a forest has an isolated vertex or
+a leaf, so its vertices can be ordered such that each vertex has at most one
+neighbour later in the order.
+-/
+
+namespace SimpleGraph
+
+universe u
+
+variable {V : Type u}
+
+/-- `tailAtMostOneNeighbor G l` says that every vertex in the list has at
+most one `G`-neighbour later in the list. -/
+def tailAtMostOneNeighbor (G : SimpleGraph V) : List V → Prop
+  | [] => True
+  | q :: tail =>
+      tailAtMostOneNeighbor G tail ∧
+        ∀ u ∈ tail, ∀ w ∈ tail, G.Adj q u → G.Adj q w → u = w
+
+/-- A nonempty finite acyclic graph has a vertex with at most one neighbour.
+
+The result deliberately includes isolated vertices: this makes it apply to
+arbitrary induced subgraphs during leaf elimination. -/
+theorem IsAcyclic.exists_vertex_adj_unique
+    {G : SimpleGraph V} [Fintype V] [DecidableRel G.Adj] [Nonempty V]
+    (hG : G.IsAcyclic) :
+    ∃ q : V, ∀ ⦃u w : V⦄, G.Adj q u → G.Adj q w → u = w := by
+  classical
+  let x : V := Classical.choice (inferInstance : Nonempty V)
+  by_cases hx : G.degree x = 0
+  · refine ⟨x, ?_⟩
+    intro u w hxu _
+    have hpos : 0 < G.degree x := (G.degree_pos_iff_exists_adj x).mpr ⟨u, hxu⟩
+    omega
+  · have hpos : 0 < G.degree x := Nat.pos_of_ne_zero hx
+    obtain ⟨y, hxy⟩ := (G.degree_pos_iff_exists_adj x).mp hpos
+    let c : G.ConnectedComponent := G.connectedComponentMk x
+    have hxc : x ∈ c := by
+      exact SimpleGraph.ConnectedComponent.connectedComponentMk_mem (G := G)
+    have hyc : y ∈ c := c.mem_supp_of_adj_mem_supp hxc hxy
+    have hne : (⟨x, hxc⟩ : c) ≠ ⟨y, hyc⟩ := by
+      intro h
+      exact hxy.ne (congrArg Subtype.val h)
+    letI : Nontrivial c := ⟨⟨x, hxc⟩, ⟨y, hyc⟩, hne⟩
+    obtain ⟨q, hq⟩ := (hG.isTree_connectedComponent c).exists_vert_degree_one_of_nontrivial
+    have huniq : ∃! z : c, c.toSimpleGraph.Adj q z :=
+      (SimpleGraph.degree_eq_one_iff_existsUnique_adj).mp hq
+    refine ⟨q, ?_⟩
+    intro u w hqu hqw
+    have huc : u ∈ c := c.mem_supp_of_adj_mem_supp q.property hqu
+    have hwc : w ∈ c := c.mem_supp_of_adj_mem_supp q.property hqw
+    have hqu' : c.toSimpleGraph.Adj q ⟨u, huc⟩ :=
+      (c.toSimpleGraph_adj q.property huc).mpr hqu
+    have hqw' : c.toSimpleGraph.Adj q ⟨w, hwc⟩ :=
+      (c.toSimpleGraph_adj q.property hwc).mpr hqw
+    exact congrArg Subtype.val (huniq.unique hqu' hqw')
+
+/-- Every finite set of vertices in an acyclic graph has a noduplicated
+leaf-elimination order.  In the resulting order each vertex has at most one
+neighbour in its tail. -/
+theorem IsAcyclic.exists_finset_tailAtMostOneNeighborOrder
+    {G : SimpleGraph V} [DecidableEq V] [DecidableRel G.Adj]
+    (hG : G.IsAcyclic) (s : Finset V) :
+    ∃ l : List V, l.Nodup ∧ l.toFinset = s ∧ G.tailAtMostOneNeighbor l := by
+  classical
+  induction s using Finset.strongInduction with
+  | H s ih =>
+    by_cases hs : s = ∅
+    · subst s
+      exact ⟨[], List.nodup_nil, by simp, trivial⟩
+    · have hsne : s.Nonempty := Finset.nonempty_iff_ne_empty.mpr hs
+      letI : Nonempty s := hsne.to_subtype
+      obtain ⟨q, hq⟩ :=
+        IsAcyclic.exists_vertex_adj_unique (hG.induce (↑s : Set V))
+      obtain ⟨l, hlNodup, hlFinset, hlTail⟩ :=
+        ih (s.erase q) (Finset.erase_ssubset q.property)
+      refine ⟨q.val :: l, ?_, ?_, ?_⟩
+      · rw [List.nodup_cons]
+        refine ⟨?_, hlNodup⟩
+        intro hqmem
+        have hqerase : q.val ∈ s.erase q.val := by
+          rw [← hlFinset]
+          exact List.mem_toFinset.mpr hqmem
+        exact (Finset.mem_erase.mp hqerase).1 rfl
+      · rw [List.toFinset_cons, hlFinset, Finset.insert_erase q.property]
+      · change
+          tailAtMostOneNeighbor G l ∧
+            ∀ u ∈ l, ∀ w ∈ l, G.Adj q.val u → G.Adj q.val w → u = w
+        refine ⟨hlTail, ?_⟩
+        intro u hu w hw hqu hqw
+        have huerase : u ∈ s.erase q.val := by
+          rw [← hlFinset]
+          exact List.mem_toFinset.mpr hu
+        have hwerase : w ∈ s.erase q.val := by
+          rw [← hlFinset]
+          exact List.mem_toFinset.mpr hw
+        have hqu' : (G.induce (↑s : Set V)).Adj q
+            ⟨u, Finset.mem_of_mem_erase huerase⟩ :=
+          SimpleGraph.induce_adj.mpr hqu
+        have hqw' : (G.induce (↑s : Set V)).Adj q
+            ⟨w, Finset.mem_of_mem_erase hwerase⟩ :=
+          SimpleGraph.induce_adj.mpr hqw
+        exact congrArg Subtype.val (hq hqu' hqw')
+
+/-- A finite acyclic graph has a noduplicated leaf-elimination order of all
+of its vertices. -/
+theorem IsAcyclic.exists_tailAtMostOneNeighborOrder
+    {G : SimpleGraph V} [Fintype V] [DecidableEq V] [DecidableRel G.Adj]
+    (hG : G.IsAcyclic) :
+    ∃ l : List V, l.Nodup ∧ l.toFinset = Finset.univ ∧ G.tailAtMostOneNeighbor l :=
+  hG.exists_finset_tailAtMostOneNeighborOrder Finset.univ
+
+end SimpleGraph
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportForestOrder
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrder
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrder
+Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrder.lean
+Normalized SHA-256: b4dac99c8ae35478542ae7a4803998ed19ec84771cdf4c27fab0df0c317a4206
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceForestOrder
+
+/-!
+# Dynamic leaf orders for bipartite incidence forests
+
+For a finite set of left vertices in a bipartite forest, this module produces
+an order in which each left vertex shares at most one right vertex with its
+remaining tail.  The right-side carrier is pruned at every induction step to
+points adjacent to at least two currently remaining left vertices.  This is
+strictly weaker than requiring the projected left-overlap graph to be a
+forest: many left vertices may share one common right vertex.
+
+The sequence-lift-specific incidence graph is connected to this generic core
+in a later module.
+-/
+
+namespace SimpleGraph
+
+universe u v
+
+variable {A : Type u} {P : Type v}
+
+/-- The undirected bipartite graph induced by a left-to-right relation. -/
+def bipartiteIncidenceGraph (r : A → P → Prop) : SimpleGraph (A ⊕ P) :=
+  SimpleGraph.fromRel fun x y =>
+    match x, y with
+    | .inl a, .inr p => r a p
+    | _, _ => False
+
+/-- The left-to-right adjacency predicate of `bipartiteIncidenceGraph`. -/
+@[simp]
+theorem bipartiteIncidenceGraph_adj_inl_inr_iff
+    (r : A → P → Prop) (a : A) (p : P) :
+    (bipartiteIncidenceGraph r).Adj (.inl a) (.inr p) ↔ r a p := by
+  simp [bipartiteIncidenceGraph]
+
+/-- The right-to-left adjacency predicate of `bipartiteIncidenceGraph`. -/
+@[simp]
+theorem bipartiteIncidenceGraph_adj_inr_inl_iff
+    (r : A → P → Prop) (a : A) (p : P) :
+    (bipartiteIncidenceGraph r).Adj (.inr p) (.inl a) ↔ r a p := by
+  simp [bipartiteIncidenceGraph]
+
+/-- Right vertices incident to at least two members of a finite left set. -/
+def sharedRightPoints (r : A → P → Prop)
+    [Fintype P] [DecidableEq P] [DecidableRel r]
+    (t : Finset A) : Finset P :=
+  Finset.univ.filter fun p => 2 ≤ (t.filter fun a => r a p).card
+
+/-- The dynamically pruned incidence carrier: all current left vertices and
+only right vertices shared by at least two of them. -/
+def bipartitePruneVertices (r : A → P → Prop)
+    [Fintype P] [DecidableEq A] [DecidableEq P] [DecidableRel r]
+    (t : Finset A) : Finset (A ⊕ P) :=
+  (t.image Sum.inl) ∪ ((sharedRightPoints r t).image Sum.inr)
+
+@[simp]
+theorem mem_sharedRightPoints
+    (r : A → P → Prop) [Fintype P] [DecidableEq P] [DecidableRel r]
+    (t : Finset A) (p : P) :
+    p ∈ sharedRightPoints r t ↔ 2 ≤ (t.filter fun a => r a p).card := by
+  simp [sharedRightPoints]
+
+@[simp]
+theorem mem_bipartitePruneVertices_inl
+    (r : A → P → Prop) [Fintype P]
+    [DecidableEq A] [DecidableEq P] [DecidableRel r]
+    (t : Finset A) (a : A) :
+    .inl a ∈ bipartitePruneVertices r t ↔ a ∈ t := by
+  simp [bipartitePruneVertices]
+
+@[simp]
+theorem mem_bipartitePruneVertices_inr
+    (r : A → P → Prop) [Fintype P]
+    [DecidableEq A] [DecidableEq P] [DecidableRel r]
+    (t : Finset A) (p : P) :
+    .inr p ∈ bipartitePruneVertices r t ↔ p ∈ sharedRightPoints r t := by
+  simp [bipartitePruneVertices]
+
+/-- A left-vertex order in which every head shares at most one right point
+with a member of its remaining tail. -/
+def bipartiteTailPointSubsingleton (r : A → P → Prop) : List A → Prop
+  | [] => True
+  | a :: tail =>
+      bipartiteTailPointSubsingleton r tail ∧
+        ∀ p p', r a p → r a p' →
+          (∃ b ∈ tail, r b p) →
+          (∃ c ∈ tail, r c p') → p = p'
+
+/-- In a nonempty finite left set of a bipartite forest, some left vertex has
+at most one neighbour in the dynamically pruned incidence graph.  A right
+leaf is impossible because every retained right vertex has two left
+neighbours. -/
+theorem IsAcyclic.exists_bipartiteLeftVertex_adj_unique
+    (r : A → P → Prop) [Fintype P] [DecidableEq A] [DecidableEq P]
+    [DecidableRel r] (hG : (bipartiteIncidenceGraph r).IsAcyclic)
+    {t : Finset A} (ht : t.Nonempty) :
+    ∃ a ∈ t, ∀ ⦃z w : A ⊕ P⦄,
+      z ∈ bipartitePruneVertices r t →
+      w ∈ bipartitePruneVertices r t →
+      (bipartiteIncidenceGraph r).Adj (.inl a) z →
+      (bipartiteIncidenceGraph r).Adj (.inl a) w → z = w := by
+  classical
+  let s : Finset (A ⊕ P) := bipartitePruneVertices r t
+  have hs : s.Nonempty := by
+    obtain ⟨a, ha⟩ := ht
+    exact ⟨.inl a, (mem_bipartitePruneVertices_inl r t a).mpr ha⟩
+  letI : Nonempty s := hs.to_subtype
+  obtain ⟨q, hq⟩ :=
+    SimpleGraph.IsAcyclic.exists_vertex_adj_unique
+      (hG.induce (↑s : Set (A ⊕ P)))
+  rcases q with ⟨q, hqmem⟩
+  rcases q with a | p
+  · have ha : a ∈ t := (mem_bipartitePruneVertices_inl r t a).mp hqmem
+    refine ⟨a, ha, ?_⟩
+    intro z w hz hw haz haw
+    let qa : ↑(↑s : Set (A ⊕ P)) := ⟨.inl a, hqmem⟩
+    let z' : ↑(↑s : Set (A ⊕ P)) := ⟨z, hz⟩
+    let w' : ↑(↑s : Set (A ⊕ P)) := ⟨w, hw⟩
+    have haz' :
+        (SimpleGraph.induce (↑s : Set (A ⊕ P))
+          (bipartiteIncidenceGraph r)).Adj qa z' := by
+      rw [SimpleGraph.induce_adj]
+      change (bipartiteIncidenceGraph r).Adj (.inl a) z
+      exact haz
+    have haw' :
+        (SimpleGraph.induce (↑s : Set (A ⊕ P))
+          (bipartiteIncidenceGraph r)).Adj qa w' := by
+      rw [SimpleGraph.induce_adj]
+      change (bipartiteIncidenceGraph r).Adj (.inl a) w
+      exact haw
+    have heq : z' = w' := hq haz' haw'
+    simpa [z', w'] using congrArg Subtype.val heq
+  · have hp : p ∈ sharedRightPoints r t :=
+      (mem_bipartitePruneVertices_inr r t p).mp hqmem
+    have hcard : 2 ≤ (t.filter fun a => r a p).card :=
+      (mem_sharedRightPoints r t p).mp hp
+    have htwo : 1 < (t.filter fun a => r a p).card := by
+      omega
+    obtain ⟨a, ha, b, hb, hab⟩ := Finset.one_lt_card.mp htwo
+    rcases Finset.mem_filter.mp ha with ⟨ha, hap⟩
+    rcases Finset.mem_filter.mp hb with ⟨hb, hbp⟩
+    have hma : (.inl a : A ⊕ P) ∈ s :=
+      (mem_bipartitePruneVertices_inl r t a).mpr ha
+    have hmb : (.inl b : A ⊕ P) ∈ s :=
+      (mem_bipartitePruneVertices_inl r t b).mpr hb
+    let qa : ↑(↑s : Set (A ⊕ P)) := ⟨.inr p, hqmem⟩
+    let za : ↑(↑s : Set (A ⊕ P)) := ⟨.inl a, hma⟩
+    let zb : ↑(↑s : Set (A ⊕ P)) := ⟨.inl b, hmb⟩
+    have hqza :
+        (SimpleGraph.induce (↑s : Set (A ⊕ P))
+          (bipartiteIncidenceGraph r)).Adj qa za := by
+      rw [SimpleGraph.induce_adj]
+      change (bipartiteIncidenceGraph r).Adj (.inr p) (.inl a)
+      exact (bipartiteIncidenceGraph_adj_inr_inl_iff r a p).mpr hap
+    have hqzb :
+        (SimpleGraph.induce (↑s : Set (A ⊕ P))
+          (bipartiteIncidenceGraph r)).Adj qa zb := by
+      rw [SimpleGraph.induce_adj]
+      change (bipartiteIncidenceGraph r).Adj (.inr p) (.inl b)
+      exact (bipartiteIncidenceGraph_adj_inr_inl_iff r b p).mpr hbp
+    have heq : za = zb := hq hqza hqzb
+    have heq' : (.inl a : A ⊕ P) = .inl b := by
+      simpa [za, zb] using congrArg Subtype.val heq
+    exact False.elim (hab (Sum.inl.inj heq'))
+
+/-- Every finite set of left vertices in an acyclic bipartite incidence graph
+has a noduplicated order with at most one shared right point at every head.
+The point carrier is recomputed after each removal. -/
+theorem IsAcyclic.exists_finset_bipartiteTailPointSubsingletonOrder
+    (r : A → P → Prop) [Fintype P] [DecidableEq A] [DecidableEq P]
+    [DecidableRel r] (hG : (bipartiteIncidenceGraph r).IsAcyclic)
+    (t : Finset A) :
+    ∃ l : List A,
+      l.Nodup ∧ l.toFinset = t ∧ bipartiteTailPointSubsingleton r l := by
+  classical
+  induction t using Finset.strongInduction with
+  | H t ih =>
+    by_cases ht : t.Nonempty
+    · obtain ⟨a, ha, hleaf⟩ := hG.exists_bipartiteLeftVertex_adj_unique r ht
+      obtain ⟨l, hlnd, hlt, hlcoh⟩ :=
+        ih (t.erase a) (Finset.erase_ssubset ha)
+      refine ⟨a :: l, ?_, ?_, ?_⟩
+      · rw [List.nodup_cons]
+        refine ⟨?_, hlnd⟩
+        intro hal
+        have hae : a ∈ t.erase a := by
+          rw [← hlt]
+          exact List.mem_toFinset.mpr hal
+        exact (Finset.mem_erase.mp hae).1 rfl
+      · rw [List.toFinset_cons, hlt, Finset.insert_erase ha]
+      · change bipartiteTailPointSubsingleton r l ∧
+          ∀ p p', r a p → r a p' →
+            (∃ b ∈ l, r b p) →
+            (∃ c ∈ l, r c p') → p = p'
+        refine ⟨hlcoh, ?_⟩
+        intro p p' hap hap' hpt hp't
+        rcases hpt with ⟨b, hb, hbp⟩
+        rcases hp't with ⟨c, hc, hcp'⟩
+        have hbe : b ∈ t.erase a := by
+          rw [← hlt]
+          exact List.mem_toFinset.mpr hb
+        have hce : c ∈ t.erase a := by
+          rw [← hlt]
+          exact List.mem_toFinset.mpr hc
+        have hbT : b ∈ t := (Finset.mem_erase.mp hbe).2
+        have hcT : c ∈ t := (Finset.mem_erase.mp hce).2
+        have hab : a ≠ b := by
+          intro hab
+          subst b
+          exact (Finset.mem_erase.mp hbe).1 rfl
+        have hac : a ≠ c := by
+          intro hac
+          subst c
+          exact (Finset.mem_erase.mp hce).1 rfl
+        have hpactive : (.inr p : A ⊕ P) ∈ bipartitePruneVertices r t := by
+          rw [mem_bipartitePruneVertices_inr]
+          rw [mem_sharedRightPoints]
+          have hcard : 1 < (t.filter fun x => r x p).card :=
+            Finset.one_lt_card.mpr ⟨a, Finset.mem_filter.mpr ⟨ha, hap⟩,
+              b, Finset.mem_filter.mpr ⟨hbT, hbp⟩, hab⟩
+          omega
+        have hp'active : (.inr p' : A ⊕ P) ∈ bipartitePruneVertices r t := by
+          rw [mem_bipartitePruneVertices_inr]
+          rw [mem_sharedRightPoints]
+          have hcard : 1 < (t.filter fun x => r x p').card :=
+            Finset.one_lt_card.mpr ⟨a, Finset.mem_filter.mpr ⟨ha, hap'⟩,
+              c, Finset.mem_filter.mpr ⟨hcT, hcp'⟩, hac⟩
+          omega
+        exact Sum.inr.inj (hleaf hpactive hp'active
+          ((bipartiteIncidenceGraph_adj_inl_inr_iff r a p).mpr hap)
+          ((bipartiteIncidenceGraph_adj_inl_inr_iff r a p').mpr hap'))
+    · have htempty : t = ∅ := Finset.not_nonempty_iff_eq_empty.mp ht
+      subst t
+      exact ⟨[], by simp, by simp, trivial⟩
+
+end SimpleGraph
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceForestOrder
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrder
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.EdgeCycleBlockIncidenceForest
+Source: Erdos593/Graph/EdgeCycleBlockIncidenceForest.lean
+Normalized SHA-256: a053b252373196ef6b3e1b2a4774303da3b38538364bcb0d1394bbe15f3c5783
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleBlockIncidenceForest
+
+namespace Erdos593
+namespace SimpleGraph
+
+set_option autoImplicit false
+
+namespace EdgeCycleBlock
+
+/-!
+# The quotient cycle-block incidence forest
+
+This module exposes the bipartite graph whose left vertices are quotient
+cycle blocks and whose right vertices are graph vertices.  Its acyclicity is
+the next graph-theoretic seam after the welded two-vertex block-intersection
+theorem.  Contracted-graph specialization and canonical atom packaging remain
+separate downstream obligations.
+-/
+
+/-- The representative-independent block/point incidence graph. -/
+def incidenceGraph {V : Type*} (G : _root_.SimpleGraph V) :
+    _root_.SimpleGraph (EdgeCycleBlock G ⊕ V) :=
+  _root_.SimpleGraph.bipartiteIncidenceGraph
+    (fun B v => Incident G v B)
+
+@[simp]
+theorem incidenceGraph_adj_inl_inr_iff {V : Type*}
+    (G : _root_.SimpleGraph V) (B : EdgeCycleBlock G) (v : V) :
+    (incidenceGraph G).Adj (.inl B) (.inr v) ↔ Incident G v B := by
+  simp [incidenceGraph]
+
+@[simp]
+theorem incidenceGraph_adj_inr_inl_iff {V : Type*}
+    (G : _root_.SimpleGraph V) (B : EdgeCycleBlock G) (v : V) :
+    (incidenceGraph G).Adj (.inr v) (.inl B) ↔ Incident G v B := by
+  simp [incidenceGraph]
+
+/-- Quotient cycle blocks and their incident vertices form a forest. -/
+theorem incidenceGraph_isAcyclic {V : Type*}
+    (G : _root_.SimpleGraph V) :
+    (incidenceGraph G).IsAcyclic := by
+  open _root_.SimpleGraph in
+  classical
+  have mem_edge_of_mem_support {a b : V} (p : G.Walk a b) {w : V} (hw : w ∈ p.support) :
+      w = b ∨ ∃ e ∈ p.edges, w ∈ e := by
+    induction p with
+    | nil => left; simpa using hw
+    | @cons a' m b' h q ih =>
+        rw [Walk.support_cons, List.mem_cons] at hw
+        rcases hw with rfl | hw'
+        · exact Or.inr ⟨s(w, m), by simp, by simp⟩
+        · rcases ih hw' with h1 | ⟨e, he, hwe⟩
+          · exact Or.inl h1
+          · exact Or.inr ⟨e, by simp [he], hwe⟩
+
+  have exists_mem_edges_of_mem_support {a b : V} (p : G.Walk a b) (hne : p.length ≠ 0) {u : V}
+      (hu : u ∈ p.support) : ∃ e ∈ p.edges, u ∈ e := by
+    induction p with
+    | nil => simp at hne
+    | @cons a' m b' h q ih =>
+      rw [Walk.support_cons, List.mem_cons] at hu
+      rcases hu with rfl | hu
+      · exact ⟨s(u, m), by simp, by simp⟩
+      · rcases mem_edge_of_mem_support q hu with rfl | ⟨e, he, hue⟩
+        · rcases Nat.eq_zero_or_pos q.length with h0 | h0
+          · have hm : m = u := Walk.eq_of_length_eq_zero h0
+            subst hm
+            exact ⟨s(a', m), by simp, by simp⟩
+          · obtain ⟨e, he, hue⟩ := ih (by omega) hu
+            exact ⟨e, by simp [he], hue⟩
+        · exact ⟨e, by simp [he], hue⟩
+
+  have exists_block_path {B : EdgeCycleBlock G} {x y : V} (hxy : x ≠ y)
+      (hx : Incident G x B) (hy : Incident G y B) :
+      ∃ p : G.Walk x y, p.IsPath ∧ (∀ e : G.edgeSet, e.1 ∈ p.edges → ofEdge G e = B) ∧
+        (∀ w ∈ p.support, Incident G w B) := by
+    classical
+    obtain ⟨e, heB, hxe⟩ := (incident_iff_exists_endpoint G).1 hx
+    obtain ⟨f, hfB, hyf⟩ := (incident_iff_exists_endpoint G).1 hy
+    change ofEdge G e = B at heB
+    change ofEdge G f = B at hfB
+    have hef : EdgeCycleLinked G e f := (ofEdge_eq_iff G).1 (heB.trans hfB.symm)
+    rcases hef with rfl | ⟨w, c, hc, hec, hfc⟩
+    · have hexy : (e : Sym2 V) = s(x, y) := (Sym2.mem_and_mem_iff hxy).1 ⟨hxe, hyf⟩
+      have hadj : G.Adj x y := by
+        have he2 := e.2
+        rw [hexy] at he2
+        exact he2
+      refine ⟨Walk.cons hadj Walk.nil, ?_, ?_, ?_⟩
+      · simp [Walk.isPath_def, hxy]
+      · intro g hg
+        simp only [Walk.edges_cons, Walk.edges_nil, List.mem_singleton] at hg
+        have : g = e := Subtype.ext (hg.trans hexy.symm)
+        rw [this]; exact heB
+      · intro u hu
+        simp only [Walk.support_cons, Walk.support_nil, List.mem_cons] at hu
+        rcases hu with rfl | hu
+        · exact hx
+        · rcases hu with rfl | hu
+          · exact hy
+          · exact absurd hu (List.not_mem_nil)
+    · have hxc : x ∈ c.support := c.mem_support_of_mem_edges hec hxe
+      have hyc : y ∈ c.support := c.mem_support_of_mem_edges hfc hyf
+      have hc' : (c.rotate x hxc).IsCycle := hc.rotate hxc
+      have hyc' : y ∈ (c.rotate x hxc).support := (Walk.mem_support_rotate_iff _ _ _).mpr hyc
+      have hedges : ∀ z : Sym2 V, z ∈ (c.rotate x hxc).edges → z ∈ c.edges :=
+        fun z hz => ((c.rotate_edges x hxc).mem_iff).mp hz
+      have hsupp : ∀ z : V, z ∈ (c.rotate x hxc).support → z ∈ c.support :=
+        fun z hz => (Walk.mem_support_rotate_iff _ _ _).mp hz
+      refine ⟨(c.rotate x hxc).takeUntil y hyc', hc'.isPath_takeUntil hyc', ?_, ?_⟩
+      · intro g hg
+        have hgc : (g : Sym2 V) ∈ c.edges :=
+          hedges _ (Walk.edges_takeUntil_subset_edges _ _ hg)
+        have : EdgeCycleLinked G g e := Or.inr ⟨w, c, hc, hgc, hec⟩
+        exact ((ofEdge_eq_iff G).2 this).trans heB
+      · intro u hu
+        have huc : u ∈ c.support :=
+          hsupp _ (Walk.support_takeUntil_subset_support _ _ hu)
+        have hcne : c.length ≠ 0 := by
+          intro h0
+          exact hc.ne_nil (Walk.eq_nil_iff_nil.mpr (Walk.length_eq_zero_iff.mp h0))
+        obtain ⟨g, hgc, hug⟩ := exists_mem_edges_of_mem_support c hcne huc
+        have hgE : g ∈ G.edgeSet := c.edges_subset_edgeSet hgc
+        have : EdgeCycleLinked G ⟨g, hgE⟩ e := Or.inr ⟨w, c, hc, hgc, hec⟩
+        refine incident_of_mem_endpoint G (e := ⟨g, hgE⟩) ?_ hug
+        change ofEdge G ⟨g, hgE⟩ = B
+        exact ((ofEdge_eq_iff G).2 this).trans heB
+
+  have exists_last_mem {P : V → Prop} {a b : V} (p : G.Walk a b)
+      (h : ∃ u ∈ p.support, P u) :
+      ∃ (z : V) (q : G.Walk z b), P z ∧ (∀ u ∈ q.support, u ≠ z → ¬ P u) ∧
+        (∀ u ∈ q.support, u ∈ p.support) := by
+    classical
+    induction p with
+    | @nil a' =>
+        obtain ⟨u, hu, hPu⟩ := h
+        simp only [Walk.support_nil, List.mem_singleton] at hu
+        subst hu
+        exact ⟨u, Walk.nil, hPu, by simp, by simp⟩
+    | @cons a' m b' hadj q ih =>
+        by_cases hq : ∃ u ∈ q.support, P u
+        · obtain ⟨z, r, hz, hr, hsub⟩ := ih hq
+          exact ⟨z, r, hz, hr, fun u hu => by
+            rw [Walk.support_cons, List.mem_cons]
+            exact Or.inr (hsub u hu)⟩
+        · push Not at hq
+          obtain ⟨u, hu, hPu⟩ := h
+          rw [Walk.support_cons, List.mem_cons] at hu
+          have hPa : P a' := by
+            rcases hu with rfl | hu
+            · exact hPu
+            · exact absurd hPu (hq u hu)
+          refine ⟨a', Walk.cons hadj q, hPa, ?_, fun u hu => hu⟩
+          intro u hu hune
+          rw [Walk.support_cons, List.mem_cons] at hu
+          rcases hu with rfl | hu
+          · exact absurd rfl hune
+          · exact hq u hu
+
+  have no_external_link {B C : EdgeCycleBlock G} {v x y : V} (W : G.Walk x y)
+      (hBC : B ≠ C) (hvB : Incident G v B) (hvC : Incident G v C)
+      (hxB : Incident G x B) (hyC : Incident G y C)
+      (hvW : v ∉ W.support) : False := by
+    classical
+    have hshare : ∀ w : V, Incident G w B → Incident G w C → w = v := by
+      intro w hwB hwC
+      by_contra hwv
+      exact hBC (eq_of_incident_two_vertices G hwv hwB hvB hwC hvC)
+    obtain ⟨z, W₂, hzB, hW₂B, hW₂sub⟩ :=
+      exists_last_mem (P := fun u => Incident G u B) W ⟨x, W.start_mem_support, hxB⟩
+    obtain ⟨u, R, huC, hRC, hRsub⟩ :=
+      exists_last_mem (P := fun w => Incident G w C) W₂.reverse
+        ⟨y, by rw [Walk.support_reverse, List.mem_reverse]; exact W₂.end_mem_support, hyC⟩
+    set W₃ : G.Walk z u := R.reverse with hW₃
+    have hW₃sub : ∀ w ∈ W₃.support, w ∈ W₂.support := by
+      intro w hw
+      rw [hW₃, Walk.support_reverse, List.mem_reverse] at hw
+      have := hRsub w hw
+      rwa [Walk.support_reverse, List.mem_reverse] at this
+    have hW₃C : ∀ w ∈ W₃.support, w ≠ u → ¬ Incident G w C := by
+      intro w hw hwu
+      refine hRC w ?_ hwu
+      rw [hW₃, Walk.support_reverse, List.mem_reverse] at hw
+      exact hw
+    have hW₃W : ∀ w ∈ W₃.support, w ∈ W.support := fun w hw => hW₂sub w (hW₃sub w hw)
+    have hzv : z ≠ v := by
+      intro h
+      exact hvW (h ▸ hW₂sub z W₂.start_mem_support)
+    have huv : u ≠ v := by
+      intro h
+      exact hvW (h ▸ hW₃W u W₃.end_mem_support)
+    have hzu : z ≠ u := by
+      intro h
+      subst h
+      exact hzv (hshare z hzB huC)
+    -- the two block paths
+    obtain ⟨P₁, hP₁path, hP₁edge, hP₁supp⟩ :=
+      exists_block_path (B := B) (Ne.symm hzv) hvB hzB
+    obtain ⟨P₂, hP₂path, hP₂edge, hP₂supp⟩ :=
+      exists_block_path (B := C) huv huC hvC
+    set W₄ : G.Walk z u := W₃.bypass with hW₄
+    have hW₄path : W₄.IsPath := W₃.bypass_isPath
+    have hW₄sub : ∀ w ∈ W₄.support, w ∈ W₃.support := fun w hw =>
+      Walk.support_bypass_subset_support _ hw
+    have hW₄B : ∀ w ∈ W₄.support, w ≠ z → ¬ Incident G w B := fun w hw hwz =>
+      hW₂B w (hW₃sub w (hW₄sub w hw)) hwz
+    have hW₄C : ∀ w ∈ W₄.support, w ≠ u → ¬ Incident G w C := fun w hw hwu =>
+      hW₃C w (hW₄sub w hw) hwu
+    have hP₁len : P₁.length ≠ 0 := fun h => hzv (Walk.eq_of_length_eq_zero h).symm
+    have hP₂len : P₂.length ≠ 0 := fun h => huv (Walk.eq_of_length_eq_zero h)
+    have hW₄len : W₄.length ≠ 0 := fun h => hzu (Walk.eq_of_length_eq_zero h)
+    -- `P₁` and `W₄` meet only at `z`
+    have hmeet₁ : ∀ w ∈ P₁.support, w ∈ W₄.support → w = z := by
+      intro w hw hw'
+      by_contra hwz
+      exact hW₄B w hw' hwz (hP₁supp w hw)
+    have hq : (P₁.append W₄).IsPath := by
+      rw [Walk.isPath_def, Walk.support_append, List.nodup_append]
+      refine ⟨hP₁path.support_nodup, hW₄path.support_nodup.tail, ?_⟩
+      intro w hw w' hw'
+      rintro rfl
+      have hwW₄ : w ∈ W₄.support := by
+        rw [← W₄.cons_tail_support]
+        exact List.mem_cons_of_mem _ hw'
+      have hwz : w = z := hmeet₁ w hw hwW₄
+      subst hwz
+      have hnot : w ∉ W₄.support.tail := by
+        have hnd := hW₄path.support_nodup
+        rw [← W₄.cons_tail_support, List.nodup_cons] at hnd
+        exact hnd.1
+      exact hnot hw'
+    have hdisj : ((P₁.append W₄).support.tail).Disjoint (P₂.support.tail) := by
+      intro w hw hw'
+      have hwC : Incident G w C := hP₂supp w (List.mem_of_mem_tail hw')
+      rw [Walk.tail_support_append, List.mem_append] at hw
+      rcases hw with hw | hw
+      · have hwB : Incident G w B := hP₁supp w (List.mem_of_mem_tail hw)
+        have hwv : w = v := hshare w hwB hwC
+        subst hwv
+        have hvnot : w ∉ P₁.support.tail := by
+          have hnd := hP₁path.support_nodup
+          rw [← P₁.cons_tail_support, List.nodup_cons] at hnd
+          exact hnd.1
+        exact hvnot hw
+      · have hwW₄ : w ∈ W₄.support := List.mem_of_mem_tail hw
+        have hwu : w = u := by
+          by_contra hwu
+          exact hW₄C w hwW₄ hwu hwC
+        subst hwu
+        have hunot : w ∉ P₂.support.tail := by
+          have hnd := hP₂path.support_nodup
+          rw [← P₂.cons_tail_support, List.nodup_cons] at hnd
+          exact hnd.1
+        exact hunot hw'
+    have hcyc : ((P₁.append W₄).append P₂).IsCycle := by
+      refine hq.isCycle_append hP₂path hdisj ?_
+      left
+      rw [Walk.length_append]
+      omega
+    obtain ⟨e, heP₁, -⟩ := exists_mem_edges_of_mem_support P₁ hP₁len P₁.start_mem_support
+    obtain ⟨f, hfP₂, -⟩ := exists_mem_edges_of_mem_support P₂ hP₂len P₂.start_mem_support
+    have heE : e ∈ G.edgeSet := P₁.edges_subset_edgeSet heP₁
+    have hfE : f ∈ G.edgeSet := P₂.edges_subset_edgeSet hfP₂
+    have heD : e ∈ ((P₁.append W₄).append P₂).edges := by
+      rw [Walk.edges_append, Walk.edges_append]
+      exact List.mem_append_left _ (List.mem_append_left _ heP₁)
+    have hfD : f ∈ ((P₁.append W₄).append P₂).edges := by
+      rw [Walk.edges_append]
+      exact List.mem_append_right _ hfP₂
+    have hlink : EdgeCycleLinked G ⟨e, heE⟩ ⟨f, hfE⟩ :=
+      Or.inr ⟨v, (P₁.append W₄).append P₂, hcyc, heD, hfD⟩
+    have hB : ofEdge G ⟨e, heE⟩ = B := hP₁edge ⟨e, heE⟩ heP₁
+    have hC : ofEdge G ⟨f, hfE⟩ = C := hP₂edge ⟨f, hfE⟩ hfP₂
+    exact hBC (hB.symm.trans (((ofEdge_eq_iff G).2 hlink).trans hC))
+
+  have incidence_adj_inr {a : V} {w : EdgeCycleBlock G ⊕ V}
+      (h : (incidenceGraph G).Adj (Sum.inr a) w) :
+      ∃ B : EdgeCycleBlock G, w = Sum.inl B ∧ Incident G a B := by
+    cases w with
+    | inl B => exact ⟨B, rfl, (incidenceGraph_adj_inr_inl_iff G B a).1 h⟩
+    | inr b => simp [incidenceGraph, _root_.SimpleGraph.bipartiteIncidenceGraph] at h
+
+  have incidence_adj_inl {B : EdgeCycleBlock G} {w : EdgeCycleBlock G ⊕ V}
+      (h : (incidenceGraph G).Adj (Sum.inl B) w) :
+      ∃ a : V, w = Sum.inr a ∧ Incident G a B := by
+    cases w with
+    | inl C => simp [incidenceGraph, _root_.SimpleGraph.bipartiteIncidenceGraph] at h
+    | inr a => exact ⟨a, rfl, (incidenceGraph_adj_inl_inr_iff G B a).1 h⟩
+
+  have exists_walk_of_incidence_walk (v₀ : V) :
+      ∀ (n : ℕ) (a b : V) (w : (incidenceGraph G).Walk (Sum.inr a) (Sum.inr b)),
+        w.length ≤ n → a ≠ v₀ →
+        (∀ B : EdgeCycleBlock G, (Sum.inl B : EdgeCycleBlock G ⊕ V) ∈ w.support →
+          ¬ Incident G v₀ B) →
+        ∃ W : G.Walk a b, v₀ ∉ W.support := by
+    intro n
+    induction n using Nat.strong_induction_on with
+    | _ n ih =>
+      intro a b w hlen ha hblocks
+      by_cases hab : a = b
+      · subst hab
+        refine ⟨Walk.nil, ?_⟩
+        simp only [Walk.support_nil, List.mem_singleton]
+        exact fun h => ha h.symm
+      · have hne : (Sum.inr a : EdgeCycleBlock G ⊕ V) ≠ Sum.inr b := by
+          simpa using hab
+        obtain ⟨p₁, h₁, w₁, rfl⟩ := w.exists_eq_cons_of_ne hne
+        obtain ⟨B, rfl, haB⟩ := incidence_adj_inr h₁
+        have hne₂ : (Sum.inl B : EdgeCycleBlock G ⊕ V) ≠ Sum.inr b := by simp
+        obtain ⟨p₂, h₂, w₂, rfl⟩ := w₁.exists_eq_cons_of_ne hne₂
+        obtain ⟨a₂, rfl, ha₂B⟩ := incidence_adj_inl h₂
+        have hB : ¬ Incident G v₀ B := by
+          refine hblocks B ?_
+          simp
+        have ha₂ : a₂ ≠ v₀ := by
+          intro h
+          exact hB (h ▸ ha₂B)
+        have hlen₂ : w₂.length < n := by
+          simp only [Walk.length_cons] at hlen
+          omega
+        have hblocks₂ : ∀ C : EdgeCycleBlock G,
+            (Sum.inl C : EdgeCycleBlock G ⊕ V) ∈ w₂.support → ¬ Incident G v₀ C := by
+          intro C hC
+          refine hblocks C ?_
+          simp only [Walk.support_cons, List.mem_cons]
+          exact Or.inr (Or.inr hC)
+        obtain ⟨W₂, hW₂⟩ := ih w₂.length hlen₂ a₂ b w₂ le_rfl ha₂ hblocks₂
+        by_cases haa : a = a₂
+        · subst haa
+          exact ⟨W₂, hW₂⟩
+        · obtain ⟨P, -, -, hPsupp⟩ := exists_block_path (B := B) haa haB ha₂B
+          refine ⟨P.append W₂, ?_⟩
+          rw [Walk.support_append, List.mem_append]
+          rintro (hv | hv)
+          · exact hB (hPsupp v₀ hv)
+          · exact hW₂ (List.mem_of_mem_tail hv)
+
+
+  have hlen1 : ∀ {a b : EdgeCycleBlock G ⊕ V} (w : (incidenceGraph G).Walk a b),
+      w.length = 1 → w.edges = [s(a, b)] := by
+    intro a b w hw
+    cases w with
+    | nil => simp at hw
+    | cons hadj w' =>
+        have hw' : w'.length = 0 := by simpa using hw
+        cases w' with
+        | nil => simp
+        | cons _ _ => simp at hw'
+  suffices H : ∀ (n : ℕ) (t : EdgeCycleBlock G ⊕ V) (c : (incidenceGraph G).Walk t t),
+      c.length ≤ n → ¬ c.IsCycle by
+    intro t c hc
+    exact H c.length t c le_rfl hc
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+  intro t c hlen hc
+  obtain ⟨v₁, hv₁⟩ : ∃ v : V, (Sum.inr v : EdgeCycleBlock G ⊕ V) ∈ c.support := by
+    cases t with
+    | inr v => exact ⟨v, c.start_mem_support⟩
+    | inl B =>
+        obtain ⟨X, hadj, c', hc'⟩ := Walk.not_nil_iff.mp hc.not_nil
+        obtain ⟨a, rfl, -⟩ := incidence_adj_inl hadj
+        refine ⟨a, ?_⟩
+        rw [hc', Walk.support_cons, List.mem_cons]
+        exact Or.inr c'.start_mem_support
+  obtain ⟨c₁, hc₁cyc, hchord⟩ :
+      ∃ c₁ : (incidenceGraph G).Walk (Sum.inr v₁) (Sum.inr v₁),
+        c₁.IsCycle ∧
+        ∀ B : EdgeCycleBlock G, (Sum.inl B : EdgeCycleBlock G ⊕ V) ∈ c₁.support →
+          Incident G v₁ B →
+          s((Sum.inr v₁ : EdgeCycleBlock G ⊕ V), Sum.inl B) ∈ c₁.edges := by
+    refine ⟨c.rotate (Sum.inr v₁) hv₁, hc.rotate hv₁, ?_⟩
+    · intro B hB hinc
+      by_contra hcon
+      have hadj : (incidenceGraph G).Adj (Sum.inr v₁) (Sum.inl B) :=
+        (incidenceGraph_adj_inr_inl_iff G B v₁).2 hinc
+      have hne : (Sum.inr v₁ : EdgeCycleBlock G ⊕ V) ≠ Sum.inl B := by simp
+      have hcrot : (c.rotate (Sum.inr v₁) hv₁).IsCycle := hc.rotate hv₁
+      have hspec := (c.rotate (Sum.inr v₁) hv₁).take_spec hB
+      have hcyc' : (((c.rotate (Sum.inr v₁) hv₁).takeUntil _ hB).append
+          ((c.rotate (Sum.inr v₁) hv₁).dropUntil _ hB)).IsCycle := by
+        rw [hspec]; exact hcrot
+      have hqpath : ((c.rotate (Sum.inr v₁) hv₁).dropUntil _ hB).IsPath :=
+        hcyc'.isPath_of_append_right (Walk.not_nil_of_ne hne)
+      have hqedges : s((Sum.inr v₁ : EdgeCycleBlock G ⊕ V), Sum.inl B) ∉
+          ((c.rotate (Sum.inr v₁) hv₁).dropUntil _ hB).edges := fun hmem =>
+        hcon (Walk.edges_dropUntil_subset_edges _ _ hmem)
+      have hnew : (Walk.cons hadj ((c.rotate (Sum.inr v₁) hv₁).dropUntil _ hB)).IsCycle :=
+        (Walk.cons_isCycle_iff _ hadj).2 ⟨hqpath, hqedges⟩
+      have hsum : ((c.rotate (Sum.inr v₁) hv₁).takeUntil _ hB).length +
+          ((c.rotate (Sum.inr v₁) hv₁).dropUntil _ hB).length = (c.rotate (Sum.inr v₁) hv₁).length := by
+        rw [← Walk.length_append, hspec]
+      have hrotlen : (c.rotate (Sum.inr v₁) hv₁).length = c.length := by
+        have hperm : (c.rotate (Sum.inr v₁) hv₁).edges.length = c.edges.length :=
+          ((c.rotate_edges (Sum.inr v₁) hv₁).perm).length_eq
+        rw [Walk.length_edges, Walk.length_edges] at hperm
+        exact hperm
+      have hp2 : 2 ≤ ((c.rotate (Sum.inr v₁) hv₁).takeUntil _ hB).length := by
+        by_contra h2
+        have hcases : ((c.rotate (Sum.inr v₁) hv₁).takeUntil (Sum.inl B) hB).length = 0 ∨
+            ((c.rotate (Sum.inr v₁) hv₁).takeUntil (Sum.inl B) hB).length = 1 := by omega
+        rcases hcases with h0 | h0
+        · exact hne (Walk.eq_of_length_eq_zero h0)
+        · refine hcon (Walk.edges_takeUntil_subset_edges (c.rotate (Sum.inr v₁) hv₁) hB ?_)
+          rw [hlen1 _ h0]
+          exact List.mem_singleton_self _
+      refine ih (Walk.cons hadj ((c.rotate (Sum.inr v₁) hv₁).dropUntil _ hB)).length ?_ _ _ le_rfl hnew
+      rw [Walk.length_cons]
+      omega
+  obtain ⟨X, hA, t₁, hc₁eq⟩ := Walk.not_nil_iff.mp hc₁cyc.not_nil
+  obtain ⟨B₂, rfl, hB₂v₁⟩ := incidence_adj_inr hA
+  subst hc₁eq
+  have hneB₂ : (Sum.inl B₂ : EdgeCycleBlock G ⊕ V) ≠ Sum.inr v₁ := by simp
+  obtain ⟨Y, hBadj, t₂, ht₁eq⟩ := t₁.exists_eq_cons_of_ne hneB₂
+  obtain ⟨v₂, rfl, hB₂v₂⟩ := incidence_adj_inl hBadj
+  subst ht₁eq
+  have hpath : (Walk.cons hBadj t₂).IsPath := ((Walk.cons_isCycle_iff _ hA).1 hc₁cyc).1
+  obtain ⟨ht₂path, hB₂notin⟩ := (Walk.cons_isPath_iff hBadj t₂).1 hpath
+  have hv₁v₂ : v₁ ≠ v₂ := by
+    intro h
+    subst h
+    have hnil : t₂.Nil := Walk.isPath_iff_nil.mp ht₂path
+    have h3 := hc₁cyc.three_le_length
+    rw [Walk.length_cons, Walk.length_cons] at h3
+    have hl0 : t₂.length = 0 := Walk.length_eq_zero_iff.mpr hnil
+    omega
+  have hrpath : t₂.reverse.IsPath := (Walk.isPath_reverse_iff t₂).mpr ht₂path
+  have hner : (Sum.inr v₁ : EdgeCycleBlock G ⊕ V) ≠ Sum.inr v₂ := by
+    simp only [ne_eq, Sum.inr.injEq]
+    exact hv₁v₂
+  obtain ⟨Z, hC, r₁, hreq⟩ := t₂.reverse.exists_eq_cons_of_ne hner
+  obtain ⟨B₁, rfl, hB₁v₁⟩ := incidence_adj_inr hC
+  have hneB₁ : (Sum.inl B₁ : EdgeCycleBlock G ⊕ V) ≠ Sum.inr v₂ := by simp
+  obtain ⟨Z', hD, r₂, hr₁eq⟩ := r₁.exists_eq_cons_of_ne hneB₁
+  obtain ⟨vn, rfl, hB₁vn⟩ := incidence_adj_inl hD
+  subst hr₁eq
+  have hrpath' : (Walk.cons hC (Walk.cons hD r₂)).IsPath := by
+    rw [← hreq]; exact hrpath
+  obtain ⟨hr₁path, hv₁notin⟩ := (Walk.cons_isPath_iff hC _).1 hrpath'
+  obtain ⟨-, hB₁notin⟩ := (Walk.cons_isPath_iff hD r₂).1 hr₁path
+  have hmemt₂ : ∀ w : EdgeCycleBlock G ⊕ V, w ∈ r₂.support → w ∈ t₂.support := by
+    intro w hw
+    have hw' : w ∈ (Walk.cons hC (Walk.cons hD r₂)).support := by
+      simp only [Walk.support_cons, List.mem_cons]
+      exact Or.inr (Or.inr hw)
+    rw [← hreq, Walk.support_reverse, List.mem_reverse] at hw'
+    exact hw'
+  have hvn : vn ≠ v₁ := by
+    intro h
+    refine hv₁notin ?_
+    simp only [Walk.support_cons, List.mem_cons]
+    exact Or.inr (h ▸ r₂.start_mem_support)
+  have hB₁B₂ : B₁ ≠ B₂ := by
+    intro h
+    subst h
+    refine hB₂notin ?_
+    have hw' : (Sum.inl B₁ : EdgeCycleBlock G ⊕ V) ∈
+        (Walk.cons hC (Walk.cons hD r₂)).support := by
+      simp
+    rw [← hreq, Walk.support_reverse, List.mem_reverse] at hw'
+    exact hw'
+  have hkey : ∀ B : EdgeCycleBlock G, (Sum.inl B : EdgeCycleBlock G ⊕ V) ∈ r₂.support →
+      ¬ Incident G v₁ B := by
+    intro B hBmem hinc
+    have hBt₂ : (Sum.inl B : EdgeCycleBlock G ⊕ V) ∈ t₂.support := hmemt₂ _ hBmem
+    have hBc₁ : (Sum.inl B : EdgeCycleBlock G ⊕ V) ∈
+        (Walk.cons hA (Walk.cons hBadj t₂)).support := by
+      simp only [Walk.support_cons, List.mem_cons]
+      exact Or.inr (Or.inr hBt₂)
+    have hedge := hchord B hBc₁ hinc
+    rw [Walk.edges_cons, Walk.edges_cons, List.mem_cons, List.mem_cons] at hedge
+    rcases hedge with h | h | h
+    · have hBB₂ : B = B₂ := by
+        rcases Sym2.eq_iff.1 h with ⟨-, h2⟩ | ⟨h1, -⟩
+        · exact (Sum.inl.injEq _ _ ▸ h2 : B = B₂)
+        · exact absurd h1 (by simp)
+      subst hBB₂
+      exact hB₂notin hBt₂
+    · rcases Sym2.eq_iff.1 h with ⟨h1, -⟩ | ⟨h1, -⟩
+      · exact absurd h1 (by simp)
+      · exact hv₁v₂ (by simpa using h1)
+    · have hr : s((Sum.inr v₁ : EdgeCycleBlock G ⊕ V), Sum.inl B) ∈
+          (Walk.cons hC (Walk.cons hD r₂)).edges := by
+        rw [← hreq, Walk.edges_reverse, List.mem_reverse]
+        exact h
+      rw [Walk.edges_cons, Walk.edges_cons, List.mem_cons, List.mem_cons] at hr
+      rcases hr with h' | h' | h'
+      · have hBB₁ : B = B₁ := by
+          rcases Sym2.eq_iff.1 h' with ⟨-, h2⟩ | ⟨h1, -⟩
+          · exact (Sum.inl.injEq _ _ ▸ h2 : B = B₁)
+          · exact absurd h1 (by simp)
+        subst hBB₁
+        exact hB₁notin hBmem
+      · rcases Sym2.eq_iff.1 h' with ⟨h1, -⟩ | ⟨h1, -⟩
+        · exact absurd h1 (by simp)
+        · exfalso
+          have h1' : v₁ = vn := by simpa using h1
+          exact hvn h1'.symm
+      · refine hv₁notin ?_
+        simp only [Walk.support_cons, List.mem_cons]
+        refine Or.inr (Walk.mem_support_of_mem_edges h' ?_)
+        simp
+  obtain ⟨W, hW⟩ :=
+    exists_walk_of_incidence_walk v₁ r₂.length vn v₂ r₂ le_rfl hvn hkey
+  exact no_external_link (B := B₁) (C := B₂) (v := v₁) W hB₁B₂ hB₁v₁ hB₂v₁ hB₁vn hB₂v₂ hW
+
+end EdgeCycleBlock
+
+end SimpleGraph
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_Graph_EdgeCycleBlockIncidenceForest
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.EdgeCycleBlockIncidenceForest
 ========================================================================== -/
 
 /- ==========================================================================
@@ -9103,6 +10815,2271 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_BridgeBlockRunningIntersection
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.BridgeBlockRunningIntersection
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomPartition
+Source: Erdos593/TripleSystem/CanonicalAtomPartition.lean
+Normalized SHA-256: 180c96b4b7b111560cb698e14cf68b27896176e1d4a99e41ca17efd700937d02
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomPartition
+
+/-!
+# Canonical atom partition: first layer
+
+This module defines the first, hyperedge-partition layer of the publication's
+canonical atom normal form.  Residual-degree-zero hyperedges are singleton
+labels.  Every other hyperedge is transported canonically to an edge of its
+active bridge-block contracted graph and then to the corresponding quotient
+edge-cycle block.
+
+The atom-type dichotomy, two-connectivity, bipartiteness, atom-point forest,
+reconstruction, and uniqueness are deliberately downstream obligations.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+namespace CanonicalAtom
+
+open BridgeBlock
+
+noncomputable section
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+  [DecidableRel F.levi.Adj]
+
+/-- Canonical labels for the first, hyperedge-partition layer of the atom
+normal form. -/
+inductive Index where
+  | singleton (e : E)
+      (hzero :
+        (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0)
+  | cycleBlock (C : BridgeBlock.HyperedgeComponent F)
+      (hC : BridgeBlock.HasIncidence F C)
+      (B : Erdos593.SimpleGraph.EdgeCycleBlock
+        (BridgeBlock.contractedGraph F C))
+
+/-- A nonzero residual degree makes the hyperedge component active. -/
+theorem hyperedgeComponent_hasIncidence_of_degree_ne_zero
+    {e : E}
+    (hzero :
+      (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) ≠ 0) :
+    BridgeBlock.HasIncidence F (BridgeBlock.hyperedgeComponentOf F e) := by
+  let C := BridgeBlock.hyperedgeComponentOf F e
+  have heC : Sum.inr e ∈ (C : BridgeBlock.Component F).supp :=
+    BridgeBlock.mem_hyperedgeComponentOf_set F e
+  have hpositive :
+      0 < (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) :=
+    Nat.pos_of_ne_zero hzero
+  rcases ((Erdos593.SimpleGraph.bridgeFree F.levi).degree_pos_iff_exists_adj
+      (Sum.inr e)).mp hpositive with ⟨z, hez⟩
+  rcases z with x | f
+  · refine ⟨x, e, ?_, heC, hez.symm⟩
+    exact (C : BridgeBlock.Component F).mem_supp_of_adj_mem_supp heC hez
+  · have hle : Erdos593.SimpleGraph.bridgeFree F.levi ≤ F.levi := by
+      dsimp only [Erdos593.SimpleGraph.bridgeFree]
+      exact F.levi.deleteEdges_le _
+    exact (F.not_levi_adj_edge_edge (hle hez)).elim
+
+/-- Canonical atom label of an original hyperedge. -/
+noncomputable def atomOf
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) (e : E) :
+    Index F := by
+  classical
+  by_cases hzero :
+      (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0
+  · exact .singleton e hzero
+  · let C := BridgeBlock.hyperedgeComponentOf F e
+    let hC : BridgeBlock.HasIncidence F C :=
+      hyperedgeComponent_hasIncidence_of_degree_ne_zero F hzero
+    let eC : BridgeBlock.Hyperedge F C :=
+      ⟨e, BridgeBlock.mem_hyperedgeComponentOf_set F e⟩
+    let a : (BridgeBlock.contractedGraph F C).edgeSet :=
+      (BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC).symm eC
+    exact .cycleBlock C hC
+      (Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+        (BridgeBlock.contractedGraph F C) a)
+
+/-- Original hyperedges carrying a fixed canonical atom label. -/
+def edges
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : Index F) : Set E :=
+  {e | atomOf F hlinear hbridge e = A}
+
+/-- Every canonical atom label is represented by an original hyperedge. -/
+theorem atomOf_surjective
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    Function.Surjective (atomOf F hlinear hbridge) := by
+  intro A
+  cases A with
+  | singleton e hzero =>
+      refine ⟨e, ?_⟩
+      unfold atomOf
+      rw [dif_pos hzero]
+  | cycleBlock C hC B =>
+      obtain ⟨a, ha⟩ := Erdos593.SimpleGraph.EdgeCycleBlock.exists_rep
+        (BridgeBlock.contractedGraph F (C : BridgeBlock.Component F)) B
+      set eC : BridgeBlock.Hyperedge F (C : BridgeBlock.Component F) :=
+        BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC a with heCdef
+      refine ⟨eC.1, ?_⟩
+      have hdeg : (Erdos593.SimpleGraph.bridgeFree F.levi).degree
+          (Sum.inr eC.1) = 2 :=
+        BridgeBlock.edge_degree_eq_two_of_hasIncidence F hbridge hC eC.2
+      have hzero : ¬ (Erdos593.SimpleGraph.bridgeFree F.levi).degree
+          (Sum.inr eC.1) = 0 := by omega
+      have key : ∀ (D : BridgeBlock.HyperedgeComponent F)
+          (hD : BridgeBlock.HasIncidence F (D : BridgeBlock.Component F))
+          (hmem : Sum.inr eC.1 ∈ (D : BridgeBlock.Component F).supp),
+          D = C →
+          Index.cycleBlock D hD
+              (Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+                (BridgeBlock.contractedGraph F (D : BridgeBlock.Component F))
+                ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hD).symm
+                  ⟨eC.1, hmem⟩))
+            = Index.cycleBlock C hC B := by
+        rintro D hD hmem rfl
+        congr 1
+        rw [show (⟨eC.1, hmem⟩ :
+              BridgeBlock.Hyperedge F (D : BridgeBlock.Component F)) = eC from rfl,
+          heCdef, Equiv.symm_apply_apply]
+        exact ha
+      unfold atomOf
+      rw [dif_neg hzero]
+      exact key _ _ _ (Subtype.ext eC.2)
+
+end
+end CanonicalAtom
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomPartition
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomPartition
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomTypeDichotomy
+Source: Erdos593/TripleSystem/CanonicalAtomTypeDichotomy.lean
+Normalized SHA-256: 26f4b68e3e7a89d4a7e423f83be8acf45e1e0a3dc8a77b7257cd7895301b3cef
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomTypeDichotomy
+
+/-!
+# Canonical atom type dichotomy
+
+This module packages each fibre of the welded canonical atom-label map as an
+exact edge restriction.  A singleton label is compared with the corresponding
+one-edge piece, while a cycle-block label is compared with the private-vertex
+expansion of the finite graph carried by that literal quotient block.
+
+Two-connectivity, bipartiteness, atom intersections, reconstruction, and
+uniqueness are deliberately downstream obligations.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+namespace CanonicalAtom
+
+open BridgeBlock
+
+noncomputable section
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+  [DecidableRel F.levi.Adj]
+
+/-- The exact triple-system restriction carried by one canonical atom label. -/
+def atomRestriction
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : CanonicalAtom.Index F) :=
+  F.edgeRestriction (CanonicalAtom.edges F hlinear hbridge A)
+
+/-- The literal quotient-graph edges belonging to a selected cycle block. -/
+def cycleBlockEdgeSet
+    (C : BridgeBlock.HyperedgeComponent F)
+    (B : Erdos593.SimpleGraph.EdgeCycleBlock
+      (BridgeBlock.contractedGraph F C)) :
+    Set (BridgeBlock.contractedGraph F C).edgeSet :=
+  Erdos593.SimpleGraph.EdgeCycleBlock.edges
+    (BridgeBlock.contractedGraph F C) B
+
+/-- A selected cycle block is finite because its ambient contracted graph is
+finite. -/
+theorem cycleBlockEdgeSet_finite
+    (C : BridgeBlock.HyperedgeComponent F)
+    (B : Erdos593.SimpleGraph.EdgeCycleBlock
+      (BridgeBlock.contractedGraph F C)) :
+    (cycleBlockEdgeSet F C B).Finite :=
+  Set.toFinite _
+
+/-- The finite graph on exactly the endpoints of a selected quotient cycle
+block. -/
+noncomputable def cycleBlockCore
+    (C : BridgeBlock.HyperedgeComponent F)
+    (B : Erdos593.SimpleGraph.EdgeCycleBlock
+      (BridgeBlock.contractedGraph F C)) :=
+  finiteEdgeFactorGraph
+    (BridgeBlock.contractedGraph F C)
+    (cycleBlockEdgeSet F C B)
+    (cycleBlockEdgeSet_finite F C B)
+
+/-- Every canonical atom restriction is exactly either the selected one-edge
+piece or the private-vertex expansion of its selected quotient cycle block. -/
+theorem atomRestriction_is_singleEdge_or_cycleBlockExpansion
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : CanonicalAtom.Index F) :
+    match A with
+    | .singleton e _ =>
+        TripleSystem.Isomorphic
+          (CanonicalAtom.atomRestriction F hlinear hbridge A)
+          (F.singleEdgePiece e)
+    | .cycleBlock C _ B =>
+        TripleSystem.Isomorphic
+          (CanonicalAtom.atomRestriction F hlinear hbridge A)
+          (privateVertexExpansion (CanonicalAtom.cycleBlockCore F C B)) := by
+  classical
+  cases A with
+  | singleton e hzero =>
+      have hmem : e ∈ CanonicalAtom.edges F hlinear hbridge
+          (Index.singleton e hzero) := by
+        change CanonicalAtom.atomOf F hlinear hbridge e = Index.singleton e hzero
+        unfold CanonicalAtom.atomOf
+        rw [dif_pos hzero]
+      have hsingle : ∀ f : E,
+          f ∈ CanonicalAtom.edges F hlinear hbridge (Index.singleton e hzero) →
+            f = e := by
+        intro f hf
+        change CanonicalAtom.atomOf F hlinear hbridge f = Index.singleton e hzero at hf
+        unfold CanonicalAtom.atomOf at hf
+        by_cases hfzero :
+            (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) = 0
+        · rw [dif_pos hfzero] at hf
+          injection hf
+        · rw [dif_neg hfzero] at hf
+          exact absurd hf (by simp)
+      have hsupp :
+          F.edgeSupportSet
+              (CanonicalAtom.edges F hlinear hbridge (Index.singleton e hzero)) =
+            F.edgeSet e := by
+        ext x
+        constructor
+        · rintro ⟨f, hfS, hxf⟩
+          rw [hsingle f hfS] at hxf
+          exact hxf
+        · intro hx
+          exact ⟨e, hmem, hx⟩
+      show TripleSystem.Isomorphic
+        (CanonicalAtom.atomRestriction F hlinear hbridge (Index.singleton e hzero))
+        (F.singleEdgePiece e)
+      refine ⟨{ vertexEquiv := Equiv.setCongr hsupp
+                edgeEquiv :=
+                  { toFun := fun _ => ULift.up ()
+                    invFun := fun _ => ⟨e, hmem⟩
+                    left_inv := fun d => Subtype.ext (hsingle d.1 d.2).symm
+                    right_inv := fun _ => rfl }
+                map_inc_iff := ?_ }⟩
+      intro x d
+      constructor
+      · intro _
+        trivial
+      · intro _
+        show F.Inc x.1 d.1
+        rw [hsingle d.1 d.2]
+        obtain ⟨f, hfS, hxf⟩ :
+            ∃ f : E,
+              f ∈ CanonicalAtom.edges F hlinear hbridge (Index.singleton e hzero) ∧
+                F.Inc x.1 f := x.2
+        rw [hsingle f hfS] at hxf
+        exact hxf
+  | cycleBlock C hC B =>
+      show TripleSystem.Isomorphic
+        (CanonicalAtom.atomRestriction F hlinear hbridge
+          (Index.cycleBlock C hC B))
+        (privateVertexExpansion (CanonicalAtom.cycleBlockCore F C B))
+      let G := BridgeBlock.contractedGraph F (C : BridgeBlock.Component F)
+      let Aset : Set G.edgeSet := CanonicalAtom.cycleBlockEdgeSet F C B
+      let hAfin : Aset.Finite := CanonicalAtom.cycleBlockEdgeSet_finite F C B
+      let phi := BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC
+      let emb :=
+        BridgeBlock.componentExpansionEmbedding F hlinear
+          (C : BridgeBlock.Component F)
+      have hedgeval : ∀ a : G.edgeSet, (phi a).1 = emb.edge a := fun _ => rfl
+      have hSdesc : ∀ f : E,
+          f ∈ CanonicalAtom.edges F hlinear hbridge (Index.cycleBlock C hC B) ↔
+            ∃ a : G.edgeSet, a ∈ Aset ∧ (phi a).1 = f := by
+        intro f
+        constructor
+        · intro hf
+          change CanonicalAtom.atomOf F hlinear hbridge f =
+            Index.cycleBlock C hC B at hf
+          by_cases hfzero :
+              (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) = 0
+          · unfold CanonicalAtom.atomOf at hf
+            rw [dif_pos hfzero] at hf
+            exact absurd hf (by simp)
+          · have keyfwd : ∀ (D : BridgeBlock.HyperedgeComponent F)
+                (hD : BridgeBlock.HasIncidence F (D : BridgeBlock.Component F))
+                (hmemD : Sum.inr f ∈ (D : BridgeBlock.Component F).supp),
+                Index.cycleBlock D hD
+                    (Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+                      (BridgeBlock.contractedGraph F
+                        (D : BridgeBlock.Component F))
+                      ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge
+                        hD).symm ⟨f, hmemD⟩))
+                  = Index.cycleBlock C hC B →
+                ∃ a : G.edgeSet, a ∈ Aset ∧ (phi a).1 = f := by
+              intro D hD hmemD heq
+              injection heq with h1 h2
+              subst h1
+              refine ⟨phi.symm ⟨f, hmemD⟩, ?_, ?_⟩
+              · exact eq_of_heq h2
+              · exact congrArg Subtype.val (phi.apply_symm_apply ⟨f, hmemD⟩)
+            unfold CanonicalAtom.atomOf at hf
+            rw [dif_neg hfzero] at hf
+            exact keyfwd _ _ _ hf
+        · rintro ⟨a, haA, rfl⟩
+          have hmem : Sum.inr (phi a).1 ∈ (C : BridgeBlock.Component F).supp :=
+            (phi a).2
+          have hdeg :
+              (Erdos593.SimpleGraph.bridgeFree F.levi).degree
+                (Sum.inr (phi a).1) = 2 :=
+            BridgeBlock.edge_degree_eq_two_of_hasIncidence F hbridge hC hmem
+          have hfzero :
+              ¬ (Erdos593.SimpleGraph.bridgeFree F.levi).degree
+                (Sum.inr (phi a).1) = 0 := by omega
+          have key : ∀ (D : BridgeBlock.HyperedgeComponent F)
+              (hD : BridgeBlock.HasIncidence F (D : BridgeBlock.Component F))
+              (hmemD : Sum.inr (phi a).1 ∈ (D : BridgeBlock.Component F).supp),
+              D = C →
+              Index.cycleBlock D hD
+                  (Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+                    (BridgeBlock.contractedGraph F (D : BridgeBlock.Component F))
+                    ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge
+                      hD).symm ⟨(phi a).1, hmemD⟩))
+                = Index.cycleBlock C hC B := by
+            rintro D hD hmemD rfl
+            congr 1
+            rw [show (⟨(phi a).1, hmemD⟩ :
+                  BridgeBlock.Hyperedge F (D : BridgeBlock.Component F)) =
+                phi a from rfl, phi.symm_apply_apply]
+            exact haA
+          change CanonicalAtom.atomOf F hlinear hbridge ((phi a).1) = _
+          unfold CanonicalAtom.atomOf
+          rw [dif_neg hfzero]
+          exact key _ _ _ (Subtype.ext hmem)
+      have hexists : ∀ f : (CanonicalAtom.cycleBlockCore F C B).edgeSet,
+          ∃ b : G.edgeSet, b ∈ Aset ∧
+            (b : Sym2 (BridgeBlock.Point F (C : BridgeBlock.Component F))) =
+              Sym2.map Subtype.val f.1 := by
+        intro f
+        have hf : f.1 ∈
+            (_root_.SimpleGraph.fromEdgeSet
+              {a | Sym2.map Subtype.val a ∈ Subtype.val '' Aset}).edgeSet := f.2
+        rw [_root_.SimpleGraph.edgeSet_fromEdgeSet] at hf
+        obtain ⟨b, hbA, hbval⟩ := hf.1
+        exact ⟨b, hbA, hbval⟩
+      let toGb : (CanonicalAtom.cycleBlockCore F C B).edgeSet → G.edgeSet :=
+        fun f => (hexists f).choose
+      have htoGA : ∀ f, toGb f ∈ Aset := fun f => (hexists f).choose_spec.1
+      have htoGval : ∀ f,
+          ((toGb f : G.edgeSet) :
+              Sym2 (BridgeBlock.Point F (C : BridgeBlock.Component F))) =
+            Sym2.map Subtype.val f.1 := fun f => (hexists f).choose_spec.2
+      have htoGinj : Function.Injective toGb := by
+        intro f f' h
+        apply Subtype.ext
+        apply Sym2.map.injective (Subtype.val_injective
+          (p := fun x => x ∈ finiteEdgeEndpointFinset G Aset hAfin))
+        rw [← htoGval, ← htoGval, h]
+      have htoGsurj : ∀ b : G.edgeSet, b ∈ Aset →
+          ∃ f : (CanonicalAtom.cycleBlockCore F C B).edgeSet, toGb f = b := by
+        intro b hbA
+        have hadj : G.Adj b.1.out.1 b.1.out.2 := by
+          change Quot.mk (Sym2.Rel
+            (BridgeBlock.Point F (C : BridgeBlock.Component F))) b.1.out ∈
+              G.edgeSet
+          simpa only [Quot.out_eq] using b.2
+        have hxX := mem_finiteEdgeEndpointFinset G hAfin hbA (Sym2.out_fst_mem b.1)
+        have hyX := mem_finiteEdgeEndpointFinset G hAfin hbA (Sym2.out_snd_mem b.1)
+        have hbval : Sym2.map Subtype.val
+            s((⟨b.1.out.1, hxX⟩ : finiteEdgeEndpointType G Aset hAfin),
+              (⟨b.1.out.2, hyX⟩ : finiteEdgeEndpointType G Aset hAfin)) =
+            (b : Sym2 (BridgeBlock.Point F (C : BridgeBlock.Component F))) := by
+          rw [Sym2.map_mk]
+          exact Quot.out_eq b.1
+        have hKadj : (CanonicalAtom.cycleBlockCore F C B).Adj
+            ⟨b.1.out.1, hxX⟩ ⟨b.1.out.2, hyX⟩ := by
+          have hne : (⟨b.1.out.1, hxX⟩ : finiteEdgeEndpointType G Aset hAfin) ≠
+              ⟨b.1.out.2, hyX⟩ := by
+            intro h
+            exact hadj.ne (congrArg Subtype.val h)
+          show (_root_.SimpleGraph.fromEdgeSet
+            {a | Sym2.map Subtype.val a ∈ Subtype.val '' Aset}).Adj _ _
+          rw [_root_.SimpleGraph.fromEdgeSet_adj]
+          exact ⟨⟨b, hbA, hbval.symm⟩, hne⟩
+        refine ⟨⟨s(⟨b.1.out.1, hxX⟩, ⟨b.1.out.2, hyX⟩), hKadj⟩, ?_⟩
+        apply Subtype.ext
+        rw [htoGval]
+        exact hbval
+      obtain ⟨hpt, hptl, hptr⟩ :
+          ∃ hpt : PrivateVertexExpansion.Point
+                (CanonicalAtom.cycleBlockCore F C B) →
+              PrivateVertexExpansion.Point G,
+            (∀ x, hpt (Sum.inl x) = Sum.inl x.1) ∧
+              ∀ f, hpt (Sum.inr f) = Sum.inr (toGb f) :=
+        ⟨Sum.elim (fun x => Sum.inl x.1) (fun f => Sum.inr (toGb f)),
+          fun _ => rfl, fun _ => rfl⟩
+      have hptinj : Function.Injective hpt := by
+        rintro (x | f) (y | g) h
+        · rw [hptl, hptl] at h
+          exact congrArg Sum.inl (Subtype.ext (Sum.inl.inj h))
+        · rw [hptl, hptr] at h
+          exact absurd h (by simp)
+        · rw [hptr, hptl] at h
+          exact absurd h (by simp)
+        · rw [hptr, hptr] at h
+          exact congrArg Sum.inr (htoGinj (Sum.inr.inj h))
+      have hstep : ∀ (p : PrivateVertexExpansion.Point G) (b : G.edgeSet),
+          F.Inc (emb.vertex p) (emb.edge b) ↔
+            (privateVertexExpansion G).Inc p b := by
+        intro p b
+        have hset := Set.ext_iff.mp (emb.map_edge b) (emb.vertex p)
+        constructor
+        · intro hp
+          rcases hset.mpr hp with ⟨q, hq, hqp⟩
+          have hqeq : q = p := emb.vertex.injective hqp
+          rwa [hqeq] at hq
+        · intro hp
+          exact hset.mp ⟨p, hp, rfl⟩
+      have hptinc : ∀ (p : PrivateVertexExpansion.Point
+            (CanonicalAtom.cycleBlockCore F C B))
+          (f : (CanonicalAtom.cycleBlockCore F C B).edgeSet),
+          (privateVertexExpansion (CanonicalAtom.cycleBlockCore F C B)).Inc p f ↔
+            (privateVertexExpansion G).Inc (hpt p) (toGb f) := by
+        rintro (x | g) f
+        · rw [hptl]
+          show x ∈ (f.1 : Sym2 (finiteEdgeEndpointType G Aset hAfin)) ↔
+            (x.1 : BridgeBlock.Point F (C : BridgeBlock.Component F)) ∈
+              ((toGb f).1 :
+                Sym2 (BridgeBlock.Point F (C : BridgeBlock.Component F)))
+          rw [htoGval, Sym2.mem_map]
+          constructor
+          · intro hx
+            exact ⟨x, hx, rfl⟩
+          · rintro ⟨y, hy, hyx⟩
+            have hyeq : y = x := Subtype.ext hyx
+            rwa [hyeq] at hy
+        · rw [hptr]
+          show g = f ↔ toGb g = toGb f
+          exact ⟨fun h => by rw [h], fun h => htoGinj h⟩
+      have hcover : ∀ p : PrivateVertexExpansion.Point
+            (CanonicalAtom.cycleBlockCore F C B),
+          ∃ b : G.edgeSet, b ∈ Aset ∧
+            (privateVertexExpansion G).Inc (hpt p) b := by
+        rintro (x | f)
+        · rw [hptl]
+          have hx : x.1 ∈ finiteEdgeEndpointFinset G Aset hAfin := x.2
+          obtain ⟨b, hbmem, hxb⟩ :=
+            (@Finset.mem_biUnion _ _ _ _
+              (fun a b => Classical.propDecidable (a = b)) _).mp hx
+          exact ⟨b, (Set.Finite.mem_toFinset hAfin).mp hbmem,
+            (@Sym2.mem_toFinset _
+              (fun a b => Classical.propDecidable (a = b)) _ _).mp hxb⟩
+        · rw [hptr]
+          exact ⟨toGb f, htoGA f, rfl⟩
+      have hvmem : ∀ p : PrivateVertexExpansion.Point
+            (CanonicalAtom.cycleBlockCore F C B),
+          emb.vertex (hpt p) ∈
+            F.edgeSupportSet
+              (CanonicalAtom.edges F hlinear hbridge
+                (Index.cycleBlock C hC B)) := by
+        intro p
+        obtain ⟨b, hbA, hinc⟩ := hcover p
+        refine ⟨(phi b).1, (hSdesc _).mpr ⟨b, hbA, rfl⟩, ?_⟩
+        rw [hedgeval]
+        exact (hstep (hpt p) b).mpr hinc
+      have hemem : ∀ f : (CanonicalAtom.cycleBlockCore F C B).edgeSet,
+          (phi (toGb f)).1 ∈
+            CanonicalAtom.edges F hlinear hbridge (Index.cycleBlock C hC B) :=
+        fun f => (hSdesc _).mpr ⟨toGb f, htoGA f, rfl⟩
+      have hvbij : Function.Bijective
+          (fun p : PrivateVertexExpansion.Point
+              (CanonicalAtom.cycleBlockCore F C B) =>
+            (⟨emb.vertex (hpt p), hvmem p⟩ :
+              F.EdgeSupport (CanonicalAtom.edges F hlinear hbridge
+                (Index.cycleBlock C hC B)))) := by
+        constructor
+        · intro p q h
+          exact hptinj (emb.vertex.injective (congrArg Subtype.val h))
+        · intro z
+          obtain ⟨e₀, he₀S, hze₀⟩ :
+              ∃ e₀ : E,
+                e₀ ∈ CanonicalAtom.edges F hlinear hbridge
+                    (Index.cycleBlock C hC B) ∧ F.Inc z.1 e₀ := z.2
+          obtain ⟨b, hbA, hbe⟩ := (hSdesc e₀).mp he₀S
+          have hzb : F.Inc z.1 (emb.edge b) := by
+            rw [← hedgeval, hbe]
+            exact hze₀
+          obtain ⟨q, hq, hqz⟩ := (Set.ext_iff.mp (emb.map_edge b) z.1).mpr hzb
+          rcases q with x | b'
+          · have hxX : x ∈ finiteEdgeEndpointFinset G Aset hAfin :=
+              mem_finiteEdgeEndpointFinset G hAfin hbA hq
+            refine ⟨Sum.inl ⟨x, hxX⟩, ?_⟩
+            apply Subtype.ext
+            show emb.vertex (hpt (Sum.inl ⟨x, hxX⟩)) = z.1
+            rw [hptl]
+            exact hqz
+          · have hb' : b' = b := hq
+            subst hb'
+            obtain ⟨f, hf⟩ := htoGsurj b' hbA
+            refine ⟨Sum.inr f, ?_⟩
+            apply Subtype.ext
+            show emb.vertex (hpt (Sum.inr f)) = z.1
+            rw [hptr, hf]
+            exact hqz
+      have hebij : Function.Bijective
+          (fun f : (CanonicalAtom.cycleBlockCore F C B).edgeSet =>
+            (⟨(phi (toGb f)).1, hemem f⟩ :
+              CanonicalAtom.edges F hlinear hbridge
+                (Index.cycleBlock C hC B))) := by
+        constructor
+        · intro f g h
+          have h' := congrArg Subtype.val h
+          exact htoGinj (phi.injective (Subtype.ext h'))
+        · intro d
+          obtain ⟨b, hbA, hbd⟩ := (hSdesc d.1).mp d.2
+          obtain ⟨f, hf⟩ := htoGsurj b hbA
+          refine ⟨f, Subtype.ext ?_⟩
+          show (phi (toGb f)).1 = d.1
+          rw [hf]
+          exact hbd
+      have hiso : TripleSystem.Isomorphic
+          (privateVertexExpansion (CanonicalAtom.cycleBlockCore F C B))
+          (F.edgeRestriction
+            (CanonicalAtom.edges F hlinear hbridge
+              (Index.cycleBlock C hC B))) := by
+        refine ⟨{ vertexEquiv := Equiv.ofBijective _ hvbij
+                  edgeEquiv := Equiv.ofBijective _ hebij
+                  map_inc_iff := ?_ }⟩
+        intro p f
+        show (privateVertexExpansion
+            (CanonicalAtom.cycleBlockCore F C B)).Inc p f ↔
+          F.Inc (emb.vertex (hpt p)) ((phi (toGb f)).1)
+        rw [hedgeval, hstep]
+        exact hptinc p f
+      exact hiso.symm
+
+end
+end CanonicalAtom
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomTypeDichotomy
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomTypeDichotomy
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomCoreStructure
+Source: Erdos593/TripleSystem/CanonicalAtomCoreStructure.lean
+Normalized SHA-256: 325785979400758a5a32072883e30e357044c1fbc5be1f924d8f9af595309354
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomCoreStructure
+
+/-!
+# Canonical cycle-block core structure
+
+This module isolates the graph-theoretic structure carried by the literal
+finite endpoint graph of a canonical cycle-block atom.  Vertex
+two-connectivity is stated explicitly as nondegeneracy together with
+connectivity after deletion of any one vertex; it is not replaced by ordinary
+connectivity, absence of bridges, or edge-biconnectivity.
+
+The selected core is finite by construction, and simplicity is built into its
+`SimpleGraph` type.  The substantive downstream obligations are genuine
+vertex two-connectivity and bipartiteness.
+-/
+
+namespace Erdos593
+
+universe u v w
+
+namespace TripleSystem
+namespace CanonicalAtom
+
+open BridgeBlock
+
+noncomputable section
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+  [DecidableRel F.levi.Adj]
+
+/-- A finite simple graph is vertex two-connected when it has at least three
+vertices and remains connected after deletion of any one vertex. -/
+def IsTwoVertexConnected {W : Type w} [Fintype W]
+    (G : _root_.SimpleGraph W) : Prop :=
+  3 ≤ Fintype.card W ∧
+    ∀ x : W, (G.induce {y | y ≠ x}).Connected
+
+/-- The endpoint type of a canonical cycle-block core is finite. -/
+theorem cycleBlockCore_vertex_finite
+    (C : BridgeBlock.HyperedgeComponent F)
+    (B : Erdos593.SimpleGraph.EdgeCycleBlock
+      (BridgeBlock.contractedGraph F C)) :
+    Finite
+      (finiteEdgeEndpointType
+        (BridgeBlock.contractedGraph F C)
+        (CanonicalAtom.cycleBlockEdgeSet F C B)
+        (CanonicalAtom.cycleBlockEdgeSet_finite F C B)) := by
+  infer_instance
+
+/-- Every canonical cycle-block core is genuinely vertex two-connected. -/
+theorem cycleBlockCore_isTwoVertexConnected
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (C : BridgeBlock.HyperedgeComponent F)
+    (hC : BridgeBlock.HasIncidence F C)
+    (B : Erdos593.SimpleGraph.EdgeCycleBlock
+      (BridgeBlock.contractedGraph F C)) :
+    IsTwoVertexConnected (CanonicalAtom.cycleBlockCore F C B) := by
+  classical
+  have hle : Erdos593.SimpleGraph.bridgeFree F.levi ≤ F.levi := by
+    dsimp only [Erdos593.SimpleGraph.bridgeFree]
+    exact F.levi.deleteEdges_le _
+  -- The bridge-free Levi graph has no bridges of its own.
+  have hLnb : ∀ a b : V ⊕ E,
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Adj a b →
+      ((Erdos593.SimpleGraph.bridgeFree F.levi).deleteEdges
+        {s(a, b)}).Reachable a b := by
+    intro a b hab
+    have habl : F.levi.Adj a b := hle hab
+    have hnotmem :
+        s(a, b) ∉ (Erdos593.SimpleGraph.bridgeFinset F.levi : Set (Sym2 (V ⊕ E))) := by
+      have h := hab
+      rw [Erdos593.SimpleGraph.bridgeFree, _root_.SimpleGraph.deleteEdges_adj] at h
+      exact h.2
+    have hnb : ¬F.levi.IsBridge s(a, b) := by
+      intro hb
+      exact hnotmem (by
+        simp only [Finset.mem_coe, Erdos593.SimpleGraph.mem_bridgeFinset]
+        exact ⟨habl, hb⟩)
+    have hreach : (F.levi.deleteEdges {s(a, b)}).Reachable a b := by
+      rw [_root_.SimpleGraph.isBridge_iff] at hnb
+      exact not_not.mp hnb
+    obtain ⟨z, c, hc, hmem⟩ :=
+      _root_.SimpleGraph.adj_and_reachable_delete_edges_iff_exists_cycle.mp ⟨habl, hreach⟩
+    have havoid : ∀ e ∈ c.edges,
+        e ∉ (Erdos593.SimpleGraph.bridgeFinset F.levi : Set (Sym2 (V ⊕ E))) := by
+      intro e he hbe
+      have hbe' : e ∈ Erdos593.SimpleGraph.bridgeFinset F.levi := by simpa using hbe
+      exact (Erdos593.SimpleGraph.mem_bridgeFinset.mp hbe').2.notMem_edges_of_isCycle hc he
+    have hcH :
+        (c.toDeleteEdges
+          (Erdos593.SimpleGraph.bridgeFinset F.levi : Set (Sym2 (V ⊕ E)))
+          havoid).IsCycle :=
+      _root_.SimpleGraph.Walk.IsCycle.toDeleteEdges (G := F.levi)
+        (s := (Erdos593.SimpleGraph.bridgeFinset F.levi : Set (Sym2 (V ⊕ E))))
+        hc havoid
+    have hedges :
+        (c.toDeleteEdges
+          (Erdos593.SimpleGraph.bridgeFinset F.levi : Set (Sym2 (V ⊕ E)))
+          havoid).edges = c.edges :=
+      _root_.SimpleGraph.Walk.edges_transfer _ _
+    exact (_root_.SimpleGraph.adj_and_reachable_delete_edges_iff_exists_cycle.mpr
+      ⟨z, c.toDeleteEdges
+        (Erdos593.SimpleGraph.bridgeFinset F.levi : Set (Sym2 (V ⊕ E))) havoid,
+        hcH, by rw [hedges]; exact hmem⟩).2
+
+  -- Hence no edge of the contracted graph is a bridge either.
+  have hGnb : ∀ pu pv : BridgeBlock.Point F C,
+      (BridgeBlock.contractedGraph F C).Adj pu pv →
+      ((BridgeBlock.contractedGraph F C).deleteEdges
+        {s(pu, pv)}).Reachable pu pv := by
+    intro pu pv huv
+    obtain ⟨hne, ee, hue, hve⟩ := (BridgeBlock.contractedGraph_adj F C pu pv).mp huv
+    have hsumne : (Sum.inl pu.1 : V ⊕ E) ≠ Sum.inl pv.1 := by
+      intro h
+      exact hne (Subtype.ext (Sum.inl.inj h))
+    -- the bridge-free Levi neighbours of the witness node are the two endpoints
+    have hnbhd : ∀ z : V ⊕ E,
+        (Erdos593.SimpleGraph.bridgeFree F.levi).Adj z (Sum.inr ee.1) →
+          z = Sum.inl pu.1 ∨ z = Sum.inl pv.1 := by
+      intro z hz
+      have hpairSubset :
+          ({Sum.inl pu.1, Sum.inl pv.1} : Finset (V ⊕ E)) ⊆
+            (Erdos593.SimpleGraph.bridgeFree F.levi).neighborFinset (Sum.inr ee.1) := by
+        intro t ht
+        simp only [Finset.mem_insert, Finset.mem_singleton] at ht
+        rcases ht with rfl | rfl
+        · exact ((Erdos593.SimpleGraph.bridgeFree F.levi).mem_neighborFinset _ _).2 hue.symm
+        · exact ((Erdos593.SimpleGraph.bridgeFree F.levi).mem_neighborFinset _ _).2 hve.symm
+      have hcard :
+          ((Erdos593.SimpleGraph.bridgeFree F.levi).neighborFinset
+            (Sum.inr ee.1)).card = 2 := by
+        rw [_root_.SimpleGraph.card_neighborFinset_eq_degree]
+        exact ee.property.2
+      have hpairCard : ({Sum.inl pu.1, Sum.inl pv.1} : Finset (V ⊕ E)).card = 2 := by
+        simp [hsumne]
+      have hpairEq :
+          ({Sum.inl pu.1, Sum.inl pv.1} : Finset (V ⊕ E)) =
+            (Erdos593.SimpleGraph.bridgeFree F.levi).neighborFinset (Sum.inr ee.1) :=
+        Finset.eq_of_subset_of_card_le hpairSubset (by omega)
+      have hzmem : z ∈ ({Sum.inl pu.1, Sum.inl pv.1} : Finset (V ⊕ E)) := by
+        rw [hpairEq]
+        exact ((Erdos593.SimpleGraph.bridgeFree F.levi).mem_neighborFinset _ _).2 hz.symm
+      simpa using hzmem
+    -- project bridge-free Levi walks avoiding the witness node
+    have hproj : ∀ (z t : V ⊕ E)
+        (w : (Erdos593.SimpleGraph.bridgeFree F.levi).Walk z t),
+        t = Sum.inl pu.1 → Sum.inr ee.1 ∉ w.support →
+        (∀ (a : V) (ha : Sum.inl a ∈ (C : BridgeBlock.Component F).supp), z = Sum.inl a →
+            ((BridgeBlock.contractedGraph F C).deleteEdges
+              {s(pu, pv)}).Reachable ⟨a, ha⟩ pu) ∧
+        (∀ (f : E) (a : V) (ha : Sum.inl a ∈ (C : BridgeBlock.Component F).supp), z = Sum.inr f →
+            (Erdos593.SimpleGraph.bridgeFree F.levi).Adj (Sum.inl a) (Sum.inr f) →
+            ((BridgeBlock.contractedGraph F C).deleteEdges
+              {s(pu, pv)}).Reachable ⟨a, ha⟩ pu) := by
+      intro z t w
+      induction w with
+      | nil =>
+          intro ht _
+          subst ht
+          refine ⟨?_, ?_⟩
+          · intro a ha hza
+            have : a = pu.1 := (Sum.inl.inj hza).symm
+            subst this
+            exact _root_.SimpleGraph.Reachable.refl _
+          · intro f a ha hzf _
+            exact absurd hzf (by simp)
+      | @cons z z' _ hadj w' ih =>
+          intro ht hsupp
+          subst ht
+          have hsupp' : Sum.inr ee.1 ∉ w'.support := by
+            intro h
+            exact hsupp (by simp [h])
+          have hzsupp : Sum.inr ee.1 ≠ z := by
+            intro h
+            exact hsupp (by simp [h])
+          refine ⟨?_, ?_⟩
+          · intro a ha hza
+            subst hza
+            match z', hadj, w', ih, hsupp' with
+            | Sum.inl y, hadj, w', ih, hsupp' =>
+                exact absurd (hle hadj) (F.not_levi_adj_point_point)
+            | Sum.inr f, hadj, w', ih, hsupp' =>
+                exact (ih rfl hsupp').2 f a ha rfl hadj
+          · intro f a ha hzf hadj2
+            subst hzf
+            match z', hadj, w', ih, hsupp' with
+            | Sum.inr g, hadj, w', ih, hsupp' =>
+                exact absurd (hle hadj) (F.not_levi_adj_edge_edge)
+            | Sum.inl a2, hadj, w', ih, hsupp' =>
+                have hfne : f ≠ ee.1 := by
+                  intro h
+                  exact hzsupp (by rw [h])
+                have hfsupp : (Sum.inr f : V ⊕ E) ∈ (C : BridgeBlock.Component F).supp := by
+                  rw [_root_.SimpleGraph.ConnectedComponent.mem_supp_iff] at ha ⊢
+                  rw [← ha]
+                  exact _root_.SimpleGraph.ConnectedComponent.sound hadj2.reachable.symm
+                have ha2 : (Sum.inl a2 : V ⊕ E) ∈ (C : BridgeBlock.Component F).supp := by
+                  rw [_root_.SimpleGraph.ConnectedComponent.mem_supp_iff] at ha ⊢
+                  rw [← ha]
+                  exact _root_.SimpleGraph.ConnectedComponent.sound
+                    (hadj2.reachable.trans hadj.reachable).symm
+                by_cases haa : a = a2
+                · subst haa
+                  exact (ih rfl hsupp').1 a ha rfl
+                · have hdeg :
+                      (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) = 2 :=
+                      BridgeBlock.edge_degree_eq_two_of_hasIncidence F hbridge hC hfsupp
+                  have hadjG : (BridgeBlock.contractedGraph F C).Adj ⟨a, ha⟩ ⟨a2, ha2⟩ := by
+                    refine (BridgeBlock.contractedGraph_adj F C _ _).mpr
+                      ⟨?_, ⟨f, hfsupp, hdeg⟩, hadj2, hadj.symm⟩
+                    intro h
+                    exact haa (congrArg Subtype.val h)
+                  have hedgeNe :
+                      s((⟨a, ha⟩ : BridgeBlock.Point F C), ⟨a2, ha2⟩) ≠ s(pu, pv) := by
+                    intro h
+                    rcases Sym2.eq_iff.mp h with ⟨h1, h2⟩ | ⟨h1, h2⟩
+                    · have hEq := BridgeBlock.contractibleEdge_unique F hlinear hne
+                        (e := ⟨f, hfsupp, hdeg⟩) (f := ee)
+                        (by rw [← h1]; exact hadj2)
+                        (by rw [← h2]; exact hadj.symm) hue hve
+                      exact hfne (congrArg Subtype.val hEq)
+                    · have hEq := BridgeBlock.contractibleEdge_unique F hlinear hne
+                        (e := ⟨f, hfsupp, hdeg⟩) (f := ee)
+                        (by rw [← h2]; exact hadj.symm)
+                        (by rw [← h1]; exact hadj2) hue hve
+                      exact hfne (congrArg Subtype.val hEq)
+                  have hadjD :
+                      ((BridgeBlock.contractedGraph F C).deleteEdges
+                        {s(pu, pv)}).Adj ⟨a, ha⟩ ⟨a2, ha2⟩ := by
+                    rw [_root_.SimpleGraph.deleteEdges_adj]
+                    exact ⟨hadjG, by simpa using hedgeNe⟩
+                  exact hadjD.reachable.trans ((ih rfl hsupp').1 a2 ha2 rfl)
+    -- a bridge-free Levi walk from the second endpoint avoiding the witness node
+    have h1 := hLnb _ _ hue
+    rw [_root_.SimpleGraph.reachable_deleteEdges_iff_exists_walk] at h1
+    obtain ⟨p, hp⟩ := h1
+    obtain ⟨r0, hr0path, hr0edges⟩ :
+        ∃ r : (Erdos593.SimpleGraph.bridgeFree F.levi).Walk
+          (Sum.inr ee.1) (Sum.inl pu.1),
+          r.IsPath ∧ ∀ e ∈ r.edges, e ∈ p.edges := by
+      refine ⟨(p.toPath : (Erdos593.SimpleGraph.bridgeFree F.levi).Walk
+        (Sum.inl pu.1) (Sum.inr ee.1)).reverse, p.toPath.2.reverse, ?_⟩
+      intro e he
+      rw [_root_.SimpleGraph.Walk.edges_reverse, List.mem_reverse] at he
+      exact _root_.SimpleGraph.Walk.edges_toPath_subset_edges p he
+    cases r0 with
+    | cons hadj' rest =>
+        rename_i z'
+        match z', hadj', rest, hr0path, hr0edges with
+        | Sum.inr g, hadj', rest, hr0path, hr0edges =>
+            exact absurd (hle hadj') (F.not_levi_adj_edge_edge)
+        | Sum.inl y, hadj', rest, hr0path, hr0edges =>
+            have hyne : y ≠ pu.1 := by
+              intro h
+              subst h
+              exact hp (hr0edges _ (by simp [Sym2.eq_swap]))
+            have hy : y = pv.1 := by
+              rcases hnbhd (Sum.inl y) hadj'.symm with h | h
+              · exact absurd (Sum.inl.inj h) hyne
+              · exact Sum.inl.inj h
+            subst hy
+            have hnotin : Sum.inr ee.1 ∉ rest.support := by
+              have := hr0path.support_nodup
+              simp only [_root_.SimpleGraph.Walk.support_cons, List.nodup_cons] at this
+              exact this.1
+            exact ((hproj _ _ rest rfl hnotin).1 pv.1 pv.2 rfl).symm
+
+  -- membership in the selected finite endpoint support
+  have hmemXf : ∀ v : BridgeBlock.Point F C,
+      v ∈ finiteEdgeEndpointFinset (BridgeBlock.contractedGraph F C)
+            (CanonicalAtom.cycleBlockEdgeSet F C B)
+            (CanonicalAtom.cycleBlockEdgeSet_finite F C B) ↔
+        ∃ g : (BridgeBlock.contractedGraph F C).edgeSet,
+          g ∈ CanonicalAtom.cycleBlockEdgeSet F C B ∧
+            v ∈ (g.1 : Sym2 (BridgeBlock.Point F C)) := by
+    intro v
+    constructor
+    · intro hv
+      simpa [finiteEdgeEndpointFinset, Sym2.mem_toFinset,
+        Set.Finite.mem_toFinset] using hv
+    · rintro ⟨g, hg, hv⟩
+      exact mem_finiteEdgeEndpointFinset (BridgeBlock.contractedGraph F C) _ hg hv
+  -- every edge of a cycle through a selected edge is itself selected
+  have hcycA : ∀ g : (BridgeBlock.contractedGraph F C).edgeSet,
+      g ∈ CanonicalAtom.cycleBlockEdgeSet F C B →
+      ∀ (z : BridgeBlock.Point F C)
+        (c : (BridgeBlock.contractedGraph F C).Walk z z),
+        c.IsCycle → (g.1 : Sym2 (BridgeBlock.Point F C)) ∈ c.edges →
+        ∀ e ∈ c.edges, ∃ g' : (BridgeBlock.contractedGraph F C).edgeSet,
+          g' ∈ CanonicalAtom.cycleBlockEdgeSet F C B ∧ g'.1 = e := by
+    intro g hg z c hc hgc e he
+    refine ⟨⟨e, c.edges_subset_edgeSet he⟩, ?_, rfl⟩
+    have hgB : Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+        (BridgeBlock.contractedGraph F C) g = B := hg
+    show Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+      (BridgeBlock.contractedGraph F C) _ = B
+    rw [← hgB]
+    exact (Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge_eq_iff
+      (BridgeBlock.contractedGraph F C)).mpr (Or.inr ⟨z, c, hc, he, hgc⟩)
+  -- selected adjacency in the core graph
+  have hKadj : ∀ (a b : BridgeBlock.Point F C)
+      (ha : a ∈ finiteEdgeEndpointFinset (BridgeBlock.contractedGraph F C)
+        (CanonicalAtom.cycleBlockEdgeSet F C B)
+        (CanonicalAtom.cycleBlockEdgeSet_finite F C B))
+      (hb : b ∈ finiteEdgeEndpointFinset (BridgeBlock.contractedGraph F C)
+        (CanonicalAtom.cycleBlockEdgeSet F C B)
+        (CanonicalAtom.cycleBlockEdgeSet_finite F C B)),
+      a ≠ b →
+      (∃ g : (BridgeBlock.contractedGraph F C).edgeSet,
+        g ∈ CanonicalAtom.cycleBlockEdgeSet F C B ∧ g.1 = s(a, b)) →
+      (CanonicalAtom.cycleBlockCore F C B).Adj ⟨a, ha⟩ ⟨b, hb⟩ := by
+    intro a b ha hb hab hg
+    obtain ⟨g, hgA, hgab⟩ := hg
+    rw [CanonicalAtom.cycleBlockCore, finiteEdgeFactorGraph,
+      _root_.SimpleGraph.fromEdgeSet_adj]
+    refine ⟨⟨g, hgA, ?_⟩, ?_⟩
+    · rw [hgab]
+      rfl
+    · simpa [Subtype.ext_iff] using hab
+  -- every vertex of a nontrivial walk lies on one of its edges
+  have hsuppEdge : ∀ (a b : BridgeBlock.Point F C)
+      (p : (BridgeBlock.contractedGraph F C).Walk a b), ¬p.Nil →
+      ∀ w ∈ p.support, ∃ e ∈ p.edges, w ∈ e := by
+    intro a b p
+    induction p with
+    | nil => intro h; exact absurd _root_.SimpleGraph.Walk.nil_nil h
+    | @cons a y b hadj q ih =>
+        intro _ w hw
+        rw [_root_.SimpleGraph.Walk.support_cons, List.mem_cons] at hw
+        rcases hw with rfl | hw
+        · exact ⟨s(w, y), by simp, by simp⟩
+        · by_cases hq : q.Nil
+          · have hwy : w = y := by
+              cases q with
+              | nil => simpa using hw
+              | cons _ _ => simp at hq
+            subst hwy
+            exact ⟨s(a, w), by simp, by simp⟩
+          · obtain ⟨e, he, hwe⟩ := ih hq w hw
+            exact ⟨e, by simp [he], hwe⟩
+  have hcard3 : 3 ≤ Fintype.card
+      (finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+        (CanonicalAtom.cycleBlockEdgeSet F C B)
+        (CanonicalAtom.cycleBlockEdgeSet_finite F C B)) := by
+    obtain ⟨g0, hg0⟩ :=
+      Erdos593.SimpleGraph.EdgeCycleBlock.edges_nonempty
+        (BridgeBlock.contractedGraph F C) B
+    obtain ⟨a0, b0, hab0⟩ :
+        ∃ a b : BridgeBlock.Point F C,
+          (g0.1 : Sym2 (BridgeBlock.Point F C)) = s(a, b) := by
+      generalize (g0.1 : Sym2 (BridgeBlock.Point F C)) = zz
+      induction zz using Sym2.ind with
+      | _ a b => exact ⟨a, b, rfl⟩
+    have hadj0 : (BridgeBlock.contractedGraph F C).Adj a0 b0 := by
+      have h := g0.2
+      rw [hab0] at h
+      exact h
+    obtain ⟨z, c, hc, hmemc⟩ :=
+      _root_.SimpleGraph.adj_and_reachable_delete_edges_iff_exists_cycle.mp
+        ⟨hadj0, hGnb a0 b0 hadj0⟩
+    have hg0c : (g0.1 : Sym2 (BridgeBlock.Point F C)) ∈ c.edges := by
+      rw [hab0]; exact hmemc
+    have hAll : ∀ e ∈ c.edges, ∃ g' : (BridgeBlock.contractedGraph F C).edgeSet,
+        g' ∈ CanonicalAtom.cycleBlockEdgeSet F C B ∧ g'.1 = e :=
+      hcycA g0 hg0 z c hc hg0c
+    have hsub : c.support.tail.toFinset ⊆
+        finiteEdgeEndpointFinset (BridgeBlock.contractedGraph F C)
+          (CanonicalAtom.cycleBlockEdgeSet F C B)
+          (CanonicalAtom.cycleBlockEdgeSet_finite F C B) := by
+      intro w hw
+      rw [List.mem_toFinset] at hw
+      have hws : w ∈ c.support := List.tail_subset _ hw
+      obtain ⟨e, he, hwe⟩ := hsuppEdge z z c hc.not_nil w hws
+      obtain ⟨g', hg', hg'e⟩ := hAll e he
+      exact (hmemXf w).mpr ⟨g', hg', by rw [hg'e]; exact hwe⟩
+    have hnodup : c.support.tail.Nodup := hc.support_nodup
+    have hlen : c.support.tail.length = c.length := by
+      rw [List.length_tail, _root_.SimpleGraph.Walk.length_support]
+      omega
+    have hcard : c.support.tail.toFinset.card = c.length := by
+      rw [List.toFinset_card_of_nodup hnodup, hlen]
+    have h3 : 3 ≤ c.length := hc.three_le_length
+    have hle3 : 3 ≤ (finiteEdgeEndpointFinset (BridgeBlock.contractedGraph F C)
+        (CanonicalAtom.cycleBlockEdgeSet F C B)
+        (CanonicalAtom.cycleBlockEdgeSet_finite F C B)).card := by
+      have := Finset.card_le_card hsub
+      omega
+    simpa [Fintype.card_coe] using hle3
+  refine ⟨hcard3, ?_⟩
+  intro x
+  -- transport selected walks avoiding the deleted vertex into the core
+  have htrans : ∀ (a b : BridgeBlock.Point F C)
+      (p : (BridgeBlock.contractedGraph F C).Walk a b),
+      (∀ e ∈ p.edges, ∃ g : (BridgeBlock.contractedGraph F C).edgeSet,
+        g ∈ CanonicalAtom.cycleBlockEdgeSet F C B ∧ g.1 = e) →
+      (∀ w ∈ p.support, w ≠ x.1) →
+      ∀ (ha : a ∈ finiteEdgeEndpointFinset (BridgeBlock.contractedGraph F C)
+            (CanonicalAtom.cycleBlockEdgeSet F C B)
+            (CanonicalAtom.cycleBlockEdgeSet_finite F C B))
+        (hb : b ∈ finiteEdgeEndpointFinset (BridgeBlock.contractedGraph F C)
+            (CanonicalAtom.cycleBlockEdgeSet F C B)
+            (CanonicalAtom.cycleBlockEdgeSet_finite F C B))
+        (hax : (⟨a, ha⟩ : finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+            (CanonicalAtom.cycleBlockEdgeSet F C B)
+            (CanonicalAtom.cycleBlockEdgeSet_finite F C B)) ≠ x)
+        (hbx : (⟨b, hb⟩ : finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+            (CanonicalAtom.cycleBlockEdgeSet F C B)
+            (CanonicalAtom.cycleBlockEdgeSet_finite F C B)) ≠ x),
+        ((CanonicalAtom.cycleBlockCore F C B).induce {y | y ≠ x}).Reachable
+          ⟨⟨a, ha⟩, hax⟩ ⟨⟨b, hb⟩, hbx⟩ := by
+    intro a b p
+    induction p with
+    | nil =>
+        intro _ _ ha hb hax hbx
+        exact _root_.SimpleGraph.Reachable.refl _
+    | @cons a y b hadj q ih =>
+        intro hedges hsupp ha hb hax hbx
+        obtain ⟨g, hgA, hgay⟩ := hedges s(a, y) (by simp)
+        have hy : y ∈ finiteEdgeEndpointFinset (BridgeBlock.contractedGraph F C)
+            (CanonicalAtom.cycleBlockEdgeSet F C B)
+            (CanonicalAtom.cycleBlockEdgeSet_finite F C B) :=
+          (hmemXf y).mpr ⟨g, hgA, by rw [hgay]; simp⟩
+        have hyx : (⟨y, hy⟩ : finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+            (CanonicalAtom.cycleBlockEdgeSet F C B)
+            (CanonicalAtom.cycleBlockEdgeSet_finite F C B)) ≠ x := by
+          intro h
+          exact hsupp y (by simp) (congrArg Subtype.val h)
+        have hstep : ((CanonicalAtom.cycleBlockCore F C B).induce
+            {y | y ≠ x}).Adj ⟨⟨a, ha⟩, hax⟩ ⟨⟨y, hy⟩, hyx⟩ :=
+          hKadj a y ha hy hadj.ne ⟨g, hgA, hgay⟩
+        exact hstep.reachable.trans
+          (ih (fun e he => hedges e (by simp [he]))
+            (fun w hw => hsupp w (by simp [hw])) hy hb hyx hbx)
+  rw [_root_.SimpleGraph.connected_iff]
+  constructor
+  · intro U W
+    obtain ⟨gU, hgU, haU⟩ := (hmemXf U.1.1).mp U.1.2
+    obtain ⟨gW, hgW, hbW⟩ := (hmemXf W.1.1).mp W.1.2
+    have hUx : U.1.1 ≠ x.1 := by
+      intro h
+      exact U.2 (Subtype.ext h)
+    have hWx : W.1.1 ≠ x.1 := by
+      intro h
+      exact W.2 (Subtype.ext h)
+    by_cases hUW : U.1.1 = W.1.1
+    · have hUW' : U = W := Subtype.ext (Subtype.ext hUW)
+      rw [hUW']
+    · by_cases hgg : gU = gW
+      · subst hgg
+        have hedge : (gU.1 : Sym2 (BridgeBlock.Point F C)) = s(U.1.1, W.1.1) :=
+          (Sym2.mem_and_mem_iff hUW).mp ⟨haU, hbW⟩
+        have hadjUW : (BridgeBlock.contractedGraph F C).Adj U.1.1 W.1.1 := by
+          have h := gU.2
+          rw [hedge] at h
+          exact h
+        exact htrans U.1.1 W.1.1
+          (_root_.SimpleGraph.Walk.cons hadjUW _root_.SimpleGraph.Walk.nil)
+          (by
+            intro e he
+            simp only [_root_.SimpleGraph.Walk.edges_cons,
+              _root_.SimpleGraph.Walk.edges_nil, List.mem_singleton] at he
+            exact ⟨gU, hgU, by rw [hedge, he]⟩)
+          (by
+            intro w hw
+            simp only [_root_.SimpleGraph.Walk.support_cons,
+              _root_.SimpleGraph.Walk.support_nil, List.mem_cons,
+              List.not_mem_nil, or_false] at hw
+            rcases hw with rfl | rfl
+            · exact hUx
+            · exact hWx)
+          U.1.2 W.1.2 U.2 W.2
+      · have hlink : Erdos593.SimpleGraph.EdgeCycleLinked
+            (BridgeBlock.contractedGraph F C) gU gW :=
+          (Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge_eq_iff
+            (BridgeBlock.contractedGraph F C)).mp
+            ((hgU : Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+                (BridgeBlock.contractedGraph F C) gU = B).trans
+              (hgW : Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+                (BridgeBlock.contractedGraph F C) gW = B).symm)
+        rcases hlink with heq | hcyc
+        · exact absurd heq hgg
+        obtain ⟨z, c, hc, hUc, hWc⟩ := hcyc
+        have hAllc : ∀ e ∈ c.edges, ∃ g' :
+            (BridgeBlock.contractedGraph F C).edgeSet,
+            g' ∈ CanonicalAtom.cycleBlockEdgeSet F C B ∧ g'.1 = e :=
+          hcycA gU hgU z c hc hUc
+        have hUsupp : U.1.1 ∈ c.support :=
+          _root_.SimpleGraph.Walk.mem_support_of_mem_edges hUc haU
+        have hWsupp : W.1.1 ∈ c.support :=
+          _root_.SimpleGraph.Walk.mem_support_of_mem_edges hWc hbW
+        have hc1 : (c.rotate U.1.1 hUsupp).IsCycle := hc.rotate hUsupp
+        have hc1edges : ∀ e ∈ (c.rotate U.1.1 hUsupp).edges, e ∈ c.edges :=
+          fun e he => ((c.rotate_edges U.1.1 hUsupp).perm.mem_iff).mp he
+        have hWc1 : W.1.1 ∈ (c.rotate U.1.1 hUsupp).support :=
+          (_root_.SimpleGraph.Walk.mem_support_rotate_iff c U.1.1 hUsupp).mpr hWsupp
+        have hspec := (c.rotate U.1.1 hUsupp).take_spec hWc1
+        have hpedges : ∀ e ∈ ((c.rotate U.1.1 hUsupp).takeUntil W.1.1 hWc1).edges,
+            e ∈ c.edges := by
+          intro e he
+          refine hc1edges e ?_
+          rw [← hspec, _root_.SimpleGraph.Walk.edges_append]
+          exact List.mem_append_left _ he
+        have hqedges : ∀ e ∈ ((c.rotate U.1.1 hUsupp).dropUntil W.1.1 hWc1).edges,
+            e ∈ c.edges := by
+          intro e he
+          refine hc1edges e ?_
+          rw [← hspec, _root_.SimpleGraph.Walk.edges_append]
+          exact List.mem_append_right _ he
+        by_cases hxp : x.1 ∈ ((c.rotate U.1.1 hUsupp).takeUntil W.1.1 hWc1).support
+        · have hxq : x.1 ∉ ((c.rotate U.1.1 hUsupp).dropUntil W.1.1 hWc1).support := by
+            intro hxq
+            have hpt : x.1 ∈
+                ((c.rotate U.1.1 hUsupp).takeUntil W.1.1 hWc1).support.tail := by
+              rw [← _root_.SimpleGraph.Walk.cons_tail_support, List.mem_cons] at hxp
+              rcases hxp with h | h
+              · exact absurd h.symm hUx
+              · exact h
+            have hqt : x.1 ∈
+                ((c.rotate U.1.1 hUsupp).dropUntil W.1.1 hWc1).support.tail := by
+              rw [← _root_.SimpleGraph.Walk.cons_tail_support, List.mem_cons] at hxq
+              rcases hxq with h | h
+              · exact absurd h.symm hWx
+              · exact h
+            have hnd : (c.rotate U.1.1 hUsupp).support.tail.Nodup := hc1.support_nodup
+            rw [← hspec, _root_.SimpleGraph.Walk.tail_support_append] at hnd
+            exact List.disjoint_of_nodup_append hnd hpt hqt
+          exact htrans U.1.1 W.1.1
+            ((c.rotate U.1.1 hUsupp).dropUntil W.1.1 hWc1).reverse
+            (by
+              intro e he
+              rw [_root_.SimpleGraph.Walk.edges_reverse, List.mem_reverse] at he
+              exact hAllc e (hqedges e he))
+            (by
+              intro w hw
+              rw [_root_.SimpleGraph.Walk.support_reverse, List.mem_reverse] at hw
+              intro hwx
+              exact hxq (hwx ▸ hw))
+            U.1.2 W.1.2 U.2 W.2
+        · exact htrans U.1.1 W.1.1
+            ((c.rotate U.1.1 hUsupp).takeUntil W.1.1 hWc1)
+            (by
+              intro e he
+              exact hAllc e (hpedges e he))
+            (by
+              intro w hw hwx
+              exact hxp (hwx ▸ hw))
+            U.1.2 W.1.2 U.2 W.2
+  · have hex : ∃ y : finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+        (CanonicalAtom.cycleBlockEdgeSet F C B)
+        (CanonicalAtom.cycleBlockEdgeSet_finite F C B), y ≠ x := by
+      by_contra hno
+      have hno' : ∀ y, y = x := by
+        intro y
+        by_contra hy
+        exact hno ⟨y, hy⟩
+      have hle1 : Fintype.card (finiteEdgeEndpointType
+          (BridgeBlock.contractedGraph F C)
+          (CanonicalAtom.cycleBlockEdgeSet F C B)
+          (CanonicalAtom.cycleBlockEdgeSet_finite F C B)) ≤ 1 :=
+        Fintype.card_le_one_iff.mpr fun a b => (hno' a).trans (hno' b).symm
+      omega
+    obtain ⟨y, hy⟩ := hex
+    exact ⟨⟨y, hy⟩⟩
+
+/-- Under even Berge-cycle parity, every canonical cycle-block core is
+bipartite. -/
+theorem cycleBlockCore_isBipartite
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hberge : F.EvenBergeCycles)
+    (C : BridgeBlock.HyperedgeComponent F)
+    (hC : BridgeBlock.HasIncidence F C)
+    (B : Erdos593.SimpleGraph.EdgeCycleBlock
+      (BridgeBlock.contractedGraph F C)) :
+    (CanonicalAtom.cycleBlockCore F C B).IsBipartite := by
+  classical
+  by_cases hcontext : F.BridgeAtEveryEdge ∧ BridgeBlock.HasIncidence F C
+  · -- Two-colour the ambient contracted graph and pull the colouring back along
+    -- the incidence-preserving factor map of the selected finite endpoint graph.
+    have hcol : (BridgeBlock.contractedGraph F C).Colorable 2 :=
+      BridgeBlock.contractedGraph_colorable_two F hlinear hberge C
+    have hhom :
+        CanonicalAtom.cycleBlockCore F C B →g BridgeBlock.contractedGraph F C :=
+      Erdos593.SimpleGraph.NonInducedFactor.toHom
+        (finiteEdgeFactor (BridgeBlock.contractedGraph F C)
+          (CanonicalAtom.cycleBlockEdgeSet F C B)
+          (CanonicalAtom.cycleBlockEdgeSet_finite F C B))
+    exact _root_.SimpleGraph.Colorable.of_hom hhom hcol
+  · exact False.elim (hcontext ⟨hbridge, hC⟩)
+
+/-- Combined manuscript-facing structure of a canonical cycle-block core. -/
+theorem cycleBlockCore_structure
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hberge : F.EvenBergeCycles)
+    (C : BridgeBlock.HyperedgeComponent F)
+    (hC : BridgeBlock.HasIncidence F C)
+    (B : Erdos593.SimpleGraph.EdgeCycleBlock
+      (BridgeBlock.contractedGraph F C)) :
+    IsTwoVertexConnected (CanonicalAtom.cycleBlockCore F C B) ∧
+      (CanonicalAtom.cycleBlockCore F C B).IsBipartite :=
+  ⟨cycleBlockCore_isTwoVertexConnected F hlinear hbridge C hC B,
+    cycleBlockCore_isBipartite F hlinear hbridge hberge C hC B⟩
+
+end
+end CanonicalAtom
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomCoreStructure
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomCoreStructure
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomForestReconstruction
+Source: Erdos593/TripleSystem/CanonicalAtomForestReconstruction.lean
+Normalized SHA-256: 2e7b0b66b7e9eaa0424a672a84a24df21d54612359b3d62cedf61095e0c5ade4
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomForestReconstruction
+
+/-!
+# Canonical atom incidence forest and exact reconstruction
+
+This module packages the second layer of the canonical atom normal form.  It
+keeps the literal fibres of `CanonicalAtom.atomOf`, records their exact point
+supports, prunes the point side of the incidence graph to points belonging to
+at least two atoms, and exposes a newest-first running edge assembly whose
+total edge union is `Set.univ`.
+
+Pairwise one-point intersection and global incidence acyclicity are separate
+obligations: the former is not used as a substitute for the latter.  The
+final reconstruction uses `edgeRestrictionUnivIso`, so the no-isolated-points
+hypothesis occurs only at the boundary where the supported restriction is
+identified with the original vertex type.
+-/
+
+namespace Erdos593
+
+universe w
+
+namespace TripleSystem
+namespace CanonicalAtom
+
+noncomputable section
+
+variable {V E : Type w} (F : TripleSystem V E)
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+  [DecidableRel F.levi.Adj]
+
+noncomputable local instance atomIndexDecidableEq :
+    DecidableEq (CanonicalAtom.Index F) :=
+  Classical.decEq _
+
+/-- The original points incident with at least one hyperedge of a canonical
+atom fibre. -/
+def atomSupport
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : CanonicalAtom.Index F) : Set V :=
+  F.edgeSupportSet (CanonicalAtom.edges F hlinear hbridge A)
+
+/-- The finite carrier of represented canonical labels, constructed as the
+image of the finite original hyperedge type. -/
+noncomputable def atomFinset
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    Finset (CanonicalAtom.Index F) := by
+  classical
+  exact Finset.univ.image (CanonicalAtom.atomOf F hlinear hbridge)
+
+/-- Surjectivity of `atomOf` says that the finite carrier contains every
+canonical label; there are no ghost atom indices. -/
+@[simp]
+theorem mem_atomFinset
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : CanonicalAtom.Index F) :
+    A ∈ CanonicalAtom.atomFinset F hlinear hbridge := by
+  classical
+  rw [CanonicalAtom.atomFinset, Finset.mem_image]
+  obtain ⟨e, he⟩ := CanonicalAtom.atomOf_surjective F hlinear hbridge A
+  exact ⟨e, Finset.mem_univ e, he⟩
+
+/-- Incidence of a canonical atom label with an original point. -/
+def atomIncident
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : CanonicalAtom.Index F) (x : V) : Prop :=
+  x ∈ CanonicalAtom.atomSupport F hlinear hbridge A
+
+noncomputable local instance atomIncidentDecidableRel
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    DecidableRel (CanonicalAtom.atomIncident F hlinear hbridge) :=
+  fun A x => Classical.propDecidable
+    (CanonicalAtom.atomIncident F hlinear hbridge A x)
+
+/-- The full bipartite atom--point incidence graph.  Degree-zero and
+degree-one point vertices are harmless leaves/isolates; the exact manuscript
+carrier is obtained by the pruning below. -/
+def atomPointIncidenceGraph
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :=
+  SimpleGraph.bipartiteIncidenceGraph
+    (CanonicalAtom.atomIncident F hlinear hbridge)
+
+/-- Original points incident with at least two represented canonical atoms. -/
+noncomputable def sharedAtomPoints
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) : Finset V := by
+  classical
+  exact SimpleGraph.sharedRightPoints
+    (CanonicalAtom.atomIncident F hlinear hbridge)
+    (CanonicalAtom.atomFinset F hlinear hbridge)
+
+/-- The exact manuscript incidence graph: all represented atom labels and
+only original points incident with at least two of them.  A point shared by
+three or more atoms remains one right-side vertex. -/
+noncomputable def atomSharedPointIncidenceGraph
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) := by
+  classical
+  exact (CanonicalAtom.atomPointIncidenceGraph F hlinear hbridge).induce
+    (↑(SimpleGraph.bipartitePruneVertices
+      (CanonicalAtom.atomIncident F hlinear hbridge)
+      (CanonicalAtom.atomFinset F hlinear hbridge)) :
+        Set (CanonicalAtom.Index F ⊕ V))
+
+/-- Membership in the pruned point carrier is literally incidence with at
+least two represented atoms. -/
+@[simp]
+theorem mem_sharedAtomPoints
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) (x : V) :
+    x ∈ CanonicalAtom.sharedAtomPoints F hlinear hbridge ↔
+      2 ≤ ((CanonicalAtom.atomFinset F hlinear hbridge).filter
+        (fun A => CanonicalAtom.atomIncident F hlinear hbridge A x)).card := by
+  simpa only [CanonicalAtom.sharedAtomPoints] using
+    (SimpleGraph.mem_sharedRightPoints
+      (CanonicalAtom.atomIncident F hlinear hbridge)
+      (CanonicalAtom.atomFinset F hlinear hbridge) x)
+
+/-- Distinct canonical atom fibres have disjoint hyperedge-index sets. -/
+theorem atomEdges_disjoint
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {A B : CanonicalAtom.Index F} (hAB : A ≠ B) :
+    Disjoint (CanonicalAtom.edges F hlinear hbridge A)
+      (CanonicalAtom.edges F hlinear hbridge B) := by
+  rw [Set.disjoint_left]
+  intro e heA heB
+  change CanonicalAtom.atomOf F hlinear hbridge e = A at heA
+  change CanonicalAtom.atomOf F hlinear hbridge e = B at heB
+  exact hAB (heA.symm.trans heB)
+
+/-- Distinct canonical atom supports meet in at most one original point. -/
+theorem atomSupport_inter_subsingleton
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {A B : CanonicalAtom.Index F} (hAB : A ≠ B) :
+    (CanonicalAtom.atomSupport F hlinear hbridge A ∩
+      CanonicalAtom.atomSupport F hlinear hbridge B).Subsingleton := by
+  classical
+  -- The two literal shapes of the welded label map.
+  have atomOf_singleton : ∀ (e : E)
+      (hzero : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0),
+      CanonicalAtom.atomOf F hlinear hbridge e = Index.singleton e hzero := by
+    intro e hzero
+    unfold CanonicalAtom.atomOf
+    rw [dif_pos hzero]
+  have atomOf_cycle : ∀ (e : E)
+      (hne : ¬ (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0),
+      CanonicalAtom.atomOf F hlinear hbridge e =
+        Index.cycleBlock (BridgeBlock.hyperedgeComponentOf F e)
+          (CanonicalAtom.hyperedgeComponent_hasIncidence_of_degree_ne_zero F hne)
+          (Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+            (BridgeBlock.contractedGraph F (BridgeBlock.hyperedgeComponentOf F e))
+            ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge
+                (CanonicalAtom.hyperedgeComponent_hasIncidence_of_degree_ne_zero
+                  F hne)).symm
+              ⟨e, BridgeBlock.mem_hyperedgeComponentOf_set F e⟩)) := by
+    intro e hne
+    unfold CanonicalAtom.atomOf
+    rw [dif_neg hne]
+  -- Hyperedges with a common canonical label lie in one bridge-free block.
+  have samecomp : ∀ e f : E, CanonicalAtom.atomOf F hlinear hbridge e =
+        CanonicalAtom.atomOf F hlinear hbridge f →
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Reachable (Sum.inr e) (Sum.inr f) := by
+    intro e f h
+    by_cases he : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0
+    · rw [atomOf_singleton e he] at h
+      by_cases hf : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) = 0
+      · rw [atomOf_singleton f hf] at h
+        injection h with h1
+        subst h1
+        rfl
+      · rw [atomOf_cycle f hf] at h
+        exact absurd h (by simp)
+    · rw [atomOf_cycle e he] at h
+      by_cases hf : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) = 0
+      · rw [atomOf_singleton f hf] at h
+        exact absurd h (by simp)
+      · rw [atomOf_cycle f hf] at h
+        injection h with h1 _
+        exact _root_.SimpleGraph.ConnectedComponent.exact (congrArg Subtype.val h1)
+  -- A residual-degree-zero label has exactly one hyperedge in its fibre.
+  have singleton_fibre : ∀ (e f : E)
+      (hzero : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0),
+      CanonicalAtom.atomOf F hlinear hbridge f = Index.singleton e hzero → f = e := by
+    intro e f hzero h
+    by_cases hf : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) = 0
+    · rw [atomOf_singleton f hf] at h
+      injection h
+    · rw [atomOf_cycle f hf] at h
+      exact absurd h (by simp)
+  -- A surviving incidence with a cycle-block label is an incidence of the block.
+  have core_atom_data : ∀ (C : BridgeBlock.HyperedgeComponent F)
+      (hC : BridgeBlock.HasIncidence F C)
+      (B : Erdos593.SimpleGraph.EdgeCycleBlock (BridgeBlock.contractedGraph F C))
+      (x : V) (e : E),
+      CanonicalAtom.atomOf F hlinear hbridge e = Index.cycleBlock C hC B →
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Adj (Sum.inl x) (Sum.inr e) →
+      ∃ hx : Sum.inl x ∈ (C : BridgeBlock.Component F).supp,
+        Erdos593.SimpleGraph.EdgeCycleBlock.Incident
+          (BridgeBlock.contractedGraph F C) ⟨x, hx⟩ B := by
+    intro C hC B x e hA hadj
+    have hdeg : ¬ (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0 := by
+      have hpos : 0 < (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) :=
+        ((Erdos593.SimpleGraph.bridgeFree F.levi).degree_pos_iff_exists_adj
+          (Sum.inr e)).mpr ⟨Sum.inl x, hadj.symm⟩
+      omega
+    rw [atomOf_cycle e hdeg] at hA
+    injection hA with h1 h3
+    subst h1
+    have hB : B = Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+        (BridgeBlock.contractedGraph F (BridgeBlock.hyperedgeComponentOf F e))
+        ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC).symm
+          ⟨e, BridgeBlock.mem_hyperedgeComponentOf_set F e⟩) := (eq_of_heq h3).symm
+    have hx : Sum.inl x ∈
+        ((BridgeBlock.hyperedgeComponentOf F e : BridgeBlock.Component F)).supp :=
+      (BridgeBlock.hyperedgeComponentOf F e :
+        BridgeBlock.Component F).mem_supp_of_adj_mem_supp
+          (BridgeBlock.mem_hyperedgeComponentOf_set F e) hadj.symm
+    refine ⟨hx, ?_⟩
+    subst hB
+    set a : (BridgeBlock.contractedGraph F
+        (BridgeBlock.hyperedgeComponentOf F e)).edgeSet :=
+      (BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC).symm
+        ⟨e, BridgeBlock.mem_hyperedgeComponentOf_set F e⟩
+    have hwit : (BridgeBlock.graphEdgeWitness F hlinear
+        (C := (BridgeBlock.hyperedgeComponentOf F e :
+          BridgeBlock.Component F)) a).1 = e :=
+      congrArg Subtype.val
+        ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC).apply_symm_apply
+          ⟨e, BridgeBlock.mem_hyperedgeComponentOf_set F e⟩)
+    have hmem : (⟨x, hx⟩ : BridgeBlock.Point F
+        (BridgeBlock.hyperedgeComponentOf F e)) ∈ (a.1 : Sym2 _) := by
+      rw [BridgeBlock.mem_graphEdge_iff_bridgeFree_adj_graphEdgeWitness
+        F hlinear a ⟨x, hx⟩, hwit]
+      exact hadj
+    exact Erdos593.SimpleGraph.EdgeCycleBlock.incident_of_mem_endpoint _ rfl hmem
+  -- A nonbridge incidence survives bridge deletion.
+  have adj_of_not_bridge : ∀ (u : V) (w : E), F.Inc u w →
+      ¬ F.levi.IsBridge s(Sum.inl u, Sum.inr w) →
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Adj (Sum.inl u) (Sum.inr w) := by
+    intro u w hinc hnb
+    rw [Erdos593.SimpleGraph.bridgeFree, _root_.SimpleGraph.deleteEdges_adj]
+    exact ⟨F.levi_adj_point_edge.mpr hinc,
+      fun hmem => hnb (Erdos593.SimpleGraph.mem_bridgeFinset.mp hmem).2⟩
+  have bridgeFree_adj_deleteEdges : ∀ (b : Sym2 (V ⊕ E)), F.levi.IsBridge b →
+      b ∈ F.levi.edgeSet → ∀ u v : V ⊕ E,
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Adj u v →
+      (F.levi.deleteEdges {b}).Adj u v := by
+    intro b hb hbmem u v h
+    rw [Erdos593.SimpleGraph.bridgeFree, _root_.SimpleGraph.deleteEdges_adj] at h
+    rw [_root_.SimpleGraph.deleteEdges_adj]
+    refine ⟨h.1, ?_⟩
+    intro hmem
+    apply h.2
+    rw [Set.mem_singleton_iff.mp hmem]
+    exact Erdos593.SimpleGraph.mem_bridgeFinset.mpr ⟨hbmem, hb⟩
+  -- Two block-connected hyperedge pairs meeting two points exclude a bridge.
+  have nobridge : ∀ (x y : V) (p q r t : E), x ≠ y → p ≠ r →
+      F.Inc x p → F.Inc y q → F.Inc x r → F.Inc y t →
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Reachable (Sum.inr p) (Sum.inr q) →
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Reachable (Sum.inr r) (Sum.inr t) →
+      ¬ F.levi.IsBridge s(Sum.inl x, Sum.inr p) := by
+    intro x y p q r t hxy hpr hxp hyq hxr hyt hpq hrt hb
+    have hbmem : s(Sum.inl x, Sum.inr p) ∈ F.levi.edgeSet :=
+      F.levi_adj_point_edge.mpr hxp
+    have hmono : (Erdos593.SimpleGraph.bridgeFree F.levi) ≤
+        F.levi.deleteEdges {s(Sum.inl x, Sum.inr p)} := by
+      intro a b h
+      exact bridgeFree_adj_deleteEdges _ hb hbmem a b h
+    have hstep : ∀ (u : V) (w : E), F.Inc u w → (u ≠ x ∨ w ≠ p) →
+        (F.levi.deleteEdges {s(Sum.inl x, Sum.inr p)}).Adj
+          (Sum.inl u) (Sum.inr w) := by
+      intro u w hinc hne
+      rw [_root_.SimpleGraph.deleteEdges_adj]
+      refine ⟨F.levi_adj_point_edge.mpr hinc, ?_⟩
+      intro hmem
+      have heq : s((Sum.inl u : V ⊕ E), Sum.inr w) = s(Sum.inl x, Sum.inr p) :=
+        Set.mem_singleton_iff.mp hmem
+      rcases Sym2.eq_iff.mp heq with ⟨h1, h2⟩ | ⟨h1, _⟩
+      · rcases hne with hne | hne
+        · exact hne (Sum.inl.inj h1)
+        · exact hne (Sum.inr.inj h2)
+      · exact Sum.inl_ne_inr h1
+    have hR : (F.levi.deleteEdges {s(Sum.inl x, Sum.inr p)}).Reachable
+        (Sum.inl x) (Sum.inr p) := by
+      refine ((hstep x r hxr (Or.inr hpr.symm)).reachable.trans ?_)
+      refine ((hrt.mono hmono).trans ?_)
+      refine (((hstep y t hyt (Or.inl hxy.symm)).symm).reachable.trans ?_)
+      exact ((hstep y q hyq (Or.inl hxy.symm)).reachable.trans (hpq.symm.mono hmono))
+    exact (_root_.SimpleGraph.isBridge_iff.mp hb) hR
+  -- The exact support claim.
+  intro x hx y hy
+  by_contra hxy
+  obtain ⟨⟨p, hpA, hxp⟩, ⟨r, hrB, hxr⟩⟩ := hx
+  obtain ⟨⟨q, hqA, hyq⟩, ⟨t, htB, hyt⟩⟩ := hy
+  change CanonicalAtom.atomOf F hlinear hbridge p = A at hpA
+  change CanonicalAtom.atomOf F hlinear hbridge q = A at hqA
+  change CanonicalAtom.atomOf F hlinear hbridge r = B at hrB
+  change CanonicalAtom.atomOf F hlinear hbridge t = B at htB
+  have hpr : p ≠ r := fun h => hAB (hpA.symm.trans (h ▸ hrB))
+  have hqt : q ≠ t := fun h => hAB (hqA.symm.trans (h ▸ htB))
+  have hpq : (Erdos593.SimpleGraph.bridgeFree F.levi).Reachable
+      (Sum.inr p) (Sum.inr q) := samecomp p q (hpA.trans hqA.symm)
+  have hrt : (Erdos593.SimpleGraph.bridgeFree F.levi).Reachable
+      (Sum.inr r) (Sum.inr t) := samecomp r t (hrB.trans htB.symm)
+  have hax : (Erdos593.SimpleGraph.bridgeFree F.levi).Adj (Sum.inl x) (Sum.inr p) :=
+    adj_of_not_bridge x p hxp (nobridge x y p q r t hxy hpr hxp hyq hxr hyt hpq hrt)
+  have hay : (Erdos593.SimpleGraph.bridgeFree F.levi).Adj (Sum.inl y) (Sum.inr q) :=
+    adj_of_not_bridge y q hyq (nobridge y x q p t r (Ne.symm hxy) hqt hyq hxp hyt hxr
+      hpq.symm hrt.symm)
+  have hbx : (Erdos593.SimpleGraph.bridgeFree F.levi).Adj (Sum.inl x) (Sum.inr r) :=
+    adj_of_not_bridge x r hxr (nobridge x y r t p q hxy (Ne.symm hpr) hxr hyt hxp hyq
+      hrt hpq)
+  have hby : (Erdos593.SimpleGraph.bridgeFree F.levi).Adj (Sum.inl y) (Sum.inr t) :=
+    adj_of_not_bridge y t hyt (nobridge y x t r q p (Ne.symm hxy) (Ne.symm hqt) hyt hxr
+      hyq hxp hrt.symm hpq.symm)
+  clear hpq hrt
+  cases A with
+  | singleton e hzero =>
+      have hpe : p = e := singleton_fibre e p hzero hpA
+      subst hpe
+      have hpos : 0 < (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr p) :=
+        ((Erdos593.SimpleGraph.bridgeFree F.levi).degree_pos_iff_exists_adj
+          (Sum.inr p)).mpr ⟨Sum.inl x, hax.symm⟩
+      omega
+  | cycleBlock C hC BA =>
+      cases B with
+      | singleton e hzero =>
+          have hre : r = e := singleton_fibre e r hzero hrB
+          subst hre
+          have hpos : 0 < (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr r) :=
+            ((Erdos593.SimpleGraph.bridgeFree F.levi).degree_pos_iff_exists_adj
+              (Sum.inr r)).mpr ⟨Sum.inl x, hbx.symm⟩
+          omega
+      | cycleBlock C' hC' BB =>
+          obtain ⟨hxC, hxBA⟩ := core_atom_data C hC BA x p hpA hax
+          obtain ⟨hyC, hyBA⟩ := core_atom_data C hC BA y q hqA hay
+          obtain ⟨hxC', hxBB⟩ := core_atom_data C' hC' BB x r hrB hbx
+          obtain ⟨hyC', hyBB⟩ := core_atom_data C' hC' BB y t htB hby
+          have hCC' : C = C' := by
+            apply Subtype.ext
+            have h1 := (_root_.SimpleGraph.ConnectedComponent.mem_supp_iff
+              (C : BridgeBlock.Component F) (Sum.inl x)).mp hxC
+            have h2 := (_root_.SimpleGraph.ConnectedComponent.mem_supp_iff
+              (C' : BridgeBlock.Component F) (Sum.inl x)).mp hxC'
+            exact h1.symm.trans h2
+          subst hCC'
+          have hne : (⟨x, hxC⟩ : BridgeBlock.Point F (C : BridgeBlock.Component F)) ≠
+              ⟨y, hyC⟩ := fun h => hxy (congrArg Subtype.val h)
+          have hblocks : BA = BB :=
+            Erdos593.SimpleGraph.EdgeCycleBlock.eq_of_incident_two_vertices
+              (BridgeBlock.contractedGraph F (C : BridgeBlock.Component F))
+              hne hxBA hyBA hxBB hyBB
+          subst hblocks
+          exact hAB rfl
+
+/-- The full canonical atom--point incidence graph is acyclic.  This is the
+global alternating-cycle exclusion and is strictly stronger than the
+pairwise support-intersection theorem. -/
+theorem atomPointIncidenceGraph_isAcyclic
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    (CanonicalAtom.atomPointIncidenceGraph F hlinear hbridge).IsAcyclic := by
+  classical
+  -- The two literal shapes of the welded label map.
+  have atomOf_singleton : ∀ (e : E)
+      (hzero : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0),
+      CanonicalAtom.atomOf F hlinear hbridge e = Index.singleton e hzero := by
+    intro e hzero
+    unfold CanonicalAtom.atomOf
+    rw [dif_pos hzero]
+  have atomOf_cycle : ∀ (e : E)
+      (hne : ¬ (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0),
+      CanonicalAtom.atomOf F hlinear hbridge e =
+        Index.cycleBlock (BridgeBlock.hyperedgeComponentOf F e)
+          (CanonicalAtom.hyperedgeComponent_hasIncidence_of_degree_ne_zero F hne)
+          (Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+            (BridgeBlock.contractedGraph F (BridgeBlock.hyperedgeComponentOf F e))
+            ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge
+                (CanonicalAtom.hyperedgeComponent_hasIncidence_of_degree_ne_zero
+                  F hne)).symm
+              ⟨e, BridgeBlock.mem_hyperedgeComponentOf_set F e⟩)) := by
+    intro e hne
+    unfold CanonicalAtom.atomOf
+    rw [dif_neg hne]
+  -- Hyperedges with a common canonical label lie in one bridge-free block.
+  have samecomp : ∀ e f : E, CanonicalAtom.atomOf F hlinear hbridge e =
+        CanonicalAtom.atomOf F hlinear hbridge f →
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Reachable (Sum.inr e) (Sum.inr f) := by
+    intro e f h
+    by_cases he : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0
+    · rw [atomOf_singleton e he] at h
+      by_cases hf : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) = 0
+      · rw [atomOf_singleton f hf] at h
+        injection h with h1
+        subst h1
+        rfl
+      · rw [atomOf_cycle f hf] at h
+        exact absurd h (by simp)
+    · rw [atomOf_cycle e he] at h
+      by_cases hf : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) = 0
+      · rw [atomOf_singleton f hf] at h
+        exact absurd h (by simp)
+      · rw [atomOf_cycle f hf] at h
+        injection h with h1 _
+        exact _root_.SimpleGraph.ConnectedComponent.exact (congrArg Subtype.val h1)
+  -- A residual-degree-zero label has exactly one hyperedge in its fibre, so it
+  -- carries no surviving incidence at all.
+  have singleton_fibre : ∀ (e f : E)
+      (hzero : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0),
+      CanonicalAtom.atomOf F hlinear hbridge f = Index.singleton e hzero → f = e := by
+    intro e f hzero h
+    by_cases hf : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) = 0
+    · rw [atomOf_singleton f hf] at h
+      injection h
+    · rw [atomOf_cycle f hf] at h
+      exact absurd h (by simp)
+  have singleton_no_core : ∀ (e f : E) (x : V)
+      (hzero : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0),
+      CanonicalAtom.atomOf F hlinear hbridge f = Index.singleton e hzero →
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Adj (Sum.inl x) (Sum.inr f) →
+      False := by
+    intro e f x hzero h hadj
+    have hfe : f = e := singleton_fibre e f hzero h
+    subst hfe
+    have hpos : 0 < (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) :=
+      ((Erdos593.SimpleGraph.bridgeFree F.levi).degree_pos_iff_exists_adj
+        (Sum.inr f)).mpr ⟨Sum.inl x, hadj.symm⟩
+    omega
+  -- A surviving incidence with a cycle-block label is an incidence of the block.
+  have core_atom_data : ∀ (C : BridgeBlock.HyperedgeComponent F)
+      (hC : BridgeBlock.HasIncidence F C)
+      (B : Erdos593.SimpleGraph.EdgeCycleBlock (BridgeBlock.contractedGraph F C))
+      (x : V) (e : E),
+      CanonicalAtom.atomOf F hlinear hbridge e = Index.cycleBlock C hC B →
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Adj (Sum.inl x) (Sum.inr e) →
+      ∃ hx : Sum.inl x ∈ (C : BridgeBlock.Component F).supp,
+        Erdos593.SimpleGraph.EdgeCycleBlock.Incident
+          (BridgeBlock.contractedGraph F C) ⟨x, hx⟩ B := by
+    intro C hC B x e hA hadj
+    have hdeg : ¬ (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0 := by
+      have hpos : 0 < (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) :=
+        ((Erdos593.SimpleGraph.bridgeFree F.levi).degree_pos_iff_exists_adj
+          (Sum.inr e)).mpr ⟨Sum.inl x, hadj.symm⟩
+      omega
+    rw [atomOf_cycle e hdeg] at hA
+    injection hA with h1 h3
+    subst h1
+    have hB : B = Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+        (BridgeBlock.contractedGraph F (BridgeBlock.hyperedgeComponentOf F e))
+        ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC).symm
+          ⟨e, BridgeBlock.mem_hyperedgeComponentOf_set F e⟩) := (eq_of_heq h3).symm
+    have hx : Sum.inl x ∈
+        ((BridgeBlock.hyperedgeComponentOf F e : BridgeBlock.Component F)).supp :=
+      (BridgeBlock.hyperedgeComponentOf F e :
+        BridgeBlock.Component F).mem_supp_of_adj_mem_supp
+          (BridgeBlock.mem_hyperedgeComponentOf_set F e) hadj.symm
+    refine ⟨hx, ?_⟩
+    subst hB
+    set a : (BridgeBlock.contractedGraph F
+        (BridgeBlock.hyperedgeComponentOf F e)).edgeSet :=
+      (BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC).symm
+        ⟨e, BridgeBlock.mem_hyperedgeComponentOf_set F e⟩
+    have hwit : (BridgeBlock.graphEdgeWitness F hlinear
+        (C := (BridgeBlock.hyperedgeComponentOf F e :
+          BridgeBlock.Component F)) a).1 = e :=
+      congrArg Subtype.val
+        ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC).apply_symm_apply
+          ⟨e, BridgeBlock.mem_hyperedgeComponentOf_set F e⟩)
+    have hmem : (⟨x, hx⟩ : BridgeBlock.Point F
+        (BridgeBlock.hyperedgeComponentOf F e)) ∈ (a.1 : Sym2 _) := by
+      rw [BridgeBlock.mem_graphEdge_iff_bridgeFree_adj_graphEdgeWitness
+        F hlinear a ⟨x, hx⟩, hwit]
+      exact hadj
+    exact Erdos593.SimpleGraph.EdgeCycleBlock.incident_of_mem_endpoint _ rfl hmem
+  -- A nonbridge incidence survives bridge deletion.
+  have adj_of_not_bridge : ∀ (u : V) (w : E), F.Inc u w →
+      ¬ F.levi.IsBridge s(Sum.inl u, Sum.inr w) →
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Adj (Sum.inl u) (Sum.inr w) := by
+    intro u w hinc hnb
+    rw [Erdos593.SimpleGraph.bridgeFree, _root_.SimpleGraph.deleteEdges_adj]
+    exact ⟨F.levi_adj_point_edge.mpr hinc,
+      fun hmem => hnb (Erdos593.SimpleGraph.mem_bridgeFinset.mp hmem).2⟩
+  have bridgeFree_adj_deleteEdges : ∀ (b : Sym2 (V ⊕ E)), F.levi.IsBridge b →
+      b ∈ F.levi.edgeSet → ∀ u v : V ⊕ E,
+      (Erdos593.SimpleGraph.bridgeFree F.levi).Adj u v →
+      (F.levi.deleteEdges {b}).Adj u v := by
+    intro b hb hbmem u v h
+    rw [Erdos593.SimpleGraph.bridgeFree, _root_.SimpleGraph.deleteEdges_adj] at h
+    rw [_root_.SimpleGraph.deleteEdges_adj]
+    refine ⟨h.1, ?_⟩
+    intro hmem
+    apply h.2
+    rw [Set.mem_singleton_iff.mp hmem]
+    exact Erdos593.SimpleGraph.mem_bridgeFinset.mpr ⟨hbmem, hb⟩
+  -- The incidence graph is bipartite between labels and points.
+  have incidence_adj_cases : ∀ u v : CanonicalAtom.Index F ⊕ V,
+      (CanonicalAtom.atomPointIncidenceGraph F hlinear hbridge).Adj u v →
+      (∃ A y, u = Sum.inl A ∧ v = Sum.inr y ∧
+          CanonicalAtom.atomIncident F hlinear hbridge A y) ∨
+        (∃ A y, u = Sum.inr y ∧ v = Sum.inl A ∧
+          CanonicalAtom.atomIncident F hlinear hbridge A y) := by
+    intro u v h
+    rcases u with A | y <;> rcases v with A' | y'
+    · exact absurd h (by
+        simp [CanonicalAtom.atomPointIncidenceGraph,
+          _root_.SimpleGraph.bipartiteIncidenceGraph, _root_.SimpleGraph.fromRel_adj])
+    · exact Or.inl ⟨A, y', rfl, rfl, by
+        simpa [CanonicalAtom.atomPointIncidenceGraph] using h⟩
+    · exact Or.inr ⟨A', y, rfl, rfl, by
+        simpa [CanonicalAtom.atomPointIncidenceGraph] using h⟩
+    · exact absurd h (by
+        simp [CanonicalAtom.atomPointIncidenceGraph,
+          _root_.SimpleGraph.bipartiteIncidenceGraph, _root_.SimpleGraph.fromRel_adj])
+  -- Welded bridge-block structure: an incidence carried by an actual Levi
+  -- bridge cannot be reached back around inside the incidence graph.
+  have bridge_edge_not_reachable : ∀ (A₀ : CanonicalAtom.Index F) (x₀ : V) (e₀ : E),
+      CanonicalAtom.atomOf F hlinear hbridge e₀ = A₀ → F.Inc x₀ e₀ →
+      F.levi.IsBridge s(Sum.inl x₀, Sum.inr e₀) →
+      ¬ ((CanonicalAtom.atomPointIncidenceGraph F hlinear hbridge).deleteEdges
+          {s(Sum.inl A₀, Sum.inr x₀)}).Reachable (Sum.inl A₀) (Sum.inr x₀) := by
+    intro A₀ x₀ e₀ he₀ hinc hb hreach
+    have hbmem : s(Sum.inl x₀, Sum.inr e₀) ∈ F.levi.edgeSet :=
+      F.levi_adj_point_edge.mpr hinc
+    have hmono : (Erdos593.SimpleGraph.bridgeFree F.levi) ≤
+        F.levi.deleteEdges {s(Sum.inl x₀, Sum.inr e₀)} := by
+      intro a b h
+      exact bridgeFree_adj_deleteEdges _ hb hbmem a b h
+    obtain ⟨rep, hrep⟩ : ∃ rep : CanonicalAtom.Index F → E,
+        ∀ A, CanonicalAtom.atomOf F hlinear hbridge (rep A) = A :=
+      ⟨fun A => Classical.choose (CanonicalAtom.atomOf_surjective F hlinear hbridge A),
+        fun A => Classical.choose_spec
+          (CanonicalAtom.atomOf_surjective F hlinear hbridge A)⟩
+    obtain ⟨lev, hlevl, hlevr⟩ : ∃ lev : (CanonicalAtom.Index F ⊕ V) → (V ⊕ E),
+        (∀ A, lev (Sum.inl A) = Sum.inr (rep A)) ∧
+          (∀ y, lev (Sum.inr y) = Sum.inl y) :=
+      ⟨fun u => match u with
+        | Sum.inl A => Sum.inr (rep A)
+        | Sum.inr y => Sum.inl y, fun _ => rfl, fun _ => rfl⟩
+    have hstep : ∀ u v : CanonicalAtom.Index F ⊕ V,
+        ((CanonicalAtom.atomPointIncidenceGraph F hlinear hbridge).deleteEdges
+          {s(Sum.inl A₀, Sum.inr x₀)}).Adj u v →
+        (F.levi.deleteEdges {s(Sum.inl x₀, Sum.inr e₀)}).Reachable (lev u) (lev v) := by
+      have hbase : ∀ (A : CanonicalAtom.Index F) (y : V),
+          CanonicalAtom.atomIncident F hlinear hbridge A y →
+          ¬ (s((Sum.inl A : CanonicalAtom.Index F ⊕ V), Sum.inr y) =
+            s(Sum.inl A₀, Sum.inr x₀)) →
+          (F.levi.deleteEdges {s(Sum.inl x₀, Sum.inr e₀)}).Reachable
+            (Sum.inr (rep A)) (Sum.inl y) := by
+        intro A y hAy hne
+        obtain ⟨f, hf, hyf⟩ := hAy
+        change CanonicalAtom.atomOf F hlinear hbridge f = A at hf
+        have h1 : (Erdos593.SimpleGraph.bridgeFree F.levi).Reachable
+            (Sum.inr (rep A)) (Sum.inr f) := samecomp _ _ ((hrep A).trans hf.symm)
+        have h2 : (F.levi.deleteEdges {s(Sum.inl x₀, Sum.inr e₀)}).Adj
+            (Sum.inl y) (Sum.inr f) := by
+          rw [_root_.SimpleGraph.deleteEdges_adj]
+          refine ⟨F.levi_adj_point_edge.mpr hyf, ?_⟩
+          intro hmem
+          have heq : s((Sum.inl y : V ⊕ E), Sum.inr f) = s(Sum.inl x₀, Sum.inr e₀) :=
+            Set.mem_singleton_iff.mp hmem
+          rcases Sym2.eq_iff.mp heq with ⟨hy1, hf1⟩ | ⟨hy1, _⟩
+          · apply hne
+            have hyx : y = x₀ := Sum.inl.inj hy1
+            have hfe : f = e₀ := Sum.inr.inj hf1
+            subst hyx
+            subst hfe
+            rw [← hf, he₀]
+          · exact Sum.inl_ne_inr hy1
+        exact (h1.mono hmono).trans h2.symm.reachable
+      intro u v huv
+      rw [_root_.SimpleGraph.deleteEdges_adj] at huv
+      obtain ⟨hadj, hnotmem⟩ := huv
+      have hne : ¬ (s(u, v) =
+          s((Sum.inl A₀ : CanonicalAtom.Index F ⊕ V), Sum.inr x₀)) :=
+        fun h => hnotmem (Set.mem_singleton_iff.mpr h)
+      rcases incidence_adj_cases u v hadj with
+        ⟨A, y, rfl, rfl, hAy⟩ | ⟨A, y, rfl, rfl, hAy⟩
+      · rw [hlevl, hlevr]
+        exact hbase A y hAy hne
+      · rw [hlevl, hlevr]
+        refine (hbase A y hAy ?_).symm
+        intro h
+        apply hne
+        rw [Sym2.eq_swap]
+        exact h
+    obtain ⟨p⟩ := hreach
+    have hmain : ∀ (u v : CanonicalAtom.Index F ⊕ V)
+        (wlk : ((CanonicalAtom.atomPointIncidenceGraph F hlinear hbridge).deleteEdges
+          {s(Sum.inl A₀, Sum.inr x₀)}).Walk u v),
+        (F.levi.deleteEdges {s(Sum.inl x₀, Sum.inr e₀)}).Reachable (lev u) (lev v) := by
+      intro u v wlk
+      induction wlk with
+      | nil => exact _root_.SimpleGraph.Reachable.refl _
+      | cons h _ ih => exact (hstep _ _ h).trans ih
+    have hfinal := hmain _ _ p
+    rw [hlevl, hlevr] at hfinal
+    have hrepA₀ : (Erdos593.SimpleGraph.bridgeFree F.levi).Reachable
+        (Sum.inr e₀) (Sum.inr (rep A₀)) := samecomp _ _ (he₀.trans (hrep A₀).symm)
+    exact (_root_.SimpleGraph.isBridge_iff.mp hb)
+      (hfinal.symm.trans (hrepA₀.mono hmono).symm)
+  -- Rooted depth in an arbitrary forest, computed componentwise.
+  have forest_unique_parent : ∀ (W : Type w) (G : _root_.SimpleGraph W), G.IsAcyclic →
+      ∀ (root C D X : W), G.Adj C X → G.Adj D X →
+      G.Reachable root C → G.Reachable root D →
+      G.dist root C + 1 = G.dist root X → G.dist root D + 1 = G.dist root X →
+      C = D := by
+    intro W G hG root C D X hCX hDX hrootC hrootD hCdepth hDdepth
+    obtain ⟨pC, hpC, hpCdist⟩ := hrootC.exists_path_of_dist
+    obtain ⟨pD, hpD, hpDdist⟩ := hrootD.exists_path_of_dist
+    have hXnotC : X ∉ pC.support := by
+      intro hX
+      have hdist := G.dist_le (pC.takeUntil X hX)
+      have htake := pC.length_takeUntil_le_length hX
+      omega
+    have hXnotD : X ∉ pD.support := by
+      intro hX
+      have hdist := G.dist_le (pD.takeUntil X hX)
+      have htake := pD.length_takeUntil_le_length hX
+      omega
+    have hpCX : (pC.concat hCX).IsPath := hpC.concat hXnotC hCX
+    have hpDX : (pD.concat hDX).IsPath := hpD.concat hXnotD hDX
+    have hpaths : pC.concat hCX = pD.concat hDX :=
+      Subtype.mk.inj (hG.path_unique ⟨_, hpCX⟩ ⟨_, hpDX⟩)
+    have hpenultimate := congrArg (fun p => p.penultimate) hpaths
+    simpa using hpenultimate
+  have acyclic_depth : ∀ (W : Type w) (G : _root_.SimpleGraph W), G.IsAcyclic →
+      ∃ f : W → ℕ, (∀ u v, G.Adj u v → f u ≠ f v) ∧
+        (∀ u v v', G.Adj u v → G.Adj u v' → f v < f u → f v' < f u → v = v') := by
+    intro W G hG
+    obtain ⟨rt, hrt⟩ : ∃ rt : G.ConnectedComponent → W,
+        ∀ K, G.connectedComponentMk (rt K) = K :=
+      ⟨fun K => Classical.choose K.nonempty_supp,
+        fun K => Classical.choose_spec K.nonempty_supp⟩
+    have hreach : ∀ u : W, G.Reachable (rt (G.connectedComponentMk u)) u := fun u =>
+      _root_.SimpleGraph.ConnectedComponent.exact (hrt _)
+    refine ⟨fun u => G.dist (rt (G.connectedComponentMk u)) u, ?_, ?_⟩
+    · intro u v huv
+      have hroot : G.connectedComponentMk u = G.connectedComponentMk v :=
+        _root_.SimpleGraph.ConnectedComponent.connectedComponentMk_eq_of_adj huv
+      show G.dist (rt (G.connectedComponentMk u)) u ≠
+        G.dist (rt (G.connectedComponentMk v)) v
+      rw [← hroot]
+      rcases hG.dist_eq_dist_add_one_of_adj_of_reachable
+        (rt (G.connectedComponentMk u)) huv (hreach u) with h | h <;> omega
+    · intro u v v' huv huv' hlt hlt'
+      have hrootv : G.connectedComponentMk u = G.connectedComponentMk v :=
+        _root_.SimpleGraph.ConnectedComponent.connectedComponentMk_eq_of_adj huv
+      have hrootv' : G.connectedComponentMk u = G.connectedComponentMk v' :=
+        _root_.SimpleGraph.ConnectedComponent.connectedComponentMk_eq_of_adj huv'
+      have hlt2 : G.dist (rt (G.connectedComponentMk u)) v <
+          G.dist (rt (G.connectedComponentMk u)) u := by
+        have h : G.dist (rt (G.connectedComponentMk v)) v <
+          G.dist (rt (G.connectedComponentMk u)) u := hlt
+        rwa [← hrootv] at h
+      have hlt2' : G.dist (rt (G.connectedComponentMk u)) v' <
+          G.dist (rt (G.connectedComponentMk u)) u := by
+        have h : G.dist (rt (G.connectedComponentMk v')) v' <
+          G.dist (rt (G.connectedComponentMk u)) u := hlt'
+        rwa [← hrootv'] at h
+      have hv := hG.dist_eq_dist_add_one_of_adj_of_reachable
+        (rt (G.connectedComponentMk u)) huv (hreach u)
+      have hv' := hG.dist_eq_dist_add_one_of_adj_of_reachable
+        (rt (G.connectedComponentMk u)) huv' (hreach u)
+      refine forest_unique_parent W G hG (rt (G.connectedComponentMk u)) v v' u
+        huv.symm huv'.symm ((hreach u).trans huv.reachable)
+        ((hreach u).trans huv'.reachable) ?_ ?_ <;> omega
+  -- Representative-independent quotient cycle-block incidence forests supply a
+  -- depth for every bridge-free block, including the disconnected ones.
+  obtain ⟨dep, hdep1, hdep2⟩ : ∃ dep : ∀ C : BridgeBlock.Component F,
+      (Erdos593.SimpleGraph.EdgeCycleBlock (BridgeBlock.contractedGraph F C) ⊕
+        BridgeBlock.Point F C) → ℕ,
+      (∀ (C : BridgeBlock.Component F) u v,
+        (Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph
+          (BridgeBlock.contractedGraph F C)).Adj u v → dep C u ≠ dep C v) ∧
+      (∀ (C : BridgeBlock.Component F) u v v',
+        (Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph
+          (BridgeBlock.contractedGraph F C)).Adj u v →
+        (Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph
+          (BridgeBlock.contractedGraph F C)).Adj u v' →
+        dep C v < dep C u → dep C v' < dep C u → v = v') := by
+    choose dep h1 h2 using fun C : BridgeBlock.Component F =>
+      acyclic_depth _
+        (Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph
+          (BridgeBlock.contractedGraph F C))
+        (Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph_isAcyclic _)
+    exact ⟨dep, h1, h2⟩
+  -- The induced rank on the canonical incidence graph.  A residual
+  -- degree-zero singleton label is isolated in the surviving structure and
+  -- gets the trivial rank.
+  obtain ⟨rk, hrkatom, hrkpoint⟩ : ∃ rk : (CanonicalAtom.Index F ⊕ V) → ℕ,
+      (∀ (C : BridgeBlock.HyperedgeComponent F) (hC : BridgeBlock.HasIncidence F C)
+          (B : Erdos593.SimpleGraph.EdgeCycleBlock (BridgeBlock.contractedGraph F C)),
+        rk (Sum.inl (Index.cycleBlock C hC B)) =
+          dep (C : BridgeBlock.Component F) (Sum.inl B)) ∧
+      (∀ (C : BridgeBlock.Component F) (x : V) (hx : Sum.inl x ∈ C.supp),
+        rk (Sum.inr x) = dep C (Sum.inr ⟨x, hx⟩)) := by
+    refine ⟨fun u => match u with
+      | Sum.inl (Index.singleton _ _) => 0
+      | Sum.inl (Index.cycleBlock C _ B) =>
+          dep (C : BridgeBlock.Component F) (Sum.inl B)
+      | Sum.inr x => dep ((Erdos593.SimpleGraph.bridgeFree F.levi).connectedComponentMk
+          (Sum.inl x)) (Sum.inr ⟨x, rfl⟩), ?_, ?_⟩
+    · intro C hC B
+      rfl
+    · intro C x hx
+      have hmk : (Erdos593.SimpleGraph.bridgeFree F.levi).connectedComponentMk
+          (Sum.inl x) = C :=
+        (_root_.SimpleGraph.ConnectedComponent.mem_supp_iff C (Sum.inl x)).mp hx
+      subst hmk
+      rfl
+  intro v c hc
+  -- No alternating cycle can use a bridge incidence.
+  have hcore : ∀ (A : CanonicalAtom.Index F) (y : V),
+      s((Sum.inl A : CanonicalAtom.Index F ⊕ V), Sum.inr y) ∈ c.edges →
+      ∃ e, CanonicalAtom.atomOf F hlinear hbridge e = A ∧
+        (Erdos593.SimpleGraph.bridgeFree F.levi).Adj (Sum.inl y) (Sum.inr e) := by
+    intro A y hmem
+    have hcyc := _root_.SimpleGraph.adj_and_reachable_delete_edges_iff_exists_cycle.mpr
+      ⟨v, c, hc, hmem⟩
+    obtain ⟨e, he, hye⟩ :
+        ∃ e, CanonicalAtom.atomOf F hlinear hbridge e = A ∧ F.Inc y e := by
+      have hadj := hcyc.1
+      simpa [CanonicalAtom.atomPointIncidenceGraph, CanonicalAtom.atomIncident,
+        CanonicalAtom.atomSupport, TripleSystem.edgeSupportSet,
+        CanonicalAtom.edges] using hadj
+    refine ⟨e, he, ?_⟩
+    by_contra hnadj
+    have hbr : F.levi.IsBridge s(Sum.inl y, Sum.inr e) := by
+      by_contra hnb
+      exact hnadj (adj_of_not_bridge y e hye hnb)
+    subst he
+    exact bridge_edge_not_reachable _ y e rfl hye hbr hcyc.2
+  -- A rank-maximal vertex of the cycle has two distinct smaller neighbours.
+  obtain ⟨m, hmmem, hmmax⟩ :=
+    Finset.exists_max_image c.support.toFinset rk ⟨v, by simp⟩
+  have hm : m ∈ c.support := List.mem_toFinset.mp hmmem
+  have hc' : (c.rotate m hm).IsCycle := hc.rotate hm
+  have hedges : (c.rotate m hm).edges ~r c.edges := c.rotate_edges m hm
+  have hnotnil : ¬ (c.rotate m hm).Nil := hc'.not_nil
+  have hnotnilr : ¬ (c.rotate m hm).reverse.Nil := hc'.reverse.not_nil
+  have hey : s(m, (c.rotate m hm).snd) ∈ c.edges :=
+    hedges.mem_iff.mp (_root_.SimpleGraph.Walk.mk_start_snd_mem_edges hnotnil)
+  have hez : s(m, (c.rotate m hm).penultimate) ∈ c.edges := by
+    have h := _root_.SimpleGraph.Walk.mk_start_snd_mem_edges hnotnilr
+    rw [_root_.SimpleGraph.Walk.snd_reverse,
+      _root_.SimpleGraph.Walk.edges_reverse, List.mem_reverse] at h
+    exact hedges.mem_iff.mp h
+  have hyz : (c.rotate m hm).snd ≠ (c.rotate m hm).penultimate := hc'.snd_ne_penultimate
+  have hadjy : (CanonicalAtom.atomPointIncidenceGraph F hlinear hbridge).Adj
+      m (c.rotate m hm).snd := _root_.SimpleGraph.Walk.adj_snd hnotnil
+  have hadjz : (CanonicalAtom.atomPointIncidenceGraph F hlinear hbridge).Adj
+      m (c.rotate m hm).penultimate :=
+    (_root_.SimpleGraph.Walk.adj_penultimate hnotnil).symm
+  have hley : rk (c.rotate m hm).snd ≤ rk m :=
+    hmmax _ (List.mem_toFinset.mpr (c.snd_mem_support_of_mem_edges hey))
+  have hlez : rk (c.rotate m hm).penultimate ≤ rk m :=
+    hmmax _ (List.mem_toFinset.mpr (c.snd_mem_support_of_mem_edges hez))
+  revert hey hez hadjy hadjz hley hlez hyz
+  generalize (c.rotate m hm).snd = y
+  generalize (c.rotate m hm).penultimate = z
+  intro hey hez hyz hadjy hadjz hley hlez
+  rcases incidence_adj_cases m y hadjy with
+    ⟨A, x1, hm1, hy1, _⟩ | ⟨A1, x, hm1, hy1, _⟩
+  · subst hm1
+    subst hy1
+    rcases incidence_adj_cases (Sum.inl A) z hadjz with
+      ⟨A', x2, hm2, hz2, _⟩ | ⟨A2, x', hm2, _, _⟩
+    · have hAA' : A' = A := (Sum.inl.inj hm2).symm
+      subst hAA'
+      subst hz2
+      obtain ⟨e1, he1, hadj1⟩ := hcore A' x1 hey
+      obtain ⟨e2, he2, hadj2⟩ := hcore A' x2 hez
+      cases A' with
+      | singleton e hzero => exact singleton_no_core e e1 x1 hzero he1 hadj1
+      | cycleBlock C hC B =>
+          obtain ⟨hx1, hinc1⟩ := core_atom_data C hC B x1 e1 he1 hadj1
+          obtain ⟨hx2, hinc2⟩ := core_atom_data C hC B x2 e2 he2 hadj2
+          have hJ1 : (Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph
+              (BridgeBlock.contractedGraph F (C : BridgeBlock.Component F))).Adj
+              (Sum.inl B) (Sum.inr ⟨x1, hx1⟩) :=
+            (Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph_adj_inl_inr_iff
+              _ B ⟨x1, hx1⟩).mpr hinc1
+          have hJ2 : (Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph
+              (BridgeBlock.contractedGraph F (C : BridgeBlock.Component F))).Adj
+              (Sum.inl B) (Sum.inr ⟨x2, hx2⟩) :=
+            (Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph_adj_inl_inr_iff
+              _ B ⟨x2, hx2⟩).mpr hinc2
+          rw [hrkpoint (C : BridgeBlock.Component F) x1 hx1, hrkatom C hC B] at hley
+          rw [hrkpoint (C : BridgeBlock.Component F) x2 hx2, hrkatom C hC B] at hlez
+          have hlt1 : dep (C : BridgeBlock.Component F) (Sum.inr ⟨x1, hx1⟩) <
+              dep (C : BridgeBlock.Component F) (Sum.inl B) :=
+            lt_of_le_of_ne hley (hdep1 _ _ _ hJ1.symm)
+          have hlt2 : dep (C : BridgeBlock.Component F) (Sum.inr ⟨x2, hx2⟩) <
+              dep (C : BridgeBlock.Component F) (Sum.inl B) :=
+            lt_of_le_of_ne hlez (hdep1 _ _ _ hJ2.symm)
+          have hxx : (Sum.inr ⟨x1, hx1⟩ :
+              Erdos593.SimpleGraph.EdgeCycleBlock
+                (BridgeBlock.contractedGraph F (C : BridgeBlock.Component F)) ⊕
+              BridgeBlock.Point F (C : BridgeBlock.Component F)) = Sum.inr ⟨x2, hx2⟩ :=
+            hdep2 _ _ _ _ hJ1 hJ2 hlt1 hlt2
+          apply hyz
+          have hx12 : x1 = x2 := congrArg Subtype.val (Sum.inr.inj hxx)
+          rw [hx12]
+    · exact absurd hm2 (by simp)
+  · subst hm1
+    subst hy1
+    rcases incidence_adj_cases (Sum.inr x) z hadjz with
+      ⟨A', x2, hm2, _, _⟩ | ⟨A2, x'', hm2, hz2, _⟩
+    · exact absurd hm2.symm (by simp)
+    · have hxx' : x'' = x := (Sum.inr.inj hm2).symm
+      subst hxx'
+      subst hz2
+      obtain ⟨e1, he1, hadj1⟩ := hcore A1 x'' (by rwa [Sym2.eq_swap] at hey)
+      obtain ⟨e2, he2, hadj2⟩ := hcore A2 x'' (by rwa [Sym2.eq_swap] at hez)
+      cases A1 with
+      | singleton e hzero => exact singleton_no_core e e1 x'' hzero he1 hadj1
+      | cycleBlock C1 hC1 B1 =>
+        cases A2 with
+        | singleton e hzero => exact singleton_no_core e e2 x'' hzero he2 hadj2
+        | cycleBlock C2 hC2 B2 =>
+            obtain ⟨hx1, hinc1⟩ := core_atom_data C1 hC1 B1 x'' e1 he1 hadj1
+            obtain ⟨hx2, hinc2⟩ := core_atom_data C2 hC2 B2 x'' e2 he2 hadj2
+            have hCC : C1 = C2 := by
+              apply Subtype.ext
+              have h1 := (_root_.SimpleGraph.ConnectedComponent.mem_supp_iff
+                (C1 : BridgeBlock.Component F) (Sum.inl x'')).mp hx1
+              have h2 := (_root_.SimpleGraph.ConnectedComponent.mem_supp_iff
+                (C2 : BridgeBlock.Component F) (Sum.inl x'')).mp hx2
+              exact h1.symm.trans h2
+            subst hCC
+            have hJ1 : (Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph
+                (BridgeBlock.contractedGraph F (C1 : BridgeBlock.Component F))).Adj
+                (Sum.inr ⟨x'', hx1⟩) (Sum.inl B1) :=
+              ((Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph_adj_inl_inr_iff
+                _ B1 ⟨x'', hx1⟩).mpr hinc1).symm
+            have hJ2 : (Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph
+                (BridgeBlock.contractedGraph F (C1 : BridgeBlock.Component F))).Adj
+                (Sum.inr ⟨x'', hx1⟩) (Sum.inl B2) :=
+              ((Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph_adj_inl_inr_iff
+                _ B2 ⟨x'', hx2⟩).mpr hinc2).symm
+            rw [hrkpoint (C1 : BridgeBlock.Component F) x'' hx1,
+              hrkatom C1 hC1 B1] at hley
+            rw [hrkpoint (C1 : BridgeBlock.Component F) x'' hx1,
+              hrkatom C1 hC2 B2] at hlez
+            have hlt1 : dep (C1 : BridgeBlock.Component F) (Sum.inl B1) <
+                dep (C1 : BridgeBlock.Component F) (Sum.inr ⟨x'', hx1⟩) :=
+              lt_of_le_of_ne hley (hdep1 _ _ _ hJ1.symm)
+            have hlt2 : dep (C1 : BridgeBlock.Component F) (Sum.inl B2) <
+                dep (C1 : BridgeBlock.Component F) (Sum.inr ⟨x'', hx1⟩) :=
+              lt_of_le_of_ne hlez (hdep1 _ _ _ hJ2.symm)
+            have hBB : (Sum.inl B1 :
+                Erdos593.SimpleGraph.EdgeCycleBlock
+                  (BridgeBlock.contractedGraph F (C1 : BridgeBlock.Component F)) ⊕
+                BridgeBlock.Point F (C1 : BridgeBlock.Component F)) = Sum.inl B2 :=
+              hdep2 _ _ _ _ hJ1 hJ2 hlt1 hlt2
+            apply hyz
+            have hB12 : B1 = B2 := Sum.inl.inj hBB
+            rw [hB12]
+
+/-- The exactly pruned atom--shared-point graph from the manuscript is a
+forest as an induced subgraph of the full incidence forest. -/
+theorem atomSharedPointIncidenceGraph_isAcyclic
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    (CanonicalAtom.atomSharedPointIncidenceGraph F hlinear hbridge).IsAcyclic := by
+  classical
+  exact (CanonicalAtom.atomPointIncidenceGraph_isAcyclic
+    F hlinear hbridge).induce _
+
+/-- The exact atom edge sets associated with a newest-first label list. -/
+def atomEdgeSets
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (atoms : List (CanonicalAtom.Index F)) : List (Set E) :=
+  atoms.map (CanonicalAtom.edges F hlinear hbridge)
+
+/-- Membership in the exact union of listed atom fibres is membership of the
+edge's canonical label in the list. -/
+@[simp]
+theorem mem_edgePieceUnion_atomEdgeSets
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (atoms : List (CanonicalAtom.Index F)) (e : E) :
+    e ∈ edgePieceUnion
+        (CanonicalAtom.atomEdgeSets F hlinear hbridge atoms) ↔
+      CanonicalAtom.atomOf F hlinear hbridge e ∈ atoms := by
+  induction atoms with
+  | nil =>
+      simp [CanonicalAtom.atomEdgeSets, edgePieceUnion]
+  | cons A atoms ih =>
+      have ih' : e ∈ edgePieceUnion
+            (atoms.map (CanonicalAtom.edges F hlinear hbridge)) ↔
+          CanonicalAtom.atomOf F hlinear hbridge e ∈ atoms := by
+        simpa only [CanonicalAtom.atomEdgeSets] using ih
+      simp only [CanonicalAtom.atomEdgeSets, List.map_cons, edgePieceUnion,
+        Set.mem_union, List.mem_cons, ih']
+      change (CanonicalAtom.atomOf F hlinear hbridge e ∈ atoms ∨
+          CanonicalAtom.atomOf F hlinear hbridge e = A) ↔ _
+      exact or_comm
+
+/-- Any list containing every represented atom label has total edge union
+exactly `Set.univ`. -/
+theorem edgePieceUnion_atomEdgeSets_eq_univ
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (atoms : List (CanonicalAtom.Index F))
+    (hlabels : atoms.toFinset =
+      CanonicalAtom.atomFinset F hlinear hbridge) :
+    edgePieceUnion (CanonicalAtom.atomEdgeSets F hlinear hbridge atoms) =
+      Set.univ := by
+  ext e
+  constructor
+  · intro _
+    exact Set.mem_univ e
+  · intro _
+    rw [CanonicalAtom.mem_edgePieceUnion_atomEdgeSets]
+    have hmem : CanonicalAtom.atomOf F hlinear hbridge e ∈
+        CanonicalAtom.atomFinset F hlinear hbridge :=
+      CanonicalAtom.mem_atomFinset F hlinear hbridge _
+    rw [← hlabels] at hmem
+    exact List.mem_toFinset.mp hmem
+
+/-- Each exact canonical atom restriction belongs to the constructive class
+under the intrinsic hypotheses. -/
+theorem atomRestriction_constructible
+    (hintrinsic : F.Intrinsic) (A : CanonicalAtom.Index F) :
+    Constructible
+      (CanonicalAtom.atomRestriction F hintrinsic.1 hintrinsic.2.1 A) := by
+  rcases hintrinsic with ⟨hlinear, hbridge, hberge⟩
+  cases A with
+  | singleton e hzero =>
+      let S : TripleSystem (F.edgeSet e) SingleEdgeIndex.{w} :=
+        F.singleEdgePiece.{w, w, w} e
+      have hsingle : Constructible S := by
+        dsimp [S]
+        exact singleEdgePiece_constructible F e
+      have htype : TripleSystem.Isomorphic
+          (CanonicalAtom.atomRestriction F hlinear hbridge
+            (CanonicalAtom.Index.singleton e hzero))
+          S := by
+        dsimp [S]
+        exact CanonicalAtom.atomRestriction_is_singleEdge_or_cycleBlockExpansion.{w, w, w}
+          (V := V) (E := E) F hlinear hbridge
+          (CanonicalAtom.Index.singleton e hzero)
+      rcases htype with ⟨hiso⟩
+      exact Constructible.ofIso hsingle hiso.symm
+  | cycleBlock C hC B =>
+      rcases CanonicalAtom.atomRestriction_is_singleEdge_or_cycleBlockExpansion.{w, w, w}
+        (V := V) (E := E) F hlinear hbridge
+          (CanonicalAtom.Index.cycleBlock C hC B) with ⟨hiso⟩
+      have hcore : Constructible
+          (privateVertexExpansion (CanonicalAtom.cycleBlockCore F C B)) :=
+        Constructible.ofExpansion (CanonicalAtom.cycleBlockCore F C B)
+          (CanonicalAtom.cycleBlockCore_isBipartite
+            F hlinear hbridge hberge C hC B)
+      exact Constructible.ofIso hcore hiso.symm
+
+/-- Complete auditable data for the canonical newest-first atom assembly.
+The tail-point condition records the dynamic leaf order; `running` retains
+the literal edge restrictions and one-point/disjoint-union geometry; `total`
+records exact hyperedge coverage. -/
+structure AtomRunningAssembly
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) where
+  atoms : List (CanonicalAtom.Index F)
+  nodup : atoms.Nodup
+  labels : atoms.toFinset = CanonicalAtom.atomFinset F hlinear hbridge
+  tailPointSubsingleton :
+    SimpleGraph.bipartiteTailPointSubsingleton
+      (CanonicalAtom.atomIncident F hlinear hbridge) atoms
+  running : F.RunningEdgeAssembly
+    (CanonicalAtom.atomEdgeSets F hlinear hbridge atoms)
+  total : edgePieceUnion
+    (CanonicalAtom.atomEdgeSets F hlinear hbridge atoms) = Set.univ
+
+/-- The canonical incidence forest supplies a finite newest-first running
+assembly of every exact atom fibre. -/
+theorem exists_atomRunningAssembly
+    (hintrinsic : F.Intrinsic) :
+    Nonempty (CanonicalAtom.AtomRunningAssembly
+      F hintrinsic.1 hintrinsic.2.1) := by
+  classical
+  have hlinear : F.Linear := hintrinsic.1
+  have hbridge : F.BridgeAtEveryEdge := hintrinsic.2.1
+  -- The canonical incidence forest gives a dynamic newest-first leaf order.
+  have hacyclic : (_root_.SimpleGraph.bipartiteIncidenceGraph
+      (CanonicalAtom.atomIncident F hlinear hbridge)).IsAcyclic :=
+    CanonicalAtom.atomPointIncidenceGraph_isAcyclic F hlinear hbridge
+  obtain ⟨l, hnd, hlt, hcoh⟩ :=
+    _root_.SimpleGraph.IsAcyclic.exists_finset_bipartiteTailPointSubsingletonOrder
+      (CanonicalAtom.atomIncident F hlinear hbridge) hacyclic
+      (CanonicalAtom.atomFinset F hlinear hbridge)
+  -- Every initial segment of such an order is a running edge assembly.
+  have hrun : ∀ m : List (CanonicalAtom.Index F), m.Nodup →
+      _root_.SimpleGraph.bipartiteTailPointSubsingleton
+        (CanonicalAtom.atomIncident F hlinear hbridge) m →
+      F.RunningEdgeAssembly (CanonicalAtom.atomEdgeSets F hlinear hbridge m) := by
+    intro m
+    induction m with
+    | nil =>
+        intro _ _
+        trivial
+    | cons A m ih =>
+        intro hndm hcohm
+        have hcohm' : _root_.SimpleGraph.bipartiteTailPointSubsingleton
+              (CanonicalAtom.atomIncident F hlinear hbridge) m ∧
+            ∀ p p', CanonicalAtom.atomIncident F hlinear hbridge A p →
+              CanonicalAtom.atomIncident F hlinear hbridge A p' →
+              (∃ b ∈ m, CanonicalAtom.atomIncident F hlinear hbridge b p) →
+              (∃ c ∈ m, CanonicalAtom.atomIncident F hlinear hbridge c p') → p = p' :=
+          hcohm
+        have hAm : A ∉ m := (List.nodup_cons.mp hndm).1
+        refine ⟨ih (List.nodup_cons.mp hndm).2 hcohm'.1, ?_, ?_, ?_⟩
+        · exact CanonicalAtom.atomRestriction_constructible F hintrinsic A
+        · rw [Set.disjoint_left]
+          intro e he heA
+          apply hAm
+          have h1 : CanonicalAtom.atomOf F hlinear hbridge e ∈ m :=
+            (CanonicalAtom.mem_edgePieceUnion_atomEdgeSets F hlinear hbridge m e).mp he
+          change CanonicalAtom.atomOf F hlinear hbridge e = A at heA
+          rwa [heA] at h1
+        · have hsub : (F.edgeSupportSet
+                (edgePieceUnion (CanonicalAtom.atomEdgeSets F hlinear hbridge m)) ∩
+              F.edgeSupportSet
+                (CanonicalAtom.edges F hlinear hbridge A)).Subsingleton := by
+            intro x hx y hy
+            obtain ⟨e1, he1, hxe1⟩ := hx.1
+            obtain ⟨e2, he2, hye2⟩ := hy.1
+            refine hcohm'.2 x y hx.2 hy.2 ?_ ?_
+            · exact ⟨CanonicalAtom.atomOf F hlinear hbridge e1,
+                (CanonicalAtom.mem_edgePieceUnion_atomEdgeSets
+                  F hlinear hbridge m e1).mp he1, e1, rfl, hxe1⟩
+            · exact ⟨CanonicalAtom.atomOf F hlinear hbridge e2,
+                (CanonicalAtom.mem_edgePieceUnion_atomEdgeSets
+                  F hlinear hbridge m e2).mp he2, e2, rfl, hye2⟩
+          rcases hsub.eq_empty_or_singleton with hemp | ⟨r, hr⟩
+          · exact Or.inl (Set.disjoint_iff_inter_eq_empty.mpr hemp)
+          · exact Or.inr ⟨r, hr⟩
+  exact ⟨{ atoms := l
+           nodup := hnd
+           labels := hlt
+           tailPointSubsingleton := hcoh
+           running := hrun l hnd hcoh
+           total := CanonicalAtom.edgePieceUnion_atomEdgeSets_eq_univ
+             F hlinear hbridge l hlt }⟩
+
+/-- The exact total restriction associated with an atom running assembly is
+isomorphic to the original system once isolated points are excluded. -/
+theorem AtomRunningAssembly.reconstructs
+    {hlinear : F.Linear} {hbridge : F.BridgeAtEveryEdge}
+    (assembly : CanonicalAtom.AtomRunningAssembly F hlinear hbridge)
+    (hnoisolated : F.HasNoIsolatedPoints) :
+    TripleSystem.Isomorphic
+      (F.edgeRestriction
+        (edgePieceUnion
+          (CanonicalAtom.atomEdgeSets F hlinear hbridge assembly.atoms))) F := by
+  rw [assembly.total]
+  exact ⟨F.edgeRestrictionUnivIso hnoisolated⟩
+
+/-- Manuscript-facing exact reconstruction from the canonical atom forest. -/
+theorem canonicalAtom_reconstruction
+    (hintrinsic : F.Intrinsic) (hnoisolated : F.HasNoIsolatedPoints) :
+    ∃ assembly : CanonicalAtom.AtomRunningAssembly
+        F hintrinsic.1 hintrinsic.2.1,
+      TripleSystem.Isomorphic
+        (F.edgeRestriction
+          (edgePieceUnion
+            (CanonicalAtom.atomEdgeSets F hintrinsic.1 hintrinsic.2.1
+              assembly.atoms))) F := by
+  rcases CanonicalAtom.exists_atomRunningAssembly F hintrinsic with ⟨assembly⟩
+  exact ⟨assembly, assembly.reconstructs F hnoisolated⟩
+
+end
+end CanonicalAtom
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomForestReconstruction
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomForestReconstruction
 ========================================================================== -/
 
 /- ==========================================================================
@@ -21208,136 +25185,6 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportTailDegreeE
 ========================================================================== -/
 
 /- ==========================================================================
-BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrder
-Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportForestOrder.lean
-Normalized SHA-256: fc44639585038e980516bcd2f5db9dc50d7a9f6d297fabef65b242905452afd8
-========================================================================== -/
-section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportForestOrder
-
-/-!
-# Leaf-elimination orders for finite forests
-
-This is the graph-theoretic core needed when a support-overlap graph is
-acyclic.  Every finite induced subgraph of a forest has an isolated vertex or
-a leaf, so its vertices can be ordered such that each vertex has at most one
-neighbour later in the order.
--/
-
-namespace SimpleGraph
-
-universe u
-
-variable {V : Type u}
-
-/-- `tailAtMostOneNeighbor G l` says that every vertex in the list has at
-most one `G`-neighbour later in the list. -/
-def tailAtMostOneNeighbor (G : SimpleGraph V) : List V → Prop
-  | [] => True
-  | q :: tail =>
-      tailAtMostOneNeighbor G tail ∧
-        ∀ u ∈ tail, ∀ w ∈ tail, G.Adj q u → G.Adj q w → u = w
-
-/-- A nonempty finite acyclic graph has a vertex with at most one neighbour.
-
-The result deliberately includes isolated vertices: this makes it apply to
-arbitrary induced subgraphs during leaf elimination. -/
-theorem IsAcyclic.exists_vertex_adj_unique
-    {G : SimpleGraph V} [Fintype V] [DecidableRel G.Adj] [Nonempty V]
-    (hG : G.IsAcyclic) :
-    ∃ q : V, ∀ ⦃u w : V⦄, G.Adj q u → G.Adj q w → u = w := by
-  classical
-  let x : V := Classical.choice (inferInstance : Nonempty V)
-  by_cases hx : G.degree x = 0
-  · refine ⟨x, ?_⟩
-    intro u w hxu _
-    have hpos : 0 < G.degree x := (G.degree_pos_iff_exists_adj x).mpr ⟨u, hxu⟩
-    omega
-  · have hpos : 0 < G.degree x := Nat.pos_of_ne_zero hx
-    obtain ⟨y, hxy⟩ := (G.degree_pos_iff_exists_adj x).mp hpos
-    let c : G.ConnectedComponent := G.connectedComponentMk x
-    have hxc : x ∈ c := by
-      exact SimpleGraph.ConnectedComponent.connectedComponentMk_mem (G := G)
-    have hyc : y ∈ c := c.mem_supp_of_adj_mem_supp hxc hxy
-    have hne : (⟨x, hxc⟩ : c) ≠ ⟨y, hyc⟩ := by
-      intro h
-      exact hxy.ne (congrArg Subtype.val h)
-    letI : Nontrivial c := ⟨⟨x, hxc⟩, ⟨y, hyc⟩, hne⟩
-    obtain ⟨q, hq⟩ := (hG.isTree_connectedComponent c).exists_vert_degree_one_of_nontrivial
-    have huniq : ∃! z : c, c.toSimpleGraph.Adj q z :=
-      (SimpleGraph.degree_eq_one_iff_existsUnique_adj).mp hq
-    refine ⟨q, ?_⟩
-    intro u w hqu hqw
-    have huc : u ∈ c := c.mem_supp_of_adj_mem_supp q.property hqu
-    have hwc : w ∈ c := c.mem_supp_of_adj_mem_supp q.property hqw
-    have hqu' : c.toSimpleGraph.Adj q ⟨u, huc⟩ :=
-      (c.toSimpleGraph_adj q.property huc).mpr hqu
-    have hqw' : c.toSimpleGraph.Adj q ⟨w, hwc⟩ :=
-      (c.toSimpleGraph_adj q.property hwc).mpr hqw
-    exact congrArg Subtype.val (huniq.unique hqu' hqw')
-
-/-- Every finite set of vertices in an acyclic graph has a noduplicated
-leaf-elimination order.  In the resulting order each vertex has at most one
-neighbour in its tail. -/
-theorem IsAcyclic.exists_finset_tailAtMostOneNeighborOrder
-    {G : SimpleGraph V} [DecidableEq V] [DecidableRel G.Adj]
-    (hG : G.IsAcyclic) (s : Finset V) :
-    ∃ l : List V, l.Nodup ∧ l.toFinset = s ∧ G.tailAtMostOneNeighbor l := by
-  classical
-  induction s using Finset.strongInduction with
-  | H s ih =>
-    by_cases hs : s = ∅
-    · subst s
-      exact ⟨[], List.nodup_nil, by simp, trivial⟩
-    · have hsne : s.Nonempty := Finset.nonempty_iff_ne_empty.mpr hs
-      letI : Nonempty s := hsne.to_subtype
-      obtain ⟨q, hq⟩ :=
-        IsAcyclic.exists_vertex_adj_unique (hG.induce (↑s : Set V))
-      obtain ⟨l, hlNodup, hlFinset, hlTail⟩ :=
-        ih (s.erase q) (Finset.erase_ssubset q.property)
-      refine ⟨q.val :: l, ?_, ?_, ?_⟩
-      · rw [List.nodup_cons]
-        refine ⟨?_, hlNodup⟩
-        intro hqmem
-        have hqerase : q.val ∈ s.erase q.val := by
-          rw [← hlFinset]
-          exact List.mem_toFinset.mpr hqmem
-        exact (Finset.mem_erase.mp hqerase).1 rfl
-      · rw [List.toFinset_cons, hlFinset, Finset.insert_erase q.property]
-      · change
-          tailAtMostOneNeighbor G l ∧
-            ∀ u ∈ l, ∀ w ∈ l, G.Adj q.val u → G.Adj q.val w → u = w
-        refine ⟨hlTail, ?_⟩
-        intro u hu w hw hqu hqw
-        have huerase : u ∈ s.erase q.val := by
-          rw [← hlFinset]
-          exact List.mem_toFinset.mpr hu
-        have hwerase : w ∈ s.erase q.val := by
-          rw [← hlFinset]
-          exact List.mem_toFinset.mpr hw
-        have hqu' : (G.induce (↑s : Set V)).Adj q
-            ⟨u, Finset.mem_of_mem_erase huerase⟩ :=
-          SimpleGraph.induce_adj.mpr hqu
-        have hqw' : (G.induce (↑s : Set V)).Adj q
-            ⟨w, Finset.mem_of_mem_erase hwerase⟩ :=
-          SimpleGraph.induce_adj.mpr hqw
-        exact congrArg Subtype.val (hq hqu' hqw')
-
-/-- A finite acyclic graph has a noduplicated leaf-elimination order of all
-of its vertices. -/
-theorem IsAcyclic.exists_tailAtMostOneNeighborOrder
-    {G : SimpleGraph V} [Fintype V] [DecidableEq V] [DecidableRel G.Adj]
-    (hG : G.IsAcyclic) :
-    ∃ l : List V, l.Nodup ∧ l.toFinset = Finset.univ ∧ G.tailAtMostOneNeighbor l :=
-  hG.exists_finset_tailAtMostOneNeighborOrder Finset.univ
-
-end SimpleGraph
-
-end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportForestOrder
-/- ==========================================================================
-END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrder
-========================================================================== -/
-
-/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportOverlapGraph
 Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportOverlapGraph.lean
 Normalized SHA-256: 3674681a775f8170d9554521d8b5c9af5d27bb8addfb5f04e2e73c981a94a8c8
@@ -22846,254 +26693,6 @@ end Erdos593
 end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceAcyclic
 /- ==========================================================================
 END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAcyclic
-========================================================================== -/
-
-/- ==========================================================================
-BEGIN SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrder
-Source: Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrder.lean
-Normalized SHA-256: b4dac99c8ae35478542ae7a4803998ed19ec84771cdf4c27fab0df0c317a4206
-========================================================================== -/
-section Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceForestOrder
-
-/-!
-# Dynamic leaf orders for bipartite incidence forests
-
-For a finite set of left vertices in a bipartite forest, this module produces
-an order in which each left vertex shares at most one right vertex with its
-remaining tail.  The right-side carrier is pruned at every induction step to
-points adjacent to at least two currently remaining left vertices.  This is
-strictly weaker than requiring the projected left-overlap graph to be a
-forest: many left vertices may share one common right vertex.
-
-The sequence-lift-specific incidence graph is connected to this generic core
-in a later module.
--/
-
-namespace SimpleGraph
-
-universe u v
-
-variable {A : Type u} {P : Type v}
-
-/-- The undirected bipartite graph induced by a left-to-right relation. -/
-def bipartiteIncidenceGraph (r : A → P → Prop) : SimpleGraph (A ⊕ P) :=
-  SimpleGraph.fromRel fun x y =>
-    match x, y with
-    | .inl a, .inr p => r a p
-    | _, _ => False
-
-/-- The left-to-right adjacency predicate of `bipartiteIncidenceGraph`. -/
-@[simp]
-theorem bipartiteIncidenceGraph_adj_inl_inr_iff
-    (r : A → P → Prop) (a : A) (p : P) :
-    (bipartiteIncidenceGraph r).Adj (.inl a) (.inr p) ↔ r a p := by
-  simp [bipartiteIncidenceGraph]
-
-/-- The right-to-left adjacency predicate of `bipartiteIncidenceGraph`. -/
-@[simp]
-theorem bipartiteIncidenceGraph_adj_inr_inl_iff
-    (r : A → P → Prop) (a : A) (p : P) :
-    (bipartiteIncidenceGraph r).Adj (.inr p) (.inl a) ↔ r a p := by
-  simp [bipartiteIncidenceGraph]
-
-/-- Right vertices incident to at least two members of a finite left set. -/
-def sharedRightPoints (r : A → P → Prop)
-    [Fintype P] [DecidableEq P] [DecidableRel r]
-    (t : Finset A) : Finset P :=
-  Finset.univ.filter fun p => 2 ≤ (t.filter fun a => r a p).card
-
-/-- The dynamically pruned incidence carrier: all current left vertices and
-only right vertices shared by at least two of them. -/
-def bipartitePruneVertices (r : A → P → Prop)
-    [Fintype P] [DecidableEq A] [DecidableEq P] [DecidableRel r]
-    (t : Finset A) : Finset (A ⊕ P) :=
-  (t.image Sum.inl) ∪ ((sharedRightPoints r t).image Sum.inr)
-
-@[simp]
-theorem mem_sharedRightPoints
-    (r : A → P → Prop) [Fintype P] [DecidableEq P] [DecidableRel r]
-    (t : Finset A) (p : P) :
-    p ∈ sharedRightPoints r t ↔ 2 ≤ (t.filter fun a => r a p).card := by
-  simp [sharedRightPoints]
-
-@[simp]
-theorem mem_bipartitePruneVertices_inl
-    (r : A → P → Prop) [Fintype P]
-    [DecidableEq A] [DecidableEq P] [DecidableRel r]
-    (t : Finset A) (a : A) :
-    .inl a ∈ bipartitePruneVertices r t ↔ a ∈ t := by
-  simp [bipartitePruneVertices]
-
-@[simp]
-theorem mem_bipartitePruneVertices_inr
-    (r : A → P → Prop) [Fintype P]
-    [DecidableEq A] [DecidableEq P] [DecidableRel r]
-    (t : Finset A) (p : P) :
-    .inr p ∈ bipartitePruneVertices r t ↔ p ∈ sharedRightPoints r t := by
-  simp [bipartitePruneVertices]
-
-/-- A left-vertex order in which every head shares at most one right point
-with a member of its remaining tail. -/
-def bipartiteTailPointSubsingleton (r : A → P → Prop) : List A → Prop
-  | [] => True
-  | a :: tail =>
-      bipartiteTailPointSubsingleton r tail ∧
-        ∀ p p', r a p → r a p' →
-          (∃ b ∈ tail, r b p) →
-          (∃ c ∈ tail, r c p') → p = p'
-
-/-- In a nonempty finite left set of a bipartite forest, some left vertex has
-at most one neighbour in the dynamically pruned incidence graph.  A right
-leaf is impossible because every retained right vertex has two left
-neighbours. -/
-theorem IsAcyclic.exists_bipartiteLeftVertex_adj_unique
-    (r : A → P → Prop) [Fintype P] [DecidableEq A] [DecidableEq P]
-    [DecidableRel r] (hG : (bipartiteIncidenceGraph r).IsAcyclic)
-    {t : Finset A} (ht : t.Nonempty) :
-    ∃ a ∈ t, ∀ ⦃z w : A ⊕ P⦄,
-      z ∈ bipartitePruneVertices r t →
-      w ∈ bipartitePruneVertices r t →
-      (bipartiteIncidenceGraph r).Adj (.inl a) z →
-      (bipartiteIncidenceGraph r).Adj (.inl a) w → z = w := by
-  classical
-  let s : Finset (A ⊕ P) := bipartitePruneVertices r t
-  have hs : s.Nonempty := by
-    obtain ⟨a, ha⟩ := ht
-    exact ⟨.inl a, (mem_bipartitePruneVertices_inl r t a).mpr ha⟩
-  letI : Nonempty s := hs.to_subtype
-  obtain ⟨q, hq⟩ :=
-    SimpleGraph.IsAcyclic.exists_vertex_adj_unique
-      (hG.induce (↑s : Set (A ⊕ P)))
-  rcases q with ⟨q, hqmem⟩
-  rcases q with a | p
-  · have ha : a ∈ t := (mem_bipartitePruneVertices_inl r t a).mp hqmem
-    refine ⟨a, ha, ?_⟩
-    intro z w hz hw haz haw
-    let qa : ↑(↑s : Set (A ⊕ P)) := ⟨.inl a, hqmem⟩
-    let z' : ↑(↑s : Set (A ⊕ P)) := ⟨z, hz⟩
-    let w' : ↑(↑s : Set (A ⊕ P)) := ⟨w, hw⟩
-    have haz' :
-        (SimpleGraph.induce (↑s : Set (A ⊕ P))
-          (bipartiteIncidenceGraph r)).Adj qa z' := by
-      rw [SimpleGraph.induce_adj]
-      change (bipartiteIncidenceGraph r).Adj (.inl a) z
-      exact haz
-    have haw' :
-        (SimpleGraph.induce (↑s : Set (A ⊕ P))
-          (bipartiteIncidenceGraph r)).Adj qa w' := by
-      rw [SimpleGraph.induce_adj]
-      change (bipartiteIncidenceGraph r).Adj (.inl a) w
-      exact haw
-    have heq : z' = w' := hq haz' haw'
-    simpa [z', w'] using congrArg Subtype.val heq
-  · have hp : p ∈ sharedRightPoints r t :=
-      (mem_bipartitePruneVertices_inr r t p).mp hqmem
-    have hcard : 2 ≤ (t.filter fun a => r a p).card :=
-      (mem_sharedRightPoints r t p).mp hp
-    have htwo : 1 < (t.filter fun a => r a p).card := by
-      omega
-    obtain ⟨a, ha, b, hb, hab⟩ := Finset.one_lt_card.mp htwo
-    rcases Finset.mem_filter.mp ha with ⟨ha, hap⟩
-    rcases Finset.mem_filter.mp hb with ⟨hb, hbp⟩
-    have hma : (.inl a : A ⊕ P) ∈ s :=
-      (mem_bipartitePruneVertices_inl r t a).mpr ha
-    have hmb : (.inl b : A ⊕ P) ∈ s :=
-      (mem_bipartitePruneVertices_inl r t b).mpr hb
-    let qa : ↑(↑s : Set (A ⊕ P)) := ⟨.inr p, hqmem⟩
-    let za : ↑(↑s : Set (A ⊕ P)) := ⟨.inl a, hma⟩
-    let zb : ↑(↑s : Set (A ⊕ P)) := ⟨.inl b, hmb⟩
-    have hqza :
-        (SimpleGraph.induce (↑s : Set (A ⊕ P))
-          (bipartiteIncidenceGraph r)).Adj qa za := by
-      rw [SimpleGraph.induce_adj]
-      change (bipartiteIncidenceGraph r).Adj (.inr p) (.inl a)
-      exact (bipartiteIncidenceGraph_adj_inr_inl_iff r a p).mpr hap
-    have hqzb :
-        (SimpleGraph.induce (↑s : Set (A ⊕ P))
-          (bipartiteIncidenceGraph r)).Adj qa zb := by
-      rw [SimpleGraph.induce_adj]
-      change (bipartiteIncidenceGraph r).Adj (.inr p) (.inl b)
-      exact (bipartiteIncidenceGraph_adj_inr_inl_iff r b p).mpr hbp
-    have heq : za = zb := hq hqza hqzb
-    have heq' : (.inl a : A ⊕ P) = .inl b := by
-      simpa [za, zb] using congrArg Subtype.val heq
-    exact False.elim (hab (Sum.inl.inj heq'))
-
-/-- Every finite set of left vertices in an acyclic bipartite incidence graph
-has a noduplicated order with at most one shared right point at every head.
-The point carrier is recomputed after each removal. -/
-theorem IsAcyclic.exists_finset_bipartiteTailPointSubsingletonOrder
-    (r : A → P → Prop) [Fintype P] [DecidableEq A] [DecidableEq P]
-    [DecidableRel r] (hG : (bipartiteIncidenceGraph r).IsAcyclic)
-    (t : Finset A) :
-    ∃ l : List A,
-      l.Nodup ∧ l.toFinset = t ∧ bipartiteTailPointSubsingleton r l := by
-  classical
-  induction t using Finset.strongInduction with
-  | H t ih =>
-    by_cases ht : t.Nonempty
-    · obtain ⟨a, ha, hleaf⟩ := hG.exists_bipartiteLeftVertex_adj_unique r ht
-      obtain ⟨l, hlnd, hlt, hlcoh⟩ :=
-        ih (t.erase a) (Finset.erase_ssubset ha)
-      refine ⟨a :: l, ?_, ?_, ?_⟩
-      · rw [List.nodup_cons]
-        refine ⟨?_, hlnd⟩
-        intro hal
-        have hae : a ∈ t.erase a := by
-          rw [← hlt]
-          exact List.mem_toFinset.mpr hal
-        exact (Finset.mem_erase.mp hae).1 rfl
-      · rw [List.toFinset_cons, hlt, Finset.insert_erase ha]
-      · change bipartiteTailPointSubsingleton r l ∧
-          ∀ p p', r a p → r a p' →
-            (∃ b ∈ l, r b p) →
-            (∃ c ∈ l, r c p') → p = p'
-        refine ⟨hlcoh, ?_⟩
-        intro p p' hap hap' hpt hp't
-        rcases hpt with ⟨b, hb, hbp⟩
-        rcases hp't with ⟨c, hc, hcp'⟩
-        have hbe : b ∈ t.erase a := by
-          rw [← hlt]
-          exact List.mem_toFinset.mpr hb
-        have hce : c ∈ t.erase a := by
-          rw [← hlt]
-          exact List.mem_toFinset.mpr hc
-        have hbT : b ∈ t := (Finset.mem_erase.mp hbe).2
-        have hcT : c ∈ t := (Finset.mem_erase.mp hce).2
-        have hab : a ≠ b := by
-          intro hab
-          subst b
-          exact (Finset.mem_erase.mp hbe).1 rfl
-        have hac : a ≠ c := by
-          intro hac
-          subst c
-          exact (Finset.mem_erase.mp hce).1 rfl
-        have hpactive : (.inr p : A ⊕ P) ∈ bipartitePruneVertices r t := by
-          rw [mem_bipartitePruneVertices_inr]
-          rw [mem_sharedRightPoints]
-          have hcard : 1 < (t.filter fun x => r x p).card :=
-            Finset.one_lt_card.mpr ⟨a, Finset.mem_filter.mpr ⟨ha, hap⟩,
-              b, Finset.mem_filter.mpr ⟨hbT, hbp⟩, hab⟩
-          omega
-        have hp'active : (.inr p' : A ⊕ P) ∈ bipartitePruneVertices r t := by
-          rw [mem_bipartitePruneVertices_inr]
-          rw [mem_sharedRightPoints]
-          have hcard : 1 < (t.filter fun x => r x p').card :=
-            Finset.one_lt_card.mpr ⟨a, Finset.mem_filter.mpr ⟨ha, hap'⟩,
-              c, Finset.mem_filter.mpr ⟨hcT, hcp'⟩, hac⟩
-          omega
-        exact Sum.inr.inj (hleaf hpactive hp'active
-          ((bipartiteIncidenceGraph_adj_inl_inr_iff r a p).mpr hap)
-          ((bipartiteIncidenceGraph_adj_inl_inr_iff r a p').mpr hap'))
-    · have htempty : t = ∅ := Finset.not_nonempty_iff_eq_empty.mp ht
-      subst t
-      exact ⟨[], by simp, by simp, trivial⟩
-
-end SimpleGraph
-
-end Erdos593SelfContained_Module_Erdos593_TripleSystem_SequenceLiftBaseFiberSupportIncidenceForestOrder
-/- ==========================================================================
-END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrder
 ========================================================================== -/
 
 /- ==========================================================================
@@ -24622,9 +28221,11173 @@ END SOURCE MODULE: Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomCanonicity
+Source: Erdos593/TripleSystem/CanonicalAtomCanonicity.lean
+Normalized SHA-256: 0f4b29c4745e0815db5bb262d712d9ccfbf57ebc592a1df8936246f813600cec
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomCanonicity
+
+/-!
+# Canonicity of the canonical atom data
+
+This module makes the manuscript phrase "determined by the triple system"
+precise as equivariance under simultaneous vertex-and-edge relabelling.  It
+retains the literal canonical fibres from `CanonicalAtomPartition`, the full
+and shared-point incidence graphs from `CanonicalAtomForestReconstruction`,
+and graph isomorphism rather than equality for the selected nontrivial cores.
+
+It does not assert uniqueness among arbitrary forest presentations lacking a
+maximal-cycle-block condition.
+-/
+
+namespace Erdos593
+
+universe w
+
+namespace TripleSystem
+namespace CanonicalAtom
+
+noncomputable section
+
+variable {V E V' E' : Type w}
+variable (F : TripleSystem V E) (F' : TripleSystem V' E')
+
+/-- The transported linearity proof used by the target canonical atom data. -/
+theorem transportedLinear (f : TripleSystem.Iso F F') (hlinear : F.Linear) :
+    F'.Linear :=
+  (TripleSystem.Iso.linear_iff f).mp hlinear
+
+/-- The transported bridge-at-every-edge proof used by the target canonical
+atom data. -/
+theorem transportedBridgeAtEveryEdge
+    (f : TripleSystem.Iso F F') (hbridge : F.BridgeAtEveryEdge) :
+    F'.BridgeAtEveryEdge :=
+  (TripleSystem.Iso.bridgeAtEveryEdge_iff f).mp hbridge
+
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+  [DecidableRel F.levi.Adj]
+variable [Fintype V'] [Fintype E'] [DecidableEq V'] [DecidableEq E']
+  [DecidableRel F'.levi.Adj]
+
+noncomputable local instance canonicalAtomIndexDecidableEq :
+    DecidableEq (CanonicalAtom.Index F) :=
+  Classical.decEq _
+
+noncomputable local instance canonicalAtomIncidentDecidableRel
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    DecidableRel (CanonicalAtom.atomIncident F hlinear hbridge) :=
+  fun A x => Classical.propDecidable
+    (CanonicalAtom.atomIncident F hlinear hbridge A x)
+
+/-- The canonical vertex of the pruned incidence forest represented by an
+atom label. -/
+noncomputable def sharedAtomVertex
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : CanonicalAtom.Index F) :
+    ↑(SimpleGraph.bipartitePruneVertices
+      (CanonicalAtom.atomIncident F hlinear hbridge)
+      (CanonicalAtom.atomFinset F hlinear hbridge)) := by
+  classical
+  exact ⟨Sum.inl A,
+    (SimpleGraph.mem_bipartitePruneVertices_inl _ _ _).mpr
+      (CanonicalAtom.mem_atomFinset F hlinear hbridge A)⟩
+
+/-- The canonical vertex of the pruned incidence forest represented by a
+shared original point. -/
+noncomputable def sharedPointVertex
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (x : V) (hx : x ∈ CanonicalAtom.sharedAtomPoints F hlinear hbridge) :
+    ↑(SimpleGraph.bipartitePruneVertices
+      (CanonicalAtom.atomIncident F hlinear hbridge)
+      (CanonicalAtom.atomFinset F hlinear hbridge)) := by
+  classical
+  exact ⟨Sum.inr x,
+    (SimpleGraph.mem_bipartitePruneVertices_inr _ _ _).mpr hx⟩
+
+/-- Complete equivariance data for the canonical atom construction under one
+triple-system isomorphism.  The graph-isomorphism coherence fields ensure that
+the incidence forests use the transported atoms and points, rather than an
+unrelated abstract graph isomorphism. -/
+structure CanonicityTransport
+    (f : TripleSystem.Iso F F')
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) where
+  /-- Bijection of the literal canonical atom labels. -/
+  atomEquiv : CanonicalAtom.Index F ≃ CanonicalAtom.Index F'
+  /-- The label of every transported hyperedge is the transported label. -/
+  atomOf_map : ∀ e : E,
+    atomEquiv (CanonicalAtom.atomOf F hlinear hbridge e) =
+      CanonicalAtom.atomOf F'
+        (transportedLinear F F' f hlinear)
+        (transportedBridgeAtEveryEdge F F' f hbridge)
+        (f.edgeEquiv e)
+  /-- Exact canonical edge fibres are preserved and reflected. -/
+  edges_map_iff : ∀ (A : CanonicalAtom.Index F) (e : E),
+    e ∈ CanonicalAtom.edges F hlinear hbridge A ↔
+      f.edgeEquiv e ∈ CanonicalAtom.edges F'
+        (transportedLinear F F' f hlinear)
+        (transportedBridgeAtEveryEdge F F' f hbridge)
+        (atomEquiv A)
+  /-- Exact atom supports are preserved and reflected by the vertex map. -/
+  support_map_iff : ∀ (A : CanonicalAtom.Index F) (x : V),
+    x ∈ CanonicalAtom.atomSupport F hlinear hbridge A ↔
+      f.vertexEquiv x ∈ CanonicalAtom.atomSupport F'
+        (transportedLinear F F' f hlinear)
+        (transportedBridgeAtEveryEdge F F' f hbridge)
+        (atomEquiv A)
+  /-- The atom--point incidence predicate itself is preserved and reflected. -/
+  atomIncident_map_iff : ∀ (A : CanonicalAtom.Index F) (x : V),
+    CanonicalAtom.atomIncident F hlinear hbridge A x ↔
+      CanonicalAtom.atomIncident F'
+        (transportedLinear F F' f hlinear)
+        (transportedBridgeAtEveryEdge F F' f hbridge)
+        (atomEquiv A) (f.vertexEquiv x)
+  /-- Full atom--point incidence graphs are canonically isomorphic. -/
+  atomPointGraphIso :
+    CanonicalAtom.atomPointIncidenceGraph F hlinear hbridge ≃g
+      CanonicalAtom.atomPointIncidenceGraph F'
+        (transportedLinear F F' f hlinear)
+        (transportedBridgeAtEveryEdge F F' f hbridge)
+  /-- The full graph isomorphism is the sum of the atom and point maps. -/
+  atomPointGraphIso_apply : ∀ z : CanonicalAtom.Index F ⊕ V,
+    atomPointGraphIso z = Equiv.sumCongr atomEquiv f.vertexEquiv z
+  /-- Shared-point membership is preserved and reflected, including points
+  incident with three or more atoms. -/
+  sharedPoint_map_iff : ∀ x : V,
+    x ∈ CanonicalAtom.sharedAtomPoints F hlinear hbridge ↔
+      f.vertexEquiv x ∈ CanonicalAtom.sharedAtomPoints F'
+        (transportedLinear F F' f hlinear)
+        (transportedBridgeAtEveryEdge F F' f hbridge)
+  /-- The exact shared-point-pruned manuscript incidence forests are
+  isomorphic. -/
+  sharedPointGraphIso :
+    CanonicalAtom.atomSharedPointIncidenceGraph F hlinear hbridge ≃g
+      CanonicalAtom.atomSharedPointIncidenceGraph F'
+        (transportedLinear F F' f hlinear)
+        (transportedBridgeAtEveryEdge F F' f hbridge)
+  /-- On atom vertices, the pruned-forest isomorphism is the canonical atom
+  transport. -/
+  sharedPointGraphIso_atom : ∀ A : CanonicalAtom.Index F,
+    sharedPointGraphIso (sharedAtomVertex F hlinear hbridge A) =
+      sharedAtomVertex F'
+        (transportedLinear F F' f hlinear)
+        (transportedBridgeAtEveryEdge F F' f hbridge)
+        (atomEquiv A)
+  /-- On retained point vertices, the pruned-forest isomorphism is the original
+  vertex transport, with only the subtype membership proof changing. -/
+  sharedPointGraphIso_point :
+    ∀ (x : V) (hx : x ∈ CanonicalAtom.sharedAtomPoints F hlinear hbridge),
+      sharedPointGraphIso (sharedPointVertex F hlinear hbridge x hx) =
+        sharedPointVertex F'
+          (transportedLinear F F' f hlinear)
+          (transportedBridgeAtEveryEdge F F' f hbridge)
+          (f.vertexEquiv x) ((sharedPoint_map_iff x).mp hx)
+  /-- Every source cycle-block atom transports to a cycle-block atom whose
+  selected suppressed core is isomorphic as a finite simple graph. -/
+  cycleBlockCore_transport :
+    ∀ (C : BridgeBlock.HyperedgeComponent F)
+      (hC : BridgeBlock.HasIncidence F C)
+      (B : Erdos593.SimpleGraph.EdgeCycleBlock
+        (BridgeBlock.contractedGraph F C)),
+      ∃ (C' : BridgeBlock.HyperedgeComponent F')
+        (hC' : BridgeBlock.HasIncidence F' C')
+        (B' : Erdos593.SimpleGraph.EdgeCycleBlock
+          (BridgeBlock.contractedGraph F' C')),
+        atomEquiv (.cycleBlock C hC B) = .cycleBlock C' hC' B' ∧
+          Nonempty
+            (CanonicalAtom.cycleBlockCore F C B ≃g
+              CanonicalAtom.cycleBlockCore F' C' B')
+
+/-- Manuscript-facing canonicity theorem: every incidence-preserving
+relabeling transports the literal atom partition, its incidence forests, and
+its nontrivial cores up to graph isomorphism. -/
+theorem exists_canonicityTransport
+    (f : TripleSystem.Iso F F')
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    Nonempty (CanonicalAtom.CanonicityTransport F F' f hlinear hbridge) := by
+  classical
+  -- Transported hypotheses.
+  have hlin' : F'.Linear := transportedLinear F F' f hlinear
+  have hbri' : F'.BridgeAtEveryEdge := transportedBridgeAtEveryEdge F F' f hbridge
+  -- ## Generic graph-isomorphism transport
+  -- Edge sets.
+  let esE : ∀ {A B : Type w} {P : _root_.SimpleGraph A} {Q : _root_.SimpleGraph B},
+      (P ≃g Q) → (P.edgeSet ≃ Q.edgeSet) := fun {_ _ _ _} g =>
+    { toFun := _root_.SimpleGraph.Hom.mapEdgeSet g.toHom
+      invFun := _root_.SimpleGraph.Hom.mapEdgeSet g.symm.toHom
+      left_inv := by
+        intro a
+        apply Subtype.ext
+        simp [_root_.SimpleGraph.Hom.mapEdgeSet, Sym2.map_map]
+      right_inv := by
+        intro a
+        apply Subtype.ext
+        simp [_root_.SimpleGraph.Hom.mapEdgeSet, Sym2.map_map] }
+  have hesE_val : ∀ {A B : Type w} {P : _root_.SimpleGraph A} {Q : _root_.SimpleGraph B}
+      (g : P ≃g Q) (a : P.edgeSet), ((esE g) a : Sym2 B) = Sym2.map g a.1 :=
+    fun _ _ => rfl
+  have hesE_symm : ∀ {A B : Type w} {P : _root_.SimpleGraph A} {Q : _root_.SimpleGraph B}
+      (g : P ≃g Q) (a : P.edgeSet), esE g.symm (esE g a) = a := by
+    intro A B P Q g a
+    apply Subtype.ext
+    rw [hesE_val, hesE_val, Sym2.map_map]
+    simp
+  have hesE_symm' : ∀ {A B : Type w} {P : _root_.SimpleGraph A} {Q : _root_.SimpleGraph B}
+      (g : P ≃g Q) (b : Q.edgeSet), esE g (esE g.symm b) = b := by
+    intro A B P Q g b
+    apply Subtype.ext
+    rw [hesE_val, hesE_val, Sym2.map_map]
+    simp
+  -- Cycle-block equivalence classes.
+  have hlinkmap : ∀ {A B : Type w} {P : _root_.SimpleGraph A} {Q : _root_.SimpleGraph B}
+      (g : P ≃g Q) (a b : P.edgeSet),
+      Erdos593.SimpleGraph.EdgeCycleLinked P a b →
+        Erdos593.SimpleGraph.EdgeCycleLinked Q (esE g a) (esE g b) := by
+    intro A B P Q g a b h
+    rcases h with rfl | ⟨v, c, hc, hea, heb⟩
+    · exact Or.inl rfl
+    · refine Or.inr ⟨g v, c.map g.toHom, hc.map g.injective, ?_, ?_⟩
+      · rw [_root_.SimpleGraph.Walk.edges_map]
+        exact List.mem_map_of_mem hea
+      · rw [_root_.SimpleGraph.Walk.edges_map]
+        exact List.mem_map_of_mem heb
+  let bmap : ∀ {A B : Type w} {P : _root_.SimpleGraph A} {Q : _root_.SimpleGraph B},
+      (P ≃g Q) → (Erdos593.SimpleGraph.EdgeCycleBlock P ≃
+        Erdos593.SimpleGraph.EdgeCycleBlock Q) := fun {_ _ _ _} g =>
+    Quotient.congr (esE g) (by
+      intro a b
+      constructor
+      · exact hlinkmap g a b
+      · intro h
+        have h2 := hlinkmap g.symm _ _ h
+        rwa [hesE_symm g a, hesE_symm g b] at h2)
+  have hbmap_ofEdge : ∀ {A B : Type w} {P : _root_.SimpleGraph A}
+      {Q : _root_.SimpleGraph B} (g : P ≃g Q) (a : P.edgeSet),
+      bmap g (Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge P a) =
+        Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge Q (esE g a) := fun _ _ => rfl
+  have hblkedges : ∀ {A B : Type w} {P : _root_.SimpleGraph A}
+      {Q : _root_.SimpleGraph B} (g : P ≃g Q)
+      (Bl : Erdos593.SimpleGraph.EdgeCycleBlock P) (a : P.edgeSet),
+      a ∈ Erdos593.SimpleGraph.EdgeCycleBlock.edges P Bl ↔
+        esE g a ∈ Erdos593.SimpleGraph.EdgeCycleBlock.edges Q (bmap g Bl) := by
+    intro A B P Q g Bl a
+    show Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge P a = Bl ↔
+      Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge Q (esE g a) = bmap g Bl
+    rw [← hbmap_ofEdge]
+    exact (Equiv.apply_eq_iff_eq _).symm
+  -- Finite endpoint factor graphs.
+  have hendmem : ∀ {A : Type w} (P : _root_.SimpleGraph A) (S : Set P.edgeSet)
+      (hS : S.Finite) (v : A),
+      v ∈ finiteEdgeEndpointFinset P S hS ↔ ∃ e ∈ S, v ∈ (e.1 : Sym2 A) := by
+    intro A P S hS v
+    classical
+    simp [finiteEdgeEndpointFinset, Finset.mem_biUnion, Set.Finite.mem_toFinset,
+      Sym2.mem_toFinset]
+  have hendmap : ∀ {A B : Type w} {P : _root_.SimpleGraph A}
+      {Q : _root_.SimpleGraph B} (g : P ≃g Q) (S : Set P.edgeSet) (hS : S.Finite)
+      (T : Set Q.edgeSet) (hT : T.Finite)
+      (hST : ∀ a : P.edgeSet, a ∈ S ↔ esE g a ∈ T) (v : A),
+      v ∈ finiteEdgeEndpointFinset P S hS ↔
+        g v ∈ finiteEdgeEndpointFinset Q T hT := by
+    intro A B P Q g S hS T hT hST v
+    rw [hendmem, hendmem]
+    constructor
+    · rintro ⟨e, heS, hve⟩
+      refine ⟨esE g e, (hST e).mp heS, ?_⟩
+      rw [hesE_val]
+      exact Sym2.mem_map.mpr ⟨v, hve, rfl⟩
+    · rintro ⟨e', he'T, hve'⟩
+      refine ⟨esE g.symm e', ?_, ?_⟩
+      · rw [hST, hesE_symm' g e']
+        exact he'T
+      · rw [hesE_val]
+        refine Sym2.mem_map.mpr ⟨g v, hve', ?_⟩
+        simp
+  let ffi : ∀ {A B : Type w} {P : _root_.SimpleGraph A} {Q : _root_.SimpleGraph B}
+      (g : P ≃g Q) (S : Set P.edgeSet) (hS : S.Finite) (T : Set Q.edgeSet)
+      (hT : T.Finite) (_ : ∀ a : P.edgeSet, a ∈ S ↔ esE g a ∈ T),
+      finiteEdgeFactorGraph P S hS ≃g finiteEdgeFactorGraph Q T hT :=
+    fun {_ _ P Q} g S hS T hT hST =>
+    { toEquiv :=
+        { toFun := fun v => ⟨g v.1, (hendmap g S hS T hT hST v.1).mp v.2⟩
+          invFun := fun v => ⟨g.symm v.1, by
+            rw [hendmap g S hS T hT hST, RelIso.apply_symm_apply]
+            exact v.2⟩
+          left_inv := by intro v; apply Subtype.ext; simp
+          right_inv := by intro v; apply Subtype.ext; simp }
+      map_rel_iff' := by
+        intro x y
+        show (finiteEdgeFactorGraph Q T hT).Adj ⟨g x.1, _⟩ ⟨g y.1, _⟩ ↔
+          (finiteEdgeFactorGraph P S hS).Adj x y
+        simp only [finiteEdgeFactorGraph, _root_.SimpleGraph.fromEdgeSet_adj,
+          Set.mem_setOf_eq, Sym2.map_mk, ne_eq, Subtype.ext_iff]
+        constructor
+        · rintro ⟨⟨e', he'T, he'⟩, hne⟩
+          refine ⟨⟨esE g.symm e', ?_, ?_⟩, ?_⟩
+          · rw [hST, hesE_symm' g e']
+            exact he'T
+          · rw [hesE_val, he', Sym2.map_mk]
+            simp
+          · intro h
+            exact hne (congrArg g h)
+        · rintro ⟨⟨e, heS, he⟩, hne⟩
+          refine ⟨⟨esE g e, (hST e).mp heS, ?_⟩, ?_⟩
+          · rw [hesE_val, he]
+            simp
+          · intro h
+            exact hne (g.injective h) }
+  -- ## Transport of the bridge-free Levi graph
+  have hIsBridge : ∀ (a b : V ⊕ E),
+      F.levi.IsBridge s(a, b) ↔
+        F'.levi.IsBridge s(TripleSystem.Iso.leviIso f a, TripleSystem.Iso.leviIso f b) := by
+    intro a b
+    let g := TripleSystem.Iso.leviIso f
+    let gd : F.levi.deleteEdges {s(a, b)} ≃g
+        F'.levi.deleteEdges {s(g a, g b)} :=
+      { toEquiv := g.toEquiv
+        map_rel_iff' := by
+          intro x y
+          simp [g.map_adj_iff] }
+    change (¬(F.levi.deleteEdges {s(a, b)}).Reachable a b) ↔
+      ¬(F'.levi.deleteEdges {s(g a, g b)}).Reachable (g a) (g b)
+    exact not_congr gd.reachable_iff.symm
+  let bfi : Erdos593.SimpleGraph.bridgeFree F.levi ≃g
+      Erdos593.SimpleGraph.bridgeFree F'.levi :=
+    { toEquiv := (TripleSystem.Iso.leviIso f).toEquiv
+      map_rel_iff' := by
+        intro a b
+        show (Erdos593.SimpleGraph.bridgeFree F'.levi).Adj
+            (TripleSystem.Iso.leviIso f a) (TripleSystem.Iso.leviIso f b) ↔
+          (Erdos593.SimpleGraph.bridgeFree F.levi).Adj a b
+        simp only [Erdos593.SimpleGraph.bridgeFree,
+          _root_.SimpleGraph.deleteEdges_adj, Finset.mem_coe,
+          Erdos593.SimpleGraph.mem_bridgeFinset,
+          (TripleSystem.Iso.leviIso f).map_adj_iff,
+          _root_.SimpleGraph.mem_edgeSet]
+        rw [hIsBridge a b] }
+  have hbfi_inl : ∀ x : V, bfi (Sum.inl x) = Sum.inl (f.vertexEquiv x) := fun _ => rfl
+  have hbfi_inr : ∀ e : E, bfi (Sum.inr e) = Sum.inr (f.edgeEquiv e) := fun _ => rfl
+  have hbfi_adj : ∀ a b : V ⊕ E,
+      (Erdos593.SimpleGraph.bridgeFree F'.levi).Adj (bfi a) (bfi b) ↔
+        (Erdos593.SimpleGraph.bridgeFree F.levi).Adj a b :=
+    fun _ _ => bfi.map_adj_iff
+  have hbfi_degree : ∀ z : V ⊕ E,
+      (Erdos593.SimpleGraph.bridgeFree F'.levi).degree (bfi z) =
+        (Erdos593.SimpleGraph.bridgeFree F.levi).degree z :=
+    fun z => _root_.SimpleGraph.Iso.degree_eq bfi z
+  -- ## Transport of components, points and contracted graphs
+  let cc : BridgeBlock.Component F ≃ BridgeBlock.Component F' :=
+    bfi.connectedComponentEquiv
+  have hcc_mk : ∀ z : V ⊕ E,
+      cc ((Erdos593.SimpleGraph.bridgeFree F.levi).connectedComponentMk z) =
+        (Erdos593.SimpleGraph.bridgeFree F'.levi).connectedComponentMk (bfi z) :=
+    fun _ => rfl
+  have hsupp : ∀ (C : BridgeBlock.Component F) (z : V ⊕ E),
+      z ∈ C.supp ↔ bfi z ∈ (cc C).supp := by
+    intro C z
+    constructor
+    · intro h
+      have h2 := congrArg cc h
+      rwa [hcc_mk] at h2
+    · intro h
+      have h' : cc ((Erdos593.SimpleGraph.bridgeFree F.levi).connectedComponentMk z) =
+          cc C := by
+        rw [hcc_mk]
+        exact h
+      exact cc.injective h'
+  let pt : ∀ C : BridgeBlock.Component F,
+      BridgeBlock.Point F C ≃ BridgeBlock.Point F' (cc C) := fun C =>
+    { toFun := fun x => ⟨f.vertexEquiv x.1, (hsupp C (Sum.inl x.1)).mp x.2⟩
+      invFun := fun y => ⟨f.vertexEquiv.symm y.1, by
+        refine (hsupp C (Sum.inl (f.vertexEquiv.symm y.1))).mpr ?_
+        rw [hbfi_inl, Equiv.apply_symm_apply]
+        exact y.2⟩
+      left_inv := by intro x; apply Subtype.ext; simp
+      right_inv := by intro y; apply Subtype.ext; simp }
+  have hpt_val : ∀ (C : BridgeBlock.Component F) (x : BridgeBlock.Point F C),
+      (pt C x).1 = f.vertexEquiv x.1 := fun _ _ => rfl
+  let ce : ∀ C : BridgeBlock.Component F,
+      BridgeBlock.ContractibleEdge F C ≃
+        BridgeBlock.ContractibleEdge F' (cc C) := fun C =>
+    { toFun := fun e => ⟨f.edgeEquiv e.1, (hsupp C (Sum.inr e.1)).mp e.2.1, by
+        rw [show (Sum.inr (f.edgeEquiv e.1) : V' ⊕ E') = bfi (Sum.inr e.1) from rfl,
+          hbfi_degree]
+        exact e.2.2⟩
+      invFun := fun e' => ⟨f.edgeEquiv.symm e'.1, by
+        refine (hsupp C (Sum.inr (f.edgeEquiv.symm e'.1))).mpr ?_
+        rw [hbfi_inr, Equiv.apply_symm_apply]
+        exact e'.2.1, by
+        rw [← hbfi_degree (Sum.inr (f.edgeEquiv.symm e'.1)), hbfi_inr,
+          Equiv.apply_symm_apply]
+        exact e'.2.2⟩
+      left_inv := by intro e; apply Subtype.ext; simp
+      right_inv := by intro e'; apply Subtype.ext; simp }
+  have hce_val : ∀ (C : BridgeBlock.Component F)
+      (e : BridgeBlock.ContractibleEdge F C), (ce C e).1 = f.edgeEquiv e.1 :=
+    fun _ _ => rfl
+  let psi : ∀ C : BridgeBlock.Component F,
+      BridgeBlock.contractedGraph F C ≃g
+        BridgeBlock.contractedGraph F' (cc C) := fun C =>
+    { toEquiv := pt C
+      map_rel_iff' := by
+        intro x y
+        show (BridgeBlock.contractedGraph F' (cc C)).Adj (pt C x) (pt C y) ↔
+          (BridgeBlock.contractedGraph F C).Adj x y
+        rw [BridgeBlock.contractedGraph_adj, BridgeBlock.contractedGraph_adj]
+        constructor
+        · rintro ⟨hne, e', he'x, he'y⟩
+          refine ⟨?_, (ce C).symm e', ?_, ?_⟩
+          · intro h
+            exact hne (congrArg (pt C) h)
+          · refine (hbfi_adj (Sum.inl x.1) (Sum.inr ((ce C).symm e').1)).mp ?_
+            rw [hbfi_inl, hbfi_inr]
+            show (Erdos593.SimpleGraph.bridgeFree F'.levi).Adj
+              (Sum.inl (pt C x).1)
+              (Sum.inr (f.edgeEquiv (f.edgeEquiv.symm e'.1)))
+            rw [Equiv.apply_symm_apply]
+            exact he'x
+          · refine (hbfi_adj (Sum.inl y.1) (Sum.inr ((ce C).symm e').1)).mp ?_
+            rw [hbfi_inl, hbfi_inr]
+            show (Erdos593.SimpleGraph.bridgeFree F'.levi).Adj
+              (Sum.inl (pt C y).1)
+              (Sum.inr (f.edgeEquiv (f.edgeEquiv.symm e'.1)))
+            rw [Equiv.apply_symm_apply]
+            exact he'y
+        · rintro ⟨hne, e, hex, hey⟩
+          refine ⟨?_, ce C e, ?_, ?_⟩
+          · intro h
+            exact hne ((pt C).injective h)
+          · exact (hbfi_adj (Sum.inl x.1) (Sum.inr e.1)).mpr hex
+          · exact (hbfi_adj (Sum.inl y.1) (Sum.inr e.1)).mpr hey }
+  have hpsi_val : ∀ (C : BridgeBlock.Component F) (x : BridgeBlock.Point F C),
+      (psi C x).1 = f.vertexEquiv x.1 := fun _ _ => rfl
+  -- ## Naturality of the canonical hyperedge witness
+  have hwitness : ∀ (C : BridgeBlock.Component F)
+      (a : (BridgeBlock.contractedGraph F C).edgeSet),
+      (BridgeBlock.graphEdgeWitness F' hlin' (C := cc C) (esE (psi C) a)).1 =
+        f.edgeEquiv (BridgeBlock.graphEdgeWitness F hlinear (C := C) a).1 := by
+    intro C a
+    set b := esE (psi C) a with hbdef
+    have haAdj : (BridgeBlock.contractedGraph F C).Adj a.1.out.1 a.1.out.2 := by
+      change Quot.mk (Sym2.Rel (BridgeBlock.Point F C)) a.1.out ∈
+        (BridgeBlock.contractedGraph F C).edgeSet
+      simpa only [Quot.out_eq] using a.2
+    have hne : a.1.out.1 ≠ a.1.out.2 :=
+      ((BridgeBlock.contractedGraph_adj F C _ _).mp haAdj).1
+    have hspec := BridgeBlock.graphEdgeWitness_spec F hlinear a
+    have hspec' := BridgeBlock.graphEdgeWitness_spec F' hlin' b
+    have hb1 : b.1 = s(psi C a.1.out.1, psi C a.1.out.2) := by
+      rw [hbdef, hesE_val]
+      conv_lhs => rw [← a.1.out_eq]
+      rfl
+    have hpair : (b.1.out.1 = psi C a.1.out.1 ∧ b.1.out.2 = psi C a.1.out.2) ∨
+        (b.1.out.1 = psi C a.1.out.2 ∧ b.1.out.2 = psi C a.1.out.1) := by
+      have hout : s(b.1.out.1, b.1.out.2) =
+          s(psi C a.1.out.1, psi C a.1.out.2) := by
+        rw [← hb1]
+        exact b.1.out_eq
+      simpa using Sym2.eq_iff.mp hout
+    have htrans1 : (Erdos593.SimpleGraph.bridgeFree F'.levi).Adj
+        (Sum.inl (psi C a.1.out.1).1)
+        (Sum.inr (ce C (BridgeBlock.graphEdgeWitness F hlinear a)).1) :=
+      (hbfi_adj (Sum.inl a.1.out.1.1)
+        (Sum.inr (BridgeBlock.graphEdgeWitness F hlinear a).1)).mpr hspec.1
+    have htrans2 : (Erdos593.SimpleGraph.bridgeFree F'.levi).Adj
+        (Sum.inl (psi C a.1.out.2).1)
+        (Sum.inr (ce C (BridgeBlock.graphEdgeWitness F hlinear a)).1) :=
+      (hbfi_adj (Sum.inl a.1.out.2.1)
+        (Sum.inr (BridgeBlock.graphEdgeWitness F hlinear a).1)).mpr hspec.2
+    have hw1 : (Erdos593.SimpleGraph.bridgeFree F'.levi).Adj
+        (Sum.inl (psi C a.1.out.1).1)
+        (Sum.inr (BridgeBlock.graphEdgeWitness F' hlin' b).1) := by
+      rcases hpair with ⟨h1, _⟩ | ⟨_, h2⟩
+      · rw [← h1]; exact hspec'.1
+      · rw [← h2]; exact hspec'.2
+    have hw2 : (Erdos593.SimpleGraph.bridgeFree F'.levi).Adj
+        (Sum.inl (psi C a.1.out.2).1)
+        (Sum.inr (BridgeBlock.graphEdgeWitness F' hlin' b).1) := by
+      rcases hpair with ⟨_, h2⟩ | ⟨h1, _⟩
+      · rw [← h2]; exact hspec'.2
+      · rw [← h1]; exact hspec'.1
+    have hne' : psi C a.1.out.1 ≠ psi C a.1.out.2 := fun h => hne ((psi C).injective h)
+    exact congrArg Subtype.val (BridgeBlock.contractibleEdge_unique F' hlin' hne'
+      (e := BridgeBlock.graphEdgeWitness F' hlin' b)
+      (f := ce C (BridgeBlock.graphEdgeWitness F hlinear a))
+      hw1 hw2 htrans1 htrans2)
+  -- ## Transport of hyperedge components
+  let cch : BridgeBlock.HyperedgeComponent F ≃ BridgeBlock.HyperedgeComponent F' :=
+    Equiv.subtypeEquiv cc (by
+      intro C
+      constructor
+      · rintro ⟨e, he⟩
+        exact ⟨f.edgeEquiv e, (hsupp C (Sum.inr e)).mp he⟩
+      · rintro ⟨e', he'⟩
+        refine ⟨f.edgeEquiv.symm e',
+          (hsupp C (Sum.inr (f.edgeEquiv.symm e'))).mpr ?_⟩
+        rw [hbfi_inr, Equiv.apply_symm_apply]
+        exact he')
+  have hcch_coe : ∀ C : BridgeBlock.HyperedgeComponent F,
+      (cch C : BridgeBlock.Component F') = cc (C : BridgeBlock.Component F) :=
+    fun _ => rfl
+  have hhasinc : ∀ (C : BridgeBlock.Component F), BridgeBlock.HasIncidence F C →
+      BridgeBlock.HasIncidence F' (cc C) := by
+    intro C hC
+    obtain ⟨x, e, hx, he, hadj⟩ := hC
+    exact ⟨f.vertexEquiv x, f.edgeEquiv e, (hsupp C (Sum.inl x)).mp hx,
+      (hsupp C (Sum.inr e)).mp he, (hbfi_adj (Sum.inl x) (Sum.inr e)).mpr hadj⟩
+  have hgeeh : ∀ (C : BridgeBlock.Component F) (hC : BridgeBlock.HasIncidence F C)
+      (hC' : BridgeBlock.HasIncidence F' (cc C)) (e : E) (he : Sum.inr e ∈ C.supp)
+      (he' : Sum.inr (f.edgeEquiv e) ∈ (cc C).supp),
+      esE (psi C) ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC).symm
+          ⟨e, he⟩) =
+        (BridgeBlock.graphEdgeEquivHyperedge F' hlin' hbri' hC').symm
+          ⟨f.edgeEquiv e, he'⟩ := by
+    intro C hC hC' e he he'
+    set a := (BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC).symm ⟨e, he⟩
+      with hadef
+    refine (Equiv.eq_symm_apply _).mpr ?_
+    apply Subtype.ext
+    show (BridgeBlock.graphEdgeWitness F' hlin' (esE (psi C) a)).1 = f.edgeEquiv e
+    rw [hwitness C a]
+    have hwa : (BridgeBlock.graphEdgeWitness F hlinear a).1 = e := by
+      have hval : ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC) a).1 =
+          (BridgeBlock.graphEdgeWitness F hlinear a).1 := rfl
+      rw [← hval, hadef, Equiv.apply_symm_apply]
+    rw [hwa]
+  -- ## The canonical atom label transport
+  let amap : CanonicalAtom.Index F → CanonicalAtom.Index F' := fun A =>
+    match A with
+    | .singleton e hz => .singleton (f.edgeEquiv e) (by
+        rw [show (Sum.inr (f.edgeEquiv e) : V' ⊕ E') = bfi (Sum.inr e) from rfl,
+          hbfi_degree]
+        exact hz)
+    | .cycleBlock C hC B =>
+        .cycleBlock (cch C) (hhasinc (C : BridgeBlock.Component F) hC)
+          (bmap (psi (C : BridgeBlock.Component F)) B)
+  have hamap_cycle : ∀ (C : BridgeBlock.HyperedgeComponent F)
+      (hC : BridgeBlock.HasIncidence F C)
+      (B : Erdos593.SimpleGraph.EdgeCycleBlock (BridgeBlock.contractedGraph F C)),
+      amap (.cycleBlock C hC B) =
+        .cycleBlock (cch C) (hhasinc (C : BridgeBlock.Component F) hC)
+          (bmap (psi (C : BridgeBlock.Component F)) B) := fun _ _ _ => rfl
+  have hamap_atomOf : ∀ e : E,
+      amap (CanonicalAtom.atomOf F hlinear hbridge e) =
+        CanonicalAtom.atomOf F' hlin' hbri' (f.edgeEquiv e) := by
+    intro e
+    have hdeg : (Erdos593.SimpleGraph.bridgeFree F'.levi).degree
+        (Sum.inr (f.edgeEquiv e)) =
+        (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) := by
+      rw [show (Sum.inr (f.edgeEquiv e) : V' ⊕ E') = bfi (Sum.inr e) from rfl,
+        hbfi_degree]
+    by_cases hz : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0
+    · have hz' : (Erdos593.SimpleGraph.bridgeFree F'.levi).degree
+          (Sum.inr (f.edgeEquiv e)) = 0 := by rw [hdeg]; exact hz
+      unfold CanonicalAtom.atomOf
+      rw [dif_pos hz, dif_pos hz']
+    · have hz' : ¬ (Erdos593.SimpleGraph.bridgeFree F'.levi).degree
+          (Sum.inr (f.edgeEquiv e)) = 0 := by rw [hdeg]; exact hz
+      unfold CanonicalAtom.atomOf
+      rw [dif_neg hz, dif_neg hz']
+      have hC : BridgeBlock.HasIncidence F
+          (BridgeBlock.hyperedgeComponentOf F e : BridgeBlock.Component F) :=
+        CanonicalAtom.hyperedgeComponent_hasIncidence_of_degree_ne_zero F hz
+      have he : Sum.inr e ∈
+          (BridgeBlock.hyperedgeComponentOf F e : BridgeBlock.Component F).supp :=
+        BridgeBlock.mem_hyperedgeComponentOf_set F e
+      have key := hgeeh (BridgeBlock.hyperedgeComponentOf F e : BridgeBlock.Component F)
+        hC (hhasinc _ hC) e he ((hsupp _ (Sum.inr e)).mp he)
+      refine Eq.trans (hamap_cycle (BridgeBlock.hyperedgeComponentOf F e) hC
+        (Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge _
+          ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge hC).symm
+            ⟨e, he⟩))) ?_
+      rw [hbmap_ofEdge, key]
+      rfl
+  have hamap_inj : Function.Injective amap := by
+    intro A A' h
+    cases A with
+    | singleton e hz =>
+        cases A' with
+        | singleton d hd =>
+            have hval : f.edgeEquiv e = f.edgeEquiv d := by injection h
+            have hed : e = d := f.edgeEquiv.injective hval
+            subst hed
+            rfl
+        | cycleBlock D hD B' => injection h
+    | cycleBlock C hC B =>
+        cases A' with
+        | singleton d hd => injection h
+        | cycleBlock D hD B' =>
+            rw [hamap_cycle C hC B, hamap_cycle D hD B'] at h
+            simp only [CanonicalAtom.Index.cycleBlock.injEq] at h
+            have h1 := h.1
+            have h3 := h.2
+            have hCD : C = D := cch.injective h1
+            subst hCD
+            have h3' : bmap (psi (C : BridgeBlock.Component F)) B =
+                bmap (psi (C : BridgeBlock.Component F)) B' := eq_of_heq h3
+            have hBB : B = B' :=
+              (bmap (psi (C : BridgeBlock.Component F))).injective h3'
+            subst hBB
+            rfl
+  have hamap_surj : Function.Surjective amap := by
+    intro A'
+    obtain ⟨e', he'⟩ := CanonicalAtom.atomOf_surjective F' hlin' hbri' A'
+    refine ⟨CanonicalAtom.atomOf F hlinear hbridge (f.edgeEquiv.symm e'), ?_⟩
+    rw [hamap_atomOf, Equiv.apply_symm_apply]
+    exact he'
+  let aeq : CanonicalAtom.Index F ≃ CanonicalAtom.Index F' :=
+    Equiv.ofBijective amap ⟨hamap_inj, hamap_surj⟩
+  have haeq_apply : ∀ A : CanonicalAtom.Index F, aeq A = amap A := fun _ => rfl
+  have haeq_atomOf : ∀ e : E,
+      aeq (CanonicalAtom.atomOf F hlinear hbridge e) =
+        CanonicalAtom.atomOf F' hlin' hbri' (f.edgeEquiv e) := hamap_atomOf
+  -- ## Fibres, supports and incidence
+  have hedges : ∀ (A : CanonicalAtom.Index F) (e : E),
+      e ∈ CanonicalAtom.edges F hlinear hbridge A ↔
+        f.edgeEquiv e ∈ CanonicalAtom.edges F' hlin' hbri' (aeq A) := by
+    intro A e
+    show CanonicalAtom.atomOf F hlinear hbridge e = A ↔
+      CanonicalAtom.atomOf F' hlin' hbri' (f.edgeEquiv e) = aeq A
+    rw [← haeq_atomOf e]
+    exact (Equiv.apply_eq_iff_eq _).symm
+  have hsupport : ∀ (A : CanonicalAtom.Index F) (x : V),
+      x ∈ CanonicalAtom.atomSupport F hlinear hbridge A ↔
+        f.vertexEquiv x ∈ CanonicalAtom.atomSupport F' hlin' hbri' (aeq A) := by
+    intro A x
+    constructor
+    · rintro ⟨e, heA, hxe⟩
+      exact ⟨f.edgeEquiv e, (hedges A e).mp heA, (f.map_inc_iff x e).mp hxe⟩
+    · rintro ⟨e', he'A, hxe'⟩
+      refine ⟨f.edgeEquiv.symm e', ?_, ?_⟩
+      · rw [hedges A, Equiv.apply_symm_apply]
+        exact he'A
+      · refine (f.map_inc_iff x (f.edgeEquiv.symm e')).mpr ?_
+        rw [Equiv.apply_symm_apply]
+        exact hxe'
+  have hincident : ∀ (A : CanonicalAtom.Index F) (x : V),
+      CanonicalAtom.atomIncident F hlinear hbridge A x ↔
+        CanonicalAtom.atomIncident F' hlin' hbri' (aeq A) (f.vertexEquiv x) :=
+    hsupport
+  -- ## The two incidence graphs
+  let apiso : CanonicalAtom.atomPointIncidenceGraph F hlinear hbridge ≃g
+      CanonicalAtom.atomPointIncidenceGraph F' hlin' hbri' :=
+    { toEquiv := Equiv.sumCongr aeq f.vertexEquiv
+      map_rel_iff' := by
+        intro z v
+        rcases z with A | x <;> rcases v with B | y <;>
+          simp [CanonicalAtom.atomPointIncidenceGraph,
+            SimpleGraph.bipartiteIncidenceGraph, hincident] }
+  have hapiso_apply : ∀ z : CanonicalAtom.Index F ⊕ V,
+      apiso z = Equiv.sumCongr aeq f.vertexEquiv z := fun _ => rfl
+  have hshared : ∀ x : V,
+      x ∈ CanonicalAtom.sharedAtomPoints F hlinear hbridge ↔
+        f.vertexEquiv x ∈ CanonicalAtom.sharedAtomPoints F' hlin' hbri' := by
+    intro x
+    rw [CanonicalAtom.mem_sharedAtomPoints, CanonicalAtom.mem_sharedAtomPoints]
+    refine Iff.of_eq (congrArg (fun n => 2 ≤ n) ?_)
+    refine Finset.card_equiv aeq ?_
+    intro A
+    simp only [Finset.mem_filter, CanonicalAtom.mem_atomFinset, true_and]
+    exact hincident A x
+  have hprune : ∀ z : CanonicalAtom.Index F ⊕ V,
+      z ∈ SimpleGraph.bipartitePruneVertices
+          (CanonicalAtom.atomIncident F hlinear hbridge)
+          (CanonicalAtom.atomFinset F hlinear hbridge) ↔
+        Equiv.sumCongr aeq f.vertexEquiv z ∈
+          SimpleGraph.bipartitePruneVertices
+            (CanonicalAtom.atomIncident F' hlin' hbri')
+            (CanonicalAtom.atomFinset F' hlin' hbri') := by
+    intro z
+    rcases z with A | x
+    · simp only [Equiv.sumCongr_apply, Sum.map_inl,
+        SimpleGraph.mem_bipartitePruneVertices_inl, CanonicalAtom.mem_atomFinset]
+    · simp only [Equiv.sumCongr_apply, Sum.map_inr,
+        SimpleGraph.mem_bipartitePruneVertices_inr]
+      exact hshared x
+  let spiso : CanonicalAtom.atomSharedPointIncidenceGraph F hlinear hbridge ≃g
+      CanonicalAtom.atomSharedPointIncidenceGraph F' hlin' hbri' :=
+    { toEquiv := Equiv.subtypeEquiv (Equiv.sumCongr aeq f.vertexEquiv) (by
+        intro z
+        simpa using hprune z)
+      map_rel_iff' := by
+        intro z v
+        exact apiso.map_rel_iff }
+  -- ## Assembling the transport
+  exact ⟨{
+    atomEquiv := aeq
+    atomOf_map := haeq_atomOf
+    edges_map_iff := hedges
+    support_map_iff := hsupport
+    atomIncident_map_iff := hincident
+    atomPointGraphIso := apiso
+    atomPointGraphIso_apply := hapiso_apply
+    sharedPoint_map_iff := hshared
+    sharedPointGraphIso := spiso
+    sharedPointGraphIso_atom := fun A => Subtype.ext rfl
+    sharedPointGraphIso_point := fun x hx => Subtype.ext rfl
+    cycleBlockCore_transport := by
+      intro C hC B
+      refine ⟨cch C, hhasinc (C : BridgeBlock.Component F) hC,
+        bmap (psi (C : BridgeBlock.Component F)) B,
+        hamap_cycle C hC B, ⟨?_⟩⟩
+      exact ffi (psi (C : BridgeBlock.Component F))
+        (CanonicalAtom.cycleBlockEdgeSet F C B)
+        (CanonicalAtom.cycleBlockEdgeSet_finite F C B)
+        (CanonicalAtom.cycleBlockEdgeSet F' (cch C)
+          (bmap (psi (C : BridgeBlock.Component F)) B))
+        (CanonicalAtom.cycleBlockEdgeSet_finite F' (cch C)
+          (bmap (psi (C : BridgeBlock.Component F)) B))
+        (hblkedges (psi (C : BridgeBlock.Component F)) B) }⟩
+
+end
+end CanonicalAtom
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomCanonicity
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomCanonicity
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomMinimalGenerators
+Source: Erdos593/TripleSystem/CanonicalAtomMinimalGenerators.lean
+Normalized SHA-256: 123ca3cb66fc94bfdac799a3486f5da60fbd173f25a7c512d662a7db0d03caad
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomMinimalGenerators
+
+/-!
+# Minimal generators and one-point indecomposable obligatory systems
+
+This module states the two corollaries of the canonical atom normal form.
+`AtomGenerated` replaces arbitrary finite bipartite expansion generators by
+one triple and expansions of finite two-vertex-connected bipartite cores.
+`OnePointDecomposable` uses a literal isomorphism to a nontrivial one-point
+amalgam; the edge-partition certificate is a proof-facing characterization,
+not a weaker definition.
+-/
+
+namespace Erdos593
+
+universe u
+
+namespace TripleSystem
+namespace CanonicalAtom
+
+/-- A finite two-vertex-connected bipartite graph, packaged with the finite
+vertex type needed by the canonical atom theorem. -/
+structure TwoConnectedBipartiteCore where
+  Vertex : Type u
+  vertexFintype : Fintype Vertex
+  graph : _root_.SimpleGraph Vertex
+  twoVertexConnected :
+    @CanonicalAtom.IsTwoVertexConnected Vertex vertexFintype graph
+  bipartite : graph.Colorable 2
+
+/-- The finite class generated by edgeless systems, one triple, and expansions
+of finite two-vertex-connected bipartite graphs, under the two assembly
+operations and isomorphism. -/
+inductive AtomGenerated : {V E : Type u} → TripleSystem V E → Prop
+  | ofEdgeless (V : Type u) [Fintype V] :
+      AtomGenerated (edgeless V)
+  | ofOneTriple :
+      AtomGenerated (privateVertexExpansion oneEdgeGraph.{u})
+  | ofCore (C : TwoConnectedBipartiteCore.{u}) :
+      AtomGenerated (privateVertexExpansion C.graph)
+  | disjointUnion {V E W D : Type u}
+      {F : TripleSystem V E} {G : TripleSystem W D}
+      (hF : AtomGenerated F) (hG : AtomGenerated G) :
+      AtomGenerated (F.disjointUnion G)
+  | amalgam {V₀ E₀ V₁ E₁ : Type u}
+      {F₀ : TripleSystem V₀ E₀} {F₁ : TripleSystem V₁ E₁}
+      (h₀ : AtomGenerated F₀) (h₁ : AtomGenerated F₁)
+      (r₀ : V₀) (r₁ : V₁) :
+      AtomGenerated (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)
+  | ofIso {V E V' E' : Type u}
+      {F : TripleSystem V E} {F' : TripleSystem V' E'}
+      (hF : AtomGenerated F) (f : TripleSystem.Iso F F') :
+      AtomGenerated F'
+
+/-- A literal nontrivial one-point-amalgam presentation. Both factors must
+contain a hyperedge. No support-based surrogate is built into the definition. -/
+def OnePointDecomposable {V E : Type u} (F : TripleSystem V E) : Prop :=
+  ∃ (V₀ E₀ V₁ E₁ : Type u)
+      (F₀ : TripleSystem V₀ E₀) (F₁ : TripleSystem V₁ E₁)
+      (r₀ : V₀) (r₁ : V₁),
+    Nonempty E₀ ∧ Nonempty E₁ ∧
+      TripleSystem.Isomorphic F
+        (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)
+
+/-- A system is one-point indecomposable when it has no literal nontrivial
+one-point-amalgam presentation. -/
+def OnePointIndecomposable {V E : Type u} (F : TripleSystem V E) : Prop :=
+  ¬ OnePointDecomposable F
+
+/-- An internal two-part edge certificate: both parts are nonempty, partition
+all hyperedges, and their point supports meet in exactly one root. -/
+structure EdgeOnePointDecomposition {V E : Type u}
+    (F : TripleSystem V E) where
+  left : Set E
+  right : Set E
+  left_nonempty : left.Nonempty
+  right_nonempty : right.Nonempty
+  disjoint : Disjoint left right
+  total : left ∪ right = Set.univ
+  root : V
+  support_intersection :
+    F.edgeSupportSet left ∩ F.edgeSupportSet right = {root}
+
+/-- Every atom-generated system belongs to the original constructive class. -/
+theorem AtomGenerated.constructible {V E : Type u} {F : TripleSystem V E}
+    (hF : AtomGenerated F) : Constructible F := by
+  induction hF with
+  | ofEdgeless V => exact Constructible.ofEdgeless V
+  | ofOneTriple =>
+      exact Constructible.ofExpansion oneEdgeGraph.{u} oneEdgeGraph_colorable_two
+  | ofCore C =>
+      letI : Fintype C.Vertex := C.vertexFintype
+      exact Constructible.ofExpansion C.graph C.bipartite
+  | disjointUnion _ _ ihF ihG => exact Constructible.disjointUnion ihF ihG
+  | amalgam _ _ r₀ r₁ ih₀ ih₁ => exact Constructible.amalgam ih₀ ih₁ r₀ r₁
+  | ofIso _ f ih => exact Constructible.ofIso ih f
+
+/-- Conversely, the canonical atom forest refines every original constructive
+presentation to the smaller atom generator family. This includes explicit
+restoration of isolated points by a finite edgeless factor. -/
+theorem atomGenerated_of_constructible {V E : Type u}
+    {F : TripleSystem V E} (hF : Constructible F) : AtomGenerated F := by
+  classical
+  have hfin := hF.finiteTypes
+  letI : Finite V := hfin.1
+  letI : Finite E := hfin.2
+  letI : Fintype V := Fintype.ofFinite V
+  letI : Fintype E := Fintype.ofFinite E
+  letI : DecidableEq E := Classical.decEq E
+  have hintr : F.isolatedReduction.Intrinsic :=
+    (isObligatory_iff_isolatedReduction_intrinsic F).mp hF.isObligatory
+  letI : Fintype F.NonIsolatedPoint := Fintype.ofFinite _
+  letI : DecidableEq F.NonIsolatedPoint := Classical.decEq _
+  letI : DecidableRel F.isolatedReduction.levi.Adj := Classical.decRel _
+  -- The canonical atom forest generates the isolated reduction.
+  have hK : AtomGenerated F.isolatedReduction := by
+    set K := F.isolatedReduction with hKdef
+    have hpieces : ∀ A : CanonicalAtom.Index K,
+        AtomGenerated (K.edgeRestriction
+          (CanonicalAtom.edges K hintr.1 hintr.2.1 A)) := by
+      intro A
+      cases A with
+      | singleton e hzero =>
+          rcases
+            CanonicalAtom.atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+              (V := F.NonIsolatedPoint) (E := E) K hintr.1 hintr.2.1
+              (CanonicalAtom.Index.singleton e hzero) with ⟨hiso⟩
+          exact AtomGenerated.ofIso
+            (AtomGenerated.ofIso AtomGenerated.ofOneTriple
+              (oneEdgeExpansionSingleEdgePieceIso K e)) hiso.symm
+      | cycleBlock C hC B =>
+          rcases
+            CanonicalAtom.atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+              (V := F.NonIsolatedPoint) (E := E) K hintr.1 hintr.2.1
+              (CanonicalAtom.Index.cycleBlock C hC B) with ⟨hiso⟩
+          have hcore : AtomGenerated
+              (privateVertexExpansion (CanonicalAtom.cycleBlockCore K C B)) :=
+            AtomGenerated.ofCore
+              { Vertex := _
+                vertexFintype := inferInstance
+                graph := CanonicalAtom.cycleBlockCore K C B
+                twoVertexConnected :=
+                  CanonicalAtom.cycleBlockCore_isTwoVertexConnected K hintr.1
+                    hintr.2.1 C hC B
+                bipartite :=
+                  CanonicalAtom.cycleBlockCore_isBipartite K hintr.1 hintr.2.1
+                    hintr.2.2 C hC B }
+          exact AtomGenerated.ofIso hcore hiso.symm
+    have key : ∀ pieces : List (Set E), K.RunningEdgeAssembly pieces →
+        (∀ S ∈ pieces, AtomGenerated (K.edgeRestriction S)) →
+        AtomGenerated (K.edgeRestriction (edgePieceUnion pieces)) := by
+      intro pieces
+      induction pieces with
+      | nil =>
+          intro _ _
+          letI : IsEmpty (K.EdgeSupport (∅ : Set E)) :=
+            ⟨by rintro ⟨x, e, he, hxe⟩; exact he⟩
+          letI : Fintype (K.EdgeSupport (∅ : Set E)) := Fintype.ofFinite _
+          exact AtomGenerated.ofIso
+            (AtomGenerated.ofEdgeless (K.EdgeSupport (∅ : Set E)))
+            (edgelessIsoEdgeRestrictionEmpty K)
+      | cons S pieces ih =>
+          rintro ⟨hprev, -, hEdges, hSupports⟩ hgen
+          have hPrev := ih hprev (fun T hT => hgen T (by simp [hT]))
+          have hS := hgen S (by simp)
+          rcases hSupports with hDisjoint | ⟨r, hRoot⟩
+          · exact AtomGenerated.ofIso (AtomGenerated.disjointUnion hPrev hS)
+              (K.edgeRestrictionUnionIsoDisjointUnion hEdges hDisjoint)
+          · exact AtomGenerated.ofIso
+              (AtomGenerated.amalgam hPrev hS (K.edgeSupportLeftRoot hRoot)
+                (K.edgeSupportRightRoot hRoot))
+              (K.edgeRestrictionUnionIsoOnePointAmalgamation hEdges hRoot)
+    obtain ⟨assembly⟩ := CanonicalAtom.exists_atomRunningAssembly K hintr
+    have hall := key (CanonicalAtom.atomEdgeSets K hintr.1 hintr.2.1 assembly.atoms)
+      assembly.running (by
+        intro S hS
+        rw [CanonicalAtom.atomEdgeSets, List.mem_map] at hS
+        obtain ⟨A, -, rfl⟩ := hS
+        exact hpieces A)
+    rw [assembly.total] at hall
+    exact AtomGenerated.ofIso hall
+      (K.edgeRestrictionUnivIso F.isolatedReduction_hasNoIsolatedPoints)
+  -- Restore the finitely many isolated points as an edgeless factor.
+  letI : Fintype {x : V // F.IsIsolated x} := Fintype.ofFinite _
+  refine AtomGenerated.ofIso
+    (AtomGenerated.disjointUnion hK
+      (AtomGenerated.ofEdgeless {x : V // F.IsIsolated x})) ?_
+  refine
+    { vertexEquiv := (Equiv.sumComm _ _).trans (Equiv.sumCompl F.IsIsolated)
+      edgeEquiv := Equiv.sumEmpty E EdgelessEdge.{u}
+      map_inc_iff := ?_ }
+  rintro (y | y) (e | d)
+  · exact Iff.rfl
+  · exact d.down.elim
+  · exact iff_of_false id (fun h => y.2 e h)
+  · exact d.down.elim
+
+/-- The atom generators give exactly the previously classified constructive
+class, not merely its isolated reduction. -/
+theorem atomGenerated_iff_constructible {V E : Type u}
+    (F : TripleSystem V E) :
+    AtomGenerated F ↔ Constructible F :=
+  ⟨AtomGenerated.constructible, atomGenerated_of_constructible⟩
+
+/-- Manuscript-facing minimal-generator theorem for the finite obligatory
+class, stated directly on the original system including isolated points. -/
+theorem isObligatory_iff_atomGenerated {V E : Type u}
+    (F : TripleSystem V E) [Fintype V] [Fintype E] :
+    F.IsObligatory ↔ AtomGenerated F := by
+  classical
+  constructor
+  · intro hobl
+    have hred : Constructible F.isolatedReduction :=
+      (isObligatory_iff_constructible_isolatedReduction F).mp hobl
+    letI : Fintype {x : V // F.IsIsolated x} := Fintype.ofFinite _
+    refine atomGenerated_of_constructible (Constructible.ofIso
+      (Constructible.disjointUnion hred
+        (Constructible.ofEdgeless {x : V // F.IsIsolated x})) ?_)
+    refine
+      { vertexEquiv := (Equiv.sumComm _ _).trans (Equiv.sumCompl F.IsIsolated)
+        edgeEquiv := Equiv.sumEmpty E EdgelessEdge.{u}
+        map_inc_iff := ?_ }
+    rintro (y | y) (e | d)
+    · exact Iff.rfl
+    · exact d.down.elim
+    · exact iff_of_false id (fun h => y.2 e h)
+    · exact d.down.elim
+  · intro hgen
+    exact hgen.constructible.isObligatory
+
+/-- For connected reduced finite systems, the literal amalgam definition is
+equivalent to the exact two-part edge/support certificate. Connectedness is
+essential here: without it an identified root need not support edges on both
+sides. -/
+theorem onePointDecomposable_iff_edgeOnePointDecomposition
+    {V E : Type u} (F : TripleSystem V E)
+    [Fintype V] [Fintype E]
+    (hconnected : F.levi.Connected)
+    (hreduced : F.HasNoIsolatedPoints) :
+    OnePointDecomposable F ↔ Nonempty (EdgeOnePointDecomposition F) := by
+  classical
+  constructor
+  · rintro ⟨V₀, E₀, V₁, E₁, F₀, F₁, r₀, r₁, ⟨a⟩, ⟨b⟩, ⟨f⟩⟩
+    set L : Set E := {e | ∃ c : E₀, f.edgeEquiv e = Sum.inl c} with hL
+    set R : Set E := {e | ∃ c : E₁, f.edgeEquiv e = Sum.inr c} with hR
+    set root : V :=
+      f.vertexEquiv.symm (OnePointAmalgamation.left r₀ r₁ r₀) with hroot
+    have hLne : L.Nonempty := ⟨f.edgeEquiv.symm (Sum.inl a), a, by simp⟩
+    have hRne : R.Nonempty := ⟨f.edgeEquiv.symm (Sum.inr b), b, by simp⟩
+    have hdisj : Disjoint L R := by
+      rw [Set.disjoint_left]
+      rintro e ⟨c, hc⟩ ⟨d, hd⟩
+      rw [hc] at hd
+      exact Sum.inl_ne_inr hd
+    have htotal : L ∪ R = Set.univ := by
+      ext e
+      simp only [Set.mem_union, Set.mem_univ, iff_true, hL, hR, Set.mem_setOf_eq]
+      cases hfe : f.edgeEquiv e with
+      | inl c => exact Or.inl ⟨c, rfl⟩
+      | inr c => exact Or.inr ⟨c, rfl⟩
+    -- A point supported on both sides is the image of the amalgamation root.
+    have hsub : ∀ x : V, x ∈ F.edgeSupportSet L → x ∈ F.edgeSupportSet R →
+        x = root := by
+      rintro x ⟨e, ⟨c, hce⟩, hxe⟩ ⟨e', ⟨d, hde⟩, hxe'⟩
+      have h₀ : (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).Inc
+          (f.vertexEquiv x) (Sum.inl c) := by
+        rw [← hce]
+        exact (f.map_inc_iff x e).mp hxe
+      have h₁ : (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).Inc
+          (f.vertexEquiv x) (Sum.inr d) := by
+        rw [← hde]
+        exact (f.map_inc_iff x e').mp hxe'
+      obtain ⟨x₀, _, hx₀⟩ : f.vertexEquiv x ∈
+        OnePointAmalgamation.left r₀ r₁ '' F₀.edgeSet c := h₀
+      obtain ⟨y₁, _, hy₁⟩ : f.vertexEquiv x ∈
+        OnePointAmalgamation.right r₀ r₁ '' F₁.edgeSet d := h₁
+      have hcross :=
+        (OnePointAmalgamation.left_eq_right_iff r₀ r₁ x₀ y₁).mp
+          (hx₀.trans hy₁.symm)
+      have hq : f.vertexEquiv x = OnePointAmalgamation.left r₀ r₁ r₀ := by
+        rw [← hx₀, hcross.1]
+      rw [hroot, ← hq, Equiv.symm_apply_apply]
+    -- Connectedness of the Levi graph forces the two supports to meet.
+    have hne : (F.edgeSupportSet L ∩ F.edgeSupportSet R).Nonempty := by
+      obtain ⟨e₀, he₀⟩ := hLne
+      obtain ⟨e₁, he₁⟩ := hRne
+      by_contra hempty
+      rw [Set.not_nonempty_iff_eq_empty] at hempty
+      set X : Set (V ⊕ E) :=
+        {z | Sum.elim (fun x => x ∈ F.edgeSupportSet L) (fun e => e ∈ L) z}
+        with hX
+      have hstep : ∀ z w : V ⊕ E, z ∈ X → F.levi.Adj z w → w ∈ X := by
+        rintro (x | e) (y | g) hz hadj
+        · exact absurd hadj F.not_levi_adj_point_point
+        · have hxg : F.Inc x g := F.levi_adj_point_edge.mp hadj
+          have hxL : x ∈ F.edgeSupportSet L := hz
+          rcases (htotal ▸ Set.mem_univ g : g ∈ L ∪ R) with hgL | hgR
+          · exact hgL
+          · exact absurd (Set.eq_empty_iff_forall_notMem.mp hempty x
+              ⟨hxL, ⟨g, hgR, hxg⟩⟩) (by simp)
+        · exact ⟨e, hz, F.levi_adj_edge_point.mp hadj⟩
+        · exact absurd hadj F.not_levi_adj_edge_edge
+      have hwalk : ∀ (z w : V ⊕ E), F.levi.Walk z w → z ∈ X → w ∈ X := by
+        intro z w p
+        induction p with
+        | nil => exact id
+        | cons hadj _ ih => exact fun hz => ih (hstep _ _ hz hadj)
+      obtain ⟨p⟩ := hconnected.preconnected (Sum.inr e₀) (Sum.inr e₁)
+      have he₁L : e₁ ∈ L := hwalk _ _ p he₀
+      have hncard : Set.ncard {x : V | F.Inc x e₁} ≠ 0 := by
+        rw [F.edge_ncard e₁]
+        decide
+      obtain ⟨x, hx⟩ := Set.nonempty_of_ncard_ne_zero hncard
+      exact absurd (Set.eq_empty_iff_forall_notMem.mp hempty x
+        ⟨⟨e₁, he₁L, hx⟩, ⟨e₁, he₁, hx⟩⟩) (by simp)
+    refine ⟨⟨L, R, hLne, hRne, hdisj, htotal, root, ?_⟩⟩
+    obtain ⟨p, hp⟩ := hne
+    have hpr : p = root := hsub p hp.1 hp.2
+    subst hpr
+    refine Set.Subset.antisymm (fun y hy => hsub y hy.1 hy.2) ?_
+    rintro y hy
+    rw [Set.mem_singleton_iff] at hy
+    subst hy
+    exact hp
+  · rintro ⟨D⟩
+    have hiso : Iso
+        (OnePointAmalgamation.amalgam
+          (F.edgeRestriction D.left) (F.edgeRestriction D.right)
+          (F.edgeSupportLeftRoot D.support_intersection)
+          (F.edgeSupportRightRoot D.support_intersection))
+        (F.edgeRestriction (D.left ∪ D.right)) :=
+      F.edgeRestrictionUnionIsoOnePointAmalgamation D.disjoint
+        D.support_intersection
+    rw [D.total] at hiso
+    exact ⟨F.EdgeSupport D.left, D.left, F.EdgeSupport D.right, D.right,
+      F.edgeRestriction D.left, F.edgeRestriction D.right, _, _,
+      ⟨⟨D.left_nonempty.choose, D.left_nonempty.choose_spec⟩⟩,
+      ⟨⟨D.right_nonempty.choose, D.right_nonempty.choose_spec⟩⟩,
+      ⟨(hiso.trans (F.edgeRestrictionUnivIso hreduced)).symm⟩⟩
+
+/-- The canonical one-triple system is one-point indecomposable. -/
+theorem oneTriple_onePointIndecomposable :
+    OnePointIndecomposable
+      (privateVertexExpansion oneEdgeGraph.{u}) := by
+  rintro ⟨V₀, E₀, V₁, E₁, F₀, F₁, r₀, r₁, ⟨a⟩, ⟨b⟩, ⟨f⟩⟩
+  have h : f.edgeEquiv.symm (Sum.inl a) = f.edgeEquiv.symm (Sum.inr b) := by
+    rw [oneEdgeGraph_edge_eq (f.edgeEquiv.symm (Sum.inl a)),
+      oneEdgeGraph_edge_eq (f.edgeEquiv.symm (Sum.inr b))]
+  exact Sum.inl_ne_inr (f.edgeEquiv.symm.injective h)
+
+/-- The expansion of a finite two-vertex-connected bipartite core is
+one-point indecomposable. -/
+theorem coreExpansion_onePointIndecomposable
+    (C : TwoConnectedBipartiteCore.{u}) :
+    OnePointIndecomposable (privateVertexExpansion C.graph) := by
+  classical
+  letI : Fintype C.Vertex := C.vertexFintype
+  rintro ⟨V₀, E₀, V₁, E₁, F₀, F₁, r₀, r₁, ⟨a⟩, ⟨b⟩, ⟨f⟩⟩
+  set G := C.graph with hG
+  set L : Set G.edgeSet := {e | ∃ c : E₀, f.edgeEquiv e = Sum.inl c} with hL
+  set R : Set G.edgeSet := {e | ∃ c : E₁, f.edgeEquiv e = Sum.inr c} with hR
+  have hLne : L.Nonempty := ⟨f.edgeEquiv.symm (Sum.inl a), a, by simp⟩
+  have hRne : R.Nonempty := ⟨f.edgeEquiv.symm (Sum.inr b), b, by simp⟩
+  have htotal : ∀ e : G.edgeSet, e ∈ L ∨ e ∈ R := by
+    intro e
+    cases hfe : f.edgeEquiv e with
+    | inl c => exact Or.inl ⟨c, hfe⟩
+    | inr c => exact Or.inr ⟨c, hfe⟩
+  set Lcov : C.Vertex → Prop :=
+    fun x => ∃ e ∈ L, x ∈ (e : Sym2 C.Vertex) with hLcov
+  set Rcov : C.Vertex → Prop :=
+    fun x => ∃ e ∈ R, x ∈ (e : Sym2 C.Vertex) with hRcov
+  -- Core points covered by both sides are all the amalgamation root.
+  have hboth : ∀ x y : C.Vertex, Lcov x → Rcov x → Lcov y → Rcov y → x = y := by
+    intro x y hxL hxR hyL hyR
+    have key : ∀ z : C.Vertex, Lcov z → Rcov z →
+        f.vertexEquiv (PrivateVertexExpansion.core G z) =
+          OnePointAmalgamation.left r₀ r₁ r₀ := by
+      rintro z ⟨e, ⟨c, hce⟩, hze⟩ ⟨e', ⟨d, hde⟩, hze'⟩
+      have h₀ : (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).Inc
+          (f.vertexEquiv (PrivateVertexExpansion.core G z)) (Sum.inl c) := by
+        rw [← hce]
+        exact (f.map_inc_iff _ e).mp hze
+      have h₁ : (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).Inc
+          (f.vertexEquiv (PrivateVertexExpansion.core G z)) (Sum.inr d) := by
+        rw [← hde]
+        exact (f.map_inc_iff _ e').mp hze'
+      obtain ⟨x₀, _, hx₀⟩ :
+        f.vertexEquiv (PrivateVertexExpansion.core G z) ∈
+          OnePointAmalgamation.left r₀ r₁ '' F₀.edgeSet c := h₀
+      obtain ⟨y₁, _, hy₁⟩ :
+        f.vertexEquiv (PrivateVertexExpansion.core G z) ∈
+          OnePointAmalgamation.right r₀ r₁ '' F₁.edgeSet d := h₁
+      have hcross :=
+        (OnePointAmalgamation.left_eq_right_iff r₀ r₁ x₀ y₁).mp
+          (hx₀.trans hy₁.symm)
+      rw [← hx₀, hcross.1]
+    have hcc : PrivateVertexExpansion.core G x = PrivateVertexExpansion.core G y :=
+      f.vertexEquiv.injective ((key x hxL hxR).trans (key y hyL hyR).symm)
+    exact Sum.inl.inj hcc
+  have hcard : 3 ≤ Fintype.card C.Vertex := C.twoVertexConnected.1
+  have hnonempty : Nonempty C.Vertex := Fintype.card_pos_iff.mp (by omega)
+  obtain ⟨r, hr⟩ : ∃ r : C.Vertex, ∀ x, Lcov x → Rcov x → x = r := by
+    by_cases hex : ∃ x, Lcov x ∧ Rcov x
+    · obtain ⟨x₀, hx₀⟩ := hex
+      exact ⟨x₀, fun x hxL hxR => hboth x x₀ hxL hxR hx₀.1 hx₀.2⟩
+    · exact ⟨Classical.arbitrary C.Vertex, fun x hxL hxR => absurd ⟨x, hxL, hxR⟩ hex⟩
+  have hother : ∀ e : G.edgeSet, ∃ w, w ∈ (e : Sym2 C.Vertex) ∧ w ≠ r := by
+    rintro ⟨e, he⟩
+    induction e using Sym2.inductionOn with
+    | _ x y =>
+        have hxy : x ≠ y := (show G.Adj x y from he).ne
+        by_cases hx : x = r
+        · refine ⟨y, by simp, ?_⟩
+          rw [← hx]
+          exact fun h => hxy h.symm
+        · exact ⟨x, by simp, hx⟩
+  obtain ⟨ea, heaL⟩ := hLne
+  obtain ⟨eb, hebR⟩ := hRne
+  obtain ⟨w₀, hw₀, hw₀r⟩ := hother ea
+  obtain ⟨w₁, hw₁, hw₁r⟩ := hother eb
+  -- Deleting the unique shared core point keeps the graph connected, but no
+  -- edge of the induced graph can cross between the two sides.
+  have hstep : ∀ z w : ↥{y : C.Vertex | y ≠ r},
+      (G.induce {y : C.Vertex | y ≠ r}).Adj z w → Lcov z.1 → Lcov w.1 := by
+    intro z w hadj hz
+    have hadj' : G.Adj z.1 w.1 := hadj
+    set e : G.edgeSet := ⟨s(z.1, w.1), hadj'⟩ with he
+    have hze : z.1 ∈ (e : Sym2 C.Vertex) := by simp [he]
+    have hwe : w.1 ∈ (e : Sym2 C.Vertex) := by simp [he]
+    rcases htotal e with hmemL | hmemR
+    · rw [hLcov]
+      exact ⟨e, hmemL, hwe⟩
+    · exact absurd (hr z.1 hz (by rw [hRcov]; exact ⟨e, hmemR, hze⟩)) z.2
+  have hwalk : ∀ (z w : ↥{y : C.Vertex | y ≠ r})
+      (_ : (G.induce {y : C.Vertex | y ≠ r}).Walk z w), Lcov z.1 → Lcov w.1 := by
+    intro z w p
+    induction p with
+    | nil => exact id
+    | cons hadj _ ih => exact fun hz => ih (hstep _ _ hadj hz)
+  obtain ⟨p⟩ := (C.twoVertexConnected.2 r).preconnected ⟨w₀, hw₀r⟩ ⟨w₁, hw₁r⟩
+  have hw₁L : Lcov w₁ :=
+    hwalk ⟨w₀, hw₀r⟩ ⟨w₁, hw₁r⟩ p (by rw [hLcov]; exact ⟨ea, heaL, hw₀⟩)
+  exact hw₁r (hr w₁ hw₁L (by rw [hRcov]; exact ⟨eb, hebR, hw₁⟩))
+
+/-- Manuscript-facing classification of connected reduced obligatory systems
+with at least one hyperedge. -/
+theorem connected_reduced_obligatory_onePointIndecomposable_iff
+    {V E : Type u} (F : TripleSystem V E)
+    [Fintype V] [Fintype E]
+    (hconnected : F.levi.Connected)
+    (hreduced : F.HasNoIsolatedPoints)
+    (hobligatory : F.IsObligatory)
+    (hnonempty : Nonempty E) :
+    OnePointIndecomposable F ↔
+      TripleSystem.Isomorphic F
+          (privateVertexExpansion oneEdgeGraph.{u}) ∨
+        ∃ C : TwoConnectedBipartiteCore.{u},
+          TripleSystem.Isomorphic F (privateVertexExpansion C.graph) := by
+  classical
+  constructor
+  · intro hindec
+    letI : DecidableEq V := Classical.decEq V
+    letI : DecidableEq E := Classical.decEq E
+    letI : DecidableRel F.levi.Adj := Classical.decRel _
+    have hisoRed : Iso F.isolatedReduction F :=
+      { vertexEquiv :=
+          { toFun := Subtype.val
+            invFun := fun x => ⟨x, hreduced x⟩
+            left_inv := fun _ => Subtype.ext rfl
+            right_inv := fun _ => rfl }
+        edgeEquiv := Equiv.refl E
+        map_inc_iff := fun _ _ => Iff.rfl }
+    have hintr : F.Intrinsic :=
+      (Iso.intrinsic_iff hisoRed).mp
+        ((isObligatory_iff_isolatedReduction_intrinsic F).mp hobligatory)
+    -- A single canonical atom carrying every hyperedge gives the two cases of
+    -- the canonical atom type dichotomy.
+    have hfinal : ∀ A : CanonicalAtom.Index F,
+        TripleSystem.Isomorphic F
+            (CanonicalAtom.atomRestriction F hintr.1 hintr.2.1 A) →
+        TripleSystem.Isomorphic F (privateVertexExpansion oneEdgeGraph.{u}) ∨
+          ∃ C : TwoConnectedBipartiteCore.{u},
+            TripleSystem.Isomorphic F (privateVertexExpansion C.graph) := by
+      intro A hisoA
+      cases A with
+      | singleton e' hzero =>
+          left
+          rcases
+            CanonicalAtom.atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+              (V := V) (E := E) F hintr.1 hintr.2.1
+              (CanonicalAtom.Index.singleton e' hzero) with ⟨hiso⟩
+          exact (hisoA.trans ⟨hiso⟩).trans
+            ⟨(oneEdgeExpansionSingleEdgePieceIso F e').symm⟩
+      | cycleBlock C hC B =>
+          right
+          rcases
+            CanonicalAtom.atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+              (V := V) (E := E) F hintr.1 hintr.2.1
+              (CanonicalAtom.Index.cycleBlock C hC B) with ⟨hiso⟩
+          exact ⟨{ Vertex := _
+                   vertexFintype := inferInstance
+                   graph := CanonicalAtom.cycleBlockCore F C B
+                   twoVertexConnected :=
+                     CanonicalAtom.cycleBlockCore_isTwoVertexConnected F hintr.1
+                       hintr.2.1 C hC B
+                   bipartite :=
+                     CanonicalAtom.cycleBlockCore_isBipartite F hintr.1 hintr.2.1
+                       hintr.2.2 C hC B },
+            hisoA.trans ⟨hiso⟩⟩
+    obtain ⟨assembly⟩ := CanonicalAtom.exists_atomRunningAssembly F hintr
+    obtain ⟨e⟩ := hnonempty
+    have hmem : e ∈ edgePieceUnion
+        (CanonicalAtom.atomEdgeSets F hintr.1 hintr.2.1 assembly.atoms) := by
+      rw [assembly.total]
+      trivial
+    have hnil : assembly.atoms ≠ [] := by
+      intro h
+      rw [h] at hmem
+      simp [CanonicalAtom.atomEdgeSets, edgePieceUnion] at hmem
+    obtain ⟨A, rest, hatoms⟩ := List.exists_cons_of_ne_nil hnil
+    have hrun := assembly.running
+    have htot := assembly.total
+    rw [hatoms, CanonicalAtom.atomEdgeSets, List.map_cons] at hrun htot
+    obtain ⟨-, -, hEdges, hSupports⟩ := hrun
+    refine hfinal A ?_
+    set Sprev : Set E :=
+      edgePieceUnion (List.map (CanonicalAtom.edges F hintr.1 hintr.2.1) rest)
+      with hSprev
+    have htot' : Sprev ∪ CanonicalAtom.edges F hintr.1 hintr.2.1 A = Set.univ :=
+      htot
+    have hSAne : (CanonicalAtom.edges F hintr.1 hintr.2.1 A).Nonempty := by
+      obtain ⟨e', he'⟩ := CanonicalAtom.atomOf_surjective F hintr.1 hintr.2.1 A
+      exact ⟨e', he'⟩
+    -- Indecomposability forces the earlier atoms to carry no hyperedge.
+    have hprevEmpty : Sprev = ∅ := by
+      rcases Set.eq_empty_or_nonempty Sprev with hempty | hne
+      · exact hempty
+      · exfalso
+        apply hindec
+        apply (onePointDecomposable_iff_edgeOnePointDecomposition F hconnected
+          hreduced).mpr
+        have hroot : ∃ r : V,
+            F.edgeSupportSet Sprev ∩
+                F.edgeSupportSet (CanonicalAtom.edges F hintr.1 hintr.2.1 A) =
+              {r} := by
+          rcases hSupports with hdisj | ⟨r, hr⟩
+          · exfalso
+            obtain ⟨e₀, he₀⟩ := hne
+            obtain ⟨e₁, he₁⟩ := hSAne
+            have hinter : F.edgeSupportSet Sprev ∩
+                F.edgeSupportSet (CanonicalAtom.edges F hintr.1 hintr.2.1 A) =
+                  ∅ :=
+              Set.disjoint_iff_inter_eq_empty.mp hdisj
+            set X : Set (V ⊕ E) :=
+              {z | Sum.elim (fun x => x ∈ F.edgeSupportSet Sprev)
+                (fun f => f ∈ Sprev) z} with hX
+            have hstep : ∀ z w : V ⊕ E, z ∈ X → F.levi.Adj z w → w ∈ X := by
+              rintro (x | f) (y | g) hz hadj
+              · exact absurd hadj F.not_levi_adj_point_point
+              · have hxg : F.Inc x g := F.levi_adj_point_edge.mp hadj
+                have hxL : x ∈ F.edgeSupportSet Sprev := hz
+                rcases (htot' ▸ Set.mem_univ g :
+                    g ∈ Sprev ∪ CanonicalAtom.edges F hintr.1 hintr.2.1 A) with
+                  hgL | hgR
+                · exact hgL
+                · exact absurd (Set.eq_empty_iff_forall_notMem.mp hinter x
+                    ⟨hxL, ⟨g, hgR, hxg⟩⟩) (by simp)
+              · exact ⟨f, hz, F.levi_adj_edge_point.mp hadj⟩
+              · exact absurd hadj F.not_levi_adj_edge_edge
+            have hwalk : ∀ (z w : V ⊕ E), F.levi.Walk z w → z ∈ X → w ∈ X := by
+              intro z w p
+              induction p with
+              | nil => exact id
+              | cons hadj _ ih => exact fun hz => ih (hstep _ _ hz hadj)
+            obtain ⟨p⟩ := hconnected.preconnected (Sum.inr e₀) (Sum.inr e₁)
+            have he₁L : e₁ ∈ Sprev := hwalk _ _ p he₀
+            have hncard : Set.ncard {x : V | F.Inc x e₁} ≠ 0 := by
+              rw [F.edge_ncard e₁]
+              decide
+            obtain ⟨x, hx⟩ := Set.nonempty_of_ncard_ne_zero hncard
+            exact absurd (Set.eq_empty_iff_forall_notMem.mp hinter x
+              ⟨⟨e₁, he₁L, hx⟩, ⟨e₁, he₁, hx⟩⟩) (by simp)
+          · exact ⟨r, hr⟩
+        obtain ⟨r, hr⟩ := hroot
+        exact ⟨⟨Sprev, CanonicalAtom.edges F hintr.1 hintr.2.1 A, hne, hSAne,
+          hEdges, htot', r, hr⟩⟩
+    rw [hprevEmpty, Set.empty_union] at htot'
+    show TripleSystem.Isomorphic F
+      (F.edgeRestriction (CanonicalAtom.edges F hintr.1 hintr.2.1 A))
+    rw [htot']
+    exact ⟨(F.edgeRestrictionUnivIso hreduced).symm⟩
+  · rintro (hone | ⟨C, hC⟩) hdec
+    · obtain ⟨V₀, E₀, V₁, E₁, F₀, F₁, r₀, r₁, h₀, h₁, hiso⟩ := hdec
+      exact oneTriple_onePointIndecomposable
+        ⟨V₀, E₀, V₁, E₁, F₀, F₁, r₀, r₁, h₀, h₁, hone.symm.trans hiso⟩
+    · obtain ⟨V₀, E₀, V₁, E₁, F₀, F₁, r₀, r₁, h₀, h₁, hiso⟩ := hdec
+      exact coreExpansion_onePointIndecomposable C
+        ⟨V₀, E₀, V₁, E₁, F₀, F₁, r₀, r₁, h₀, h₁, hC.symm.trans hiso⟩
+
+end CanonicalAtom
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomMinimalGenerators
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomMinimalGenerators
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SpanningEdgeDeletion
+Source: Erdos593/TripleSystem/SpanningEdgeDeletion.lean
+Normalized SHA-256: 646eecfe52ce166f6702e3e160ee30f9cd843cb47e35fc480155cdcdad6e24fb
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SpanningEdgeDeletion
+
+/-!
+# Spanning hyperedge deletion and the bridge condition
+
+Deletion removes an edge index, not the points that become isolated. A closed
+reachability class gives the local bridge criterion without choosing paths.
+-/
+
+namespace Erdos593
+
+universe u v
+
+namespace TripleSystem
+
+variable {V : Type u} {E : Type v}
+
+/-- Restrict edge indices while retaining the entire original point type. -/
+def spanningEdgeRestriction (F : TripleSystem V E) (S : Set E) :
+    TripleSystem V S where
+  Inc x d := F.Inc x d.1
+  edge_ncard d := F.edge_ncard d.1
+  simple := by
+    intro a b hab
+    apply Subtype.ext
+    exact F.simple hab
+
+/-- Delete one hyperedge, retaining even the newly isolated points. -/
+abbrev deleteHyperedge (F : TripleSystem V E) (e : E) :
+    TripleSystem V {d : E // d ≠ e} :=
+  F.spanningEdgeRestriction {d : E | d ≠ e}
+
+@[simp]
+theorem deleteHyperedge_inc (F : TripleSystem V E) (e : E)
+    (x : V) (d : {d : E // d ≠ e}) :
+    (F.deleteHyperedge e).Inc x d ↔ F.Inc x d.1 := Iff.rfl
+
+/-- The spanning-deletion Levi graph maps into the graph with any one of the
+deleted hyperedge's incidences removed. -/
+private def deleteHyperedgeToDeleteIncidence (F : TripleSystem V E)
+    (e : E) (x : V) :
+    (F.deleteHyperedge e).levi →g
+      F.levi.deleteEdges {s(Sum.inl x, Sum.inr e)} where
+  toFun := Sum.map id Subtype.val
+  map_rel' := by
+    rintro (a | ⟨d, hd⟩) (b | ⟨f, hf⟩) hab <;>
+      simp_all [SimpleGraph.deleteEdges_adj]
+
+/-- A non-bridge incidence is exactly a connection to another endpoint after
+spanning deletion of the hyperedge. -/
+theorem levi_incidence_not_bridge_iff_reachable_deleteHyperedge
+    (F : TripleSystem V E) [Fintype V] [Fintype E]
+    (e : E) (x : V) (hxe : F.Inc x e) :
+    s(Sum.inl x, Sum.inr e) ∉
+        Erdos593.SimpleGraph.bridgeEdges F.levi ↔
+      ∃ y : V, F.Inc y e ∧ y ≠ x ∧
+        (F.deleteHyperedge e).levi.Reachable (Sum.inl x) (Sum.inl y) := by
+  classical
+  let H := (F.deleteHyperedge e).levi
+  let G := F.levi.deleteEdges {s(Sum.inl x, Sum.inr e)}
+  have hadj : F.levi.Adj (Sum.inl x) (Sum.inr e) :=
+    F.levi_adj_point_edge.mpr hxe
+  have hmem : s(Sum.inl x, Sum.inr e) ∈ F.levi.edgeSet := hadj
+  change ¬(s(Sum.inl x, Sum.inr e) ∈ F.levi.edgeSet ∧
+    F.levi.IsBridge s(Sum.inl x, Sum.inr e)) ↔ _
+  simp only [hmem, true_and, _root_.SimpleGraph.isBridge_iff, not_not]
+  constructor
+  · intro hreach
+    by_contra hnone
+    -- This class cannot escape through e unless it contains a second endpoint.
+    let P : V ⊕ E → Prop
+      | .inl y => H.Reachable (.inl x) (.inl y)
+      | .inr d => ∃ h : d ≠ e, H.Reachable (.inl x) (.inr ⟨d, h⟩)
+    have hclosed : ∀ a b, G.Adj a b → P a → P b := by
+      intro a b hab ha
+      have hab' := (_root_.SimpleGraph.deleteEdges_adj).mp hab
+      cases a with
+      | inl a =>
+        cases b with
+        | inl b => exact (F.not_levi_adj_point_point hab'.1).elim
+        | inr d =>
+          have had : F.Inc a d := F.levi_adj_point_edge.mp hab'.1
+          by_cases hde : d = e
+          · subst d
+            have hax : a = x := by
+              by_contra hax
+              exact hnone ⟨a, had, hax, ha⟩
+            subst a
+            exact (hab'.2 (by simp)).elim
+          · refine ⟨hde, ha.trans ?_⟩
+            have hstep : H.Adj (.inl a) (.inr ⟨d, hde⟩) :=
+              (F.deleteHyperedge e).levi_adj_point_edge.mpr had
+            exact hstep.reachable
+      | inr d =>
+        cases b with
+        | inl b =>
+          obtain ⟨hde, hd⟩ := ha
+          exact hd.trans
+            (((F.deleteHyperedge e).levi_adj_edge_point.mpr
+              (F.levi_adj_edge_point.mp hab'.1)).reachable)
+        | inr b => exact (F.not_levi_adj_edge_edge hab'.1).elim
+    have hP : P (Sum.inr e) := by
+      change G.Reachable (Sum.inl x) (Sum.inr e) at hreach
+      rw [_root_.SimpleGraph.reachable_eq_reflTransGen] at hreach
+      have hstart : P (Sum.inl x) := _root_.SimpleGraph.Reachable.rfl
+      have preserve : ∀ {z}, Relation.ReflTransGen G.Adj (Sum.inl x) z → P z := by
+        intro z hr
+        induction hr with
+        | refl => exact hstart
+        | tail _ hab ih => exact hclosed _ _ hab ih
+      exact preserve hreach
+    obtain ⟨hne, _⟩ := hP
+    exact hne rfl
+  · rintro ⟨y, hye, hyx, hxy⟩
+    have hxy' : G.Reachable (Sum.inl x) (Sum.inl y) :=
+      hxy.map (deleteHyperedgeToDeleteIncidence F e x)
+    apply hxy'.trans
+    apply _root_.SimpleGraph.Adj.reachable
+    simp [G, _root_.SimpleGraph.deleteEdges_adj, hye, hyx]
+
+/-- The three endpoints lie in one component after spanning edge deletion
+exactly when no incidence at that edge-node is a bridge. -/
+theorem no_incident_bridge_iff_deleteHyperedge_connected_on_edge
+    (F : TripleSystem V E) [Fintype V] [Fintype E] (e : E) :
+    (∀ x : V, F.Inc x e →
+      s(Sum.inl x, Sum.inr e) ∉
+        Erdos593.SimpleGraph.bridgeEdges F.levi) ↔
+    (∀ x y : V, F.Inc x e → F.Inc y e →
+      (F.deleteHyperedge e).levi.Reachable (Sum.inl x) (Sum.inl y)) := by
+  classical
+  obtain ⟨a, b, c, hab, hac, hbc, hedge⟩ :=
+    Set.ncard_eq_three.mp (F.edgeSet_ncard e)
+  have hinc : ∀ w, F.Inc w e ↔ w = a ∨ w = b ∨ w = c := by
+    intro w
+    change w ∈ F.edgeSet e ↔ _
+    rw [hedge]
+    simp
+  have ha := (hinc a).mpr (Or.inl rfl)
+  have hb := (hinc b).mpr (Or.inr (Or.inl rfl))
+  have hc := (hinc c).mpr (Or.inr (Or.inr rfl))
+  constructor
+  · intro hn
+    have partner : ∀ x, F.Inc x e → ∃ y, F.Inc y e ∧ y ≠ x ∧
+        (F.deleteHyperedge e).levi.Reachable (.inl x) (.inl y) := by
+      intro x hx
+      exact (levi_incidence_not_bridge_iff_reachable_deleteHyperedge F e x hx).mp
+        (hn x hx)
+    have hR_ab : (F.deleteHyperedge e).levi.Reachable (.inl a) (.inl b) := by
+      by_contra hnab
+      obtain ⟨d, hd, hda, had⟩ := partner a ha
+      rcases (hinc d).mp hd with rfl | rfl | rfl
+      · exact hda rfl
+      · exact hnab had
+      obtain ⟨d, hd, hdb, hbd⟩ := partner b hb
+      rcases (hinc d).mp hd with rfl | rfl | rfl
+      · exact hnab hbd.symm
+      · exact hdb rfl
+      · exact hnab (had.trans hbd.symm)
+    have hR_ac : (F.deleteHyperedge e).levi.Reachable (.inl a) (.inl c) := by
+      obtain ⟨d, hd, hdc, hcd⟩ := partner c hc
+      rcases (hinc d).mp hd with rfl | rfl | rfl
+      · exact hcd.symm
+      · exact hR_ab.trans hcd.symm
+      · exact (hdc rfl).elim
+    intro x y hx hy
+    rcases (hinc x).mp hx with rfl | rfl | rfl <;>
+      rcases (hinc y).mp hy with rfl | rfl | rfl <;>
+      first | exact .rfl | exact hR_ab | exact hR_ab.symm |
+        exact hR_ac | exact hR_ac.symm |
+        exact hR_ab.symm.trans hR_ac | exact hR_ac.symm.trans hR_ab
+  · intro hr x hx
+    apply (levi_incidence_not_bridge_iff_reachable_deleteHyperedge F e x hx).mpr
+    by_cases hxa : x = a
+    · subst x
+      exact ⟨b, hb, hab.symm, hr a b ha hb⟩
+    · exact ⟨a, ha, Ne.symm hxa, hr x a hx ha⟩
+
+/-- The hypergraph-native edge-deletion form of the bridge condition. -/
+theorem bridgeAtEveryEdge_iff_deleteHyperedge_separates
+    (F : TripleSystem V E) [Fintype V] [Fintype E] :
+    F.BridgeAtEveryEdge ↔
+      ∀ e : E, ∃ x y : V, F.Inc x e ∧ F.Inc y e ∧
+        ¬(F.deleteHyperedge e).levi.Reachable (Sum.inl x) (Sum.inl y) := by
+  classical
+  constructor
+  · intro hF e
+    by_contra hsep
+    push Not at hsep
+    have hn := (no_incident_bridge_iff_deleteHyperedge_connected_on_edge F e).mpr hsep
+    obtain ⟨x, hx⟩ := hF e
+    have hxe : F.Inc x e := by
+      have hmem : s(Sum.inl x, Sum.inr e) ∈ F.levi.edgeSet := hx.1
+      exact F.levi_adj_point_edge.mp hmem
+    exact hn x hxe hx
+  · intro hF e
+    by_contra hn
+    have hnone : ∀ x : V, F.Inc x e →
+        s(Sum.inl x, Sum.inr e) ∉
+          Erdos593.SimpleGraph.bridgeEdges F.levi := by
+      intro x _ hx
+      exact hn ⟨x, hx⟩
+    obtain ⟨x, y, hx, hy, hxy⟩ := hF e
+    exact hxy ((no_incident_bridge_iff_deleteHyperedge_connected_on_edge F e).mp
+      hnone x y hx hy)
+
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SpanningEdgeDeletion
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SpanningEdgeDeletion
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.ExpansionComponents
+Source: Erdos593/TripleSystem/ExpansionComponents.lean
+Normalized SHA-256: 10abd3fd0dfee1b4725c3eb509f2bd57b314d4475d48e69cdeab335ede19b190
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_ExpansionComponents
+
+/-!
+# Components of a private-vertex expansion
+
+Subdividing graph edges and attaching their private leaves does not change
+connected components. The explicit equivalence below includes isolated core
+vertices and the empty graph, and needs no bipartiteness assumption.
+-/
+
+namespace Erdos593.TripleSystem
+
+universe u
+
+namespace ExpansionComponents
+
+variable {W : Type u} (J : _root_.SimpleGraph W)
+
+private theorem edge_has_endpoint (e : J.edgeSet) :
+    ∃ x : W, x ∈ (e : Sym2 W) := by
+  rcases e with ⟨e, he⟩
+  induction e using Sym2.inductionOn with
+  | _ x y => exact ⟨x, by simp⟩
+
+private noncomputable def edgeRoot (e : J.edgeSet) : W :=
+  Classical.choose (edge_has_endpoint J e)
+
+private theorem edgeRoot_mem (e : J.edgeSet) :
+    edgeRoot J e ∈ (e : Sym2 W) :=
+  Classical.choose_spec (edge_has_endpoint J e)
+
+private theorem endpoint_reaches_root (e : J.edgeSet) (x : W)
+    (hx : x ∈ (e : Sym2 W)) : J.Reachable x (edgeRoot J e) := by
+  have hr := edgeRoot_mem J e
+  rcases e with ⟨e, he⟩
+  induction e using Sym2.inductionOn with
+  | _ a b =>
+    simp only [Sym2.mem_iff] at hx hr
+    have hab : J.Reachable a b := (show J.Adj a b from he).reachable
+    rcases hx with hx | hx <;> rcases hr with hr | hr
+    · exact (hx.trans hr.symm) ▸ _root_.SimpleGraph.Reachable.rfl
+    · simpa only [hx, hr] using hab
+    · simpa only [hx, hr] using hab.symm
+    · exact (hx.trans hr.symm) ▸ _root_.SimpleGraph.Reachable.rfl
+
+private noncomputable def nodeRoot :
+    (PrivateVertexExpansion.Point J ⊕ PrivateVertexExpansion.Edge J) → W
+  | .inl (.inl x) => x
+  | .inl (.inr e) => edgeRoot J e
+  | .inr e => edgeRoot J e
+
+private theorem roots_reachable_of_adj
+    {a b : PrivateVertexExpansion.Point J ⊕ PrivateVertexExpansion.Edge J}
+    (h : (privateVertexExpansion J).levi.Adj a b) :
+    J.Reachable (nodeRoot J a) (nodeRoot J b) := by
+  rcases a with (x | e) | e <;> rcases b with (y | f) | f
+  all_goals simp only [levi_adj_point_edge, levi_adj_edge_point,
+    not_levi_adj_point_point, not_levi_adj_edge_edge,
+    privateVertexExpansion, PrivateVertexExpansion.Inc] at h
+  · exact endpoint_reaches_root J f x h
+  · subst f; exact .rfl
+  · exact (endpoint_reaches_root J e y h).symm
+  · subst f; exact .rfl
+
+private theorem roots_reachable_of_reachable
+    {a b : PrivateVertexExpansion.Point J ⊕ PrivateVertexExpansion.Edge J}
+    (h : (privateVertexExpansion J).levi.Reachable a b) :
+    J.Reachable (nodeRoot J a) (nodeRoot J b) := by
+  obtain ⟨p⟩ := h
+  induction p with
+  | nil => exact .rfl
+  | cons h _ ih => exact (roots_reachable_of_adj J h).trans ih
+
+private theorem core_reachable_of_reachable {x y : W}
+    (h : J.Reachable x y) :
+    (privateVertexExpansion J).levi.Reachable
+      (.inl (.inl x)) (.inl (.inl y)) := by
+  obtain ⟨p⟩ := h
+  induction p with
+  | nil => exact .rfl
+  | @cons x z y hxz p ih =>
+    let e : J.edgeSet := ⟨s(x, z), hxz⟩
+    have hxe : (privateVertexExpansion J).levi.Adj (.inl (.inl x)) (.inr e) := by
+      simp [e, privateVertexExpansion, PrivateVertexExpansion.Inc]
+    have hze : (privateVertexExpansion J).levi.Adj (.inr e) (.inl (.inl z)) := by
+      simp [e, privateVertexExpansion, PrivateVertexExpansion.Inc]
+    exact hxe.reachable.trans (hze.reachable.trans ih)
+
+private theorem core_root_reaches_node
+    (a : PrivateVertexExpansion.Point J ⊕ PrivateVertexExpansion.Edge J) :
+    (privateVertexExpansion J).levi.Reachable (.inl (.inl (nodeRoot J a))) a := by
+  rcases a with (x | e) | e
+  · exact .rfl
+  · have hcore : (privateVertexExpansion J).levi.Adj
+        (.inl (.inl (edgeRoot J e))) (.inr e) := by
+      exact (levi_adj_point_edge _).mpr (edgeRoot_mem J e)
+    have hprivate : (privateVertexExpansion J).levi.Adj
+        (.inr e) (.inl (.inr e)) := by
+      simp [privateVertexExpansion, PrivateVertexExpansion.Inc]
+    exact hcore.reachable.trans hprivate.reachable
+  · exact ((levi_adj_point_edge _).mpr (edgeRoot_mem J e)).reachable
+
+end ExpansionComponents
+
+/-- Core reachability is exactly preserved by private-vertex expansion. -/
+theorem privateVertexExpansion_core_reachable_iff
+    {W : Type u} (J : _root_.SimpleGraph W) (x y : W) :
+    (privateVertexExpansion J).levi.Reachable
+      (.inl (.inl x)) (.inl (.inl y)) ↔ J.Reachable x y :=
+  ⟨ExpansionComponents.roots_reachable_of_reachable J,
+    ExpansionComponents.core_reachable_of_reachable J⟩
+
+/-- Expansion induces a genuine equivalence of component types. -/
+noncomputable def privateVertexExpansion_componentEquiv
+    {W : Type u} (J : _root_.SimpleGraph W) :
+    (privateVertexExpansion J).levi.ConnectedComponent ≃ J.ConnectedComponent where
+  toFun := Quot.lift (fun a => J.connectedComponentMk (ExpansionComponents.nodeRoot J a))
+    (fun _ _ h => _root_.SimpleGraph.ConnectedComponent.sound
+      (ExpansionComponents.roots_reachable_of_reachable J h))
+  invFun := Quot.lift (fun x => (privateVertexExpansion J).levi.connectedComponentMk
+      (.inl (.inl x)))
+    (fun _ _ h => _root_.SimpleGraph.ConnectedComponent.sound
+      (ExpansionComponents.core_reachable_of_reachable J h))
+  left_inv := by
+    intro C
+    refine C.ind (fun a => ?_)
+    exact _root_.SimpleGraph.ConnectedComponent.sound
+      (ExpansionComponents.core_root_reaches_node J a)
+  right_inv := by
+    intro C
+    exact C.ind (fun _ => rfl)
+
+/-- The equality holds even for graphs with isolated vertices or no vertices. -/
+theorem privateVertexExpansion_component_card
+    {W : Type u} (J : _root_.SimpleGraph W) :
+    Nat.card (privateVertexExpansion J).levi.ConnectedComponent =
+      Nat.card J.ConnectedComponent :=
+  Nat.card_congr (privateVertexExpansion_componentEquiv J)
+
+end Erdos593.TripleSystem
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_ExpansionComponents
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.ExpansionComponents
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.BipartiteShadow
+Source: Erdos593/TripleSystem/BipartiteShadow.lean
+Normalized SHA-256: f679a6e26b7f8e23109311dad0542f78260fbc66578702c07ec5227234ae26f4
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_BipartiteShadow
+
+/-!
+# Bipartite shadows: exact finite parameters
+
+Finite obligatory reduced triple systems admit simple bipartite parameter
+shadows with the same edge and component counts. The expansion converse
+and the manuscript-facing subtraction identity are included below.
+-/
+
+namespace Erdos593.TripleSystem
+
+universe u
+
+theorem exists_bipartite_shadow
+    {V E : Type u} (F : TripleSystem V E)
+    [Fintype V] [Fintype E]
+    (hobligatory : F.IsObligatory)
+    (hreduced : F.HasNoIsolatedPoints)
+    (hnonempty : Nonempty E) :
+    ∃ (s : ℕ) (J : _root_.SimpleGraph (Fin s)),
+      J.Colorable 2 ∧
+      (∀ x, ∃ y, J.Adj x y) ∧
+      Nat.card J.edgeSet = Fintype.card E ∧
+      s + Fintype.card E = Fintype.card V ∧
+      Nat.card J.ConnectedComponent = Nat.card F.levi.ConnectedComponent := by
+  classical
+  -- The nonemptiness hypothesis is not needed for the parameter identities below.
+  have _hEnonempty : Nonempty E := hnonempty
+  have cover_lift {α β γ : Type u} {A : _root_.SimpleGraph α} {B : _root_.SimpleGraph β}
+      {C : _root_.SimpleGraph γ}
+      {i : α → γ} {j : β → γ} (hi : Function.Injective i) (hj : Function.Injective j)
+      (hcov : ∀ z, (∃ x, i x = z) ∨ (∃ y, j y = z))
+      (hadj : ∀ z z', C.Adj z z' ↔
+        ((∃ x x', A.Adj x x' ∧ i x = z ∧ i x' = z') ∨
+         (∃ y y', B.Adj y y' ∧ j y = z ∧ j y' = z')))
+      {X : Type u} (f : α → X) (g : β → X)
+      (hcompat : ∀ x y, i x = j y → f x = g y)
+      (hfA : ∀ x x', A.Adj x x' → f x = f x')
+      (hgB : ∀ y y', B.Adj y y' → g y = g y') :
+      ∃ Φ : γ → X, (∀ x, Φ (i x) = f x) ∧ (∀ y, Φ (j y) = g y) ∧
+        (∀ z z', C.Reachable z z' → Φ z = Φ z') := by
+    classical
+    set Φ : γ → X := fun z =>
+      if h : ∃ x, i x = z then f h.choose else g ((hcov z).resolve_left h).choose with hΦ
+    have hΦi : ∀ x, Φ (i x) = f x := by
+      intro x
+      have hex : ∃ x', i x' = i x := ⟨x, rfl⟩
+      simp only [hΦ, dif_pos hex]
+      exact congrArg f (hi hex.choose_spec)
+    have hΦj : ∀ y, Φ (j y) = g y := by
+      intro y
+      by_cases hex : ∃ x, i x = j y
+      · simp only [hΦ, dif_pos hex]
+        exact hcompat _ y hex.choose_spec
+      · simp only [hΦ, dif_neg hex]
+        have := ((hcov (j y)).resolve_left hex).choose_spec
+        exact congrArg g (hj this)
+    have hstep : ∀ z z', C.Adj z z' → Φ z = Φ z' := by
+      intro z z' hzz'
+      rcases (hadj z z').mp hzz' with ⟨x, x', hxx', rfl, rfl⟩ | ⟨y, y', hyy', rfl, rfl⟩
+      · rw [hΦi, hΦi]; exact hfA _ _ hxx'
+      · rw [hΦj, hΦj]; exact hgB _ _ hyy'
+    refine ⟨Φ, hΦi, hΦj, ?_⟩
+    rintro z z' ⟨p⟩
+    induction p with
+    | nil => rfl
+    | cons h _ ih => exact (hstep _ _ h).trans ih
+
+  have adj_i {α β γ : Type u} {A : _root_.SimpleGraph α} {B : _root_.SimpleGraph β}
+      {C : _root_.SimpleGraph γ}
+      {i : α → γ} {j : β → γ} (hi : Function.Injective i)
+      (hadj : ∀ z z', C.Adj z z' ↔
+        ((∃ x x', A.Adj x x' ∧ i x = z ∧ i x' = z') ∨
+         (∃ y y', B.Adj y y' ∧ j y = z ∧ j y' = z')))
+      (hcross : ∀ x x' y y', i x = j y → i x' = j y' → x = x' ∧ y = y')
+      (x x' : α) : C.Adj (i x) (i x') ↔ A.Adj x x' := by
+    constructor
+    · intro h
+      rcases (hadj _ _).mp h with ⟨u, u', huu', hu, hu'⟩ | ⟨v, v', hvv', hv, hv'⟩
+      · rw [← hi hu, ← hi hu']; exact huu'
+      · have := hcross x x' v v' hv.symm hv'.symm
+        exact absurd (this.2 ▸ hvv') (by simp)
+    · intro h
+      exact (hadj _ _).mpr (Or.inl ⟨x, x', h, rfl, rfl⟩)
+
+  have adj_j {α β γ : Type u} {A : _root_.SimpleGraph α} {B : _root_.SimpleGraph β}
+      {C : _root_.SimpleGraph γ}
+      {i : α → γ} {j : β → γ} (hj : Function.Injective j)
+      (hadj : ∀ z z', C.Adj z z' ↔
+        ((∃ x x', A.Adj x x' ∧ i x = z ∧ i x' = z') ∨
+         (∃ y y', B.Adj y y' ∧ j y = z ∧ j y' = z')))
+      (hcross : ∀ x x' y y', i x = j y → i x' = j y' → x = x' ∧ y = y')
+      (y y' : β) : C.Adj (j y) (j y') ↔ B.Adj y y' := by
+    constructor
+    · intro h
+      rcases (hadj _ _).mp h with ⟨u, u', huu', hu, hu'⟩ | ⟨v, v', hvv', hv, hv'⟩
+      · have := hcross u u' y y' hu hu'
+        exact absurd (this.1 ▸ huu') (by simp)
+      · rw [← hj hv, ← hj hv']; exact hvv'
+    · intro h
+      exact (hadj _ _).mpr (Or.inr ⟨y, y', h, rfl, rfl⟩)
+
+  have edge_equiv {α β γ : Type u} {A : _root_.SimpleGraph α} {B : _root_.SimpleGraph β}
+      {C : _root_.SimpleGraph γ}
+      {i : α → γ} {j : β → γ} (hi : Function.Injective i) (hj : Function.Injective j)
+      (hadj : ∀ z z', C.Adj z z' ↔
+        ((∃ x x', A.Adj x x' ∧ i x = z ∧ i x' = z') ∨
+         (∃ y y', B.Adj y y' ∧ j y = z ∧ j y' = z')))
+      (hcross : ∀ x x' y y', i x = j y → i x' = j y' → x = x' ∧ y = y') :
+      Nonempty ((A.edgeSet ⊕ B.edgeSet) ≃ C.edgeSet) := by
+    classical
+    have hmemA : ∀ e : Sym2 α, e ∈ A.edgeSet → Sym2.map i e ∈ C.edgeSet := by
+      intro e he
+      induction e with
+      | _ x x' =>
+          simp only [_root_.SimpleGraph.mem_edgeSet] at he ⊢
+          exact (adj_i hi hadj hcross x x').mpr he
+    have hmemB : ∀ e : Sym2 β, e ∈ B.edgeSet → Sym2.map j e ∈ C.edgeSet := by
+      intro e he
+      induction e with
+      | _ y y' =>
+          simp only [_root_.SimpleGraph.mem_edgeSet] at he ⊢
+          exact (adj_j hj hadj hcross y y').mpr he
+    refine ⟨Equiv.ofBijective
+      (fun p => Sum.elim (fun e => (⟨Sym2.map i e.1, hmemA e.1 e.2⟩ : C.edgeSet))
+        (fun e => (⟨Sym2.map j e.1, hmemB e.1 e.2⟩ : C.edgeSet)) p) ⟨?_, ?_⟩⟩
+    · rintro (⟨e, he⟩ | ⟨e, he⟩) (⟨f, hf⟩ | ⟨f, hf⟩) h <;>
+        simp only [Sum.elim_inl, Sum.elim_inr, Subtype.mk.injEq] at h
+      · exact congrArg Sum.inl (Subtype.ext (Sym2.map.injective hi h))
+      · exfalso
+        induction e with
+        | _ x x' =>
+          induction f with
+          | _ y y' =>
+            simp only [Sym2.map_mk, Sym2.eq_iff] at h
+            simp only [_root_.SimpleGraph.mem_edgeSet] at he
+            rcases h with ⟨h1, h2⟩ | ⟨h1, h2⟩
+            · exact absurd ((hcross x x' y y' h1 h2).1 ▸ he) (by simp)
+            · exact absurd ((hcross x x' y' y h1 h2).1 ▸ he) (by simp)
+      · exfalso
+        induction e with
+        | _ y y' =>
+          induction f with
+          | _ x x' =>
+            simp only [Sym2.map_mk, Sym2.eq_iff] at h
+            simp only [_root_.SimpleGraph.mem_edgeSet] at hf
+            rcases h with ⟨h1, h2⟩ | ⟨h1, h2⟩
+            · exact absurd ((hcross x x' y y' h1.symm h2.symm).1 ▸ hf) (by simp)
+            · exact absurd ((hcross x x' y' y h2.symm h1.symm).1 ▸ hf) (by simp)
+      · exact congrArg Sum.inr (Subtype.ext (Sym2.map.injective hj h))
+    · rintro ⟨e, he⟩
+      induction e with
+      | _ z z' =>
+          simp only [_root_.SimpleGraph.mem_edgeSet] at he
+          rcases (hadj _ _).mp he with ⟨x, x', hxx', rfl, rfl⟩ | ⟨y, y', hyy', rfl, rfl⟩
+          · exact ⟨Sum.inl ⟨s(x, x'), by simpa using hxx'⟩, by simp⟩
+          · exact ⟨Sum.inr ⟨s(y, y'), by simpa using hyy'⟩, by simp⟩
+
+  have sum_vertex_equiv {α β γ : Type u} {i : α → γ} {j : β → γ} (hi : Function.Injective i)
+      (hj : Function.Injective j)
+      (hcov : ∀ z, (∃ x, i x = z) ∨ (∃ y, j y = z))
+      (hdisj : ∀ x y, i x ≠ j y) :
+      Nonempty ((α ⊕ β) ≃ γ) := by
+    refine ⟨Equiv.ofBijective (Sum.elim i j) ⟨?_, ?_⟩⟩
+    · rintro (x | y) (x' | y') h <;> simp only [Sum.elim_inl, Sum.elim_inr] at h
+      · exact congrArg Sum.inl (hi h)
+      · exact absurd h (hdisj x y')
+      · exact absurd h.symm (hdisj x' y)
+      · exact congrArg Sum.inr (hj h)
+    · intro z
+      rcases hcov z with ⟨x, rfl⟩ | ⟨y, rfl⟩
+      · exact ⟨Sum.inl x, rfl⟩
+      · exact ⟨Sum.inr y, rfl⟩
+
+  have sum_component_equiv {α β γ : Type u} {A : _root_.SimpleGraph α} {B : _root_.SimpleGraph β}
+    {C : _root_.SimpleGraph γ}
+      {i : α → γ} {j : β → γ} (hi : Function.Injective i) (hj : Function.Injective j)
+      (hcov : ∀ z, (∃ x, i x = z) ∨ (∃ y, j y = z))
+      (hadj : ∀ z z', C.Adj z z' ↔
+        ((∃ x x', A.Adj x x' ∧ i x = z ∧ i x' = z') ∨
+         (∃ y y', B.Adj y y' ∧ j y = z ∧ j y' = z')))
+      (hdisj : ∀ x y, i x ≠ j y) :
+      Nonempty ((A.ConnectedComponent ⊕ B.ConnectedComponent) ≃ C.ConnectedComponent) := by
+    classical
+    have hcross : ∀ x x' y y', i x = j y → i x' = j y' → x = x' ∧ y = y' := by
+      intro x _ y _ h _
+      exact absurd h (hdisj x y)
+    obtain ⟨Φ, hΦi, hΦj, hΦr⟩ :=
+      cover_lift (A := A) (B := B) (C := C) hi hj hcov hadj
+        (X := A.ConnectedComponent ⊕ B.ConnectedComponent)
+        (fun x => Sum.inl (A.connectedComponentMk x))
+        (fun y => Sum.inr (B.connectedComponentMk y))
+        (fun x y h => absurd h (hdisj x y))
+        (fun x x' h => congrArg Sum.inl (_root_.SimpleGraph.ConnectedComponent.sound h.reachable))
+        (fun y y' h => congrArg Sum.inr (_root_.SimpleGraph.ConnectedComponent.sound h.reachable))
+    let homA : A →g C := ⟨i, fun {x x'} h => (adj_i hi hadj hcross x x').mpr h⟩
+    let homB : B →g C := ⟨j, fun {y y'} h => (adj_j hj hadj hcross y y').mpr h⟩
+    refine ⟨{
+      toFun := Sum.elim (_root_.SimpleGraph.ConnectedComponent.map homA)
+        (_root_.SimpleGraph.ConnectedComponent.map homB)
+      invFun := _root_.SimpleGraph.ConnectedComponent.lift Φ (fun v w p _ => hΦr v w p.reachable)
+      left_inv := ?_
+      right_inv := ?_ }⟩
+    · rintro (c | c)
+      · induction c using _root_.SimpleGraph.ConnectedComponent.ind with
+        | _ x => simpa [homA] using hΦi x
+      · induction c using _root_.SimpleGraph.ConnectedComponent.ind with
+        | _ y => simpa [homB] using hΦj y
+    · intro d
+      induction d using _root_.SimpleGraph.ConnectedComponent.ind with
+      | _ z =>
+          rcases hcov z with ⟨x, rfl⟩ | ⟨y, rfl⟩
+          · show Sum.elim _ _ (Φ (i x)) = _
+            rw [hΦi]; rfl
+          · show Sum.elim _ _ (Φ (j y)) = _
+            rw [hΦj]; rfl
+
+  have sum_isolated_equiv {α β γ : Type u} {A : _root_.SimpleGraph α} {B : _root_.SimpleGraph β} {C
+    : _root_.SimpleGraph γ}
+      {i : α → γ} {j : β → γ} (hi : Function.Injective i) (hj : Function.Injective j)
+      (hcov : ∀ z, (∃ x, i x = z) ∨ (∃ y, j y = z))
+      (hadj : ∀ z z', C.Adj z z' ↔
+        ((∃ x x', A.Adj x x' ∧ i x = z ∧ i x' = z') ∨
+         (∃ y y', B.Adj y y' ∧ j y = z ∧ j y' = z')))
+      (hdisj : ∀ x y, i x ≠ j y) :
+      Nonempty (({x : α // ∀ w, ¬A.Adj x w} ⊕ {y : β // ∀ w, ¬B.Adj y w}) ≃
+        {z : γ // ∀ w, ¬C.Adj z w}) := by
+    classical
+    have hcross : ∀ x x' y y', i x = j y → i x' = j y' → x = x' ∧ y = y' := by
+      intro x _ y _ h _
+      exact absurd h (hdisj x y)
+    have hisoA : ∀ x : α, (∀ w, ¬C.Adj (i x) w) ↔ (∀ w, ¬A.Adj x w) := by
+      intro x
+      constructor
+      · intro h w hw
+        exact h (i w) ((adj_i hi hadj hcross x w).mpr hw)
+      · intro h w hw
+        rcases (hadj _ _).mp hw with ⟨u, u', huu', hu, _⟩ | ⟨v, v', hvv', hv, _⟩
+        · exact h u' (hi hu ▸ huu')
+        · exact absurd hv.symm (hdisj x v)
+    have hisoB : ∀ y : β, (∀ w, ¬C.Adj (j y) w) ↔ (∀ w, ¬B.Adj y w) := by
+      intro y
+      constructor
+      · intro h w hw
+        exact h (j w) ((adj_j hj hadj hcross y w).mpr hw)
+      · intro h w hw
+        rcases (hadj _ _).mp hw with ⟨u, u', huu', hu, _⟩ | ⟨v, v', hvv', hv, _⟩
+        · exact absurd hu (hdisj u y)
+        · exact h v' (hj hv ▸ hvv')
+    refine ⟨Equiv.ofBijective
+      (fun p => Sum.elim (fun x => (⟨i x.1, (hisoA x.1).mpr x.2⟩ : {z : γ // ∀ w, ¬C.Adj z w}))
+        (fun y => (⟨j y.1, (hisoB y.1).mpr y.2⟩ : {z : γ // ∀ w, ¬C.Adj z w})) p) ⟨?_, ?_⟩⟩
+    · rintro (⟨x, hx⟩ | ⟨y, hy⟩) (⟨x', hx'⟩ | ⟨y', hy'⟩) h <;>
+        simp only [Sum.elim_inl, Sum.elim_inr, Subtype.mk.injEq] at h
+      · exact congrArg Sum.inl (Subtype.ext (hi h))
+      · exact absurd h (hdisj x y')
+      · exact absurd h.symm (hdisj x' y)
+      · exact congrArg Sum.inr (Subtype.ext (hj h))
+    · rintro ⟨z, hz⟩
+      rcases hcov z with ⟨x, rfl⟩ | ⟨y, rfl⟩
+      · exact ⟨Sum.inl ⟨x, (hisoA x).mp hz⟩, rfl⟩
+      · exact ⟨Sum.inr ⟨y, (hisoB y).mp hz⟩, rfl⟩
+
+  have glue_vertex_equiv {α β γ : Type u} {i : α → γ} {j : β → γ} {a : α} {b : β}
+      (hi : Function.Injective i) (hj : Function.Injective j)
+      (hcov : ∀ z, (∃ x, i x = z) ∨ (∃ y, j y = z))
+      (hmeet : ∀ x y, i x = j y ↔ (x = a ∧ y = b)) :
+      Nonempty ((α ⊕ {y : β // y ≠ b}) ≃ γ) := by
+    refine ⟨Equiv.ofBijective (Sum.elim i (fun y => j y.1)) ⟨?_, ?_⟩⟩
+    · rintro (x | ⟨y, hy⟩) (x' | ⟨y', hy'⟩) h <;> simp only [Sum.elim_inl, Sum.elim_inr] at h
+      · exact congrArg Sum.inl (hi h)
+      · exact absurd ((hmeet x y').mp h).2 hy'
+      · exact absurd ((hmeet x' y).mp h.symm).2 hy
+      · exact congrArg Sum.inr (Subtype.ext (hj h))
+    · intro z
+      rcases hcov z with ⟨x, rfl⟩ | ⟨y, rfl⟩
+      · exact ⟨Sum.inl x, rfl⟩
+      · by_cases hy : y = b
+        · exact ⟨Sum.inl a, by simp [hy, (hmeet a b).mpr ⟨rfl, rfl⟩]⟩
+        · exact ⟨Sum.inr ⟨y, hy⟩, rfl⟩
+
+  have glue_component_equiv {α β γ : Type u} {A : _root_.SimpleGraph α} {B : _root_.SimpleGraph β}
+    {C : _root_.SimpleGraph γ}
+      {i : α → γ} {j : β → γ} {a : α} {b : β}
+      (hi : Function.Injective i) (hj : Function.Injective j)
+      (hcov : ∀ z, (∃ x, i x = z) ∨ (∃ y, j y = z))
+      (hadj : ∀ z z', C.Adj z z' ↔
+        ((∃ x x', A.Adj x x' ∧ i x = z ∧ i x' = z') ∨
+         (∃ y y', B.Adj y y' ∧ j y = z ∧ j y' = z')))
+      (hmeet : ∀ x y, i x = j y ↔ (x = a ∧ y = b)) :
+      Nonempty ((A.ConnectedComponent ⊕
+          {c : B.ConnectedComponent // c ≠ B.connectedComponentMk b}) ≃
+        C.ConnectedComponent) := by
+    classical
+    have hcross : ∀ x x' y y', i x = j y → i x' = j y' → x = x' ∧ y = y' := by
+      intro x x' y y' h h'
+      obtain ⟨rfl, rfl⟩ := (hmeet x y).mp h
+      obtain ⟨rfl, rfl⟩ := (hmeet x' y').mp h'
+      exact ⟨rfl, rfl⟩
+    set X := A.ConnectedComponent ⊕ {c : B.ConnectedComponent // c ≠ B.connectedComponentMk b}
+      with hX
+    set g : β → X := fun y =>
+      if h : B.Reachable y b then Sum.inl (A.connectedComponentMk a)
+      else Sum.inr ⟨B.connectedComponentMk y, by
+        simpa [_root_.SimpleGraph.ConnectedComponent.eq] using h⟩ with hg
+    obtain ⟨Φ, hΦi, hΦj, hΦr⟩ :=
+      cover_lift (A := A) (B := B) (C := C) hi hj hcov hadj (X := X)
+        (fun x => Sum.inl (A.connectedComponentMk x)) g
+        (by
+          intro x y hxy
+          obtain ⟨rfl, rfl⟩ := (hmeet x y).mp hxy
+          simp [hg])
+        (fun x x' h => congrArg Sum.inl (_root_.SimpleGraph.ConnectedComponent.sound h.reachable))
+        (by
+          intro y y' hyy'
+          by_cases hy : B.Reachable y b
+          · have hy' : B.Reachable y' b := (hyy'.symm.reachable).trans hy
+            simp [hg, hy, hy']
+          · have hy' : ¬ B.Reachable y' b := fun h => hy (hyy'.reachable.trans h)
+            simp only [hg, dif_neg hy, dif_neg hy']
+            exact congrArg Sum.inr
+              (Subtype.ext (_root_.SimpleGraph.ConnectedComponent.sound hyy'.reachable)))
+    let homA : A →g C := ⟨i, fun {x x'} h => (adj_i hi hadj hcross x x').mpr h⟩
+    let homB : B →g C := ⟨j, fun {y y'} h => (adj_j hj hadj hcross y y').mpr h⟩
+    refine ⟨{
+      toFun := Sum.elim (_root_.SimpleGraph.ConnectedComponent.map homA)
+        (fun c => _root_.SimpleGraph.ConnectedComponent.map homB c.1)
+      invFun := _root_.SimpleGraph.ConnectedComponent.lift Φ (fun v w p _ => hΦr v w p.reachable)
+      left_inv := ?_
+      right_inv := ?_ }⟩
+    · rintro (c | ⟨c, hc⟩)
+      · induction c using _root_.SimpleGraph.ConnectedComponent.ind with
+        | _ x => simpa [homA] using hΦi x
+      · revert hc
+        induction c using _root_.SimpleGraph.ConnectedComponent.ind with
+        | _ y =>
+            intro hc
+            have hy : ¬ B.Reachable y b := by
+              simpa [_root_.SimpleGraph.ConnectedComponent.eq] using hc
+            simp only [Sum.elim_inr, homB]
+            rw [show _root_.SimpleGraph.ConnectedComponent.map ⟨j, _⟩ (B.connectedComponentMk y) =
+              C.connectedComponentMk (j y) from rfl]
+            show Φ (j y) = _
+            rw [hΦj]
+            simp [hg, hy]
+    · intro d
+      induction d using _root_.SimpleGraph.ConnectedComponent.ind with
+      | _ z =>
+          rcases hcov z with ⟨x, rfl⟩ | ⟨y, rfl⟩
+          · show Sum.elim _ _ (Φ (i x)) = _
+            rw [hΦi]; rfl
+          · show Sum.elim _ _ (Φ (j y)) = _
+            rw [hΦj]
+            by_cases hy : B.Reachable y b
+            · simp only [hg, dif_pos hy, Sum.elim_inl]
+              have h1 : C.connectedComponentMk (i a) = C.connectedComponentMk (j y) := by
+                rw [(hmeet a b).mpr ⟨rfl, rfl⟩]
+                exact _root_.SimpleGraph.ConnectedComponent.sound
+                  ((hy.symm).map homB)
+              simpa [homA] using h1
+            · simp only [hg, dif_neg hy, Sum.elim_inr]
+              rfl
+
+  have glue_isolated_equiv {α β γ : Type u} {A : _root_.SimpleGraph α} {B : _root_.SimpleGraph β}
+    {C : _root_.SimpleGraph γ}
+      {i : α → γ} {j : β → γ} {a : α} {b : β}
+      (hi : Function.Injective i) (hj : Function.Injective j)
+      (hcov : ∀ z, (∃ x, i x = z) ∨ (∃ y, j y = z))
+      (hadj : ∀ z z', C.Adj z z' ↔
+        ((∃ x x', A.Adj x x' ∧ i x = z ∧ i x' = z') ∨
+         (∃ y y', B.Adj y y' ∧ j y = z ∧ j y' = z')))
+      (hmeet : ∀ x y, i x = j y ↔ (x = a ∧ y = b)) :
+      Nonempty (({x : α // (∀ w, ¬A.Adj x w) ∧ (x = a → ∀ w, ¬B.Adj b w)} ⊕
+          {y : β // (∀ w, ¬B.Adj y w) ∧ y ≠ b}) ≃
+        {z : γ // ∀ w, ¬C.Adj z w}) := by
+    classical
+    have hcross : ∀ x x' y y', i x = j y → i x' = j y' → x = x' ∧ y = y' := by
+      intro x x' y y' h h'
+      obtain ⟨rfl, rfl⟩ := (hmeet x y).mp h
+      obtain ⟨rfl, rfl⟩ := (hmeet x' y').mp h'
+      exact ⟨rfl, rfl⟩
+    have hisoA : ∀ x : α, (∀ w, ¬C.Adj (i x) w) ↔
+        ((∀ w, ¬A.Adj x w) ∧ (x = a → ∀ w, ¬B.Adj b w)) := by
+      intro x
+      constructor
+      · intro h
+        refine ⟨fun w hw => h (i w) ((adj_i hi hadj hcross x w).mpr hw), ?_⟩
+        rintro rfl w hw
+        have hix : i x = j b := (hmeet x b).mpr ⟨rfl, rfl⟩
+        refine h (j w) ?_
+        rw [hix]
+        exact (adj_j hj hadj hcross b w).mpr hw
+      · rintro ⟨h1, h2⟩ w hw
+        rcases (hadj _ _).mp hw with ⟨u, u', huu', hu, _⟩ | ⟨v, v', hvv', hv, _⟩
+        · exact h1 u' (hi hu ▸ huu')
+        · obtain ⟨rfl, rfl⟩ := (hmeet x v).mp hv.symm
+          exact h2 rfl v' hvv'
+    have hisoB : ∀ y : β, y ≠ b → ((∀ w, ¬C.Adj (j y) w) ↔ (∀ w, ¬B.Adj y w)) := by
+      intro y hy
+      constructor
+      · intro h w hw
+        exact h (j w) ((adj_j hj hadj hcross y w).mpr hw)
+      · intro h w hw
+        rcases (hadj _ _).mp hw with ⟨u, u', huu', hu, _⟩ | ⟨v, v', hvv', hv, _⟩
+        · exact absurd ((hmeet u y).mp hu).2 hy
+        · exact h v' (hj hv ▸ hvv')
+    refine ⟨Equiv.ofBijective
+      (fun p => Sum.elim
+        (fun x => (⟨i x.1, (hisoA x.1).mpr x.2⟩ : {z : γ // ∀ w, ¬C.Adj z w}))
+        (fun y => (⟨j y.1, (hisoB y.1 y.2.2).mpr y.2.1⟩ : {z : γ // ∀ w, ¬C.Adj z w})) p)
+      ⟨?_, ?_⟩⟩
+    · rintro (⟨x, hx⟩ | ⟨y, hy⟩) (⟨x', hx'⟩ | ⟨y', hy'⟩) h <;>
+        simp only [Sum.elim_inl, Sum.elim_inr, Subtype.mk.injEq] at h
+      · exact congrArg Sum.inl (Subtype.ext (hi h))
+      · exact absurd ((hmeet x y').mp h).2 hy'.2
+      · exact absurd ((hmeet x' y).mp h.symm).2 hy.2
+      · exact congrArg Sum.inr (Subtype.ext (hj h))
+    · rintro ⟨z, hz⟩
+      rcases hcov z with ⟨x, rfl⟩ | ⟨y, rfl⟩
+      · exact ⟨Sum.inl ⟨x, (hisoA x).mp hz⟩, rfl⟩
+      · by_cases hy : y = b
+        · subst hy
+          refine ⟨Sum.inl ⟨a, (hisoA a).mp ?_⟩, ?_⟩
+          · rw [(hmeet a y).mpr ⟨rfl, rfl⟩]; exact hz
+          · exact Subtype.ext ((hmeet a y).mpr ⟨rfl, rfl⟩)
+        · exact ⟨Sum.inr ⟨y, (hisoB y hy).mp hz, hy⟩, rfl⟩
+
+  have edgeless_component_equiv {γ : Type u} {C : _root_.SimpleGraph γ} (hC : ∀ z z', ¬C.Adj z z') :
+      Nonempty (γ ≃ C.ConnectedComponent) := by
+    refine ⟨Equiv.ofBijective C.connectedComponentMk ⟨?_, ?_⟩⟩
+    · intro z z' h
+      obtain ⟨p⟩ := _root_.SimpleGraph.ConnectedComponent.exact h
+      cases p with
+      | nil => rfl
+      | cons hadj _ => exact absurd hadj (hC _ _)
+    · intro c
+      induction c using _root_.SimpleGraph.ConnectedComponent.ind with
+      | _ z => exact ⟨z, rfl⟩
+
+  have iso_transfer {γ γ' : Type u} (C : _root_.SimpleGraph γ) (C' : _root_.SimpleGraph γ') (e : γ
+    ≃ γ')
+      (he : ∀ z z', C'.Adj (e z) (e z') ↔ C.Adj z z') :
+      Nonempty (C.ConnectedComponent ≃ C'.ConnectedComponent) ∧
+      Nonempty (C.edgeSet ≃ C'.edgeSet) ∧
+      Nonempty ({z : γ // ∀ w, ¬C.Adj z w} ≃ {z' : γ' // ∀ w, ¬C'.Adj z' w}) ∧
+      (C.Colorable 2 → C'.Colorable 2) := by
+    let φ : C ≃g C' := ⟨e, fun {x y} => he x y⟩
+    refine ⟨⟨φ.connectedComponentEquiv⟩, ⟨φ.mapEdgeSet⟩, ⟨?_⟩, ?_⟩
+    · refine Equiv.ofBijective (fun z => ⟨e z.1, ?_⟩) ⟨?_, ?_⟩
+      · intro w hw
+        exact z.2 (e.symm w) ((he z.1 (e.symm w)).mp (by simpa using hw))
+      · rintro ⟨z, hz⟩ ⟨z', hz'⟩ h
+        exact Subtype.ext (e.injective (by simpa using h))
+      · rintro ⟨w, hw⟩
+        refine ⟨⟨e.symm w, ?_⟩, Subtype.ext (by simp)⟩
+        intro v hv
+        have := (he (e.symm w) v).mpr hv
+        rw [Equiv.apply_symm_apply] at this
+        exact hw (e v) this
+    · rintro ⟨c⟩
+      exact ⟨c.comp φ.symm.toHom⟩
+
+
+  have card_subtype_ne_succ {X : Type u} [Finite X] (x₀ : X) :
+      Nat.card {x : X // x ≠ x₀} + 1 = Nat.card X := by
+    classical
+    have : Nat.card ({x : X // x ≠ x₀} ⊕ PUnit.{u+1}) = Nat.card X := by
+      refine Nat.card_congr (Equiv.ofBijective
+        (Sum.elim (fun x => x.1) (fun _ => x₀)) ⟨?_, ?_⟩)
+      · rintro (⟨x, hx⟩ | u) (⟨y, hy⟩ | v) h <;> simp only [Sum.elim_inl, Sum.elim_inr] at h
+        · exact congrArg Sum.inl (Subtype.ext h)
+        · exact absurd h hx
+        · exact absurd h.symm hy
+        · rfl
+      · intro x
+        by_cases hx : x = x₀
+        · exact ⟨Sum.inr PUnit.unit, hx.symm⟩
+        · exact ⟨Sum.inl ⟨x, hx⟩, rfl⟩
+    rw [← this, Nat.card_sum]
+    simp
+
+  have card_subtype_and_ne_succ {X : Type u} [Finite X] (P : X → Prop) (x₀ : X)
+      (h₀ : P x₀) : Nat.card {x : X // P x ∧ x ≠ x₀} + 1 = Nat.card {x : X // P x} := by
+    classical
+    have : Nat.card ({x : X // P x ∧ x ≠ x₀} ⊕ PUnit.{u+1}) = Nat.card {x : X // P x} := by
+      refine Nat.card_congr (Equiv.ofBijective
+        (Sum.elim (fun x => (⟨x.1, x.2.1⟩ : {x : X // P x})) (fun _ => ⟨x₀, h₀⟩)) ⟨?_, ?_⟩)
+      · rintro (⟨x, hx⟩ | u) (⟨y, hy⟩ | v) h <;>
+          simp only [Sum.elim_inl, Sum.elim_inr, Subtype.mk.injEq] at h
+        · exact congrArg Sum.inl (Subtype.ext h)
+        · exact absurd h hx.2
+        · exact absurd h.symm hy.2
+        · rfl
+      · rintro ⟨x, hx⟩
+        by_cases hxx : x = x₀
+        · exact ⟨Sum.inr PUnit.unit, Subtype.ext hxx.symm⟩
+        · exact ⟨Sum.inl ⟨x, hx, hxx⟩, rfl⟩
+    rw [← this, Nat.card_sum]
+    simp
+
+  have card_glue_isolated_pos {X Y : Type u} [Finite X] [Finite Y]
+      (P : X → Prop) (Q : Y → Prop) (x₀ : X) (y₀ : Y) (hpos : P x₀ ∨ Q y₀) :
+      Nat.card {x : X // P x ∧ (x = x₀ → Q y₀)} + Nat.card {y : Y // Q y ∧ y ≠ y₀} + 1 =
+        Nat.card {x : X // P x} + Nat.card {y : Y // Q y} := by
+    classical
+    by_cases hQ : Q y₀
+    · have h1 : Nat.card {x : X // P x ∧ (x = x₀ → Q y₀)} = Nat.card {x : X // P x} :=
+        Nat.card_congr (Equiv.subtypeEquivRight (fun x => by simp [hQ]))
+      have h2 := card_subtype_and_ne_succ Q y₀ hQ
+      omega
+    · have hP : P x₀ := hpos.resolve_right hQ
+      have h1 : Nat.card {x : X // P x ∧ (x = x₀ → Q y₀)} =
+          Nat.card {x : X // P x ∧ x ≠ x₀} :=
+        Nat.card_congr (Equiv.subtypeEquivRight (fun x => by
+          constructor
+          · rintro ⟨hp, hx⟩
+            exact ⟨hp, fun hxx => hQ (hx hxx)⟩
+          · rintro ⟨hp, hx⟩
+            exact ⟨hp, fun hxx => absurd hxx hx⟩))
+      have h2 : Nat.card {y : Y // Q y ∧ y ≠ y₀} = Nat.card {y : Y // Q y} :=
+        Nat.card_congr (Equiv.subtypeEquivRight (fun y => by
+          constructor
+          · rintro ⟨hq, -⟩
+            exact hq
+          · intro hq
+            exact ⟨hq, by rintro rfl; exact hQ hq⟩))
+      have h3 := card_subtype_and_ne_succ P x₀ hP
+      omega
+
+  have card_glue_isolated_neg {X Y : Type u} [Finite X] [Finite Y]
+      (P : X → Prop) (Q : Y → Prop) (x₀ : X) (y₀ : Y)
+      (hP : ¬P x₀) (hQ : ¬Q y₀) :
+      Nat.card {x : X // P x ∧ (x = x₀ → Q y₀)} + Nat.card {y : Y // Q y ∧ y ≠ y₀} =
+        Nat.card {x : X // P x} + Nat.card {y : Y // Q y} := by
+    classical
+    have h1 : Nat.card {x : X // P x ∧ (x = x₀ → Q y₀)} = Nat.card {x : X // P x} :=
+      Nat.card_congr (Equiv.subtypeEquivRight (fun x => by
+        constructor
+        · rintro ⟨hp, -⟩
+          exact hp
+        · intro hp
+          exact ⟨hp, by rintro rfl; exact absurd hp hP⟩))
+    have h2 : Nat.card {y : Y // Q y ∧ y ≠ y₀} = Nat.card {y : Y // Q y} :=
+      Nat.card_congr (Equiv.subtypeEquivRight (fun y => by
+        constructor
+        · rintro ⟨hq, -⟩
+          exact hq
+        · intro hq
+          exact ⟨hq, by rintro rfl; exact hQ hq⟩))
+    omega
+
+  have root_selection {V' E' W' : Type u} (F' : Erdos593.TripleSystem V' E')
+      (J' : _root_.SimpleGraph W') [Finite V'] [Finite E'] [Finite W'] (r : V')
+      (hiso : Nat.card {x : W' // ∀ y, ¬J'.Adj x y} =
+        Nat.card {z : V' ⊕ E' // ∀ w, ¬F'.levi.Adj z w})
+      (hedge : Nat.card J'.edgeSet = Nat.card E') :
+      ∃ a : W', ((∀ y, ¬J'.Adj a y) ↔ (∀ w, ¬F'.levi.Adj (Sum.inl r) w)) := by
+    classical
+    by_cases hr : ∀ w, ¬F'.levi.Adj (Sum.inl r) w
+    · have hne : Nonempty {z : V' ⊕ E' // ∀ w, ¬F'.levi.Adj z w} := ⟨⟨Sum.inl r, hr⟩⟩
+      have hpos : 0 < Nat.card {x : W' // ∀ y, ¬J'.Adj x y} := by
+        rw [hiso]
+        exact Nat.card_pos
+      have : Nonempty {x : W' // ∀ y, ¬J'.Adj x y} := by
+        rw [Nat.card_pos_iff] at hpos
+        exact hpos.1
+      obtain ⟨a, ha⟩ := this
+      exact ⟨a, iff_of_true ha hr⟩
+    · have hex : ∃ w, F'.levi.Adj (Sum.inl r) w := by
+        by_contra hcon
+        exact hr (fun w hw => hcon ⟨w, hw⟩)
+      obtain ⟨w, hw⟩ := hex
+      have hE : Nonempty E' := by
+        rcases w with x | e
+        · exact absurd hw (F'.not_levi_adj_point_point)
+        · exact ⟨e⟩
+      have hpos : 0 < Nat.card J'.edgeSet := by
+        rw [hedge]
+        exact Nat.card_pos
+      have hnee : Nonempty J'.edgeSet := by
+        rw [Nat.card_pos_iff] at hpos
+        exact hpos.1
+      obtain ⟨e, he⟩ := hnee
+      induction e with
+      | _ x y =>
+          refine ⟨x, iff_of_false ?_ ?_⟩
+          · intro hcon
+            exact hcon y he
+          · intro hcon
+            exact hcon w hw
+
+  have key : ∀ {V E : Type u} {F : Erdos593.TripleSystem V E}, F.Constructible →
+      ∃ (W : Type u) (J : _root_.SimpleGraph W), Finite W ∧ J.Colorable 2 ∧
+        Nat.card {x : W // ∀ y, ¬J.Adj x y} =
+          Nat.card {z : V ⊕ E // ∀ w, ¬F.levi.Adj z w} ∧
+        Nat.card J.edgeSet = Nat.card E ∧
+        Nat.card W + Nat.card E = Nat.card V ∧
+        Nat.card J.ConnectedComponent = Nat.card F.levi.ConnectedComponent := by
+    intro V E F hF
+    induction hF with
+    | ofEdgeless V =>
+        classical
+        have hbot : ∀ x y : V, ¬(⊥ : _root_.SimpleGraph V).Adj x y := by simp
+        have hlevi : ∀ z w : V ⊕ EdgelessEdge.{u}, ¬(edgeless V).levi.Adj z w := by
+          rintro (x | e) (y | f) h
+          · exact (edgeless V).not_levi_adj_point_point h
+          · exact Empty.elim f.down
+          · exact Empty.elim e.down
+          · exact Empty.elim e.down
+        have hsum : (V ⊕ EdgelessEdge.{u}) ≃ V := Equiv.sumEmpty V _
+        refine ⟨V, ⊥, inferInstance, ⟨_root_.SimpleGraph.Coloring.mk (fun _ => (0 : Fin 2))
+          (by simp)⟩, ?_, ?_, ?_, ?_⟩
+        · refine Nat.card_congr ?_
+          exact (Equiv.subtypeUnivEquiv (fun x => hbot x)).trans
+            (hsum.symm.trans (Equiv.subtypeUnivEquiv (fun z => hlevi z)).symm)
+        · simp
+        · simp
+        · refine Nat.card_congr ?_
+          refine (Classical.choice (edgeless_component_equiv hbot)).symm.trans ?_
+          exact hsum.symm.trans (Classical.choice (edgeless_component_equiv hlevi))
+    | @ofExpansion V hVfin G hG =>
+        classical
+        letI : Fintype V := hVfin
+        letI : Finite G.edgeSet := Finite.of_injective Subtype.val Subtype.val_injective
+        have hmemadj : ∀ (x : V) (e : G.edgeSet), x ∈ (e : Sym2 V) → ∃ y, G.Adj x y := by
+          rintro x ⟨e, he⟩ hx
+          obtain ⟨y, rfl⟩ := Sym2.mem_iff_exists.mp hx
+          exact ⟨y, he⟩
+        have hisoCore : ∀ x : V,
+            (∀ w, ¬(privateVertexExpansion G).levi.Adj (Sum.inl (Sum.inl x)) w) ↔
+              (∀ y, ¬G.Adj x y) := by
+          intro x
+          constructor
+          · intro h y hy
+            refine h (Sum.inr ⟨s(x, y), hy⟩) ?_
+            rw [levi_adj_point_edge]
+            exact Sym2.mem_mk_left x y
+          · intro h w hw
+            rcases w with p | e
+            · exact (privateVertexExpansion G).not_levi_adj_point_point hw
+            · obtain ⟨y, hy⟩ := hmemadj x e ((levi_adj_point_edge _).mp hw)
+              exact h y hy
+        have hnotisoPriv : ∀ f : G.edgeSet,
+            ¬(∀ w, ¬(privateVertexExpansion G).levi.Adj (Sum.inl (Sum.inr f)) w) := by
+          intro f h
+          exact h (Sum.inr f) ((levi_adj_point_edge _).mpr rfl)
+        have hnotisoEdge : ∀ e : G.edgeSet,
+            ¬(∀ w, ¬(privateVertexExpansion G).levi.Adj (Sum.inr e) w) := by
+          intro e h
+          exact h (Sum.inl (Sum.inr e)) ((levi_adj_edge_point _).mpr rfl)
+        refine ⟨V, G, inferInstance, hG, ?_, rfl, ?_, ?_⟩
+        · refine Nat.card_congr (Equiv.ofBijective
+            (fun x => (⟨Sum.inl (Sum.inl x.1), (hisoCore x.1).mpr x.2⟩ :
+              {z // ∀ w, ¬(privateVertexExpansion G).levi.Adj z w})) ⟨?_, ?_⟩)
+          · rintro ⟨x, hx⟩ ⟨x', hx'⟩ h
+            simpa using h
+          · rintro ⟨z, hz⟩
+            rcases z with (x | f) | e
+            · exact ⟨⟨x, (hisoCore x).mp hz⟩, rfl⟩
+            · exact absurd hz (hnotisoPriv f)
+            · exact absurd hz (hnotisoEdge e)
+        · exact (Nat.card_sum (α := V) (β := G.edgeSet)).symm
+        · exact (privateVertexExpansion_component_card G).symm
+    | @disjointUnion V E W D F G hF hG ihF ihG =>
+        classical
+        obtain ⟨W₀, J₀, hW₀, hcol₀, hiso₀, hedge₀, hvert₀, hcomp₀⟩ := ihF
+        obtain ⟨W₁, J₁, hW₁, hcol₁, hiso₁, hedge₁, hvert₁, hcomp₁⟩ := ihG
+        letI : Finite V := hF.finiteTypes.1
+        letI : Finite E := hF.finiteTypes.2
+        letI : Finite W := hG.finiteTypes.1
+        letI : Finite D := hG.finiteTypes.2
+        letI : Finite W₀ := hW₀
+        letI : Finite W₁ := hW₁
+        -- the shadow side
+        have hSi : Function.Injective (Sum.inl : W₀ → W₀ ⊕ W₁) := Sum.inl_injective
+        have hSj : Function.Injective (Sum.inr : W₁ → W₀ ⊕ W₁) := Sum.inr_injective
+        have hScov : ∀ z : W₀ ⊕ W₁, (∃ x, Sum.inl x = z) ∨ (∃ y, Sum.inr y = z) := by
+          rintro (x | y)
+          · exact Or.inl ⟨x, rfl⟩
+          · exact Or.inr ⟨y, rfl⟩
+        have hSdisj : ∀ (x : W₀) (y : W₁), (Sum.inl x : W₀ ⊕ W₁) ≠ Sum.inr y := by
+          rintro x y ⟨⟩
+        have hSadj : ∀ z z' : W₀ ⊕ W₁, (_root_.SimpleGraph.sum J₀ J₁).Adj z z' ↔
+            ((∃ x x', J₀.Adj x x' ∧ Sum.inl x = z ∧ Sum.inl x' = z') ∨
+             (∃ y y', J₁.Adj y y' ∧ Sum.inr y = z ∧ Sum.inr y' = z')) := by
+          rintro (x | y) (x' | y') <;> simp [_root_.SimpleGraph.sum]
+        -- the Levi side
+        set iL : V ⊕ E → (V ⊕ W) ⊕ (E ⊕ D) :=
+          Sum.elim (fun x => Sum.inl (Sum.inl x)) (fun e => Sum.inr (Sum.inl e)) with hiLdef
+        set jL : W ⊕ D → (V ⊕ W) ⊕ (E ⊕ D) :=
+          Sum.elim (fun y => Sum.inl (Sum.inr y)) (fun d => Sum.inr (Sum.inr d)) with hjLdef
+        have hLred : ∀ (x : V) (e : E) (y : W) (d : D),
+            iL (Sum.inl x) = Sum.inl (Sum.inl x) ∧ iL (Sum.inr e) = Sum.inr (Sum.inl e) ∧
+              jL (Sum.inl y) = Sum.inl (Sum.inr y) ∧ jL (Sum.inr d) = Sum.inr (Sum.inr d) :=
+          fun x e y d => ⟨rfl, rfl, rfl, rfl⟩
+        have hLi : Function.Injective iL := by
+          rintro (x | e) (x' | e') h <;>
+            simp only [hiLdef, Sum.elim_inl, Sum.elim_inr] at h
+          · exact congrArg Sum.inl (by simpa using h)
+          · exact absurd h (by simp)
+          · exact absurd h (by simp)
+          · exact congrArg Sum.inr (by simpa using h)
+        have hLj : Function.Injective jL := by
+          rintro (y | d) (y' | d') h <;>
+            simp only [hjLdef, Sum.elim_inl, Sum.elim_inr] at h
+          · exact congrArg Sum.inl (by simpa using h)
+          · exact absurd h (by simp)
+          · exact absurd h (by simp)
+          · exact congrArg Sum.inr (by simpa using h)
+        have hLcov : ∀ z, (∃ p, iL p = z) ∨ (∃ q, jL q = z) := by
+          rintro ((x | y) | (e | d))
+          · exact Or.inl ⟨Sum.inl x, rfl⟩
+          · exact Or.inr ⟨Sum.inl y, rfl⟩
+          · exact Or.inl ⟨Sum.inr e, rfl⟩
+          · exact Or.inr ⟨Sum.inr d, rfl⟩
+        have hLdisj : ∀ p q, iL p ≠ jL q := by
+          rintro (x | e) (y | d) h <;>
+            simp only [hiLdef, hjLdef, Sum.elim_inl, Sum.elim_inr] at h
+          · exact absurd h (by simp)
+          · exact absurd h (by simp)
+          · exact absurd h (by simp)
+          · exact absurd h (by simp)
+        have hLadj : ∀ z z', (F.disjointUnion G).levi.Adj z z' ↔
+            ((∃ p p', F.levi.Adj p p' ∧ iL p = z ∧ iL p' = z') ∨
+             (∃ q q', G.levi.Adj q q' ∧ jL q = z ∧ jL q' = z')) := by
+          intro z z'
+          constructor
+          · intro h
+            rcases z with (x | y) | (e | d) <;> rcases z' with (x' | y') | (e' | d')
+            · exact absurd h ((F.disjointUnion G).not_levi_adj_point_point)
+            · exact absurd h ((F.disjointUnion G).not_levi_adj_point_point)
+            · exact Or.inl ⟨Sum.inl x, Sum.inr e',
+                (levi_adj_point_edge F).mpr
+                  ((levi_adj_point_edge (F.disjointUnion G)).mp h), rfl, rfl⟩
+            · exact absurd ((levi_adj_point_edge (F.disjointUnion G)).mp h)
+                (disjointUnion_not_inc_inl_inr F G x d')
+            · exact absurd h ((F.disjointUnion G).not_levi_adj_point_point)
+            · exact absurd h ((F.disjointUnion G).not_levi_adj_point_point)
+            · exact absurd ((levi_adj_point_edge (F.disjointUnion G)).mp h)
+                (disjointUnion_not_inc_inr_inl F G y e')
+            · exact Or.inr ⟨Sum.inl y, Sum.inr d',
+                (levi_adj_point_edge G).mpr
+                  ((levi_adj_point_edge (F.disjointUnion G)).mp h), rfl, rfl⟩
+            · exact Or.inl ⟨Sum.inr e, Sum.inl x',
+                (levi_adj_edge_point F).mpr
+                  ((levi_adj_edge_point (F.disjointUnion G)).mp h), rfl, rfl⟩
+            · exact absurd ((levi_adj_edge_point (F.disjointUnion G)).mp h)
+                (disjointUnion_not_inc_inr_inl F G y' e)
+            · exact absurd h ((F.disjointUnion G).not_levi_adj_edge_edge)
+            · exact absurd h ((F.disjointUnion G).not_levi_adj_edge_edge)
+            · exact absurd ((levi_adj_edge_point (F.disjointUnion G)).mp h)
+                (disjointUnion_not_inc_inl_inr F G x' d)
+            · exact Or.inr ⟨Sum.inr d, Sum.inl y',
+                (levi_adj_edge_point G).mpr
+                  ((levi_adj_edge_point (F.disjointUnion G)).mp h), rfl, rfl⟩
+            · exact absurd h ((F.disjointUnion G).not_levi_adj_edge_edge)
+            · exact absurd h ((F.disjointUnion G).not_levi_adj_edge_edge)
+          · rintro (⟨p, p', hpp', rfl, rfl⟩ | ⟨q, q', hqq', rfl, rfl⟩)
+            · rcases p with x | e <;> rcases p' with x' | e'
+              · exact absurd hpp' F.not_levi_adj_point_point
+              · exact (levi_adj_point_edge (F.disjointUnion G)).mpr
+                  ((levi_adj_point_edge F).mp hpp')
+              · exact (levi_adj_edge_point (F.disjointUnion G)).mpr
+                  ((levi_adj_edge_point F).mp hpp')
+              · exact absurd hpp' F.not_levi_adj_edge_edge
+            · rcases q with y | d <;> rcases q' with y' | d'
+              · exact absurd hqq' G.not_levi_adj_point_point
+              · exact (levi_adj_point_edge (F.disjointUnion G)).mpr
+                  ((levi_adj_point_edge G).mp hqq')
+              · exact (levi_adj_edge_point (F.disjointUnion G)).mpr
+                  ((levi_adj_edge_point G).mp hqq')
+              · exact absurd hqq' G.not_levi_adj_edge_edge
+        refine ⟨W₀ ⊕ W₁, _root_.SimpleGraph.sum J₀ J₁, inferInstance, ?_, ?_, ?_, ?_, ?_⟩
+        · obtain ⟨c₀⟩ := hcol₀
+          obtain ⟨c₁⟩ := hcol₁
+          exact ⟨c₀.sum c₁⟩
+        · rw [← Nat.card_congr (Classical.choice (sum_isolated_equiv hSi hSj hScov hSadj hSdisj)),
+            ← Nat.card_congr (Classical.choice (sum_isolated_equiv hLi hLj hLcov hLadj hLdisj)),
+            Nat.card_sum, Nat.card_sum, hiso₀, hiso₁]
+        · rw [← Nat.card_congr (Classical.choice (edge_equiv hSi hSj hSadj
+            (fun x _ y _ h _ => absurd h (hSdisj x y)))),
+            Nat.card_sum, hedge₀, hedge₁, Nat.card_sum]
+        · rw [Nat.card_sum, Nat.card_sum, Nat.card_sum]
+          omega
+        · rw [← Nat.card_congr (Classical.choice (sum_component_equiv hSi hSj hScov hSadj hSdisj)),
+            ← Nat.card_congr (Classical.choice (sum_component_equiv hLi hLj hLcov hLadj hLdisj)),
+            Nat.card_sum, Nat.card_sum, hcomp₀, hcomp₁]
+    | @amalgam V₀ E₀ V₁ E₁ F₀ F₁ h₀ h₁ r₀ r₁ ih₀ ih₁ =>
+        classical
+        obtain ⟨W₀, J₀, hW₀, hcol₀, hiso₀, hedge₀, hvert₀, hcomp₀⟩ := ih₀
+        obtain ⟨W₁, J₁, hW₁, hcol₁, hiso₁, hedge₁, hvert₁, hcomp₁⟩ := ih₁
+        letI : Finite V₀ := h₀.finiteTypes.1
+        letI : Finite E₀ := h₀.finiteTypes.2
+        letI : Finite V₁ := h₁.finiteTypes.1
+        letI : Finite E₁ := h₁.finiteTypes.2
+        letI : Finite W₀ := hW₀
+        letI : Finite W₁ := hW₁
+        obtain ⟨a₀, ha₀⟩ := root_selection F₀ J₀ r₀ hiso₀ hedge₀
+        obtain ⟨a₁, ha₁⟩ := root_selection F₁ J₁ r₁ hiso₁ hedge₁
+        -- the glued shadow graph
+        set iS : W₀ → OnePointAmalgamation.Vertex a₀ a₁ :=
+          OnePointAmalgamation.left a₀ a₁ with hiSdef
+        set jS : W₁ → OnePointAmalgamation.Vertex a₀ a₁ :=
+          OnePointAmalgamation.right a₀ a₁ with hjSdef
+        have hSi : Function.Injective iS := OnePointAmalgamation.left_injective a₀ a₁
+        have hSj : Function.Injective jS := OnePointAmalgamation.right_injective a₀ a₁
+        set JG : _root_.SimpleGraph (OnePointAmalgamation.Vertex a₀ a₁) :=
+          _root_.SimpleGraph.map iS J₀ ⊔ _root_.SimpleGraph.map jS J₁ with hJGdef
+        have hScov : ∀ z, (∃ x, iS x = z) ∨ (∃ y, jS y = z) :=
+          OnePointAmalgamation.exists_left_or_right a₀ a₁
+        have hSmeet : ∀ x y, iS x = jS y ↔ (x = a₀ ∧ y = a₁) :=
+          OnePointAmalgamation.left_eq_right_iff a₀ a₁
+        have hSadj : ∀ z z', JG.Adj z z' ↔
+            ((∃ x x', J₀.Adj x x' ∧ iS x = z ∧ iS x' = z') ∨
+             (∃ y y', J₁.Adj y y' ∧ jS y = z ∧ jS y' = z')) := by
+          intro z z'
+          rw [hJGdef]
+          simp only [_root_.SimpleGraph.sup_adj, _root_.SimpleGraph.map_adj']
+          constructor
+          · rintro (⟨-, x, x', hxx', hx, hx'⟩ | ⟨-, y, y', hyy', hy, hy'⟩)
+            · exact Or.inl ⟨x, x', hxx', hx, hx'⟩
+            · exact Or.inr ⟨y, y', hyy', hy, hy'⟩
+          · rintro (⟨x, x', hxx', rfl, rfl⟩ | ⟨y, y', hyy', rfl, rfl⟩)
+            · exact Or.inl ⟨fun hcon => hxx'.ne (hSi hcon), x, x', hxx', rfl, rfl⟩
+            · exact Or.inr ⟨fun hcon => hyy'.ne (hSj hcon), y, y', hyy', rfl, rfl⟩
+        have hScross : ∀ x x' y y', iS x = jS y → iS x' = jS y' → x = x' ∧ y = y' := by
+          intro x x' y y' h h'
+          obtain ⟨hx, hy⟩ := (hSmeet x y).mp h
+          obtain ⟨hx', hy'⟩ := (hSmeet x' y').mp h'
+          exact ⟨hx.trans hx'.symm, hy.trans hy'.symm⟩
+        -- the Levi side
+        set iL : V₀ ⊕ E₀ → OnePointAmalgamation.Vertex r₀ r₁ ⊕ (E₀ ⊕ E₁) :=
+          Sum.elim (fun x => Sum.inl (OnePointAmalgamation.left r₀ r₁ x))
+            (fun e => Sum.inr (Sum.inl e)) with hiLdef
+        set jL : V₁ ⊕ E₁ → OnePointAmalgamation.Vertex r₀ r₁ ⊕ (E₀ ⊕ E₁) :=
+          Sum.elim (fun y => Sum.inl (OnePointAmalgamation.right r₀ r₁ y))
+            (fun d => Sum.inr (Sum.inr d)) with hjLdef
+        have hLi : Function.Injective iL := by
+          rintro (x | e) (x' | e') h <;>
+            simp only [hiLdef, Sum.elim_inl, Sum.elim_inr] at h
+          · exact congrArg Sum.inl
+              (OnePointAmalgamation.left_injective r₀ r₁ (by simpa using h))
+          · exact absurd h (by simp)
+          · exact absurd h (by simp)
+          · exact congrArg Sum.inr (by simpa using h)
+        have hLj : Function.Injective jL := by
+          rintro (y | d) (y' | d') h <;>
+            simp only [hjLdef, Sum.elim_inl, Sum.elim_inr] at h
+          · exact congrArg Sum.inl
+              (OnePointAmalgamation.right_injective r₀ r₁ (by simpa using h))
+          · exact absurd h (by simp)
+          · exact absurd h (by simp)
+          · exact congrArg Sum.inr (by simpa using h)
+        have hLcov : ∀ z, (∃ p, iL p = z) ∨ (∃ q, jL q = z) := by
+          rintro (q | (e | d))
+          · rcases OnePointAmalgamation.exists_left_or_right r₀ r₁ q with ⟨x, rfl⟩ | ⟨y, rfl⟩
+            · exact Or.inl ⟨Sum.inl x, rfl⟩
+            · exact Or.inr ⟨Sum.inl y, rfl⟩
+          · exact Or.inl ⟨Sum.inr e, rfl⟩
+          · exact Or.inr ⟨Sum.inr d, rfl⟩
+        have hLmeet : ∀ p q, iL p = jL q ↔ (p = Sum.inl r₀ ∧ q = Sum.inl r₁) := by
+          rintro (x | e) (y | d)
+          · constructor
+            · intro h
+              have h2 : OnePointAmalgamation.left r₀ r₁ x =
+                  OnePointAmalgamation.right r₀ r₁ y := by
+                simpa [hiLdef, hjLdef] using h
+              obtain ⟨hx, hy⟩ := (OnePointAmalgamation.left_eq_right_iff r₀ r₁ x y).mp h2
+              exact ⟨congrArg Sum.inl hx, congrArg Sum.inl hy⟩
+            · rintro ⟨hx, hy⟩
+              have hx' : x = r₀ := by simpa using hx
+              have hy' : y = r₁ := by simpa using hy
+              simp only [hiLdef, hjLdef, Sum.elim_inl, hx', hy']
+              exact congrArg Sum.inl (OnePointAmalgamation.root_eq r₀ r₁)
+          · constructor
+            · intro h
+              exact absurd h (by simp [hiLdef, hjLdef])
+            · rintro ⟨-, hy⟩
+              exact absurd hy (by simp)
+          · constructor
+            · intro h
+              exact absurd h (by simp [hiLdef, hjLdef])
+            · rintro ⟨hx, -⟩
+              exact absurd hx (by simp)
+          · constructor
+            · intro h
+              exact absurd h (by simp [hiLdef, hjLdef])
+            · rintro ⟨hx, -⟩
+              exact absurd hx (by simp)
+        have hLadj : ∀ z z',
+            (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).levi.Adj z z' ↔
+            ((∃ p p', F₀.levi.Adj p p' ∧ iL p = z ∧ iL p' = z') ∨
+             (∃ q q', F₁.levi.Adj q q' ∧ jL q = z ∧ jL q' = z')) := by
+          intro z z'
+          constructor
+          · intro h
+            rcases z with q | (e | d)
+            · rcases OnePointAmalgamation.exists_left_or_right r₀ r₁ q with ⟨x, rfl⟩ | ⟨y, rfl⟩ <;>
+                rcases z' with q' | (e' | d')
+              · exact absurd h
+                  ((OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).not_levi_adj_point_point)
+              · exact Or.inl ⟨Sum.inl x, Sum.inr e',
+                  (levi_adj_point_edge F₀).mpr
+                    ((OnePointAmalgamation.inc_left_left_iff F₀ F₁ r₀ r₁ x e').mp
+                      ((levi_adj_point_edge (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mp h)),
+                  rfl, rfl⟩
+              · have hpair := (OnePointAmalgamation.inc_left_right_iff F₀ F₁ r₀ r₁ x d').mp
+                  ((levi_adj_point_edge (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mp h)
+                refine Or.inr ⟨Sum.inl r₁, Sum.inr d',
+                  (levi_adj_point_edge F₁).mpr hpair.2, ?_, rfl⟩
+                rw [hpair.1]
+                exact congrArg Sum.inl (OnePointAmalgamation.root_eq r₀ r₁).symm
+              · exact absurd h
+                  ((OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).not_levi_adj_point_point)
+              · have hpair := (OnePointAmalgamation.inc_right_left_iff F₀ F₁ r₀ r₁ y e').mp
+                  ((levi_adj_point_edge (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mp h)
+                refine Or.inl ⟨Sum.inl r₀, Sum.inr e',
+                  (levi_adj_point_edge F₀).mpr hpair.2, ?_, rfl⟩
+                rw [hpair.1]
+                exact congrArg Sum.inl (OnePointAmalgamation.root_eq r₀ r₁)
+              · exact Or.inr ⟨Sum.inl y, Sum.inr d',
+                  (levi_adj_point_edge F₁).mpr
+                    ((OnePointAmalgamation.inc_right_right_iff F₀ F₁ r₀ r₁ y d').mp
+                      ((levi_adj_point_edge (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mp h)),
+                  rfl, rfl⟩
+            · rcases z' with q' | (e' | d')
+              · rcases OnePointAmalgamation.exists_left_or_right r₀ r₁ q' with ⟨x', rfl⟩ | ⟨y', rfl⟩
+                · exact Or.inl ⟨Sum.inr e, Sum.inl x',
+                    (levi_adj_edge_point F₀).mpr
+                      ((OnePointAmalgamation.inc_left_left_iff F₀ F₁ r₀ r₁ x' e).mp
+                        ((levi_adj_edge_point (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mp h)),
+                    rfl, rfl⟩
+                · have hpair := (OnePointAmalgamation.inc_right_left_iff F₀ F₁ r₀ r₁ y' e).mp
+                    ((levi_adj_edge_point (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mp h)
+                  refine Or.inl ⟨Sum.inr e, Sum.inl r₀,
+                    (levi_adj_edge_point F₀).mpr hpair.2, rfl, ?_⟩
+                  rw [hpair.1]
+                  exact congrArg Sum.inl (OnePointAmalgamation.root_eq r₀ r₁)
+              · exact absurd h
+                  ((OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).not_levi_adj_edge_edge)
+              · exact absurd h
+                  ((OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).not_levi_adj_edge_edge)
+            · rcases z' with q' | (e' | d')
+              · rcases OnePointAmalgamation.exists_left_or_right r₀ r₁ q' with ⟨x', rfl⟩ | ⟨y', rfl⟩
+                · have hpair := (OnePointAmalgamation.inc_left_right_iff F₀ F₁ r₀ r₁ x' d).mp
+                    ((levi_adj_edge_point (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mp h)
+                  refine Or.inr ⟨Sum.inr d, Sum.inl r₁,
+                    (levi_adj_edge_point F₁).mpr hpair.2, rfl, ?_⟩
+                  rw [hpair.1]
+                  exact congrArg Sum.inl (OnePointAmalgamation.root_eq r₀ r₁).symm
+                · exact Or.inr ⟨Sum.inr d, Sum.inl y',
+                    (levi_adj_edge_point F₁).mpr
+                      ((OnePointAmalgamation.inc_right_right_iff F₀ F₁ r₀ r₁ y' d).mp
+                        ((levi_adj_edge_point (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mp h)),
+                    rfl, rfl⟩
+              · exact absurd h
+                  ((OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).not_levi_adj_edge_edge)
+              · exact absurd h
+                  ((OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).not_levi_adj_edge_edge)
+          · rintro (⟨p, p', hpp', rfl, rfl⟩ | ⟨q, q', hqq', rfl, rfl⟩)
+            · rcases p with x | e <;> rcases p' with x' | e'
+              · exact absurd hpp' F₀.not_levi_adj_point_point
+              · exact (levi_adj_point_edge (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mpr
+                  ((OnePointAmalgamation.inc_left_left_iff F₀ F₁ r₀ r₁ x e').mpr
+                    ((levi_adj_point_edge F₀).mp hpp'))
+              · exact (levi_adj_edge_point (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mpr
+                  ((OnePointAmalgamation.inc_left_left_iff F₀ F₁ r₀ r₁ x' e).mpr
+                    ((levi_adj_edge_point F₀).mp hpp'))
+              · exact absurd hpp' F₀.not_levi_adj_edge_edge
+            · rcases q with y | d <;> rcases q' with y' | d'
+              · exact absurd hqq' F₁.not_levi_adj_point_point
+              · exact (levi_adj_point_edge (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mpr
+                  ((OnePointAmalgamation.inc_right_right_iff F₀ F₁ r₀ r₁ y d').mpr
+                    ((levi_adj_point_edge F₁).mp hqq'))
+              · exact (levi_adj_edge_point (OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁)).mpr
+                  ((OnePointAmalgamation.inc_right_right_iff F₀ F₁ r₀ r₁ y' d).mpr
+                    ((levi_adj_edge_point F₁).mp hqq'))
+              · exact absurd hqq' F₁.not_levi_adj_edge_edge
+        have hLcross : ∀ p p' q q', iL p = jL q → iL p' = jL q' → p = p' ∧ q = q' := by
+          intro p p' q q' h h'
+          obtain ⟨hp, hq⟩ := (hLmeet p q).mp h
+          obtain ⟨hp', hq'⟩ := (hLmeet p' q').mp h'
+          exact ⟨hp.trans hp'.symm, hq.trans hq'.symm⟩
+        refine ⟨OnePointAmalgamation.Vertex a₀ a₁, JG, inferInstance, ?_, ?_, ?_, ?_, ?_⟩
+        · obtain ⟨c₀⟩ := hcol₀
+          obtain ⟨c₁⟩ := hcol₁
+          set c₁' : W₁ → Fin 2 :=
+            fun y => if c₀ a₀ = c₁ a₁ then c₁ y else Equiv.swap 0 1 (c₁ y) with hc₁'def
+          have hc₁'ne : ∀ y y', J₁.Adj y y' → c₁' y ≠ c₁' y' := by
+            intro y y' hyy'
+            have hne := c₁.valid hyy'
+            by_cases hcase : c₀ a₀ = c₁ a₁
+            · simpa [hc₁'def, hcase] using hne
+            · simp only [hc₁'def, if_neg hcase]
+              exact fun hh => hne ((Equiv.swap (0 : Fin 2) 1).injective hh)
+          have hrooteq : c₀ a₀ = c₁' a₁ := by
+            by_cases hcase : c₀ a₀ = c₁ a₁
+            · simp [hc₁'def, hcase]
+            · simp only [hc₁'def, if_neg hcase]
+              revert hcase
+              generalize c₀ a₀ = pp
+              generalize c₁ a₁ = qq
+              revert pp qq
+              decide
+          refine ⟨_root_.SimpleGraph.Coloring.mk
+            (OnePointAmalgamation.lift a₀ a₁ c₀ c₁' hrooteq) ?_⟩
+          intro z z' hzz'
+          rcases (hSadj z z').mp hzz' with ⟨x, x', hxx', rfl, rfl⟩ | ⟨y, y', hyy', rfl, rfl⟩
+          · simpa [hiSdef] using c₀.valid hxx'
+          · simpa [hjSdef] using hc₁'ne y y' hyy'
+        · have hSiso := Classical.choice (glue_isolated_equiv hSi hSj hScov hSadj hSmeet)
+          have hLiso := Classical.choice (glue_isolated_equiv hLi hLj hLcov hLadj hLmeet)
+          by_cases hcond : (∀ w, ¬J₀.Adj a₀ w) ∨ (∀ w, ¬J₁.Adj a₁ w)
+          · have hcondL : (∀ w, ¬F₀.levi.Adj (Sum.inl r₀) w) ∨
+                (∀ w, ¬F₁.levi.Adj (Sum.inl r₁) w) := by
+              rcases hcond with h | h
+              · exact Or.inl (ha₀.mp h)
+              · exact Or.inr (ha₁.mp h)
+            have hS : Nat.card {z // ∀ w, ¬JG.Adj z w} + 1 =
+                Nat.card {x : W₀ // ∀ w, ¬J₀.Adj x w} +
+                  Nat.card {y : W₁ // ∀ w, ¬J₁.Adj y w} := by
+              rw [← Nat.card_congr hSiso, Nat.card_sum]
+              exact card_glue_isolated_pos (fun x : W₀ => ∀ w, ¬J₀.Adj x w)
+                (fun y : W₁ => ∀ w, ¬J₁.Adj y w) a₀ a₁ hcond
+            have hL : Nat.card {z // ∀ w,
+                  ¬(OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).levi.Adj z w} + 1 =
+                Nat.card {p : V₀ ⊕ E₀ // ∀ w, ¬F₀.levi.Adj p w} +
+                  Nat.card {q : V₁ ⊕ E₁ // ∀ w, ¬F₁.levi.Adj q w} := by
+              rw [← Nat.card_congr hLiso, Nat.card_sum]
+              exact card_glue_isolated_pos (fun p : V₀ ⊕ E₀ => ∀ w, ¬F₀.levi.Adj p w)
+                (fun q : V₁ ⊕ E₁ => ∀ w, ¬F₁.levi.Adj q w) (Sum.inl r₀) (Sum.inl r₁) hcondL
+            omega
+          · have hcond0 : ¬(∀ w, ¬J₀.Adj a₀ w) := fun h => hcond (Or.inl h)
+            have hcond1 : ¬(∀ w, ¬J₁.Adj a₁ w) := fun h => hcond (Or.inr h)
+            have hcondL0 : ¬(∀ w, ¬F₀.levi.Adj (Sum.inl r₀) w) := fun h => hcond0 (ha₀.mpr h)
+            have hcondL1 : ¬(∀ w, ¬F₁.levi.Adj (Sum.inl r₁) w) := fun h => hcond1 (ha₁.mpr h)
+            have hS : Nat.card {z // ∀ w, ¬JG.Adj z w} =
+                Nat.card {x : W₀ // ∀ w, ¬J₀.Adj x w} +
+                  Nat.card {y : W₁ // ∀ w, ¬J₁.Adj y w} := by
+              rw [← Nat.card_congr hSiso, Nat.card_sum]
+              exact card_glue_isolated_neg (fun x : W₀ => ∀ w, ¬J₀.Adj x w)
+                (fun y : W₁ => ∀ w, ¬J₁.Adj y w) a₀ a₁ hcond0 hcond1
+            have hL : Nat.card {z // ∀ w,
+                  ¬(OnePointAmalgamation.amalgam F₀ F₁ r₀ r₁).levi.Adj z w} =
+                Nat.card {p : V₀ ⊕ E₀ // ∀ w, ¬F₀.levi.Adj p w} +
+                  Nat.card {q : V₁ ⊕ E₁ // ∀ w, ¬F₁.levi.Adj q w} := by
+              rw [← Nat.card_congr hLiso, Nat.card_sum]
+              exact card_glue_isolated_neg (fun p : V₀ ⊕ E₀ => ∀ w, ¬F₀.levi.Adj p w)
+                (fun q : V₁ ⊕ E₁ => ∀ w, ¬F₁.levi.Adj q w) (Sum.inl r₀) (Sum.inl r₁)
+                hcondL0 hcondL1
+            omega
+        · rw [← Nat.card_congr (Classical.choice (edge_equiv hSi hSj hSadj hScross)),
+            Nat.card_sum, hedge₀, hedge₁, Nat.card_sum]
+        · have hSv := Nat.card_congr (Classical.choice (glue_vertex_equiv hSi hSj hScov hSmeet))
+          have hLv := Nat.card_congr (Classical.choice (glue_vertex_equiv hLi hLj hLcov hLmeet))
+          have h3 := card_subtype_ne_succ (X := W₁) a₁
+          have h4 := card_subtype_ne_succ (X := V₁ ⊕ E₁) (Sum.inl r₁)
+          simp only [Nat.card_sum] at hSv hLv h4 ⊢
+          omega
+        · have hSc := Nat.card_congr (Classical.choice
+            (glue_component_equiv hSi hSj hScov hSadj hSmeet))
+          have hLc := Nat.card_congr (Classical.choice
+            (glue_component_equiv hLi hLj hLcov hLadj hLmeet))
+          have h3 := card_subtype_ne_succ (X := J₁.ConnectedComponent)
+            (J₁.connectedComponentMk a₁)
+          have h4 := card_subtype_ne_succ (X := F₁.levi.ConnectedComponent)
+            (F₁.levi.connectedComponentMk (Sum.inl r₁))
+          simp only [Nat.card_sum] at hSc hLc
+          omega
+    | @ofIso V E V' E' F F' hF f ihF =>
+        classical
+        obtain ⟨W, J, hWfin, hcol, hiso, hedge, hvert, hcomp⟩ := ihF
+        have he : ∀ z z' : V ⊕ E,
+            F'.levi.Adj (Equiv.sumCongr f.vertexEquiv f.edgeEquiv z)
+              (Equiv.sumCongr f.vertexEquiv f.edgeEquiv z') ↔ F.levi.Adj z z' := by
+          rintro (x | e) (y | d) <;>
+            simp [Equiv.sumCongr, ← f.map_inc_iff]
+        obtain ⟨⟨ecomp⟩, -, ⟨eiso⟩, -⟩ :=
+          iso_transfer F.levi F'.levi (Equiv.sumCongr f.vertexEquiv f.edgeEquiv) he
+        refine ⟨W, J, hWfin, hcol, ?_, ?_, ?_, ?_⟩
+        · rw [hiso]; exact Nat.card_congr eiso
+        · rw [hedge]; exact Nat.card_congr f.edgeEquiv
+        · rw [← Nat.card_congr f.edgeEquiv, ← Nat.card_congr f.vertexEquiv]; exact hvert
+        · rw [hcomp]; exact Nat.card_congr ecomp
+
+  have hconstr : F.Constructible :=
+    (CanonicalAtom.atomGenerated_iff_constructible F).mp
+      ((CanonicalAtom.isObligatory_iff_atomGenerated F).mp hobligatory)
+  obtain ⟨W, J, hWfin, hcol, hiso, hedge, hvert, hcomp⟩ := key hconstr
+  letI : Finite W := hWfin
+  have hlevi_empty : IsEmpty {z : V ⊕ E // ∀ w, ¬F.levi.Adj z w} := by
+    constructor
+    rintro ⟨z, hz⟩
+    rcases z with x | e
+    · obtain ⟨e, he⟩ := (F.not_isolated_iff_exists_inc).mp (hreduced x)
+      exact hz (Sum.inr e) ((levi_adj_point_edge F).mpr he)
+    · have hne : Set.ncard {x : V | F.Inc x e} ≠ 0 := by
+        rw [F.edge_ncard e]
+        decide
+      obtain ⟨x, hx⟩ := Set.nonempty_of_ncard_ne_zero hne
+      exact hz (Sum.inl x) ((levi_adj_edge_point F).mpr hx)
+  have hzero : Nat.card {z : V ⊕ E // ∀ w, ¬F.levi.Adj z w} = 0 := by
+    haveI := hlevi_empty
+    exact Nat.card_of_isEmpty
+  have hnoiso : ∀ x : W, ∃ y, J.Adj x y := by
+    intro x
+    by_contra hcon
+    have hne : Nonempty {v : W // ∀ y, ¬J.Adj v y} := ⟨⟨x, fun y hy => hcon ⟨y, hy⟩⟩⟩
+    have hpos : 0 < Nat.card {v : W // ∀ y, ¬J.Adj v y} := Nat.card_pos
+    omega
+  refine ⟨Nat.card W, _root_.SimpleGraph.map (Finite.equivFin W) J, ?_, ?_, ?_, ?_, ?_⟩
+  · obtain ⟨c⟩ := hcol
+    exact ⟨c.comp (_root_.SimpleGraph.Iso.map (Finite.equivFin W) J).symm.toHom⟩
+  · intro x
+    obtain ⟨y, hy⟩ := hnoiso ((Finite.equivFin W).symm x)
+    refine ⟨Finite.equivFin W y, ?_⟩
+    have := (_root_.SimpleGraph.Iso.map (Finite.equivFin W) J).map_adj_iff.mpr hy
+    simpa using this
+  · rw [← Nat.card_congr (_root_.SimpleGraph.Iso.map (Finite.equivFin W) J).mapEdgeSet, hedge,
+      Nat.card_eq_fintype_card]
+  · rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
+    exact hvert
+  · rw [← Nat.card_congr
+      (_root_.SimpleGraph.Iso.map (Finite.equivFin W) J).connectedComponentEquiv, hcomp]
+
+theorem privateVertexExpansion_shadow_parameters
+    {W : Type u} [Fintype W] (J : _root_.SimpleGraph W)
+    (hbipartite : J.Colorable 2)
+    (hnoisolated : ∀ x, ∃ y, J.Adj x y) :
+    (privateVertexExpansion J).IsObligatory ∧
+    (privateVertexExpansion J).HasNoIsolatedPoints ∧
+    Nat.card (PrivateVertexExpansion.Edge J) = Nat.card J.edgeSet ∧
+    Nat.card (PrivateVertexExpansion.Point J) =
+      Fintype.card W + Nat.card J.edgeSet ∧
+    Nat.card (privateVertexExpansion J).levi.ConnectedComponent =
+      Nat.card J.ConnectedComponent := by
+  classical
+  refine ⟨(Constructible.ofExpansion J hbipartite).isObligatory, ?_, rfl, ?_,
+    privateVertexExpansion_component_card J⟩
+  · intro p
+    rw [not_isolated_iff_exists_inc]
+    rcases p with x | e
+    · obtain ⟨y, hxy⟩ := hnoisolated x
+      exact ⟨⟨s(x, y), hxy⟩, by simp [privateVertexExpansion, PrivateVertexExpansion.Inc]⟩
+    · exact ⟨e, rfl⟩
+  · simpa only [PrivateVertexExpansion.Point, PrivateVertexExpansion.CoreVertex,
+      PrivateVertexExpansion.PrivateVertex, Nat.card_eq_fintype_card] using
+      (Nat.card_sum (α := W) (β := J.edgeSet))
+
+/-- The manuscript's subtraction form of the bipartite-shadow parameters. -/
+theorem exists_bipartite_shadow_subtraction
+    {V E : Type u} (F : TripleSystem V E)
+    [Fintype V] [Fintype E]
+    (hobligatory : F.IsObligatory)
+    (hreduced : F.HasNoIsolatedPoints)
+    (hnonempty : Nonempty E) :
+    ∃ (J : _root_.SimpleGraph (Fin (Fintype.card V - Fintype.card E))),
+      J.Colorable 2 ∧
+      (∀ x, ∃ y, J.Adj x y) ∧
+      Nat.card J.edgeSet = Fintype.card E ∧
+      Nat.card J.ConnectedComponent = Nat.card F.levi.ConnectedComponent := by
+  obtain ⟨s, J, hbipartite, hnoisolated, hedges, hvertices, hcomponents⟩ :=
+    exists_bipartite_shadow F hobligatory hreduced hnonempty
+  have hs : s = Fintype.card V - Fintype.card E := by omega
+  subst s
+  exact ⟨J, hbipartite, hnoisolated, hedges, hcomponents⟩
+
+end Erdos593.TripleSystem
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_BipartiteShadow
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.BipartiteShadow
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.FiniteForestCounting
+Source: Erdos593/Graph/FiniteForestCounting.lean
+Normalized SHA-256: 093a494a646fab2a4f579391d398a800c52978d2645b1d91df4ad3a382f9d918
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_FiniteForestCounting
+
+/-!
+# Finite forest and incidence accounting
+
+Edges are unordered graph edges. Component equivalences below are obtained
+from explicit vertex maps and paths, not from a cardinality hypothesis.
+-/
+
+namespace SimpleGraph.FiniteForestCounting
+
+universe u v
+
+open scoped Sym2
+
+theorem map_reachable {V : Type u} {W : Type v}
+    {G : SimpleGraph V} {H : SimpleGraph W} (f : V → W)
+    (hf : ∀ ⦃x y⦄, G.Adj x y → H.Reachable (f x) (f y))
+    {x y : V} (h : G.Reachable x y) : H.Reachable (f x) (f y) := by
+  obtain ⟨p⟩ := h
+  induction p with
+  | nil => exact .rfl
+  | cons h _ ih => exact (hf h).trans ih
+
+/-- Maps inverse up to paths induce inverse maps on actual component types. -/
+noncomputable def componentEquivOfReachable {V : Type u} {W : Type v}
+    (G : SimpleGraph V) (H : SimpleGraph W) (f : V → W) (g : W → V)
+    (hf : ∀ ⦃x y⦄, G.Adj x y → H.Reachable (f x) (f y))
+    (hg : ∀ ⦃x y⦄, H.Adj x y → G.Reachable (g x) (g y))
+    (hgf : ∀ x, G.Reachable (g (f x)) x)
+    (hfg : ∀ y, H.Reachable (f (g y)) y) :
+    G.ConnectedComponent ≃ H.ConnectedComponent where
+  toFun := Quot.lift (fun x => H.connectedComponentMk (f x))
+    (fun _ _ h => ConnectedComponent.sound (map_reachable f hf h))
+  invFun := Quot.lift (fun y => G.connectedComponentMk (g y))
+    (fun _ _ h => ConnectedComponent.sound (map_reachable g hg h))
+  left_inv C := C.ind (fun x => ConnectedComponent.sound (hgf x))
+  right_inv C := C.ind (fun y => ConnectedComponent.sound (hfg y))
+
+private def componentEdgeMap {V : Type u} (G : SimpleGraph V) :
+    (Σ C : G.ConnectedComponent, C.toSimpleGraph.edgeSet) → G.edgeSet :=
+  fun e => e.1.toSimpleGraph_hom.mapEdgeSet e.2
+
+private theorem componentEdgeMap_bijective {V : Type u} (G : SimpleGraph V) :
+    Function.Bijective (componentEdgeMap G) := by
+  constructor
+  · rintro ⟨C, e⟩ ⟨D, f⟩ h
+    have hCD : C = D := by
+      rcases e with ⟨e, he⟩
+      rcases f with ⟨f, hf⟩
+      induction e using Sym2.inductionOn with
+      | _ a b =>
+        induction f using Sym2.inductionOn with
+        | _ x y =>
+          have hh := congrArg Subtype.val h
+          change s((a : V), (b : V)) = s((x : V), (y : V)) at hh
+          rcases Sym2.eq_iff.mp hh with hh | hh
+          · exact a.property.symm.trans
+              ((congrArg G.connectedComponentMk hh.1).trans x.property)
+          · exact a.property.symm.trans
+              ((congrArg G.connectedComponentMk hh.1).trans y.property)
+    subst D
+    have hef : e = f :=
+      Hom.mapEdgeSet.injective C.toSimpleGraph_hom Subtype.val_injective h
+    exact congrArg (Sigma.mk C) hef
+  · rintro ⟨e, he⟩
+    induction e using Sym2.inductionOn with
+    | _ x y =>
+      let C := G.connectedComponentMk x
+      have hx : x ∈ C.supp := rfl
+      have hy : y ∈ C.supp := C.mem_supp_of_adj_mem_supp hx he
+      exact ⟨⟨C, ⟨s((⟨x, hx⟩ : C), ⟨y, hy⟩), he⟩⟩, rfl⟩
+
+/-- Finite forest Euler identity, including empty graphs and isolated vertices. -/
+theorem card_edges_add_components {V : Type u} [Finite V]
+    (G : SimpleGraph V) (hG : G.IsAcyclic) :
+    Nat.card G.edgeSet + Nat.card G.ConnectedComponent = Nat.card V := by
+  classical
+  letI := Fintype.ofFinite V
+  letI := Fintype.ofFinite G.ConnectedComponent
+  have he : Nat.card G.edgeSet =
+      ∑ C : G.ConnectedComponent, Nat.card C.toSimpleGraph.edgeSet := by
+    rw [← Nat.card_sigma]
+    exact (Nat.card_congr
+      (Equiv.ofBijective (componentEdgeMap G) (componentEdgeMap_bijective G))).symm
+  have hv : Nat.card V = ∑ C : G.ConnectedComponent, Nat.card C := by
+    rw [← Nat.card_sigma]
+    exact (Nat.card_congr (Equiv.sigmaFiberEquiv G.connectedComponentMk)).symm
+  have hc : ∀ C : G.ConnectedComponent,
+      Nat.card C.toSimpleGraph.edgeSet + 1 = Nat.card C :=
+    fun C => (isTree_iff_connected_and_card.mp (hG.isTree_connectedComponent C)).2
+  rw [he, hv, Nat.card_eq_fintype_card]
+  simpa only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ,
+    smul_eq_mul, mul_one] using
+    (Finset.sum_congr rfl (fun C (_ : C ∈ Finset.univ) => hc C))
+
+private def incidenceEdgeMap {A : Type u} {P : Type v} (r : A → P → Prop) :
+    (Σ a : A, {p : P // r a p}) → (bipartiteIncidenceGraph r).edgeSet :=
+  fun z => ⟨s(Sum.inl z.1, Sum.inr z.2.val),
+    (bipartiteIncidenceGraph_adj_inl_inr_iff r z.1 z.2.val).mpr z.2.property⟩
+
+private theorem incidenceEdgeMap_bijective {A : Type u} {P : Type v}
+    (r : A → P → Prop) : Function.Bijective (incidenceEdgeMap r) := by
+  constructor
+  · rintro ⟨a, p, hp⟩ ⟨b, q, hq⟩ h
+    have hh := congrArg Subtype.val h
+    change s(Sum.inl a, Sum.inr p) = s(Sum.inl b, Sum.inr q) at hh
+    rcases Sym2.eq_iff.mp hh with hh | hh
+    · have hab := Sum.inl.inj hh.1
+      have hpq := Sum.inr.inj hh.2
+      subst b
+      subst q
+      rfl
+    · cases hh.1
+  · rintro ⟨e, he⟩
+    induction e using Sym2.inductionOn with
+    | _ x y =>
+      rcases x with a | p <;> rcases y with b | q
+      · simp [bipartiteIncidenceGraph] at he
+      · exact ⟨⟨a, q, (bipartiteIncidenceGraph_adj_inl_inr_iff r a q).mp he⟩, rfl⟩
+      · refine ⟨⟨b, p, (bipartiteIncidenceGraph_adj_inr_inl_iff r b p).mp he⟩, ?_⟩
+        exact Subtype.ext Sym2.eq_swap
+      · simp [bipartiteIncidenceGraph] at he
+
+/-- Count each incidence once, rather than counting the two oriented darts. -/
+theorem card_incidence_edges {A : Type u} {P : Type v} [Fintype A] [Finite P]
+    (r : A → P → Prop) :
+    Nat.card (bipartiteIncidenceGraph r).edgeSet =
+      ∑ a : A, Nat.card {p : P // r a p} := by
+  rw [← Nat.card_sigma]
+  exact (Nat.card_congr
+    (Equiv.ofBijective (incidenceEdgeMap r) (incidenceEdgeMap_bijective r))).symm
+
+/-- The two ways of summing a finite incidence relation agree. -/
+theorem sum_card_incidence_comm {A : Type u} {P : Type v}
+    [Fintype A] [Fintype P] (r : A → P → Prop) :
+    (∑ a : A, Nat.card {p : P // r a p}) =
+      ∑ p : P, Nat.card {a : A // r a p} := by
+  rw [← Nat.card_sigma, ← Nat.card_sigma]
+  exact Nat.card_congr
+    { toFun := fun z => ⟨z.2.val, z.1, z.2.property⟩
+      invFun := fun z => ⟨z.2.val, z.1, z.2.property⟩
+      left_inv := fun _ => rfl
+      right_inv := fun _ => rfl }
+
+/-- Removing right-side leaves preserves components when every right vertex
+has an incident left vertex and every left vertex is retained. In particular,
+isolated left vertices remain as components of the pruned graph. -/
+noncomputable def pruneComponentEquiv {A : Type u} {P : Type v}
+    [Fintype P] [DecidableEq A] [DecidableEq P]
+    (r : A → P → Prop) [DecidableRel r] (t : Finset A)
+    (hcover : ∀ a, a ∈ t) (hpoint : ∀ p, ∃ a, r a p) :
+    (bipartiteIncidenceGraph r).ConnectedComponent ≃
+      ((bipartiteIncidenceGraph r).induce
+        (↑(bipartitePruneVertices r t) : Set (A ⊕ P))).ConnectedComponent := by
+  classical
+  let S := sharedRightPoints r t
+  let X := (↑(bipartitePruneVertices r t) : Set (A ⊕ P))
+  let H := bipartiteIncidenceGraph r
+  let K := H.induce X
+  let root : P → A := fun p => Classical.choose (hpoint p)
+  have hroot : ∀ p, r (root p) p := fun p => Classical.choose_spec (hpoint p)
+  let liftA : A → X := fun a => ⟨.inl a, by
+    change Sum.inl a ∈ bipartitePruneVertices r t
+    simpa only [mem_bipartitePruneVertices_inl] using hcover a⟩
+  let liftP : (p : P) → p ∈ S → X := fun p hp => ⟨.inr p, by
+    change Sum.inr p ∈ bipartitePruneVertices r t
+    simpa only [mem_bipartitePruneVertices_inr] using hp⟩
+  let f : A ⊕ P → X
+    | .inl a => liftA a
+    | .inr p => if hp : p ∈ S then liftP p hp else liftA (root p)
+  have hunique : ∀ p, p ∉ S → ∀ a, r a p → a = root p := by
+    intro p hp a ha
+    have hsmall : (t.filter (fun a => r a p)).card ≤ 1 := by
+      have hnot : ¬ 2 ≤ (t.filter (fun a => r a p)).card := by
+        simpa only [S, mem_sharedRightPoints] using hp
+      omega
+    exact Finset.card_le_one.mp hsmall a
+      (Finset.mem_filter.mpr ⟨hcover a, ha⟩) (root p)
+      (Finset.mem_filter.mpr ⟨hcover (root p), hroot p⟩)
+  have hforward : ∀ a p, r a p → K.Reachable (f (.inl a)) (f (.inr p)) := by
+    intro a p ha
+    by_cases hp : p ∈ S
+    · simp only [f, dif_pos hp]
+      apply Adj.reachable
+      exact (bipartiteIncidenceGraph_adj_inl_inr_iff r a p).mpr ha
+    · simp only [f, dif_neg hp]
+      rw [hunique p hp a ha]
+  refine componentEquivOfReachable H K f Subtype.val ?_ ?_ ?_ ?_
+  · intro x y h
+    rcases x with a | p <;> rcases y with b | q
+    · simp [H, bipartiteIncidenceGraph] at h
+    · exact hforward a q ((bipartiteIncidenceGraph_adj_inl_inr_iff r a q).mp h)
+    · exact (hforward b p ((bipartiteIncidenceGraph_adj_inr_inl_iff r b p).mp h)).symm
+    · simp [H, bipartiteIncidenceGraph] at h
+  · intro x y h
+    exact (show H.Adj (x : A ⊕ P) (y : A ⊕ P) from h).reachable
+  · intro x
+    rcases x with a | p
+    · exact .rfl
+    · by_cases hp : p ∈ S
+      · simp only [f, dif_pos hp]
+        exact .rfl
+      · simp only [f, dif_neg hp]
+        exact ((bipartiteIncidenceGraph_adj_inl_inr_iff r (root p) p).mpr (hroot p)).reachable
+  · rintro ⟨x, hx⟩
+    rcases x with a | p
+    · exact .rfl
+    · have hp : p ∈ S := by
+        simpa only [X, Finset.mem_coe, mem_bipartitePruneVertices_inr] using hx
+      simp only [f, dif_pos hp]
+      exact .rfl
+
+/-- The pruned graph has precisely all left vertices and the shared right
+vertices. This is an isomorphism of the existing induced graph, not a change
+of the pruning definition. -/
+noncomputable def pruneGraphIso {A : Type u} {P : Type v}
+    [Fintype P] [DecidableEq A] [DecidableEq P]
+    (r : A → P → Prop) [DecidableRel r] (t : Finset A)
+    (hcover : ∀ a, a ∈ t) :
+    bipartiteIncidenceGraph (fun a (p : ↥(sharedRightPoints r t)) => r a p.val) ≃g
+      (bipartiteIncidenceGraph r).induce
+        (↑(bipartitePruneVertices r t) : Set (A ⊕ P)) := by
+  let e : (A ⊕ ↥(sharedRightPoints r t)) ≃
+      ↥(↑(bipartitePruneVertices r t) : Set (A ⊕ P)) :=
+    { toFun := fun z => match z with
+        | .inl a => ⟨.inl a, (mem_bipartitePruneVertices_inl r t a).mpr (hcover a)⟩
+        | .inr p => ⟨.inr p.val, (mem_bipartitePruneVertices_inr r t p.val).mpr p.property⟩
+      invFun := fun z => match z with
+        | ⟨.inl a, _⟩ => .inl a
+        | ⟨.inr p, hp⟩ => .inr ⟨p, (mem_bipartitePruneVertices_inr r t p).mp hp⟩
+      left_inv := by
+        rintro (a | ⟨p, hp⟩) <;> rfl
+      right_inv := by
+        rintro ⟨a | p, h⟩ <;> rfl }
+  exact
+    { toEquiv := e
+      map_rel_iff' := by
+        rintro (a | p) (b | q) <;> simp [e, bipartiteIncidenceGraph] }
+
+end SimpleGraph.FiniteForestCounting
+
+end Erdos593SelfContained_Module_Erdos593_Graph_FiniteForestCounting
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.FiniteForestCounting
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomCounting
+Source: Erdos593/TripleSystem/CanonicalAtomCounting.lean
+Normalized SHA-256: 8256fbe9139bac74e07fbb8b90beb514895e44b2d8b05417e344909299801e9b
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomCounting
+
+/-!
+# Exact accounting for the canonical atom forest
+
+The counts use the original edge fibres and original-point supports. No
+component count is supplied as a hypothesis. Internal atom connectivity,
+literal core orders and the bipartite shadow give the local and global
+integer accounting identities.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe w
+
+noncomputable section
+
+variable {V E : Type w} (F : TripleSystem V E)
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+  [DecidableRel F.levi.Adj]
+
+noncomputable local instance : DecidableEq (Index F) := Classical.decEq _
+
+/-- Number of original hyperedges in a canonical fibre. -/
+def atomEdgeCount (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : Index F) : ℕ := Nat.card (edges F hlinear hbridge A)
+
+/-- Number of original points in the support of a canonical fibre. -/
+def atomPointCount (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : Index F) : ℕ := Nat.card (atomSupport F hlinear hbridge A)
+
+/-- Number of distinct represented atoms containing the original point. -/
+def pointMultiplicity (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (x : V) : ℕ := by
+  classical
+  exact ((atomFinset F hlinear hbridge).filter
+    (fun A => atomIncident F hlinear hbridge A x)).card
+
+private abbrev indexFintype (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    Fintype (Index F) := by
+  haveI : Finite (Index F) := Finite.of_surjective _ (atomOf_surjective F hlinear hbridge)
+  exact Fintype.ofFinite _
+
+private theorem atomFinset_eq_univ
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) [Fintype (Index F)] :
+    atomFinset F hlinear hbridge = Finset.univ := by
+  ext A
+  simp
+
+/-- The exact, disjoint edge fibres account for every original hyperedge. -/
+theorem sum_atomEdgeCount (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    ∑ A ∈ atomFinset F hlinear hbridge, atomEdgeCount F hlinear hbridge A =
+      Nat.card E := by
+  classical
+  letI := indexFintype F hlinear hbridge
+  rw [atomFinset_eq_univ]
+  change (∑ A : Index F, Nat.card {e : E // atomOf F hlinear hbridge e = A}) = _
+  rw [← Nat.card_sigma]
+  exact Nat.card_congr (Equiv.sigmaFiberEquiv (atomOf F hlinear hbridge))
+
+/-- Sharing means at least two atoms, before any truncated subtraction occurs. -/
+theorem two_le_pointMultiplicity_of_shared
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {x : V} (hx : x ∈ sharedAtomPoints F hlinear hbridge) :
+    2 ≤ pointMultiplicity F hlinear hbridge x :=
+  (mem_sharedAtomPoints F hlinear hbridge x).mp hx
+
+/-- Hyperedges with the same label are connected in the original Levi graph.
+The cycle-block case uses the literal bridge-free component in the label;
+the residual-degree-zero case forces equality of hyperedge indices. -/
+theorem levi_reachable_of_atomOf_eq
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (e f : E) (h : atomOf F hlinear hbridge e = atomOf F hlinear hbridge f) :
+    F.levi.Reachable (.inr e) (.inr f) := by
+  classical
+  have atomOf_singleton : ∀ (e : E)
+      (hzero : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0),
+      atomOf F hlinear hbridge e = Index.singleton e hzero := by
+    intro e hzero
+    unfold atomOf
+    rw [dif_pos hzero]
+  have atomOf_cycle : ∀ (e : E)
+      (hne : ¬ (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0),
+      atomOf F hlinear hbridge e =
+        Index.cycleBlock (BridgeBlock.hyperedgeComponentOf F e)
+          (hyperedgeComponent_hasIncidence_of_degree_ne_zero F hne)
+          (Erdos593.SimpleGraph.EdgeCycleBlock.ofEdge
+            (BridgeBlock.contractedGraph F (BridgeBlock.hyperedgeComponentOf F e))
+            ((BridgeBlock.graphEdgeEquivHyperedge F hlinear hbridge
+                (hyperedgeComponent_hasIncidence_of_degree_ne_zero F hne)).symm
+              ⟨e, BridgeBlock.mem_hyperedgeComponentOf_set F e⟩)) := by
+    intro e hne
+    unfold atomOf
+    rw [dif_neg hne]
+  have hfree : (Erdos593.SimpleGraph.bridgeFree F.levi).Reachable
+      (Sum.inr e) (Sum.inr f) := by
+    by_cases he : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0
+    · rw [atomOf_singleton e he] at h
+      by_cases hf : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) = 0
+      · rw [atomOf_singleton f hf] at h
+        injection h with h1
+        subst h1
+        rfl
+      · rw [atomOf_cycle f hf] at h
+        exact absurd h (by simp)
+    · rw [atomOf_cycle e he] at h
+      by_cases hf : (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr f) = 0
+      · rw [atomOf_singleton f hf] at h
+        exact absurd h (by simp)
+      · rw [atomOf_cycle f hf] at h
+        injection h with h1 _
+        exact _root_.SimpleGraph.ConnectedComponent.exact (congrArg Subtype.val h1)
+  exact hfree.mono (by
+    dsimp only [Erdos593.SimpleGraph.bridgeFree]
+    intro x y hxy
+    exact hxy.1)
+
+private def representative (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : Index F) : E := Classical.choose (atomOf_surjective F hlinear hbridge A)
+
+private theorem representative_spec
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) (A : Index F) :
+    atomOf F hlinear hbridge (representative F hlinear hbridge A) = A :=
+  Classical.choose_spec (atomOf_surjective F hlinear hbridge A)
+
+private def leviToAtomNode (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    V ⊕ E → Index F ⊕ V
+  | .inl x => .inr x
+  | .inr e => .inl (atomOf F hlinear hbridge e)
+
+private def atomNodeToLevi (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    Index F ⊕ V → V ⊕ E
+  | .inl A => .inr (representative F hlinear hbridge A)
+  | .inr x => .inl x
+
+private theorem leviToAtomNode_adj
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {a b : V ⊕ E} (h : F.levi.Adj a b) :
+    (atomPointIncidenceGraph F hlinear hbridge).Reachable
+      (leviToAtomNode F hlinear hbridge a) (leviToAtomNode F hlinear hbridge b) := by
+  rcases a with x | e <;> rcases b with y | f
+  · exact False.elim (F.not_levi_adj_point_point h)
+  · apply _root_.SimpleGraph.Adj.reachable
+    change (atomPointIncidenceGraph F hlinear hbridge).Adj
+      (.inr x) (.inl (atomOf F hlinear hbridge f))
+    rw [atomPointIncidenceGraph, _root_.SimpleGraph.bipartiteIncidenceGraph_adj_inr_inl_iff]
+    exact ⟨f, rfl, F.levi_adj_point_edge.mp h⟩
+  · apply _root_.SimpleGraph.Adj.reachable
+    change (atomPointIncidenceGraph F hlinear hbridge).Adj
+      (.inl (atomOf F hlinear hbridge e)) (.inr y)
+    rw [atomPointIncidenceGraph, _root_.SimpleGraph.bipartiteIncidenceGraph_adj_inl_inr_iff]
+    exact ⟨e, rfl, F.levi_adj_edge_point.mp h⟩
+  · exact False.elim (F.not_levi_adj_edge_edge h)
+
+private theorem representative_reaches_point
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : Index F) (x : V) (h : atomIncident F hlinear hbridge A x) :
+    F.levi.Reachable (.inr (representative F hlinear hbridge A)) (.inl x) := by
+  obtain ⟨e, he, hx⟩ := h
+  have hh : atomOf F hlinear hbridge (representative F hlinear hbridge A) =
+      atomOf F hlinear hbridge e := (representative_spec F hlinear hbridge A).trans he.symm
+  exact (levi_reachable_of_atomOf_eq F hlinear hbridge _ _ hh).trans
+    (F.levi_adj_edge_point.mpr hx).reachable
+
+private theorem atomNodeToLevi_adj
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    {a b : Index F ⊕ V} (h : (atomPointIncidenceGraph F hlinear hbridge).Adj a b) :
+    F.levi.Reachable (atomNodeToLevi F hlinear hbridge a)
+      (atomNodeToLevi F hlinear hbridge b) := by
+  rcases a with A | x <;> rcases b with B | y
+  · simp [atomPointIncidenceGraph, _root_.SimpleGraph.bipartiteIncidenceGraph] at h
+  · exact representative_reaches_point F hlinear hbridge A y
+      ((_root_.SimpleGraph.bipartiteIncidenceGraph_adj_inl_inr_iff _ A y).mp h)
+  · exact (representative_reaches_point F hlinear hbridge B x
+      ((_root_.SimpleGraph.bipartiteIncidenceGraph_adj_inr_inl_iff _ B x).mp h)).symm
+  · simp [atomPointIncidenceGraph, _root_.SimpleGraph.bipartiteIncidenceGraph] at h
+
+/-- Full atom incidence and original Levi components correspond, also when
+original points are isolated. Pruning will require a separate reducedness gate. -/
+def atomPoint_componentEquiv (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    F.levi.ConnectedComponent ≃
+      (atomPointIncidenceGraph F hlinear hbridge).ConnectedComponent := by
+  refine _root_.SimpleGraph.FiniteForestCounting.componentEquivOfReachable
+    F.levi (atomPointIncidenceGraph F hlinear hbridge)
+    (leviToAtomNode F hlinear hbridge) (atomNodeToLevi F hlinear hbridge)
+    (fun _ _ h => leviToAtomNode_adj F hlinear hbridge h)
+    (fun _ _ h => atomNodeToLevi_adj F hlinear hbridge h) ?_ ?_
+  · intro a
+    rcases a with x | e
+    · exact .rfl
+    · exact levi_reachable_of_atomOf_eq F hlinear hbridge _ _
+        (representative_spec F hlinear hbridge (atomOf F hlinear hbridge e))
+  · intro a
+    rcases a with A | x
+    · change (atomPointIncidenceGraph F hlinear hbridge).Reachable
+        (.inl (atomOf F hlinear hbridge (representative F hlinear hbridge A))) (.inl A)
+      rw [representative_spec]
+    · exact .rfl
+
+/-- Euler accounting on the actual full canonical incidence forest. -/
+theorem point_add_atom_count (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    Nat.card V + (atomFinset F hlinear hbridge).card =
+      (∑ A ∈ atomFinset F hlinear hbridge, atomPointCount F hlinear hbridge A) +
+        Nat.card F.levi.ConnectedComponent := by
+  classical
+  letI := indexFintype F hlinear hbridge
+  have hc := Nat.card_congr (atomPoint_componentEquiv F hlinear hbridge)
+  have he := _root_.SimpleGraph.FiniteForestCounting.card_incidence_edges
+    (atomIncident F hlinear hbridge)
+  have hf := _root_.SimpleGraph.FiniteForestCounting.card_edges_add_components
+    (atomPointIncidenceGraph F hlinear hbridge)
+    (atomPointIncidenceGraph_isAcyclic F hlinear hbridge)
+  change Nat.card (_root_.SimpleGraph.bipartiteIncidenceGraph
+    (atomIncident F hlinear hbridge)).edgeSet + _ = _ at hf
+  rw [he, ← hc, Nat.card_sum] at hf
+  rw [atomFinset_eq_univ]
+  simpa only [Finset.card_univ, atomPointCount, atomIncident,
+    Nat.card_eq_fintype_card, add_comm] using hf.symm
+
+/-- Reducedness supplies an actual incident atom at every original point. -/
+theorem exists_atomIncident (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hreduced : F.HasNoIsolatedPoints) (x : V) :
+    ∃ A : Index F, atomIncident F hlinear hbridge A x := by
+  classical
+  have hx : ∃ e, F.Inc x e := by
+    simpa only [IsIsolated, not_forall, not_not] using hreduced x
+  obtain ⟨e, he⟩ := hx
+  exact ⟨atomOf F hlinear hbridge e, e, rfl, he⟩
+
+theorem one_le_pointMultiplicity
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hreduced : F.HasNoIsolatedPoints) (x : V) :
+    1 ≤ pointMultiplicity F hlinear hbridge x := by
+  classical
+  obtain ⟨A, hA⟩ := exists_atomIncident F hlinear hbridge hreduced x
+  exact Finset.card_pos.mpr ⟨A, Finset.mem_filter.mpr
+    ⟨mem_atomFinset F hlinear hbridge A, hA⟩⟩
+
+private theorem card_incidentAtoms
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) [Fintype (Index F)]
+    (x : V) : Nat.card {A : Index F // atomIncident F hlinear hbridge A x} =
+      pointMultiplicity F hlinear hbridge x := by
+  classical
+  unfold pointMultiplicity
+  rw [atomFinset_eq_univ]
+  have hs : {A : Index F | atomIncident F hlinear hbridge A x} =
+      (↑(Finset.univ.filter (fun A => atomIncident F hlinear hbridge A x)) : Set (Index F)) := by
+    ext A
+    simp
+  change Nat.card {A : Index F | atomIncident F hlinear hbridge A x} = _
+  rw [hs]
+  simp
+
+/-- Double-count atom--point incidences; each shared point contributes mu-1. -/
+theorem sum_atomPointCount
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hreduced : F.HasNoIsolatedPoints) :
+    (∑ A ∈ atomFinset F hlinear hbridge, atomPointCount F hlinear hbridge A) =
+      Nat.card V + ∑ x ∈ sharedAtomPoints F hlinear hbridge,
+        (pointMultiplicity F hlinear hbridge x - 1) := by
+  classical
+  letI := indexFintype F hlinear hbridge
+  have hd : (∑ A ∈ atomFinset F hlinear hbridge, atomPointCount F hlinear hbridge A) =
+      ∑ x : V, pointMultiplicity F hlinear hbridge x := by
+    rw [atomFinset_eq_univ]
+    change (∑ A : Index F, Nat.card {x : V // atomIncident F hlinear hbridge A x}) = _
+    rw [_root_.SimpleGraph.FiniteForestCounting.sum_card_incidence_comm]
+    exact Finset.sum_congr rfl (fun x _ => card_incidentAtoms F hlinear hbridge x)
+  have hp : ∀ x : V, pointMultiplicity F hlinear hbridge x =
+      1 + if x ∈ sharedAtomPoints F hlinear hbridge then
+        pointMultiplicity F hlinear hbridge x - 1 else 0 := by
+    intro x
+    have hpos := one_le_pointMultiplicity F hlinear hbridge hreduced x
+    by_cases hx : x ∈ sharedAtomPoints F hlinear hbridge
+    · rw [if_pos hx]
+      omega
+    · have hlt : ¬ 2 ≤ pointMultiplicity F hlinear hbridge x :=
+        fun h => hx ((mem_sharedAtomPoints F hlinear hbridge x).mpr h)
+      rw [if_neg hx]
+      omega
+  rw [hd]
+  calc
+    _ = ∑ x : V, (1 + if x ∈ sharedAtomPoints F hlinear hbridge then
+        pointMultiplicity F hlinear hbridge x - 1 else 0) :=
+      Finset.sum_congr rfl (fun x _ => hp x)
+    _ = _ := ?_
+  rw [Finset.sum_add_distrib]
+  have hs : (∑ x : V, if x ∈ sharedAtomPoints F hlinear hbridge then
+      pointMultiplicity F hlinear hbridge x - 1 else 0) =
+      ∑ x ∈ sharedAtomPoints F hlinear hbridge, (pointMultiplicity F hlinear hbridge x - 1) := by
+    rw [← Finset.sum_filter]
+    have ht : Finset.univ.filter (fun x => x ∈ sharedAtomPoints F hlinear hbridge) =
+        sharedAtomPoints F hlinear hbridge := by
+      ext x
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+    rw [ht]
+  rw [hs]
+  simp
+
+/-- The identification excess is derived from forest Euler accounting. -/
+theorem excess_add_components
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hreduced : F.HasNoIsolatedPoints) :
+    (∑ x ∈ sharedAtomPoints F hlinear hbridge,
+      (pointMultiplicity F hlinear hbridge x - 1)) +
+      Nat.card F.levi.ConnectedComponent = (atomFinset F hlinear hbridge).card := by
+  have he := point_add_atom_count F hlinear hbridge
+  rw [sum_atomPointCount F hlinear hbridge hreduced] at he
+  omega
+
+omit [DecidableEq V] [DecidableEq E] [DecidableRel F.levi.Adj] in
+/-- Levi edges are incidences, with exactly three per original hyperedge. -/
+theorem levi_card_edges : Nat.card F.levi.edgeSet = 3 * Nat.card E := by
+  classical
+  have he := _root_.SimpleGraph.FiniteForestCounting.card_incidence_edges F.Inc
+  change Nat.card F.levi.edgeSet = _ at he
+  rw [_root_.SimpleGraph.FiniteForestCounting.sum_card_incidence_comm] at he
+  have hthree : ∀ e : E, Nat.card {x : V // F.Inc x e} = 3 :=
+    fun e => F.edge_ncard e
+  simp_rw [hthree] at he
+  simpa only [Finset.sum_const, Finset.card_univ, smul_eq_mul,
+    Nat.card_eq_fintype_card, mul_comm] using he
+
+/-- Reducedness permits the manuscript's exact pruning, retaining isolated
+atom nodes and thus preserving the number of components. -/
+def atomSharedPoint_componentEquiv
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hreduced : F.HasNoIsolatedPoints) :
+    F.levi.ConnectedComponent ≃
+      (atomSharedPointIncidenceGraph F hlinear hbridge).ConnectedComponent := by
+  classical
+  exact (atomPoint_componentEquiv F hlinear hbridge).trans
+    (_root_.SimpleGraph.FiniteForestCounting.pruneComponentEquiv
+      (atomIncident F hlinear hbridge) (atomFinset F hlinear hbridge)
+      (mem_atomFinset F hlinear hbridge)
+      (exists_atomIncident F hlinear hbridge hreduced))
+
+/-- Integer subtraction identity; no truncated subtraction is used. -/
+theorem atom_surplus_identity
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    (Nat.card V : ℤ) - (Nat.card E : ℤ) =
+      (Nat.card F.levi.ConnectedComponent : ℤ) +
+        ∑ A ∈ atomFinset F hlinear hbridge,
+          ((atomPointCount F hlinear hbridge A : ℤ) -
+            (atomEdgeCount F hlinear hbridge A : ℤ) - 1) := by
+  classical
+  have he : (∑ A ∈ atomFinset F hlinear hbridge,
+      (atomEdgeCount F hlinear hbridge A : ℤ)) = (Nat.card E : ℤ) := by
+    exact_mod_cast sum_atomEdgeCount F hlinear hbridge
+  have hv : (Nat.card V : ℤ) + ((atomFinset F hlinear hbridge).card : ℤ) =
+      (∑ A ∈ atomFinset F hlinear hbridge, (atomPointCount F hlinear hbridge A : ℤ)) +
+        (Nat.card F.levi.ConnectedComponent : ℤ) := by
+    exact_mod_cast point_add_atom_count F hlinear hbridge
+  simp only [Finset.sum_sub_distrib, Finset.sum_const, nsmul_eq_mul, mul_one]
+  rw [he]
+  omega
+
+/-- Additive Euler expression. Identifying its summands as local connected
+cycle ranks additionally requires the separate atom-connectivity theorem. -/
+theorem atom_euler_identity
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    2 * (Nat.card E : ℤ) - (Nat.card V : ℤ) + (Nat.card F.levi.ConnectedComponent : ℤ) =
+      ∑ A ∈ atomFinset F hlinear hbridge,
+        (2 * (atomEdgeCount F hlinear hbridge A : ℤ) -
+          (atomPointCount F hlinear hbridge A : ℤ) + 1) := by
+  classical
+  have he : (∑ A ∈ atomFinset F hlinear hbridge,
+      (atomEdgeCount F hlinear hbridge A : ℤ)) = (Nat.card E : ℤ) := by
+    exact_mod_cast sum_atomEdgeCount F hlinear hbridge
+  have hv : (Nat.card V : ℤ) + ((atomFinset F hlinear hbridge).card : ℤ) =
+      (∑ A ∈ atomFinset F hlinear hbridge, (atomPointCount F hlinear hbridge A : ℤ)) +
+        (Nat.card F.levi.ConnectedComponent : ℤ) := by
+    exact_mod_cast point_add_atom_count F hlinear hbridge
+  simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib,
+    ← Finset.mul_sum, Finset.sum_const, nsmul_eq_mul, mul_one]
+  rw [he]
+  omega
+
+omit [DecidableEq V] [DecidableEq E] [DecidableRel F.levi.Adj] in
+/-- This is the actual finite Levi Euler expression, not an assertion about
+a separately defined cycle space. -/
+theorem levi_euler_expression :
+    (Nat.card F.levi.edgeSet : ℤ) - (Nat.card (V ⊕ E) : ℤ) +
+        (Nat.card F.levi.ConnectedComponent : ℤ) =
+      2 * (Nat.card E : ℤ) - (Nat.card V : ℤ) +
+        (Nat.card F.levi.ConnectedComponent : ℤ) := by
+  rw [levi_card_edges F, Nat.card_sum]
+  push_cast
+  ring
+
+/-- Direct Euler accounting on the manuscript's pruned incidence forest.
+This independently uses its actual edge set and component equivalence. -/
+theorem shared_forest_excess_add_components
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hreduced : F.HasNoIsolatedPoints) :
+    (∑ x ∈ sharedAtomPoints F hlinear hbridge,
+      (pointMultiplicity F hlinear hbridge x - 1)) +
+      Nat.card F.levi.ConnectedComponent = (atomFinset F hlinear hbridge).card := by
+  classical
+  letI := indexFintype F hlinear hbridge
+  let S := sharedAtomPoints F hlinear hbridge
+  let r := atomIncident F hlinear hbridge
+  let iso := _root_.SimpleGraph.FiniteForestCounting.pruneGraphIso r
+    (atomFinset F hlinear hbridge) (mem_atomFinset F hlinear hbridge)
+  have hc := Nat.card_congr (atomSharedPoint_componentEquiv F hlinear hbridge hreduced)
+  have hf := _root_.SimpleGraph.FiniteForestCounting.card_edges_add_components
+    (atomSharedPointIncidenceGraph F hlinear hbridge)
+    (atomSharedPointIncidenceGraph_isAcyclic F hlinear hbridge)
+  have hv : Nat.card (Index F ⊕ ↥S) =
+      Nat.card ↥(↑(_root_.SimpleGraph.bipartitePruneVertices r
+        (atomFinset F hlinear hbridge)) : Set (Index F ⊕ V)) :=
+    Nat.card_congr iso.toEquiv
+  have he : Nat.card (atomSharedPointIncidenceGraph F hlinear hbridge).edgeSet =
+      ∑ x ∈ S, pointMultiplicity F hlinear hbridge x := by
+    change Nat.card ((_root_.SimpleGraph.bipartiteIncidenceGraph r).induce
+      (↑(_root_.SimpleGraph.bipartitePruneVertices r (atomFinset F hlinear hbridge)) :
+        Set (Index F ⊕ V))).edgeSet = _
+    rw [← Nat.card_congr iso.mapEdgeSet,
+      _root_.SimpleGraph.FiniteForestCounting.card_incidence_edges,
+      _root_.SimpleGraph.FiniteForestCounting.sum_card_incidence_comm]
+    calc
+      _ = ∑ x : ↥S, pointMultiplicity F hlinear hbridge x.val :=
+        Finset.sum_congr rfl (fun x _ => card_incidentAtoms F hlinear hbridge x.val)
+      _ = _ := Finset.sum_coe_sort S _
+  rw [he, ← hc, ← hv, Nat.card_sum] at hf
+  have hs : (∑ x ∈ S, pointMultiplicity F hlinear hbridge x) =
+      S.card + ∑ x ∈ S, (pointMultiplicity F hlinear hbridge x - 1) := by
+    calc
+      _ = ∑ x ∈ S, (1 + (pointMultiplicity F hlinear hbridge x - 1)) := by
+        apply Finset.sum_congr rfl
+        intro x hx
+        have hh := two_le_pointMultiplicity_of_shared F hlinear hbridge hx
+        omega
+      _ = _ := by simp only [Finset.sum_add_distrib, Finset.sum_const, smul_eq_mul, mul_one]
+  rw [hs] at hf
+  have hS : Nat.card ↥S = S.card := by simp
+  have hI : Nat.card (Index F) = (atomFinset F hlinear hbridge).card := by
+    rw [atomFinset_eq_univ]
+    simp
+  rw [hS, hI] at hf
+  change (∑ x ∈ S, (pointMultiplicity F hlinear hbridge x - 1)) + _ = _
+  omega
+
+/-- The global incidence-counting sublayer of S1. This does not assert the
+remaining local connected-atom/core-order statements. -/
+structure IncidenceCounts (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) : Prop where
+  edge_partition :
+    (∑ A ∈ atomFinset F hlinear hbridge, atomEdgeCount F hlinear hbridge A) = Nat.card E
+  point_overlap :
+    (∑ A ∈ atomFinset F hlinear hbridge, atomPointCount F hlinear hbridge A) =
+      Nat.card V + ∑ x ∈ sharedAtomPoints F hlinear hbridge,
+        (pointMultiplicity F hlinear hbridge x - 1)
+  forest_excess :
+    (∑ x ∈ sharedAtomPoints F hlinear hbridge,
+      (pointMultiplicity F hlinear hbridge x - 1)) +
+      Nat.card F.levi.ConnectedComponent = (atomFinset F hlinear hbridge).card
+  forest_balance :
+    Nat.card V + (atomFinset F hlinear hbridge).card =
+      (∑ A ∈ atomFinset F hlinear hbridge, atomPointCount F hlinear hbridge A) +
+        Nat.card F.levi.ConnectedComponent
+
+/-- At the manuscript boundary, linearity and the bridge condition are
+derived from obligatoriness; neither is an additional hypothesis. -/
+theorem obligatory_incidenceCounts
+    (hobligatory : F.IsObligatory) (hreduced : F.HasNoIsolatedPoints)
+    (_hnonempty : Nonempty E) :
+    ∃ (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge),
+      IncidenceCounts F hlinear hbridge := by
+  have hi : F.Intrinsic :=
+    ((atomGenerated_iff_constructible F).mp
+      ((isObligatory_iff_atomGenerated F).mp hobligatory)).intrinsic
+  exact ⟨hi.1, hi.2.1, sum_atomEdgeCount F hi.1 hi.2.1,
+    sum_atomPointCount F hi.1 hi.2.1 hreduced,
+    shared_forest_excess_add_components F hi.1 hi.2.1 hreduced,
+    point_add_atom_count F hi.1 hi.2.1⟩
+
+/-! ## Internal atom connectivity and literal core counts -/
+
+private theorem connected_of_twoVertexConnected {W : Type w} [Fintype W]
+    (G : _root_.SimpleGraph W) (hG : IsTwoVertexConnected G) : G.Connected := by
+  classical
+  haveI : Nonempty W := Fintype.card_pos_iff.mp (by have := hG.1; omega)
+  refine { preconnected := ?_, nonempty := inferInstance }
+  intro x y
+  have hsmall : ({x, y} : Finset W).card < (Finset.univ : Finset W).card := by
+    have hp : ({x, y} : Finset W).card ≤ 2 := by
+      by_cases hxy : x = y <;> simp [hxy]
+    rw [Finset.card_univ]
+    have := hG.1
+    omega
+  obtain ⟨z, _, hz⟩ := Finset.exists_mem_notMem_of_card_lt_card hsmall
+  have hx : x ≠ z := by intro h; exact hz (by simp [h])
+  have hy : y ≠ z := by intro h; exact hz (by simp [h])
+  let inc : G.induce {p : W | p ≠ z} →g G :=
+    ⟨Subtype.val, fun h => h⟩
+  exact ((hG.2 z).preconnected ⟨x, hx⟩ ⟨y, hy⟩).map inc
+
+private theorem component_card_of_connected {W : Type w}
+    (G : _root_.SimpleGraph W) (hG : G.Connected) :
+    Nat.card G.ConnectedComponent = 1 := by
+  haveI := hG.nonempty
+  haveI := hG.preconnected.subsingleton_connectedComponent
+  exact Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, inferInstance⟩
+
+private theorem expansion_connected_of_core_connected {W : Type w}
+    (G : _root_.SimpleGraph W) (hG : G.Connected) :
+    (privateVertexExpansion G).levi.Connected := by
+  haveI := hG.nonempty
+  haveI := hG.preconnected.subsingleton_connectedComponent
+  refine { preconnected := ?_, nonempty := inferInstance }
+  intro x y
+  apply _root_.SimpleGraph.ConnectedComponent.exact
+  apply (privateVertexExpansion_componentEquiv G).injective
+  exact Subsingleton.elim _ _
+
+omit [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E] [DecidableRel F.levi.Adj] in
+private theorem singleEdgePiece_connected (e : E) : (F.singleEdgePiece e).levi.Connected := by
+  apply (_root_.SimpleGraph.connected_iff_exists_forall_reachable _).mpr
+  refine ⟨.inr (⟨()⟩ : SingleEdgeIndex), ?_⟩
+  rintro (x | d)
+  · exact ((levi_adj_edge_point (F.singleEdgePiece e)).mpr trivial).reachable
+  · have hd : d = (⟨()⟩ : SingleEdgeIndex) := Subsingleton.elim _ _
+    subst d
+    exact .rfl
+
+/-- Connectivity is inside the atom's own supported restriction, not merely
+ambient connectivity in F. The exact A2 isomorphism transports the paths. -/
+theorem atomRestriction_connected
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) (A : Index F) :
+    (atomRestriction F hlinear hbridge A).levi.Connected := by
+  classical
+  cases A with
+  | singleton e hzero =>
+    have hshape : Isomorphic (atomRestriction F hlinear hbridge (.singleton e hzero))
+        (F.singleEdgePiece e : TripleSystem (F.edgeSet e) (SingleEdgeIndex : Type w)) :=
+      atomRestriction_is_singleEdge_or_cycleBlockExpansion F hlinear hbridge (.singleton e hzero)
+    obtain ⟨i⟩ := hshape
+    exact i.leviIso.connected_iff.mpr (singleEdgePiece_connected F e)
+  | cycleBlock C hC B =>
+    have hshape : Isomorphic (atomRestriction F hlinear hbridge (.cycleBlock C hC B))
+        (privateVertexExpansion (cycleBlockCore F C B)) :=
+      atomRestriction_is_singleEdge_or_cycleBlockExpansion.{w, w, w}
+        F hlinear hbridge (.cycleBlock C hC B)
+    obtain ⟨i⟩ := hshape
+    exact i.leviIso.connected_iff.mpr
+      (expansion_connected_of_core_connected _
+        (connected_of_twoVertexConnected _
+          (cycleBlockCore_isTwoVertexConnected F hlinear hbridge C hC B)))
+
+/-- The local component term is genuinely one, by internal connectivity. -/
+theorem atomRestriction_component_card
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) (A : Index F) :
+    Nat.card (atomRestriction F hlinear hbridge A).levi.ConnectedComponent = 1 :=
+  component_card_of_connected _ (atomRestriction_connected F hlinear hbridge A)
+
+/-- The literal core order: two endpoints for a single edge, and the
+existing finite cycle-block endpoint carrier in the nontrivial case. -/
+def coreOrder : Index F → ℕ
+  | .singleton _ _ => 2
+  | .cycleBlock C _ B =>
+    Nat.card (finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+      (cycleBlockEdgeSet F C B) (cycleBlockEdgeSet_finite F C B))
+
+/-- Exact A2 vertex and edge equivalences give n_A=m_A+|V(J_A)|. -/
+theorem atomPointCount_eq_edge_add_core
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) (A : Index F) :
+    atomPointCount F hlinear hbridge A = atomEdgeCount F hlinear hbridge A + coreOrder F A := by
+  classical
+  have hshape := atomRestriction_is_singleEdge_or_cycleBlockExpansion F hlinear hbridge A
+  cases A with
+  | singleton e hzero =>
+    obtain ⟨i⟩ := hshape
+    have hv : atomPointCount F hlinear hbridge (.singleton e hzero) = 3 := by
+      calc
+        _ = Nat.card (F.edgeSet e) := Nat.card_congr i.vertexEquiv
+        _ = 3 := F.edge_ncard e
+    have he : atomEdgeCount F hlinear hbridge (.singleton e hzero) = 1 := by
+      calc
+        _ = Nat.card (SingleEdgeIndex : Type w) := Nat.card_congr i.edgeEquiv
+        _ = 1 := by simp [SingleEdgeIndex]
+    rw [hv, he]
+    rfl
+  | cycleBlock C hC B =>
+    obtain ⟨i⟩ := hshape
+    let W := finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+      (cycleBlockEdgeSet F C B) (cycleBlockEdgeSet_finite F C B)
+    let J := cycleBlockCore F C B
+    have hv := Nat.card_congr i.vertexEquiv
+    have he := Nat.card_congr i.edgeEquiv
+    change atomPointCount F hlinear hbridge (.cycleBlock C hC B) =
+      Nat.card (W ⊕ J.edgeSet) at hv
+    change atomEdgeCount F hlinear hbridge (.cycleBlock C hC B) =
+      Nat.card J.edgeSet at he
+    rw [Nat.card_sum] at hv
+    change atomPointCount F hlinear hbridge (.cycleBlock C hC B) =
+      atomEdgeCount F hlinear hbridge (.cycleBlock C hC B) + Nat.card W
+    omega
+
+/-- The actual finite Levi Euler expression of one supported atom. This
+definition does not assert any independent cycle-space dimension theorem. -/
+def atomLeviEuler (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) (A : Index F) : ℤ :=
+  (Nat.card (atomRestriction F hlinear hbridge A).levi.edgeSet : ℤ) -
+    (Nat.card (atomSupport F hlinear hbridge A ⊕ edges F hlinear hbridge A) : ℤ) +
+      (Nat.card (atomRestriction F hlinear hbridge A).levi.ConnectedComponent : ℤ)
+
+/-- Three incidences per hyperedge and one internal component justify the
+local connected Euler summand 2*m_A-n_A+1. -/
+theorem atomLeviEuler_eq
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) (A : Index F) :
+    atomLeviEuler F hlinear hbridge A =
+      2 * (atomEdgeCount F hlinear hbridge A : ℤ) -
+        (atomPointCount F hlinear hbridge A : ℤ) + 1 := by
+  classical
+  unfold atomLeviEuler
+  rw [levi_card_edges (atomRestriction F hlinear hbridge A), Nat.card_sum,
+    atomRestriction_component_card F hlinear hbridge A]
+  change ((3 * atomEdgeCount F hlinear hbridge A : ℕ) : ℤ) -
+      ((atomPointCount F hlinear hbridge A + atomEdgeCount F hlinear hbridge A : ℕ) : ℤ) + 1 = _
+  push_cast
+  ring
+
+/-- The global Levi Euler expression splits over internally connected atoms. -/
+theorem levi_euler_eq_sum_atomLeviEuler
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    (Nat.card F.levi.edgeSet : ℤ) - (Nat.card (V ⊕ E) : ℤ) +
+        (Nat.card F.levi.ConnectedComponent : ℤ) =
+      ∑ A ∈ atomFinset F hlinear hbridge, atomLeviEuler F hlinear hbridge A := by
+  rw [levi_euler_expression F]
+  simp_rw [atomLeviEuler_eq F hlinear hbridge]
+  exact atom_euler_identity F hlinear hbridge
+
+/-- The manuscript's core-order surplus formula uses the literal core of
+each canonical atom, including the one-edge core of a single triple. -/
+theorem surplus_eq_core_sum
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    (Nat.card V : ℤ) - (Nat.card E : ℤ) =
+      (Nat.card F.levi.ConnectedComponent : ℤ) +
+        ∑ A ∈ atomFinset F hlinear hbridge, ((coreOrder F A : ℤ) - 1) := by
+  classical
+  rw [atom_surplus_identity F hlinear hbridge]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro A _
+  rw [atomPointCount_eq_edge_add_core F hlinear hbridge A]
+  push_cast
+  ring
+
+/-- Complete canonical-forest accounting, with genuine internal atom
+connectivity and both actual global and local Levi Euler interpretations. -/
+structure CountingIdentities (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) : Prop
+    extends IncidenceCounts F hlinear hbridge where
+  atom_connected : ∀ A : Index F, (atomRestriction F hlinear hbridge A).levi.Connected
+  core_order : ∀ A : Index F,
+    atomPointCount F hlinear hbridge A = atomEdgeCount F hlinear hbridge A + coreOrder F A
+  shared_components : Nonempty (F.levi.ConnectedComponent ≃
+    (atomSharedPointIncidenceGraph F hlinear hbridge).ConnectedComponent)
+  local_euler : ∀ A : Index F, atomLeviEuler F hlinear hbridge A =
+    2 * (atomEdgeCount F hlinear hbridge A : ℤ) - (atomPointCount F hlinear hbridge A : ℤ) + 1
+  levi_edges : Nat.card F.levi.edgeSet = 3 * Nat.card E
+  levi_vertices : Nat.card (V ⊕ E) = Nat.card V + Nat.card E
+  surplus : (Nat.card V : ℤ) - (Nat.card E : ℤ) =
+    (Nat.card F.levi.ConnectedComponent : ℤ) +
+      ∑ A ∈ atomFinset F hlinear hbridge,
+        ((atomPointCount F hlinear hbridge A : ℤ) - (atomEdgeCount F hlinear hbridge A : ℤ) - 1)
+  core_surplus : (Nat.card V : ℤ) - (Nat.card E : ℤ) =
+    (Nat.card F.levi.ConnectedComponent : ℤ) +
+      ∑ A ∈ atomFinset F hlinear hbridge, ((coreOrder F A : ℤ) - 1)
+  euler_additive : (Nat.card F.levi.edgeSet : ℤ) - (Nat.card (V ⊕ E) : ℤ) +
+    (Nat.card F.levi.ConnectedComponent : ℤ) =
+      ∑ A ∈ atomFinset F hlinear hbridge, atomLeviEuler F hlinear hbridge A
+
+/-- Full S1 boundary, including an actual N2 shadow whose order is the
+integer surplus and hence the sum of the literal atom core contributions. -/
+theorem obligatory_canonical_counting
+    (hobligatory : F.IsObligatory) (hreduced : F.HasNoIsolatedPoints)
+    (hnonempty : Nonempty E) :
+    ∃ (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge),
+      CountingIdentities F hlinear hbridge ∧
+        ∃ (s : ℕ) (J : _root_.SimpleGraph (Fin s)),
+          J.Colorable 2 ∧ (∀ x, ∃ y, J.Adj x y) ∧
+          Nat.card J.edgeSet = Nat.card E ∧
+          (s : ℤ) = (Nat.card V : ℤ) - (Nat.card E : ℤ) ∧
+          Nat.card J.ConnectedComponent = Nat.card F.levi.ConnectedComponent ∧
+          (s : ℤ) = (Nat.card F.levi.ConnectedComponent : ℤ) +
+            ∑ A ∈ atomFinset F hlinear hbridge, ((coreOrder F A : ℤ) - 1) := by
+  classical
+  have hi : F.Intrinsic :=
+    ((atomGenerated_iff_constructible F).mp
+      ((isObligatory_iff_atomGenerated F).mp hobligatory)).intrinsic
+  refine ⟨hi.1, hi.2.1, ?_, ?_⟩
+  · exact
+      { toIncidenceCounts :=
+          ⟨sum_atomEdgeCount F hi.1 hi.2.1,
+            sum_atomPointCount F hi.1 hi.2.1 hreduced,
+            shared_forest_excess_add_components F hi.1 hi.2.1 hreduced,
+            point_add_atom_count F hi.1 hi.2.1⟩
+        atom_connected := atomRestriction_connected F hi.1 hi.2.1
+        core_order := atomPointCount_eq_edge_add_core F hi.1 hi.2.1
+        shared_components := ⟨atomSharedPoint_componentEquiv F hi.1 hi.2.1 hreduced⟩
+        local_euler := atomLeviEuler_eq F hi.1 hi.2.1
+        levi_edges := levi_card_edges F
+        levi_vertices := Nat.card_sum
+        surplus := atom_surplus_identity F hi.1 hi.2.1
+        core_surplus := surplus_eq_core_sum F hi.1 hi.2.1
+        euler_additive := levi_euler_eq_sum_atomLeviEuler F hi.1 hi.2.1 }
+  · obtain ⟨s, J, hcol, hnoisolated, he, hv, hc⟩ :=
+      exists_bipartite_shadow F hobligatory hreduced hnonempty
+    have hs : (s : ℤ) = (Nat.card V : ℤ) - (Nat.card E : ℤ) := by
+      have hvNat : s + Nat.card E = Nat.card V := by
+        simpa only [Nat.card_eq_fintype_card] using hv
+      have hv' : (s : ℤ) + (Nat.card E : ℤ) = (Nat.card V : ℤ) := by
+        exact_mod_cast hvNat
+      omega
+    refine ⟨s, J, hcol, hnoisolated, ?_, hs, hc, ?_⟩
+    · simpa only [Nat.card_eq_fintype_card] using he
+    · exact hs.trans (surplus_eq_core_sum F hi.1 hi.2.1)
+
+end
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomCounting
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomCounting
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.BipartiteSpectrumBounds
+Source: Erdos593/Graph/BipartiteSpectrumBounds.lean
+Normalized SHA-256: a6456ba25f6f0e49ed9c12009b9213ae47632cedcdbd5731ef74e262676d7cba
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_BipartiteSpectrumBounds
+
+/-!
+# Exact finite bipartite spectrum bounds
+
+The ceiling is the literal real-square-root ceiling. The lower bound is
+proved by integer capacity concentration over the actual component family.
+-/
+
+namespace Erdos593.Spectrum
+
+/-- The exact rounding term in the order-size spectrum. -/
+noncomputable def q (r : ℕ) : ℕ := ⌈2 * Real.sqrt (r : ℝ)⌉₊
+
+theorem q_le_iff (r t : ℕ) : q r ≤ t ↔ 4 * r ≤ t ^ 2 := by
+  rw [q, Nat.ceil_le]
+  have hs : (Real.sqrt (r : ℝ)) ^ 2 = r := Real.sq_sqrt (by positivity)
+  have hnonneg : 0 ≤ 2 * Real.sqrt (r : ℝ) := by positivity
+  have ht : (0 : ℝ) ≤ t := by positivity
+  constructor
+  · intro h
+    have hh := (sq_le_sq₀ hnonneg ht).mpr h
+    have hreal : (4 : ℝ) * r ≤ (t : ℝ) ^ 2 := by nlinarith
+    exact_mod_cast hreal
+  · intro h
+    have hreal : (4 : ℝ) * r ≤ (t : ℝ) ^ 2 := by exact_mod_cast h
+    apply (sq_le_sq₀ hnonneg ht).mp
+    nlinarith
+
+/-- Concentration of nonnegative integer excess, including an empty index set. -/
+theorem capacity_sum {ι : Type*} (s : Finset ι) (a d : ι → ℕ)
+    (h : ∀ i ∈ s, 4 * a i ≤ (d i) ^ 2 + 4 * d i) :
+    4 * (∑ i ∈ s, a i) ≤ (∑ i ∈ s, d i) ^ 2 + 4 * (∑ i ∈ s, d i) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simp
+  | @insert i s hi ih =>
+    have hi' := h i (Finset.mem_insert_self i s)
+    have ih' := ih (fun j hj => h j (Finset.mem_insert_of_mem hj))
+    simp only [Finset.sum_insert hi]
+    nlinarith [Nat.zero_le (d i * ∑ j ∈ s, d j)]
+
+end Erdos593.Spectrum
+
+namespace SimpleGraph.BipartiteSpectrumBounds
+
+universe u
+
+open scoped Sym2
+
+private def componentEdgeMap {V : Type u} (G : SimpleGraph V) :
+    (Σ C : G.ConnectedComponent, C.toSimpleGraph.edgeSet) → G.edgeSet :=
+  fun e => e.1.toSimpleGraph_hom.mapEdgeSet e.2
+
+private theorem componentEdgeMap_bijective {V : Type u} (G : SimpleGraph V) :
+    Function.Bijective (componentEdgeMap G) := by
+  constructor
+  · rintro ⟨C, e⟩ ⟨D, f⟩ h
+    have hCD : C = D := by
+      rcases e with ⟨e, he⟩
+      rcases f with ⟨f, hf⟩
+      induction e using Sym2.inductionOn with
+      | _ a b =>
+        induction f using Sym2.inductionOn with
+        | _ x y =>
+          have hh := congrArg Subtype.val h
+          change s((a : V), (b : V)) = s((x : V), (y : V)) at hh
+          rcases Sym2.eq_iff.mp hh with hh | hh
+          · exact a.property.symm.trans
+              ((congrArg G.connectedComponentMk hh.1).trans x.property)
+          · exact a.property.symm.trans
+              ((congrArg G.connectedComponentMk hh.1).trans y.property)
+    subst D
+    have hef : e = f :=
+      Hom.mapEdgeSet.injective C.toSimpleGraph_hom Subtype.val_injective h
+    exact congrArg (Sigma.mk C) hef
+  · rintro ⟨e, he⟩
+    induction e using Sym2.inductionOn with
+    | _ x y =>
+      let C := G.connectedComponentMk x
+      have hx : x ∈ C.supp := rfl
+      have hy : y ∈ C.supp := C.mem_supp_of_adj_mem_supp hx he
+      exact ⟨⟨C, ⟨s((⟨x, hx⟩ : C), ⟨y, hy⟩), he⟩⟩, rfl⟩
+
+theorem edge_count_components {V : Type u} [Finite V] (G : SimpleGraph V)
+    [Fintype G.ConnectedComponent] :
+    Nat.card G.edgeSet = ∑ C : G.ConnectedComponent, Nat.card C.toSimpleGraph.edgeSet := by
+  rw [← Nat.card_sigma]
+  exact (Nat.card_congr
+    (Equiv.ofBijective (componentEdgeMap G) (componentEdgeMap_bijective G))).symm
+
+theorem vertex_count_components {V : Type u} [Finite V] (G : SimpleGraph V)
+    [Fintype G.ConnectedComponent] :
+    Nat.card V = ∑ C : G.ConnectedComponent, Nat.card C := by
+  rw [← Nat.card_sigma]
+  exact (Nat.card_congr (Equiv.sigmaFiberEquiv G.connectedComponentMk)).symm
+
+theorem bipartite_capacity {V : Type u} [Finite V] (G : SimpleGraph V)
+    (hb : G.Colorable 2) : 4 * Nat.card G.edgeSet ≤ (Nat.card V) ^ 2 := by
+  have h := SimpleGraph.IsBipartite.four_mul_encard_edgeSet_le hb
+  rw [← G.edgeSet.toFinite.cast_ncard_eq, ENat.card_eq_coe_natCard] at h
+  rw [Nat.card_coe_set_eq]
+  exact_mod_cast h
+
+/-- Bounds on an actual finite simple bipartite graph with no isolated vertices.
+The component count is derived from its quotient, not supplied as a parameter. -/
+theorem parameter_bounds {V : Type u} [Finite V] (G : SimpleGraph V)
+    (hb : G.Colorable 2) (hnoiso : ∀ x, ∃ y, G.Adj x y)
+    (hne : Nonempty G.edgeSet) :
+    1 ≤ Nat.card G.ConnectedComponent ∧
+    Nat.card G.ConnectedComponent ≤ Nat.card G.edgeSet ∧
+    2 * (Nat.card G.ConnectedComponent - 1) +
+        Erdos593.Spectrum.q (Nat.card G.edgeSet - Nat.card G.ConnectedComponent + 1)
+      ≤ Nat.card V ∧
+    Nat.card V ≤ Nat.card G.edgeSet + Nat.card G.ConnectedComponent := by
+  classical
+  letI := Fintype.ofFinite V
+  letI := Fintype.ofFinite G.ConnectedComponent
+  let r (C : G.ConnectedComponent) := Nat.card C.toSimpleGraph.edgeSet
+  let t (C : G.ConnectedComponent) := Nat.card C
+  have hr : ∀ C, 1 ≤ r C := by
+    intro C
+    obtain ⟨y, hy⟩ := hnoiso C.out
+    have hx : C.out ∈ C.supp := C.out_eq
+    have hyC := C.mem_supp_of_adj_mem_supp hx hy
+    haveI : Nonempty C.toSimpleGraph.edgeSet :=
+      ⟨⟨s((⟨C.out, hx⟩ : C), ⟨y, hyC⟩), hy⟩⟩
+    exact Nat.card_pos
+  have ht : ∀ C, 2 ≤ t C := by
+    intro C
+    obtain ⟨y, hy⟩ := hnoiso C.out
+    have hx : C.out ∈ C.supp := C.out_eq
+    have hyC := C.mem_supp_of_adj_mem_supp hx hy
+    have hxy : (⟨C.out, hx⟩ : C) ≠ ⟨y, hyC⟩ := by
+      intro h
+      exact hy.ne (congrArg Subtype.val h)
+    haveI : Nontrivial C := ⟨⟨_, _, hxy⟩⟩
+    letI := Fintype.ofFinite C
+    change 2 ≤ Nat.card C
+    rw [Nat.card_eq_fintype_card]
+    exact Fintype.one_lt_card
+  have hcap : ∀ C, 4 * r C ≤ (t C) ^ 2 := by
+    intro C
+    obtain ⟨col⟩ := hb
+    exact bipartite_capacity C.toSimpleGraph ⟨col.comp C.toSimpleGraph_hom⟩
+  have hup : ∀ C, t C ≤ r C + 1 :=
+    fun C => C.connected_toSimpleGraph.card_vert_le_card_edgeSet_add_one
+  have he := edge_count_components G
+  have hv := vertex_count_components G
+  change Nat.card G.edgeSet = ∑ C, r C at he
+  change Nat.card V = ∑ C, t C at hv
+  have hcpos : 1 ≤ Nat.card G.ConnectedComponent := by
+    obtain ⟨e, he'⟩ := hne
+    induction e using Sym2.inductionOn with
+    | _ x y =>
+      haveI : Nonempty G.ConnectedComponent := ⟨G.connectedComponentMk x⟩
+      exact Nat.card_pos
+  have hclt : Nat.card G.ConnectedComponent ≤ Nat.card G.edgeSet := by
+    rw [he, Nat.card_eq_fintype_card]
+    simpa using Finset.sum_le_sum (fun C (_ : C ∈ Finset.univ) => hr C)
+  let a (C : G.ConnectedComponent) := r C - 1
+  let d (C : G.ConnectedComponent) := t C - 2
+  have hra : ∀ C, r C = a C + 1 := fun C => by dsimp [a]; have := hr C; omega
+  have htd : ∀ C, t C = d C + 2 := fun C => by dsimp [d]; have := ht C; omega
+  have ha : Nat.card G.edgeSet = (∑ C, a C) + Nat.card G.ConnectedComponent := by
+    rw [he]
+    simp_rw [hra]
+    simp [Finset.sum_add_distrib, Nat.card_eq_fintype_card]
+  have hd : Nat.card V = (∑ C, d C) + 2 * Nat.card G.ConnectedComponent := by
+    rw [hv]
+    simp_rw [htd]
+    simp [Finset.sum_add_distrib, Nat.card_eq_fintype_card, mul_comm]
+  have hsum := Erdos593.Spectrum.capacity_sum Finset.univ a d (fun C _ => by
+    have hh := hcap C
+    rw [hra C, htd C] at hh
+    nlinarith)
+  have hql : Erdos593.Spectrum.q
+      (Nat.card G.edgeSet - Nat.card G.ConnectedComponent + 1) ≤ (∑ C, d C) + 2 := by
+    apply (Erdos593.Spectrum.q_le_iff _ _).mpr
+    have hsub : Nat.card G.edgeSet - Nat.card G.ConnectedComponent = ∑ C, a C := by omega
+    rw [hsub]
+    nlinarith
+  refine ⟨hcpos, hclt, ?_, ?_⟩
+  · omega
+  · have hh := Finset.sum_le_sum (fun C (_ : C ∈ Finset.univ) => hup C)
+    simpa [Finset.sum_add_distrib, ← he, ← hv, Nat.card_eq_fintype_card] using hh
+
+end SimpleGraph.BipartiteSpectrumBounds
+
+end Erdos593SelfContained_Module_Erdos593_Graph_BipartiteSpectrumBounds
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.BipartiteSpectrumBounds
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SpectrumNecessity
+Source: Erdos593/TripleSystem/SpectrumNecessity.lean
+Normalized SHA-256: 593cbe4a74876e99b5798da4f1b7380b90fd58a707ebd75296b05f0df0b5ddaa
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SpectrumNecessity
+
+/-!
+# Necessity in the exact order-size-component spectrum
+
+This proves only the necessity direction. The realization converse is separate.
+-/
+
+namespace Erdos593.TripleSystem
+
+universe u
+
+theorem obligatory_spectrum_necessity
+    {V E : Type u} (F : TripleSystem V E)
+    [Fintype V] [Fintype E]
+    (hobligatory : F.IsObligatory)
+    (hreduced : F.HasNoIsolatedPoints)
+    (hnonempty : Nonempty E) :
+    1 ≤ Nat.card F.levi.ConnectedComponent ∧
+    Nat.card F.levi.ConnectedComponent ≤ Nat.card E ∧
+    Nat.card E + 2 * (Nat.card F.levi.ConnectedComponent - 1) +
+        Erdos593.Spectrum.q (Nat.card E - Nat.card F.levi.ConnectedComponent + 1)
+      ≤ Nat.card V ∧
+    Nat.card V ≤ 2 * Nat.card E + Nat.card F.levi.ConnectedComponent := by
+  classical
+  obtain ⟨s, G, hb, hnoiso, he, hv, hc⟩ :=
+    exists_bipartite_shadow F hobligatory hreduced hnonempty
+  haveI : Nonempty E := hnonempty
+  have hpos : 0 < Nat.card G.edgeSet := by
+    rw [he]
+    exact Fintype.card_pos
+  have hne : Nonempty G.edgeSet := Nat.card_pos_iff.mp hpos |>.1
+  obtain ⟨h1, h2, h3, h4⟩ :=
+    _root_.SimpleGraph.BipartiteSpectrumBounds.parameter_bounds G hb hnoiso hne
+  simp only [hc, he, Nat.card_eq_fintype_card, Fintype.card_fin] at h1 h2 h3 h4 ⊢
+  exact ⟨h1, h2, by omega, by omega⟩
+
+end Erdos593.TripleSystem
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SpectrumNecessity
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SpectrumNecessity
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.BipartiteSpectrumRealization
+Source: Erdos593/Graph/BipartiteSpectrumRealization.lean
+Normalized SHA-256: 2ab847bf11da44b09f9476164cf25c823d4000b0c278978a392d6d9d1a000113
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_BipartiteSpectrumRealization
+
+/-!
+# Exact finite bipartite spectrum realization
+
+Construct actual graphs, retaining a spanning tree while selecting edges.
+The component count is the cardinality of the actual reachability quotient.
+-/
+
+namespace SimpleGraph.BipartiteSpectrumRealization
+
+open scoped Sym2
+
+private theorem connected_intermediate {V : Type} [Fintype V]
+    (K : SimpleGraph V) (hK : K.Connected) (m : ℕ)
+    (hlo : Nat.card V ≤ m + 1) (hhi : m ≤ Nat.card K.edgeSet) :
+    ∃ G : SimpleGraph V, G ≤ K ∧ G.Connected ∧ Nat.card G.edgeSet = m := by
+  classical
+  obtain ⟨T, hTK, hT⟩ := hK.exists_isTree_le
+  have ht := (isTree_iff_connected_and_card.mp hT).2
+  have htc : T.edgeFinset.card ≤ m := by
+    rw [edgeFinset_card, ← Nat.card_eq_fintype_card]
+    omega
+  have hkc : m ≤ K.edgeFinset.card := by
+    simpa only [edgeFinset_card, Nat.card_eq_fintype_card] using hhi
+  obtain ⟨s, hTs, hsK, hsm⟩ :=
+    Finset.exists_subsuperset_card_eq (edgeFinset_mono hTK) htc hkc
+  let G := fromEdgeSet (s : Set (Sym2 V))
+  have hTG : T ≤ G := by
+    rw [le_fromEdgeSet_iff]
+    intro e he
+    exact hTs (mem_edgeFinset.mpr he)
+  have hGK : G ≤ K := by
+    intro x y hxy
+    exact mem_edgeFinset.mp (hsK hxy.1)
+  have hges : G.edgeSet = (s : Set (Sym2 V)) := by
+    ext e
+    rw [edgeSet_fromEdgeSet]
+    constructor
+    · exact fun h => h.1
+    · intro he
+      exact ⟨he, K.not_isDiag_of_mem_edgeFinset (hsK he)⟩
+  refine ⟨G, hGK, hT.connected.mono hTG, ?_⟩
+  rw [hges]
+  simpa using hsm
+
+private theorem sum_component_card {V W : Type} [Finite V] [Finite W]
+    (G : SimpleGraph V) (H : SimpleGraph W) :
+    Nat.card (G.sum H).ConnectedComponent =
+      Nat.card G.ConnectedComponent + Nat.card H.ConnectedComponent := by
+  classical
+  let label : V ⊕ W → G.ConnectedComponent ⊕ H.ConnectedComponent :=
+    Sum.map G.connectedComponentMk H.connectedComponentMk
+  have hstep : ∀ x y, (G.sum H).Adj x y → label x = label y := by
+    rintro (x | x) (y | y) h
+    · have hxy : G.Adj x y := by simpa using h
+      exact congrArg Sum.inl (ConnectedComponent.sound hxy.reachable)
+    · simp at h
+    · simp at h
+    · have hxy : H.Adj x y := by simpa using h
+      exact congrArg Sum.inr (ConnectedComponent.sound hxy.reachable)
+  have hreach : ∀ x y, (G.sum H).Reachable x y → label x = label y := by
+    rintro x y ⟨p⟩
+    induction p with
+    | nil => rfl
+    | cons h _ ih => exact (hstep _ _ h).trans ih
+  let e : (G.sum H).ConnectedComponent ≃
+      G.ConnectedComponent ⊕ H.ConnectedComponent :=
+    { toFun := Quot.lift label (fun x y h => hreach x y h)
+      invFun := Sum.elim
+        (ConnectedComponent.map (Embedding.sumInl (G := G) (H := H)).toHom)
+        (ConnectedComponent.map (Embedding.sumInr (G := G) (H := H)).toHom)
+      left_inv := by
+        intro C
+        refine C.ind ?_
+        rintro (x | x) <;> rfl
+      right_inv := by
+        rintro (C | C)
+        · exact C.ind (fun _ => rfl)
+        · exact C.ind (fun _ => rfl) }
+  rw [Nat.card_congr e, Nat.card_sum]
+
+private theorem relabel_graph {V : Type} [Finite V] (G : SimpleGraph V)
+    (hb : G.Colorable 2) (hno : ∀ x, ∃ y, G.Adj x y) (s m c : ℕ)
+    (hv : Nat.card V = s) (he : Nat.card G.edgeSet = m)
+    (hc : Nat.card G.ConnectedComponent = c) :
+    ∃ J : SimpleGraph (Fin s), J.Colorable 2 ∧
+      (∀ x, ∃ y, J.Adj x y) ∧ Nat.card J.edgeSet = m ∧
+      Nat.card J.ConnectedComponent = c := by
+  classical
+  let e : V ≃ Fin s := (Finite.equivFin V).trans (finCongr hv)
+  let i := Iso.map e G
+  refine ⟨SimpleGraph.map e G, ?_, ?_, ?_, ?_⟩
+  · obtain ⟨b⟩ := hb
+    exact ⟨b.comp i.symm.toHom⟩
+  · intro x
+    obtain ⟨y, hy⟩ := hno (e.symm x)
+    refine ⟨e y, ?_⟩
+    have hh := i.map_adj_iff.mpr hy
+    change (SimpleGraph.map e G).Adj (e (e.symm x)) (e y) at hh
+    simpa only [e.apply_symm_apply] using hh
+  · exact (Nat.card_congr i.mapEdgeSet).symm.trans he
+  · exact (Nat.card_congr i.connectedComponentEquiv).symm.trans hc
+
+theorem exists_connected (m t : ℕ) (hm : 1 ≤ m)
+    (hlower : Erdos593.Spectrum.q m ≤ t) (hupper : t ≤ m + 1) :
+    ∃ G : SimpleGraph (Fin t), G.Colorable 2 ∧ G.Connected ∧
+      (∀ x, ∃ y, G.Adj x y) ∧ Nat.card G.edgeSet = m := by
+  classical
+  have hcap := (Erdos593.Spectrum.q_le_iff m t).mp hlower
+  have ht : 2 ≤ t := by
+    by_contra h
+    have : t = 0 ∨ t = 1 := by omega
+    rcases this with rfl | rfl <;> norm_num at hcap <;> omega
+  let a := t / 2
+  let b := t - a
+  have ha : 0 < a := by dsimp [a]; omega
+  have hb : 0 < b := by dsimp [a, b]; omega
+  have hab : a + b = t := by dsimp [a, b]; omega
+  have hbal : b = a ∨ b = a + 1 := by dsimp [a, b]; omega
+  have hcapacity : m ≤ a * b := by
+    rw [← hab] at hcap
+    rcases hbal with h | h <;> rw [h] at hcap ⊢ <;> nlinarith
+  letI : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
+  letI : Nonempty (Fin b) := ⟨⟨0, hb⟩⟩
+  let K := completeBipartiteGraph (Fin a) (Fin b)
+  have hconn : K.Connected := by
+    apply (connected_iff_exists_forall_reachable K).mpr
+    refine ⟨Sum.inl ⟨0, ha⟩, ?_⟩
+    rintro (x | y)
+    · exact (show K.Adj (Sum.inl ⟨0, ha⟩) (Sum.inr ⟨0, hb⟩) by simp [K]).reachable.trans
+        (show K.Adj (Sum.inr ⟨0, hb⟩) (Sum.inl x) by simp [K]).reachable
+    · exact (show K.Adj (Sum.inl ⟨0, ha⟩) (Sum.inr y) by simp [K]).reachable
+  have hcolor : K.Colorable 2 := by
+    simpa using (CompleteBipartiteGraph.bicoloring (Fin a) (Fin b)).colorable
+  have hkedges : Nat.card K.edgeSet = a * b := by
+    have h := encard_edgeSet_completeBipartiteGraph (W₁ := Fin a) (W₂ := Fin b)
+    rw [← K.edgeSet.toFinite.cast_ncard_eq, ENat.card_eq_coe_natCard,
+      ENat.card_eq_coe_natCard] at h
+    rw [Nat.card_coe_set_eq]
+    simp only [Nat.card_fin] at h
+    exact_mod_cast h
+  have hv : Nat.card (Fin a ⊕ Fin b) = t := by simp [hab]
+  obtain ⟨G, hGK, hG, hGe⟩ := connected_intermediate K hconn m
+    (by omega) (by omega)
+  have hbG : G.Colorable 2 := by
+    obtain ⟨col⟩ := hcolor
+    exact ⟨col.comp (Hom.ofLE hGK)⟩
+  let e : (Fin a ⊕ Fin b) ≃ Fin t :=
+    (Finite.equivFin (Fin a ⊕ Fin b)).trans (finCongr hv)
+  let i := Iso.map e G
+  have hJ : (SimpleGraph.map e G).Connected := i.connected_iff.mp hG
+  haveI : Nontrivial (Fin t) := Fin.nontrivial_iff_two_le.mpr ht
+  refine ⟨SimpleGraph.map e G, ?_, hJ, hJ.preconnected.exists_adj_of_nontrivial, ?_⟩
+  · obtain ⟨col⟩ := hbG
+    exact ⟨col.comp i.symm.toHom⟩
+  · exact (Nat.card_congr i.mapEdgeSet).symm.trans hGe
+
+theorem exists_shadow (m s c : ℕ) (hc : 1 ≤ c) (hcm : c ≤ m)
+    (hlower : 2 * (c - 1) + Erdos593.Spectrum.q (m - c + 1) ≤ s)
+    (hupper : s ≤ m + c) :
+    ∃ G : SimpleGraph (Fin s), G.Colorable 2 ∧
+      (∀ x, ∃ y, G.Adj x y) ∧ Nat.card G.edgeSet = m ∧
+      Nat.card G.ConnectedComponent = c := by
+  classical
+  have hM : 1 ≤ m - c + 1 := by omega
+  let M := m - c + 1
+  let t := s - 2 * (c - 1)
+  have htlow : Erdos593.Spectrum.q M ≤ t := by dsimp [t, M]; omega
+  have hthigh : t ≤ M + 1 := by dsimp [t, M]; omega
+  obtain ⟨J, hJb, hJc, hJno, hJe⟩ := exists_connected M t hM htlow hthigh
+  haveI : Nonempty (Fin t) := hJc.nonempty
+  haveI : Subsingleton J.ConnectedComponent := hJc.preconnected.subsingleton_connectedComponent
+  have hJcc : Nat.card J.ConnectedComponent = 1 := Nat.card_unique
+  obtain ⟨K, hKb, hKc, hKno, hKe⟩ := exists_connected 1 2 (by omega)
+    ((Erdos593.Spectrum.q_le_iff 1 2).mpr (by norm_num)) (by omega)
+  haveI : Subsingleton K.ConnectedComponent := hKc.preconnected.subsingleton_connectedComponent
+  have hKcc : Nat.card K.ConnectedComponent = 1 := Nat.card_unique
+  have assemble : ∀ d : ℕ, ∃ G : SimpleGraph (Fin (t + 2 * d)), G.Colorable 2 ∧
+      (∀ x, ∃ y, G.Adj x y) ∧ Nat.card G.edgeSet = M + d ∧
+      Nat.card G.ConnectedComponent = 1 + d := by
+    intro d
+    induction d with
+    | zero =>
+      simp only [Nat.mul_zero, Nat.add_zero]
+      exact ⟨J, hJb, hJno, hJe, hJcc⟩
+    | succ d ih =>
+      obtain ⟨G, hbG, hnoG, heG, hcG⟩ := ih
+      refine relabel_graph (G.sum K) (colorable_sum.mpr ⟨hbG, hKb⟩) ?_
+        (t + 2 * (d + 1)) (M + (d + 1)) (1 + (d + 1)) ?_ ?_ ?_
+      · rintro (x | x)
+        · obtain ⟨y, hy⟩ := hnoG x
+          exact ⟨Sum.inl y, by simpa using hy⟩
+        · obtain ⟨y, hy⟩ := hKno x
+          exact ⟨Sum.inr y, by simpa using hy⟩
+      · simp; omega
+      · rw [Nat.card_congr (edgeSetSumEquiv (G := G) (H := K)), Nat.card_sum, heG, hKe]
+        omega
+      · rw [sum_component_card, hcG, hKcc]; omega
+  have hs : t + 2 * (c - 1) = s := by dsimp [t]; omega
+  have he : M + (c - 1) = m := by dsimp [M]; omega
+  have hcc : 1 + (c - 1) = c := by omega
+  obtain ⟨G, hGb, hGno, hGe, hGc⟩ := assemble (c - 1)
+  exact relabel_graph G hGb hGno s m c (by simpa only [Nat.card_fin] using hs)
+    (hGe.trans he) (hGc.trans hcc)
+
+end SimpleGraph.BipartiteSpectrumRealization
+
+end Erdos593SelfContained_Module_Erdos593_Graph_BipartiteSpectrumRealization
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.BipartiteSpectrumRealization
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SpectrumRealization
+Source: Erdos593/TripleSystem/SpectrumRealization.lean
+Normalized SHA-256: 15f6bf0bcf61c548d675280b642218db77dadbdd6d82986ed3b7780962270d6f
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SpectrumRealization
+
+/-!
+# Realization in the exact order-size-component spectrum
+
+The witness uses literal finite point and edge carriers. No numerical test
+or abstract list of component parameters substitutes for a constructed system.
+-/
+
+namespace Erdos593.TripleSystem
+
+theorem exists_obligatory_spectrum (m n c : ℕ)
+    (hm : 1 ≤ m) (hc : 1 ≤ c) (hcm : c ≤ m)
+    (hlower : m + 2 * (c - 1) + Erdos593.Spectrum.q (m - c + 1) ≤ n)
+    (hupper : n ≤ 2 * m + c) :
+    ∃ F : TripleSystem (Fin n) (Fin m),
+      F.IsObligatory ∧ F.HasNoIsolatedPoints ∧
+      Nat.card F.levi.ConnectedComponent = c := by
+  classical
+  have _hm : 0 < m := hm
+  obtain ⟨G, hb, hno, he, hcomp⟩ :=
+    _root_.SimpleGraph.BipartiteSpectrumRealization.exists_shadow m (n - m) c hc hcm
+      (by omega) (by omega)
+  obtain ⟨hF, hred, hedge, hvertex, hcF⟩ :=
+    privateVertexExpansion_shadow_parameters G hb hno
+  have hv : Nat.card (PrivateVertexExpansion.Point G) = n := by
+    simp only [Fintype.card_fin, he] at hvertex
+    omega
+  have he' : Nat.card (PrivateVertexExpansion.Edge G) = m := hedge.trans he
+  let ev : PrivateVertexExpansion.Point G ≃ Fin n :=
+    (Finite.equivFin _).trans (finCongr hv)
+  let ee : PrivateVertexExpansion.Edge G ≃ Fin m :=
+    (Finite.equivFin _).trans (finCongr he')
+  let F := TriangleHostTransport.reindex (privateVertexExpansion G) ev ee
+  let i : Iso (privateVertexExpansion G) F :=
+    { vertexEquiv := ev
+      edgeEquiv := ee
+      map_inc_iff := fun x e => (TriangleHostTransport.reindex_inc_iff _ ev ee x e).symm }
+  refine ⟨F, hF.ofIso i, ?_, ?_⟩
+  · intro x
+    apply (not_isolated_iff_exists_inc F).mpr
+    obtain ⟨e, he⟩ := (not_isolated_iff_exists_inc _).mp (hred (ev.symm x))
+    refine ⟨ee e, ?_⟩
+    simpa [i] using (i.map_inc_iff (ev.symm x) e).mp he
+  · exact (Nat.card_congr i.leviIso.connectedComponentEquiv).symm.trans (hcF.trans hcomp)
+
+end Erdos593.TripleSystem
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SpectrumRealization
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SpectrumRealization
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.SpectrumCorollaryArithmetic
+Source: Erdos593/Graph/SpectrumCorollaryArithmetic.lean
+Normalized SHA-256: a6bf834c815a31103acab67a73cb6e29df04fb90aba980a927a4f4e22862550b
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_SpectrumCorollaryArithmetic
+
+/-! # Exact arithmetic for the finite spectrum corollaries -/
+
+namespace Erdos593.Spectrum
+
+theorem q_mono {a b : ℕ} (h : a ≤ b) : q a ≤ q b := by
+  apply (q_le_iff a (q b)).mpr
+  have hb := (q_le_iff b (q b)).mp le_rfl
+  omega
+
+theorem two_le_q (m : ℕ) (hm : 1 ≤ m) : 2 ≤ q m := by
+  have h := (q_le_iff m (q m)).mp le_rfl
+  by_contra hn
+  have : q m = 0 ∨ q m = 1 := by omega
+  rcases this with hq | hq <;> rw [hq] at h <;> norm_num at h <;> omega
+
+theorem q_le_succ (m : ℕ) (hm : 1 ≤ m) : q m ≤ m + 1 := by
+  apply (q_le_iff m (m + 1)).mpr
+  have h : m - 1 + 1 = m := by omega
+  nlinarith [Nat.zero_le ((m - 1) ^ 2)]
+
+theorem q_le_self (m : ℕ) (hm : 4 ≤ m) : q m ≤ m := by
+  apply (q_le_iff m m).mpr
+  nlinarith [Nat.mul_le_mul_left m hm]
+
+theorem q_shift_le (m d : ℕ) (hm : 1 ≤ m) : q (m + d) ≤ q m + 2 * d := by
+  apply (q_le_iff (m + d) (q m + 2 * d)).mpr
+  have h := (q_le_iff m (q m)).mp le_rfl
+  have hq := two_le_q m hm
+  nlinarith [Nat.mul_le_mul_left d hq, Nat.zero_le (d ^ 2)]
+
+theorem inverse_q_bound (M N : ℕ) (hM : 1 ≤ M) (hN : 3 ≤ N) :
+    M + q M ≤ N ↔ M ≤ N + 2 - q (N + 1) := by
+  have _hM : 0 < M := hM
+  let k := q (N + 1)
+  let U := N + 2 - k
+  have hklo : 4 ≤ k := by
+    have hcap := (q_le_iff (N + 1) k).mp le_rfl
+    by_contra h
+    have hk : k ≤ 3 := by omega
+    nlinarith [Nat.mul_le_mul hk hk]
+  have hkhi : k ≤ N + 1 := q_le_self (N + 1) (by omega)
+  have hU : U + k = N + 2 := by dsimp [U]; omega
+  have _hUpos : 1 ≤ U := by omega
+  have hkcap : 4 * (N + 1) ≤ k ^ 2 := (q_le_iff (N + 1) k).mp le_rfl
+  have hkmin : (k - 1) ^ 2 < 4 * (N + 1) := by
+    by_contra h
+    have hq := (q_le_iff (N + 1) (k - 1)).mpr (by omega)
+    change k ≤ k - 1 at hq
+    omega
+  have hk1 : k - 1 + 1 = k := by omega
+  have hk2 : k - 2 + 2 = k := by omega
+  have hk3 : k - 3 + 3 = k := by omega
+  have hUcap : 4 * U ≤ (k - 2) ^ 2 := by nlinarith
+  have hUq := (q_le_iff U (k - 2)).mpr hUcap
+  have hUgood : U + q U ≤ N := by omega
+  have hnextcap : (k - 3) ^ 2 < 4 * (U + 1) := by nlinarith
+  have hnextq : k - 2 ≤ q (U + 1) := by
+    by_contra h
+    have hh := (q_le_iff (U + 1) (k - 3)).mp (by omega)
+    omega
+  have hnext : N < U + 1 + q (U + 1) := by omega
+  change M + q M ≤ N ↔ M ≤ U
+  constructor
+  · intro h
+    by_contra hbad
+    have hq := q_mono (show U + 1 ≤ M by omega)
+    omega
+  · intro h
+    have hq := q_mono h
+    omega
+
+theorem half_ceiling (n c : ℕ) (hcn : c ≤ n) :
+    (n - c + 1) / 2 = ⌈((n : ℝ) - c) / 2⌉₊ := by
+  let t := (n - c + 1) / 2
+  let x : ℝ := ((n : ℝ) - c) / 2
+  have hn : n - c ≤ 2 * t := by dsimp [t]; omega
+  have hnreal : ((n - c : ℕ) : ℝ) ≤ 2 * (t : ℝ) := by exact_mod_cast hn
+  rw [Nat.cast_sub hcn] at hnreal
+  have hceil : ⌈x⌉₊ ≤ t := (Nat.ceil_le).mpr (by dsimp [x]; linarith)
+  have hx : x ≤ (⌈x⌉₊ : ℝ) := Nat.le_ceil x
+  have hnreal' : ((n - c : ℕ) : ℝ) ≤ (2 * ⌈x⌉₊ : ℕ) := by
+    rw [Nat.cast_sub hcn]
+    push_cast
+    dsimp [x] at hx
+    linarith
+  have hn' : n - c ≤ 2 * ⌈x⌉₊ := by exact_mod_cast hnreal'
+  have hother : t ≤ ⌈x⌉₊ := by dsimp [t]; omega
+  exact Nat.le_antisymm hother hceil
+
+theorem fixed_order_bounds_iff (m n c : ℕ)
+    (hc : 1 ≤ c) (hn : 3 * c ≤ n) (hcm : c ≤ m) :
+    (m + 2 * (c - 1) + q (m - c + 1) ≤ n ∧ n ≤ 2 * m + c) ↔
+      ((n - c + 1) / 2 ≤ m ∧ m ≤ n - 2 * c + 4 - q (n - 3 * c + 4)) := by
+  let M := m - c + 1
+  let N := n - 3 * c + 3
+  have hM : 1 ≤ M := by dsimp [M]; omega
+  have hN : 3 ≤ N := by dsimp [N]; omega
+  have hN1 : N + 1 = n - 3 * c + 4 := rfl
+  have hq := q_le_self (N + 1) (by omega)
+  have hi := inverse_q_bound M N hM hN
+  rw [hN1] at hq hi
+  dsimp [M, N] at hi ⊢
+  omega
+
+private theorem connected_order_bounds (n : ℕ) :
+    (∃ m : ℕ, 1 ≤ m ∧ m + q m ≤ n ∧ n ≤ 2 * m + 1) ↔
+      n = 3 ∨ n = 5 ∨ 7 ≤ n := by
+  have hq1 : q 1 = 2 := by
+    have hlo := two_le_q 1 (by omega)
+    have hhi := q_le_succ 1 (by omega)
+    omega
+  have hq2 : q 2 = 3 := by
+    have hhi := (q_le_iff 2 3).mpr (by norm_num)
+    have hn : ¬q 2 ≤ 2 := by rw [q_le_iff]; norm_num
+    omega
+  have hq3 : q 3 = 4 := by
+    have hhi := (q_le_iff 3 4).mpr (by norm_num)
+    have hn : ¬q 3 ≤ 3 := by rw [q_le_iff]; norm_num
+    omega
+  constructor
+  · rintro ⟨m, hm, hlo, hhi⟩
+    have hq := two_le_q m hm
+    by_cases h : 7 ≤ n
+    · exact Or.inr (Or.inr h)
+    by_cases hm1 : m = 1
+    · subst m
+      rw [hq1] at hlo
+      omega
+    by_cases hm2 : m = 2
+    · subst m
+      rw [hq2] at hlo
+      omega
+    have hq3m := q_mono (show 3 ≤ m by omega)
+    omega
+  · rintro (rfl | rfl | h)
+    · exact ⟨1, by omega, by omega, by omega⟩
+    · exact ⟨2, by omega, by omega, by omega⟩
+    · by_cases h7 : n = 7
+      · exact ⟨3, by omega, by omega, by omega⟩
+      have hm : 4 ≤ n / 2 := by omega
+      have hq := q_le_self (n / 2) hm
+      exact ⟨n / 2, by omega, by omega, by omega⟩
+
+theorem exists_order_bounds_iff (n c : ℕ) (hc : 1 ≤ c) (hn : 3 * c ≤ n) :
+    (∃ m : ℕ, c ≤ m ∧
+      m + 2 * (c - 1) + q (m - c + 1) ≤ n ∧ n ≤ 2 * m + c) ↔
+      n = 3 * c ∨ n = 3 * c + 2 ∨ 3 * c + 4 ≤ n := by
+  let N := n - 3 * c + 3
+  constructor
+  · rintro ⟨m, hcm, hlo, hhi⟩
+    have h : ∃ M : ℕ, 1 ≤ M ∧ M + q M ≤ N ∧ N ≤ 2 * M + 1 := by
+      refine ⟨m - c + 1, by omega, ?_, ?_⟩ <;> dsimp [N] <;> omega
+    have hh := (connected_order_bounds N).mp h
+    dsimp [N] at hh
+    omega
+  · intro h
+    have hN : N = 3 ∨ N = 5 ∨ 7 ≤ N := by dsimp [N]; omega
+    obtain ⟨M, hM, hlo, hhi⟩ := (connected_order_bounds N).mpr hN
+    have hmc : M + c - 1 - c + 1 = M := by omega
+    refine ⟨M + c - 1, by omega, ?_, ?_⟩
+    · rw [hmc]
+      dsimp [N] at hlo
+      omega
+    · dsimp [N] at hhi
+      omega
+
+end Erdos593.Spectrum
+
+end Erdos593SelfContained_Module_Erdos593_Graph_SpectrumCorollaryArithmetic
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.SpectrumCorollaryArithmetic
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.IsolatedPointExtension
+Source: Erdos593/TripleSystem/IsolatedPointExtension.lean
+Normalized SHA-256: 94fdabc454451af7e7825022e5f25ffb1d37ec04d0a06ad079ac8ddc44838be4
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_IsolatedPointExtension
+
+/-! # Adjoining isolated points along a prescribed vertex embedding -/
+
+namespace Erdos593.TripleSystem
+
+variable {V W E : Type}
+
+def isolatedExtensionInc (F : TripleSystem V E) (f : V ↪ W) (x : W) (e : E) : Prop :=
+  x ∈ f '' F.edgeSet e
+
+def withIsolatedPoints (F : TripleSystem V E) (f : V ↪ W) : TripleSystem W E where
+  Inc := isolatedExtensionInc F f
+  edge_ncard := by
+    intro e
+    change (f '' F.edgeSet e).ncard = 3
+    rw [Set.ncard_image_of_injective _ f.injective, F.edgeSet_ncard]
+  simple := by
+    intro e d h
+    apply F.simple
+    ext x
+    have hx := Set.ext_iff.mp h (f x)
+    simpa [isolatedExtensionInc, Set.mem_image, f.injective.eq_iff, edgeSet] using hx
+
+theorem withIsolatedPoints_inc_iff (F : TripleSystem V E) (f : V ↪ W) (x : V) (e : E) :
+    (F.withIsolatedPoints f).Inc (f x) e ↔ F.Inc x e := by
+  simp [withIsolatedPoints, isolatedExtensionInc, Set.mem_image, f.injective.eq_iff, edgeSet]
+
+theorem IsObligatory.withIsolatedPoints (F : TripleSystem V E) (f : V ↪ W)
+    [Fintype V] [Fintype W] (hF : F.IsObligatory) (hred : F.HasNoIsolatedPoints) :
+    (F.withIsolatedPoints f).IsObligatory := by
+  classical
+  let H := F.withIsolatedPoints f
+  let g : V → H.NonIsolatedPoint := fun x =>
+    ⟨f x, by
+      obtain ⟨e, he⟩ := (not_isolated_iff_exists_inc F).mp (hred x)
+      exact H.not_isolated_of_inc ((withIsolatedPoints_inc_iff F f x e).mpr he)⟩
+  have hg : Function.Bijective g := by
+    constructor
+    · intro x y h
+      exact f.injective (congrArg Subtype.val h)
+    · intro x
+      obtain ⟨e, he⟩ := (not_isolated_iff_exists_inc H).mp x.property
+      change x.val ∈ f '' F.edgeSet e at he
+      obtain ⟨v, hv, hfx⟩ := he
+      exact ⟨v, Subtype.ext hfx⟩
+  let v := Equiv.ofBijective g hg
+  have hinc (x : V) (e : E) : H.isolatedReduction.Inc (v x) e ↔ F.Inc x e :=
+    withIsolatedPoints_inc_iff F f x e
+  let i : H.isolatedReduction.Embedding F :=
+    { vertex := v.symm.toEmbedding
+      edge := id
+      map_edge := by
+        intro e
+        ext x
+        constructor
+        · rintro ⟨y, hy, rfl⟩
+          apply (hinc (v.symm y) e).mp
+          simpa using hy
+        · intro hx
+          exact ⟨v x, (hinc x e).mpr hx, v.symm_apply_apply x⟩ }
+  exact IsObligatory.of_isolatedReduction (hF.of_sourceEmbedding i)
+
+end Erdos593.TripleSystem
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_IsolatedPointExtension
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.IsolatedPointExtension
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SpectrumCorollaries
+Source: Erdos593/TripleSystem/SpectrumCorollaries.lean
+Normalized SHA-256: 81c7f0e702835e17f3927d00c6a9be7159a5be59060ca027792213299bb43823
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SpectrumCorollaries
+
+/-! # Connected, unrestricted and fixed-order spectra -/
+
+namespace Erdos593.TripleSystem
+
+private theorem reduced_order_bounds {V E : Type} (F : TripleSystem V E)
+    [Fintype V] [Fintype E] (hF : F.IsObligatory) (hr : F.HasNoIsolatedPoints)
+    (he : Nonempty E) :
+    Nat.card E + Spectrum.q (Nat.card E) ≤ Nat.card V ∧ Nat.card V ≤ 3 * Nat.card E := by
+  obtain ⟨hc, hcm, hlo, hhi⟩ := obligatory_spectrum_necessity F hF hr he
+  have hM : 1 ≤ Nat.card E - Nat.card F.levi.ConnectedComponent + 1 := by omega
+  have hsum : Nat.card E - Nat.card F.levi.ConnectedComponent + 1 +
+      (Nat.card F.levi.ConnectedComponent - 1) = Nat.card E := by omega
+  have hq := Spectrum.q_shift_le _ (Nat.card F.levi.ConnectedComponent - 1) hM
+  rw [hsum] at hq
+  constructor <;> omega
+
+private theorem edge_nonempty_of_reduced {m n : ℕ} (F : TripleSystem (Fin n) (Fin m))
+    (hr : F.HasNoIsolatedPoints) (hn : 1 ≤ n) : 1 ≤ m := by
+  obtain ⟨e, _⟩ := (not_isolated_iff_exists_inc F).mp (hr ⟨0, hn⟩)
+  have he := e.isLt
+  omega
+
+theorem exists_connected_obligatory_iff (m n : ℕ) (hm : 1 ≤ m) :
+    (∃ F : TripleSystem (Fin n) (Fin m),
+      F.IsObligatory ∧ F.HasNoIsolatedPoints ∧ F.levi.Connected) ↔
+      m + Spectrum.q m ≤ n ∧ n ≤ 2 * m + 1 := by
+  classical
+  constructor
+  · rintro ⟨F, hF, hr, hconn⟩
+    have hcard : Nat.card F.levi.ConnectedComponent = 1 :=
+      Nat.card_eq_one_iff_unique.mpr
+        ⟨hconn.preconnected.subsingleton_connectedComponent,
+          ⟨F.levi.connectedComponentMk (Sum.inr ⟨0, hm⟩)⟩⟩
+    obtain ⟨_, _, hlo, hhi⟩ := obligatory_spectrum_necessity F hF hr ⟨⟨0, hm⟩⟩
+    simpa only [Nat.card_fin, hcard, Nat.sub_self, Nat.mul_zero, Nat.add_zero,
+      Nat.sub_add_cancel hm] using And.intro hlo hhi
+  · rintro ⟨hlo, hhi⟩
+    obtain ⟨F, hF, hr, hcard⟩ := exists_obligatory_spectrum m n 1 hm le_rfl hm
+      (by simpa only [Nat.sub_self, Nat.mul_zero, Nat.add_zero, Nat.sub_add_cancel hm] using hlo) hhi
+    haveI : Subsingleton F.levi.ConnectedComponent := (Nat.card_eq_one_iff_unique.mp hcard).1
+    haveI : Nonempty (Fin n ⊕ Fin m) := ⟨Sum.inr ⟨0, hm⟩⟩
+    refine ⟨F, hF, hr, ⟨?_⟩⟩
+    intro x y
+    exact _root_.SimpleGraph.ConnectedComponent.exact (Subsingleton.elim _ _)
+
+theorem exists_reduced_obligatory_iff (m n : ℕ) (hm : 1 ≤ m) :
+    (∃ F : TripleSystem (Fin n) (Fin m), F.IsObligatory ∧ F.HasNoIsolatedPoints) ↔
+      m + Spectrum.q m ≤ n ∧ n ≤ 3 * m := by
+  classical
+  constructor
+  · rintro ⟨F, hF, hr⟩
+    simpa only [Nat.card_fin] using reduced_order_bounds F hF hr ⟨⟨0, hm⟩⟩
+  · rintro ⟨hlo, hhi⟩
+    by_cases hconn : n ≤ 2 * m + 1
+    · obtain ⟨F, hF, hr, _⟩ := (exists_connected_obligatory_iff m n hm).mpr ⟨hlo, hconn⟩
+      exact ⟨F, hF, hr⟩
+    let c := n - 2 * m
+    have hc : 1 ≤ c := by dsimp [c]; omega
+    have hcm : c ≤ m := by dsimp [c]; omega
+    have hq := Spectrum.q_le_succ (m - c + 1) (by omega)
+    obtain ⟨F, hF, hr, _⟩ := exists_obligatory_spectrum m n c hm hc hcm
+      (by dsimp [c] at *; omega) (by dsimp [c]; omega)
+    exact ⟨F, hF, hr⟩
+
+theorem exists_obligatory_iff (m n : ℕ) (hm : 1 ≤ m) :
+    (∃ F : TripleSystem (Fin n) (Fin m), F.IsObligatory) ↔
+      m + Spectrum.q m ≤ n := by
+  classical
+  constructor
+  · rintro ⟨F, hF⟩
+    have hlo := (reduced_order_bounds F.isolatedReduction hF.isolatedReduction
+      F.isolatedReduction_hasNoIsolatedPoints ⟨⟨0, hm⟩⟩).1
+    have hcard : Nat.card F.NonIsolatedPoint ≤ Nat.card (Fin n) :=
+      Nat.card_le_card_of_injective Subtype.val Subtype.val_injective
+    simp only [Nat.card_fin] at hlo hcard
+    omega
+  · intro hlo
+    have hq := Spectrum.q_le_succ m hm
+    obtain ⟨F, hF, hr, _⟩ := (exists_connected_obligatory_iff m (m + Spectrum.q m) hm).mpr
+      ⟨le_rfl, by omega⟩
+    let f : Fin (m + Spectrum.q m) ↪ Fin n :=
+      ⟨fun x => ⟨x.val, lt_of_lt_of_le x.isLt hlo⟩,
+        fun _ _ h => Fin.ext (congrArg (fun y : Fin n => y.val) h)⟩
+    exact ⟨F.withIsolatedPoints f, IsObligatory.withIsolatedPoints F f hF hr⟩
+
+theorem exists_obligatory_fixed_order_iff (m n c : ℕ) (hc : 1 ≤ c) (hn : 3 * c ≤ n) :
+    (∃ F : TripleSystem (Fin n) (Fin m), F.IsObligatory ∧ F.HasNoIsolatedPoints ∧
+      Nat.card F.levi.ConnectedComponent = c) ↔
+      (n - c + 1) / 2 ≤ m ∧ m ≤ n - 2 * c + 4 - Spectrum.q (n - 3 * c + 4) := by
+  classical
+  constructor
+  · rintro ⟨F, hF, hr, hcard⟩
+    have hm := edge_nonempty_of_reduced F hr (by omega)
+    obtain ⟨_, hcm, hlo, hhi⟩ := obligatory_spectrum_necessity F hF hr ⟨⟨0, hm⟩⟩
+    simp only [Nat.card_fin, hcard] at hcm hlo hhi
+    exact (Spectrum.fixed_order_bounds_iff m n c hc hn hcm).mp ⟨hlo, hhi⟩
+  · intro h
+    have hcm : c ≤ m := by omega
+    have hm : 1 ≤ m := by omega
+    obtain ⟨hlo, hhi⟩ := (Spectrum.fixed_order_bounds_iff m n c hc hn hcm).mpr h
+    exact exists_obligatory_spectrum m n c hm hc hcm hlo hhi
+
+theorem exists_obligatory_order_components_iff (n c : ℕ) (hc : 1 ≤ c) (hn : 3 * c ≤ n) :
+    (∃ (m : ℕ) (F : TripleSystem (Fin n) (Fin m)),
+      F.IsObligatory ∧ F.HasNoIsolatedPoints ∧ Nat.card F.levi.ConnectedComponent = c) ↔
+      n = 3 * c ∨ n = 3 * c + 2 ∨ 3 * c + 4 ≤ n := by
+  classical
+  rw [← Spectrum.exists_order_bounds_iff n c hc hn]
+  constructor
+  · rintro ⟨m, F, hF, hr, hcard⟩
+    have hm := edge_nonempty_of_reduced F hr (by omega)
+    obtain ⟨_, hcm, hlo, hhi⟩ := obligatory_spectrum_necessity F hF hr ⟨⟨0, hm⟩⟩
+    simp only [Nat.card_fin, hcard] at hcm hlo hhi
+    exact ⟨m, hcm, hlo, hhi⟩
+  · rintro ⟨m, hcm, hlo, hhi⟩
+    obtain ⟨F, hF, hr, hcard⟩ := exists_obligatory_spectrum m n c (by omega) hc hcm hlo hhi
+    exact ⟨m, F, hF, hr, hcard⟩
+
+end Erdos593.TripleSystem
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SpectrumCorollaries
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SpectrumCorollaries
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.FiniteCycleRank
+Source: Erdos593/Graph/FiniteCycleRank.lean
+Normalized SHA-256: 2a03b0b9dc386b76fabed04aed2fbca0a037319f05774c7a2c61c1501ca1d7f4
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_FiniteCycleRank
+
+/-! # Cycle rank of a finite simple graph
+
+The edge set consists of unordered edges. The component type is the actual
+reachability quotient, including isolated vertices. The spanning-forest theorem
+below supplies the combinatorial interpretation of the Euler excess.
+-/
+
+namespace SimpleGraph.FiniteCycleRank
+
+universe u
+
+noncomputable def cycleRank {V : Type u} (G : SimpleGraph V) : ℕ :=
+  Nat.card G.edgeSet + Nat.card G.ConnectedComponent - Nat.card V
+
+theorem card_components_eq_of_reachable_eq {V : Type u}
+    (G T : SimpleGraph V) (h : T.Reachable = G.Reachable) :
+    Nat.card T.ConnectedComponent = Nat.card G.ConnectedComponent := by
+  refine Nat.card_congr (FiniteForestCounting.componentEquivOfReachable
+    T G id id ?_ ?_ (fun _ => .rfl) (fun _ => .rfl))
+  · intro x y hxy
+    change G.Reachable x y
+    rw [← h]
+    exact hxy.reachable
+  · intro x y hxy
+    change T.Reachable x y
+    rw [h]
+    exact hxy.reachable
+
+theorem card_vertices_le_edges_add_components {V : Type u} [Finite V]
+    (G : SimpleGraph V) :
+    Nat.card V ≤ Nat.card G.edgeSet + Nat.card G.ConnectedComponent := by
+  obtain ⟨T, hle, hforest, hreach⟩ := G.exists_isAcyclic_reachable_eq_le
+  have ht := FiniteForestCounting.card_edges_add_components T hforest
+  rw [card_components_eq_of_reachable_eq G T hreach] at ht
+  have he : Nat.card T.edgeSet ≤ Nat.card G.edgeSet :=
+    Set.ncard_le_ncard (edgeSet_mono hle)
+  omega
+
+theorem cycleRank_int {V : Type u} [Finite V] (G : SimpleGraph V) :
+    (cycleRank G : ℤ) = (Nat.card G.edgeSet : ℤ) - (Nat.card V : ℤ) +
+      (Nat.card G.ConnectedComponent : ℤ) := by
+  rw [cycleRank, Nat.cast_sub (card_vertices_le_edges_add_components G), Nat.cast_add]
+  omega
+
+theorem cycleRank_eq_chords {V : Type u} [Finite V]
+    (G T : SimpleGraph V) (hle : T ≤ G) (hforest : T.IsAcyclic)
+    (hreach : T.Reachable = G.Reachable) :
+    cycleRank G = Nat.card ↥(G.edgeSet \ T.edgeSet) := by
+  have ht := FiniteForestCounting.card_edges_add_components T hforest
+  rw [card_components_eq_of_reachable_eq G T hreach] at ht
+  have he := Set.ncard_sdiff_add_ncard_of_subset (edgeSet_mono hle)
+  change Nat.card ↥(G.edgeSet \ T.edgeSet) + Nat.card T.edgeSet = Nat.card G.edgeSet at he
+  change Nat.card G.edgeSet + Nat.card G.ConnectedComponent - Nat.card V =
+    Nat.card ↥(G.edgeSet \ T.edgeSet)
+  omega
+
+theorem cycleRank_eq_zero_iff {V : Type u} [Finite V] (G : SimpleGraph V) :
+    cycleRank G = 0 ↔ G.IsAcyclic := by
+  constructor
+  · intro hz
+    obtain ⟨T, hle, hforest, hreach⟩ := G.exists_isAcyclic_reachable_eq_le
+    have ht := FiniteForestCounting.card_edges_add_components T hforest
+    rw [card_components_eq_of_reachable_eq G T hreach] at ht
+    have he : Nat.card G.edgeSet ≤ Nat.card T.edgeSet := by
+      change Nat.card G.edgeSet + Nat.card G.ConnectedComponent - Nat.card V = 0 at hz
+      omega
+    have hsets : T.edgeSet = G.edgeSet :=
+      Set.eq_of_subset_of_ncard_le (edgeSet_mono hle) he
+    have hTG : T = G := edgeSet_injective hsets
+    rw [← hTG]
+    exact hforest
+  · intro hforest
+    have ht := FiniteForestCounting.card_edges_add_components G hforest
+    change Nat.card G.edgeSet + Nat.card G.ConnectedComponent - Nat.card V = 0
+    omega
+
+end SimpleGraph.FiniteCycleRank
+
+end Erdos593SelfContained_Module_Erdos593_Graph_FiniteCycleRank
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.FiniteCycleRank
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CycleRankSpectrum
+Source: Erdos593/TripleSystem/CycleRankSpectrum.lean
+Normalized SHA-256: 74ae88112d083d7f2da83d6205eb7c589e5f43117ac62a679e4ad954ff32d9e0
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CycleRankSpectrum
+
+/-! # Exact Levi cycle-rank spectrum
+
+The counting identities apply also to systems with isolated points. Reducedness
+and nonemptiness are needed only for the obligatory spectrum interval.
+-/
+
+namespace Erdos593.TripleSystem
+
+universe u
+
+open _root_.SimpleGraph.FiniteCycleRank
+
+theorem levi_cycleRank {V E : Type u} [Finite V] [Finite E]
+    (F : TripleSystem V E) :
+    cycleRank F.levi = 2 * Nat.card E + Nat.card F.levi.ConnectedComponent -
+      Nat.card V := by
+  letI := Fintype.ofFinite V
+  letI := Fintype.ofFinite E
+  rw [cycleRank, CanonicalAtom.levi_card_edges F, Nat.card_sum]
+  omega
+
+theorem levi_cycleRank_int {V E : Type u} [Finite V] [Finite E]
+    (F : TripleSystem V E) :
+    (cycleRank F.levi : ℤ) = 2 * (Nat.card E : ℤ) - (Nat.card V : ℤ) +
+      (Nat.card F.levi.ConnectedComponent : ℤ) := by
+  letI := Fintype.ofFinite V
+  letI := Fintype.ofFinite E
+  rw [cycleRank_int]
+  exact CanonicalAtom.levi_euler_expression F
+
+theorem obligatory_cycleRank_le {V E : Type u} [Finite V] [Finite E]
+    (F : TripleSystem V E) (hobligatory : F.IsObligatory)
+    (hreduced : F.HasNoIsolatedPoints) (hnonempty : Nonempty E) :
+    cycleRank F.levi ≤ Nat.card E - Nat.card F.levi.ConnectedComponent + 2 -
+      Erdos593.Spectrum.q (Nat.card E - Nat.card F.levi.ConnectedComponent + 1) := by
+  letI := Fintype.ofFinite V
+  letI := Fintype.ofFinite E
+  obtain ⟨hc, hcm, hlower, hupper⟩ :=
+    obligatory_spectrum_necessity F hobligatory hreduced hnonempty
+  rw [levi_cycleRank]
+  omega
+
+theorem exists_obligatory_cycleRank_iff (m c b : ℕ)
+    (hm : 1 ≤ m) (hc : 1 ≤ c) (hcm : c ≤ m) :
+    (∃ n : ℕ, ∃ F : TripleSystem (Fin n) (Fin m),
+      F.IsObligatory ∧ F.HasNoIsolatedPoints ∧
+      Nat.card F.levi.ConnectedComponent = c ∧ cycleRank F.levi = b) ↔
+      b ≤ m - c + 2 - Erdos593.Spectrum.q (m - c + 1) := by
+  constructor
+  · rintro ⟨n, F, hF, hred, hcomp, hrank⟩
+    have hnonempty : Nonempty (Fin m) := ⟨⟨0, by omega⟩⟩
+    have h := obligatory_cycleRank_le F hF hred hnonempty
+    simpa only [hrank, hcomp, Nat.card_eq_fintype_card, Fintype.card_fin] using h
+  · intro hb
+    have hq := Erdos593.Spectrum.q_le_succ (m - c + 1) (by omega)
+    let n := 2 * m + c - b
+    have hlower : m + 2 * (c - 1) + Erdos593.Spectrum.q (m - c + 1) ≤ n := by
+      dsimp [n]
+      omega
+    have hupper : n ≤ 2 * m + c := Nat.sub_le _ _
+    obtain ⟨F, hF, hred, hcomp⟩ :=
+      exists_obligatory_spectrum m n c hm hc hcm hlower hupper
+    refine ⟨n, F, hF, hred, hcomp, ?_⟩
+    rw [levi_cycleRank, hcomp]
+    simp only [Nat.card_eq_fintype_card, Fintype.card_fin]
+    dsimp [n]
+    omega
+
+theorem order_eq_iff_levi_isAcyclic {V E : Type u} [Finite V] [Finite E]
+    (F : TripleSystem V E) :
+    Nat.card V = 2 * Nat.card E + Nat.card F.levi.ConnectedComponent ↔
+      F.levi.IsAcyclic := by
+  have hv := card_vertices_le_edges_add_components F.levi
+  letI := Fintype.ofFinite V
+  letI := Fintype.ofFinite E
+  rw [CanonicalAtom.levi_card_edges F, Nat.card_sum] at hv
+  rw [← cycleRank_eq_zero_iff, levi_cycleRank]
+  omega
+
+end Erdos593.TripleSystem
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CycleRankSpectrum
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CycleRankSpectrum
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.BalancedBipartiteRigidity
+Source: Erdos593/Graph/BalancedBipartiteRigidity.lean
+Normalized SHA-256: 2d9af9b5e5d0563a2fff220054353684583e84a2efc017c762ec4b0de9137c25
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_BalancedBipartiteRigidity
+
+/-! # Balanced bipartite equality and strict atom concentration
+
+These are exact finite statements. The concentration bound excludes the
+two-single-edge family with surplus three; the graph statements include
+the empty-part boundary cases. Isomorphism means a vertex equivalence
+preserving and reflecting adjacency, not merely equality of parameters.
+-/
+
+namespace Erdos593.Spectrum
+
+theorem strict_atom_capacity_concentration {ι : Type*}
+    (s : Finset ι) (v : ι → ℕ) (hs : 2 ≤ s.card)
+    (hv : ∀ i ∈ s, 2 ≤ v i)
+    (hsize : 4 ≤ 1 + ∑ i ∈ s, (v i - 1)) :
+    (∑ i ∈ s, (v i) ^ 2) + 2 ≤ (1 + ∑ i ∈ s, (v i - 1)) ^ 2 := by
+  classical
+  have h1 : ∑ i ∈ s, (v i - 1) = (∑ i ∈ s, (v i - 2)) + s.card := by
+    rw [Finset.card_eq_sum_ones, ← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl fun i hi => by have := hv i hi; omega
+  have h2 : ∑ i ∈ s, (v i) ^ 2
+      = (∑ i ∈ s, (v i - 2) ^ 2) + 4 * (∑ i ∈ s, (v i - 2)) + 4 * s.card := by
+    rw [Finset.mul_sum, Finset.card_eq_sum_ones, Finset.mul_sum, ← Finset.sum_add_distrib,
+      ← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl fun i hi => ?_
+    obtain ⟨c, hc⟩ : ∃ c, v i = c + 2 := ⟨v i - 2, by have := hv i hi; omega⟩
+    rw [hc]
+    simp only [Nat.add_sub_cancel, mul_one]
+    ring
+  have hsq : ∑ i ∈ s, (v i - 2) ^ 2 ≤ (∑ i ∈ s, (v i - 2)) ^ 2 := by
+    calc ∑ i ∈ s, (v i - 2) ^ 2 ≤ ∑ i ∈ s, (v i - 2) * (∑ j ∈ s, (v j - 2)) := by
+          refine Finset.sum_le_sum fun i hi => ?_
+          have hle : v i - 2 ≤ ∑ j ∈ s, (v j - 2) :=
+            Finset.single_le_sum (f := fun j => v j - 2) (fun j _ => Nat.zero_le _) hi
+          nlinarith
+      _ = (∑ i ∈ s, (v i - 2)) ^ 2 := by rw [← Finset.sum_mul]; ring
+  rw [h1] at hsize ⊢
+  rw [h2]
+  revert hsize hs hsq
+  generalize (∑ i ∈ s, (v i - 2)) = A
+  generalize (∑ i ∈ s, (v i - 2) ^ 2) = S
+  generalize s.card = B
+  intro hs hsize hsq
+  rcases Nat.lt_or_ge B 3 with h3 | h3
+  · have hB2 : B = 2 := by omega
+    subst hB2
+    have hA1 : 1 ≤ A := by omega
+    nlinarith
+  · nlinarith
+
+end Erdos593.Spectrum
+
+namespace SimpleGraph.BalancedBipartiteRigidity
+
+universe u
+
+theorem even_order_isomorphic_complete_bipartite
+    {V : Type u} [Finite V] (G : SimpleGraph V) (hb : G.Colorable 2)
+    (t : ℕ) (hv : Nat.card V = 2 * t) (he : Nat.card G.edgeSet = t ^ 2) :
+    Nonempty (G ≃g completeBipartiteGraph (Fin t) (Fin t)) := by
+  classical
+  obtain ⟨c⟩ := hb
+  set A : Set V := {x | c x = 0} with hA
+  have htwo : ∀ (a b : Fin 2), a ≠ b → a ≠ 0 → b = 0 := by decide
+  set φ : ↥A × ↥(Aᶜ : Set V) → Sym2 V := fun p => s((p.1 : V), (p.2 : V)) with hφ
+  have hφinj : Function.Injective φ := by
+    rintro ⟨⟨x, hx⟩, ⟨y, hy⟩⟩ ⟨⟨x', hx'⟩, ⟨y', hy'⟩⟩ h
+    have h' : s(x, y) = s(x', y') := h
+    rcases Sym2.eq_iff.mp h' with ⟨h1, h2⟩ | ⟨h1, h2⟩
+    · subst h1; subst h2; rfl
+    · exact absurd (h1 ▸ hx) hy'
+  have hsub : G.edgeSet ⊆ Set.range φ := by
+    intro e he'
+    induction e using Sym2.inductionOn with
+    | _ x y =>
+      have hxy : G.Adj x y := he'
+      have hne : c x ≠ c y := c.valid hxy
+      by_cases hx : c x = 0
+      · have hy : y ∈ (Aᶜ : Set V) := fun hy => hne (hx.trans hy.symm)
+        exact ⟨(⟨x, hx⟩, ⟨y, hy⟩), rfl⟩
+      · have hy : c y = 0 := htwo _ _ hne hx
+        exact ⟨(⟨y, hy⟩, ⟨x, hx⟩), Sym2.eq_swap⟩
+  have hfin : (Set.range φ).Finite := Set.toFinite _
+  have hcardrange : (Set.range φ).ncard = A.ncard * (Aᶜ : Set V).ncard := by
+    rw [Set.ncard_range_of_injective hφinj, Nat.card_prod, Nat.card_coe_set_eq,
+      Nat.card_coe_set_eq]
+  have hcards : A.ncard + (Aᶜ : Set V).ncard = 2 * t := by
+    rw [Set.ncard_add_ncard_compl A, hv]
+  have hecard : G.edgeSet.ncard = t ^ 2 := by rw [← Nat.card_coe_set_eq]; exact he
+  have hle : t ^ 2 ≤ A.ncard * (Aᶜ : Set V).ncard := by
+    have h1 : G.edgeSet.ncard ≤ (Set.range φ).ncard := Set.ncard_le_ncard hsub hfin
+    rw [hcardrange, hecard] at h1
+    exact h1
+  have hAt : A.ncard = t := by
+    have hz : ((A.ncard : ℤ) - t) ^ 2 ≤ 0 := by
+      have h1 : (A.ncard : ℤ) + ((Aᶜ : Set V).ncard : ℤ) = 2 * t := by exact_mod_cast hcards
+      have h2 : (t : ℤ) ^ 2 ≤ (A.ncard : ℤ) * ((Aᶜ : Set V).ncard : ℤ) := by exact_mod_cast hle
+      nlinarith
+    have hz0 : ((A.ncard : ℤ) - t) ^ 2 = 0 := le_antisymm hz (sq_nonneg _)
+    have hzero := (pow_eq_zero_iff (n := 2) (by norm_num)).mp hz0
+    omega
+  have hBt : (Aᶜ : Set V).ncard = t := by omega
+  have hEq : G.edgeSet = Set.range φ := by
+    refine Set.eq_of_subset_of_ncard_le hsub ?_ hfin
+    rw [hcardrange, hAt, hBt, hecard, pow_two]
+  have hadj : ∀ x y, G.Adj x y ↔ (x ∈ A ↔ y ∉ A) := by
+    intro x y
+    constructor
+    · intro h
+      have hne : c x ≠ c y := c.valid h
+      exact ⟨fun hxA hyA => hne (hxA.trans hyA.symm), fun hyA => htwo _ _ (Ne.symm hne) hyA⟩
+    · intro h
+      by_cases hx : x ∈ A
+      · have hy : y ∈ (Aᶜ : Set V) := h.mp hx
+        have hmem : s(x, y) ∈ Set.range φ := ⟨(⟨x, hx⟩, ⟨y, hy⟩), rfl⟩
+        rw [← hEq] at hmem
+        exact hmem
+      · have hy : y ∈ A := by
+          by_contra hy
+          exact hx (h.mpr hy)
+        have hxc : x ∈ (Aᶜ : Set V) := hx
+        have hmem : s(y, x) ∈ Set.range φ := ⟨(⟨y, hy⟩, ⟨x, hxc⟩), rfl⟩
+        rw [← hEq] at hmem
+        exact (G.mem_edgeSet.mp hmem).symm
+  have eA : ↥A ≃ Fin t := Finite.equivFinOfCardEq (by rw [Nat.card_coe_set_eq, hAt])
+  have eB : ↥(Aᶜ : Set V) ≃ Fin t := Finite.equivFinOfCardEq (by rw [Nat.card_coe_set_eq, hBt])
+  refine ⟨⟨(Equiv.Set.sumCompl A).symm.trans (Equiv.sumCongr eA eB), ?_⟩⟩
+  intro x y
+  have hxl : ∀ z : V, ((Equiv.Set.sumCompl A).symm.trans (Equiv.sumCongr eA eB) z).isLeft
+      = decide (z ∈ A) := by
+    intro z
+    by_cases hz : z ∈ A
+    · simp [Equiv.Set.sumCompl_symm_apply_of_mem hz, hz]
+    · simp [Equiv.Set.sumCompl_symm_apply_of_notMem hz, hz]
+  have hxr : ∀ z : V, ((Equiv.Set.sumCompl A).symm.trans (Equiv.sumCongr eA eB) z).isRight
+      = decide (z ∉ A) := by
+    intro z
+    by_cases hz : z ∈ A
+    · simp [Equiv.Set.sumCompl_symm_apply_of_mem hz, hz]
+    · simp [Equiv.Set.sumCompl_symm_apply_of_notMem hz, hz]
+  rw [hadj x y]
+  simp only [completeBipartiteGraph, hxl, hxr]
+  by_cases h1 : x ∈ A <;> by_cases h2 : y ∈ A <;> simp [h1, h2]
+
+theorem odd_order_isomorphic_complete_bipartite
+    {V : Type u} [Finite V] (G : SimpleGraph V) (hb : G.Colorable 2)
+    (t : ℕ) (hv : Nat.card V = 2 * t + 1)
+    (he : Nat.card G.edgeSet = t * (t + 1)) :
+    Nonempty (G ≃g completeBipartiteGraph (Fin t) (Fin (t + 1))) := by
+  classical
+  have build : ∀ B : Set V, B.ncard = t → (Bᶜ : Set V).ncard = t + 1 →
+      (∀ x y, G.Adj x y ↔ (x ∈ B ↔ y ∉ B)) →
+      Nonempty (G ≃g completeBipartiteGraph (Fin t) (Fin (t + 1))) := by
+    intro B hB1 hB2 hadj
+    have eA : ↥B ≃ Fin t := Finite.equivFinOfCardEq (by rw [Nat.card_coe_set_eq, hB1])
+    have eB : ↥(Bᶜ : Set V) ≃ Fin (t + 1) :=
+      Finite.equivFinOfCardEq (by rw [Nat.card_coe_set_eq, hB2])
+    refine ⟨⟨(Equiv.Set.sumCompl B).symm.trans (Equiv.sumCongr eA eB), ?_⟩⟩
+    intro x y
+    have hxl : ∀ z : V, ((Equiv.Set.sumCompl B).symm.trans (Equiv.sumCongr eA eB) z).isLeft
+        = decide (z ∈ B) := by
+      intro z
+      by_cases hz : z ∈ B
+      · simp [Equiv.Set.sumCompl_symm_apply_of_mem hz, hz]
+      · simp [Equiv.Set.sumCompl_symm_apply_of_notMem hz, hz]
+    have hxr : ∀ z : V, ((Equiv.Set.sumCompl B).symm.trans (Equiv.sumCongr eA eB) z).isRight
+        = decide (z ∉ B) := by
+      intro z
+      by_cases hz : z ∈ B
+      · simp [Equiv.Set.sumCompl_symm_apply_of_mem hz, hz]
+      · simp [Equiv.Set.sumCompl_symm_apply_of_notMem hz, hz]
+    rw [hadj x y]
+    simp only [completeBipartiteGraph, hxl, hxr]
+    by_cases h1 : x ∈ B <;> by_cases h2 : y ∈ B <;> simp [h1, h2]
+  obtain ⟨c⟩ := hb
+  set A : Set V := {x | c x = 0} with hA
+  have htwo : ∀ (a b : Fin 2), a ≠ b → a ≠ 0 → b = 0 := by decide
+  set φ : ↥A × ↥(Aᶜ : Set V) → Sym2 V := fun p => s((p.1 : V), (p.2 : V)) with hφ
+  have hφinj : Function.Injective φ := by
+    rintro ⟨⟨x, hx⟩, ⟨y, hy⟩⟩ ⟨⟨x', hx'⟩, ⟨y', hy'⟩⟩ h
+    have h' : s(x, y) = s(x', y') := h
+    rcases Sym2.eq_iff.mp h' with ⟨h1, h2⟩ | ⟨h1, h2⟩
+    · subst h1; subst h2; rfl
+    · exact absurd (h1 ▸ hx) hy'
+  have hsub : G.edgeSet ⊆ Set.range φ := by
+    intro e he'
+    induction e using Sym2.inductionOn with
+    | _ x y =>
+      have hxy : G.Adj x y := he'
+      have hne : c x ≠ c y := c.valid hxy
+      by_cases hx : c x = 0
+      · have hy : y ∈ (Aᶜ : Set V) := fun hy => hne (hx.trans hy.symm)
+        exact ⟨(⟨x, hx⟩, ⟨y, hy⟩), rfl⟩
+      · have hy : c y = 0 := htwo _ _ hne hx
+        exact ⟨(⟨y, hy⟩, ⟨x, hx⟩), Sym2.eq_swap⟩
+  have hfin : (Set.range φ).Finite := Set.toFinite _
+  have hcardrange : (Set.range φ).ncard = A.ncard * (Aᶜ : Set V).ncard := by
+    rw [Set.ncard_range_of_injective hφinj, Nat.card_prod, Nat.card_coe_set_eq,
+      Nat.card_coe_set_eq]
+  have hcards : A.ncard + (Aᶜ : Set V).ncard = 2 * t + 1 := by
+    rw [Set.ncard_add_ncard_compl A, hv]
+  have hecard : G.edgeSet.ncard = t * (t + 1) := by rw [← Nat.card_coe_set_eq]; exact he
+  have hle : t * (t + 1) ≤ A.ncard * (Aᶜ : Set V).ncard := by
+    have h1 : G.edgeSet.ncard ≤ (Set.range φ).ncard := Set.ncard_le_ncard hsub hfin
+    rw [hcardrange, hecard] at h1
+    exact h1
+  have hzint : ((A.ncard : ℤ) - t) * ((A.ncard : ℤ) - t - 1) ≤ 0 := by
+    have h1 : (A.ncard : ℤ) + ((Aᶜ : Set V).ncard : ℤ) = 2 * t + 1 := by exact_mod_cast hcards
+    have h2 : (t : ℤ) * (t + 1) ≤ (A.ncard : ℤ) * ((Aᶜ : Set V).ncard : ℤ) := by
+      exact_mod_cast hle
+    nlinarith
+  have hge : t ≤ A.ncard := by
+    by_contra hcon
+    have hlt : (A.ncard : ℤ) < t := by exact_mod_cast Nat.not_le.mp hcon
+    nlinarith
+  have hup : A.ncard ≤ t + 1 := by
+    by_contra hcon
+    have hlt : ((t : ℤ) + 1) < A.ncard := by exact_mod_cast Nat.not_le.mp hcon
+    nlinarith
+  have hEq : G.edgeSet = Set.range φ := by
+    refine Set.eq_of_subset_of_ncard_le hsub ?_ hfin
+    rw [hcardrange, hecard]
+    rcases (by omega : A.ncard = t ∨ A.ncard = t + 1) with h | h
+    · have h2 : (Aᶜ : Set V).ncard = t + 1 := by omega
+      rw [h, h2]
+    · have h2 : (Aᶜ : Set V).ncard = t := by omega
+      rw [h, h2, Nat.mul_comm]
+  have hadj : ∀ x y, G.Adj x y ↔ (x ∈ A ↔ y ∉ A) := by
+    intro x y
+    constructor
+    · intro h
+      have hne : c x ≠ c y := c.valid h
+      exact ⟨fun hxA hyA => hne (hxA.trans hyA.symm), fun hyA => htwo _ _ (Ne.symm hne) hyA⟩
+    · intro h
+      by_cases hx : x ∈ A
+      · have hy : y ∈ (Aᶜ : Set V) := h.mp hx
+        have hmem : s(x, y) ∈ Set.range φ := ⟨(⟨x, hx⟩, ⟨y, hy⟩), rfl⟩
+        rw [← hEq] at hmem
+        exact hmem
+      · have hy : y ∈ A := by
+          by_contra hy
+          exact hx (h.mpr hy)
+        have hxc : x ∈ (Aᶜ : Set V) := hx
+        have hmem : s(y, x) ∈ Set.range φ := ⟨(⟨y, hy⟩, ⟨x, hxc⟩), rfl⟩
+        rw [← hEq] at hmem
+        exact (G.mem_edgeSet.mp hmem).symm
+  rcases (by omega : A.ncard = t ∨ A.ncard = t + 1) with h | h
+  · exact build A h (by omega) hadj
+  · refine build (Aᶜ) (by omega) (by rw [compl_compl]; omega) ?_
+    intro x y
+    rw [hadj x y]
+    simp only [Set.mem_compl_iff, not_not]
+    tauto
+
+end SimpleGraph.BalancedBipartiteRigidity
+
+end Erdos593SelfContained_Module_Erdos593_Graph_BalancedBipartiteRigidity
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.BalancedBipartiteRigidity
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.BalancedEndpointRigidity
+Source: Erdos593/TripleSystem/BalancedEndpointRigidity.lean
+Normalized SHA-256: 9202065e2490964ab003c32ff237b762487b71b068bd043030d8d708f5d5368d
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_BalancedEndpointRigidity
+
+/-! # Rigidity at the two balanced lower endpoints
+
+The final conclusions use the existing incidence isomorphism and literal
+private-vertex expansion. Structural atom concentration is derived, never
+assumed at the manuscript endpoints. The two-edge small case is separate
+because its complete bipartite core has a cut vertex.
+-/
+
+namespace Erdos593.TripleSystem
+
+universe u v
+
+theorem privateVertexExpansion_isomorphic_of_graphIso
+    {V : Type u} {W : Type v} (G : _root_.SimpleGraph V)
+    (H : _root_.SimpleGraph W) (i : G ≃g H) :
+    Isomorphic (privateVertexExpansion G) (privateVertexExpansion H) := by
+  refine ⟨{ vertexEquiv := Equiv.sumCongr i.toEquiv i.mapEdgeSet
+            edgeEquiv := i.mapEdgeSet
+            map_inc_iff := ?_ }⟩
+  rintro (x | f) e
+  · show x ∈ (e : Sym2 V) ↔ (i x) ∈ ((i.mapEdgeSet e : H.edgeSet) : Sym2 W)
+    have hmap : ((i.mapEdgeSet e : H.edgeSet) : Sym2 W) = Sym2.map i (e : Sym2 V) := rfl
+    rw [hmap, Sym2.mem_map]
+    refine ⟨fun hx => ⟨x, hx, rfl⟩, ?_⟩
+    rintro ⟨a, ha, hae⟩
+    exact (i.toEquiv.injective hae) ▸ ha
+  · show f = e ↔ i.mapEdgeSet f = i.mapEdgeSet e
+    exact ⟨fun h => h ▸ rfl, fun h => i.mapEdgeSet.injective h⟩
+
+namespace CanonicalAtom
+
+section FiniteAtoms
+
+variable {V E : Type u} [Fintype V] [Fintype E]
+variable [DecidableEq V] [DecidableEq E]
+variable (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+
+theorem atomCore_capacity (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hberge : F.EvenBergeCycles) (A : Index F) :
+    2 ≤ coreOrder F A ∧
+      4 * atomEdgeCount F hlinear hbridge A ≤ (coreOrder F A) ^ 2 := by
+  classical
+  have hshape := atomRestriction_is_singleEdge_or_cycleBlockExpansion F hlinear hbridge A
+  cases A with
+  | singleton e hzero =>
+    obtain ⟨i⟩ := hshape
+    have he : atomEdgeCount F hlinear hbridge (.singleton e hzero) = 1 := by
+      calc atomEdgeCount F hlinear hbridge (.singleton e hzero)
+          = Nat.card (SingleEdgeIndex : Type u) := Nat.card_congr i.edgeEquiv
+        _ = 1 := by simp [SingleEdgeIndex]
+    have hcore : coreOrder F (Index.singleton e hzero) = 2 := rfl
+    rw [he, hcore]
+    norm_num
+  | cycleBlock C hC B =>
+    obtain ⟨i⟩ := hshape
+    have hcore : coreOrder F (Index.cycleBlock C hC B) =
+        Nat.card (finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+          (cycleBlockEdgeSet F C B) (cycleBlockEdgeSet_finite F C B)) := rfl
+    have he : atomEdgeCount F hlinear hbridge (.cycleBlock C hC B) =
+        Nat.card (cycleBlockCore F C B).edgeSet := Nat.card_congr i.edgeEquiv
+    have htwo := cycleBlockCore_isTwoVertexConnected F hlinear hbridge C hC B
+    have hbip := cycleBlockCore_isBipartite F hlinear hbridge hberge C hC B
+    have hcap := _root_.SimpleGraph.BipartiteSpectrumBounds.bipartite_capacity
+      (cycleBlockCore F C B) hbip
+    have hcard : Nat.card (finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+        (cycleBlockEdgeSet F C B) (cycleBlockEdgeSet_finite F C B))
+        = Fintype.card (finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+          (cycleBlockEdgeSet F C B) (cycleBlockEdgeSet_finite F C B)) :=
+      Nat.card_eq_fintype_card
+    refine ⟨?_, ?_⟩
+    · have h3 := htwo.1
+      rw [hcore, hcard]
+      omega
+    · rw [hcore, he]
+      exact hcap
+
+theorem isomorphic_atomRestriction_of_all_edges_same_atom
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hreduced : F.HasNoIsolatedPoints) (A : Index F)
+    (hall : ∀ e : E, atomOf F hlinear hbridge e = A) :
+    Isomorphic F (atomRestriction F hlinear hbridge A) := by
+  classical
+  have hsetuniv : edges F hlinear hbridge A = (Set.univ : Set E) :=
+    Set.eq_univ_of_forall hall
+  show Isomorphic F (F.edgeRestriction (edges F hlinear hbridge A))
+  rw [hsetuniv]
+  exact ⟨(F.edgeRestrictionUnivIso hreduced).symm⟩
+
+theorem card_index_eq_one_of_near_capacity
+    (hintrinsic : F.Intrinsic) (hconnected : F.levi.Connected)
+    (hreduced : F.HasNoIsolatedPoints)
+    (hsurplus : 4 ≤ Nat.card V - Nat.card E)
+    (hcapacity : (Nat.card V - Nat.card E) ^ 2 ≤ 4 * Nat.card E + 1) :
+    Nat.card (Index F) = 1 := by
+  classical
+  obtain ⟨hlinear, hbridge, hberge⟩ := hintrinsic
+  haveI : Finite (Index F) := Finite.of_surjective _ (atomOf_surjective F hlinear hbridge)
+  letI : Fintype (Index F) := Fintype.ofFinite _
+  set s : Finset (Index F) := atomFinset F hlinear hbridge with hs
+  have hsuniv : s = Finset.univ := by
+    ext A
+    simp [hs]
+  have hneE : Nonempty E := by
+    by_contra hempty
+    haveI : IsEmpty E := not_nonempty_iff.mp hempty
+    have hVempty : IsEmpty V := by
+      refine ⟨fun x => hreduced x ?_⟩
+      intro e
+      exact (IsEmpty.false e).elim
+    have hV0 : Nat.card V = 0 := by simp
+    have hE0 : Nat.card E = 0 := by simp
+    rw [hV0, hE0] at hsurplus
+    omega
+  have hIndexNonempty : Nonempty (Index F) :=
+    ⟨atomOf F hlinear hbridge (Classical.arbitrary E)⟩
+  have hcomp : Nat.card F.levi.ConnectedComponent = 1 := by
+    haveI := hconnected.nonempty
+    haveI := hconnected.preconnected.subsingleton_connectedComponent
+    exact Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, inferInstance⟩
+  have hv2 : ∀ A ∈ s, 2 ≤ coreOrder F A :=
+    fun A _ => (atomCore_capacity F hlinear hbridge hberge A).1
+  have hcastsum : ((∑ A ∈ s, (coreOrder F A - 1) : ℕ) : ℤ) =
+      ∑ A ∈ s, ((coreOrder F A : ℤ) - 1) := by
+    push_cast
+    refine Finset.sum_congr rfl fun A hA => ?_
+    have := hv2 A hA
+    omega
+  have hsurp := surplus_eq_core_sum F hlinear hbridge
+  rw [hcomp, ← hs, ← hcastsum] at hsurp
+  have hSnat : Nat.card V - Nat.card E = 1 + ∑ A ∈ s, (coreOrder F A - 1) := by
+    omega
+  have hsumsq : 4 * Nat.card E ≤ ∑ A ∈ s, (coreOrder F A) ^ 2 := by
+    rw [← sum_atomEdgeCount F hlinear hbridge, ← hs, Finset.mul_sum]
+    exact Finset.sum_le_sum
+      fun A _ => (atomCore_capacity F hlinear hbridge hberge A).2
+  have hcardone : s.card = 1 := by
+    rcases Nat.lt_or_ge s.card 2 with hlt | hge
+    · have hpos : 0 < s.card := Finset.card_pos.mpr ⟨Classical.arbitrary (Index F),
+        by simp [hs]⟩
+      omega
+    · exfalso
+      have hconc := Erdos593.Spectrum.strict_atom_capacity_concentration s
+        (coreOrder F) hge hv2 (by omega)
+      rw [← hSnat] at hconc
+      omega
+  rw [hsuniv] at hcardone
+  rw [Nat.card_eq_fintype_card, ← Finset.card_univ]
+  exact hcardone
+
+end FiniteAtoms
+
+end CanonicalAtom
+
+theorem one_edge_isomorphic_complete_bipartite_expansion
+    {V E : Type u} [Finite V] [Finite E] (F : TripleSystem V E)
+    (hreduced : F.HasNoIsolatedPoints) (he : Nat.card E = 1) :
+    Isomorphic F
+      (privateVertexExpansion (_root_.completeBipartiteGraph (Fin 1) (Fin 1))) := by
+  classical
+  letI : Fintype V := Fintype.ofFinite V
+  letI : Fintype E := Fintype.ofFinite E
+  set K := _root_.completeBipartiteGraph (Fin 1) (Fin 1) with hK
+  have hKadj : K.Adj (Sum.inl 0) (Sum.inr 0) := by
+    simp [hK, _root_.completeBipartiteGraph]
+  have hedgeK : ∀ c : K.edgeSet, (c : Sym2 (Fin 1 ⊕ Fin 1)) = s(Sum.inl 0, Sum.inr 0) := by
+    rintro ⟨c, hc⟩
+    induction c using Sym2.inductionOn with
+    | _ x y =>
+      have hxy : K.Adj x y := hc
+      rcases x with x | x <;> rcases y with y | y <;>
+        simp_all [_root_.completeBipartiteGraph, Subsingleton.elim x 0, Subsingleton.elim y 0]
+  letI : Unique K.edgeSet :=
+    { default := ⟨s(Sum.inl 0, Sum.inr 0), hKadj⟩
+      uniq := fun c => Subtype.ext (hedgeK c) }
+  letI : Fintype K.edgeSet := Fintype.ofFinite _
+  have hcardEdgeK : Fintype.card K.edgeSet = 1 := Fintype.card_unique
+  have hincK : ∀ (q : PrivateVertexExpansion.Point K) (c : PrivateVertexExpansion.Edge K),
+      (privateVertexExpansion K).Inc q c := by
+    intro q c
+    rcases q with x | d
+    · show x ∈ (c : Sym2 (Fin 1 ⊕ Fin 1))
+      rw [hedgeK c]
+      rcases x with x | x
+      · rw [Subsingleton.elim x 0]; simp
+      · rw [Subsingleton.elim x 0]; simp
+    · show d = c
+      exact Subsingleton.elim d c
+  obtain ⟨hsubE, hneE⟩ := Nat.card_eq_one_iff_unique.mp he
+  obtain ⟨e₀⟩ := hneE
+  have hEsub : ∀ f : E, f = e₀ := fun f => hsubE.elim f e₀
+  have hallinc : ∀ x : V, F.Inc x e₀ := by
+    intro x
+    obtain ⟨f, hf⟩ := F.not_isolated_iff_exists_inc.mp (hreduced x)
+    rw [hEsub f] at hf
+    exact hf
+  have hV3 : Fintype.card V = 3 := by
+    have huniv : {x : V | F.Inc x e₀} = Set.univ := Set.eq_univ_of_forall hallinc
+    have hcard := F.edge_ncard e₀
+    rw [huniv, Set.ncard_univ] at hcard
+    rw [← Nat.card_eq_fintype_card]
+    exact hcard
+  have hPoint3 : Fintype.card (PrivateVertexExpansion.Point K) = 3 := by
+    simp only [PrivateVertexExpansion.Point, PrivateVertexExpansion.CoreVertex,
+      PrivateVertexExpansion.PrivateVertex, Fintype.card_sum, Fintype.card_fin, hcardEdgeK]
+  have hE1 : Fintype.card E = 1 := by rw [← Nat.card_eq_fintype_card]; exact he
+  refine ⟨{ vertexEquiv := Fintype.equivOfCardEq (hV3.trans hPoint3.symm)
+            edgeEquiv := Fintype.equivOfCardEq (hE1.trans hcardEdgeK.symm)
+            map_inc_iff := ?_ }⟩
+  intro x e
+  exact ⟨fun _ => hincK _ _, fun _ => by rw [hEsub e]; exact hallinc x⟩
+
+theorem two_edges_isomorphic_complete_bipartite_expansion
+    {V E : Type u} [Finite V] [Finite E] (F : TripleSystem V E)
+    (hlinear : F.Linear) (hconnected : F.levi.Connected)
+    (hreduced : F.HasNoIsolatedPoints) (he : Nat.card E = 2) :
+    Isomorphic F
+      (privateVertexExpansion (_root_.completeBipartiteGraph (Fin 1) (Fin 2))) := by
+  classical
+  obtain ⟨e₁, e₂, hne, huniv⟩ := Nat.card_eq_two_iff.mp he
+  have htwo : ∀ f : E, f = e₁ ∨ f = e₂ := by
+    intro f
+    have hf : f ∈ ({e₁, e₂} : Set E) := by rw [huniv]; trivial
+    simpa using hf
+  have hshared : ∃ q : V, F.Inc q e₁ ∧ F.Inc q e₂ := by
+    by_contra hno
+    have hno' : ∀ q : V, F.Inc q e₁ → ¬F.Inc q e₂ := fun q h1 h2 => hno ⟨q, h1, h2⟩
+    set S : Set (V ⊕ E) := {z | match z with
+      | Sum.inl x => F.Inc x e₁
+      | Sum.inr e => e = e₁} with hS
+    have hclosed : ∀ z w, F.levi.Adj z w → z ∈ S → w ∈ S := by
+      rintro (x | e) (y | f) hadj hz
+      · exact absurd hadj (F.not_levi_adj_point_point)
+      · have hxf : F.Inc x f := (F.levi_adj_point_edge).mp hadj
+        have hx1 : F.Inc x e₁ := hz
+        rcases htwo f with rfl | rfl
+        · rfl
+        · exact absurd hxf (hno' x hx1)
+      · have hyf : F.Inc y e := (F.levi_adj_edge_point).mp hadj
+        have hee : e = e₁ := hz
+        subst hee
+        exact hyf
+      · exact absurd hadj (F.not_levi_adj_edge_edge)
+    have hwalk : ∀ (z w : V ⊕ E) (t : F.levi.Walk z w), z ∈ S → w ∈ S := by
+      intro z w t
+      induction t with
+      | nil => exact fun h => h
+      | cons hadj q ih => exact fun h => ih (hclosed _ _ hadj h)
+    obtain ⟨t⟩ := hconnected.preconnected (Sum.inr e₁) (Sum.inr e₂)
+    exact hne (hwalk _ _ t rfl).symm
+  obtain ⟨p, hp1, hp2⟩ := hshared
+  have hthree : ∀ (S : Set V) (q : V), S.ncard = 3 → q ∈ S →
+      ∃ u v, q ≠ u ∧ q ≠ v ∧ u ≠ v ∧ S = {q, u, v} := by
+    intro S q hcard hq
+    obtain ⟨c1, c2, c3, h12, h13, h23, hSeq⟩ := Set.ncard_eq_three.mp hcard
+    subst hSeq
+    rcases hq with h | h | h
+    · exact ⟨c2, c3, by rw [h]; exact h12, by rw [h]; exact h13, h23, by rw [h]⟩
+    · refine ⟨c1, c3, by rw [h]; exact Ne.symm h12, by rw [h]; exact h23, h13, ?_⟩
+      rw [show q = c2 from h]
+      ext z; simp; tauto
+    · refine ⟨c1, c2, by rw [h]; exact Ne.symm h13, by rw [h]; exact Ne.symm h23, h12, ?_⟩
+      rw [show q = c3 from h]
+      ext z; simp; tauto
+  obtain ⟨x1, x2, hpx1, hpx2, hx12, hE1⟩ :=
+    hthree (F.edgeSet e₁) p (F.edgeSet_ncard e₁) hp1
+  obtain ⟨y1, y2, hpy1, hpy2, hy12, hE2⟩ :=
+    hthree (F.edgeSet e₂) p (F.edgeSet_ncard e₂) hp2
+  have hcross : ∀ v, F.Inc v e₁ → F.Inc v e₂ → v = p :=
+    fun v h1 h2 => hlinear hne h1 h2 hp1 hp2
+  have hmem1 : ∀ v, F.Inc v e₁ ↔ (v = p ∨ v = x1 ∨ v = x2) := by
+    intro v
+    have hv : v ∈ F.edgeSet e₁ ↔ v ∈ ({p, x1, x2} : Set V) := by rw [hE1]
+    simpa using hv
+  have hmem2 : ∀ v, F.Inc v e₂ ↔ (v = p ∨ v = y1 ∨ v = y2) := by
+    intro v
+    have hv : v ∈ F.edgeSet e₂ ↔ v ∈ ({p, y1, y2} : Set V) := by rw [hE2]
+    simpa using hv
+  have hx1e1 : F.Inc x1 e₁ := (hmem1 x1).mpr (by tauto)
+  have hx2e1 : F.Inc x2 e₁ := (hmem1 x2).mpr (by tauto)
+  have hy1e2 : F.Inc y1 e₂ := (hmem2 y1).mpr (by tauto)
+  have hy2e2 : F.Inc y2 e₂ := (hmem2 y2).mpr (by tauto)
+  have hx1e2 : ¬F.Inc x1 e₂ := fun h => hpx1 (hcross x1 hx1e1 h).symm
+  have hx2e2 : ¬F.Inc x2 e₂ := fun h => hpx2 (hcross x2 hx2e1 h).symm
+  have hx1y1 : x1 ≠ y1 := fun h => hx1e2 (by rw [h]; exact hy1e2)
+  have hx1y2 : x1 ≠ y2 := fun h => hx1e2 (by rw [h]; exact hy2e2)
+  have hx2y1 : x2 ≠ y1 := fun h => hx2e2 (by rw [h]; exact hy1e2)
+  have hx2y2 : x2 ≠ y2 := fun h => hx2e2 (by rw [h]; exact hy2e2)
+  have hall : ∀ v : V, F.Inc v e₁ ∨ F.Inc v e₂ := by
+    intro v
+    obtain ⟨f, hf⟩ := F.not_isolated_iff_exists_inc.mp (hreduced v)
+    rcases htwo f with rfl | rfl
+    · exact Or.inl hf
+    · exact Or.inr hf
+  have hvsplit : ∀ v : V, v = p ∨ v = x1 ∨ v = x2 ∨ v = y1 ∨ v = y2 := by
+    intro v
+    rcases hall v with h | h
+    · rcases (hmem1 v).mp h with h' | h' | h' <;> tauto
+    · rcases (hmem2 v).mp h with h' | h' | h' <;> tauto
+  set K := _root_.completeBipartiteGraph (Fin 1) (Fin 2) with hK
+  have ha : K.Adj (Sum.inl 0) (Sum.inr 0) := by simp [hK, _root_.completeBipartiteGraph]
+  have hb : K.Adj (Sum.inl 0) (Sum.inr 1) := by simp [hK, _root_.completeBipartiteGraph]
+  set a : K.edgeSet := ⟨s(Sum.inl 0, Sum.inr 0), ha⟩ with hadef
+  set b : K.edgeSet := ⟨s(Sum.inl 0, Sum.inr 1), hb⟩ with hbdef
+  have hab : a ≠ b := by
+    intro h
+    have h' := congrArg Subtype.val h
+    simp [hadef, hbdef] at h'
+  have hclass : ∀ c : K.edgeSet, c = a ∨ c = b := by
+    rintro ⟨c, hc⟩
+    induction c using Sym2.inductionOn with
+    | _ x y =>
+      have hxy : K.Adj x y := hc
+      rcases x with x | x <;> rcases y with y | y
+      · exact absurd hxy (by simp [hK, _root_.completeBipartiteGraph])
+      · fin_cases x
+        fin_cases y
+        · exact Or.inl (by rw [hadef]; rfl)
+        · exact Or.inr (by rw [hbdef]; rfl)
+      · fin_cases x <;> fin_cases y
+        · exact Or.inl (by apply Subtype.ext; rw [hadef]; exact Sym2.eq_swap)
+        · exact Or.inr (by apply Subtype.ext; rw [hbdef]; exact Sym2.eq_swap)
+      · exact absurd hxy (by simp [hK, _root_.completeBipartiteGraph])
+  refine ⟨Iso.symm (?iso : Iso (privateVertexExpansion K) F)⟩
+  refine
+    { vertexEquiv :=
+        { toFun := fun q =>
+            match q with
+            | Sum.inl (Sum.inl _) => p
+            | Sum.inl (Sum.inr j) => if j = 0 then x1 else y1
+            | Sum.inr c => if c = a then x2 else y2
+          invFun := fun v =>
+            if v = p then Sum.inl (Sum.inl 0)
+            else if v = x1 then Sum.inl (Sum.inr 0)
+            else if v = x2 then Sum.inr a
+            else if v = y1 then Sum.inl (Sum.inr 1)
+            else Sum.inr b
+          left_inv := ?_
+          right_inv := ?_ }
+      edgeEquiv :=
+        { toFun := fun c => if c = a then e₁ else e₂
+          invFun := fun e => if e = e₁ then a else b
+          left_inv := ?_
+          right_inv := ?_ }
+      map_inc_iff := ?_ }
+  · rintro ((j | j) | c)
+    · fin_cases j
+      simp
+    · fin_cases j
+      · simp [hpx1.symm]
+      · simp [hpy1.symm, Ne.symm hx1y1, Ne.symm hx2y1]
+    · rcases hclass c with rfl | rfl
+      · simp [hpx2.symm, Ne.symm hx12]
+      · simp [hab.symm, hpy2.symm, Ne.symm hx1y2, Ne.symm hx2y2, Ne.symm hy12]
+  · intro v
+    rcases hvsplit v with rfl | rfl | rfl | rfl | rfl
+    · simp
+    · simp [hpx1.symm]
+    · simp [hpx2.symm, Ne.symm hx12]
+    · simp [hpy1.symm, Ne.symm hx1y1, Ne.symm hx2y1]
+    · simp [hpy2.symm, Ne.symm hx1y2, Ne.symm hx2y2, Ne.symm hy12, hab.symm]
+  · intro c
+    rcases hclass c with rfl | rfl
+    · simp
+    · simp [hab.symm, hne.symm]
+  · intro e
+    rcases htwo e with rfl | rfl
+    · simp
+    · simp [hne.symm, hab.symm]
+  · intro q c
+    rcases hclass c with rfl | rfl <;> rcases q with (j | j) | c'
+    all_goals try (fin_cases j)
+    all_goals try (rcases hclass c' with rfl | rfl)
+    all_goals
+      simp [privateVertexExpansion, PrivateVertexExpansion.Inc, hadef, hbdef, hmem1, hmem2,
+        hpx1, hpx2, hx12, hpy1, hpy2, hy12, hx1y1, hx1y2, hx2y1, hx2y2,
+        Ne.symm hpx1, Ne.symm hpx2, Ne.symm hx12, Ne.symm hpy1, Ne.symm hpy2, Ne.symm hy12,
+        Ne.symm hx1y1, Ne.symm hx1y2, Ne.symm hx2y1, Ne.symm hx2y2]
+
+theorem balanced_even_endpoint_rigidity
+    {V E : Type u} [Finite V] [Finite E] (F : TripleSystem V E)
+    (hconnected : F.levi.Connected) (hreduced : F.HasNoIsolatedPoints)
+    (hobligatory : F.IsObligatory) (t : ℕ) (ht : 1 ≤ t)
+    (he : Nat.card E = t ^ 2) (hv : Nat.card V = t ^ 2 + 2 * t) :
+    Isomorphic F
+      (privateVertexExpansion (_root_.completeBipartiteGraph (Fin t) (Fin t))) := by
+  classical
+  letI : Fintype V := Fintype.ofFinite V
+  letI : Fintype E := Fintype.ofFinite E
+  letI : DecidableEq V := Classical.decEq V
+  letI : DecidableEq E := Classical.decEq E
+  letI : DecidableRel F.levi.Adj := Classical.decRel _
+  rcases Nat.lt_or_ge t 2 with hlt | hge
+  · have ht1 : t = 1 := by omega
+    subst ht1
+    exact one_edge_isomorphic_complete_bipartite_expansion F hreduced (by simpa using he)
+  · have hintrinsic : F.Intrinsic :=
+      ((CanonicalAtom.atomGenerated_iff_constructible F).mp
+        ((CanonicalAtom.isObligatory_iff_atomGenerated F).mp hobligatory)).intrinsic
+    have hlin := hintrinsic.1
+    have hbr := hintrinsic.2.1
+    have hberge := hintrinsic.2.2
+    have hsurplus : Nat.card V - Nat.card E = 2 * t := by rw [hv, he]; omega
+    have hcapsq : (2 * t) ^ 2 = 4 * t ^ 2 := by ring
+    have hone : Nat.card (CanonicalAtom.Index F) = 1 :=
+      CanonicalAtom.card_index_eq_one_of_near_capacity F hintrinsic hconnected hreduced
+        (by rw [hsurplus]; omega) (by rw [hsurplus, he, hcapsq]; omega)
+    obtain ⟨hsubI, hneI⟩ := Nat.card_eq_one_iff_unique.mp hone
+    obtain ⟨A⟩ := hneI
+    have hcomp : Nat.card F.levi.ConnectedComponent = 1 := by
+      haveI := hconnected.nonempty
+      haveI := hconnected.preconnected.subsingleton_connectedComponent
+      exact Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, inferInstance⟩
+    have hsingleton : CanonicalAtom.atomFinset F hlin hbr = {A} :=
+      Finset.eq_singleton_iff_unique_mem.mpr
+        ⟨CanonicalAtom.mem_atomFinset F hlin hbr A, fun B _ => hsubI.elim B A⟩
+    have hall : ∀ e : E, CanonicalAtom.atomOf F hlin hbr e = A := fun e => hsubI.elim _ _
+    have hisoA : Isomorphic F (CanonicalAtom.atomRestriction F hlin hbr A) :=
+      CanonicalAtom.isomorphic_atomRestriction_of_all_edges_same_atom F hlin hbr hreduced A hall
+    have hsurp := CanonicalAtom.surplus_eq_core_sum F hlin hbr
+    rw [hsingleton, hcomp, Finset.sum_singleton] at hsurp
+    have hcore : CanonicalAtom.coreOrder F A = 2 * t := by
+      rw [hv, he] at hsurp
+      push_cast at hsurp
+      omega
+    have hedgecount : CanonicalAtom.atomEdgeCount F hlin hbr A = Nat.card E := by
+      have hsum := CanonicalAtom.sum_atomEdgeCount F hlin hbr
+      rwa [hsingleton, Finset.sum_singleton] at hsum
+    clear hsurp hsingleton hone hsubI
+    cases A with
+    | singleton e hzero =>
+      exfalso
+      have h2 : CanonicalAtom.coreOrder F (CanonicalAtom.Index.singleton e hzero) = 2 := rfl
+      omega
+    | cycleBlock C hC B =>
+      obtain ⟨i⟩ := CanonicalAtom.atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+        F hlin hbr (CanonicalAtom.Index.cycleBlock C hC B)
+      have hJedges : Nat.card (CanonicalAtom.cycleBlockCore F C B).edgeSet = t ^ 2 := by
+        have hcongr : CanonicalAtom.atomEdgeCount F hlin hbr
+            (CanonicalAtom.Index.cycleBlock C hC B) =
+            Nat.card (CanonicalAtom.cycleBlockCore F C B).edgeSet := Nat.card_congr i.edgeEquiv
+        rw [← hcongr, hedgecount, he]
+      have hJverts : Nat.card (finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+          (CanonicalAtom.cycleBlockEdgeSet F C B)
+          (CanonicalAtom.cycleBlockEdgeSet_finite F C B)) = 2 * t := hcore
+      have hbip : (CanonicalAtom.cycleBlockCore F C B).Colorable 2 :=
+        CanonicalAtom.cycleBlockCore_isBipartite F hlin hbr hberge C hC B
+      obtain ⟨g⟩ :=
+        _root_.SimpleGraph.BalancedBipartiteRigidity.even_order_isomorphic_complete_bipartite
+          (CanonicalAtom.cycleBlockCore F C B) hbip t hJverts hJedges
+      have hiso2 : Isomorphic
+          (CanonicalAtom.atomRestriction F hlin hbr (CanonicalAtom.Index.cycleBlock C hC B))
+          (privateVertexExpansion (CanonicalAtom.cycleBlockCore F C B)) := ⟨i⟩
+      exact hisoA.trans
+        (hiso2.trans (privateVertexExpansion_isomorphic_of_graphIso _ _ g))
+
+theorem balanced_odd_endpoint_rigidity
+    {V E : Type u} [Finite V] [Finite E] (F : TripleSystem V E)
+    (hconnected : F.levi.Connected) (hreduced : F.HasNoIsolatedPoints)
+    (hobligatory : F.IsObligatory) (t : ℕ) (ht : 1 ≤ t)
+    (he : Nat.card E = t * (t + 1))
+    (hv : Nat.card V = t * (t + 1) + 2 * t + 1) :
+    Isomorphic F
+      (privateVertexExpansion (_root_.completeBipartiteGraph (Fin t) (Fin (t + 1)))) := by
+  classical
+  letI : Fintype V := Fintype.ofFinite V
+  letI : Fintype E := Fintype.ofFinite E
+  letI : DecidableEq V := Classical.decEq V
+  letI : DecidableEq E := Classical.decEq E
+  letI : DecidableRel F.levi.Adj := Classical.decRel _
+  have hintrinsic : F.Intrinsic :=
+    ((CanonicalAtom.atomGenerated_iff_constructible F).mp
+      ((CanonicalAtom.isObligatory_iff_atomGenerated F).mp hobligatory)).intrinsic
+  have hlin := hintrinsic.1
+  have hbr := hintrinsic.2.1
+  have hberge := hintrinsic.2.2
+  rcases Nat.lt_or_ge t 2 with hlt | hge
+  · have ht1 : t = 1 := by omega
+    subst ht1
+    exact two_edges_isomorphic_complete_bipartite_expansion F hlin hconnected hreduced
+      (by simpa using he)
+  · have hsurplus : Nat.card V - Nat.card E = 2 * t + 1 := by rw [hv, he]; omega
+    have hcapsq : (2 * t + 1) ^ 2 = 4 * (t * (t + 1)) + 1 := by ring
+    have hone : Nat.card (CanonicalAtom.Index F) = 1 :=
+      CanonicalAtom.card_index_eq_one_of_near_capacity F hintrinsic hconnected hreduced
+        (by rw [hsurplus]; omega) (by rw [hsurplus, he, hcapsq])
+    obtain ⟨hsubI, hneI⟩ := Nat.card_eq_one_iff_unique.mp hone
+    obtain ⟨A⟩ := hneI
+    have hcomp : Nat.card F.levi.ConnectedComponent = 1 := by
+      haveI := hconnected.nonempty
+      haveI := hconnected.preconnected.subsingleton_connectedComponent
+      exact Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, inferInstance⟩
+    have hsingleton : CanonicalAtom.atomFinset F hlin hbr = {A} :=
+      Finset.eq_singleton_iff_unique_mem.mpr
+        ⟨CanonicalAtom.mem_atomFinset F hlin hbr A, fun B _ => hsubI.elim B A⟩
+    have hall : ∀ e : E, CanonicalAtom.atomOf F hlin hbr e = A := fun e => hsubI.elim _ _
+    have hisoA : Isomorphic F (CanonicalAtom.atomRestriction F hlin hbr A) :=
+      CanonicalAtom.isomorphic_atomRestriction_of_all_edges_same_atom F hlin hbr hreduced A hall
+    have hsurp := CanonicalAtom.surplus_eq_core_sum F hlin hbr
+    rw [hsingleton, hcomp, Finset.sum_singleton] at hsurp
+    have hcore : CanonicalAtom.coreOrder F A = 2 * t + 1 := by
+      rw [hv, he] at hsurp
+      push_cast at hsurp
+      omega
+    have hedgecount : CanonicalAtom.atomEdgeCount F hlin hbr A = Nat.card E := by
+      have hsum := CanonicalAtom.sum_atomEdgeCount F hlin hbr
+      rwa [hsingleton, Finset.sum_singleton] at hsum
+    clear hsurp hsingleton hone hsubI
+    cases A with
+    | singleton e hzero =>
+      exfalso
+      have h2 : CanonicalAtom.coreOrder F (CanonicalAtom.Index.singleton e hzero) = 2 := rfl
+      omega
+    | cycleBlock C hC B =>
+      obtain ⟨i⟩ := CanonicalAtom.atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+        F hlin hbr (CanonicalAtom.Index.cycleBlock C hC B)
+      have hJedges : Nat.card (CanonicalAtom.cycleBlockCore F C B).edgeSet = t * (t + 1) := by
+        have hcongr : CanonicalAtom.atomEdgeCount F hlin hbr
+            (CanonicalAtom.Index.cycleBlock C hC B) =
+            Nat.card (CanonicalAtom.cycleBlockCore F C B).edgeSet := Nat.card_congr i.edgeEquiv
+        rw [← hcongr, hedgecount, he]
+      have hJverts : Nat.card (finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+          (CanonicalAtom.cycleBlockEdgeSet F C B)
+          (CanonicalAtom.cycleBlockEdgeSet_finite F C B)) = 2 * t + 1 := hcore
+      have hbip : (CanonicalAtom.cycleBlockCore F C B).Colorable 2 :=
+        CanonicalAtom.cycleBlockCore_isBipartite F hlin hbr hberge C hC B
+      obtain ⟨g⟩ :=
+        _root_.SimpleGraph.BalancedBipartiteRigidity.odd_order_isomorphic_complete_bipartite
+          (CanonicalAtom.cycleBlockCore F C B) hbip t hJverts hJedges
+      have hiso2 : Isomorphic
+          (CanonicalAtom.atomRestriction F hlin hbr (CanonicalAtom.Index.cycleBlock C hC B))
+          (privateVertexExpansion (CanonicalAtom.cycleBlockCore F C B)) := ⟨i⟩
+      exact hisoA.trans
+        (hiso2.trans (privateVertexExpansion_isomorphic_of_graphIso _ _ g))
+
+end Erdos593.TripleSystem
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_BalancedEndpointRigidity
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.BalancedEndpointRigidity
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.TwoConnectedBipartiteSpectrum
+Source: Erdos593/Graph/TwoConnectedBipartiteSpectrum.lean
+Normalized SHA-256: 94aa6d8e8b2364ec9d8dee0dd732cc9713e378094dc36cfeda79526735914c65
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_TwoConnectedBipartiteSpectrum
+
+/-!
+# Minimum order at fixed positive cycle rank
+
+Unintegrated proposition/API surface only: twelve intentional proof holes.
+The graph, vertex-deletion two-connectivity, coloring and cycle rank are
+literal objects, not numerical substitutes or target-equivalent assumptions.
+-/
+
+namespace SimpleGraph.TwoConnectedBipartiteSpectrum
+
+universe u w
+
+theorem two_connected_connected {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G) :
+    G.Connected := by
+  classical
+  haveI : Nonempty V := Fintype.card_pos_iff.mp (by have := htwo.1; omega)
+  refine { preconnected := ?_, nonempty := inferInstance }
+  intro x y
+  have hsmall : ({x, y} : Finset V).card < (Finset.univ : Finset V).card := by
+    have hp : ({x, y} : Finset V).card ≤ 2 := by
+      by_cases hxy : x = y <;> simp [hxy]
+    rw [Finset.card_univ]
+    have := htwo.1
+    omega
+  obtain ⟨z, _, hz⟩ := Finset.exists_mem_notMem_of_card_lt_card hsmall
+  have hx : x ≠ z := by intro h; exact hz (by simp [h])
+  have hy : y ≠ z := by intro h; exact hz (by simp [h])
+  let inc : G.induce {p : V | p ≠ z} →g G :=
+    ⟨Subtype.val, fun h => h⟩
+  exact ((htwo.2 z).preconnected ⟨x, hx⟩ ⟨y, hy⟩).map inc
+
+theorem two_connected_min_degree {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G) (x : V) :
+    2 ≤ Nat.card (G.neighborSet x) := by
+  classical
+  haveI : Nontrivial V := Fintype.one_lt_card_iff_nontrivial.mp (by
+    have := htwo.1
+    omega)
+  obtain ⟨y, hxy⟩ :=
+    (two_connected_connected G htwo).preconnected.exists_adj_of_nontrivial x
+  have hsmall : ({x, y} : Finset V).card < (Finset.univ : Finset V).card := by
+    have hp : ({x, y} : Finset V).card ≤ 2 := by
+      by_cases h : x = y <;> simp [h]
+    rw [Finset.card_univ]
+    have := htwo.1
+    omega
+  obtain ⟨z, _, hz⟩ := Finset.exists_mem_notMem_of_card_lt_card hsmall
+  have hxz : x ≠ z := by intro h; exact hz (by simp [h])
+  have hzy : z ≠ y := by intro h; exact hz (by simp [h])
+  let X : {p : V | p ≠ y} := ⟨x, hxy.ne⟩
+  let Z : {p : V | p ≠ y} := ⟨z, hzy⟩
+  haveI : Nontrivial {p : V | p ≠ y} :=
+    ⟨⟨X, Z, fun h => hxz (congrArg Subtype.val h)⟩⟩
+  obtain ⟨w, hw⟩ := (htwo.2 y).preconnected.exists_adj_of_nontrivial X
+  have hxw : G.Adj x w.val := hw
+  rw [Nat.card_coe_set_eq]
+  exact (Set.one_lt_ncard_iff (s := G.neighborSet x)).mpr
+    ⟨y, w.val, hxy, hxw, Ne.symm w.property⟩
+
+theorem two_connected_mono {V : Type u} [Fintype V] (G H : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hle : G ≤ H) :
+    Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected H := by
+  refine ⟨htwo.1, fun x => (htwo.2 x).mono ?_⟩
+  intro a b hab
+  exact hle hab
+
+theorem two_connected_of_iso {V : Type u} {W : Type w} [Fintype V] [Fintype W]
+    (G : SimpleGraph V) (H : SimpleGraph W) (i : G ≃g H)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G) :
+    Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected H := by
+  refine ⟨?_, ?_⟩
+  · have hcard := Fintype.card_congr i.toEquiv
+    have := htwo.1
+    omega
+  · intro x
+    have hj : Set.BijOn i {v : V | v ≠ i.symm x} {w : W | w ≠ x} := by
+      refine ⟨?_, i.injective.injOn, ?_⟩
+      · intro v hv
+        change i v ≠ x
+        intro h
+        apply hv
+        apply i.injective
+        simpa only [RelIso.apply_symm_apply] using h
+      · intro w hw
+        refine ⟨i.symm w, ?_, by simp⟩
+        intro h
+        exact hw (i.symm.injective h)
+    exact (i.induce hj).connected_iff.mp (htwo.2 (i.symm x))
+
+theorem connected_cycleRank_euler {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (hc : G.Connected) :
+    Nat.card G.edgeSet + 1 = SimpleGraph.FiniteCycleRank.cycleRank G + Nat.card V := by
+  haveI : Nonempty V := hc.nonempty
+  haveI : Subsingleton G.ConnectedComponent := hc.preconnected.subsingleton_connectedComponent
+  have hcc : Nat.card G.ConnectedComponent = 1 := Nat.card_unique
+  have hle := SimpleGraph.FiniteCycleRank.card_vertices_le_edges_add_components G
+  rw [hcc] at hle
+  simp only [SimpleGraph.FiniteCycleRank.cycleRank, hcc]
+  omega
+
+theorem minimum_order {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hb : G.Colorable 2)
+    (hr : 1 ≤ SimpleGraph.FiniteCycleRank.cycleRank G) :
+    2 + Erdos593.Spectrum.q (SimpleGraph.FiniteCycleRank.cycleRank G)
+      ≤ Nat.card V := by
+  obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le hr
+  have hv : 3 ≤ Nat.card V := by
+    simpa only [Nat.card_eq_fintype_card] using htwo.1
+  have he := connected_cycleRank_euler G (two_connected_connected G htwo)
+  rw [hk] at he ⊢
+  have hcap := SimpleGraph.BipartiteSpectrumBounds.bipartite_capacity G hb
+  have hvsub : Nat.card V - 2 + 2 = Nat.card V := by omega
+  have hsq : 4 * (1 + k) ≤ (Nat.card V - 2) ^ 2 := by
+    nlinarith
+  have hq := (Erdos593.Spectrum.q_le_iff (1 + k) (Nat.card V - 2)).mpr hsq
+  omega
+
+theorem even_order_of_rank_one {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hb : G.Colorable 2) (hr : SimpleGraph.FiniteCycleRank.cycleRank G = 1) :
+    Even (Nat.card V) := by
+  classical
+  have hEuler := connected_cycleRank_euler G (two_connected_connected G htwo)
+  have hedge : Nat.card G.edgeSet = Nat.card V := by omega
+  have hdegrees : ∀ x, 2 ≤ G.degree x := by
+    intro x
+    have h := two_connected_min_degree G htwo x
+    simpa only [Nat.card_eq_fintype_card, G.card_neighborSet_eq_degree] using h
+  have hsum : (∑ x : V, G.degree x) = ∑ _x : V, (2 : ℕ) := by
+    calc
+      (∑ x : V, G.degree x) = 2 * G.edgeFinset.card :=
+        G.sum_degrees_eq_twice_card_edges
+      _ = 2 * Nat.card V := by
+        rw [G.edgeFinset_card, ← Nat.card_eq_fintype_card, hedge]
+      _ = ∑ _x : V, (2 : ℕ) := by
+        simp [Nat.card_eq_fintype_card, mul_comm]
+  have hdegree : ∀ x, G.degree x = 2 := by
+    intro x
+    by_contra hx
+    have hlt : 2 < G.degree x := by have := hdegrees x; omega
+    have hstrict : (∑ _y : V, (2 : ℕ)) < ∑ y : V, G.degree y :=
+      Finset.sum_lt_sum (fun y _ => hdegrees y) ⟨x, Finset.mem_univ x, hlt⟩
+    omega
+  obtain ⟨A, B, hAB⟩ := _root_.SimpleGraph.IsBipartite.exists_isBipartiteWith hb
+  have hABf : G.IsBipartiteWith (A.toFinset : Set V) (B.toFinset : Set V) := by
+    simpa only [Set.coe_toFinset] using hAB
+  have hAcount : (∑ x ∈ A.toFinset, G.degree x) = G.edgeFinset.card :=
+    _root_.SimpleGraph.isBipartiteWith_sum_degrees_eq_card_edges hABf
+  have hAeven : 2 * A.toFinset.card = Nat.card V := by
+    calc
+      2 * A.toFinset.card = ∑ x ∈ A.toFinset, G.degree x := by
+        simp [hdegree, mul_comm]
+      _ = G.edgeFinset.card := hAcount
+      _ = Nat.card V := by
+        rw [G.edgeFinset_card, ← Nat.card_eq_fintype_card, hedge]
+  exact ⟨A.toFinset.card, by omega⟩
+
+theorem exists_even_seed (n : ℕ) (hn : 2 ≤ n) :
+    ∃ G : SimpleGraph (Fin n ⊕ Fin n),
+      G ≤ completeBipartiteGraph (Fin n) (Fin n) ∧
+      Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G ∧
+      Nat.card G.edgeSet = 2 * n := by
+  classical
+  letI : NeZero n := ⟨by omega⟩
+  let rel : Fin n → Fin n → Prop := fun i j =>
+    i = j ∨ i.val + 1 = j.val ∨ (i.val + 1 = n ∧ j.val = 0)
+  let G : SimpleGraph (Fin n ⊕ Fin n) := fromRel (fun x y =>
+    match x, y with
+    | .inl i, .inr j => rel i j
+    | _, _ => False)
+  have hLR (i j : Fin n) : G.Adj (.inl i) (.inr j) ↔ rel i j := by
+    simp [G, fromRel]
+  let s : Fin n → Fin n := fun i =>
+    if h : i.val + 1 < n then ⟨i.val + 1, h⟩ else ⟨0, by omega⟩
+  have hrel (i j : Fin n) : rel i j ↔ j = i ∨ j = s i := by
+    dsimp only [rel, s]
+    split_ifs with hi
+    · simp only [Fin.ext_iff]
+      omega
+    · simp only [Fin.ext_iff]
+      omega
+  have hsne (i : Fin n) : s i ≠ i := by
+    intro hi
+    have hv := congrArg Fin.val hi
+    dsimp only [s] at hv
+    split_ifs at hv <;> dsimp only at hv <;> omega
+  let f : (Fin n ⊕ Fin n) → G.edgeSet := Sum.elim
+    (fun i => ⟨Sym2.mk (.inl i) (.inr i), (hLR i i).mpr (Or.inl rfl)⟩)
+    (fun i => ⟨Sym2.mk (.inl i) (.inr (s i)),
+      (hLR i (s i)).mpr ((hrel i (s i)).mpr (Or.inr rfl))⟩)
+  have hfi : Function.Injective f := by
+    rintro (i | i) (j | j) h
+    · have hv := congrArg Subtype.val h
+      have hij : i = j := by simpa [f, Sym2.eq_iff] using hv
+      exact congrArg Sum.inl hij
+    · have hv := congrArg Subtype.val h
+      have hij : i = j ∧ i = s j := by simpa [f, Sym2.eq_iff] using hv
+      exact (hsne j (hij.2.symm.trans hij.1)).elim
+    · have hv := congrArg Subtype.val h
+      have hij : i = j ∧ s i = j := by simpa [f, Sym2.eq_iff] using hv
+      exact (hsne i (hij.2.trans hij.1.symm)).elim
+    · have hv := congrArg Subtype.val h
+      have hij : i = j ∧ s i = s j := by simpa [f, Sym2.eq_iff] using hv
+      exact congrArg Sum.inr hij.1
+  have hfs : ∀ e : Sym2 (Fin n ⊕ Fin n),
+      e ∈ G.edgeSet → ∃ x, (f x).val = e := by
+    intro e
+    refine Sym2.inductionOn e ?_
+    rintro (i | i) (j | j) he
+    · simp [G, fromRel] at he
+    · have hij := (hrel i j).mp ((hLR i j).mp he)
+      rcases hij with hij | hij
+      · subst j
+        exact ⟨.inl i, rfl⟩
+      · subst j
+        exact ⟨.inr i, rfl⟩
+    · have he' : G.Adj (.inr i) (.inl j) := he
+      have hij := (hrel j i).mp ((hLR j i).mp he'.symm)
+      rcases hij with hij | hij
+      · subst i
+        exact ⟨.inl j, Sym2.eq_swap⟩
+      · subst i
+        exact ⟨.inr j, Sym2.eq_swap⟩
+    · simp [G, fromRel] at he
+  have hfc : Nat.card G.edgeSet = 2 * n := by
+    have hfb : Function.Bijective f := by
+      refine ⟨hfi, ?_⟩
+      rintro ⟨e, he⟩
+      obtain ⟨x, hx⟩ := hfs e he
+      exact ⟨x, Subtype.ext hx⟩
+    have hc := Nat.card_congr (Equiv.ofBijective f hfb)
+    simpa only [Nat.card_eq_fintype_card, Fintype.card_sum, Fintype.card_fin,
+      ← two_mul] using hc.symm
+  have hGtwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G := by
+    have hleft (k : Fin n) :
+        (G.induce {x | x ≠ Sum.inl k}).Connected := by
+      let D := G.induce {x | x ≠ Sum.inl k}
+      let R (j : Fin n) : {x : Fin n ⊕ Fin n // x ≠ Sum.inl k} :=
+        ⟨Sum.inr j, by simp⟩
+      let L (i : Fin n) (hi : i ≠ k) :
+          {x : Fin n ⊕ Fin n // x ≠ Sum.inl k} :=
+        ⟨Sum.inl i, by simpa using hi⟩
+      have hstep (i j : Fin n) (hi : i ≠ k)
+          (hij : i.val + 1 = j.val ∨ (i.val + 1 = n ∧ j.val = 0)) :
+          D.Reachable (R i) (R j) := by
+        have h₁ : D.Adj (R i) (L i hi) :=
+          ((hLR i i).mpr (Or.inl rfl)).symm
+        have h₂ : D.Adj (L i hi) (R j) :=
+          (hLR i j).mpr (Or.inr hij)
+        exact h₁.reachable.trans h₂.reachable
+      have hforward : ∀ j : ℕ, ∀ hj : j < n, j ≤ k.val →
+          D.Reachable (R 0) (R ⟨j, hj⟩) := by
+        intro j
+        induction j with
+        | zero =>
+          intro hj _
+          exact .rfl
+        | succ j ih =>
+          intro hj hjk
+          have hjn : j < n := by omega
+          have hneq : (⟨j, hjn⟩ : Fin n) ≠ k := by
+            intro h
+            have hv := congrArg Fin.val h
+            change j = k.val at hv
+            omega
+          exact (ih hjn (by omega)).trans
+            (hstep ⟨j, hjn⟩ ⟨j + 1, hj⟩ hneq (Or.inl rfl))
+      have hbackward : ∀ d : ℕ, ∀ j : Fin n,
+          n - 1 - j.val = d → k.val < j.val →
+          D.Reachable (R j) (R 0) := by
+        intro d
+        induction d with
+        | zero =>
+          intro j hd hj
+          have hlast : j.val + 1 = n := by have := j.isLt; omega
+          have hneq : j ≠ k := by
+            intro h
+            have hv := congrArg Fin.val h
+            omega
+          exact hstep j 0 hneq (Or.inr ⟨hlast, rfl⟩)
+        | succ d ih =>
+          intro j hd hj
+          have hjn : j.val + 1 < n := by have := j.isLt; omega
+          let j' : Fin n := ⟨j.val + 1, hjn⟩
+          have hj'd : n - 1 - j'.val = d := by dsimp [j']; omega
+          have hj'k : k.val < j'.val := by dsimp [j']; omega
+          have hneq : j ≠ k := by
+            intro h
+            have hv := congrArg Fin.val h
+            omega
+          exact (hstep j j' hneq (Or.inl rfl)).trans (ih j' hj'd hj'k)
+      have hall (j : Fin n) : D.Reachable (R 0) (R j) := by
+        by_cases hj : j.val ≤ k.val
+        · exact hforward j.val j.isLt hj
+        · exact (hbackward (n - 1 - j.val) j rfl (by omega)).symm
+      apply (connected_iff_exists_forall_reachable D).mpr
+      refine ⟨R 0, ?_⟩
+      rintro ⟨x, hx⟩
+      cases x with
+      | inl i =>
+        have hi : i ≠ k := by simpa using hx
+        have hstep : D.Adj (R i) (L i hi) :=
+          ((hLR i i).mpr (Or.inl rfl)).symm
+        exact (hall i).trans hstep.reachable
+      | inr j => exact hall j
+    have hreflect (i j : Fin n) : rel i j ↔ rel j.rev i.rev := by
+      dsimp only [rel]
+      simp only [Fin.ext_iff, Fin.val_rev]
+      have hi := i.isLt
+      have hj := j.isLt
+      omega
+    let swap : (Fin n ⊕ Fin n) → (Fin n ⊕ Fin n)
+      | .inl i => .inr i.rev
+      | .inr j => .inl j.rev
+    have hswap_inv (x : Fin n ⊕ Fin n) : swap (swap x) = x := by
+      cases x <;> simp [swap]
+    have hswap_adj (x y : Fin n ⊕ Fin n) (h : G.Adj x y) :
+        G.Adj (swap x) (swap y) := by
+      rcases x with i | i <;> rcases y with j | j
+      · simp [G, fromRel] at h
+      · exact ((hLR j.rev i.rev).mpr ((hreflect i j).mp ((hLR i j).mp h))).symm
+      · exact (hLR i.rev j.rev).mpr ((hreflect j i).mp ((hLR j i).mp h.symm))
+      · simp [G, fromRel] at h
+    refine ⟨?_, ?_⟩
+    · simp only [Fintype.card_sum, Fintype.card_fin]
+      omega
+    · rintro (k | k)
+      · exact hleft k
+      · let DL := G.induce {x | x ≠ Sum.inl k.rev}
+        let DR := G.induce {x | x ≠ Sum.inr k}
+        let f : DL →g DR :=
+          { toFun := fun x => ⟨swap x.val, by
+              intro h
+              apply x.property
+              have h' := congrArg swap h
+              simpa only [hswap_inv, swap] using h'⟩
+            map_rel' := by
+              intro x y h
+              exact hswap_adj x.val y.val h }
+        have hf : Function.Surjective f := by
+          rintro ⟨x, hx⟩
+          refine ⟨⟨swap x, ?_⟩, ?_⟩
+          · intro h
+            apply hx
+            have h' := congrArg swap h
+            simpa only [hswap_inv, swap, Fin.rev_rev] using h'
+          · exact Subtype.ext (hswap_inv x)
+        exact (hleft k.rev).map f hf
+  refine ⟨G, ?_, hGtwo, hfc⟩
+  rintro (i | i) (j | j) h
+  · simp [G, fromRel] at h
+  · simp [completeBipartiteGraph]
+  · simp [completeBipartiteGraph]
+  · simp [G, fromRel] at h
+
+theorem exists_odd_seed (n : ℕ) (hn : 2 ≤ n) :
+    ∃ G : SimpleGraph (Fin n ⊕ Fin (n + 1)),
+      G ≤ completeBipartiteGraph (Fin n) (Fin (n + 1)) ∧
+      Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G ∧
+      Nat.card G.edgeSet = 2 * n + 2 := by
+  classical
+  letI : NeZero n := ⟨by omega⟩
+  obtain ⟨G, hGK, hGtwo, hGc⟩ := exists_even_seed n hn
+  let V := Fin n ⊕ Fin n
+  let W := V ⊕ Fin 1
+  let inc : V ↪ W := ⟨Sum.inl, fun _ _ h => Sum.inl.inj h⟩
+  let a : V := .inl ⟨0, by omega⟩
+  let b : V := .inl ⟨1, by omega⟩
+  let z : W := .inr 0
+  have hab : a ≠ b := by
+    intro h
+    have h01 : (⟨0, by omega⟩ : Fin n) = ⟨1, by omega⟩ := Sum.inl.inj h
+    have hv := congrArg Fin.val h01
+    change (0 : ℕ) = 1 at hv
+    omega
+  let T : Set (Sym2 W) := {Sym2.mk (inc a) z, Sym2.mk (inc b) z}
+  let H : SimpleGraph W := G.map inc ⊔ fromEdgeSet T
+  have hold (x y : V) : H.Adj (.inl x) (.inl y) ↔ G.Adj x y := by
+    change (G.map inc).Adj (inc x) (inc y) ∨
+      (fromEdgeSet T).Adj (inc x) (inc y) ↔ G.Adj x y
+    rw [map_adj inc G (inc x) (inc y)]
+    simp [T, inc, z, Sum.inl_injective.eq_iff]
+  have hnew (x : V) : H.Adj (.inl x) z ↔ x = a ∨ x = b := by
+    change (G.map inc).Adj (inc x) z ∨
+      (fromEdgeSet T).Adj (inc x) z ↔ x = a ∨ x = b
+    rw [map_adj inc G (inc x) z]
+    simp [T, inc, z, Sum.inl_injective.eq_iff]
+  have hHtwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected H := by
+    refine ⟨?_, ?_⟩
+    · change 3 ≤ Fintype.card (V ⊕ Fin 1)
+      simp only [V, Fintype.card_sum, Fintype.card_fin]
+      omega
+    · rintro (x | j)
+      · obtain ⟨v, hv, hvx⟩ : ∃ v : V, (v = a ∨ v = b) ∧ v ≠ x := by
+          by_cases hx : x = a
+          · refine ⟨b, Or.inr rfl, ?_⟩
+            simpa [hx] using hab.symm
+          · exact ⟨a, Or.inl rfl, fun h => hx h.symm⟩
+        let D := H.induce {y : W | y ≠ Sum.inl x}
+        let r : {y : W // y ≠ Sum.inl x} :=
+          ⟨Sum.inl v, fun h => hvx (Sum.inl.inj h)⟩
+        let f : (G.induce {y : V | y ≠ x}) →g D :=
+          { toFun := fun (y : {y : V // y ≠ x}) =>
+              ⟨Sum.inl y.val, fun h => y.property (Sum.inl.inj h)⟩
+            map_rel' := by
+              intro y y' h
+              exact (hold y.val y'.val).mpr h }
+        apply (connected_iff_exists_forall_reachable _).mpr
+        refine ⟨r, ?_⟩
+        rintro ⟨y, hy⟩
+        cases y with
+        | inl y =>
+          have hyx : y ≠ x := fun h =>
+            hy (congrArg (fun t : V => (Sum.inl t : W)) h)
+          exact ((hGtwo.2 x).preconnected ⟨v, hvx⟩ ⟨y, hyx⟩).map f
+        | inr k =>
+          have hk : k = 0 := Subsingleton.elim _ _
+          subst k
+          apply Adj.reachable
+          exact (hnew v).mpr hv
+      · have hj : j = 0 := Subsingleton.elim _ _
+        subst j
+        let D := H.induce {y : W | y ≠ z}
+        let f : G →g D :=
+          { toFun := fun y => ⟨Sum.inl y, by simp [z]⟩
+            map_rel' := by
+              intro y y' h
+              exact (hold y y').mpr h }
+        have hf : Function.Surjective f := by
+          rintro ⟨y, hy⟩
+          cases y with
+          | inl y => exact ⟨y, Subtype.ext rfl⟩
+          | inr k =>
+            have hk : k = 0 := Subsingleton.elim _ _
+            exact (hy (by simp [z, hk])).elim
+        exact (two_connected_connected G hGtwo).map f hf
+  have hT : (fromEdgeSet T).edgeSet = T := by
+    ext e
+    simp only [edgeSet_fromEdgeSet, Set.mem_sdiff]
+    constructor
+    · exact And.left
+    · intro he
+      refine ⟨he, ?_⟩
+      rcases he with rfl | rfl <;> simp [inc, z]
+  have hdisj : Disjoint (G.map inc).edgeSet T := by
+    apply Set.disjoint_left.mpr
+    intro e he ht
+    rw [edgeSet_map] at he
+    obtain ⟨d, _, hde⟩ := he
+    have hz : z ∈ e := by
+      rcases ht with rfl | rfl <;> exact Sym2.mem_mk_right _ _
+    rw [← hde] at hz
+    change z ∈ Sym2.map inc d at hz
+    obtain ⟨x, _, hx⟩ := Sym2.mem_map.mp hz
+    exact Sum.inl_ne_inr hx
+  have hTc : T.ncard = 2 := by
+    apply Set.ncard_pair
+    intro h
+    have h' : a = b := by simpa [inc, z, Sym2.eq_iff, Sum.inl_injective.eq_iff] using h
+    exact hab h'
+  have hHc : Nat.card H.edgeSet = 2 * n + 2 := by
+    change H.edgeSet.ncard = _
+    rw [show H.edgeSet = (G.map inc).edgeSet ∪ (fromEdgeSet T).edgeSet from
+      edgeSet_sup (G.map inc) (fromEdgeSet T),
+      hT, Set.ncard_union_eq hdisj, edgeSet_map,
+      Set.ncard_image_of_injective _ inc.sym2Map.injective, hTc]
+    exact congrArg (fun k => k + 2) hGc
+  let e : W ≃ (Fin n ⊕ Fin (n + 1)) :=
+    (Equiv.sumAssoc (Fin n) (Fin n) (Fin 1)).trans
+      (Equiv.sumCongr (Equiv.refl (Fin n)) finSumFinEquiv)
+  have eleft (x : Fin n) : e (.inl (.inl x)) = .inl x := rfl
+  have eright (x : Fin n) :
+      e (.inl (.inr x)) = .inr (finSumFinEquiv (.inl x : Fin n ⊕ Fin 1)) := rfl
+  have enew (i : Fin 1) :
+      e (.inr i) = .inr (finSumFinEquiv (.inr i : Fin n ⊕ Fin 1)) := rfl
+  have hcolor : ∀ u v : W, H.Adj u v →
+      (completeBipartiteGraph (Fin n) (Fin (n + 1))).Adj (e u) (e v) := by
+    rintro ((x | x) | i) ((y | y) | j) h
+    · have h' := hGK ((hold _ _).mp h)
+      simp [completeBipartiteGraph] at h'
+    · rw [eleft, eright]
+      simp [completeBipartiteGraph]
+    · rw [eleft, enew]
+      simp [completeBipartiteGraph]
+    · rw [eright, eleft]
+      simp [completeBipartiteGraph]
+    · have h' := hGK ((hold _ _).mp h)
+      simp [completeBipartiteGraph] at h'
+    · have hj : j = 0 := Subsingleton.elim _ _
+      subst j
+      have h' := (hnew (Sum.inr x)).mp h
+      simp [a, b] at h'
+    · rw [enew, eleft]
+      simp [completeBipartiteGraph]
+    · have hi : i = 0 := Subsingleton.elim _ _
+      subst i
+      have h' := (hnew (Sum.inr y)).mp h.symm
+      simp [a, b] at h'
+    · have hij : i = j := Subsingleton.elim _ _
+      subst j
+      exact (H.irrefl h).elim
+  let iso := Iso.map e H
+  refine ⟨H.map e, ?_, two_connected_of_iso H (H.map e) iso hHtwo, ?_⟩
+  · intro x y hxy
+    obtain ⟨u, v, huv, rfl, rfl⟩ := (map_adj e.toEmbedding H x y).mp hxy
+    exact hcolor u v huv
+  · exact (Nat.card_congr iso.mapEdgeSet).symm.trans hHc
+
+theorem two_connected_intermediate {V : Type u} [Fintype V]
+    (S K : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected S)
+    (hle : S ≤ K) (m : ℕ)
+    (hlo : Nat.card S.edgeSet ≤ m) (hhi : m ≤ Nat.card K.edgeSet) :
+    ∃ G : SimpleGraph V, S ≤ G ∧ G ≤ K ∧
+      Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G ∧
+      Nat.card G.edgeSet = m := by
+  classical
+  have hsc : S.edgeFinset.card ≤ m := by
+    simpa only [edgeFinset_card, Nat.card_eq_fintype_card] using hlo
+  have hkc : m ≤ K.edgeFinset.card := by
+    simpa only [edgeFinset_card, Nat.card_eq_fintype_card] using hhi
+  obtain ⟨s, hSs, hsK, hsm⟩ :=
+    Finset.exists_subsuperset_card_eq (edgeFinset_mono hle) hsc hkc
+  let G := fromEdgeSet (s : Set (Sym2 V))
+  have hSG : S ≤ G := by
+    rw [le_fromEdgeSet_iff]
+    intro e he
+    exact hSs (mem_edgeFinset.mpr he)
+  have hGK : G ≤ K := by
+    intro x y hxy
+    exact mem_edgeFinset.mp (hsK hxy.1)
+  have hges : G.edgeSet = (s : Set (Sym2 V)) := by
+    ext e
+    rw [edgeSet_fromEdgeSet]
+    constructor
+    · exact fun h => h.1
+    · intro he
+      exact ⟨he, K.not_isDiag_of_mem_edgeFinset (hsK he)⟩
+  refine ⟨G, hSG, hGK, two_connected_mono S G htwo hSG, ?_⟩
+  rw [hges]
+  simpa using hsm
+
+theorem exists_of_rank_ge_two (r v : ℕ) (hr : 2 ≤ r)
+    (hv : 2 + Erdos593.Spectrum.q r ≤ v) :
+    ∃ G : SimpleGraph (Fin v),
+      Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G ∧
+      G.Colorable 2 ∧ SimpleGraph.FiniteCycleRank.cycleRank G = r := by
+  classical
+  have hv2 : 2 ≤ v := by omega
+  have hq : Erdos593.Spectrum.q r ≤ v - 2 := by omega
+  have hcap := (Erdos593.Spectrum.q_le_iff r (v - 2)).mp hq
+  have hv5 : 5 ≤ v := by
+    by_contra h
+    have : v - 2 ≤ 2 := by omega
+    nlinarith
+  let a := v / 2
+  let b := v - a
+  have ha : 2 ≤ a := by dsimp [a]; omega
+  have hab : a + b = v := by dsimp [a, b]; omega
+  have hbal : b = a ∨ b = a + 1 := by dsimp [a, b]; omega
+  have hsub : v - 2 + 2 = v := by omega
+  have hsize : (r + v - 1) + 1 = r + v := by omega
+  have hcapacity : r + v - 1 ≤ a * b := by
+    rcases hbal with h | h <;> rw [h] at hab ⊢ <;> nlinarith
+  let K := completeBipartiteGraph (Fin a) (Fin b)
+  have hseed : ∃ S : SimpleGraph (Fin a ⊕ Fin b), S ≤ K ∧
+      Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected S ∧
+      Nat.card S.edgeSet ≤ r + v - 1 := by
+    rcases hbal with h | h
+    · dsimp only [K]
+      rw [h]
+      obtain ⟨S, hSK, hS, he⟩ := exists_even_seed a ha
+      exact ⟨S, hSK, hS, by omega⟩
+    · dsimp only [K]
+      rw [h]
+      obtain ⟨S, hSK, hS, he⟩ := exists_odd_seed a ha
+      exact ⟨S, hSK, hS, by omega⟩
+  have hkedges : Nat.card K.edgeSet = a * b := by
+    have h := encard_edgeSet_completeBipartiteGraph (W₁ := Fin a) (W₂ := Fin b)
+    rw [← K.edgeSet.toFinite.cast_ncard_eq, ENat.card_eq_coe_natCard,
+      ENat.card_eq_coe_natCard] at h
+    rw [Nat.card_coe_set_eq]
+    simp only [Nat.card_fin] at h
+    exact_mod_cast h
+  obtain ⟨S, hSK, hS, heS⟩ := hseed
+  obtain ⟨G, _, hGK, hG, hGe⟩ := two_connected_intermediate S K hS hSK
+    (r + v - 1) heS (by omega)
+  have hcolor : K.Colorable 2 := by
+    simpa using (CompleteBipartiteGraph.bicoloring (Fin a) (Fin b)).colorable
+  have hGcolor : G.Colorable 2 := by
+    obtain ⟨col⟩ := hcolor
+    exact ⟨col.comp (Hom.ofLE hGK)⟩
+  have hcard : Nat.card (Fin a ⊕ Fin b) = v := by simp [hab]
+  let e : (Fin a ⊕ Fin b) ≃ Fin v :=
+    (Finite.equivFin (Fin a ⊕ Fin b)).trans (finCongr hcard)
+  let i := Iso.map e G
+  have hJtwo := two_connected_of_iso G (SimpleGraph.map e G) i hG
+  have hJedges : Nat.card (SimpleGraph.map e G).edgeSet = r + v - 1 :=
+    (Nat.card_congr i.mapEdgeSet).symm.trans hGe
+  refine ⟨SimpleGraph.map e G, hJtwo, ?_, ?_⟩
+  · obtain ⟨col⟩ := hGcolor
+    exact ⟨col.comp i.symm.toHom⟩
+  · have he := connected_cycleRank_euler (SimpleGraph.map e G)
+      (two_connected_connected _ hJtwo)
+    simp only [Nat.card_fin] at he
+    omega
+
+theorem exists_rank_one_iff (v : ℕ) :
+    (∃ G : SimpleGraph (Fin v),
+      Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G ∧
+      G.Colorable 2 ∧ SimpleGraph.FiniteCycleRank.cycleRank G = 1) ↔
+      4 ≤ v ∧ Even v := by
+  classical
+  constructor
+  · rintro ⟨G, htwo, hb, hr⟩
+    have hmin := minimum_order G htwo hb (by omega)
+    have hq : Erdos593.Spectrum.q 1 = 2 := by
+      have hlo : 2 ≤ Erdos593.Spectrum.q 1 := by
+        by_contra h
+        have hle : Erdos593.Spectrum.q 1 ≤ 1 := by omega
+        have := (Erdos593.Spectrum.q_le_iff 1 1).mp hle
+        omega
+      have hhi := (Erdos593.Spectrum.q_le_iff 1 2).mpr (by norm_num)
+      omega
+    rw [hr, hq, Nat.card_fin] at hmin
+    exact ⟨hmin, by simpa only [Nat.card_fin] using even_order_of_rank_one G htwo hb hr⟩
+  · rintro ⟨hv, n, hn⟩
+    have hn2 : 2 ≤ n := by omega
+    obtain ⟨G, hGK, hG, hGe⟩ := exists_even_seed n hn2
+    have hcard : Nat.card (Fin n ⊕ Fin n) = v := by simp; omega
+    let e : (Fin n ⊕ Fin n) ≃ Fin v :=
+      (Finite.equivFin (Fin n ⊕ Fin n)).trans (finCongr hcard)
+    let i := Iso.map e G
+    have hJtwo := two_connected_of_iso G (SimpleGraph.map e G) i hG
+    have hJedges : Nat.card (SimpleGraph.map e G).edgeSet = 2 * n :=
+      (Nat.card_congr i.mapEdgeSet).symm.trans hGe
+    have hcolor : (completeBipartiteGraph (Fin n) (Fin n)).Colorable 2 := by
+      simpa using (CompleteBipartiteGraph.bicoloring (Fin n) (Fin n)).colorable
+    refine ⟨SimpleGraph.map e G, hJtwo, ?_, ?_⟩
+    · obtain ⟨col⟩ := hcolor
+      exact ⟨(col.comp (Hom.ofLE hGK)).comp i.symm.toHom⟩
+    · have he := connected_cycleRank_euler (SimpleGraph.map e G)
+        (two_connected_connected _ hJtwo)
+      simp only [Nat.card_fin] at he
+      omega
+
+end SimpleGraph.TwoConnectedBipartiteSpectrum
+
+end Erdos593SelfContained_Module_Erdos593_Graph_TwoConnectedBipartiteSpectrum
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.TwoConnectedBipartiteSpectrum
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.AtomRankConcentration
+Source: Erdos593/Graph/AtomRankConcentration.lean
+Normalized SHA-256: ce9b920d92098cfa6f5fa7060b93f4f11304a1b4279e4ac96f1d29471fbf90a8
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_AtomRankConcentration
+
+/-! # Strict concentration for positive canonical-atom ranks
+
+This arithmetic support does not assert a canonical-atom spectrum or supply
+the missing construction/transport interfaces of K2.
+-/
+
+namespace Erdos593.Spectrum
+
+theorem q_add_strict (a b : ℕ) (ha : 1 ≤ a) (hb : 1 ≤ b) :
+    q (a + b) + 1 ≤ q a + q b := by
+  have hqa := two_le_q a ha
+  have hqb := two_le_q b hb
+  have hca := (q_le_iff a (q a)).mp le_rfl
+  have hcb := (q_le_iff b (q b)).mp le_rfl
+  obtain ⟨x, hx⟩ := Nat.exists_eq_add_of_le hqa
+  obtain ⟨y, hy⟩ := Nat.exists_eq_add_of_le hqb
+  have hcap : 4 * (a + b) ≤ (q a + q b - 1) ^ 2 := by
+    rw [hx] at hca ⊢
+    rw [hy] at hcb ⊢
+    have hsub : 2 + x + (2 + y) - 1 = x + y + 3 := by omega
+    rw [hsub]
+    nlinarith [Nat.zero_le x, Nat.zero_le y, Nat.zero_le (x * y)]
+  have hq := (q_le_iff (a + b) (q a + q b - 1)).mpr hcap
+  omega
+
+theorem q_sum_add_card_le {ι : Type*}
+    (s : Finset ι) (r : ι → ℕ)
+    (hs : s.Nonempty) (hr : ∀ i ∈ s, 1 ≤ r i) :
+    q (∑ i ∈ s, r i) + s.card ≤
+      (∑ i ∈ s, q (r i)) + 1 := by
+  classical
+  revert hs hr
+  induction s using Finset.induction_on with
+  | empty =>
+      intro hs _
+      simp at hs
+  | @insert i s hi ih =>
+      intro _ hr
+      by_cases hnonempty : s.Nonempty
+      · have hir : 1 ≤ r i := hr i (Finset.mem_insert_self i s)
+        have hrest : ∀ j ∈ s, 1 ≤ r j :=
+          fun j hj => hr j (Finset.mem_insert_of_mem hj)
+        have hbound := ih hnonempty hrest
+        obtain ⟨j, hj⟩ := hnonempty
+        have hsumpos : 1 ≤ ∑ j ∈ s, r j :=
+          (hrest j hj).trans
+            (Finset.single_le_sum (f := r) (fun j _ => Nat.zero_le (r j)) hj)
+        have hpair := q_add_strict (r i) (∑ j ∈ s, r j) hir hsumpos
+        simp only [Finset.sum_insert hi, Finset.card_insert_of_notMem hi]
+        omega
+      · have hempty : s = ∅ := Finset.not_nonempty_iff_eq_empty.mp hnonempty
+        subst s
+        simp
+
+theorem sum_q_eq_q_sum_iff_card_eq_one {ι : Type*}
+    (s : Finset ι) (r : ι → ℕ)
+    (hs : s.Nonempty) (hr : ∀ i ∈ s, 1 ≤ r i) :
+    (∑ i ∈ s, q (r i)) = q (∑ i ∈ s, r i) ↔
+      s.card = 1 := by
+  classical
+  constructor
+  · intro h
+    have hbound := q_sum_add_card_le s r hs hr
+    rw [h] at hbound
+    have hpos := Finset.card_pos.mpr hs
+    omega
+  · intro hcard
+    obtain ⟨i, hi⟩ := Finset.card_eq_one.mp hcard
+    rw [hi]
+    simp
+
+end Erdos593.Spectrum
+
+end Erdos593SelfContained_Module_Erdos593_Graph_AtomRankConcentration
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.AtomRankConcentration
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomRankInterpretation
+Source: Erdos593/TripleSystem/CanonicalAtomRankInterpretation.lean
+Normalized SHA-256: 8c9b953aa2b225e50b9b10125cf8fc5367a0053324fd6a0c8d17a4dd3c785f24
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomRankInterpretation
+
+/-! # Actual cycle ranks of canonical atoms
+
+The existing finite Euler identities supply the rank interpretation and
+additivity. This module does not assert the full canonical atom-count spectrum.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+
+theorem atomLeviEuler_eq_cycleRank
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) (A : Index F) :
+    atomLeviEuler F hlinear hbridge A =
+      (_root_.SimpleGraph.FiniteCycleRank.cycleRank
+        (atomRestriction F hlinear hbridge A).levi : ℤ) := by
+  exact (_root_.SimpleGraph.FiniteCycleRank.cycleRank_int
+    (atomRestriction F hlinear hbridge A).levi).symm
+
+theorem sum_atom_cycleRank
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    (∑ A ∈ atomFinset F hlinear hbridge,
+      _root_.SimpleGraph.FiniteCycleRank.cycleRank
+        (atomRestriction F hlinear hbridge A).levi) =
+      _root_.SimpleGraph.FiniteCycleRank.cycleRank F.levi := by
+  classical
+  have h := levi_euler_eq_sum_atomLeviEuler F hlinear hbridge
+  rw [← _root_.SimpleGraph.FiniteCycleRank.cycleRank_int F.levi] at h
+  simp_rw [atomLeviEuler_eq_cycleRank F hlinear hbridge] at h
+  exact_mod_cast h.symm
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomRankInterpretation
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomRankInterpretation
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomCoreRank
+Source: Erdos593/TripleSystem/CanonicalAtomCoreRank.lean
+Normalized SHA-256: abf22ccb199fb4e27472f3b0cae10c941707d0a598dc43fec7662f3c55123c9c
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomCoreRank
+
+/-! # Canonical core ranks and local minimum order
+
+Proposition/API scaffold only: three disclosed proof holes.
+All ranks and core orders refer to the existing actual canonical objects.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+
+theorem cycleBlock_atom_cycleRank_eq_core
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (C : BridgeBlock.HyperedgeComponent F)
+    (hC : BridgeBlock.HasIncidence F C)
+    (B : Erdos593.SimpleGraph.EdgeCycleBlock
+      (BridgeBlock.contractedGraph F C)) :
+    _root_.SimpleGraph.FiniteCycleRank.cycleRank
+      (atomRestriction F hlinear hbridge (Index.cycleBlock C hC B)).levi =
+    _root_.SimpleGraph.FiniteCycleRank.cycleRank (cycleBlockCore F C B) := by
+  classical
+  let W := finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+    (cycleBlockEdgeSet F C B) (cycleBlockEdgeSet_finite F C B)
+  let J := cycleBlockCore F C B
+  obtain ⟨i⟩ := atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+    F hlinear hbridge (Index.cycleBlock C hC B)
+  have he := Nat.card_congr i.edgeEquiv
+  change atomEdgeCount F hlinear hbridge (Index.cycleBlock C hC B) =
+    Nat.card J.edgeSet at he
+  have hlocal := atomLeviEuler_eq F hlinear hbridge (Index.cycleBlock C hC B)
+  rw [atomLeviEuler_eq_cycleRank, atomPointCount_eq_edge_add_core, he] at hlocal
+  push_cast at hlocal
+  have htwo := cycleBlockCore_isTwoVertexConnected F hlinear hbridge C hC B
+  have hEuler := _root_.SimpleGraph.TwoConnectedBipartiteSpectrum.connected_cycleRank_euler
+    J (_root_.SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_connected J htwo)
+  have hEulerInt : (Nat.card J.edgeSet : ℤ) + 1 =
+      (_root_.SimpleGraph.FiniteCycleRank.cycleRank J : ℤ) + (Nat.card W : ℤ) := by
+    exact_mod_cast hEuler
+  have hrank :
+      (_root_.SimpleGraph.FiniteCycleRank.cycleRank
+        (atomRestriction F hlinear hbridge (Index.cycleBlock C hC B)).levi : ℤ) =
+      (_root_.SimpleGraph.FiniteCycleRank.cycleRank J : ℤ) := by
+    change _ = 2 * (Nat.card J.edgeSet : ℤ) -
+      ((Nat.card J.edgeSet : ℤ) + (Nat.card W : ℤ)) + 1 at hlocal
+    linarith
+  exact_mod_cast hrank
+
+theorem atom_cycleRank_eq_zero_iff_singleton
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (A : Index F) :
+    _root_.SimpleGraph.FiniteCycleRank.cycleRank
+      (atomRestriction F hlinear hbridge A).levi = 0 ↔
+    ∃ e : E, ∃ hzero :
+      (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0,
+      A = Index.singleton e hzero := by
+  classical
+  cases A with
+  | singleton e hzero =>
+    constructor
+    · intro _
+      exact ⟨e, hzero, rfl⟩
+    · intro _
+      obtain ⟨i⟩ := atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+        F hlinear hbridge (Index.singleton e hzero)
+      have he : atomEdgeCount F hlinear hbridge (Index.singleton e hzero) = 1 := by
+        calc
+          _ = Nat.card (SingleEdgeIndex : Type u) := Nat.card_congr i.edgeEquiv
+          _ = 1 := by simp [SingleEdgeIndex]
+      have hv : atomPointCount F hlinear hbridge (Index.singleton e hzero) = 3 := by
+        calc
+          _ = Nat.card (F.edgeSet e) := Nat.card_congr i.vertexEquiv
+          _ = 3 := F.edge_ncard e
+      have h := atomLeviEuler_eq F hlinear hbridge (Index.singleton e hzero)
+      rw [atomLeviEuler_eq_cycleRank, he, hv] at h
+      norm_num at h
+      exact_mod_cast h
+  | cycleBlock C hC B =>
+    let W := finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+      (cycleBlockEdgeSet F C B) (cycleBlockEdgeSet_finite F C B)
+    let J := cycleBlockCore F C B
+    have htwo := cycleBlockCore_isTwoVertexConnected F hlinear hbridge C hC B
+    have hdegree : ∀ x : W, 2 ≤ J.degree x := by
+      intro x
+      have h := _root_.SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_min_degree
+        J htwo x
+      simpa only [Nat.card_eq_fintype_card, J.card_neighborSet_eq_degree] using h
+    have htwice : 2 * Nat.card W ≤ 2 * Nat.card J.edgeSet := by
+      calc
+        _ = ∑ _x : W, (2 : ℕ) := by simp [Nat.card_eq_fintype_card, mul_comm]
+        _ ≤ ∑ x : W, J.degree x := Finset.sum_le_sum (fun x _ => hdegree x)
+        _ = 2 * Nat.card J.edgeSet := by
+          simpa only [J.edgeFinset_card, ← Nat.card_eq_fintype_card] using
+            J.sum_degrees_eq_twice_card_edges
+    have hEuler := _root_.SimpleGraph.TwoConnectedBipartiteSpectrum.connected_cycleRank_euler
+      J (_root_.SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_connected J htwo)
+    change Nat.card J.edgeSet + 1 =
+      _root_.SimpleGraph.FiniteCycleRank.cycleRank J + Nat.card W at hEuler
+    have hpositive : 1 ≤ _root_.SimpleGraph.FiniteCycleRank.cycleRank
+        (atomRestriction F hlinear hbridge (Index.cycleBlock C hC B)).levi := by
+      rw [cycleBlock_atom_cycleRank_eq_core F hlinear hbridge C hC B]
+      change 1 ≤ _root_.SimpleGraph.FiniteCycleRank.cycleRank J
+      omega
+    constructor
+    · intro hzero
+      omega
+    · rintro ⟨e, hzero, hEq⟩
+      cases hEq
+
+theorem atom_coreOrder_lower_bound
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hberge : F.EvenBergeCycles) (A : Index F) :
+    2 + Erdos593.Spectrum.q
+      (_root_.SimpleGraph.FiniteCycleRank.cycleRank
+        (atomRestriction F hlinear hbridge A).levi) ≤ coreOrder F A := by
+  classical
+  cases A with
+  | singleton e hzero =>
+    have hzRank := (atom_cycleRank_eq_zero_iff_singleton
+      F hlinear hbridge (Index.singleton e hzero)).mpr ⟨e, hzero, rfl⟩
+    rw [hzRank]
+    norm_num [coreOrder, Erdos593.Spectrum.q]
+  | cycleBlock C hC B =>
+    let J := cycleBlockCore F C B
+    have hr : 1 ≤ _root_.SimpleGraph.FiniteCycleRank.cycleRank J := by
+      by_contra h
+      have hzRank : _root_.SimpleGraph.FiniteCycleRank.cycleRank
+          (atomRestriction F hlinear hbridge (Index.cycleBlock C hC B)).levi = 0 := by
+        rw [cycleBlock_atom_cycleRank_eq_core F hlinear hbridge C hC B]
+        change _root_.SimpleGraph.FiniteCycleRank.cycleRank J = 0
+        omega
+      obtain ⟨e, hzero, hEq⟩ := (atom_cycleRank_eq_zero_iff_singleton
+        F hlinear hbridge (Index.cycleBlock C hC B)).mp hzRank
+      cases hEq
+    rw [cycleBlock_atom_cycleRank_eq_core F hlinear hbridge C hC B]
+    exact _root_.SimpleGraph.TwoConnectedBipartiteSpectrum.minimum_order J
+      (cycleBlockCore_isTwoVertexConnected F hlinear hbridge C hC B)
+      (cycleBlockCore_isBipartite F hlinear hbridge hberge C hC B) hr
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomCoreRank
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomCoreRank
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomExtremalCount
+Source: Erdos593/TripleSystem/CanonicalAtomExtremalCount.lean
+Normalized SHA-256: ae361213babb9123247bdc68119396422ccb8dceea87aa568295d7ee9187ecf5
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomExtremalCount
+
+/-! # Canonical atom budget, rank-one parity and extremal concentration
+
+API-only scaffold: three disclosed proof holes, not proof evidence.
+Counts and ranks refer to the existing actual canonical finite objects.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+
+theorem connected_atom_q_budget
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hberge : F.EvenBergeCycles) (hconnected : F.levi.Connected) :
+    Nat.card E + Nat.card (Index F) + 1 +
+      (∑ A ∈ atomFinset F hlinear hbridge,
+        Erdos593.Spectrum.q
+          (_root_.SimpleGraph.FiniteCycleRank.cycleRank
+            (atomRestriction F hlinear hbridge A).levi)) ≤
+      Nat.card V := by
+  classical
+  haveI : Finite (Index F) :=
+    Finite.of_surjective _ (atomOf_surjective F hlinear hbridge)
+  letI : Fintype (Index F) := Fintype.ofFinite _
+  have hs : atomFinset F hlinear hbridge = Finset.univ := by
+    ext A
+    simp
+  have hc : Nat.card F.levi.ConnectedComponent = 1 := by
+    haveI := hconnected.nonempty
+    haveI := hconnected.preconnected.subsingleton_connectedComponent
+    exact Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, inferInstance⟩
+  let r (A : Index F) := _root_.SimpleGraph.FiniteCycleRank.cycleRank
+    (atomRestriction F hlinear hbridge A).levi
+  have hsum :
+      (Nat.card (Index F) : ℤ) +
+        ((∑ A ∈ atomFinset F hlinear hbridge, Erdos593.Spectrum.q (r A) : ℕ) : ℤ) ≤
+      ∑ A ∈ atomFinset F hlinear hbridge, ((coreOrder F A : ℤ) - 1) := by
+    calc
+      _ = ∑ A ∈ atomFinset F hlinear hbridge,
+          (1 + (Erdos593.Spectrum.q (r A) : ℤ)) := by
+        simp [Finset.sum_add_distrib, hs, Nat.card_eq_fintype_card]
+      _ ≤ _ := by
+        apply Finset.sum_le_sum
+        intro A _
+        have hbound := atom_coreOrder_lower_bound F hlinear hbridge hberge A
+        have hboundInt : (2 : ℤ) + Erdos593.Spectrum.q (r A) ≤ coreOrder F A := by
+          exact_mod_cast hbound
+        linarith
+  have hsurplus := surplus_eq_core_sum F hlinear hbridge
+  rw [hc] at hsurplus
+  norm_num only [Nat.cast_one] at hsurplus
+  have hresult :
+      (Nat.card E : ℤ) + (Nat.card (Index F) : ℤ) + 1 +
+        ((∑ A ∈ atomFinset F hlinear hbridge, Erdos593.Spectrum.q (r A) : ℕ) : ℤ) ≤
+      Nat.card V := by
+    linarith only [hsum, hsurplus]
+  exact_mod_cast hresult
+
+theorem atom_coreOrder_even_of_cycleRank_eq_one
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hberge : F.EvenBergeCycles) (A : Index F)
+    (hrank :
+      _root_.SimpleGraph.FiniteCycleRank.cycleRank
+        (atomRestriction F hlinear hbridge A).levi = 1) :
+    Even (coreOrder F A) := by
+  classical
+  cases A with
+  | singleton e hzero =>
+    have hzeroRank := (atom_cycleRank_eq_zero_iff_singleton
+      F hlinear hbridge (Index.singleton e hzero)).mpr ⟨e, hzero, rfl⟩
+    omega
+  | cycleBlock C hC B =>
+    rw [cycleBlock_atom_cycleRank_eq_core F hlinear hbridge C hC B] at hrank
+    exact _root_.SimpleGraph.TwoConnectedBipartiteSpectrum.even_order_of_rank_one
+      (cycleBlockCore F C B)
+      (cycleBlockCore_isTwoVertexConnected F hlinear hbridge C hC B)
+      (cycleBlockCore_isBipartite F hlinear hbridge hberge C hC B) hrank
+
+theorem exists_concentrated_atom_of_extremal_count
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (hberge : F.EvenBergeCycles) (hconnected : F.levi.Connected)
+    (b : ℕ) (hb : 1 ≤ b)
+    (hrank :
+      _root_.SimpleGraph.FiniteCycleRank.cycleRank F.levi = b)
+    (hcount :
+      Nat.card V =
+        Nat.card E + Nat.card (Index F) + 1 + Erdos593.Spectrum.q b) :
+    ∃ A : Index F,
+      _root_.SimpleGraph.FiniteCycleRank.cycleRank
+        (atomRestriction F hlinear hbridge A).levi = b ∧
+      coreOrder F A = 2 + Erdos593.Spectrum.q b ∧
+      ∀ B : Index F, B ≠ A →
+        ∃ e : E, ∃ hzero :
+          (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0,
+          B = Index.singleton e hzero := by
+  classical
+  haveI : Finite (Index F) :=
+    Finite.of_surjective _ (atomOf_surjective F hlinear hbridge)
+  letI : Fintype (Index F) := Fintype.ofFinite _
+  let s : Finset (Index F) := atomFinset F hlinear hbridge
+  let r : Index F → ℕ := fun A =>
+    _root_.SimpleGraph.FiniteCycleRank.cycleRank
+      (atomRestriction F hlinear hbridge A).levi
+  let p : Finset (Index F) := s.filter (fun A => 0 < r A)
+  have hall : ∀ A : Index F, A ∈ s :=
+    fun A => mem_atomFinset F hlinear hbridge A
+  have hsuniv : s = Finset.univ := by
+    ext A
+    simp [s]
+  have hcard : s.card = Nat.card (Index F) := by
+    simp [hsuniv, Nat.card_eq_fintype_card]
+  have hsumr : (∑ A ∈ s, r A) = b := by
+    exact (sum_atom_cycleRank F hlinear hbridge).trans hrank
+  have hsumrP : (∑ A ∈ p, r A) = b := by
+    calc
+      _ = ∑ A ∈ s, r A := by
+        simp only [p, Finset.sum_filter]
+        apply Finset.sum_congr rfl
+        intro A _
+        by_cases hA : 0 < r A
+        · simp only [hA, if_true]
+        · have hz : r A = 0 := by omega
+          rw [if_neg hA, hz]
+      _ = b := hsumr
+  have hq0 : Erdos593.Spectrum.q 0 = 0 := by
+    norm_num [Erdos593.Spectrum.q]
+  have hsumqP :
+      (∑ A ∈ p, Erdos593.Spectrum.q (r A)) =
+        ∑ A ∈ s, Erdos593.Spectrum.q (r A) := by
+    simp only [p, Finset.sum_filter]
+    apply Finset.sum_congr rfl
+    intro A _
+    by_cases hA : 0 < r A
+    · simp only [hA, if_true]
+    · have hz : r A = 0 := by omega
+      rw [if_neg hA, hz, hq0]
+  have hpne : p.Nonempty := by
+    by_contra h
+    have hempty : p = ∅ := Finset.not_nonempty_iff_eq_empty.mp h
+    have hb0 : b = 0 := by
+      simpa only [hempty, Finset.sum_empty] using hsumrP.symm
+    omega
+  have hpRank : ∀ A ∈ p, 1 ≤ r A := by
+    intro A hA
+    exact Nat.succ_le_of_lt (Finset.mem_filter.mp hA).2
+  have hbudget :=
+    connected_atom_q_budget F hlinear hbridge hberge hconnected
+  change Nat.card E + Nat.card (Index F) + 1 +
+    (∑ A ∈ s, Erdos593.Spectrum.q (r A)) ≤ Nat.card V at hbudget
+  have hqle :
+      (∑ A ∈ p, Erdos593.Spectrum.q (r A)) ≤ Erdos593.Spectrum.q b := by
+    rw [hsumqP]
+    omega
+  have hconc :=
+    Erdos593.Spectrum.q_sum_add_card_le p r hpne hpRank
+  rw [hsumrP] at hconc
+  have hpcpos : 0 < p.card := Finset.card_pos.mpr hpne
+  have hqeq :
+      (∑ A ∈ p, Erdos593.Spectrum.q (r A)) = Erdos593.Spectrum.q b := by
+    omega
+  have hpone : p.card = 1 :=
+    (Erdos593.Spectrum.sum_q_eq_q_sum_iff_card_eq_one p r hpne hpRank).mp (by
+      rw [hsumrP]
+      exact hqeq)
+  obtain ⟨A, hpsingle⟩ := Finset.card_eq_one.mp hpone
+  have hAr : r A = b := by
+    simpa only [hpsingle, Finset.sum_singleton] using hsumrP
+  have hzeroRank : ∀ B : Index F, B ≠ A → r B = 0 := by
+    intro B hBA
+    by_contra hB
+    have hBp : B ∈ p :=
+      Finset.mem_filter.mpr ⟨hall B, Nat.pos_of_ne_zero hB⟩
+    have heq : B = A := by
+      simpa only [hpsingle, Finset.mem_singleton] using hBp
+    exact hBA heq
+  have hsingle :
+      ∀ B : Index F, B ≠ A →
+        ∃ e : E, ∃ hzero :
+          (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0,
+          B = Index.singleton e hzero := by
+    intro B hBA
+    exact (atom_cycleRank_eq_zero_iff_singleton F hlinear hbridge B).mp
+      (hzeroRank B hBA)
+  have hsumDelta :
+      (∑ B ∈ s, ((coreOrder F B : ℤ) - 2)) =
+        (coreOrder F A : ℤ) - 2 := by
+    apply Finset.sum_eq_single A
+    · intro B _ hBA
+      obtain ⟨e, hzero, heq⟩ := hsingle B hBA
+      rw [heq]
+      norm_num [coreOrder]
+    · intro hnot
+      exact False.elim (hnot (hall A))
+  have hsumCore :
+      (∑ B ∈ s, ((coreOrder F B : ℤ) - 1)) =
+        (s.card : ℤ) + ((coreOrder F A : ℤ) - 2) := by
+    calc
+      _ = ∑ B ∈ s, ((1 : ℤ) + ((coreOrder F B : ℤ) - 2)) := by
+        apply Finset.sum_congr rfl
+        intro B _
+        ring
+      _ = (s.card : ℤ) + ((coreOrder F A : ℤ) - 2) := by
+        rw [Finset.sum_add_distrib, hsumDelta]
+        simp
+  have hcomp : Nat.card F.levi.ConnectedComponent = 1 := by
+    haveI := hconnected.nonempty
+    haveI := hconnected.preconnected.subsingleton_connectedComponent
+    exact Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, inferInstance⟩
+  have hsurp := surplus_eq_core_sum F hlinear hbridge
+  rw [hcomp] at hsurp
+  change (Nat.card V : ℤ) - (Nat.card E : ℤ) =
+    1 + ∑ B ∈ s, ((coreOrder F B : ℤ) - 1) at hsurp
+  rw [hsumCore, hcard] at hsurp
+  have hcountInt :
+      (Nat.card V : ℤ) =
+        (Nat.card E : ℤ) + (Nat.card (Index F) : ℤ) + 1 +
+          (Erdos593.Spectrum.q b : ℤ) := by
+    exact_mod_cast hcount
+  have hcoreInt :
+      (coreOrder F A : ℤ) = 2 + (Erdos593.Spectrum.q b : ℤ) := by
+    linarith only [hsurp, hcountInt]
+  have hcore : coreOrder F A = 2 + Erdos593.Spectrum.q b := by
+    exact_mod_cast hcoreInt
+  exact ⟨A, hAr, hcore, hsingle⟩
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomExtremalCount
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomExtremalCount
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomContainment
+Source: Erdos593/TripleSystem/CanonicalAtomContainment.lean
+Normalized SHA-256: ac7ab98552ece1cec62d121d5dd1e5da5151b38445795189ddcecbb91d789f5d
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomContainment
+
+/-! # Indecomposable edge restrictions and separator containment
+
+All restrictions and canonical labels are the existing literal objects.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+
+theorem edgeRestriction_subset_or_subset_of_support_inter_subsingleton
+    {V E : Type u} (F : TripleSystem V E)
+    (S L R : Set E)
+    (hcover : S ⊆ L ∪ R)
+    (hdisjoint : Disjoint L R)
+    (hinter :
+      (F.edgeSupportSet L ∩ F.edgeSupportSet R).Subsingleton)
+    (hconnected : (F.edgeRestriction S).levi.Connected)
+    (hindec : OnePointIndecomposable (F.edgeRestriction S)) :
+    S ⊆ L ∨ S ⊆ R := by
+  classical
+  by_cases hL : S ⊆ L
+  · exact Or.inl hL
+  by_cases hR : S ⊆ R
+  · exact Or.inr hR
+  obtain ⟨eR, heRS, heRL⟩ := Set.not_subset.mp hL
+  obtain ⟨eL, heLS, heLR⟩ := Set.not_subset.mp hR
+  have heLL : eL ∈ L := (hcover heLS).resolve_right heLR
+  have heRR : eR ∈ R := (hcover heRS).resolve_left heRL
+  let L' : Set E := S ∩ L
+  let R' : Set E := S ∩ R
+  have hparts : L' ∪ R' = S := by
+    ext e
+    constructor
+    · rintro (he | he)
+      · exact he.1
+      · exact he.1
+    · intro he
+      rcases hcover he with hleft | hright
+      · exact Or.inl ⟨he, hleft⟩
+      · exact Or.inr ⟨he, hright⟩
+  have hdisjoint' : Disjoint L' R' := by
+    apply Set.disjoint_left.mpr
+    intro e heL heR
+    exact Set.disjoint_left.mp hdisjoint heL.2 heR.2
+  have hsub :
+      (F.edgeSupportSet L' ∩ F.edgeSupportSet R').Subsingleton := by
+    intro x hx y hy
+    apply hinter
+    · rcases hx with ⟨⟨e, he, hxe⟩, ⟨g, hg, hxg⟩⟩
+      exact ⟨⟨e, he.2, hxe⟩, ⟨g, hg.2, hxg⟩⟩
+    · rcases hy with ⟨⟨e, he, hye⟩, ⟨g, hg, hyg⟩⟩
+      exact ⟨⟨e, he.2, hye⟩, ⟨g, hg.2, hyg⟩⟩
+  have hmeet : (F.edgeSupportSet L' ∩ F.edgeSupportSet R').Nonempty := by
+    by_contra hempty
+    let X : Set (F.EdgeSupport S ⊕ S) :=
+      {z | Sum.elim (fun x => x.1 ∈ F.edgeSupportSet L')
+        (fun e => e.1 ∈ L') z}
+    have hstep : ∀ z w : F.EdgeSupport S ⊕ S,
+        z ∈ X → (F.edgeRestriction S).levi.Adj z w → w ∈ X := by
+      rintro (x | e) (y | g) hz hadj
+      · exact absurd hadj (F.edgeRestriction S).not_levi_adj_point_point
+      · have hxg : F.Inc x.1 g.1 :=
+          (F.edgeRestriction S).levi_adj_point_edge.mp hadj
+        have hxL : x.1 ∈ F.edgeSupportSet L' := hz
+        rcases hcover g.2 with hgL | hgR
+        · exact ⟨g.2, hgL⟩
+        · exact (hempty ⟨x.1, hxL, ⟨g.1, ⟨g.2, hgR⟩, hxg⟩⟩).elim
+      · exact ⟨e.1, hz, (F.edgeRestriction S).levi_adj_edge_point.mp hadj⟩
+      · exact absurd hadj (F.edgeRestriction S).not_levi_adj_edge_edge
+    have hwalk : ∀ z w : F.EdgeSupport S ⊕ S,
+        (F.edgeRestriction S).levi.Walk z w → z ∈ X → w ∈ X := by
+      intro z w p
+      induction p with
+      | nil => exact id
+      | cons hadj _ ih => exact fun hz => ih (hstep _ _ hz hadj)
+    obtain ⟨p⟩ := hconnected.preconnected
+      (Sum.inr ⟨eL, heLS⟩) (Sum.inr ⟨eR, heRS⟩)
+    have heRleft : eR ∈ L' := hwalk _ _ p ⟨heLS, heLL⟩
+    exact heRL heRleft.2
+  obtain ⟨r, hr⟩ := hmeet
+  have hroot : F.edgeSupportSet L' ∩ F.edgeSupportSet R' = {r} := by
+    apply Set.Subset.antisymm
+    · intro x hx
+      exact Set.mem_singleton_iff.mpr (hsub hx hr)
+    · intro x hx
+      have hxr : x = r := Set.mem_singleton_iff.mp hx
+      exact hxr.symm ▸ hr
+  exfalso
+  apply hindec
+  refine ⟨F.EdgeSupport L', L', F.EdgeSupport R', R',
+    F.edgeRestriction L', F.edgeRestriction R',
+    F.edgeSupportLeftRoot hroot, F.edgeSupportRightRoot hroot,
+    ⟨⟨eL, heLS, heLL⟩⟩, ⟨⟨eR, heRS, heRR⟩⟩, ?_⟩
+  have hi := (F.edgeRestrictionUnionIsoOnePointAmalgamation hdisjoint' hroot).symm
+  rw [hparts] at hi
+  exact ⟨hi⟩
+
+theorem edgeRestriction_subset_piece_of_runningEdgeAssembly
+    {V E : Type u} (F : TripleSystem V E)
+    (pieces : List (Set E))
+    (hrunning : F.RunningEdgeAssembly pieces)
+    (S : Set E)
+    (hcover : S ⊆ edgePieceUnion pieces)
+    (hconnected : (F.edgeRestriction S).levi.Connected)
+    (hindec : OnePointIndecomposable (F.edgeRestriction S)) :
+    ∃ T ∈ pieces, S ⊆ T := by
+  classical
+  revert hrunning hcover
+  induction pieces with
+  | nil =>
+      intro _ hcover
+      exfalso
+      obtain ⟨z⟩ := hconnected.nonempty
+      rcases z with x | e
+      · obtain ⟨e, he, _⟩ := x.property
+        exact hcover he
+      · exact hcover e.property
+  | cons T pieces ih =>
+      intro hrunning hcover
+      obtain ⟨hprevious, _, hEdges, hSupports⟩ := hrunning
+      have hinter :
+          (F.edgeSupportSet (edgePieceUnion pieces) ∩
+            F.edgeSupportSet T).Subsingleton := by
+        rcases hSupports with hdisj | ⟨root, hroot⟩
+        · intro _ hx _ _
+          exact False.elim (Set.disjoint_left.mp hdisj hx.1 hx.2)
+        · intro x hx y hy
+          have hxroot : x = root :=
+            Set.mem_singleton_iff.mp (hroot ▸ hx)
+          have hyroot : y = root :=
+            Set.mem_singleton_iff.mp (hroot ▸ hy)
+          exact hxroot.trans hyroot.symm
+      change S ⊆ edgePieceUnion pieces ∪ T at hcover
+      rcases edgeRestriction_subset_or_subset_of_support_inter_subsingleton
+          F S (edgePieceUnion pieces) T hcover hEdges hinter
+          hconnected hindec with hprevS | hnewS
+      · obtain ⟨P, hP, hSP⟩ := ih hprevious hprevS
+        exact ⟨P, by simp [hP], hSP⟩
+      · exact ⟨T, by simp, hnewS⟩
+
+theorem indecomposable_edgeRestriction_subset_atom
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hF : F.Intrinsic) (S : Set E)
+    (hconnected : (F.edgeRestriction S).levi.Connected)
+    (hindec : OnePointIndecomposable (F.edgeRestriction S)) :
+    ∃ A : Index F, S ⊆ edges F hF.1 hF.2.1 A := by
+  classical
+  obtain ⟨assembly⟩ := exists_atomRunningAssembly F hF
+  have hcover :
+      S ⊆ edgePieceUnion
+        (atomEdgeSets F hF.1 hF.2.1 assembly.atoms) := by
+    rw [assembly.total]
+    exact Set.subset_univ S
+  obtain ⟨T, hT, hST⟩ :=
+    edgeRestriction_subset_piece_of_runningEdgeAssembly
+      F (atomEdgeSets F hF.1 hF.2.1 assembly.atoms)
+      assembly.running S hcover hconnected hindec
+  rw [atomEdgeSets, List.mem_map] at hT
+  obtain ⟨A, _, rfl⟩ := hT
+  exact ⟨A, hST⟩
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomContainment
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomContainment
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomTransport
+Source: Erdos593/TripleSystem/CanonicalAtomTransport.lean
+Normalized SHA-256: 825eed31ffad6168caeb534c2f92aa8680f544c7f06be3866fc93677c5db10a8
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomTransport
+
+/-!
+# Canonical atom transport
+
+Supported edge restrictions have no isolated points. Literal one-point
+indecomposability is invariant under isomorphism, and each actual canonical
+atom restriction has this property.
+-/
+
+namespace Erdos593
+namespace TripleSystem
+
+universe u v
+
+theorem edgeRestriction_hasNoIsolatedPoints
+    {V : Type u} {E : Type v} (F : TripleSystem V E) (S : Set E) :
+    (F.edgeRestriction S).HasNoIsolatedPoints := by
+  intro x
+  rcases x.property with ⟨e, he, hxe⟩
+  exact (F.edgeRestriction S).not_isolated_of_inc (e := ⟨e, he⟩) hxe
+
+namespace CanonicalAtom
+
+theorem onePointIndecomposable_iff_of_iso
+    {V E W D : Type u}
+    {F : TripleSystem V E} {G : TripleSystem W D}
+    (f : TripleSystem.Iso F G) :
+    OnePointIndecomposable F ↔ OnePointIndecomposable G := by
+  constructor
+  · intro hF hG
+    rcases hG with ⟨V₀, E₀, V₁, E₁, F₀, F₁, r₀, r₁, h₀, h₁, ⟨g⟩⟩
+    exact hF ⟨V₀, E₀, V₁, E₁, F₀, F₁, r₀, r₁, h₀, h₁, ⟨f.trans g⟩⟩
+  · intro hG hF
+    rcases hF with ⟨V₀, E₀, V₁, E₁, F₀, F₁, r₀, r₁, h₀, h₁, ⟨g⟩⟩
+    exact hG ⟨V₀, E₀, V₁, E₁, F₀, F₁, r₀, r₁, h₀, h₁, ⟨f.symm.trans g⟩⟩
+
+theorem atomRestriction_onePointIndecomposable
+    {V E : Type u} (F : TripleSystem V E)
+    [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+    [DecidableRel F.levi.Adj]
+    (hF : F.Intrinsic) (A : CanonicalAtom.Index F) :
+    OnePointIndecomposable
+      (CanonicalAtom.atomRestriction F hF.1 hF.2.1 A) := by
+  classical
+  cases A with
+  | singleton e hzero =>
+      rcases atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+        F hF.1 hF.2.1 (CanonicalAtom.Index.singleton e hzero) with ⟨hiso⟩
+      exact (onePointIndecomposable_iff_of_iso
+        (hiso.trans (oneEdgeExpansionSingleEdgePieceIso F e).symm)).mpr
+          oneTriple_onePointIndecomposable
+  | cycleBlock C hC B =>
+      rcases atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+        F hF.1 hF.2.1 (CanonicalAtom.Index.cycleBlock C hC B) with ⟨hiso⟩
+      let core : TwoConnectedBipartiteCore.{u} :=
+        { Vertex := _
+          vertexFintype := inferInstance
+          graph := CanonicalAtom.cycleBlockCore F C B
+          twoVertexConnected :=
+            cycleBlockCore_isTwoVertexConnected F hF.1 hF.2.1 C hC B
+          bipartite :=
+            cycleBlockCore_isBipartite F hF.1 hF.2.1 hF.2.2 C hC B }
+      exact (onePointIndecomposable_iff_of_iso hiso).mpr
+        (coreExpansion_onePointIndecomposable core)
+
+end CanonicalAtom
+end TripleSystem
+end Erdos593
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomTransport
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomTransport
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.EmbeddingRestrictionTransport
+Source: Erdos593/TripleSystem/EmbeddingRestrictionTransport.lean
+Normalized SHA-256: 6bb9312a5a598105a6b42ef20ad711168699902d61893e27f24da14cdc4301dc
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_EmbeddingRestrictionTransport
+
+/-!
+# Supported edge restrictions along embeddings
+
+An embedding identifies every supported source edge restriction with the
+exact selected host edge restriction, including its full incident support.
+-/
+
+namespace Erdos593.TripleSystem.Embedding
+
+universe u v w x
+
+theorem edgeRestriction_image_isomorphic
+    {V : Type u} {E : Type v} {W : Type w} {D : Type x}
+    {F : TripleSystem V E} {H : TripleSystem W D}
+    (f : F.Embedding H) (S : Set E) :
+    Isomorphic (F.edgeRestriction S)
+      (H.edgeRestriction (f.edge '' S)) :=
+by
+  let g : (F.edgeRestriction S).Embedding H :=
+    (F.edgeRestrictionEmbedding S).trans f
+  have hedge : g.edgeImage = f.edge '' S := by
+    ext d
+    constructor
+    · rintro ⟨e, rfl⟩
+      exact ⟨e.1, e.2, rfl⟩
+    · rintro ⟨e, he, rfl⟩
+      exact ⟨⟨e, he⟩, rfl⟩
+  exact (congrArg (fun T : Set D =>
+    Isomorphic (F.edgeRestriction S) (H.edgeRestriction T)) hedge).mp
+      ⟨g.imageEdgeRestrictionIso (F.edgeRestriction_hasNoIsolatedPoints S)⟩
+
+theorem edgeSupportSet_image
+    {V : Type u} {E : Type v} {W : Type w} {D : Type x}
+    {F : TripleSystem V E} {H : TripleSystem W D}
+    (f : F.Embedding H) (S : Set E) :
+    H.edgeSupportSet (f.edge '' S) =
+      f.vertex '' F.edgeSupportSet S :=
+by
+  ext y
+  constructor
+  · rintro ⟨d, ⟨e, he, rfl⟩, hye⟩
+    rcases (Set.ext_iff.mp (f.map_edge e) y).mpr hye with ⟨x, hxe, rfl⟩
+    exact ⟨x, ⟨e, he, hxe⟩, rfl⟩
+  · rintro ⟨x, ⟨e, he, hxe⟩, rfl⟩
+    refine ⟨f.edge e, ⟨e, he, rfl⟩, ?_⟩
+    exact (Set.ext_iff.mp (f.map_edge e) (f.vertex x)).mp ⟨x, hxe, rfl⟩
+
+end Erdos593.TripleSystem.Embedding
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_EmbeddingRestrictionTransport
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.EmbeddingRestrictionTransport
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomAmalgamLabels
+Source: Erdos593/TripleSystem/CanonicalAtomAmalgamLabels.lean
+Normalized SHA-256: 17ae8fe4d280cb3a2f2d30be885f7909692e682ee126ddd886eb7b8beac64e55
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomAmalgamLabels
+
+/-!
+# Canonical atom labels under one-point amalgamation
+
+The actual tagged edges from opposite factors have distinct atom labels.
+Within the left factor, amalgamation preserves and reflects label equality.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+
+theorem atomOf_amalgam_inl_ne_inr
+    {V E W D : Type u}
+    [Fintype V] [Fintype E] [Fintype W] [Fintype D]
+    (F : TripleSystem V E) (T : TripleSystem W D)
+    (hF : F.Intrinsic) (hT : T.Intrinsic)
+    (r : V) (q : W) (e : E) (d : D) :
+    let U := OnePointAmalgamation.amalgam F T r q
+    letI : Fintype (OnePointAmalgamation.Vertex r q) :=
+      OnePointAmalgamation.vertexFintype r q
+    letI : DecidableEq (OnePointAmalgamation.Vertex r q) := Classical.decEq _
+    letI : DecidableEq (E ⊕ D) := Classical.decEq _
+    letI : DecidableRel U.levi.Adj := Classical.decRel _
+    let hU : U.Intrinsic :=
+      OnePointAmalgamation.amalgam_intrinsic F T r q hF hT
+    atomOf U hU.1 hU.2.1 (Sum.inl e) ≠
+      atomOf U hU.1 hU.2.1 (Sum.inr d) :=
+by
+  let U := OnePointAmalgamation.amalgam F T r q
+  letI : Fintype (OnePointAmalgamation.Vertex r q) :=
+    OnePointAmalgamation.vertexFintype r q
+  letI : DecidableEq (OnePointAmalgamation.Vertex r q) := Classical.decEq _
+  letI : DecidableEq (E ⊕ D) := Classical.decEq _
+  letI : DecidableRel U.levi.Adj := Classical.decRel _
+  let hU : U.Intrinsic :=
+    OnePointAmalgamation.amalgam_intrinsic F T r q hF hT
+  change atomOf U hU.1 hU.2.1 (Sum.inl e) ≠
+    atomOf U hU.1 hU.2.1 (Sum.inr d)
+  intro heq
+  let A : Index U := atomOf U hU.1 hU.2.1 (Sum.inl e)
+  let S : Set (E ⊕ D) := edges U hU.1 hU.2.1 A
+  let L : Set (E ⊕ D) := Set.range (Sum.inl : E → E ⊕ D)
+  let R : Set (E ⊕ D) := Set.range (Sum.inr : D → E ⊕ D)
+  have heS : (Sum.inl e : E ⊕ D) ∈ S := rfl
+  have hdS : (Sum.inr d : E ⊕ D) ∈ S := heq.symm
+  have hcover : S ⊆ L ∪ R := by
+    intro z _
+    cases z with
+    | inl x => exact Or.inl ⟨x, rfl⟩
+    | inr y => exact Or.inr ⟨y, rfl⟩
+  have hdisjoint : Disjoint L R := by
+    apply Set.disjoint_left.mpr
+    rintro z ⟨x, rfl⟩ ⟨y, h⟩
+    cases h
+  have hleftSupport :=
+    Embedding.edgeSupportSet_image
+      (OnePointAmalgamation.leftFactorEmbedding F T r q)
+      (Set.univ : Set E)
+  rw [Set.image_univ] at hleftSupport
+  change U.edgeSupportSet L =
+    OnePointAmalgamation.left r q '' F.edgeSupportSet Set.univ
+    at hleftSupport
+  have hrightSupport :=
+    Embedding.edgeSupportSet_image
+      (OnePointAmalgamation.rightFactorEmbedding F T r q)
+      (Set.univ : Set D)
+  rw [Set.image_univ] at hrightSupport
+  change U.edgeSupportSet R =
+    OnePointAmalgamation.right r q '' T.edgeSupportSet Set.univ
+    at hrightSupport
+  have hinter :
+      (U.edgeSupportSet L ∩ U.edgeSupportSet R).Subsingleton := by
+    rw [hleftSupport, hrightSupport]
+    exact OnePointAmalgamation.cross_image_inter_subsingleton r q
+      (F.edgeSupportSet Set.univ) (T.edgeSupportSet Set.univ)
+  have hconnected : (U.edgeRestriction S).levi.Connected :=
+    atomRestriction_connected U hU.1 hU.2.1 A
+  have hindec : OnePointIndecomposable (U.edgeRestriction S) :=
+    atomRestriction_onePointIndecomposable U hU A
+  rcases edgeRestriction_subset_or_subset_of_support_inter_subsingleton
+      U S L R hcover hdisjoint hinter hconnected hindec with hleft | hright
+  · obtain ⟨x, hx⟩ := hleft hdS
+    cases hx
+  · obtain ⟨y, hy⟩ := hright heS
+    cases hy
+
+theorem atomOf_amalgam_inl_eq_iff
+    {V E W D : Type u}
+    [Fintype V] [Fintype E] [Fintype W] [Fintype D]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) (T : TripleSystem W D)
+    [DecidableRel F.levi.Adj]
+    (hF : F.Intrinsic) (hT : T.Intrinsic)
+    (r : V) (q : W) (e f : E) :
+    let U := OnePointAmalgamation.amalgam F T r q
+    letI : Fintype (OnePointAmalgamation.Vertex r q) :=
+      OnePointAmalgamation.vertexFintype r q
+    letI : DecidableEq (OnePointAmalgamation.Vertex r q) := Classical.decEq _
+    letI : DecidableEq (E ⊕ D) := Classical.decEq _
+    letI : DecidableRel U.levi.Adj := Classical.decRel _
+    let hU : U.Intrinsic :=
+      OnePointAmalgamation.amalgam_intrinsic F T r q hF hT
+    (atomOf U hU.1 hU.2.1 (Sum.inl e) =
+        atomOf U hU.1 hU.2.1 (Sum.inl f)) ↔
+      atomOf F hF.1 hF.2.1 e = atomOf F hF.1 hF.2.1 f :=
+by
+  let U := OnePointAmalgamation.amalgam F T r q
+  letI : Fintype (OnePointAmalgamation.Vertex r q) :=
+    OnePointAmalgamation.vertexFintype r q
+  letI : DecidableEq (OnePointAmalgamation.Vertex r q) := Classical.decEq _
+  letI : DecidableEq (E ⊕ D) := Classical.decEq _
+  letI : DecidableRel U.levi.Adj := Classical.decRel _
+  let hU : U.Intrinsic :=
+    OnePointAmalgamation.amalgam_intrinsic F T r q hF hT
+  change (atomOf U hU.1 hU.2.1 (Sum.inl e) =
+    atomOf U hU.1 hU.2.1 (Sum.inl f)) ↔
+    atomOf F hF.1 hF.2.1 e = atomOf F hF.1 hF.2.1 f
+  let j : F.Embedding U :=
+    OnePointAmalgamation.leftFactorEmbedding F T r q
+  constructor
+  · intro heq
+    let Q := edges U hU.1 hU.2.1 (atomOf U hU.1 hU.2.1 (Sum.inl e))
+    let S : Set E := (Sum.inl : E → E ⊕ D) ⁻¹' Q
+    have himage : j.edge '' S = Q := by
+      ext z
+      constructor
+      · rintro ⟨g, hg, rfl⟩
+        exact hg
+      · intro hz
+        cases z with
+        | inl g => exact ⟨g, hz, rfl⟩
+        | inr d =>
+            have hd : atomOf U hU.1 hU.2.1 (Sum.inr d) =
+                atomOf U hU.1 hU.2.1 (Sum.inl e) := hz
+            exact False.elim ((atomOf_amalgam_inl_ne_inr F T hF hT r q e d) hd.symm)
+    have hiso : Isomorphic (F.edgeRestriction S) (U.edgeRestriction Q) :=
+      (congrArg (fun R : Set (E ⊕ D) =>
+        Isomorphic (F.edgeRestriction S) (U.edgeRestriction R)) himage).mp
+          (j.edgeRestriction_image_isomorphic S)
+    obtain ⟨i⟩ := hiso
+    have hc : (U.edgeRestriction Q).levi.Connected :=
+      atomRestriction_connected U hU.1 hU.2.1 (atomOf U hU.1 hU.2.1 (Sum.inl e))
+    have hi : OnePointIndecomposable (U.edgeRestriction Q) :=
+      atomRestriction_onePointIndecomposable U hU (atomOf U hU.1 hU.2.1 (Sum.inl e))
+    obtain ⟨A, hA⟩ := indecomposable_edgeRestriction_subset_atom F hF S
+      (i.leviIso.connected_iff.mpr hc)
+      ((onePointIndecomposable_iff_of_iso i).mpr hi)
+    have heA : atomOf F hF.1 hF.2.1 e = A := hA (show e ∈ S from rfl)
+    have hfA : atomOf F hF.1 hF.2.1 f = A := hA (show f ∈ S from heq.symm)
+    exact heA.trans hfA.symm
+  · intro heq
+    let S := edges F hF.1 hF.2.1 (atomOf F hF.1 hF.2.1 e)
+    obtain ⟨i⟩ := j.edgeRestriction_image_isomorphic S
+    have hc : (F.edgeRestriction S).levi.Connected :=
+      atomRestriction_connected F hF.1 hF.2.1 (atomOf F hF.1 hF.2.1 e)
+    have hi : OnePointIndecomposable (F.edgeRestriction S) :=
+      atomRestriction_onePointIndecomposable F hF (atomOf F hF.1 hF.2.1 e)
+    obtain ⟨A, hA⟩ := indecomposable_edgeRestriction_subset_atom U hU (j.edge '' S)
+      (i.leviIso.connected_iff.mp hc)
+      ((onePointIndecomposable_iff_of_iso i).mp hi)
+    have heA : atomOf U hU.1 hU.2.1 (Sum.inl e) = A :=
+      hA ⟨e, rfl, rfl⟩
+    have hfA : atomOf U hU.1 hU.2.1 (Sum.inl f) = A :=
+      hA ⟨f, heq.symm, rfl⟩
+    exact heA.trans hfA.symm
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomAmalgamLabels
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomAmalgamLabels
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomAmalgamOption
+Source: Erdos593/TripleSystem/CanonicalAtomAmalgamOption.lean
+Normalized SHA-256: a3deb68177c8af77d9cc1d6f440bbe77a8cfb34da3d6452e362d8eb759f19e24
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomAmalgamOption
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+
+theorem exists_atomEquiv_option_of_unique_edges
+    {V E W D : Type u}
+    [Fintype V] [Fintype E] [Fintype W] [Fintype D]
+    [DecidableEq V] [DecidableEq E] [Unique D]
+    (F : TripleSystem V E) (T : TripleSystem W D)
+    [DecidableRel F.levi.Adj]
+    (hF : F.Intrinsic) (hT : T.Intrinsic)
+    (r : V) (q : W) :
+    let U := OnePointAmalgamation.amalgam F T r q
+    letI : Fintype (OnePointAmalgamation.Vertex r q) :=
+      OnePointAmalgamation.vertexFintype r q
+    letI : DecidableEq (OnePointAmalgamation.Vertex r q) := Classical.decEq _
+    letI : DecidableEq (E ⊕ D) := Classical.decEq _
+    letI : DecidableRel U.levi.Adj := Classical.decRel _
+    let hU : U.Intrinsic :=
+      OnePointAmalgamation.amalgam_intrinsic F T r q hF hT
+    ∃ φ : Index U ≃ Option (Index F),
+      (∀ e : E,
+        φ (atomOf U hU.1 hU.2.1 (Sum.inl e)) =
+          some (atomOf F hF.1 hF.2.1 e)) ∧
+      (∀ d : D,
+        φ (atomOf U hU.1 hU.2.1 (Sum.inr d)) = none) :=
+by
+  let U := OnePointAmalgamation.amalgam F T r q
+  letI : Fintype (OnePointAmalgamation.Vertex r q) :=
+    OnePointAmalgamation.vertexFintype r q
+  letI : DecidableEq (OnePointAmalgamation.Vertex r q) := Classical.decEq _
+  letI : DecidableEq (E ⊕ D) := Classical.decEq _
+  letI : DecidableRel U.levi.Adj := Classical.decRel _
+  let hU : U.Intrinsic :=
+    OnePointAmalgamation.amalgam_intrinsic F T r q hF hT
+  change ∃ φ : Index U ≃ Option (Index F),
+    (∀ e : E,
+      φ (atomOf U hU.1 hU.2.1 (Sum.inl e)) =
+        some (atomOf F hF.1 hF.2.1 e)) ∧
+    (∀ d : D, φ (atomOf U hU.1 hU.2.1 (Sum.inr d)) = none)
+  have hne : ∀ (e : E) (d : D),
+      atomOf U hU.1 hU.2.1 (Sum.inl e) ≠ atomOf U hU.1 hU.2.1 (Sum.inr d) :=
+    fun e d => atomOf_amalgam_inl_ne_inr F T hF hT r q e d
+  have hiff : ∀ e f : E,
+      (atomOf U hU.1 hU.2.1 (Sum.inl e) = atomOf U hU.1 hU.2.1 (Sum.inl f)) ↔
+        atomOf F hF.1 hF.2.1 e = atomOf F hF.1 hF.2.1 f :=
+    fun e f => atomOf_amalgam_inl_eq_iff F T hF hT r q e f
+  let rep : Index F → E :=
+    fun B => Classical.choose (atomOf_surjective F hF.1 hF.2.1 B)
+  have hrep : ∀ B : Index F, atomOf F hF.1 hF.2.1 (rep B) = B :=
+    fun B => Classical.choose_spec (atomOf_surjective F hF.1 hF.2.1 B)
+  let g : Option (Index F) → Index U := fun o =>
+    match o with
+    | some B => atomOf U hU.1 hU.2.1 (Sum.inl (rep B))
+    | none => atomOf U hU.1 hU.2.1 (Sum.inr default)
+  have hg_some : ∀ B : Index F,
+      g (some B) = atomOf U hU.1 hU.2.1 (Sum.inl (rep B)) := fun _ => rfl
+  have hg_none : g none = atomOf U hU.1 hU.2.1 (Sum.inr default) := rfl
+  have hginj : Function.Injective g := by
+    intro a b hab
+    cases a with
+    | none =>
+        cases b with
+        | none => rfl
+        | some B =>
+            rw [hg_none, hg_some] at hab
+            exact absurd hab.symm (hne (rep B) default)
+    | some A =>
+        cases b with
+        | none =>
+            rw [hg_none, hg_some] at hab
+            exact absurd hab (hne (rep A) default)
+        | some B =>
+            rw [hg_some, hg_some] at hab
+            have h := (hiff (rep A) (rep B)).mp hab
+            rw [hrep, hrep] at h
+            exact congrArg some h
+  have hgsurj : Function.Surjective g := by
+    intro A
+    obtain ⟨z, hz⟩ := atomOf_surjective U hU.1 hU.2.1 A
+    cases z with
+    | inl e =>
+        refine ⟨some (atomOf F hF.1 hF.2.1 e), ?_⟩
+        rw [hg_some]
+        refine Eq.trans ?_ hz
+        exact (hiff (rep (atomOf F hF.1 hF.2.1 e)) e).mpr (hrep _)
+    | inr d =>
+        refine ⟨none, ?_⟩
+        rw [hg_none, Subsingleton.elim (default : D) d]
+        exact hz
+  refine ⟨(Equiv.ofBijective g ⟨hginj, hgsurj⟩).symm, ?_, ?_⟩
+  · intro e
+    rw [Equiv.symm_apply_eq]
+    show atomOf U hU.1 hU.2.1 (Sum.inl e) = g (some (atomOf F hF.1 hF.2.1 e))
+    rw [hg_some]
+    exact (hiff e (rep (atomOf F hF.1 hF.2.1 e))).mpr (hrep _).symm
+  · intro d
+    rw [Equiv.symm_apply_eq]
+    show atomOf U hU.1 hU.2.1 (Sum.inr d) = g none
+    rw [hg_none, Subsingleton.elim (default : D) d]
+
+theorem card_index_amalgam_of_unique_edges
+    {V E W D : Type u}
+    [Fintype V] [Fintype E] [Fintype W] [Fintype D]
+    [DecidableEq V] [DecidableEq E] [Unique D]
+    (F : TripleSystem V E) (T : TripleSystem W D)
+    [DecidableRel F.levi.Adj]
+    (hF : F.Intrinsic) (hT : T.Intrinsic)
+    (r : V) (q : W) :
+    let U := OnePointAmalgamation.amalgam F T r q
+    letI : Fintype (OnePointAmalgamation.Vertex r q) :=
+      OnePointAmalgamation.vertexFintype r q
+    letI : DecidableEq (OnePointAmalgamation.Vertex r q) := Classical.decEq _
+    letI : DecidableEq (E ⊕ D) := Classical.decEq _
+    letI : DecidableRel U.levi.Adj := Classical.decRel _
+    Nat.card (Index U) = Nat.card (Index F) + 1 :=
+by
+  let U := OnePointAmalgamation.amalgam F T r q
+  letI : Fintype (OnePointAmalgamation.Vertex r q) :=
+    OnePointAmalgamation.vertexFintype r q
+  letI : DecidableEq (OnePointAmalgamation.Vertex r q) := Classical.decEq _
+  letI : DecidableEq (E ⊕ D) := Classical.decEq _
+  letI : DecidableRel U.levi.Adj := Classical.decRel _
+  change Nat.card (Index U) = Nat.card (Index F) + 1
+  haveI : Finite (Index F) :=
+    Finite.of_surjective _ (atomOf_surjective F hF.1 hF.2.1)
+  obtain ⟨φ, -, -⟩ :=
+    exists_atomEquiv_option_of_unique_edges F T hF hT r q
+  have hcard : Nat.card (Index U) = Nat.card (Option (Index F)) :=
+    Nat.card_congr φ
+  rw [hcard, _root_.Finite.card_option]
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomAmalgamOption
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomAmalgamOption
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomBaseCount
+Source: Erdos593/TripleSystem/CanonicalAtomBaseCount.lean
+Normalized SHA-256: cf6318090928ae0ede98446c5e365a89974877e65b513eda1fa0ee2f1717aa11
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomBaseCount
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+
+theorem card_index_eq_one_of_onePointIndecomposable
+    {V E : Type u}
+    [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hF : F.Intrinsic)
+    (hconnected : F.levi.Connected)
+    (hreduced : F.HasNoIsolatedPoints)
+    (hindec : OnePointIndecomposable F) :
+    Nat.card (Index F) = 1 := by
+  let i := F.edgeRestrictionUnivIso hreduced
+  have hconnected' : (F.edgeRestriction Set.univ).levi.Connected :=
+    i.leviIso.connected_iff.mpr hconnected
+  have hindec' : OnePointIndecomposable (F.edgeRestriction Set.univ) :=
+    (onePointIndecomposable_iff_of_iso i).mpr hindec
+  obtain ⟨A, hA⟩ := indecomposable_edgeRestriction_subset_atom
+    F hF Set.univ hconnected' hindec'
+  apply Nat.card_eq_one_iff_exists.mpr
+  refine ⟨A, ?_⟩
+  intro B
+  obtain ⟨e, he⟩ := atomOf_surjective F hF.1 hF.2.1 B
+  have heA : atomOf F hF.1 hF.2.1 e = A := hA (Set.mem_univ e)
+  exact he.symm.trans heA
+
+theorem card_index_eq_one_of_unique_edges
+    {V E : Type u}
+    [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E] [Unique E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    Nat.card (Index F) = 1 := by
+  apply Nat.card_eq_one_iff_exists.mpr
+  refine ⟨atomOf F hlinear hbridge (default : E), ?_⟩
+  intro A
+  obtain ⟨e, he⟩ := atomOf_surjective F hlinear hbridge A
+  have he0 : e = (default : E) := Subsingleton.elim e _
+  exact he.symm.trans (congrArg (atomOf F hlinear hbridge) he0)
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomBaseCount
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomBaseCount
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.OnePointAmalgamationGeometry
+Source: Erdos593/TripleSystem/OnePointAmalgamationGeometry.lean
+Normalized SHA-256: 2646a21fac1166f81ebc2ad86f91b681c336b33de64214fd8592ec2c08106d4b
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_OnePointAmalgamationGeometry
+
+/-!
+# Geometry of one-point amalgamation
+
+Counts and structural properties of the actual quotient construction.
+-/
+
+namespace Erdos593.TripleSystem.OnePointAmalgamation
+
+universe u
+
+theorem card_vertex_add_one
+    {V W : Type u} [Finite V] [Finite W]
+    (r : V) (q : W) :
+    Nat.card (Vertex r q) + 1 = Nat.card V + Nat.card W := by
+  classical
+  let e : (V ⊕ {y : W // y ≠ q}) ≃ Vertex r q :=
+    Equiv.ofBijective (Sum.elim (left r q) (fun y => right r q y.1)) (by
+      constructor
+      · rintro (x | ⟨y, hy⟩) (x' | ⟨y', hy'⟩) h <;>
+          simp only [Sum.elim_inl, Sum.elim_inr] at h
+        · exact congrArg Sum.inl (left_injective r q h)
+        · exact absurd ((left_eq_right_iff r q x y').mp h).2 hy'
+        · exact absurd ((left_eq_right_iff r q x' y).mp h.symm).2 hy
+        · exact congrArg Sum.inr (Subtype.ext (right_injective r q h))
+      · intro z
+        rcases exists_left_or_right r q z with ⟨x, rfl⟩ | ⟨y, rfl⟩
+        · exact ⟨Sum.inl x, rfl⟩
+        · by_cases hy : y = q
+          · exact ⟨Sum.inl r, by simpa only [Sum.elim_inl, hy] using root_eq r q⟩
+          · exact ⟨Sum.inr ⟨y, hy⟩, rfl⟩)
+  have hrest : Nat.card {y : W // y ≠ q} + 1 = Nat.card W := by
+    have hcard : Nat.card ({y : W // y ≠ q} ⊕ PUnit.{u + 1}) = Nat.card W := by
+      refine Nat.card_congr (Equiv.ofBijective
+        (Sum.elim (fun y => y.1) (fun _ => q)) ⟨?_, ?_⟩)
+      · rintro (⟨x, hx⟩ | a) (⟨y, hy⟩ | b) h <;>
+          simp only [Sum.elim_inl, Sum.elim_inr] at h
+        · exact congrArg Sum.inl (Subtype.ext h)
+        · exact absurd h hx
+        · exact absurd h.symm hy
+        · rfl
+      · intro y
+        by_cases hy : y = q
+        · exact ⟨Sum.inr PUnit.unit, hy.symm⟩
+        · exact ⟨Sum.inl ⟨y, hy⟩, rfl⟩
+    rw [← hcard, Nat.card_sum]
+    simp
+  calc
+    Nat.card (Vertex r q) + 1 =
+        (Nat.card V + Nat.card {y : W // y ≠ q}) + 1 := by
+      rw [← Nat.card_congr e, Nat.card_sum]
+    _ = Nat.card V + Nat.card W := by rw [Nat.add_assoc, hrest]
+
+theorem amalgam_levi_connected
+    {V E W D : Type u}
+    (F : TripleSystem V E) (T : TripleSystem W D)
+    (r : V) (q : W)
+    (hF : F.levi.Preconnected)
+    (hT : T.levi.Preconnected) :
+    (amalgam F T r q).levi.Connected := by
+  have hreach : ∀ z : Vertex r q ⊕ Edge E D,
+      (amalgam F T r q).levi.Reachable z (.inl (left r q r)) := by
+    intro z
+    rcases z with z | (e | d)
+    · rcases exists_left_or_right r q z with ⟨x, rfl⟩ | ⟨y, rfl⟩
+      · exact (hF (.inl x) (.inl r)).map (leftLeviEmbedding F T r q).toHom
+      · have h := (hT (.inl y) (.inl q)).map (rightLeviEmbedding F T r q).toHom
+        change (amalgam F T r q).levi.Reachable
+          (.inl (right r q y)) (.inl (right r q q)) at h
+        rw [← root_eq r q] at h
+        exact h
+    · exact (hF (.inr e) (.inl r)).map (leftLeviEmbedding F T r q).toHom
+    · have h := (hT (.inr d) (.inl q)).map (rightLeviEmbedding F T r q).toHom
+      change (amalgam F T r q).levi.Reachable
+        (.inr (.inr d)) (.inl (right r q q)) at h
+      rw [← root_eq r q] at h
+      exact h
+  exact {
+    preconnected := fun a b => (hreach a).trans (hreach b).symm
+    nonempty := ⟨.inl (left r q r)⟩ }
+
+theorem amalgam_hasNoIsolatedPoints
+    {V E W D : Type u}
+    (F : TripleSystem V E) (T : TripleSystem W D)
+    (r : V) (q : W)
+    (hF : F.HasNoIsolatedPoints)
+    (hT : T.HasNoIsolatedPoints) :
+    (amalgam F T r q).HasNoIsolatedPoints := by
+  intro z
+  rcases exists_left_or_right r q z with ⟨x, rfl⟩ | ⟨y, rfl⟩
+  · obtain ⟨e, he⟩ := F.not_isolated_iff_exists_inc.mp (hF x)
+    exact (amalgam F T r q).not_isolated_of_inc (e := Sum.inl e)
+      ((inc_left_left_iff F T r q x e).mpr he)
+  · obtain ⟨d, hd⟩ := T.not_isolated_iff_exists_inc.mp (hT y)
+    exact (amalgam F T r q).not_isolated_of_inc (e := Sum.inr d)
+      ((inc_right_right_iff F T r q y d).mpr hd)
+
+end Erdos593.TripleSystem.OnePointAmalgamation
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_OnePointAmalgamationGeometry
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.OnePointAmalgamationGeometry
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomFiniteAttachment
+Source: Erdos593/TripleSystem/CanonicalAtomFiniteAttachment.lean
+Normalized SHA-256: bcfd586f1e401b12a991bee0ea7afbbb1a748b22cc4b87172c0f66892540b1e9
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomFiniteAttachment
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+theorem exists_finite_attachment_parameters
+    (n m t : ℕ)
+    (F : TripleSystem (Fin n) (Fin m))
+    [DecidableRel F.levi.Adj]
+    (hF : F.Intrinsic)
+    (hconnected : F.levi.Connected)
+    (hreduced : F.HasNoIsolatedPoints) :
+    ∃ H : TripleSystem (Fin (n + 2 * t)) (Fin (m + t)),
+      letI : DecidableRel H.levi.Adj := Classical.decRel _
+      H.Intrinsic ∧
+      H.HasNoIsolatedPoints ∧
+      H.levi.Connected ∧
+      _root_.SimpleGraph.FiniteCycleRank.cycleRank H.levi =
+        _root_.SimpleGraph.FiniteCycleRank.cycleRank F.levi ∧
+      Nat.card (Index H) = Nat.card (Index F) + t :=
+by
+  classical
+  -- The canonical single-triple piece: the private-vertex expansion of `K₂`.
+  letI : Unique (PrivateVertexExpansion.Edge oneEdgeGraph.{0}) :=
+    { default := oneEdgeGraphEdge.{0}, uniq := oneEdgeGraph_edge_eq }
+  let T : TripleSystem (PrivateVertexExpansion.Point oneEdgeGraph.{0})
+      (PrivateVertexExpansion.Edge oneEdgeGraph.{0}) :=
+    privateVertexExpansion oneEdgeGraph.{0}
+  have hfin : ∀ j : ℕ, Nat.card (Fin j) = j := fun j => by simp
+  have hD : Nat.card (PrivateVertexExpansion.Edge oneEdgeGraph.{0}) = 1 :=
+    Nat.card_unique
+  have hP : Nat.card (PrivateVertexExpansion.Point oneEdgeGraph.{0}) = 3 := by
+    show Nat.card (PrivateVertexExpansion.CoreVertex oneEdgeGraph.{0} ⊕
+      PrivateVertexExpansion.PrivateVertex oneEdgeGraph.{0}) = 3
+    rw [Nat.card_sum, hD]
+    show Nat.card (ULift.{0} (Fin 2)) + 1 = 3
+    simp
+  have hTint : T.Intrinsic :=
+    privateVertexExpansion_intrinsic oneEdgeGraph.{0} oneEdgeGraph_colorable_two
+  have hTiso : T.HasNoIsolatedPoints :=
+    fun p hp => hp default (oneEdgeExpansion_inc p default)
+  have hTpre : T.levi.Preconnected := by
+    have hhub : ∀ z : PrivateVertexExpansion.Point oneEdgeGraph.{0} ⊕
+        PrivateVertexExpansion.Edge oneEdgeGraph.{0},
+        T.levi.Reachable z (Sum.inr default) := by
+      rintro (p | d)
+      · exact (T.levi_adj_point_edge.mpr (oneEdgeExpansion_inc p default)).reachable
+      · rw [Subsingleton.elim d (default : PrivateVertexExpansion.Edge oneEdgeGraph.{0})]
+    intro a b
+    exact (hhub a).trans (hhub b).symm
+  -- A connected graph has exactly one component.
+  have hcomp1 : ∀ {W : Type} (G : _root_.SimpleGraph W), G.Connected →
+      Nat.card G.ConnectedComponent = 1 := by
+    intro W G hG
+    haveI := hG.nonempty
+    haveI := hG.preconnected.subsingleton_connectedComponent
+    exact Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, inferInstance⟩
+  -- The source system has at least one point.
+  have hn : 0 < n := by
+    rcases Nat.eq_zero_or_pos n with rfl | h
+    · exfalso
+      rcases hconnected.nonempty with ⟨z⟩
+      rcases z with x | e
+      · exact x.elim0
+      · have h3 := F.edge_ncard e
+        rw [Set.eq_empty_of_isEmpty {x : Fin 0 | F.Inc x e}, Set.ncard_empty] at h3
+        exact absurd h3 (by norm_num)
+    · exact h
+  -- Relabelling a finite system onto `Fin` carriers preserves all the data.
+  have transport : ∀ (k l : ℕ) (W D : Type) (X : TripleSystem W D)
+      (iW : Fintype W) (iD : Fintype D) (dW : DecidableEq W) (dD : DecidableEq D)
+      (iR : DecidableRel X.levi.Adj) (eV : W ≃ Fin k) (eE : D ≃ Fin l),
+      X.Intrinsic → X.HasNoIsolatedPoints → X.levi.Connected →
+      ∃ Y : TripleSystem (Fin k) (Fin l),
+        letI : DecidableRel Y.levi.Adj := Classical.decRel _
+        Y.Intrinsic ∧ Y.HasNoIsolatedPoints ∧ Y.levi.Connected ∧
+        Nat.card (Index Y) = Nat.card (@Index W D X iW iD dW dD iR) := by
+    intro k l W D X iW iD dW dD iR eV eE hint hiso hconn
+    letI := iW
+    letI := iD
+    letI := dW
+    letI := dD
+    letI := iR
+    let Y : TripleSystem (Fin k) (Fin l) := TriangleHostTransport.reindex X eV eE
+    have f : TripleSystem.Iso X Y :=
+      { vertexEquiv := eV
+        edgeEquiv := eE
+        map_inc_iff := fun x e =>
+          (TriangleHostTransport.reindex_inc_iff X eV eE x e).symm }
+    letI : DecidableRel Y.levi.Adj := Classical.decRel _
+    refine ⟨Y, (TripleSystem.Iso.intrinsic_iff f).mp hint, ?_, ?_, ?_⟩
+    · intro y hy
+      obtain ⟨e, he⟩ := X.not_isolated_iff_exists_inc.mp (hiso (eV.symm y))
+      refine hy (eE e) ?_
+      have h2 : Y.Inc (eV (eV.symm y)) (eE e) :=
+        (TriangleHostTransport.reindex_inc_iff X eV eE (eV.symm y) e).mpr he
+      rwa [Equiv.apply_symm_apply] at h2
+    · exact (TripleSystem.Iso.leviIso f).connected_iff.mp hconn
+    · obtain ⟨tr⟩ := exists_canonicityTransport X Y f hint.1 hint.2.1
+      exact (Nat.card_congr tr.atomEquiv).symm
+  -- One attachment step: amalgamate a single new triple at an existing point.
+  have step : ∀ (k l : ℕ) (X : TripleSystem (Fin k) (Fin l))
+      (iR : DecidableRel X.levi.Adj), 0 < k →
+      X.Intrinsic → X.HasNoIsolatedPoints → X.levi.Connected →
+      ∃ Y : TripleSystem (Fin (k + 2)) (Fin (l + 1)),
+        letI : DecidableRel Y.levi.Adj := Classical.decRel _
+        Y.Intrinsic ∧ Y.HasNoIsolatedPoints ∧ Y.levi.Connected ∧
+        Nat.card (Index Y) = Nat.card (@Index (Fin k) (Fin l) X _ _ _ _ iR) + 1 := by
+    intro k l X iR hk hint hiso hconn
+    letI := iR
+    let r : Fin k := ⟨0, hk⟩
+    let q : PrivateVertexExpansion.Point oneEdgeGraph.{0} := Sum.inl (ULift.up 0)
+    let U := OnePointAmalgamation.amalgam X T r q
+    have hUint : U.Intrinsic :=
+      OnePointAmalgamation.amalgam_intrinsic X T r q hint hTint
+    have hUiso : U.HasNoIsolatedPoints :=
+      OnePointAmalgamation.amalgam_hasNoIsolatedPoints X T r q hiso hTiso
+    have hUconn : U.levi.Connected :=
+      OnePointAmalgamation.amalgam_levi_connected X T r q hconn.preconnected hTpre
+    have hUV : Nat.card (OnePointAmalgamation.Vertex r q) = k + 2 := by
+      have h := OnePointAmalgamation.card_vertex_add_one (V := Fin k)
+        (W := PrivateVertexExpansion.Point oneEdgeGraph.{0}) r q
+      rw [hP, hfin k] at h
+      omega
+    have hUE : Nat.card (OnePointAmalgamation.Edge (Fin l)
+        (PrivateVertexExpansion.Edge oneEdgeGraph.{0})) = l + 1 := by
+      show Nat.card (Fin l ⊕ PrivateVertexExpansion.Edge oneEdgeGraph.{0}) = l + 1
+      rw [Nat.card_sum, hD, hfin l]
+    have hcard : Nat.card (@Index _ _ U (OnePointAmalgamation.vertexFintype r q)
+        inferInstance (Classical.decEq _) (Classical.decEq _) (Classical.decRel _)) =
+        Nat.card (@Index (Fin k) (Fin l) X _ _ _ _ iR) + 1 :=
+      card_index_amalgam_of_unique_edges X T hint hTint r q
+    obtain ⟨Y, hY1, hY2, hY3, hY4⟩ :=
+      transport (k + 2) (l + 1) _ _ U (OnePointAmalgamation.vertexFintype r q)
+        inferInstance (Classical.decEq _) (Classical.decEq _) (Classical.decRel _)
+        (Finite.equivFinOfCardEq hUV) (Finite.equivFinOfCardEq hUE)
+        hUint hUiso hUconn
+    exact ⟨Y, hY1, hY2, hY3, by omega⟩
+  -- The finite induction on the number of attached triples.
+  have key : ∀ s : ℕ, ∃ H : TripleSystem (Fin (n + 2 * s)) (Fin (m + s)),
+      letI : DecidableRel H.levi.Adj := Classical.decRel _
+      H.Intrinsic ∧ H.HasNoIsolatedPoints ∧ H.levi.Connected ∧
+      Nat.card (Index H) =
+        Nat.card (@Index (Fin n) (Fin m) F _ _ _ _ (Classical.decRel _)) + s := by
+    intro s
+    induction s with
+    | zero => exact ⟨F, hF, hreduced, hconnected, by omega⟩
+    | succ s ih =>
+        obtain ⟨H, hH1, hH2, hH3, hH4⟩ := ih
+        obtain ⟨Y, hY1, hY2, hY3, hY4⟩ :=
+          step (n + 2 * s) (m + s) H (Classical.decRel _) (by omega) hH1 hH2 hH3
+        exact ⟨Y, hY1, hY2, hY3, by omega⟩
+  obtain ⟨H, hH1, hH2, hH3, hH4⟩ := key t
+  have hFidx : Nat.card (@Index (Fin n) (Fin m) F _ _ _ _ (Classical.decRel _)) =
+      Nat.card (Index F) :=
+    congrArg (fun i => Nat.card (@Index (Fin n) (Fin m) F _ _ _ _ i))
+      (Subsingleton.elim _ _)
+  refine ⟨H, hH1, hH2, hH3, ?_, by omega⟩
+  have hrH := levi_cycleRank_int H
+  have hrF := levi_cycleRank_int F
+  rw [hcomp1 _ hH3] at hrH
+  rw [hcomp1 _ hconnected] at hrF
+  have : ((_root_.SimpleGraph.FiniteCycleRank.cycleRank H.levi : ℤ)) =
+      ((_root_.SimpleGraph.FiniteCycleRank.cycleRank F.levi : ℤ)) := by
+    rw [hrH, hrF]
+    simp only [hfin]
+    push_cast
+    ring
+  exact_mod_cast this
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomFiniteAttachment
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomFiniteAttachment
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomCountSpectrum
+Source: Erdos593/TripleSystem/CanonicalAtomCountSpectrum.lean
+Normalized SHA-256: 1d2cc49e28876eca5fbe6466c8fca2b766f934fe9d1740e8c3209893f8032ff4
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomCountSpectrum
+
+/-!
+# Exact connected canonical atom-count spectrum
+
+Statement/API scaffold with three disclosed proof holes.
+No proof acceptance or full K2 completion is asserted.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+
+noncomputable def canonicalAtomCount {V E : Type u} [Fintype V] [Fintype E]
+    (F : TripleSystem V E) : ℕ := by
+  classical
+  exact Nat.card (Index F)
+
+def AllowedConnectedAtomCount (s b k : ℕ) : Prop :=
+  (b = 0 ∧ 2 ≤ s ∧ k + 1 = s) ∨
+  (b = 1 ∧ 1 ≤ k ∧ k + 3 ≤ s ∧ k % 2 = (s + 1) % 2) ∨
+  (2 ≤ b ∧ 1 ≤ k ∧ k + 1 + Erdos593.Spectrum.q b ≤ s)
+
+def ConnectedAtomParameters {V E : Type u} [Fintype V] [Fintype E]
+    (F : TripleSystem V E) (s b k : ℕ) : Prop :=
+  F.IsObligatory ∧ F.HasNoIsolatedPoints ∧ F.levi.Connected ∧
+  Nonempty E ∧ Nat.card V = s + Nat.card E ∧
+  _root_.SimpleGraph.FiniteCycleRank.cycleRank F.levi = b ∧
+  canonicalAtomCount F = k
+
+theorem connected_atom_count_necessity {V E : Type u}
+    [Fintype V] [Fintype E] (F : TripleSystem V E) (s b k : ℕ)
+    (hF : ConnectedAtomParameters F s b k) :
+    AllowedConnectedAtomCount s b k :=
+by
+  classical
+  obtain ⟨hobl, hred, hconn, hne, hcard, hrank, hkcount⟩ := hF
+  -- the classification turns obligatoriness into the intrinsic conditions
+  have hisoRed : TripleSystem.Iso F.isolatedReduction F :=
+    { vertexEquiv := Equiv.subtypeUnivEquiv (fun x => hred x)
+      edgeEquiv := Equiv.refl E
+      map_inc_iff := fun _ _ => Iff.rfl }
+  have hintrinsic : F.Intrinsic :=
+    (TripleSystem.Iso.intrinsic_iff hisoRed).mp
+      ((isObligatory_iff_isolatedReduction_intrinsic F).mp hobl)
+  obtain ⟨hlinear, hbridge, hberge⟩ := hintrinsic
+  letI : DecidableEq V := Classical.decEq V
+  letI : DecidableEq E := Classical.decEq E
+  letI : DecidableRel F.levi.Adj := Classical.decRel _
+  have hidx : ∀ (dV : DecidableEq V) (dE : DecidableEq E)
+      (dR : DecidableRel F.levi.Adj),
+      canonicalAtomCount F = Nat.card (@Index V E F _ _ dV dE dR) := by
+    intro dV dE dR
+    have key : ∀ (d1 d2 : DecidableEq V) (e1 e2 : DecidableEq E)
+        (r1 r2 : DecidableRel F.levi.Adj),
+        Nat.card (@Index V E F _ _ d1 e1 r1) =
+          Nat.card (@Index V E F _ _ d2 e2 r2) := by
+      intro d1 d2 e1 e2 r1 r2
+      rw [Subsingleton.elim d1 d2, Subsingleton.elim e1 e2,
+        Subsingleton.elim r1 r2]
+    unfold canonicalAtomCount
+    exact key _ _ _ _ _ _
+  have hkIdx : Nat.card (Index F) = k := by
+    rw [← hkcount, hidx]
+  haveI : Finite (Index F) :=
+    Finite.of_surjective _ (atomOf_surjective F hlinear hbridge)
+  letI : Fintype (Index F) := Fintype.ofFinite _
+  obtain ⟨e0⟩ := hne
+  haveI : Nonempty (Index F) := ⟨atomOf F hlinear hbridge e0⟩
+  have hkpos : 1 ≤ k := by
+    rw [← hkIdx]
+    exact Nat.card_pos
+  have hsuniv : atomFinset F hlinear hbridge = Finset.univ := by
+    ext A
+    simp
+  have hcardFinset : (atomFinset F hlinear hbridge).card = k := by
+    rw [hsuniv, Finset.card_univ, ← Nat.card_eq_fintype_card, hkIdx]
+  have hsumr :
+      (∑ A ∈ atomFinset F hlinear hbridge,
+        _root_.SimpleGraph.FiniteCycleRank.cycleRank
+          (atomRestriction F hlinear hbridge A).levi) = b :=
+    (sum_atom_cycleRank F hlinear hbridge).trans hrank
+  have hbudget := connected_atom_q_budget F hlinear hbridge hberge hconn
+  have hcomp : Nat.card F.levi.ConnectedComponent = 1 := by
+    haveI := hconn.nonempty
+    haveI := hconn.preconnected.subsingleton_connectedComponent
+    exact Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, inferInstance⟩
+  have hcardInt : (Nat.card V : ℤ) = (s : ℤ) + (Nat.card E : ℤ) := by
+    exact_mod_cast hcard
+  have hsurp := surplus_eq_core_sum F hlinear hbridge
+  rw [hcomp] at hsurp
+  set r : Index F → ℕ := fun A =>
+    _root_.SimpleGraph.FiniteCycleRank.cycleRank
+      (atomRestriction F hlinear hbridge A).levi with hrdef
+  have hsInt :
+      (s : ℤ) = 1 + ∑ A ∈ atomFinset F hlinear hbridge,
+        ((coreOrder F A : ℤ) - 1) := by
+    push_cast at hsurp
+    linarith
+  have hsingle_core : ∀ A : Index F, r A = 0 → coreOrder F A = 2 := by
+    intro A hA
+    obtain ⟨e, hzero, rfl⟩ :=
+      (atom_cycleRank_eq_zero_iff_singleton F hlinear hbridge A).mp hA
+    rfl
+  rcases Nat.eq_zero_or_pos b with hb0 | hbpos
+  · -- rank zero: every atom is a single triple
+    have hallzero : ∀ A ∈ atomFinset F hlinear hbridge, r A = 0 := by
+      intro A hA
+      have hzero := hsumr.trans hb0
+      exact (Finset.sum_eq_zero_iff.mp hzero) A hA
+    have hstep : ∀ A ∈ atomFinset F hlinear hbridge,
+        ((coreOrder F A : ℤ) - 1) = 1 := by
+      intro A hA
+      rw [hsingle_core A (hallzero A hA)]
+      norm_num
+    have hsum1 :
+        (∑ A ∈ atomFinset F hlinear hbridge, ((coreOrder F A : ℤ) - 1)) =
+          (k : ℤ) := by
+      rw [Finset.sum_congr rfl hstep, Finset.sum_const, hcardFinset]
+      simp
+    rw [hsum1] at hsInt
+    have hsk : s = 1 + k := by exact_mod_cast hsInt
+    exact Or.inl ⟨hb0, by omega, by omega⟩
+  · -- positive rank: the concentration budget
+    have hq1 : Erdos593.Spectrum.q 1 = 2 := by
+      have hlo : 2 ≤ Erdos593.Spectrum.q 1 := by
+        by_contra hcon
+        have hle : Erdos593.Spectrum.q 1 ≤ 1 := by omega
+        have hcap := (Erdos593.Spectrum.q_le_iff 1 1).mp hle
+        omega
+      have hhi := (Erdos593.Spectrum.q_le_iff 1 2).mpr (by norm_num)
+      omega
+    have hq0 : Erdos593.Spectrum.q 0 = 0 := by
+      norm_num [Erdos593.Spectrum.q]
+    set p : Finset (Index F) :=
+      (atomFinset F hlinear hbridge).filter (fun A => 0 < r A) with hpdef
+    have hsumrP : (∑ A ∈ p, r A) = b := by
+      calc
+        _ = ∑ A ∈ atomFinset F hlinear hbridge, r A := by
+          simp only [hpdef, Finset.sum_filter]
+          apply Finset.sum_congr rfl
+          intro A _
+          by_cases hA : 0 < r A
+          · simp only [hA, if_true]
+          · have hz : r A = 0 := by omega
+            rw [if_neg hA, hz]
+        _ = b := hsumr
+    have hsumqP :
+        (∑ A ∈ p, Erdos593.Spectrum.q (r A)) =
+          ∑ A ∈ atomFinset F hlinear hbridge, Erdos593.Spectrum.q (r A) := by
+      simp only [hpdef, Finset.sum_filter]
+      apply Finset.sum_congr rfl
+      intro A _
+      by_cases hA : 0 < r A
+      · simp only [hA, if_true]
+      · have hz : r A = 0 := by omega
+        rw [if_neg hA, hz, hq0]
+    have hpne : p.Nonempty := by
+      by_contra hcon
+      have hempty : p = ∅ := Finset.not_nonempty_iff_eq_empty.mp hcon
+      have hb0 : b = 0 := by
+        simpa only [hempty, Finset.sum_empty] using hsumrP.symm
+      omega
+    have hpRank : ∀ A ∈ p, 1 ≤ r A := by
+      intro A hA
+      exact Nat.succ_le_of_lt (Finset.mem_filter.mp hA).2
+    have hconc := Erdos593.Spectrum.q_sum_add_card_le p r hpne hpRank
+    rw [hsumrP] at hconc
+    have hpcpos : 0 < p.card := Finset.card_pos.mpr hpne
+    have hqb :
+        Erdos593.Spectrum.q b ≤
+          ∑ A ∈ atomFinset F hlinear hbridge,
+            Erdos593.Spectrum.q
+              (_root_.SimpleGraph.FiniteCycleRank.cycleRank
+                (atomRestriction F hlinear hbridge A).levi) := by
+      have hstep : Erdos593.Spectrum.q b ≤
+          ∑ A ∈ atomFinset F hlinear hbridge, Erdos593.Spectrum.q (r A) := by
+        rw [← hsumqP]
+        omega
+      simpa only [hrdef] using hstep
+    have hkey : k + 1 + Erdos593.Spectrum.q b ≤ s := by
+      rw [hkIdx] at hbudget
+      omega
+    by_cases hb1 : b = 1
+    · -- rank one: the core of the unique nontrivial atom has even order
+      have hpcard : p.card = 1 := by
+        have hle := Finset.card_nsmul_le_sum p r 1 hpRank
+        simp only [smul_eq_mul, mul_one, hsumrP] at hle
+        omega
+      obtain ⟨A, hpsingle⟩ := Finset.card_eq_one.mp hpcard
+      have hAr : r A = 1 := by
+        rw [hpsingle, Finset.sum_singleton] at hsumrP
+        omega
+      have hother : ∀ B : Index F, B ≠ A → r B = 0 := by
+        intro B hBA
+        by_contra hB
+        have hBp : B ∈ p :=
+          Finset.mem_filter.mpr
+            ⟨mem_atomFinset F hlinear hbridge B, Nat.pos_of_ne_zero hB⟩
+        have heq : B = A := by
+          simpa only [hpsingle, Finset.mem_singleton] using hBp
+        exact hBA heq
+      have hArExp :
+          _root_.SimpleGraph.FiniteCycleRank.cycleRank
+            (atomRestriction F hlinear hbridge A).levi = 1 := by
+        simpa only [hrdef] using hAr
+      have hAeven : Even (coreOrder F A) :=
+        atom_coreOrder_even_of_cycleRank_eq_one F hlinear hbridge hberge A hArExp
+      have hAlb := atom_coreOrder_lower_bound F hlinear hbridge hberge A
+      rw [hArExp, hq1] at hAlb
+      have hsumDelta :
+          (∑ B ∈ atomFinset F hlinear hbridge, ((coreOrder F B : ℤ) - 2)) =
+            (coreOrder F A : ℤ) - 2 := by
+        apply Finset.sum_eq_single A
+        · intro B _ hBA
+          rw [hsingle_core B (hother B hBA)]
+          norm_num
+        · intro hnot
+          exact False.elim (hnot (mem_atomFinset F hlinear hbridge A))
+      have hsumCore :
+          (∑ B ∈ atomFinset F hlinear hbridge, ((coreOrder F B : ℤ) - 1)) =
+            (k : ℤ) + ((coreOrder F A : ℤ) - 2) := by
+        calc
+          _ = ∑ B ∈ atomFinset F hlinear hbridge,
+              ((1 : ℤ) + ((coreOrder F B : ℤ) - 2)) := by
+            apply Finset.sum_congr rfl
+            intro B _
+            ring
+          _ = (k : ℤ) + ((coreOrder F A : ℤ) - 2) := by
+            rw [Finset.sum_add_distrib, hsumDelta]
+            simp [hcardFinset]
+      rw [hsumCore] at hsInt
+      have hsNat : s + 1 = k + coreOrder F A := by
+        have hInt : (s : ℤ) + 1 = (k : ℤ) + (coreOrder F A : ℤ) := by
+          linarith
+        exact_mod_cast hInt
+      have hmod : coreOrder F A % 2 = 0 := Nat.even_iff.mp hAeven
+      exact Or.inr (Or.inl ⟨hb1, hkpos, by omega, by omega⟩)
+    · exact Or.inr (Or.inr ⟨by omega, hkpos, hkey⟩)
+
+theorem exists_connected_atom_count_iff (s b k : ℕ) :
+    (∃ n m : ℕ, ∃ F : TripleSystem (Fin n) (Fin m),
+      ConnectedAtomParameters F s b k) ↔ AllowedConnectedAtomCount s b k :=
+by
+  classical
+  constructor
+  · rintro ⟨n, m, F, hF⟩
+    exact connected_atom_count_necessity F s b k hF
+  · intro h
+    have core_witness : ∀ (W : Type) (instW : Fintype W)
+        (G : _root_.SimpleGraph W), G.Colorable 2 →
+        (∀ x : W, ∃ y, G.Adj x y) → G.Connected →
+        OnePointIndecomposable (privateVertexExpansion G) →
+        ∀ v r t : ℕ, Nat.card W = v →
+        _root_.SimpleGraph.FiniteCycleRank.cycleRank G = r →
+        ∃ n m : ℕ, ∃ F : TripleSystem (Fin n) (Fin m),
+          ConnectedAtomParameters F (v + t) r (1 + t) := by
+      intro W instW G hb hno hconn hindec v r t hv hr
+      letI := instW
+      classical
+      have hconn_of_card : ∀ {Z : Type} (H : _root_.SimpleGraph Z),
+          Nat.card H.ConnectedComponent = 1 → H.Connected := by
+        intro Z H h
+        obtain ⟨hsub, hne⟩ := Nat.card_eq_one_iff_unique.mp h
+        obtain ⟨C⟩ := hne
+        exact { preconnected := fun x y =>
+                  _root_.SimpleGraph.ConnectedComponent.exact (Subsingleton.elim _ _)
+                nonempty := ⟨C.out⟩ }
+      have hcomp1 : ∀ {Z : Type} (H : _root_.SimpleGraph Z), H.Connected →
+          Nat.card H.ConnectedComponent = 1 := by
+        intro Z H hH
+        haveI := hH.nonempty
+        haveI := hH.preconnected.subsingleton_connectedComponent
+        exact Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, inferInstance⟩
+      have hidx : ∀ (a c : ℕ) (Z : TripleSystem (Fin a) (Fin c))
+          (dV : DecidableEq (Fin a)) (dE : DecidableEq (Fin c))
+          (dR : DecidableRel Z.levi.Adj),
+          canonicalAtomCount Z = Nat.card (@Index (Fin a) (Fin c) Z _ _ dV dE dR) := by
+        intro a c Z dV dE dR
+        have key : ∀ (d1 d2 : DecidableEq (Fin a)) (e1 e2 : DecidableEq (Fin c))
+            (r1 r2 : DecidableRel Z.levi.Adj),
+            Nat.card (@Index (Fin a) (Fin c) Z _ _ d1 e1 r1) =
+              Nat.card (@Index (Fin a) (Fin c) Z _ _ d2 e2 r2) := by
+          intro d1 d2 e1 e2 r1 r2
+          rw [Subsingleton.elim d1 d2, Subsingleton.elim e1 e2, Subsingleton.elim r1 r2]
+        unfold canonicalAtomCount
+        exact key _ _ _ _ _ _
+      -- the private-vertex expansion of the core
+      obtain ⟨hXobl, hXred, hXedge, hXpoint, hXcomp⟩ :=
+        privateVertexExpansion_shadow_parameters G hb hno
+      have hXint : (privateVertexExpansion G).Intrinsic :=
+        privateVertexExpansion_intrinsic G hb
+      have hXconn : (privateVertexExpansion G).levi.Connected := by
+        apply hconn_of_card
+        rw [hXcomp]
+        exact hcomp1 G hconn
+      set e := Nat.card G.edgeSet with hedef
+      have hepos : 1 ≤ e := by
+        obtain ⟨x⟩ := hconn.nonempty
+        obtain ⟨y, hxy⟩ := hno x
+        haveI : Nonempty G.edgeSet := ⟨⟨s(x, y), hxy⟩⟩
+        exact Nat.card_pos
+      have hEuler :=
+        _root_.SimpleGraph.TwoConnectedBipartiteSpectrum.connected_cycleRank_euler G hconn
+      rw [hr] at hEuler
+      -- reindex onto `Fin` carriers
+      have hPcard : Nat.card (PrivateVertexExpansion.Point G) = v + e := by
+        rw [hXpoint, ← Nat.card_eq_fintype_card, hv]
+      have hEcard : Nat.card (PrivateVertexExpansion.Edge G) = e := hXedge
+      let ev : PrivateVertexExpansion.Point G ≃ Fin (v + e) :=
+        (Finite.equivFin _).trans (finCongr hPcard)
+      let ee : PrivateVertexExpansion.Edge G ≃ Fin e :=
+        (Finite.equivFin _).trans (finCongr hEcard)
+      let Y : TripleSystem (Fin (v + e)) (Fin e) :=
+        TriangleHostTransport.reindex (privateVertexExpansion G) ev ee
+      let i : TripleSystem.Iso (privateVertexExpansion G) Y :=
+        { vertexEquiv := ev
+          edgeEquiv := ee
+          map_inc_iff := fun x d =>
+            (TriangleHostTransport.reindex_inc_iff _ ev ee x d).symm }
+      letI : DecidableRel Y.levi.Adj := Classical.decRel _
+      have hYint : Y.Intrinsic := (TripleSystem.Iso.intrinsic_iff i).mp hXint
+      have hYred : Y.HasNoIsolatedPoints := by
+        intro x
+        apply (not_isolated_iff_exists_inc Y).mpr
+        obtain ⟨d, hd⟩ := (not_isolated_iff_exists_inc _).mp (hXred (ev.symm x))
+        refine ⟨ee d, ?_⟩
+        simpa [i] using (i.map_inc_iff (ev.symm x) d).mp hd
+      have hYconn : Y.levi.Connected :=
+        (TripleSystem.Iso.leviIso i).connected_iff.mp hXconn
+      have hYindec : OnePointIndecomposable Y :=
+        (onePointIndecomposable_iff_of_iso i).mp hindec
+      have hYcount : Nat.card (Index Y) = 1 :=
+        card_index_eq_one_of_onePointIndecomposable Y hYint hYconn hYred hYindec
+      have hYrank : _root_.SimpleGraph.FiniteCycleRank.cycleRank Y.levi = r := by
+        have h1 := levi_cycleRank Y
+        rw [hcomp1 _ hYconn] at h1
+        simp only [Nat.card_eq_fintype_card, Fintype.card_fin] at h1
+        omega
+      -- attach `t` further triples
+      obtain ⟨H, hH1, hH2, hH3, hH4, hH5⟩ :=
+        exists_finite_attachment_parameters (v + e) e t Y hYint hYconn hYred
+      refine ⟨v + e + 2 * t, e + t, H, ?_, hH2, hH3, ⟨⟨0, by omega⟩⟩, ?_, ?_, ?_⟩
+      · -- obligatory
+        refine (isObligatory_iff_isolatedReduction_intrinsic H).mpr ?_
+        have iso : TripleSystem.Iso H.isolatedReduction H :=
+          { vertexEquiv := Equiv.subtypeUnivEquiv (fun x => hH2 x)
+            edgeEquiv := Equiv.refl _
+            map_inc_iff := fun x d => Iff.rfl }
+        exact (TripleSystem.Iso.intrinsic_iff iso).mpr hH1
+      · simp only [Nat.card_eq_fintype_card, Fintype.card_fin]
+        omega
+      · rw [hH4, hYrank]
+      · rw [hidx _ _ H _ _ (Classical.decRel _), hH5, hYcount]
+    have core_expansion_case : ∀ (v : ℕ) (G : _root_.SimpleGraph (Fin v)),
+        IsTwoVertexConnected G → G.Colorable 2 → ∀ r s k : ℕ,
+        _root_.SimpleGraph.FiniteCycleRank.cycleRank G = r → 1 ≤ k →
+        v + (k - 1) = s →
+        ∃ n m : ℕ, ∃ F : TripleSystem (Fin n) (Fin m),
+          ConnectedAtomParameters F s r k := by
+      intro v G htwo hbip r s k hr hk hs
+      classical
+      have hconn := _root_.SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_connected G htwo
+      have hno : ∀ x : Fin v, ∃ y, G.Adj x y := by
+        intro x
+        have h2 :=
+          _root_.SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_min_degree G htwo x
+        have hpos : 0 < Nat.card (G.neighborSet x) := by omega
+        obtain ⟨y, hy⟩ := (Nat.card_pos_iff.mp hpos).1
+        exact ⟨y, hy⟩
+      let C : TwoConnectedBipartiteCore.{0} :=
+        { Vertex := Fin v
+          vertexFintype := inferInstance
+          graph := G
+          twoVertexConnected := htwo
+          bipartite := hbip }
+      have hindec : OnePointIndecomposable (privateVertexExpansion G) :=
+        coreExpansion_onePointIndecomposable C
+      obtain ⟨n, m, F, hFp⟩ :=
+        core_witness (Fin v) inferInstance G hbip hno hconn hindec v r (k - 1)
+          (by simp) hr
+      refine ⟨n, m, F, ?_⟩
+      have h2 : 1 + (k - 1) = k := by omega
+      rwa [hs, h2] at hFp
+    rcases h with ⟨hb0, hs2, hks⟩ | ⟨hb1, hk1, hks, hpar⟩ | ⟨hb2, hk1, hq⟩
+    · -- rank zero: a single triple with `k - 1` further triples attached
+      subst hb0
+      have hkpos : 1 ≤ k := by omega
+      haveI : Unique (PrivateVertexExpansion.Edge oneEdgeGraph.{0}) :=
+        { default := oneEdgeGraphEdge.{0}, uniq := oneEdgeGraph_edge_eq }
+      have hcard : Nat.card (oneEdgeGraph.{0}).edgeSet = 1 := Nat.card_unique
+      have hconn : (oneEdgeGraph.{0}).Connected := by
+        haveI : Nonempty OneEdgeVertex.{0} := ⟨ULift.up 0⟩
+        refine { preconnected := ?_, nonempty := inferInstance }
+        intro x y
+        by_cases hxy : x = y
+        · exact hxy ▸ _root_.SimpleGraph.Reachable.refl x
+        · exact _root_.SimpleGraph.Adj.reachable hxy
+      have hno : ∀ x : OneEdgeVertex.{0}, ∃ y, (oneEdgeGraph.{0}).Adj x y := by
+        intro x
+        rcases x with ⟨x⟩
+        refine ⟨ULift.up (if x = 0 then 1 else 0), ?_⟩
+        fin_cases x <;> decide
+      have hv : Nat.card OneEdgeVertex.{0} = 2 := by simp
+      have hr : _root_.SimpleGraph.FiniteCycleRank.cycleRank oneEdgeGraph.{0} = 0 := by
+        have heuler :=
+          _root_.SimpleGraph.TwoConnectedBipartiteSpectrum.connected_cycleRank_euler
+            oneEdgeGraph.{0} hconn
+        rw [hcard, hv] at heuler
+        omega
+      obtain ⟨n, m, F, hFp⟩ := core_witness OneEdgeVertex.{0} inferInstance
+        oneEdgeGraph.{0} oneEdgeGraph_colorable_two hno hconn
+        oneTriple_onePointIndecomposable 2 0 (k - 1) hv hr
+      refine ⟨n, m, F, ?_⟩
+      have h1 : 2 + (k - 1) = s := by omega
+      have h2 : 1 + (k - 1) = k := by omega
+      rwa [h1, h2] at hFp
+    · -- rank one: an even cycle core with `k - 1` further triples attached
+      subst hb1
+      obtain ⟨G, htwo, hbip, hGr⟩ :=
+        (_root_.SimpleGraph.TwoConnectedBipartiteSpectrum.exists_rank_one_iff
+          (s - k + 1)).mpr ⟨by omega, by rw [Nat.even_iff]; omega⟩
+      exact core_expansion_case (s - k + 1) G htwo hbip 1 s k hGr
+        (by omega) (by omega)
+    · -- rank at least two: a core of rank `b` with `k - 1` further triples
+      obtain ⟨G, htwo, hbip, hGr⟩ :=
+        _root_.SimpleGraph.TwoConnectedBipartiteSpectrum.exists_of_rank_ge_two
+          b (s - k + 1) hb2 (by omega)
+      exact core_expansion_case (s - k + 1) G htwo hbip b s k hGr
+        (by omega) (by omega)
+
+theorem exists_maximum_atom_count (s b : ℕ) (hb : 1 ≤ b)
+    (hs : 2 + Erdos593.Spectrum.q b ≤ s) :
+    ∃ n m : ℕ, ∃ F : TripleSystem (Fin n) (Fin m),
+      ConnectedAtomParameters F s b (s - 1 - Erdos593.Spectrum.q b) :=
+by
+  refine (exists_connected_atom_count_iff s b (s - 1 - Erdos593.Spectrum.q b)).mpr ?_
+  by_cases hb1 : b = 1
+  · have hq1 : Erdos593.Spectrum.q 1 = 2 := by
+      have hlo : 2 ≤ Erdos593.Spectrum.q 1 := by
+        by_contra hcon
+        have hle : Erdos593.Spectrum.q 1 ≤ 1 := by omega
+        have hcap := (Erdos593.Spectrum.q_le_iff 1 1).mp hle
+        omega
+      have hhi := (Erdos593.Spectrum.q_le_iff 1 2).mpr (by norm_num)
+      omega
+    rw [hb1, hq1] at hs ⊢
+    exact Or.inr (Or.inl ⟨rfl, by omega, by omega, by omega⟩)
+  · exact Or.inr (Or.inr ⟨by omega, by omega, by omega⟩)
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomCountSpectrum
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomCountSpectrum
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomMaximizer
+Source: Erdos593/TripleSystem/CanonicalAtomMaximizer.lean
+Normalized SHA-256: 597e923140f7221d39279fb98b1e8f96e23789a559df9e3eaa1ce30ac35b6fe5
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomMaximizer
+
+/-!
+# Connected positive-rank canonical atom-count maximizers
+
+Unvalidated candidate isolated from private PR47 at
+16fc602b5eeb5a7711293f5f3bec4e10c1ec0b99. Only the five required-interface
+helpers and four maximizer declarations are retained; no K3 phase candidates.
+Statements and proof bodies are unchanged. Requires independent pinned replay.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+
+/-- The one arithmetic constant used by all rank-one endpoint proofs. -/
+theorem spectrum_q_one : Erdos593.Spectrum.q 1 = 2 := by
+  have hlo := Erdos593.Spectrum.two_le_q 1 (by decide)
+  have hhi := (Erdos593.Spectrum.q_le_iff 1 2).mpr (by norm_num)
+  omega
+
+/-- Hide decidable-instance transport at a single boundary. -/
+theorem canonicalAtomCount_eq_card_index
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj] :
+    canonicalAtomCount F = Nat.card (Index F) := by
+  classical
+  have key : ∀ (d1 d2 : DecidableEq V) (e1 e2 : DecidableEq E)
+      (r1 r2 : DecidableRel F.levi.Adj),
+      Nat.card (@Index V E F _ _ d1 e1 r1) =
+        Nat.card (@Index V E F _ _ d2 e2 r2) := by
+    intro d1 d2 e1 e2 r1 r2
+    rw [Subsingleton.elim d1 d2, Subsingleton.elim e1 e2,
+      Subsingleton.elim r1 r2]
+  unfold canonicalAtomCount
+  exact key _ _ _ _ _ _
+
+/-- Recover intrinsic structure on the original reduced system once. -/
+theorem reduced_obligatory_intrinsic_for_spectrum
+    {V E : Type u} [Fintype V] [Fintype E]
+    (F : TripleSystem V E) (hred : F.HasNoIsolatedPoints)
+    (hobl : F.IsObligatory) : F.Intrinsic := by
+  let i : TripleSystem.Iso F.isolatedReduction F :=
+    { vertexEquiv := Equiv.subtypeUnivEquiv (fun x => hred x)
+      edgeEquiv := Equiv.refl E
+      map_inc_iff := fun _ _ => Iff.rfl }
+  exact (TripleSystem.Iso.intrinsic_iff i).mp
+    ((isObligatory_iff_isolatedReduction_intrinsic F).mp hobl)
+
+/-- The parameter predicate already contains all structural hypotheses. -/
+theorem ConnectedAtomParameters.toIntrinsic
+    {V E : Type u} [Fintype V] [Fintype E]
+    {F : TripleSystem V E} {s b k : ℕ}
+    (hF : ConnectedAtomParameters F s b k) : F.Intrinsic :=
+  reduced_obligatory_intrinsic_for_spectrum F hF.2.1 hF.1
+
+/-- Positive-rank arithmetic, independent of any hypergraph representation. -/
+theorem AllowedConnectedAtomCount.positive_rank_bound
+    {s b k : ℕ} (h : AllowedConnectedAtomCount s b k) (hb : 1 ≤ b) :
+    1 ≤ k ∧ k + 1 + Erdos593.Spectrum.q b ≤ s := by
+  rcases h with ⟨hb0, _, _⟩ | ⟨hb1, hk, hs, _⟩ | ⟨_, hk, hs⟩
+  · omega
+  · rw [hb1, spectrum_q_one]
+    omega
+  · exact ⟨hk, hs⟩
+
+/-- The numerical bound uses the actual canonical atom count. -/
+theorem connected_positive_rank_atom_count_bound
+    {V E : Type u} [Fintype V] [Fintype E]
+    (F : TripleSystem V E) (s b k : ℕ)
+    (hF : ConnectedAtomParameters F s b k) (hb : 1 ≤ b) :
+    1 ≤ k ∧ k + 1 + Erdos593.Spectrum.q b ≤ s := by
+  exact (connected_atom_count_necessity F s b k hF).positive_rank_bound hb
+
+/--
+For an actual finite system of positive rank, maximality among all finite
+realisations with the same parameters is equivalent to the sharp formula.
+The witness supplied by `exists_maximum_atom_count` rules out vacuous
+maximality. No maximality or concentration conclusion is assumed by the
+spectrum dependency.
+-/
+theorem connected_atom_count_maximal_iff
+    {V E : Type u} [Fintype V] [Fintype E]
+    (F : TripleSystem V E) (s b k : ℕ)
+    (hF : ConnectedAtomParameters F s b k) (hb : 1 ≤ b) :
+    (∀ (n m k' : ℕ) (G : TripleSystem (Fin n) (Fin m)),
+      ConnectedAtomParameters G s b k' → k' ≤ k) ↔
+      k = s - 1 - Erdos593.Spectrum.q b := by
+  obtain ⟨hkpos, hkbound⟩ :=
+    connected_positive_rank_atom_count_bound F s b k hF hb
+  constructor
+  · intro hmax
+    have hs : 2 + Erdos593.Spectrum.q b ≤ s := by omega
+    obtain ⟨n, m, G, hG⟩ := exists_maximum_atom_count s b hb hs
+    have hle := hmax n m (s - 1 - Erdos593.Spectrum.q b) G hG
+    omega
+  · intro hkmax n m k' G hG
+    obtain ⟨_, hGbound⟩ :=
+      connected_positive_rank_atom_count_bound G s b k' hG hb
+    omega
+
+/--
+Every system attaining the sharp positive-rank count has one minimum-order
+cyclic atom carrying the full rank; every other canonical atom is a singleton
+triple. Linearity and the bridge property are deduced from obligatoriness,
+not added as hypotheses. The conclusion concerns `Index F`, not a chosen
+assembly or a numerical surrogate for canonical atoms.
+-/
+theorem every_maximum_atom_count_structure
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (s b k : ℕ) (hF : ConnectedAtomParameters F s b k)
+    (hb : 1 ≤ b) (hmax : k = s - 1 - Erdos593.Spectrum.q b) :
+    ∃ hlinear : F.Linear, ∃ hbridge : F.BridgeAtEveryEdge,
+      ∃ A : Index F,
+        _root_.SimpleGraph.FiniteCycleRank.cycleRank
+          (atomRestriction F hlinear hbridge A).levi = b ∧
+        coreOrder F A = 2 + Erdos593.Spectrum.q b ∧
+        ∀ B : Index F, B ≠ A →
+          ∃ e : E, ∃ hzero :
+            (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0,
+            B = Index.singleton e hzero := by
+  classical
+  obtain ⟨_, hbound⟩ :=
+    connected_positive_rank_atom_count_bound F s b k hF hb
+  obtain ⟨hobl, hred, hconn, _, hcard, hrank, hkcount⟩ := hF
+  have hintrinsic := reduced_obligatory_intrinsic_for_spectrum F hred hobl
+  obtain ⟨hlinear, hbridge, hberge⟩ := hintrinsic
+  have hkIndex : Nat.card (Index F) = k :=
+    (canonicalAtomCount_eq_card_index F).symm.trans hkcount
+  have hcount :
+      Nat.card V = Nat.card E + Nat.card (Index F) + 1 +
+        Erdos593.Spectrum.q b := by
+    omega
+  refine ⟨hlinear, hbridge, ?_⟩
+  exact exists_concentrated_atom_of_extremal_count F hlinear hbridge hberge
+    hconn b hb hrank hcount
+
+/-- The same structure theorem from the genuine universal maximality property. -/
+theorem every_maximizer_structure
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (s b k : ℕ) (hF : ConnectedAtomParameters F s b k) (hb : 1 ≤ b)
+    (hmax : ∀ (n m k' : ℕ) (G : TripleSystem (Fin n) (Fin m)),
+      ConnectedAtomParameters G s b k' → k' ≤ k) :
+    ∃ hlinear : F.Linear, ∃ hbridge : F.BridgeAtEveryEdge,
+      ∃ A : Index F,
+        _root_.SimpleGraph.FiniteCycleRank.cycleRank
+          (atomRestriction F hlinear hbridge A).levi = b ∧
+        coreOrder F A = 2 + Erdos593.Spectrum.q b ∧
+        ∀ B : Index F, B ≠ A →
+          ∃ e : E, ∃ hzero :
+            (Erdos593.SimpleGraph.bridgeFree F.levi).degree (Sum.inr e) = 0,
+            B = Index.singleton e hzero := by
+  exact every_maximum_atom_count_structure F s b k hF hb
+    ((connected_atom_count_maximal_iff F s b k hF hb).mp hmax)
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalAtomMaximizer
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalAtomMaximizer
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Separator.SeparatorCertificate
+Source: Erdos593/Separator/SeparatorCertificate.lean
+Normalized SHA-256: 206cfdd8c0639f35c20a68c2288af16efcf1d053d227e9af82f5a55eb90ef9c9
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Separator_SeparatorCertificate
+
+/-!
+# A reusable certificate interface for local-to-global partitions
+
+Unvalidated Lean 4.32 candidate. No project-local or Mathlib imports are used.
+`Certificate` is explicit separation data; existence of these certificates
+from an acyclic incidence graph is NOT assumed proved by this file.
+
+The intended mathematical application is the product decomposition of the
+connected-partition lattice of a forest of cliques. That lattice machinery is
+classical; this is a small proof interface, not a novelty claim for it.
+-/
+
+namespace E593Separator
+
+universe u v w
+
+structure Partition (A : Type u) where
+  rel : A → A → Prop
+  refl : ∀ a, rel a a
+  symm : ∀ {a b}, rel a b → rel b a
+  trans : ∀ {a b c}, rel a b → rel b c → rel a c
+
+theorem Partition.ext {A : Type u} {R S : Partition A}
+    (h : R.rel = S.rel) : R = S := by
+  cases R
+  cases S
+  cases h
+  rfl
+
+inductive Closure {A : Type u} (R : A → A → Prop) : A → A → Prop
+  | refl (a : A) : Closure R a a
+  | step {a b : A} : R a b → Closure R a b
+  | symm {a b : A} : Closure R a b → Closure R b a
+  | trans {a b c : A} : Closure R a b → Closure R b c → Closure R a c
+
+theorem Closure.map {A : Type u} {R S : A → A → Prop}
+    (f : ∀ {a b}, R a b → S a b) {a b : A}
+    (h : Closure R a b) : Closure S a b := by
+  induction h with
+  | refl a => exact Closure.refl a
+  | step h => exact Closure.step (f h)
+  | symm h ih => exact Closure.symm ih
+  | trans h1 h2 ih1 ih2 => exact Closure.trans ih1 ih2
+
+theorem Closure.respects {A : Type u} {B : Type w}
+    {R : A → A → Prop} (S : Partition B) (f : A → B)
+    (hstep : ∀ {a b}, R a b → S.rel (f a) (f b))
+    {a b : A} (h : Closure R a b) : S.rel (f a) (f b) := by
+  induction h with
+  | refl a => exact S.refl (f a)
+  | step h => exact hstep h
+  | symm h ih => exact S.symm ih
+  | trans h1 h2 ih1 ih2 => exact S.trans ih1 ih2
+
+def optionPartition {A : Type u} (R : Partition A) : Partition (Option A) where
+  rel a b := match a, b with
+    | none, none => True
+    | some a, some b => R.rel a b
+    | _, _ => False
+  refl := by
+    intro a
+    cases a with
+    | none => exact True.intro
+    | some a => exact R.refl a
+  symm := by
+    intro a b h
+    cases a with
+    | none =>
+      cases b with
+      | none => exact True.intro
+      | some b => exact False.elim h
+    | some a =>
+      cases b with
+      | none => exact False.elim h
+      | some b => exact R.symm h
+  trans := by
+    intro a b c hab hbc
+    cases a with
+    | none =>
+      cases b with
+      | none =>
+        cases c with
+        | none => exact True.intro
+        | some c => exact False.elim hbc
+      | some b => exact False.elim hab
+    | some a =>
+      cases b with
+      | none => exact False.elim hab
+      | some b =>
+        cases c with
+        | none => exact False.elim hbc
+        | some c => exact R.trans hab hbc
+
+variable {A : Type u} {P : Type v}
+
+abbrev Star (Inc : A → P → Prop) (p : P) := {a : A // Inc a p}
+abbrev Local (Inc : A → P → Prop) := (p : P) → Partition (Star Inc p)
+
+/-- A forest supplies these maps by deleting p and recording which neighbor
+of p lies in the remaining component; other components are sent to none. -/
+structure Certificate (Inc : A → P → Prop) where
+  root : (p : P) → A → Option (Star Inc p)
+  at_star : ∀ (p : P) (a : A) (ha : Inc a p), root p a = some ⟨a, ha⟩
+  away : ∀ (p q : P), q ≠ p → ∀ (a b : A),
+    Inc a q → Inc b q → root p a = root p b
+
+def Step (Inc : A → P → Prop) (L : Local Inc) (a b : A) : Prop :=
+  ∃ p, ∃ ha : Inc a p, ∃ hb : Inc b p, (L p).rel ⟨a, ha⟩ ⟨b, hb⟩
+
+def extend (Inc : A → P → Prop) (L : Local Inc) : Partition A where
+  rel := Closure (Step Inc L)
+  refl := Closure.refl
+  symm := Closure.symm
+  trans := Closure.trans
+
+def restrict (Inc : A → P → Prop) (R : Partition A) : Local Inc := fun _ =>
+  { rel := fun a b => R.rel a.val b.val
+    refl := fun a => R.refl a.val
+    symm := fun h => R.symm h
+    trans := fun h1 h2 => R.trans h1 h2 }
+
+def InternalStep (Inc : A → P → Prop) (R : Partition A) (a b : A) : Prop :=
+  R.rel a b ∧ ∃ p, Inc a p ∧ Inc b p
+
+/-- Every equivalence class is connected in the graph joining pieces that
+share a separator. This is the literal path condition, not a reconstruction
+identity inserted as an assumption. -/
+def ConnectedPartition (Inc : A → P → Prop) (R : Partition A) : Prop :=
+  ∀ a b, R.rel a b → Closure (InternalStep Inc R) a b
+
+def Refines {B : Type w} (R S : Partition B) : Prop :=
+  ∀ a b, R.rel a b → S.rel a b
+
+theorem step_incidence (Inc : A → P → Prop) (L : Local Inc)
+    {a b : A} (h : Step Inc L a b) : ∃ p, Inc a p ∧ Inc b p := by
+  cases h with
+  | intro p h =>
+    cases h with
+    | intro ha h =>
+      cases h with
+      | intro hb hab => exact ⟨p, ha, hb⟩
+
+theorem step_projected (Inc : A → P → Prop) (C : Certificate Inc)
+    (L : Local Inc) (p : P) {a b : A} (h : Step Inc L a b) :
+    (optionPartition (L p)).rel (C.root p a) (C.root p b) := by
+  cases h with
+  | intro q h =>
+    cases h with
+    | intro ha h =>
+      cases h with
+      | intro hb hab =>
+        cases Classical.em (q = p) with
+        | inl heq =>
+          subst q
+          rw [C.at_star p a ha, C.at_star p b hb]
+          exact hab
+        | inr hne =>
+          rw [C.away p q hne a b ha hb]
+          exact (optionPartition (L p)).refl _
+
+/-- No global chain can create a relation missing at a single separator. -/
+theorem local_recovery (Inc : A → P → Prop) (C : Certificate Inc)
+    (L : Local Inc) (p : P) (a b : Star Inc p) :
+    (extend Inc L).rel a.val b.val ↔ (L p).rel a b := by
+  constructor
+  · intro h
+    have hp := Closure.respects (optionPartition (L p)) (C.root p)
+      (fun hs => step_projected Inc C L p hs) h
+    rw [C.at_star p a.val a.property, C.at_star p b.val b.property] at hp
+    exact hp
+  · intro h
+    exact Closure.step ⟨p, a.property, b.property, h⟩
+
+theorem restrict_extend (Inc : A → P → Prop) (C : Certificate Inc)
+    (L : Local Inc) : restrict Inc (extend Inc L) = L := by
+  funext p
+  apply Partition.ext
+  funext a b
+  exact propext (local_recovery Inc C L p a b)
+
+theorem extend_connected (Inc : A → P → Prop) (L : Local Inc) :
+    ConnectedPartition Inc (extend Inc L) := by
+  intro a b h
+  exact Closure.map
+    (fun hs => And.intro (Closure.step hs) (step_incidence Inc L hs)) h
+
+theorem extend_restrict (Inc : A → P → Prop) (R : Partition A)
+    (hR : ConnectedPartition Inc R) : extend Inc (restrict Inc R) = R := by
+  apply Partition.ext
+  funext a b
+  apply propext
+  constructor
+  · intro h
+    apply Closure.respects R (fun x => x) ?_ h
+    intro x y hxy
+    cases hxy with
+    | intro p h =>
+      cases h with
+      | intro hx h =>
+        cases h with
+        | intro hy hr => exact hr
+  · intro h
+    apply Closure.map (R := InternalStep Inc R) ?_ (hR a b h)
+    intro x y hxy
+    cases hxy with
+    | intro hr hi =>
+      cases hi with
+      | intro p hp => exact ⟨p, hp.left, hp.right, hr⟩
+
+theorem extend_injective (Inc : A → P → Prop) (C : Certificate Inc)
+    {L M : Local Inc} (h : extend Inc L = extend Inc M) : L = M := by
+  have hh := congrArg (restrict Inc) h
+  rw [restrict_extend Inc C L, restrict_extend Inc C M] at hh
+  exact hh
+
+/-- The local/global bijection preserves and reflects the refinement order. -/
+theorem extend_refines_iff (Inc : A → P → Prop) (C : Certificate Inc)
+    (L M : Local Inc) :
+    Refines (extend Inc L) (extend Inc M) ↔ ∀ p, Refines (L p) (M p) := by
+  constructor
+  · intro h p a b hab
+    exact (local_recovery Inc C M p a b).mp
+      (h a.val b.val ((local_recovery Inc C L p a b).mpr hab))
+  · intro h a b hab
+    apply Closure.map ?_ hab
+    intro x y hxy
+    cases hxy with
+    | intro p hp =>
+      cases hp with
+      | intro hx hp =>
+        cases hp with
+        | intro hy hr => exact ⟨p, hx, hy, h p ⟨x, hx⟩ ⟨y, hy⟩ hr⟩
+
+/-- Surjectivity onto precisely the connected global partitions. -/
+theorem exists_local_iff_connected (Inc : A → P → Prop) (R : Partition A) :
+    (∃ L : Local Inc, extend Inc L = R) ↔ ConnectedPartition Inc R := by
+  constructor
+  · intro h
+    cases h with
+    | intro L heq =>
+      rw [← heq]
+      exact extend_connected Inc L
+  · intro h
+    exact ⟨restrict Inc R, extend_restrict Inc R h⟩
+
+end E593Separator
+
+end Erdos593SelfContained_Module_Erdos593_Separator_SeparatorCertificate
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Separator.SeparatorCertificate
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Separator.SeparatorNoReturn
+Source: Erdos593/Separator/SeparatorNoReturn.lean
+Normalized SHA-256: 64980049b8ce0e70ed43a1342b3c4f98d9101c882bf9ef625bad6e563ade1826
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Separator_SeparatorNoReturn
+
+/-!
+# Constructing separator certificates from deletion connectivity
+
+Proof-source continuation of PR48. Kernel replay is still required.
+`NoReturn` is a deletion-path uniqueness condition, not a supplied certificate
+or an assumed order isomorphism. The Mathlib forest implication is in
+`SeparatorForest.lean`.
+-/
+
+namespace E593Separator
+
+universe u v
+variable {A : Type u} {P : Type v}
+
+/-- A step between pieces using a separator other than the deleted one. -/
+def AwayStep (Inc : A → P → Prop) (p : P) (a b : A) : Prop :=
+  ∃ q, q ≠ p ∧ Inc a q ∧ Inc b q
+
+/-- Two neighbours of p cannot be connected without using p unless equal. -/
+def NoReturn (Inc : A → P → Prop) : Prop :=
+  ∀ (p : P) (a b : A), Inc a p → Inc b p →
+    Closure (AwayStep Inc p) a b → a = b
+
+/-- A reachable anchor in the star of the deleted separator. -/
+def HasStarRoot (Inc : A → P → Prop) (p : P) (a : A) : Prop :=
+  ∃ b : Star Inc p, Closure (AwayStep Inc p) a b.val
+
+/-- This choice is defined for every incidence relation, with no nonemptiness
+assumption. `NoReturn` is used to prove that it has the certificate properties. -/
+noncomputable def componentRoot (Inc : A → P → Prop) (p : P) (a : A) :
+    Option (Star Inc p) := by
+  classical
+  exact if h : HasStarRoot Inc p a then some (Classical.choose h) else none
+
+/-- The existing certificate implies the concrete deletion uniqueness condition. -/
+theorem Certificate.noReturn (Inc : A → P → Prop) (C : Certificate Inc) :
+    NoReturn Inc := by
+  intro p a b ha hb hab
+  have same : ∀ {x y : A}, Closure (AwayStep Inc p) x y →
+      C.root p x = C.root p y := by
+    intro x y h
+    induction h with
+    | refl x => rfl
+    | step h =>
+        rcases h with ⟨q, hqp, hx, hy⟩
+        exact C.away p q hqp _ _ hx hy
+    | symm h ih => exact ih.symm
+    | trans h1 h2 ih1 ih2 => exact ih1.trans ih2
+  have he := same hab
+  rw [C.at_star p a ha, C.at_star p b hb] at he
+  exact congrArg Subtype.val (Option.some.inj he)
+
+/-- Being in the component of a star does not change along a deletion path. -/
+theorem hasStarRoot_iff_of_related (Inc : A → P → Prop) (p : P)
+    {a b : A} (hab : Closure (AwayStep Inc p) a b) :
+    HasStarRoot Inc p a ↔ HasStarRoot Inc p b := by
+  constructor
+  · rintro ⟨x, hx⟩
+    exact ⟨x, Closure.trans (Closure.symm hab) hx⟩
+  · rintro ⟨x, hx⟩
+    exact ⟨x, Closure.trans hab hx⟩
+
+/-- At a neighbour, the chosen root is that very neighbour. -/
+theorem componentRoot_at_star (Inc : A → P → Prop) (hN : NoReturn Inc)
+    (p : P) (a : A) (ha : Inc a p) :
+    componentRoot Inc p a = some ⟨a, ha⟩ := by
+  classical
+  have hex : HasStarRoot Inc p a := ⟨⟨a, ha⟩, Closure.refl a⟩
+  have heq : Classical.choose hex = (⟨a, ha⟩ : Star Inc p) := by
+    apply Subtype.ext
+    exact (hN p a (Classical.choose hex).val ha
+      (Classical.choose hex).property (Classical.choose_spec hex)).symm
+  unfold componentRoot
+  rw [dif_pos hex]
+  exact congrArg Option.some heq
+
+/-- Equal deletion components have equal chosen roots, including the none case. -/
+theorem componentRoot_eq_of_related (Inc : A → P → Prop) (hN : NoReturn Inc)
+    (p : P) {a b : A} (hab : Closure (AwayStep Inc p) a b) :
+    componentRoot Inc p a = componentRoot Inc p b := by
+  classical
+  by_cases ha : HasStarRoot Inc p a
+  · have hb : HasStarRoot Inc p b :=
+      (hasStarRoot_iff_of_related Inc p hab).mp ha
+    have hp : Closure (AwayStep Inc p)
+        (Classical.choose ha).val (Classical.choose hb).val :=
+      Closure.trans (Closure.symm (Classical.choose_spec ha))
+        (Closure.trans hab (Classical.choose_spec hb))
+    have heq : Classical.choose ha = Classical.choose hb := by
+      apply Subtype.ext
+      exact hN p _ _ (Classical.choose ha).property
+        (Classical.choose hb).property hp
+    unfold componentRoot
+    rw [dif_pos ha, dif_pos hb, heq]
+  · have hb : ¬ HasStarRoot Inc p b :=
+      fun h => ha ((hasStarRoot_iff_of_related Inc p hab).mpr h)
+    unfold componentRoot
+    rw [dif_neg ha, dif_neg hb]
+
+/-- No certificate is postulated: its fields are constructed from path uniqueness. -/
+noncomputable def certificateOfNoReturn (Inc : A → P → Prop)
+    (hN : NoReturn Inc) : Certificate Inc where
+  root := componentRoot Inc
+  at_star := componentRoot_at_star Inc hN
+  away := by
+    intro p q hqp a b ha hb
+    exact componentRoot_eq_of_related Inc hN p
+      (Closure.step ⟨q, hqp, ha, hb⟩)
+
+theorem nonempty_certificate_iff_noReturn (Inc : A → P → Prop) :
+    Nonempty (Certificate Inc) ↔ NoReturn Inc := by
+  constructor
+  · rintro ⟨C⟩
+    exact Certificate.noReturn Inc C
+  · intro hN
+    exact ⟨certificateOfNoReturn Inc hN⟩
+
+/-- Local recovery now has a deletion-connectivity hypothesis rather than
+unproved certificate data. -/
+theorem local_recovery_of_noReturn (Inc : A → P → Prop) (hN : NoReturn Inc)
+    (L : Local Inc) (p : P) (a b : Star Inc p) :
+    (extend Inc L).rel a.val b.val ↔ (L p).rel a b :=
+  local_recovery Inc (certificateOfNoReturn Inc hN) L p a b
+
+end E593Separator
+
+end Erdos593SelfContained_Module_Erdos593_Separator_SeparatorNoReturn
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Separator.SeparatorNoReturn
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Separator.SeparatorForest
+Source: Erdos593/Separator/SeparatorForest.lean
+Normalized SHA-256: b8be1dfabf2db273b696a2a3b2ded463202181303d8914ab61ec3ba1e55afcd7
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Separator_SeparatorForest
+
+/-!
+# The ordinary Mathlib forest gives the separator certificate
+
+The graph hypothesis is Mathlib's unchanged `SimpleGraph.IsAcyclic`.
+The proof uses its existing bridge characterization. No certificate,
+NoReturn condition or local/global conclusion is added as a hypothesis.
+This file is candidate source; it has not passed Lean in this environment.
+-/
+
+namespace E593Separator
+
+universe u v w
+variable {A : Type u} {P : Type v}
+
+/-- The ordinary bipartite graph of an incidence relation. -/
+def incidenceGraph (Inc : A → P → Prop) : SimpleGraph (A ⊕ P) :=
+  SimpleGraph.fromRel fun x y =>
+    match x, y with
+    | .inl a, .inr p => Inc a p
+    | _, _ => False
+
+/-- Deleting one incidence at p leaves all incidences at q != p intact. -/
+theorem away_incidence_survives (Inc : A → P → Prop)
+    (a : A) (p q : P) (hqp : q ≠ p) {x : A} (hx : Inc x q) :
+    ((incidenceGraph Inc).deleteEdges {s(Sum.inl a, Sum.inr p)}).Adj
+      (Sum.inl x) (Sum.inr q) := by
+  simpa [SimpleGraph.deleteEdges_adj, incidenceGraph, Sym2.eq_iff,
+    hqp, Ne.symm hqp] using hx
+
+/-- Lift a path avoiding p to a graph walk avoiding any selected incidence at p. -/
+theorem away_closure_reachable (Inc : A → P → Prop) (a : A) (p : P)
+    {x y : A} (h : Closure (AwayStep Inc p) x y) :
+    ((incidenceGraph Inc).deleteEdges {s(Sum.inl a, Sum.inr p)}).Reachable
+      (Sum.inl x) (Sum.inl y) := by
+  induction h with
+  | refl x => exact SimpleGraph.Reachable.refl _
+  | step h =>
+      rcases h with ⟨q, hqp, hx, hy⟩
+      exact (away_incidence_survives Inc a p q hqp hx).reachable.trans
+        (away_incidence_survives Inc a p q hqp hy).symm.reachable
+  | symm h ih => exact ih.symm
+  | trans h1 h2 ih1 ih2 => exact ih1.trans ih2
+
+/-- An alternate deletion path between two distinct neighbours would bypass
+an edge which acyclicity says is a bridge. -/
+theorem noReturn_of_isAcyclic (Inc : A → P → Prop)
+    (hF : (incidenceGraph Inc).IsAcyclic) : NoReturn Inc := by
+  intro p a b ha hb hab
+  by_contra hne
+  have hadj : (incidenceGraph Inc).Adj (Sum.inl a) (Sum.inr p) := by
+    simpa [incidenceGraph] using ha
+  have hbridge := SimpleGraph.isAcyclic_iff_forall_adj_isBridge.mp hF hadj
+  have hlast :
+      ((incidenceGraph Inc).deleteEdges {s(Sum.inl a, Sum.inr p)}).Adj
+        (Sum.inl b) (Sum.inr p) := by
+    simpa [SimpleGraph.deleteEdges_adj, incidenceGraph, Sym2.eq_iff,
+      hne, Ne.symm hne] using hb
+  exact hbridge
+    ((away_closure_reachable Inc a p hab).trans hlast.reachable)
+
+/-- The requested certificate is constructed from an actual acyclic graph. -/
+noncomputable def certificateOfForest (Inc : A → P → Prop)
+    (hF : (incidenceGraph Inc).IsAcyclic) : Certificate Inc :=
+  certificateOfNoReturn Inc (noReturn_of_isAcyclic Inc hF)
+
+/-- Refinement is a partial order on the existing partition structures. -/
+instance partitionPartialOrder {B : Type w} : PartialOrder (Partition B) where
+  le := Refines
+  le_refl R a b h := h
+  le_trans R S T hRS hST a b h := hST a b (hRS a b h)
+  le_antisymm R S hRS hSR :=
+    Partition.ext (funext fun a => funext fun b =>
+      propext ⟨hRS a b, hSR a b⟩)
+
+/-- An actual standard-library OrderIso, not only informal inverse maps. -/
+noncomputable def forestPartitionOrderIso (Inc : A → P → Prop)
+    (hF : (incidenceGraph Inc).IsAcyclic) :
+    Local Inc ≃o {R : Partition A // ConnectedPartition Inc R} where
+  toFun L := ⟨extend Inc L, extend_connected Inc L⟩
+  invFun R := restrict Inc R.val
+  left_inv L := restrict_extend Inc (certificateOfForest Inc hF) L
+  right_inv R := Subtype.ext (extend_restrict Inc R.val R.property)
+  map_rel_iff' := by
+    intro L M
+    change Refines (extend Inc L) (extend Inc M) ↔
+      ∀ p, Refines (L p) (M p)
+    exact extend_refines_iff Inc (certificateOfForest Inc hF) L M
+
+/-- Existence and uniqueness of local data for every connected global partition. -/
+theorem forest_exists_unique_local (Inc : A → P → Prop)
+    (hF : (incidenceGraph Inc).IsAcyclic) (R : Partition A)
+    (hR : ConnectedPartition Inc R) :
+    ∃! L : Local Inc, extend Inc L = R := by
+  refine ⟨restrict Inc R, extend_restrict Inc R hR, ?_⟩
+  intro L hL
+  apply extend_injective Inc (certificateOfForest Inc hF)
+  exact hL.trans (extend_restrict Inc R hR).symm
+
+/-- No finiteness, connectedness or lower degree assumption is necessary. -/
+theorem forest_local_recovery (Inc : A → P → Prop)
+    (hF : (incidenceGraph Inc).IsAcyclic)
+    (L : Local Inc) (p : P) (a b : Star Inc p) :
+    (extend Inc L).rel a.val b.val ↔ (L p).rel a b :=
+  local_recovery Inc (certificateOfForest Inc hF) L p a b
+
+end E593Separator
+
+end Erdos593SelfContained_Module_Erdos593_Separator_SeparatorForest
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Separator.SeparatorForest
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalSeparatorApplication
+Source: Erdos593/TripleSystem/CanonicalSeparatorApplication.lean
+Normalized SHA-256: 72736b94418147204bb4a084920db8b6707e2def1eba0ecfca0c97598007bf07
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalSeparatorApplication
+
+/-!
+# Instantiation on the existing canonical atom incidence graph
+
+This uses the already defined literal atom supports and its existing acyclicity
+theorem. It proves an interface for connected partitions of actual atom labels.
+It does NOT silently identify them with all supported hypergraph decompositions;
+that hypergraph partition correspondence and removal of trivial point factors
+remain separate obligations. Candidate source: no kernel replay obtained here.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+variable {V E : Type u} [Fintype V] [Fintype E]
+  [DecidableEq V] [DecidableEq E]
+variable (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+
+/-- The newly defined graph is definitionally the existing canonical incidence graph. -/
+theorem canonical_separator_incidence_eq
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    E593Separator.incidenceGraph (atomIncident F hlinear hbridge) =
+      atomPointIncidenceGraph F hlinear hbridge := rfl
+
+/-- Constructed certificates on the actual atom labels and original point carrier. -/
+noncomputable def canonicalSeparatorCertificate
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    E593Separator.Certificate (atomIncident F hlinear hbridge) :=
+  E593Separator.certificateOfForest (atomIncident F hlinear hbridge) (by
+    rw [canonical_separator_incidence_eq F hlinear hbridge]
+    exact atomPointIncidenceGraph_isAcyclic F hlinear hbridge)
+
+/-- The canonical forest instantiates the general local/global refinement isomorphism. -/
+noncomputable def canonicalAtomConnectedPartitionOrderIso
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge) :
+    E593Separator.Local (atomIncident F hlinear hbridge) ≃o
+      {R : E593Separator.Partition (Index F) //
+        E593Separator.ConnectedPartition (atomIncident F hlinear hbridge) R} :=
+  E593Separator.forestPartitionOrderIso (atomIncident F hlinear hbridge) (by
+    rw [canonical_separator_incidence_eq F hlinear hbridge]
+    exact atomPointIncidenceGraph_isAcyclic F hlinear hbridge)
+
+/-- The application uses the original support relation, not a guessed atom count. -/
+theorem canonical_separator_local_recovery
+    (hlinear : F.Linear) (hbridge : F.BridgeAtEveryEdge)
+    (L : E593Separator.Local (atomIncident F hlinear hbridge)) (p : V)
+    (a b : E593Separator.Star (atomIncident F hlinear hbridge) p) :
+    (E593Separator.extend (atomIncident F hlinear hbridge) L).rel a.val b.val ↔
+      (L p).rel a b :=
+  E593Separator.local_recovery (atomIncident F hlinear hbridge)
+    (canonicalSeparatorCertificate F hlinear hbridge) L p a b
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalSeparatorApplication
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalSeparatorApplication
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Separator.SeparatorCoarsening
+Source: Erdos593/Separator/SeparatorCoarsening.lean
+Normalized SHA-256: 97992addc8535449b7de1e23e93966e0fb2664e20ad84228106aa226f3d773c0
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Separator_SeparatorCoarsening
+
+/-!
+# Connected coarsenings preserve the incidence forest
+
+Source candidate for an existing missing step in the supported-decomposition
+correspondence. No new acyclicity or refinement hypothesis is put on the
+coarsened objects. The hypotheses concern only the original forest and
+connectivity of the actual fibres of a surjective label map.
+-/
+
+namespace E593Separator
+
+universe u v w
+variable {A : Type u} {P : Type v} {B : Type w}
+
+/-- A concrete certificate also proves ordinary graph acyclicity. -/
+theorem Certificate.isAcyclic (Inc : A → P → Prop) (C : Certificate Inc) :
+    (incidenceGraph Inc).IsAcyclic := by
+  classical
+  apply SimpleGraph.isAcyclic_iff_forall_adj_isBridge.mpr
+  have bridge : ∀ (a : A) (p : P), Inc a p →
+      (incidenceGraph Inc).IsBridge s(Sum.inl a, Sum.inr p) := by
+    intro a p hap
+    let cut : A ⊕ P → Prop
+      | .inl x => C.root p x = some ⟨a, hap⟩
+      | .inr q => q ≠ p ∧ ∃ x, Inc x q ∧ C.root p x = some ⟨a, hap⟩
+    have cross : ∀ (x : A) (q : P),
+        ((incidenceGraph Inc).deleteEdges {s(Sum.inl a, Sum.inr p)}).Adj
+          (.inl x) (.inr q) → (cut (.inl x) ↔ cut (.inr q)) := by
+      intro x q h
+      have hx : Inc x q := by
+        simpa [incidenceGraph] using h.1
+      by_cases hqp : q = p
+      · subst q
+        have hxa : x ≠ a := by
+          intro heq
+          subst x
+          exact h.2 (by simp)
+        have hleft : ¬ cut (.inl x) := by
+          intro hc
+          change C.root p x = some ⟨a, hap⟩ at hc
+          rw [C.at_star p x hx] at hc
+          exact hxa (congrArg Subtype.val (Option.some.inj hc))
+        exact iff_of_false hleft (fun hc => hc.1 rfl)
+      · constructor
+        · intro hc
+          exact ⟨hqp, x, hx, hc⟩
+        · rintro ⟨_, y, hy, hc⟩
+          change C.root p x = some ⟨a, hap⟩
+          exact (C.away p q hqp x y hx hy).trans hc
+    have step : ∀ {x y : A ⊕ P},
+        ((incidenceGraph Inc).deleteEdges {s(Sum.inl a, Sum.inr p)}).Adj x y →
+        (cut x ↔ cut y) := by
+      rintro (x | q) (y | r) h
+      · have := h.1
+        simp [incidenceGraph] at this
+      · exact cross x r h
+      · exact (cross y q h.symm).symm
+      · have := h.1
+        simp [incidenceGraph] at this
+    have along : ∀ {x y : A ⊕ P}
+        (walk : ((incidenceGraph Inc).deleteEdges
+          {s(Sum.inl a, Sum.inr p)}).Walk x y), cut x → cut y := by
+      intro x y walk
+      induction walk with
+      | nil => exact id
+      | cons h _ ih => exact fun hx => ih ((step h).mp hx)
+    intro reachable
+    obtain ⟨walk⟩ := reachable
+    have hc : cut (.inl a) := C.at_star p a hap
+    exact (along walk hc).1 rfl
+  rintro (a | p) (b | q) h
+  · simp [incidenceGraph] at h
+  · exact bridge a q (by simpa [incidenceGraph] using h)
+  · simpa only [Sym2.eq_swap] using
+      bridge b p (by simpa [incidenceGraph] using h)
+  · simp [incidenceGraph] at h
+
+/-- Ordinary acyclicity and the explicit certificate have the same domain. -/
+theorem isAcyclic_iff_nonempty_certificate (Inc : A → P → Prop) :
+    (incidenceGraph Inc).IsAcyclic ↔ Nonempty (Certificate Inc) :=
+  ⟨fun h => ⟨certificateOfForest Inc h⟩,
+   fun ⟨C⟩ => Certificate.isAcyclic Inc C⟩
+
+/-- Incidence on actual nonempty fibres of a label map. -/
+def imageIncidence (Inc : A → P → Prop) (f : A → B) (b : B) (p : P) : Prop :=
+  ∃ a : A, f a = b ∧ Inc a p
+
+/-- Connectivity is a path in the original piece intersection graph staying
+inside one fibre; it is not defined by acyclicity of the output. -/
+def FibreConnected (Inc : A → P → Prop) (f : A → B) : Prop :=
+  ∀ a b, f a = f b →
+    Closure (fun x y => f x = f y ∧ ∃ p, Inc x p ∧ Inc y p) a b
+
+/-- Map an original star neighbour to the corresponding image star neighbour. -/
+def imageStar (Inc : A → P → Prop) (f : A → B) (p : P) :
+    Star Inc p → Star (imageIncidence Inc f) p :=
+  fun a => ⟨f a.val, a.val, rfl, a.property⟩
+
+def imageRootAux (Inc : A → P → Prop) (C : Certificate Inc)
+    (f : A → B) (p : P) (a : A) :
+    Option (Star (imageIncidence Inc f) p) :=
+  (C.root p a).map (imageStar Inc f p)
+
+/-- The mapped root does not depend on the representative of a connected fibre. -/
+theorem imageRootAux_eq (Inc : A → P → Prop) (C : Certificate Inc)
+    (f : A → B) (hf : FibreConnected Inc f) (p : P)
+    {a b : A} (hab : f a = f b) :
+    imageRootAux Inc C f p a = imageRootAux Inc C f p b := by
+  have path := hf a b hab
+  clear hab
+  induction path with
+  | refl a => rfl
+  | step h =>
+      rcases h with ⟨hxy, q, hx, hy⟩
+      by_cases hqp : q = p
+      · subst q
+        simp only [imageRootAux, C.at_star p _ hx, C.at_star p _ hy, Option.map_some]
+        apply congrArg Option.some
+        exact Subtype.ext hxy
+      · exact congrArg (fun root => root.map (imageStar Inc f p))
+          (C.away p q hqp _ _ hx hy)
+  | symm _ ih => exact ih.symm
+  | trans _ _ ih1 ih2 => exact ih1.trans ih2
+
+/-- Connected coarsening has a constructed certificate, not an assumed forest. -/
+noncomputable def imageCertificate (Inc : A → P → Prop) (C : Certificate Inc)
+    (f : A → B) (hsurj : Function.Surjective f) (hconn : FibreConnected Inc f) :
+    Certificate (imageIncidence Inc f) := by
+  classical
+  let rep (b : B) := Classical.choose (hsurj b)
+  have rep_spec (b : B) : f (rep b) = b := Classical.choose_spec (hsurj b)
+  let root (p : P) (b : B) := imageRootAux Inc C f p (rep b)
+  have root_rep (p : P) (a : A) :
+      root p (f a) = imageRootAux Inc C f p a :=
+    imageRootAux_eq Inc C f hconn p (rep_spec (f a))
+  refine ⟨root, ?_, ?_⟩
+  · intro p b hb
+    rcases hb with ⟨a, rfl, ha⟩
+    rw [root_rep]
+    simp only [imageRootAux, C.at_star p a ha, Option.map_some]
+    rfl
+  · intro p q hqp b d hb hd
+    rcases hb with ⟨a, rfl, ha⟩
+    rcases hd with ⟨c, rfl, hc⟩
+    rw [root_rep, root_rep]
+    exact congrArg (fun z => z.map (imageStar Inc f p))
+      (C.away p q hqp a c ha hc)
+
+/-- Coarsening along connected fibres preserves ordinary incidence acyclicity. -/
+theorem imageIncidence_isAcyclic (Inc : A → P → Prop)
+    (hF : (incidenceGraph Inc).IsAcyclic) (f : A → B)
+    (hsurj : Function.Surjective f) (hconn : FibreConnected Inc f) :
+    (incidenceGraph (imageIncidence Inc f)).IsAcyclic :=
+  Certificate.isAcyclic _
+    (imageCertificate Inc (certificateOfForest Inc hF) f hsurj hconn)
+
+/-- Two coarsened pieces still meet in at most one separator. -/
+theorem image_support_inter_subsingleton (Inc : A → P → Prop)
+    (hF : (incidenceGraph Inc).IsAcyclic) (f : A → B)
+    (hsurj : Function.Surjective f) (hconn : FibreConnected Inc f)
+    {b d : B} (hbd : b ≠ d) {p q : P}
+    (hbp : imageIncidence Inc f b p) (hdp : imageIncidence Inc f d p)
+    (hbq : imageIncidence Inc f b q) (hdq : imageIncidence Inc f d q) : p = q := by
+  by_contra hpq
+  have hN := noReturn_of_isAcyclic _ (imageIncidence_isAcyclic Inc hF f hsurj hconn)
+  exact hbd (hN p b d hbp hdp (Closure.step ⟨q, Ne.symm hpq, hbq, hdq⟩))
+
+/-- The existing partition object has the usual quotient by its equivalence relation. -/
+def Partition.toSetoid (R : Partition A) : Setoid A :=
+  ⟨R.rel, R.refl, R.symm, R.trans⟩
+
+abbrev Partition.Block (R : Partition A) := Quotient R.toSetoid
+
+def Partition.block (R : Partition A) (a : A) : R.Block := Quotient.mk R.toSetoid a
+
+theorem Partition.block_eq_iff (R : Partition A) (a b : A) :
+    R.block a = R.block b ↔ R.rel a b := by
+  constructor
+  · intro h
+    exact @Quotient.exact A R.toSetoid a b h
+  · intro h
+    exact @Quotient.sound A R.toSetoid a b h
+
+theorem Partition.block_surjective (R : Partition A) : Function.Surjective R.block := by
+  intro b
+  refine Quotient.inductionOn b ?_
+  intro a
+  exact ⟨a, rfl⟩
+
+theorem ConnectedPartition.fibreConnected (Inc : A → P → Prop) (R : Partition A)
+    (hR : ConnectedPartition Inc R) : FibreConnected Inc R.block := by
+  intro a b hab
+  have hr := hR a b ((R.block_eq_iff a b).mp hab)
+  apply Closure.map ?_ hr
+  intro x y h
+  exact ⟨(R.block_eq_iff x y).mpr h.1, h.2⟩
+
+theorem connectedPartition_quotient_isAcyclic (Inc : A → P → Prop)
+    (hF : (incidenceGraph Inc).IsAcyclic) (R : Partition A)
+    (hR : ConnectedPartition Inc R) :
+    (incidenceGraph (imageIncidence Inc R.block)).IsAcyclic :=
+  imageIncidence_isAcyclic Inc hF R.block R.block_surjective
+    (ConnectedPartition.fibreConnected Inc R hR)
+
+/-- Relabelling by an injective piece map preserves the forest assertion. -/
+theorem incidence_isAcyclic_of_embedding (I : A → P → Prop) (J : B → P → Prop)
+    (f : A → B) (hf : Function.Injective f)
+    (hI : ∀ a p, I a p → J (f a) p) (hJ : (incidenceGraph J).IsAcyclic) :
+    (incidenceGraph I).IsAcyclic := by
+  let g : incidenceGraph I →g incidenceGraph J :=
+    ⟨Sum.map f id, by
+      rintro (a | p) (b | q) h
+      · simp [incidenceGraph] at h
+      · simpa [incidenceGraph] using hI a q (by simpa [incidenceGraph] using h)
+      · simpa [incidenceGraph] using hI b p (by simpa [incidenceGraph] using h)
+      · simp [incidenceGraph] at h⟩
+  apply SimpleGraph.IsAcyclic.comap g ?_ hJ
+  rintro (a | p) (b | q) h
+  · exact congrArg Sum.inl (hf (Sum.inl.inj h))
+  · cases h
+  · cases h
+  · exact congrArg Sum.inr (Sum.inr.inj h)
+
+/-- Pull a genuine equivalence relation back to the original indices. -/
+def pullbackPartition (R : Partition B) (f : A → B) : Partition A where
+  rel a b := R.rel (f a) (f b)
+  refl a := R.refl (f a)
+  symm h := R.symm h
+  trans h1 h2 := R.trans h1 h2
+
+/-- The quotient map induced by pullback is injective without any surjectivity hypothesis. -/
+def pullbackBlockMap (R : Partition B) (f : A → B) :
+    (pullbackPartition R f).Block → R.Block :=
+  Quotient.lift (fun a => R.block (f a)) (fun _ _ h => Quotient.sound h)
+
+theorem pullbackBlockMap_injective (R : Partition B) (f : A → B) :
+    Function.Injective (pullbackBlockMap R f) := by
+  intro x y
+  refine Quotient.inductionOn₂ x y ?_
+  intro a b h
+  change R.block (f a) = R.block (f b) at h
+  apply ((pullbackPartition R f).block_eq_iff a b).mpr
+  exact (R.block_eq_iff (f a) (f b)).mp h
+
+theorem pullbackBlockMap_surjective (R : Partition B) (f : A → B)
+    (hf : Function.Surjective f) : Function.Surjective (pullbackBlockMap R f) := by
+  intro q
+  refine Quotient.inductionOn q ?_
+  intro b
+  obtain ⟨a, rfl⟩ := hf b
+  exact ⟨(pullbackPartition R f).block a, rfl⟩
+
+/-- The genuine shared separators, expressed without finiteness or a numeric degree. -/
+def SharedSeparator (I : A → P → Prop) (p : P) : Prop :=
+  ∃ a b : A, a ≠ b ∧ I a p ∧ I b p
+
+theorem star_subsingleton_of_not_shared (I : A → P → Prop) (p : P)
+    (hp : ¬ SharedSeparator I p) : Subsingleton (Star I p) := by
+  refine ⟨?_⟩
+  intro a b
+  apply Subtype.ext
+  by_contra hab
+  exact hp ⟨a.val, b.val, hab, a.property, b.property⟩
+
+/-- Extending across empty or singleton separator stars cannot create a cycle. -/
+noncomputable def certificateRestoreTrivial (I : A → P → Prop) (keep : P → Prop)
+    (htriv : ∀ p, ¬ keep p → Subsingleton (Star I p))
+    (C : Certificate (fun a (p : {p // keep p}) => I a p.val)) : Certificate I := by
+  classical
+  let root (p : P) (a : A) : Option (Star I p) :=
+    if hp : keep p then C.root ⟨p, hp⟩ a
+    else if hn : Nonempty (Star I p) then some (Classical.choice hn) else none
+  refine ⟨root, ?_, ?_⟩
+  · intro p a ha
+    dsimp only [root]
+    by_cases hp : keep p
+    · rw [dif_pos hp]
+      exact C.at_star ⟨p, hp⟩ a ha
+    · rw [dif_neg hp, dif_pos (show Nonempty (Star I p) from ⟨⟨a, ha⟩⟩)]
+      letI := htriv p hp
+      exact congrArg Option.some (Subsingleton.elim _ _)
+  · intro p q hqp a b ha hb
+    dsimp only [root]
+    by_cases hp : keep p
+    · simp only [dif_pos hp]
+      by_cases hq : keep q
+      · exact C.away ⟨p, hp⟩ ⟨q, hq⟩
+          (fun h => hqp (congrArg Subtype.val h)) a b ha hb
+      · letI := htriv q hq
+        have hab : a = b := congrArg Subtype.val
+          (Subsingleton.elim (⟨a, ha⟩ : Star I q) ⟨b, hb⟩)
+        rw [hab]
+    · simp only [dif_neg hp]
+
+/-- Restricting the separator carrier restricts every certificate. -/
+def certificateRestrict (I : A → P → Prop) (keep : P → Prop) (C : Certificate I) :
+    Certificate (fun a (p : {p // keep p}) => I a p.val) where
+  root p := C.root p.val
+  at_star p a ha := C.at_star p.val a ha
+  away p q hqp a b ha hb := C.away p.val q.val
+    (fun h => hqp (Subtype.ext h)) a b ha hb
+
+/-- Exact equivalence between full incidence acyclicity and the manuscript's
+incidence graph retaining only points shared by at least two pieces. -/
+theorem isAcyclic_iff_shared_pruning (I : A → P → Prop) :
+    (incidenceGraph I).IsAcyclic ↔
+      (incidenceGraph (fun a (p : {p // SharedSeparator I p}) => I a p.val)).IsAcyclic := by
+  constructor
+  · intro h
+    exact Certificate.isAcyclic _ (certificateRestrict I _ (certificateOfForest I h))
+  · intro h
+    exact Certificate.isAcyclic I (certificateRestoreTrivial I (SharedSeparator I)
+      (star_subsingleton_of_not_shared I) (certificateOfForest _ h))
+
+end E593Separator
+
+end Erdos593SelfContained_Module_Erdos593_Separator_SeparatorCoarsening
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Separator.SeparatorCoarsening
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedDecomposition
+Source: Erdos593/TripleSystem/SupportedDecomposition.lean
+Normalized SHA-256: 31f3aa3c7c88cbbed495c471b241352f257a16008220b48cc499c2e14b5c757c
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedDecomposition
+
+/-!
+# Actual supported partitions of the original hyperedge indices
+
+The competitor is a partition of E. Its definition does not assume that any
+canonical atom lies in a single part, that its parts are obligatory, or that
+it is obtained by grouping canonical atoms. Those are conclusions.
+This proof source has not yet been replayed by Lean.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+open E593Separator
+universe u
+variable {V E : Type u}
+
+/-- The exact original edge-index set of a partition class. -/
+def partEdges (R : Partition E) (b : R.Block) : Set E := {e | R.block e = b}
+
+/-- All original points supported by this exact edge set. -/
+def partIncident (F : TripleSystem V E) (R : Partition E) (b : R.Block) (x : V) : Prop :=
+  x ∈ F.edgeSupportSet (partEdges R b)
+
+/-- Nonempty parts are built into the quotient carrier. Connectivity and the
+ordinary incidence forest are imposed on their actual supported restrictions. -/
+structure IsSupportedDecomposition (F : TripleSystem V E) (R : Partition E) : Prop where
+  connected : ∀ b : R.Block, (F.edgeRestriction (partEdges R b)).levi.Connected
+  forest : (incidenceGraph (partIncident F R)).IsAcyclic
+
+theorem partEdges_nonempty (R : Partition E) (b : R.Block) : (partEdges R b).Nonempty := by
+  obtain ⟨e, he⟩ := R.block_surjective b
+  exact ⟨e, he⟩
+
+theorem partEdges_disjoint (R : Partition E) {b c : R.Block} (hbc : b ≠ c) :
+    Disjoint (partEdges R b) (partEdges R c) := by
+  apply Set.disjoint_left.mpr
+  intro e he hf
+  exact hbc (he.symm.trans hf)
+
+/-- The separate one-point-intersection condition in the manuscript follows
+from the incidence forest; it is not omitted by redefining decomposition. -/
+theorem IsSupportedDecomposition.support_inter_subsingleton
+    (F : TripleSystem V E) (R : Partition E) (hD : IsSupportedDecomposition F R)
+    {b c : R.Block} (hbc : b ≠ c) :
+    (F.edgeSupportSet (partEdges R b) ∩ F.edgeSupportSet (partEdges R c)).Subsingleton := by
+  intro p hp q hq
+  by_contra hpq
+  have hN := noReturn_of_isAcyclic _ hD.forest
+  exact hbc (hN p b c hp.1 hp.2 (Closure.step ⟨q, Ne.symm hpq, hq.1, hq.2⟩))
+
+/-- The definition is equivalent to the three literal conditions in the
+manuscript: connected pieces, at most one shared point, and a pruned forest. -/
+theorem supportedDecomposition_iff_manuscript (F : TripleSystem V E) (R : Partition E) :
+    IsSupportedDecomposition F R ↔
+      (∀ b, (F.edgeRestriction (partEdges R b)).levi.Connected) ∧
+      (∀ b c, b ≠ c →
+        (F.edgeSupportSet (partEdges R b) ∩ F.edgeSupportSet (partEdges R c)).Subsingleton) ∧
+      (incidenceGraph (fun b (p : {p // SharedSeparator (partIncident F R) p}) =>
+        partIncident F R b p.val)).IsAcyclic := by
+  constructor
+  · intro hD
+    exact ⟨hD.connected, fun _ _ h => IsSupportedDecomposition.support_inter_subsingleton F R hD h,
+      (isAcyclic_iff_shared_pruning _).mp hD.forest⟩
+  · rintro ⟨hc, _, hf⟩
+    exact ⟨hc, (isAcyclic_iff_shared_pruning _).mpr hf⟩
+
+/-- A running support family needs no constructibility assumption on competitors. -/
+def RunningSupportFamily (F : TripleSystem V E) : List (Set E) → Prop
+  | [] => True
+  | S :: tail => RunningSupportFamily F tail ∧
+      Disjoint (edgePieceUnion tail) S ∧
+      (F.edgeSupportSet (edgePieceUnion tail) ∩ F.edgeSupportSet S).Subsingleton
+
+theorem mem_union_mapped_parts {I : Type u} (pieces : I → Set E) (l : List I) (e : E) :
+    e ∈ edgePieceUnion (l.map pieces) ↔ ∃ i ∈ l, e ∈ pieces i := by
+  induction l with
+  | nil => simp [edgePieceUnion]
+  | cons a tail ih =>
+      simp [edgePieceUnion, ih, or_comm]
+
+/-- The usual splitting lemma works for arbitrary supported pieces. -/
+theorem indecomposable_subset_running_part
+    (F : TripleSystem V E) (l : List (Set E)) (hL : RunningSupportFamily F l)
+    (S : Set E) (hcover : S ⊆ edgePieceUnion l)
+    (hc : (F.edgeRestriction S).levi.Connected)
+    (hi : OnePointIndecomposable (F.edgeRestriction S)) :
+    ∃ T ∈ l, S ⊆ T := by
+  revert hL hcover
+  induction l with
+  | nil =>
+      intro _ hcover
+      obtain ⟨z⟩ := hc.nonempty
+      rcases z with x | e
+      · obtain ⟨e, he, _⟩ := x.property
+        exact False.elim (hcover he)
+      · exact False.elim (hcover e.property)
+  | cons T tail ih =>
+      intro hL hcover
+      rcases hL with ⟨hprev, hdisj, hmeet⟩
+      rcases edgeRestriction_subset_or_subset_of_support_inter_subsingleton
+          F S (edgePieceUnion tail) T hcover hdisj hmeet hc hi with hS | hS
+      · obtain ⟨U, hU, hSU⟩ := ih hprev hS
+        exact ⟨U, List.mem_cons_of_mem T hU, hSU⟩
+      · exact ⟨T, by simp, hS⟩
+
+/-- A leaf ordering of the actual piece incidence forest gives a running family. -/
+theorem parts_running_of_tail_order (F : TripleSystem V E) (R : Partition E)
+    (l : List R.Block) (hnd : l.Nodup)
+    (horder : SimpleGraph.bipartiteTailPointSubsingleton (partIncident F R) l) :
+    RunningSupportFamily F (l.map (partEdges R)) := by
+  revert hnd horder
+  induction l with
+  | nil =>
+      intro _ _
+      trivial
+  | cons b tail ih =>
+      intro hnd horder
+      obtain ⟨hb, hnd⟩ := List.nodup_cons.mp hnd
+      obtain ⟨hprev, hleaf⟩ := horder
+      refine ⟨ih hnd hprev, ?_, ?_⟩
+      · apply Set.disjoint_left.mpr
+        intro e he heb
+        obtain ⟨c, hc, hec⟩ := (mem_union_mapped_parts (partEdges R) tail e).mp he
+        have hcb : c = b := hec.symm.trans heb
+        exact hb (hcb ▸ hc)
+      · intro x hx y hy
+        obtain ⟨e, he, hxe⟩ := hx.1
+        obtain ⟨c, hc, hec⟩ := (mem_union_mapped_parts (partEdges R) tail e).mp he
+        obtain ⟨f, hf, hyf⟩ := hy.1
+        obtain ⟨d, hd, hfd⟩ := (mem_union_mapped_parts (partEdges R) tail f).mp hf
+        exact hleaf x y hx.2 hy.2 ⟨c, hc, e, hec, hxe⟩ ⟨d, hd, f, hfd, hyf⟩
+
+/-- Every actual finite decomposition has a running support presentation. -/
+theorem decomposition_running_parts [Fintype V] [Fintype E]
+    (F : TripleSystem V E) (R : Partition E) (hD : IsSupportedDecomposition F R) :
+    ∃ l : List R.Block, (∀ b, b ∈ l) ∧
+      RunningSupportFamily F (l.map (partEdges R)) := by
+  classical
+  haveI : Finite R.Block := Finite.of_surjective _ R.block_surjective
+  letI : Fintype R.Block := Fintype.ofFinite _
+  have hf : (SimpleGraph.bipartiteIncidenceGraph (partIncident F R)).IsAcyclic :=
+    hD.forest
+  obtain ⟨l, hnd, htotal, horder⟩ :=
+    hf.exists_finset_bipartiteTailPointSubsingletonOrder (partIncident F R) Finset.univ
+  refine ⟨l, ?_, parts_running_of_tail_order F R l hnd horder⟩
+  intro b
+  apply List.mem_toFinset.mp
+  rw [htotal]
+  exact Finset.mem_univ b
+
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+variable (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+
+/-- Literal indecomposability of each atom, using the previously proved two shapes. -/
+theorem atomRestriction_indivisible_for_decomposition (hF : F.Intrinsic) (A : Index F) :
+    OnePointIndecomposable (atomRestriction F hF.1 hF.2.1 A) := by
+  classical
+  cases A with
+  | singleton e hz =>
+      obtain ⟨i⟩ := atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u,u,u}
+        F hF.1 hF.2.1 (Index.singleton e hz)
+      apply (onePointIndecomposable_iff_of_iso i).mpr
+      exact (onePointIndecomposable_iff_of_iso (oneEdgeExpansionSingleEdgePieceIso F e)).mp
+        oneTriple_onePointIndecomposable
+  | cycleBlock C hC B =>
+      obtain ⟨i⟩ := atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u,u,u}
+        F hF.1 hF.2.1 (Index.cycleBlock C hC B)
+      let K : TwoConnectedBipartiteCore.{u} :=
+        { Vertex := _
+          vertexFintype := inferInstance
+          graph := cycleBlockCore F C B
+          twoVertexConnected := cycleBlockCore_isTwoVertexConnected F hF.1 hF.2.1 C hC B
+          bipartite := cycleBlockCore_isBipartite F hF.1 hF.2.1 hF.2.2 C hC B }
+      exact (onePointIndecomposable_iff_of_iso i).mpr (coreExpansion_onePointIndecomposable K)
+
+/-- Every canonical atom belongs to exactly one competing piece. No
+obligatoriness or indecomposability assumption is made on those pieces. -/
+theorem canonical_atom_in_unique_part (hF : F.Intrinsic)
+    (R : Partition E) (hD : IsSupportedDecomposition F R) (A : Index F) :
+    ∃! b : R.Block, edges F hF.1 hF.2.1 A ⊆ partEdges R b := by
+  obtain ⟨l, htotal, hrun⟩ := decomposition_running_parts F R hD
+  have hcover : edges F hF.1 hF.2.1 A ⊆ edgePieceUnion (l.map (partEdges R)) := by
+    intro e _
+    exact (mem_union_mapped_parts (partEdges R) l e).mpr ⟨R.block e, htotal _, rfl⟩
+  obtain ⟨T, hT, hAT⟩ := indecomposable_subset_running_part F _ hrun _ hcover
+    (atomRestriction_connected F hF.1 hF.2.1 A)
+    (atomRestriction_indivisible_for_decomposition F hF A)
+  obtain ⟨b, _, rfl⟩ := List.mem_map.mp hT
+  refine ⟨b, hAT, ?_⟩
+  intro c hAC
+  obtain ⟨e, he⟩ := atomOf_surjective F hF.1 hF.2.1 A
+  exact (hAC he).symm.trans (hAT he)
+
+/-- The canonical edge equivalence refines every literal supported forest decomposition. -/
+theorem canonical_refines_supported_decomposition (hF : F.Intrinsic)
+    (R : Partition E) (hD : IsSupportedDecomposition F R) (e f : E)
+    (hef : atomOf F hF.1 hF.2.1 e = atomOf F hF.1 hF.2.1 f) : R.rel e f := by
+  obtain ⟨b, hb, _⟩ := canonical_atom_in_unique_part F hF R hD (atomOf F hF.1 hF.2.1 e)
+  exact (R.block_eq_iff e f).mp ((hb rfl).trans (hb hef.symm).symm)
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedDecomposition
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedDecomposition
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.CanonicalCoarsening
+Source: Erdos593/TripleSystem/CanonicalCoarsening.lean
+Normalized SHA-256: 5625dae79090347b5ab3d3aa0c9eac6dce226b755fd26664147c57546ee4bd8c
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalCoarsening
+
+/-!
+# Connected canonical-atom groups give actual supported edge decompositions
+
+Every part below is a subset of the original edge carrier. Connectivity is
+proved inside its own supported restriction. The output forest and pairwise
+one-point intersections are conclusions, not fields postulated for a grouping.
+This remains uncompiled candidate source.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+open E593Separator
+universe u
+variable {V E : Type u}
+
+/-- Include one exact edge restriction into a larger one on both point and edge nodes. -/
+def restrictionLeviHom (F : TripleSystem V E) {S T : Set E} (hST : S ⊆ T) :
+    (F.edgeRestriction S).levi →g (F.edgeRestriction T).levi :=
+  ⟨Sum.map
+    (fun x => ⟨x.val, by obtain ⟨e, he, hx⟩ := x.property; exact ⟨e, hST he, hx⟩⟩)
+    (fun e => ⟨e.val, hST e.property⟩), by
+      rintro (x | e) (y | f) h
+      · exact False.elim ((F.edgeRestriction S).not_levi_adj_point_point h)
+      · exact (F.edgeRestriction T).levi_adj_point_edge.mpr
+          ((F.edgeRestriction S).levi_adj_point_edge.mp h)
+      · exact (F.edgeRestriction T).levi_adj_edge_point.mpr
+          ((F.edgeRestriction S).levi_adj_edge_point.mp h)
+      · exact False.elim ((F.edgeRestriction S).not_levi_adj_edge_edge h)⟩
+
+variable [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+variable (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+
+/-- The original edge partition induced by a partition of the actual atom labels. -/
+noncomputable def coarsenedEdges (hL : F.Linear) (hB : F.BridgeAtEveryEdge) (R : Partition (Index F)) :
+    Partition E := pullbackPartition R (atomOf F hL hB)
+
+/-- The quotient incidences have their literal original-point support meaning. -/
+theorem coarsened_incidence_iff (hL : F.Linear) (hB : F.BridgeAtEveryEdge)
+    (R : Partition (Index F)) (b : (coarsenedEdges F hL hB R).Block) (p : V) :
+    partIncident F (coarsenedEdges F hL hB R) b p ↔
+      imageIncidence (atomIncident F hL hB) R.block
+        (pullbackBlockMap R (atomOf F hL hB) b) p := by
+  constructor
+  · rintro ⟨e, he, hp⟩
+    refine ⟨atomOf F hL hB e, ?_, e, rfl, hp⟩
+    exact congrArg (pullbackBlockMap R (atomOf F hL hB)) he
+  · rintro ⟨A, hA, e, heA, hp⟩
+    refine ⟨e, ?_, hp⟩
+    apply pullbackBlockMap_injective R (atomOf F hL hB)
+    change R.block (atomOf F hL hB e) = _
+    rw [heA]
+    exact hA
+
+/-- Connectivity of a union of whole canonical fibres is internal, not merely ambient. -/
+theorem coarsened_part_connected (hL : F.Linear) (hB : F.BridgeAtEveryEdge)
+    (R : Partition (Index F)) (hR : ConnectedPartition (atomIncident F hL hB) R)
+    (b : (coarsenedEdges F hL hB R).Block) :
+    (F.edgeRestriction (partEdges (coarsenedEdges F hL hB R) b)).levi.Connected := by
+  classical
+  let f := atomOf F hL hB
+  let T := coarsenedEdges F hL hB R
+  let S := partEdges T b
+  let K := (F.edgeRestriction S).levi
+  obtain ⟨e0, he0⟩ := partEdges_nonempty T b
+  let same (a : Index F) : Prop := R.rel (f e0) a
+  let rep (a : Index F) : E := Classical.choose (atomOf_surjective F hL hB a)
+  have rep_spec (a : Index F) : f (rep a) = a :=
+    Classical.choose_spec (atomOf_surjective F hL hB a)
+  have within (a : Index F) (ha : same a) : edges F hL hB a ⊆ S := by
+    intro e he
+    change T.block e = b
+    have hr : T.rel e0 e := by
+      change R.rel (f e0) (f e)
+      rw [show f e = a from he]
+      exact ha
+    exact ((T.block_eq_iff e0 e).mpr hr).symm.trans he0
+  have rep_mem (a : Index F) (ha : same a) : rep a ∈ S := within a ha (rep_spec a)
+  let node (a : Index F) : F.EdgeSupport S ⊕ S :=
+    if ha : same a then .inr ⟨rep a, rep_mem a ha⟩ else .inr ⟨e0, he0⟩
+  let reachablePartition : Partition (F.EdgeSupport S ⊕ S) :=
+    { rel := K.Reachable
+      refl _ := .rfl
+      symm h := h.symm
+      trans h1 h2 := h1.trans h2 }
+  have liftstep : ∀ {a c : Index F},
+      InternalStep (atomIncident F hL hB) R a c → K.Reachable (node a) (node c) := by
+    intro a c h
+    rcases h with ⟨hac, p, hap, hcp⟩
+    have heq : same a ↔ same c :=
+      ⟨fun ha => R.trans ha hac, fun hc => R.trans hc (R.symm hac)⟩
+    by_cases ha : same a
+    · have hc := heq.mp ha
+      dsimp only [node]
+      rw [dif_pos ha, dif_pos hc]
+      have pa := ((atomRestriction_connected F hL hB a).preconnected
+        (.inr ⟨rep a, rep_spec a⟩) (.inl ⟨p, hap⟩)).map (restrictionLeviHom F (within a ha))
+      have pc := ((atomRestriction_connected F hL hB c).preconnected
+        (.inr ⟨rep c, rep_spec c⟩) (.inl ⟨p, hcp⟩)).map (restrictionLeviHom F (within c hc))
+      exact pa.trans pc.symm
+    · have hc : ¬ same c := fun h => ha (heq.mpr h)
+      dsimp only [node]
+      rw [dif_neg ha, dif_neg hc]
+  have label_path {a c : Index F} (hac : R.rel a c) : K.Reachable (node a) (node c) :=
+    Closure.respects reachablePartition node liftstep (hR a c hac)
+  have same_of_member (e : E) (he : e ∈ S) : same (f e) := by
+    apply (T.block_eq_iff e0 e).mp
+    exact he0.trans he.symm
+  have edge_to_node (e : E) (he : e ∈ S) : K.Reachable (.inr ⟨e, he⟩) (node (f e)) := by
+    have ha := same_of_member e he
+    dsimp only [node]
+    rw [dif_pos ha]
+    exact ((atomRestriction_connected F hL hB (f e)).preconnected
+      (.inr ⟨e, rfl⟩) (.inr ⟨rep (f e), rep_spec (f e)⟩)).map
+        (restrictionLeviHom F (within (f e) ha))
+  have edges_reachable (e : E) (he : e ∈ S) :
+      K.Reachable (.inr ⟨e0, he0⟩) (.inr ⟨e, he⟩) :=
+    (edge_to_node e0 he0).trans
+      ((label_path (same_of_member e he)).trans (edge_to_node e he).symm)
+  apply (SimpleGraph.connected_iff_exists_forall_reachable K).mpr
+  refine ⟨.inr ⟨e0, he0⟩, ?_⟩
+  rintro (x | e)
+  · obtain ⟨e, he, hx⟩ := x.property
+    exact (edges_reachable e he).trans
+      (((F.edgeRestriction S).levi_adj_edge_point (x := x) (e := ⟨e, he⟩)).mpr hx).reachable
+  · exact edges_reachable e.val e.property
+
+/-- A connected partition of canonical atoms satisfies the actual supported-decomposition
+conditions on original edge indices. No output forest is assumed. -/
+theorem coarsenedEdges_supported (hL : F.Linear) (hB : F.BridgeAtEveryEdge)
+    (R : Partition (Index F)) (hR : ConnectedPartition (atomIncident F hL hB) R) :
+    IsSupportedDecomposition F (coarsenedEdges F hL hB R) := by
+  refine ⟨coarsened_part_connected F hL hB R hR, ?_⟩
+  apply incidence_isAcyclic_of_embedding _ _ (pullbackBlockMap R (atomOf F hL hB))
+    (pullbackBlockMap_injective R (atomOf F hL hB))
+    (fun b p h => (coarsened_incidence_iff F hL hB R b p).mp h)
+  exact connectedPartition_quotient_isAcyclic (atomIncident F hL hB)
+    (atomPointIncidenceGraph_isAcyclic F hL hB) R hR
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_CanonicalCoarsening
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.CanonicalCoarsening
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedDecompositionProduct
+Source: Erdos593/TripleSystem/SupportedDecompositionProduct.lean
+Normalized SHA-256: 12db65b50fb6e60e91baf7f86fc4b5dc999f755546f93876a9185d8347ee56d4
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedDecompositionProduct
+
+/-!
+# The local product for actual supported one-point decompositions
+
+The source and target use original edge indices, literal supported restrictions,
+and the existing sharedAtomPoints. Atom refinement is proved, not imposed on
+competitors. These sources require pinned Lean compilation and semantic review.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+open E593Separator
+universe u
+variable {V E : Type u} [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
+variable (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+
+noncomputable def decompositionAtomRep (hL : F.Linear) (hB : F.BridgeAtEveryEdge)
+    (A : Index F) : E := Classical.choose (atomOf_surjective F hL hB A)
+
+theorem decompositionAtomRep_spec (hL : F.Linear) (hB : F.BridgeAtEveryEdge) (A : Index F) :
+    atomOf F hL hB (decompositionAtomRep F hL hB A) = A :=
+  Classical.choose_spec (atomOf_surjective F hL hB A)
+
+/-- The induced atom equivalence is determined by the original edge partition. -/
+noncomputable def inducedAtomPartition (hL : F.Linear) (hB : F.BridgeAtEveryEdge)
+    (R : Partition E) : Partition (Index F) :=
+  pullbackPartition R (decompositionAtomRep F hL hB)
+
+/-- Representatives can be replaced by every original edge of their atom. -/
+theorem induced_relation_on_edges (hF : F.Intrinsic) (R : Partition E)
+    (hD : IsSupportedDecomposition F R) (e f : E) :
+    (inducedAtomPartition F hF.1 hF.2.1 R).rel
+      (atomOf F hF.1 hF.2.1 e) (atomOf F hF.1 hF.2.1 f) ↔ R.rel e f := by
+  let a := atomOf F hF.1 hF.2.1 e
+  let b := atomOf F hF.1 hF.2.1 f
+  have he : R.rel e (decompositionAtomRep F hF.1 hF.2.1 a) :=
+    canonical_refines_supported_decomposition F hF R hD _ _
+      (decompositionAtomRep_spec F hF.1 hF.2.1 a).symm
+  have hf : R.rel f (decompositionAtomRep F hF.1 hF.2.1 b) :=
+    canonical_refines_supported_decomposition F hF R hD _ _
+      (decompositionAtomRep_spec F hF.1 hF.2.1 b).symm
+  exact ⟨fun h => R.trans he (R.trans h (R.symm hf)),
+    fun h => R.trans (R.symm he) (R.trans h hf)⟩
+
+/-- Pullback recovers the exact original-edge partition, not merely an isomorphic count. -/
+theorem coarsened_induced_eq (hF : F.Intrinsic) (R : Partition E)
+    (hD : IsSupportedDecomposition F R) :
+    coarsenedEdges F hF.1 hF.2.1 (inducedAtomPartition F hF.1 hF.2.1 R) = R := by
+  apply Partition.ext
+  funext e f
+  exact propext (induced_relation_on_edges F hF R hD e f)
+
+theorem induced_coarsened_eq (hL : F.Linear) (hB : F.BridgeAtEveryEdge)
+    (R : Partition (Index F)) :
+    inducedAtomPartition F hL hB (coarsenedEdges F hL hB R) = R := by
+  apply Partition.ext
+  funext A B
+  change R.rel (atomOf F hL hB (decompositionAtomRep F hL hB A))
+    (atomOf F hL hB (decompositionAtomRep F hL hB B)) = R.rel A B
+  rw [decompositionAtomRep_spec, decompositionAtomRep_spec]
+
+/-- Actual connectivity of an edge part projects to connectivity of its atom group. -/
+theorem inducedAtomPartition_connected (hF : F.Intrinsic) (R : Partition E)
+    (hD : IsSupportedDecomposition F R) :
+    ConnectedPartition (atomIncident F hF.1 hF.2.1)
+      (inducedAtomPartition F hF.1 hF.2.1 R) := by
+  classical
+  let f := atomOf F hF.1 hF.2.1
+  let rep := decompositionAtomRep F hF.1 hF.2.1
+  let Q := inducedAtomPartition F hF.1 hF.2.1 R
+  intro A B hAB
+  let b := R.block (rep A)
+  let S := partEdges R b
+  have hA : rep A ∈ S := rfl
+  have hB : rep B ∈ S := ((R.block_eq_iff (rep A) (rep B)).mpr hAB).symm
+  let pick (x : F.EdgeSupport S) := Classical.choose x.property
+  have pick_mem (x : F.EdgeSupport S) : pick x ∈ S := (Classical.choose_spec x.property).1
+  have pick_inc (x : F.EdgeSupport S) : F.Inc x.val (pick x) :=
+    (Classical.choose_spec x.property).2
+  let mapNode : F.EdgeSupport S ⊕ S → Index F
+    | .inl x => f (pick x)
+    | .inr e => f e.val
+  have related_members (e g : E) (he : e ∈ S) (hg : g ∈ S) : Q.rel (f e) (f g) := by
+    apply (induced_relation_on_edges F hF R hD e g).mpr
+    exact (R.block_eq_iff e g).mp (he.trans hg.symm)
+  have step : ∀ {z w : F.EdgeSupport S ⊕ S},
+      (F.edgeRestriction S).levi.Adj z w →
+      Closure (InternalStep (atomIncident F hF.1 hF.2.1) Q) (mapNode z) (mapNode w) := by
+    rintro (x | e) (y | g) h
+    · exact False.elim ((F.edgeRestriction S).not_levi_adj_point_point h)
+    · refine Closure.step ⟨related_members (pick x) g.val (pick_mem x) g.property, x.val, ?_, ?_⟩
+      · exact ⟨pick x, rfl, pick_inc x⟩
+      · exact ⟨g.val, rfl, (F.edgeRestriction S).levi_adj_point_edge.mp h⟩
+    · refine Closure.step ⟨related_members e.val (pick y) e.property (pick_mem y), y.val, ?_, ?_⟩
+      · exact ⟨e.val, rfl, (F.edgeRestriction S).levi_adj_edge_point.mp h⟩
+      · exact ⟨pick y, rfl, pick_inc y⟩
+    · exact False.elim ((F.edgeRestriction S).not_levi_adj_edge_edge h)
+  have along : ∀ {z w : F.EdgeSupport S ⊕ S}, (F.edgeRestriction S).levi.Walk z w →
+      Closure (InternalStep (atomIncident F hF.1 hF.2.1) Q) (mapNode z) (mapNode w) := by
+    intro z w path
+    induction path with
+    | nil => exact Closure.refl _
+    | cons h _ ih => exact Closure.trans (step h) ih
+  obtain ⟨path⟩ := (hD.connected b).preconnected (.inr ⟨rep A, hA⟩) (.inr ⟨rep B, hB⟩)
+  have lifted := along path
+  change Closure (InternalStep (atomIncident F hF.1 hF.2.1) Q) (f (rep A)) (f (rep B)) at lifted
+  simpa only [f, rep, decompositionAtomRep_spec] using lifted
+
+abbrev SupportedPartitions := {R : Partition E // IsSupportedDecomposition F R}
+
+/-- The manuscript's actual supported-decomposition poset, not a definition by atom grouping. -/
+noncomputable def connectedAtomsSupportedOrderIso (hF : F.Intrinsic) :
+    {R : Partition (Index F) // ConnectedPartition (atomIncident F hF.1 hF.2.1) R} ≃o
+      SupportedPartitions F where
+  toFun R := ⟨coarsenedEdges F hF.1 hF.2.1 R.val,
+    coarsenedEdges_supported F hF.1 hF.2.1 R.val R.property⟩
+  invFun D := ⟨inducedAtomPartition F hF.1 hF.2.1 D.val,
+    inducedAtomPartition_connected F hF D.val D.property⟩
+  left_inv R := Subtype.ext (induced_coarsened_eq F hF.1 hF.2.1 R.val)
+  right_inv D := Subtype.ext (coarsened_induced_eq F hF D.val D.property)
+  map_rel_iff' := by
+    intro R S
+    change Refines (coarsenedEdges F hF.1 hF.2.1 R.val)
+      (coarsenedEdges F hF.1 hF.2.1 S.val) ↔ Refines R.val S.val
+    constructor
+    · intro h A B hAB
+      obtain ⟨e, he⟩ := atomOf_surjective F hF.1 hF.2.1 A
+      obtain ⟨f, hf⟩ := atomOf_surjective F hF.1 hF.2.1 B
+      have hEF : (coarsenedEdges F hF.1 hF.2.1 R.val).rel e f := by
+        change R.val.rel (atomOf F hF.1 hF.2.1 e) (atomOf F hF.1 hF.2.1 f)
+        rwa [he, hf]
+      have hh := h e f hEF
+      change S.val.rel (atomOf F hF.1 hF.2.1 e) (atomOf F hF.1 hF.2.1 f) at hh
+      rwa [he, hf] at hh
+    · intro h e f hef
+      exact h _ _ hef
+
+/-- There is only one equivalence relation on an empty or singleton type. -/
+theorem partition_eq_of_subsingleton {A : Type u} [Subsingleton A] (R S : Partition A) : R = S := by
+  apply Partition.ext
+  funext a b
+  have hab : a = b := Subsingleton.elim a b
+  subst b
+  exact propext ⟨fun _ => S.refl a, fun _ => R.refl a⟩
+
+/-- Outside the existing shared point carrier the local star is empty or singleton. -/
+theorem nonshared_star_subsingleton (hL : F.Linear) (hB : F.BridgeAtEveryEdge)
+    (p : V) (hp : p ∉ sharedAtomPoints F hL hB) :
+    Subsingleton (Star (atomIncident F hL hB) p) := by
+  classical
+  refine ⟨?_⟩
+  intro a b
+  apply Subtype.ext
+  by_contra hab
+  have hc : 1 < ((atomFinset F hL hB).filter (fun A => atomIncident F hL hB A p)).card :=
+    Finset.one_lt_card.mpr ⟨a.val, Finset.mem_filter.mpr ⟨mem_atomFinset F hL hB a.val, a.property⟩,
+      b.val, Finset.mem_filter.mpr ⟨mem_atomFinset F hL hB b.val, b.property⟩, hab⟩
+  exact hp ((mem_sharedAtomPoints F hL hB p).mpr (by omega))
+
+/-- Remove precisely the trivial factors, using the already defined sharedAtomPoints. -/
+noncomputable def sharedStarOrderIso (hL : F.Linear) (hB : F.BridgeAtEveryEdge) :
+    Local (atomIncident F hL hB) ≃o
+      ((p : ↥(sharedAtomPoints F hL hB)) → Partition (Star (atomIncident F hL hB) p.val)) := by
+  classical
+  let trivial (p : V) : Partition (Star (atomIncident F hL hB) p) :=
+    ⟨Eq, fun _ => rfl, Eq.symm, Eq.trans⟩
+  let extendLocal (L : (p : ↥(sharedAtomPoints F hL hB)) →
+      Partition (Star (atomIncident F hL hB) p.val)) : Local (atomIncident F hL hB) :=
+    fun p => if hp : p ∈ sharedAtomPoints F hL hB then L ⟨p, hp⟩ else trivial p
+  refine
+    { toFun := fun L p => L p.val
+      invFun := extendLocal
+      left_inv := ?_
+      right_inv := ?_
+      map_rel_iff' := ?_ }
+  · intro L
+    funext p
+    dsimp only [extendLocal]
+    by_cases hp : p ∈ sharedAtomPoints F hL hB
+    · rw [dif_pos hp]
+    · rw [dif_neg hp]
+      letI := nonshared_star_subsingleton F hL hB p hp
+      exact partition_eq_of_subsingleton _ _
+  · intro L
+    funext p
+    dsimp only [extendLocal]
+    rw [dif_pos p.property]
+  · intro L M
+    change (∀ p : ↥(sharedAtomPoints F hL hB), Refines (L p.val) (M p.val)) ↔
+      ∀ p : V, Refines (L p) (M p)
+    constructor
+    · intro h p
+      by_cases hp : p ∈ sharedAtomPoints F hL hB
+      · exact h ⟨p, hp⟩
+      · letI := nonshared_star_subsingleton F hL hB p hp
+        have he := partition_eq_of_subsingleton (L p) (M p)
+        rw [he]
+        exact fun _ _ h => h
+    · intro h p
+      exact h p.val
+
+/-- Each displayed local factor has the original manuscript multiplicity. -/
+theorem canonicalStar_card (hL : F.Linear) (hB : F.BridgeAtEveryEdge) (p : V) :
+    Nat.card (Star (atomIncident F hL hB) p) = pointMultiplicity F hL hB p := by
+  classical
+  have hs : {A : Index F | atomIncident F hL hB A p} =
+      (↑((atomFinset F hL hB).filter (fun A => atomIncident F hL hB A p)) : Set (Index F)) := by
+    ext A
+    simp [mem_atomFinset]
+  change Nat.card {A : Index F | atomIncident F hL hB A p} =
+    ((atomFinset F hL hB).filter (fun A => atomIncident F hL hB A p)).card
+  rw [Nat.card_coe_set_eq, hs, Set.ncard_coe_finset]
+
+/-- Full local product for literal supported decompositions of original edges. -/
+noncomputable def supportedDecompositionProduct (hF : F.Intrinsic) :
+    SupportedPartitions F ≃o
+      ((p : ↥(sharedAtomPoints F hF.1 hF.2.1)) →
+        Partition (Star (atomIncident F hF.1 hF.2.1) p.val)) :=
+  (connectedAtomsSupportedOrderIso F hF).symm.trans
+    ((canonicalAtomConnectedPartitionOrderIso F hF.1 hF.2.1).symm.trans
+      (sharedStarOrderIso F hF.1 hF.2.1))
+
+/-- Manuscript-facing form: structural assumptions are obtained from obligatoriness. -/
+theorem obligatory_supported_decomposition_product (hobl : F.IsObligatory) :
+    ∃ (hL : F.Linear) (hB : F.BridgeAtEveryEdge),
+      Nonempty (SupportedPartitions F ≃o
+        ((p : ↥(sharedAtomPoints F hL hB)) → Partition (Star (atomIncident F hL hB) p.val))) := by
+  have hi : F.Intrinsic := ((isObligatory_iff_atomGenerated F).mp hobl).constructible.intrinsic
+  exact ⟨hi.1, hi.2.1, ⟨supportedDecompositionProduct F hi⟩⟩
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedDecompositionProduct
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedDecompositionProduct
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.StandardPartitionBridge
+Source: Erdos593/TripleSystem/StandardPartitionBridge.lean
+Normalized SHA-256: 3bfc6148e84d5283db0e3a7c0b872310c264d9d3296bafc5d4e851f5bf4e95d9
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_StandardPartitionBridge
+
+/-!
+# The project's partition type is the standard partition lattice
+
+This module uses PR50's accepted partition structure and its existing refinement
+order. It does not introduce another order instance or redefine that structure.
+The explicit equivalences below identify it with Mathlib's `Setoid`, including
+empty carriers and transport to the standard finite carrier.
+
+New source candidate, not a claim of kernel verification.
+-/
+
+namespace E593Standard
+
+universe u v w
+
+/-- Retain exactly the original equivalence relation. -/
+def toSetoid {A : Type u} (R : E593Separator.Partition A) : Setoid A where
+  r := R.rel
+  iseqv := ⟨R.refl, R.symm, R.trans⟩
+
+/-- Retain exactly the standard equivalence relation. -/
+def ofSetoid {A : Type u} (R : Setoid A) : E593Separator.Partition A where
+  rel := R.r
+  refl := R.iseqv.refl
+  symm := R.iseqv.symm
+  trans := R.iseqv.trans
+
+/-- The original refinement order, not only cardinality, is preserved. -/
+def partitionSetoidOrderIso (A : Type u) : E593Separator.Partition A ≃o Setoid A where
+  toFun := toSetoid
+  invFun := ofSetoid
+  left_inv R := E593Separator.Partition.ext rfl
+  right_inv R := Setoid.ext (fun _ _ => Iff.rfl)
+  map_rel_iff' := by
+    intro R S
+    constructor
+    · intro h a b hab
+      exact h hab
+    · intro h a b hab
+      exact h a b hab
+
+@[simp]
+theorem partitionSetoidOrderIso_rel {A : Type u}
+    (R : E593Separator.Partition A) (a b : A) :
+    (partitionSetoidOrderIso A R).r a b ↔ R.rel a b := Iff.rfl
+
+/-- Relabel a standard partition by an actual carrier equivalence. -/
+def setoidReindex {A : Type u} {B : Type v} (e : A ≃ B) (R : Setoid A) : Setoid B where
+  r x y := R.r (e.symm x) (e.symm y)
+  iseqv := ⟨fun x => R.iseqv.refl (e.symm x),
+    fun h => R.iseqv.symm h, fun h₁ h₂ => R.iseqv.trans h₁ h₂⟩
+
+/-- The inverse map is relabelling by the inverse carrier equivalence. -/
+def setoidReindexOrderIso {A : Type u} {B : Type v} (e : A ≃ B) : Setoid A ≃o Setoid B where
+  toFun := setoidReindex e
+  invFun := setoidReindex e.symm
+  left_inv R := by
+    apply Setoid.ext
+    intro a b
+    change R.r (e.symm (e a)) (e.symm (e b)) ↔ R.r a b
+    rw [e.symm_apply_apply, e.symm_apply_apply]
+  right_inv R := by
+    apply Setoid.ext
+    intro a b
+    change R.r (e (e.symm a)) (e (e.symm b)) ↔ R.r a b
+    rw [e.apply_symm_apply, e.apply_symm_apply]
+  map_rel_iff' := by
+    intro R S
+    constructor
+    · intro h a b hab
+      have hab' : (setoidReindex e R).r (e a) (e b) := by
+        change R.r (e.symm (e a)) (e.symm (e b))
+        rwa [e.symm_apply_apply, e.symm_apply_apply]
+      have hS := h hab'
+      change S.r (e.symm (e a)) (e.symm (e b)) at hS
+      rwa [e.symm_apply_apply, e.symm_apply_apply] at hS
+    · intro h a b hab
+      exact h hab
+
+@[simp]
+theorem setoidReindexOrderIso_rel {A : Type u} {B : Type v}
+    (e : A ≃ B) (R : Setoid A) (a b : B) :
+    (setoidReindexOrderIso e R).r a b ↔ R.r (e.symm a) (e.symm b) := Iff.rfl
+
+/-- A real enumeration of the finite carrier; finiteness is not inferred
+from a natural cardinality whose value could otherwise be zero. -/
+noncomputable def finiteCarrierEquiv (A : Type u) [Finite A] : A ≃ Fin (Nat.card A) := by
+  classical
+  letI : Fintype A := Fintype.ofFinite A
+  simpa only [Nat.card_eq_fintype_card] using Fintype.equivFin A
+
+/-- The standard finite partition lattice, with no positivity restriction. -/
+noncomputable def finitePartitionOrderIso (A : Type u) [Finite A] :
+    E593Separator.Partition A ≃o Setoid (Fin (Nat.card A)) :=
+  (partitionSetoidOrderIso A).trans (setoidReindexOrderIso (finiteCarrierEquiv A))
+
+/-- Pointwise order transport: no permutation of the separator index is used. -/
+def pointwiseOrderIso {I : Type u} {A : I → Type v} {B : I → Type w}
+    [∀ i, PartialOrder (A i)] [∀ i, PartialOrder (B i)]
+    (e : ∀ i, A i ≃o B i) : (∀ i, A i) ≃o (∀ i, B i) where
+  toFun R i := e i (R i)
+  invFun R i := (e i).symm (R i)
+  left_inv R := funext (fun i => (e i).symm_apply_apply (R i))
+  right_inv R := funext (fun i => (e i).apply_symm_apply (R i))
+  map_rel_iff' := by
+    intro R S
+    constructor
+    · intro h i
+      exact (e i).le_iff_le.mp (h i)
+    · intro h i
+      exact (e i).le_iff_le.mpr (h i)
+
+@[simp]
+theorem pointwiseOrderIso_apply {I : Type u} {A : I → Type v} {B : I → Type w}
+    [∀ i, PartialOrder (A i)] [∀ i, PartialOrder (B i)]
+    (e : ∀ i, A i ≃o B i) (R : ∀ i, A i) (i : I) :
+    pointwiseOrderIso e R i = e i (R i) := rfl
+
+end E593Standard
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_StandardPartitionBridge
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.StandardPartitionBridge
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedStandardPartitions
+Source: Erdos593/TripleSystem/SupportedStandardPartitions.lean
+Normalized SHA-256: 8a57f74012a926adaf10775bdaa7eaac137acc472bd8e1f5c9bf4e51eb1ee129
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedStandardPartitions
+
+/-!
+# The literal decomposition order and standard finite partition lattices
+
+The imported Product file must be PR50's final repaired candidate, not PR48's
+older version. The accepted separator modules retain their canonical names.
+Nothing here replaces the original-edge decomposition predicate or assumes a
+standard product representation as an input.
+
+New source candidate: Product acceptance and pinned replay remain separate.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+open E593Separator
+
+universe u
+variable {V E : Type u} [Fintype V] [Fintype E]
+  [DecidableEq V] [DecidableEq E]
+variable (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+
+/-- A choice of labels, not a claim of canonical enumeration of a star. -/
+noncomputable def starEquivFin (hL : F.Linear) (hB : F.BridgeAtEveryEdge) (p : V) :
+    Star (atomIncident F hL hB) p ≃ Fin (pointMultiplicity F hL hB p) := by
+  classical
+  haveI : Finite (Index F) := Finite.of_surjective _ (atomOf_surjective F hL hB)
+  letI : Fintype (Star (atomIncident F hL hB) p) := Fintype.ofFinite _
+  apply Fintype.equivFinOfCardEq
+  simpa only [Nat.card_eq_fintype_card] using canonicalStar_card F hL hB p
+
+/-- Each local factor is the standard setoid partition lattice on Fin mu. -/
+noncomputable def starStandardOrderIso (hL : F.Linear) (hB : F.BridgeAtEveryEdge) (p : V) :
+    Partition (Star (atomIncident F hL hB) p) ≃o
+      Setoid (Fin (pointMultiplicity F hL hB p)) :=
+  (E593Standard.partitionSetoidOrderIso _).trans
+    (E593Standard.setoidReindexOrderIso (starEquivFin F hL hB p))
+
+/-- The index set and multiplicities are the already defined original points. -/
+abbrev StandardLocalPartitions (hL : F.Linear) (hB : F.BridgeAtEveryEdge) :=
+  (p : ↥(sharedAtomPoints F hL hB)) → Setoid (Fin (pointMultiplicity F hL hB p.val))
+
+/-- Exact order equivalence on supported partitions of original hyperedges. -/
+noncomputable def supportedStandardProduct (hF : F.Intrinsic) :
+    SupportedPartitions F ≃o StandardLocalPartitions F hF.1 hF.2.1 :=
+  (supportedDecompositionProduct F hF).trans
+    (E593Standard.pointwiseOrderIso (fun p => starStandardOrderIso F hF.1 hF.2.1 p.val))
+
+/-- The standardization retains the original local relation, up to enumeration. -/
+theorem supportedStandardProduct_rel (hF : F.Intrinsic)
+    (D : SupportedPartitions F) (p : ↥(sharedAtomPoints F hF.1 hF.2.1))
+    (a b : Fin (pointMultiplicity F hF.1 hF.2.1 p.val)) :
+    (supportedStandardProduct F hF D p).r a b ↔
+      (supportedDecompositionProduct F hF D p).rel
+        ((starEquivFin F hF.1 hF.2.1 p.val).symm a)
+        ((starEquivFin F hF.1 hF.2.1 p.val).symm b) := Iff.rfl
+
+/-- Original-carrier wrapper: no reducedness or connectedness is added. -/
+theorem obligatory_supported_standard_product (hobl : F.IsObligatory) :
+    ∃ (hL : F.Linear) (hB : F.BridgeAtEveryEdge),
+      Nonempty (SupportedPartitions F ≃o StandardLocalPartitions F hL hB) := by
+  have hi : F.Intrinsic :=
+    ((isObligatory_iff_atomGenerated F).mp hobl).constructible.intrinsic
+  exact ⟨hi.1, hi.2.1, ⟨supportedStandardProduct F hi⟩⟩
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedStandardPartitions
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedStandardPartitions
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedLatticeOperations
+Source: Erdos593/TripleSystem/SupportedLatticeOperations.lean
+Normalized SHA-256: 95e7f3a52b8d35879b592f4989b08d949f08ee2d91952842ff3a827dac811a41
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedLatticeOperations
+
+/-!
+# Suprema and infima in the actual supported-decomposition order
+
+Use the standard complete partition lattices coordinatewise and transport back
+to the unchanged original-edge objects. This avoids installing a competing
+global order/lattice instance on the earlier custom partition type. Every set,
+including the empty set, has the stated least upper and greatest lower bounds.
+
+Candidate proof source; no claim of successful kernel checking is made here.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+variable {V E : Type u} [Fintype V] [Fintype E]
+  [DecidableEq V] [DecidableEq E]
+variable (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+
+/-- Infimum transported from the standard local partition lattices. -/
+noncomputable def supportedInfimum (hF : F.Intrinsic) (S : Set (SupportedPartitions F)) :
+    SupportedPartitions F :=
+  (supportedStandardProduct F hF).symm
+    (fun p => sInf ((fun D => supportedStandardProduct F hF D p) '' S))
+
+/-- Supremum transported from the standard local partition lattices. -/
+noncomputable def supportedSupremum (hF : F.Intrinsic) (S : Set (SupportedPartitions F)) :
+    SupportedPartitions F :=
+  (supportedStandardProduct F hF).symm
+    (fun p => sSup ((fun D => supportedStandardProduct F hF D p) '' S))
+
+theorem supportedInfimum_le (hF : F.Intrinsic) (S : Set (SupportedPartitions F))
+    (D : SupportedPartitions F) (hD : D ∈ S) : supportedInfimum F hF S ≤ D := by
+  let e := supportedStandardProduct F hF
+  change e.symm (fun p => sInf ((fun R => e R p) '' S)) ≤ D
+  calc
+    _ ≤ e.symm (e D) := by
+      apply e.symm.monotone
+      intro p
+      have hp : e D p ∈ (fun R => e R p) '' S := ⟨D, hD, rfl⟩
+      exact sInf_le hp
+    _ = D := e.symm_apply_apply D
+
+theorem le_supportedInfimum (hF : F.Intrinsic) (S : Set (SupportedPartitions F))
+    (D : SupportedPartitions F) (hD : ∀ R ∈ S, D ≤ R) : D ≤ supportedInfimum F hF S := by
+  let e := supportedStandardProduct F hF
+  change D ≤ e.symm (fun p => sInf ((fun R => e R p) '' S))
+  calc
+    D = e.symm (e D) := (e.symm_apply_apply D).symm
+    _ ≤ _ := by
+      apply e.symm.monotone
+      intro p
+      apply le_sInf
+      rintro _ ⟨R, hR, rfl⟩
+      exact (e.monotone (hD R hR)) p
+
+theorem le_supportedSupremum (hF : F.Intrinsic) (S : Set (SupportedPartitions F))
+    (D : SupportedPartitions F) (hD : D ∈ S) : D ≤ supportedSupremum F hF S := by
+  let e := supportedStandardProduct F hF
+  change D ≤ e.symm (fun p => sSup ((fun R => e R p) '' S))
+  calc
+    D = e.symm (e D) := (e.symm_apply_apply D).symm
+    _ ≤ _ := by
+      apply e.symm.monotone
+      intro p
+      have hp : e D p ∈ (fun R => e R p) '' S := ⟨D, hD, rfl⟩
+      exact le_sSup hp
+
+theorem supportedSupremum_le (hF : F.Intrinsic) (S : Set (SupportedPartitions F))
+    (D : SupportedPartitions F) (hD : ∀ R ∈ S, R ≤ D) : supportedSupremum F hF S ≤ D := by
+  let e := supportedStandardProduct F hF
+  change e.symm (fun p => sSup ((fun R => e R p) '' S)) ≤ D
+  calc
+    _ ≤ e.symm (e D) := by
+      apply e.symm.monotone
+      intro p
+      apply sSup_le
+      rintro _ ⟨R, hR, rfl⟩
+      exact (e.monotone (hD R hR)) p
+    _ = D := e.symm_apply_apply D
+
+/-- Greatest lower bound, in the original order on original edge partitions. -/
+theorem supportedInfimum_isGLB (hF : F.Intrinsic) (S : Set (SupportedPartitions F)) :
+    IsGLB S (supportedInfimum F hF S) :=
+  ⟨fun D hD => supportedInfimum_le F hF S D hD,
+    fun D hD => le_supportedInfimum F hF S D hD⟩
+
+/-- Least upper bound, in the original order on original edge partitions. -/
+theorem supportedSupremum_isLUB (hF : F.Intrinsic) (S : Set (SupportedPartitions F)) :
+    IsLUB S (supportedSupremum F hF S) :=
+  ⟨fun D hD => le_supportedSupremum F hF S D hD,
+    fun D hD => supportedSupremum_le F hF S D hD⟩
+
+/-- This order has all infima and suprema; the empty-set cases provide its bounds. -/
+theorem obligatory_supported_has_bounds (hobl : F.IsObligatory)
+    (S : Set (SupportedPartitions F)) :
+    (∃ D : SupportedPartitions F, IsGLB S D) ∧
+      (∃ D : SupportedPartitions F, IsLUB S D) := by
+  have hi : F.Intrinsic :=
+    ((isObligatory_iff_atomGenerated F).mp hobl).constructible.intrinsic
+  exact ⟨⟨supportedInfimum F hi S, supportedInfimum_isGLB F hi S⟩,
+    ⟨supportedSupremum F hi S, supportedSupremum_isLUB F hi S⟩⟩
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedLatticeOperations
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedLatticeOperations
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedPointSeparation
+Source: Erdos593/TripleSystem/SupportedPointSeparation.lean
+Normalized SHA-256: e36f7cf81239ce013f8b27ed080080bda9b75c56643a4f81c4fae2cbcc8e4f67
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedPointSeparation
+
+/-!
+# Point deletion and literal edge separations
+
+Candidate only: no canonical imports or accepted proof bodies are changed.
+Only point nodes may be deleted. Every original hyperedge node is retained.
+-/
+
+namespace Erdos593.TripleSystem.SupportedBlocks
+
+universe u v
+
+variable {V : Type u} {E : Type v}
+
+/-- Point-nonseparability, independently of obligatoriness or canonical atoms. -/
+def PointNonseparable (F : TripleSystem V E) : Prop :=
+  F.levi.Connected ∧
+    ∀ r : V, (F.levi.induce {z : V ⊕ E | z ≠ Sum.inl r}).Connected
+
+/-- A literal original-edge partition meeting in exactly one point. -/
+def IsPointSeparation (F : TripleSystem V E) (L R : Set E) (r : V) : Prop :=
+  L.Nonempty ∧ R.Nonempty ∧ Disjoint L R ∧ L ∪ R = Set.univ ∧
+    F.edgeSupportSet L ∩ F.edgeSupportSet R = {r}
+
+/-- Existence of a literal nontrivial point separation. -/
+def HasPointSeparation (F : TripleSystem V E) : Prop :=
+  ∃ L R : Set E, ∃ r : V, IsPointSeparation F L R r
+
+private abbrev RemainingNode (r : V) :=
+  {z : V ⊕ E // z ≠ Sum.inl r}
+
+private def retainedEdge (r : V) (e : E) : RemainingNode (E := E) r :=
+  ⟨Sum.inr e, Sum.inr_ne_inl⟩
+
+/-- In a connected Levi graph, two nonempty complementary edge parts cannot
+have disjoint point supports. No finiteness or linearity is needed. -/
+theorem support_inter_nonempty_of_partition
+    (F : TripleSystem V E) (hconnected : F.levi.Connected)
+    (L R : Set E) (hL : L.Nonempty) (hR : R.Nonempty)
+    (hdisjoint : Disjoint L R) (htotal : L ∪ R = Set.univ) :
+    (F.edgeSupportSet L ∩ F.edgeSupportSet R).Nonempty := by
+  classical
+  obtain ⟨e₀, he₀⟩ := hL
+  obtain ⟨e₁, he₁⟩ := hR
+  by_contra hmeet
+  let X : V ⊕ E → Prop :=
+    Sum.elim (fun x => x ∈ F.edgeSupportSet L) (fun e => e ∈ L)
+  have hstep : ∀ z w : V ⊕ E, X z → F.levi.Adj z w → X w := by
+    rintro (x | e) (y | g) hz hadj
+    · exact (F.not_levi_adj_point_point hadj).elim
+    · have hxg : F.Inc x g := F.levi_adj_point_edge.mp hadj
+      rcases (htotal ▸ Set.mem_univ g : g ∈ L ∪ R) with hgL | hgR
+      · exact hgL
+      · exact (hmeet ⟨x, hz, ⟨g, hgR, hxg⟩⟩).elim
+    · exact ⟨e, hz, F.levi_adj_edge_point.mp hadj⟩
+    · exact (F.not_levi_adj_edge_edge hadj).elim
+  have hwalk : ∀ z w : V ⊕ E, F.levi.Walk z w → X z → X w := by
+    intro z w p
+    induction p with
+    | nil => exact id
+    | cons hadj _ ih => exact fun hz => ih (hstep _ _ hz hadj)
+  obtain ⟨p⟩ := hconnected.preconnected (Sum.inr e₀) (Sum.inr e₁)
+  exact Set.disjoint_left.mp hdisjoint (hwalk _ _ p he₀) he₁
+
+/-- A one-point edge separation disconnects the Levi graph after its shared
+POINT is deleted; the hyperedge nodes on both sides survive. -/
+theorem pointDeletion_not_connected_of_separation
+    (F : TripleSystem V E) (L R : Set E) (r : V)
+    (hsep : IsPointSeparation F L R r) :
+    ¬(F.levi.induce {z : V ⊕ E | z ≠ Sum.inl r}).Connected := by
+  classical
+  obtain ⟨hL, hR, hdisjoint, htotal, hinter⟩ := hsep
+  obtain ⟨e₀, he₀⟩ := hL
+  obtain ⟨e₁, he₁⟩ := hR
+  let G := F.levi.induce {z : V ⊕ E | z ≠ Sum.inl r}
+  let X : RemainingNode (E := E) r → Prop :=
+    fun z => Sum.elim (fun x => x ∈ F.edgeSupportSet L) (fun e => e ∈ L) z.1
+  have hstep : ∀ z w : RemainingNode (E := E) r,
+      X z → G.Adj z w → X w := by
+    rintro ⟨z, hz⟩ ⟨w, hw⟩ hX hadj
+    rcases z with x | e <;> rcases w with y | g
+    · exact (F.not_levi_adj_point_point hadj).elim
+    · have hxg : F.Inc x g := F.levi_adj_point_edge.mp hadj
+      rcases (htotal ▸ Set.mem_univ g : g ∈ L ∪ R) with hgL | hgR
+      · exact hgL
+      · have hxroot : x = r := Set.mem_singleton_iff.mp
+          (hinter ▸ (show x ∈ F.edgeSupportSet L ∩ F.edgeSupportSet R from
+            ⟨hX, ⟨g, hgR, hxg⟩⟩))
+        exact (hz (congrArg Sum.inl hxroot)).elim
+    · exact ⟨e, hX, F.levi_adj_edge_point.mp hadj⟩
+    · exact (F.not_levi_adj_edge_edge hadj).elim
+  have hwalk : ∀ z w : RemainingNode (E := E) r,
+      G.Walk z w → X z → X w := by
+    intro z w p
+    induction p with
+    | nil => exact id
+    | cons hadj _ ih => exact fun hz => ih (hstep _ _ hz hadj)
+  intro hconnected
+  obtain ⟨p⟩ := hconnected.preconnected (retainedEdge r e₀) (retainedEdge r e₁)
+  exact Set.disjoint_left.mp hdisjoint (hwalk _ _ p he₀) he₁
+
+/-- Every disconnected point deletion of a connected reduced system determines
+a literal edge partition. In particular, this does not assume Intrinsic. -/
+theorem exists_separation_of_pointDeletion_not_connected
+    (F : TripleSystem V E) (hconnected : F.levi.Connected)
+    (hreduced : F.HasNoIsolatedPoints) (hnonempty : Nonempty E)
+    (r : V)
+    (hdeleted : ¬(F.levi.induce {z : V ⊕ E | z ≠ Sum.inl r}).Connected) :
+    ∃ L R : Set E, IsPointSeparation F L R r := by
+  classical
+  let G := F.levi.induce {z : V ⊕ E | z ≠ Sum.inl r}
+  have hnotpre : ¬G.Preconnected := by
+    intro hpre
+    obtain ⟨e⟩ := hnonempty
+    exact hdeleted (@SimpleGraph.Connected.mk _ _ hpre
+      ⟨⟨Sum.inr e, Sum.inr_ne_inl⟩⟩)
+  obtain ⟨a, b, hab⟩ : ∃ a b : RemainingNode (E := E) r, ¬G.Reachable a b := by
+    obtain ⟨a, ha⟩ := not_forall.mp hnotpre
+    obtain ⟨b, hb⟩ := not_forall.mp ha
+    exact ⟨a, b, hb⟩
+  have htoEdge : ∀ z : RemainingNode (E := E) r,
+      ∃ e : E, G.Reachable z (retainedEdge r e) := by
+    rintro ⟨x | e, hz⟩
+    · obtain ⟨e, hxe⟩ := F.not_isolated_iff_exists_inc.mp (hreduced x)
+      refine ⟨e, SimpleGraph.Adj.reachable ?_⟩
+      exact F.levi_adj_point_edge.mpr hxe
+    · exact ⟨e, SimpleGraph.Reachable.rfl⟩
+  obtain ⟨e₀, ha⟩ := htoEdge a
+  obtain ⟨e₁, hb⟩ := htoEdge b
+  have hseparate : ¬G.Reachable (retainedEdge r e₀) (retainedEdge r e₁) := by
+    intro h
+    exact hab (ha.trans (h.trans hb.symm))
+  let L : Set E := {e | G.Reachable (retainedEdge r e₀) (retainedEdge r e)}
+  let R : Set E := Lᶜ
+  have hL : L.Nonempty := ⟨e₀, SimpleGraph.Reachable.rfl⟩
+  have hR : R.Nonempty := ⟨e₁, hseparate⟩
+  have hdisjoint : Disjoint L R :=
+    Set.disjoint_left.mpr (fun _ he hg => hg he)
+  have htotal : L ∪ R = Set.univ := Set.union_compl_self L
+  have hsub : ∀ x : V,
+      x ∈ F.edgeSupportSet L ∩ F.edgeSupportSet R → x = r := by
+    rintro x ⟨⟨e, he, hxe⟩, ⟨g, hg, hxg⟩⟩
+    by_contra hxr
+    let z : RemainingNode (E := E) r :=
+      ⟨Sum.inl x, fun h => hxr (Sum.inl.inj h)⟩
+    have hez : G.Adj (retainedEdge r e) z := F.levi_adj_edge_point.mpr hxe
+    have hzg : G.Adj z (retainedEdge r g) := F.levi_adj_point_edge.mpr hxg
+    exact hg (he.trans (hez.reachable.trans hzg.reachable))
+  obtain ⟨x, hx⟩ := support_inter_nonempty_of_partition
+    F hconnected L R hL hR hdisjoint htotal
+  have hxr : x = r := hsub x hx
+  have hroot : r ∈ F.edgeSupportSet L ∩ F.edgeSupportSet R := hxr ▸ hx
+  refine ⟨L, R, hL, hR, hdisjoint, htotal, Set.Subset.antisymm ?_ ?_⟩
+  · exact fun y hy => Set.mem_singleton_iff.mpr (hsub y hy)
+  · intro y hy
+    have hyr : y = r := Set.mem_singleton_iff.mp hy
+    exact hyr.symm ▸ hroot
+
+/-- The independent point-deletion test agrees with absence of a literal
+edge separation. This light kernel does not require finite carriers. -/
+theorem pointNonseparable_iff_no_pointSeparation
+    (F : TripleSystem V E) (hconnected : F.levi.Connected)
+    (hreduced : F.HasNoIsolatedPoints) (hnonempty : Nonempty E) :
+    PointNonseparable F ↔ ¬HasPointSeparation F := by
+  classical
+  constructor
+  · rintro ⟨_, hpoint⟩ ⟨L, R, r, hsep⟩
+    exact pointDeletion_not_connected_of_separation F L R r hsep (hpoint r)
+  · intro hnosep
+    refine ⟨hconnected, fun r => ?_⟩
+    by_contra hdeleted
+    obtain ⟨L, R, hsep⟩ := exists_separation_of_pointDeletion_not_connected
+      F hconnected hreduced hnonempty r hdeleted
+    exact hnosep ⟨L, R, r, hsep⟩
+
+end Erdos593.TripleSystem.SupportedBlocks
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedPointSeparation
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedPointSeparation
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedPointIndecomposable
+Source: Erdos593/TripleSystem/SupportedPointIndecomposable.lean
+Normalized SHA-256: 49ff719dd36b8117e97d8ce866d54f1b7eb1ab535c5b394d503c39312af7f2f3
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedPointIndecomposable
+
+/-! # Literal amalgam adapter for the independent point-deletion criterion
+
+Candidate only; the light kernel and this adapter are not integrated or accepted.
+-/
+
+namespace Erdos593.TripleSystem.SupportedBlocks
+
+universe u
+
+/-- The light separation predicate is exactly the existing literal certificate,
+not a weakened or strengthened substitute. -/
+theorem hasPointSeparation_iff_edgeOnePointDecomposition
+    {V E : Type u} (F : TripleSystem V E) :
+    HasPointSeparation F ↔ Nonempty (CanonicalAtom.EdgeOnePointDecomposition F) := by
+  constructor
+  · rintro ⟨L, R, r, hL, hR, hdisjoint, htotal, hinter⟩
+    exact ⟨⟨L, R, hL, hR, hdisjoint, htotal, r, hinter⟩⟩
+  · rintro ⟨D⟩
+    exact ⟨D.left, D.right, D.root, D.left_nonempty, D.right_nonempty,
+      D.disjoint, D.total, D.support_intersection⟩
+
+/-- Manuscript-facing point-separator/indecomposable bridge. The hypotheses and
+literal amalgam definition are the existing finite API; Intrinsic is not assumed. -/
+theorem pointNonseparable_iff_onePointIndecomposable
+    {V E : Type u} (F : TripleSystem V E)
+    [Fintype V] [Fintype E]
+    (hconnected : F.levi.Connected)
+    (hreduced : F.HasNoIsolatedPoints)
+    (hnonempty : Nonempty E) :
+    PointNonseparable F ↔ CanonicalAtom.OnePointIndecomposable F := by
+  rw [pointNonseparable_iff_no_pointSeparation F hconnected hreduced hnonempty,
+    hasPointSeparation_iff_edgeOnePointDecomposition,
+    ← CanonicalAtom.onePointDecomposable_iff_edgeOnePointDecomposition
+      F hconnected hreduced]
+  rfl
+
+end Erdos593.TripleSystem.SupportedBlocks
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedPointIndecomposable
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedPointIndecomposable
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedClassicalBlockForward
+Source: Erdos593/TripleSystem/SupportedClassicalBlockForward.lean
+Normalized SHA-256: 837f39294617109b0269da0a6d48ba18438742fdd1cacc03f2fd4d84c505e168
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedClassicalBlockForward
+
+/-!
+# Forward classical-block interface
+
+Candidate only. Neither this module nor its point-separator adapter has pinned
+project acceptance. No canonical import or existing proof is changed.
+
+The converse for arbitrary finite systems still needs generic block assembly;
+it is not obtained by assuming the classification hypotheses.
+-/
+
+namespace Erdos593.TripleSystem.SupportedBlocks
+
+universe u
+
+/-- Nonempty maximal point-nonseparable restrictions of original edge indices.
+This definition contains no obligatoriness or Intrinsic premise. -/
+def IsSupportedBlock {V E : Type u} (F : TripleSystem V E) (S : Set E) : Prop :=
+  S.Nonempty ∧ PointNonseparable (F.edgeRestriction S) ∧
+    ∀ T : Set E, S ⊆ T → PointNonseparable (F.edgeRestriction T) → T ⊆ S
+
+/-- The literal incidence-isomorphism types in the classical-block statement. -/
+def AllowedBlockType {V E : Type u} (F : TripleSystem V E) : Prop :=
+  TripleSystem.Isomorphic F (privateVertexExpansion oneEdgeGraph.{u}) ∨
+    ∃ C : CanonicalAtom.TwoConnectedBipartiteCore.{u},
+      TripleSystem.Isomorphic F (privateVertexExpansion C.graph)
+
+/-- The independent point-deletion test identifies the allowed types for a
+connected reduced obligatory system. All original hypotheses are retained. -/
+theorem connected_reduced_obligatory_pointNonseparable_iff
+    {V E : Type u} (F : TripleSystem V E)
+    [Fintype V] [Fintype E]
+    (hconnected : F.levi.Connected)
+    (hreduced : F.HasNoIsolatedPoints)
+    (hobligatory : F.IsObligatory)
+    (hnonempty : Nonempty E) :
+    PointNonseparable F ↔ AllowedBlockType F := by
+  exact (pointNonseparable_iff_onePointIndecomposable
+    F hconnected hreduced hnonempty).trans
+      (CanonicalAtom.connected_reduced_obligatory_onePointIndecomposable_iff
+        F hconnected hreduced hobligatory hnonempty)
+
+/-- In the forward direction, maximality is unnecessary: every nonempty
+point-nonseparable supported restriction of an obligatory system is allowed. -/
+theorem obligatory_restriction_allowed_of_pointNonseparable
+    {V E : Type u} (F : TripleSystem V E)
+    [Fintype V] [Fintype E]
+    (hobligatory : F.IsObligatory) (S : Set E)
+    (hS : S.Nonempty) (hpoint : PointNonseparable (F.edgeRestriction S)) :
+    AllowedBlockType (F.edgeRestriction S) := by
+  classical
+  letI : Fintype (F.EdgeSupport S) := Fintype.ofFinite _
+  letI : Fintype S := Fintype.ofFinite _
+  have hnonempty : Nonempty S := ⟨⟨hS.choose, hS.choose_spec⟩⟩
+  have hreduced : (F.edgeRestriction S).HasNoIsolatedPoints := by
+    intro x hx
+    obtain ⟨e, he, hxe⟩ := x.property
+    exact hx ⟨e, he⟩ hxe
+  have hobligatoryRestriction : (F.edgeRestriction S).IsObligatory :=
+    hobligatory.of_sourceEmbedding (F.edgeRestrictionEmbedding S)
+  exact (connected_reduced_obligatory_pointNonseparable_iff
+    (F.edgeRestriction S) hpoint.1 hreduced hobligatoryRestriction hnonempty).mp hpoint
+
+/-- The forward half of the unrestricted manuscript block formulation,
+including isolated vertices, disconnected systems and the empty-edge case. -/
+theorem isObligatory_implies_forall_supportedBlock_allowed
+    {V E : Type u} (F : TripleSystem V E)
+    [Fintype V] [Fintype E] (hobligatory : F.IsObligatory) :
+    ∀ S : Set E, IsSupportedBlock F.isolatedReduction S →
+      AllowedBlockType (F.isolatedReduction.edgeRestriction S) := by
+  classical
+  letI : Fintype F.NonIsolatedPoint := Fintype.ofFinite _
+  intro S hS
+  exact obligatory_restriction_allowed_of_pointNonseparable
+    F.isolatedReduction hobligatory.isolatedReduction S hS.1 hS.2.1
+
+end Erdos593.TripleSystem.SupportedBlocks
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedClassicalBlockForward
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedClassicalBlockForward
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedRestrictionTransport
+Source: Erdos593/TripleSystem/SupportedRestrictionTransport.lean
+Normalized SHA-256: 7daddfb2af273ad1df319d4b90f11eb76b02a5e30004461ac9d731d004a08fb5
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedRestrictionTransport
+
+/-!
+# Exact restriction inclusions and finite maximal extension
+
+Candidate only. These helpers address literal support/edge transport and finite
+maximal extension; they do not prove generic block splitting or running order.
+-/
+
+namespace Erdos593.TripleSystem
+
+universe u v
+
+variable {V : Type u} {E : Type v} (F : TripleSystem V E)
+
+/-- Inclusion of original edge indices gives inclusion of actual point supports. -/
+theorem edgeSupportSet_mono {S T : Set E} (hST : S ⊆ T) :
+    F.edgeSupportSet S ⊆ F.edgeSupportSet T := by
+  rintro x ⟨e, he, hxe⟩
+  exact ⟨e, hST he, hxe⟩
+
+/-- Literal subtype inclusions embed a smaller supported restriction into a
+larger one; no isolated, finite, linear or obligatory premise is required. -/
+def edgeRestrictionEmbeddingOfSubset {S T : Set E} (hST : S ⊆ T) :
+    (F.edgeRestriction S).Embedding (F.edgeRestriction T) where
+  vertex :=
+    { toFun := fun x => ⟨x.1, F.edgeSupportSet_mono hST x.2⟩
+      inj' := by
+        intro x y h
+        exact Subtype.ext (congrArg (fun z : F.EdgeSupport T => (z : V)) h) }
+  edge := fun e => ⟨e.1, hST e.2⟩
+  map_edge := by
+    intro e
+    ext x
+    constructor
+    · rintro ⟨y, hy, hxy⟩
+      change F.Inc x.1 e.1
+      have hval : y.1 = x.1 := congrArg Subtype.val hxy
+      exact hval ▸ hy
+    · intro hx
+      change F.Inc x.1 e.1 at hx
+      exact ⟨⟨x.1, e.1, e.2, hx⟩, hx, Subtype.ext rfl⟩
+
+@[simp]
+theorem edgeRestrictionEmbeddingOfSubset_vertex_coe {S T : Set E}
+    (hST : S ⊆ T) (x : F.EdgeSupport S) :
+    ((F.edgeRestrictionEmbeddingOfSubset hST).vertex x : V) = x.1 :=
+  rfl
+
+@[simp]
+theorem edgeRestrictionEmbeddingOfSubset_edge_coe {S T : Set E}
+    (hST : S ⊆ T) (e : S) :
+    ((F.edgeRestrictionEmbeddingOfSubset hST).edge e : E) = e.1 :=
+  rfl
+
+namespace SupportedBlocks
+
+/-- Any predicate on edge subsets of a finite ORIGINAL carrier has a maximal
+superset of each satisfying set. Monotonicity of the predicate is NOT assumed. -/
+theorem exists_maximal_set_superset [Finite E] (P : Set E → Prop)
+    (S : Set E) (hS : P S) :
+    ∃ T : Set E, S ⊆ T ∧ P T ∧
+      ∀ U : Set E, T ⊆ U → P U → U ⊆ T := by
+  classical
+  let C : Set (Set E) := {T | S ⊆ T ∧ P T}
+  have hC : C.Nonempty := ⟨S, Set.Subset.refl S, hS⟩
+  obtain ⟨T, hT, hmax⟩ := Set.exists_max_image C Set.ncard (Set.toFinite C) hC
+  refine ⟨T, hT.1, hT.2, ?_⟩
+  intro U hTU hPU
+  have hcard : U.ncard ≤ T.ncard := hmax U ⟨hT.1.trans hTU, hPU⟩
+  exact (Set.eq_of_subset_of_ncard_le hTU hcard (Set.toFinite U)).symm.subset
+
+end SupportedBlocks
+
+end Erdos593.TripleSystem
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedRestrictionTransport
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedRestrictionTransport
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedDisconnectedSplit
+Source: Erdos593/TripleSystem/SupportedDisconnectedSplit.lean
+Normalized SHA-256: d3dffb763b55685ec752a0b5c3b7f8e9aa6e70998eaf07e074588bff712b2ec2
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedDisconnectedSplit
+
+/-!
+# Disconnected supported restrictions
+
+Candidate only. Partitions use the original edge carrier, not an assembly list.
+No canonical import or previously accepted source is changed.
+-/
+
+namespace Erdos593.TripleSystem.SupportedBlocks
+
+universe u v
+
+/-- A disconnected reduced Levi graph has a nontrivial edge partition with
+disjoint point supports. No finite-carrier assumption is needed. -/
+theorem exists_disjoint_support_partition_of_not_connected
+    {V : Type u} {E : Type v} (F : TripleSystem V E)
+    (hreduced : F.HasNoIsolatedPoints) (hnonempty : Nonempty E)
+    (hnotconnected : ¬F.levi.Connected) :
+    ∃ L R : Set E, L.Nonempty ∧ R.Nonempty ∧ Disjoint L R ∧
+      L ∪ R = Set.univ ∧ Disjoint (F.edgeSupportSet L) (F.edgeSupportSet R) := by
+  classical
+  have hnotpre : ¬F.levi.Preconnected := by
+    intro hpre
+    obtain ⟨e⟩ := hnonempty
+    exact hnotconnected (@SimpleGraph.Connected.mk _ _ hpre ⟨Sum.inr e⟩)
+  obtain ⟨a, b, hab⟩ : ∃ a b : V ⊕ E, ¬F.levi.Reachable a b := by
+    obtain ⟨a, ha⟩ := not_forall.mp hnotpre
+    obtain ⟨b, hb⟩ := not_forall.mp ha
+    exact ⟨a, b, hb⟩
+  have htoEdge : ∀ z : V ⊕ E, ∃ e : E, F.levi.Reachable z (Sum.inr e) := by
+    rintro (x | e)
+    · obtain ⟨e, hxe⟩ := F.not_isolated_iff_exists_inc.mp (hreduced x)
+      exact ⟨e, (F.levi_adj_point_edge.mpr hxe).reachable⟩
+    · exact ⟨e, SimpleGraph.Reachable.rfl⟩
+  obtain ⟨e₀, ha⟩ := htoEdge a
+  obtain ⟨e₁, hb⟩ := htoEdge b
+  have hseparate : ¬F.levi.Reachable (Sum.inr e₀) (Sum.inr e₁) := by
+    intro h
+    exact hab (ha.trans (h.trans hb.symm))
+  let L : Set E := {e | F.levi.Reachable (Sum.inr e₀) (Sum.inr e)}
+  let R : Set E := Lᶜ
+  refine ⟨L, R, ⟨e₀, SimpleGraph.Reachable.rfl⟩, ⟨e₁, hseparate⟩,
+    Set.disjoint_left.mpr (fun _ he hg => hg he), Set.union_compl_self L, ?_⟩
+  apply Set.disjoint_left.mpr
+  rintro x ⟨e, he, hxe⟩ ⟨g, hg, hxg⟩
+  exact hg (he.trans ((F.levi_adj_edge_point.mpr hxe).reachable.trans
+    (F.levi_adj_point_edge.mpr hxg).reachable))
+
+/-- Push the partition of a supported restriction back to literal ambient
+edge subsets. Isolated points of the ambient system are unrestricted. -/
+theorem exists_original_partition_of_disconnected_restriction
+    {V : Type u} {E : Type v} (F : TripleSystem V E)
+    (S : Set E) (hS : S.Nonempty)
+    (hnotconnected : ¬(F.edgeRestriction S).levi.Connected) :
+    ∃ L R : Set E, L.Nonempty ∧ R.Nonempty ∧ Disjoint L R ∧
+      L ∪ R = S ∧ Disjoint (F.edgeSupportSet L) (F.edgeSupportSet R) := by
+  classical
+  have hnonempty : Nonempty S := ⟨⟨hS.choose, hS.choose_spec⟩⟩
+  have hreduced : (F.edgeRestriction S).HasNoIsolatedPoints := by
+    intro x hx
+    obtain ⟨e, he, hxe⟩ := x.property
+    exact hx ⟨e, he⟩ hxe
+  obtain ⟨A, B, hA, hB, hdisjoint, htotal, hsupports⟩ :=
+    exists_disjoint_support_partition_of_not_connected
+      (F.edgeRestriction S) hreduced hnonempty hnotconnected
+  let L : Set E := Subtype.val '' A
+  let R : Set E := Subtype.val '' B
+  refine ⟨L, R, hA.image _, hB.image _, ?_, ?_, ?_⟩
+  · apply Set.disjoint_left.mpr
+    rintro e ⟨a, ha, hae⟩ ⟨b, hb, hbe⟩
+    have hab : a = b := Subtype.ext (hae.trans hbe.symm)
+    exact Set.disjoint_left.mp hdisjoint (hab ▸ ha) hb
+  · apply Set.Subset.antisymm
+    · rintro e (⟨a, _, rfl⟩ | ⟨b, _, rfl⟩)
+      · exact a.property
+      · exact b.property
+    · intro e he
+      let a : S := ⟨e, he⟩
+      rcases (htotal ▸ Set.mem_univ a : a ∈ A ∪ B) with ha | hb
+      · exact Or.inl ⟨a, ha, rfl⟩
+      · exact Or.inr ⟨a, hb, rfl⟩
+  · apply Set.disjoint_left.mpr
+    rintro x ⟨e, ⟨a, ha, rfl⟩, hxe⟩ ⟨g, ⟨b, hb, rfl⟩, hxg⟩
+    let xS : F.EdgeSupport S := ⟨x, a.1, a.2, hxe⟩
+    exact Set.disjoint_left.mp hsupports
+      (show xS ∈ (F.edgeRestriction S).edgeSupportSet A from ⟨a, ha, hxe⟩)
+      (show xS ∈ (F.edgeRestriction S).edgeSupportSet B from ⟨b, hb, hxg⟩)
+
+end Erdos593.TripleSystem.SupportedBlocks
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedDisconnectedSplit
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedDisconnectedSplit
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedClassicalBlockConverse
+Source: Erdos593/TripleSystem/SupportedClassicalBlockConverse.lean
+Normalized SHA-256: 68d06a6a1aa24e60055df91bedc2f5e9a8022eca88629e8b34f12e402b1877c9
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedClassicalBlockConverse
+
+/-!
+# Unrestricted classical-block converse by finite edge splitting
+
+Candidate: no project acceptance is claimed by this file. The induction is on
+literal subsets of the original edge carrier. In particular, the converse does
+not assume Intrinsic, obligatoriness, connectedness, or a block running order.
+-/
+
+namespace Erdos593.TripleSystem.SupportedBlocks
+
+universe u
+
+/-- Transport a point-separation of a supported restriction to the original
+edge carrier, retaining the actual ambient cut point. -/
+theorem exists_original_partition_of_pointSeparation
+    {V E : Type u} (F : TripleSystem V E) (S : Set E)
+    (h : HasPointSeparation (F.edgeRestriction S)) :
+    ∃ L R : Set E, L.Nonempty ∧ R.Nonempty ∧ Disjoint L R ∧
+      L ∪ R = S ∧ ∃ r : V,
+        F.edgeSupportSet L ∩ F.edgeSupportSet R = {r} := by
+  rcases h with ⟨A, B, r, hA, hB, hdisjoint, htotal, hsupports⟩
+  let L : Set E := Subtype.val '' A
+  let R : Set E := Subtype.val '' B
+  refine ⟨L, R, hA.image _, hB.image _, ?_, ?_, r.1, ?_⟩
+  · apply Set.disjoint_left.mpr
+    rintro e ⟨a, ha, hae⟩ ⟨b, hb, hbe⟩
+    have hab : a = b := Subtype.ext (hae.trans hbe.symm)
+    exact Set.disjoint_left.mp hdisjoint (hab ▸ ha) hb
+  · apply Set.Subset.antisymm
+    · rintro e (⟨a, _, rfl⟩ | ⟨b, _, rfl⟩)
+      · exact a.property
+      · exact b.property
+    · intro e he
+      let a : S := ⟨e, he⟩
+      rcases (htotal ▸ Set.mem_univ a : a ∈ A ∪ B) with ha | hb
+      · exact Or.inl ⟨a, ha, rfl⟩
+      · exact Or.inr ⟨a, hb, rfl⟩
+  · ext x
+    constructor
+    · rintro ⟨⟨e, ⟨a, ha, rfl⟩, hxe⟩, ⟨g, ⟨b, hb, rfl⟩, hxg⟩⟩
+      let xS : F.EdgeSupport S := ⟨x, a.1, a.2, hxe⟩
+      have hx : xS ∈ (F.edgeRestriction S).edgeSupportSet A ∩
+          (F.edgeRestriction S).edgeSupportSet B :=
+        ⟨⟨a, ha, hxe⟩, ⟨b, hb, hxg⟩⟩
+      have hxr : xS = r := Set.mem_singleton_iff.mp (hsupports ▸ hx)
+      exact Set.mem_singleton_iff.mpr (congrArg Subtype.val hxr)
+    · intro hx
+      have hxr : x = r.1 := Set.mem_singleton_iff.mp hx
+      subst x
+      have hr : r ∈ (F.edgeRestriction S).edgeSupportSet A ∩
+          (F.edgeRestriction S).edgeSupportSet B := by
+        rw [hsupports]
+        exact Set.mem_singleton r
+      obtain ⟨a, ha, hra⟩ := hr.1
+      obtain ⟨b, hb, hrb⟩ := hr.2
+      exact ⟨⟨a.1, ⟨a, ha, rfl⟩, hra⟩, ⟨b.1, ⟨b, hb, rfl⟩, hrb⟩⟩
+
+/-- Every finite original edge set is obtained from point-nonseparable pieces
+by disjoint-support unions and singleton-support unions. This is a predicate
+induction principle, not an assumption that a block ordering already exists. -/
+theorem edgeRestriction_induction
+    {V E : Type u} (F : TripleSystem V E) [Finite E]
+    (P : Set E → Prop) (hempty : P ∅)
+    (hterminal : ∀ S : Set E, S.Nonempty →
+      PointNonseparable (F.edgeRestriction S) → P S)
+    (hglue : ∀ L R : Set E, L.Nonempty → R.Nonempty → Disjoint L R →
+      (Disjoint (F.edgeSupportSet L) (F.edgeSupportSet R) ∨
+        ∃ r : V, F.edgeSupportSet L ∩ F.edgeSupportSet R = {r}) →
+      P L → P R → P (L ∪ R)) : ∀ S : Set E, P S := by
+  classical
+  have h : ∀ n : ℕ, ∀ S : Set E, S.ncard = n → P S := by
+    intro n
+    induction n using Nat.strong_induction_on with
+    | h n ih =>
+      intro S hcard
+      by_cases hS : S.Nonempty
+      · by_cases hp : PointNonseparable (F.edgeRestriction S)
+        · exact hterminal S hS hp
+        · have hsplit : ∃ L R : Set E, L.Nonempty ∧ R.Nonempty ∧
+              Disjoint L R ∧ L ∪ R = S ∧
+              (Disjoint (F.edgeSupportSet L) (F.edgeSupportSet R) ∨
+                ∃ r : V, F.edgeSupportSet L ∩ F.edgeSupportSet R = {r}) := by
+            by_cases hc : (F.edgeRestriction S).levi.Connected
+            · have hr : (F.edgeRestriction S).HasNoIsolatedPoints := by
+                intro x hx
+                obtain ⟨e, he, hxe⟩ := x.property
+                exact hx ⟨e, he⟩ hxe
+              have hn : Nonempty S := ⟨⟨hS.choose, hS.choose_spec⟩⟩
+              have hsep : HasPointSeparation (F.edgeRestriction S) := by
+                by_contra hnot
+                exact hp ((pointNonseparable_iff_no_pointSeparation
+                  (F.edgeRestriction S) hc hr hn).mpr hnot)
+              obtain ⟨L, R, hL, hR, hd, hu, r, hs⟩ :=
+                exists_original_partition_of_pointSeparation F S hsep
+              exact ⟨L, R, hL, hR, hd, hu, Or.inr ⟨r, hs⟩⟩
+            · obtain ⟨L, R, hL, hR, hd, hu, hs⟩ :=
+                exists_original_partition_of_disconnected_restriction F S hS hc
+              exact ⟨L, R, hL, hR, hd, hu, Or.inl hs⟩
+          obtain ⟨L, R, hL, hR, hd, hu, hs⟩ := hsplit
+          have hLS : L ⊆ S := fun _ he => hu ▸ Or.inl he
+          have hRS : R ⊆ S := fun _ he => hu ▸ Or.inr he
+          have hLt : L ⊂ S := by
+            refine ⟨hLS, ?_⟩
+            intro hSL
+            obtain ⟨e, he⟩ := hR
+            exact Set.disjoint_left.mp hd (hSL (hRS he)) he
+          have hRt : R ⊂ S := by
+            refine ⟨hRS, ?_⟩
+            intro hSR
+            obtain ⟨e, he⟩ := hL
+            exact Set.disjoint_left.mp hd he (hSR (hLS he))
+          have hPL : P L := ih L.ncard (hcard ▸ Set.ncard_lt_ncard hLt) L rfl
+          have hPR : P R := ih R.ncard (hcard ▸ Set.ncard_lt_ncard hRt) R rfl
+          exact hu ▸ hglue L R hL hR hd hs hPL hPR
+      · have he : S = ∅ := Set.not_nonempty_iff_eq_empty.mp hS
+        exact he ▸ hempty
+  intro S
+  exact h S.ncard S rfl
+
+/-- A nonempty point-nonseparable restriction extends to a maximal such
+restriction. No monotonicity of point-nonseparability is needed. -/
+theorem exists_supportedBlock_superset
+    {V E : Type u} (F : TripleSystem V E) [Finite E]
+    (S : Set E) (hS : S.Nonempty)
+    (hp : PointNonseparable (F.edgeRestriction S)) :
+    ∃ T : Set E, S ⊆ T ∧ IsSupportedBlock F T := by
+  obtain ⟨T, hST, hT, hmax⟩ := exists_maximal_set_superset
+    (fun U : Set E => PointNonseparable (F.edgeRestriction U)) S hp
+  exact ⟨T, hST, hS.mono hST, hT, hmax⟩
+
+/-- Both allowed literal incidence-isomorphism types are obligatory. -/
+theorem AllowedBlockType.isObligatory
+    {V E : Type u} {F : TripleSystem V E} (h : AllowedBlockType F) :
+    F.IsObligatory := by
+  rcases h with h | ⟨C, h⟩
+  · obtain ⟨f⟩ := h
+    exact CanonicalAtom.AtomGenerated.ofOneTriple.constructible.isObligatory.ofIso f.symm
+  · obtain ⟨f⟩ := h
+    exact (CanonicalAtom.AtomGenerated.ofCore C).constructible.isObligatory.ofIso f.symm
+
+/-- If all maximal point-nonseparable restrictions are allowed, every exact
+restriction is obligatory. The induction handles disconnected systems too. -/
+theorem restriction_isObligatory_of_forall_supportedBlock_allowed
+    {V E : Type u} (F : TripleSystem V E) [Fintype V] [Fintype E]
+    (hall : ∀ S : Set E, IsSupportedBlock F S → AllowedBlockType (F.edgeRestriction S)) :
+    ∀ S : Set E, (F.edgeRestriction S).IsObligatory := by
+  classical
+  apply edgeRestriction_induction F (fun S => (F.edgeRestriction S).IsObligatory)
+  · letI : Fintype (F.EdgeSupport ∅) := Fintype.ofFinite _
+    exact isObligatory_of_isEmptyEdgeIndices (F.edgeRestriction ∅)
+  · intro S hS hp
+    obtain ⟨T, hST, hT⟩ := exists_supportedBlock_superset F S hS hp
+    exact (hall T hT).isObligatory.of_sourceEmbedding
+      (F.edgeRestrictionEmbeddingOfSubset hST)
+  · intro L R _ _ hd hs hL hR
+    letI : Fintype (F.EdgeSupport L) := Fintype.ofFinite _
+    letI : Fintype (F.EdgeSupport R) := Fintype.ofFinite _
+    letI : Fintype L := Fintype.ofFinite _
+    letI : Fintype R := Fintype.ofFinite _
+    rcases hs with hs | ⟨r, hs⟩
+    · exact (IsObligatory.disjointUnion _ _ hL hR).ofIso
+        (F.edgeRestrictionUnionIsoDisjointUnion hd hs)
+    · exact (IsObligatory.onePointAmalgamation hL hR
+        (F.edgeSupportLeftRoot hs) (F.edgeSupportRightRoot hs)).ofIso
+        (F.edgeRestrictionUnionIsoOnePointAmalgamation hd hs)
+
+/-- The unrestricted classical-block characterization, including empty edge
+sets, disconnected systems and isolated points, with no Intrinsic premise. -/
+theorem isObligatory_iff_forall_supportedBlock_allowed
+    {V E : Type u} (F : TripleSystem V E) [Fintype V] [Fintype E] :
+    F.IsObligatory ↔
+      ∀ S : Set E, IsSupportedBlock F.isolatedReduction S →
+        AllowedBlockType (F.isolatedReduction.edgeRestriction S) := by
+  classical
+  constructor
+  · exact isObligatory_implies_forall_supportedBlock_allowed F
+  · intro hall
+    letI : Fintype F.NonIsolatedPoint := Fintype.ofFinite _
+    have h := restriction_isObligatory_of_forall_supportedBlock_allowed
+      F.isolatedReduction hall Set.univ
+    exact (h.ofIso (F.isolatedReduction.edgeRestrictionUnivIso
+      F.isolatedReduction_hasNoIsolatedPoints)).of_isolatedReduction
+
+end Erdos593.TripleSystem.SupportedBlocks
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedClassicalBlockConverse
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedClassicalBlockConverse
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: 24500c8c6ae0d86a7f598dc3fc70512b5da33854b642f9beb976a41dcfc82663
+Normalized SHA-256: 4188ce5036c9f4bcd6fcfca5988c995335455f640a1f1c1299b460ada88f0c96
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

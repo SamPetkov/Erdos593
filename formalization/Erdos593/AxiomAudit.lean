@@ -1,0 +1,403 @@
+import Erdos593.Graph.EdgeCycleSplice
+import Erdos593.TripleSystem.CanonicalAtomAmalgamOption
+import Erdos593.TripleSystem.CanonicalAtomBaseCount
+import Erdos593.TripleSystem.OnePointAmalgamationGeometry
+import Erdos593.TripleSystem.CanonicalAtomFiniteAttachment
+import Erdos593.TripleSystem.CanonicalAtomCountSpectrum
+import Erdos593.TripleSystem.CanonicalAtomMaximizer
+import Erdos593.TripleSystem.CanonicalSeparatorApplication
+import Erdos593.TripleSystem.SupportedDecompositionProduct
+import Erdos593.TripleSystem.SupportedLatticeOperations
+import Erdos593.TripleSystem.SupportedClassicalBlockConverse
+import Erdos593.Graph.EdgeCycleBlocks
+import Erdos593.Graph.EdgeCycleBlockIncidence
+import Erdos593.Graph.EdgeCycleBlockIntersection
+import Erdos593.Graph.EdgeCycleBlockIncidenceForest
+import Erdos593.Graph.TwoVertexCycleSplice
+import Erdos593.Graph.EdgeCycleChord
+import Erdos593.TripleSystem.CanonicalAtomPartition
+import Erdos593.TripleSystem.CanonicalAtomTypeDichotomy
+import Erdos593.TripleSystem.CanonicalAtomCoreStructure
+import Erdos593.TripleSystem.CanonicalAtomForestReconstruction
+import Erdos593.TripleSystem.CanonicalAtomCanonicity
+
+import Erdos593.TripleSystem.CanonicalAtomMinimalGenerators
+import Erdos593.TripleSystem.SpanningEdgeDeletion
+import Erdos593.TripleSystem.BipartiteShadow
+import Erdos593.TripleSystem.CanonicalAtomCounting
+import Erdos593.TripleSystem.SpectrumNecessity
+import Erdos593.TripleSystem.SpectrumRealization
+import Erdos593.TripleSystem.SpectrumCorollaries
+import Erdos593.TripleSystem.CycleRankSpectrum
+import Erdos593.TripleSystem.BalancedEndpointRigidity
+import Erdos593.Graph.TwoConnectedBipartiteSpectrum
+import Erdos593.Graph.AtomRankConcentration
+import Erdos593.TripleSystem.CanonicalAtomRankInterpretation
+import Erdos593.TripleSystem.CanonicalAtomCoreRank
+import Erdos593.TripleSystem.CanonicalAtomExtremalCount
+import Erdos593.TripleSystem.CanonicalAtomContainment
+import Erdos593.TripleSystem.CanonicalAtomTransport
+import Erdos593.TripleSystem.EmbeddingRestrictionTransport
+import Erdos593.TripleSystem.CanonicalAtomAmalgamLabels
+
+#print axioms Erdos593.SimpleGraph.edgeCycle_splice
+#print axioms Erdos593.SimpleGraph.edgeCycleLinked_equivalence
+#print axioms Erdos593.SimpleGraph.EdgeCycleBlock.incident_ofEdge_iff
+#print axioms Erdos593.SimpleGraph.EdgeCycleBlock.eq_of_incident_two_vertices
+#print axioms Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph_isAcyclic
+#print axioms Erdos593.SimpleGraph.edgesOnCommonCycle_of_cycles_share_two_vertices
+#print axioms Erdos593.SimpleGraph.edgesOnCommonCycle_of_edge_endpoints_and_cycle
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomOf_surjective
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomRestriction_is_singleEdge_or_cycleBlockExpansion
+#print axioms Erdos593.TripleSystem.CanonicalAtom.cycleBlockCore_isTwoVertexConnected
+#print axioms Erdos593.TripleSystem.CanonicalAtom.cycleBlockCore_isBipartite
+#print axioms Erdos593.TripleSystem.CanonicalAtom.cycleBlockCore_structure
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomSupport_inter_subsingleton
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomPointIncidenceGraph_isAcyclic
+#print axioms Erdos593.TripleSystem.CanonicalAtom.exists_atomRunningAssembly
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomSharedPointIncidenceGraph_isAcyclic
+#print axioms Erdos593.TripleSystem.CanonicalAtom.canonicalAtom_reconstruction
+#print axioms Erdos593.TripleSystem.CanonicalAtom.exists_canonicityTransport
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.AtomGenerated.constructible
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomGenerated_of_constructible
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomGenerated_iff_constructible
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.isObligatory_iff_atomGenerated
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.onePointDecomposable_iff_edgeOnePointDecomposition
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.oneTriple_onePointIndecomposable
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.coreExpansion_onePointIndecomposable
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.connected_reduced_obligatory_onePointIndecomposable_iff
+
+#print axioms Erdos593.TripleSystem.deleteHyperedge_inc
+#print axioms Erdos593.TripleSystem.levi_incidence_not_bridge_iff_reachable_deleteHyperedge
+#print axioms Erdos593.TripleSystem.no_incident_bridge_iff_deleteHyperedge_connected_on_edge
+#print axioms Erdos593.TripleSystem.bridgeAtEveryEdge_iff_deleteHyperedge_separates
+
+#print axioms Erdos593.TripleSystem.privateVertexExpansion_core_reachable_iff
+#print axioms Erdos593.TripleSystem.privateVertexExpansion_componentEquiv
+#print axioms Erdos593.TripleSystem.privateVertexExpansion_component_card
+#print axioms Erdos593.TripleSystem.exists_bipartite_shadow
+#print axioms Erdos593.TripleSystem.privateVertexExpansion_shadow_parameters
+#print axioms Erdos593.TripleSystem.exists_bipartite_shadow_subtraction
+
+#print axioms SimpleGraph.FiniteForestCounting.componentEquivOfReachable
+#print axioms SimpleGraph.FiniteForestCounting.card_edges_add_components
+#print axioms SimpleGraph.FiniteForestCounting.card_incidence_edges
+#print axioms SimpleGraph.FiniteForestCounting.sum_card_incidence_comm
+#print axioms SimpleGraph.FiniteForestCounting.pruneComponentEquiv
+#print axioms SimpleGraph.FiniteForestCounting.pruneGraphIso
+#print axioms Erdos593.TripleSystem.CanonicalAtom.sum_atomEdgeCount
+#print axioms Erdos593.TripleSystem.CanonicalAtom.two_le_pointMultiplicity_of_shared
+#print axioms Erdos593.TripleSystem.CanonicalAtom.levi_reachable_of_atomOf_eq
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomPoint_componentEquiv
+#print axioms Erdos593.TripleSystem.CanonicalAtom.point_add_atom_count
+#print axioms Erdos593.TripleSystem.CanonicalAtom.exists_atomIncident
+#print axioms Erdos593.TripleSystem.CanonicalAtom.one_le_pointMultiplicity
+#print axioms Erdos593.TripleSystem.CanonicalAtom.sum_atomPointCount
+#print axioms Erdos593.TripleSystem.CanonicalAtom.excess_add_components
+#print axioms Erdos593.TripleSystem.CanonicalAtom.levi_card_edges
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomSharedPoint_componentEquiv
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atom_surplus_identity
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atom_euler_identity
+#print axioms Erdos593.TripleSystem.CanonicalAtom.levi_euler_expression
+#print axioms Erdos593.TripleSystem.CanonicalAtom.shared_forest_excess_add_components
+#print axioms Erdos593.TripleSystem.CanonicalAtom.obligatory_incidenceCounts
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomRestriction_connected
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomRestriction_component_card
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomPointCount_eq_edge_add_core
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomLeviEuler_eq
+#print axioms Erdos593.TripleSystem.CanonicalAtom.levi_euler_eq_sum_atomLeviEuler
+#print axioms Erdos593.TripleSystem.CanonicalAtom.surplus_eq_core_sum
+#print axioms Erdos593.TripleSystem.CanonicalAtom.obligatory_canonical_counting
+
+#print axioms Erdos593.Spectrum.q_le_iff
+#print axioms Erdos593.Spectrum.capacity_sum
+#print axioms SimpleGraph.BipartiteSpectrumBounds.edge_count_components
+#print axioms SimpleGraph.BipartiteSpectrumBounds.vertex_count_components
+#print axioms SimpleGraph.BipartiteSpectrumBounds.bipartite_capacity
+#print axioms SimpleGraph.BipartiteSpectrumBounds.parameter_bounds
+#print axioms Erdos593.TripleSystem.obligatory_spectrum_necessity
+
+#print axioms SimpleGraph.BipartiteSpectrumRealization.exists_connected
+#print axioms SimpleGraph.BipartiteSpectrumRealization.exists_shadow
+#print axioms Erdos593.TripleSystem.exists_obligatory_spectrum
+
+#print axioms Erdos593.Spectrum.q_mono
+#print axioms Erdos593.Spectrum.two_le_q
+#print axioms Erdos593.Spectrum.q_le_succ
+#print axioms Erdos593.Spectrum.q_le_self
+#print axioms Erdos593.Spectrum.q_shift_le
+#print axioms Erdos593.Spectrum.inverse_q_bound
+#print axioms Erdos593.Spectrum.half_ceiling
+#print axioms Erdos593.Spectrum.fixed_order_bounds_iff
+#print axioms Erdos593.Spectrum.exists_order_bounds_iff
+#print axioms Erdos593.TripleSystem.withIsolatedPoints_inc_iff
+#print axioms Erdos593.TripleSystem.IsObligatory.withIsolatedPoints
+#print axioms Erdos593.TripleSystem.exists_connected_obligatory_iff
+#print axioms Erdos593.TripleSystem.exists_reduced_obligatory_iff
+#print axioms Erdos593.TripleSystem.exists_obligatory_iff
+#print axioms Erdos593.TripleSystem.exists_obligatory_fixed_order_iff
+#print axioms Erdos593.TripleSystem.exists_obligatory_order_components_iff
+
+#print axioms SimpleGraph.FiniteCycleRank.card_components_eq_of_reachable_eq
+#print axioms SimpleGraph.FiniteCycleRank.card_vertices_le_edges_add_components
+#print axioms SimpleGraph.FiniteCycleRank.cycleRank_int
+#print axioms SimpleGraph.FiniteCycleRank.cycleRank_eq_chords
+#print axioms SimpleGraph.FiniteCycleRank.cycleRank_eq_zero_iff
+#print axioms Erdos593.TripleSystem.levi_cycleRank
+#print axioms Erdos593.TripleSystem.levi_cycleRank_int
+#print axioms Erdos593.TripleSystem.obligatory_cycleRank_le
+#print axioms Erdos593.TripleSystem.exists_obligatory_cycleRank_iff
+#print axioms Erdos593.TripleSystem.order_eq_iff_levi_isAcyclic
+
+#print axioms Erdos593.Spectrum.strict_atom_capacity_concentration
+#print axioms SimpleGraph.BalancedBipartiteRigidity.even_order_isomorphic_complete_bipartite
+#print axioms SimpleGraph.BalancedBipartiteRigidity.odd_order_isomorphic_complete_bipartite
+#print axioms Erdos593.TripleSystem.privateVertexExpansion_isomorphic_of_graphIso
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomCore_capacity
+#print axioms Erdos593.TripleSystem.CanonicalAtom.isomorphic_atomRestriction_of_all_edges_same_atom
+#print axioms Erdos593.TripleSystem.CanonicalAtom.card_index_eq_one_of_near_capacity
+#print axioms Erdos593.TripleSystem.one_edge_isomorphic_complete_bipartite_expansion
+#print axioms Erdos593.TripleSystem.two_edges_isomorphic_complete_bipartite_expansion
+#print axioms Erdos593.TripleSystem.balanced_even_endpoint_rigidity
+#print axioms Erdos593.TripleSystem.balanced_odd_endpoint_rigidity
+
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_connected
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_min_degree
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_mono
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_of_iso
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.connected_cycleRank_euler
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.minimum_order
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.even_order_of_rank_one
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.exists_even_seed
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.exists_odd_seed
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_intermediate
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.exists_of_rank_ge_two
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.exists_rank_one_iff
+
+#print axioms Erdos593.Spectrum.q_add_strict
+#print axioms Erdos593.Spectrum.q_sum_add_card_le
+#print axioms Erdos593.Spectrum.sum_q_eq_q_sum_iff_card_eq_one
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomLeviEuler_eq_cycleRank
+#print axioms Erdos593.TripleSystem.CanonicalAtom.sum_atom_cycleRank
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.cycleBlock_atom_cycleRank_eq_core
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atom_cycleRank_eq_zero_iff_singleton
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atom_coreOrder_lower_bound
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.connected_atom_q_budget
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atom_coreOrder_even_of_cycleRank_eq_one
+#print axioms Erdos593.TripleSystem.CanonicalAtom.exists_concentrated_atom_of_extremal_count
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.edgeRestriction_subset_or_subset_of_support_inter_subsingleton
+#print axioms Erdos593.TripleSystem.CanonicalAtom.edgeRestriction_subset_piece_of_runningEdgeAssembly
+#print axioms Erdos593.TripleSystem.CanonicalAtom.indecomposable_edgeRestriction_subset_atom
+
+#print axioms Erdos593.TripleSystem.edgeRestriction_hasNoIsolatedPoints
+#print axioms Erdos593.TripleSystem.CanonicalAtom.onePointIndecomposable_iff_of_iso
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomRestriction_onePointIndecomposable
+
+#print axioms Erdos593.TripleSystem.Embedding.edgeRestriction_image_isomorphic
+#print axioms Erdos593.TripleSystem.Embedding.edgeSupportSet_image
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomOf_amalgam_inl_ne_inr
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomOf_amalgam_inl_eq_iff
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.exists_atomEquiv_option_of_unique_edges
+#print axioms Erdos593.TripleSystem.CanonicalAtom.card_index_amalgam_of_unique_edges
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.card_index_eq_one_of_onePointIndecomposable
+#print axioms Erdos593.TripleSystem.CanonicalAtom.card_index_eq_one_of_unique_edges
+
+#print axioms Erdos593.TripleSystem.OnePointAmalgamation.card_vertex_add_one
+#print axioms Erdos593.TripleSystem.OnePointAmalgamation.amalgam_levi_connected
+#print axioms Erdos593.TripleSystem.OnePointAmalgamation.amalgam_hasNoIsolatedPoints
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.exists_finite_attachment_parameters
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.connected_atom_count_necessity
+#print axioms Erdos593.TripleSystem.CanonicalAtom.exists_connected_atom_count_iff
+#print axioms Erdos593.TripleSystem.CanonicalAtom.exists_maximum_atom_count
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.spectrum_q_one
+#print axioms Erdos593.TripleSystem.CanonicalAtom.canonicalAtomCount_eq_card_index
+#print axioms Erdos593.TripleSystem.CanonicalAtom.reduced_obligatory_intrinsic_for_spectrum
+#print axioms Erdos593.TripleSystem.CanonicalAtom.ConnectedAtomParameters.toIntrinsic
+#print axioms Erdos593.TripleSystem.CanonicalAtom.AllowedConnectedAtomCount.positive_rank_bound
+#print axioms Erdos593.TripleSystem.CanonicalAtom.connected_positive_rank_atom_count_bound
+#print axioms Erdos593.TripleSystem.CanonicalAtom.connected_atom_count_maximal_iff
+#print axioms Erdos593.TripleSystem.CanonicalAtom.every_maximum_atom_count_structure
+#print axioms Erdos593.TripleSystem.CanonicalAtom.every_maximizer_structure
+
+#print axioms E593Separator.Partition
+#print axioms E593Separator.Partition.ext
+#print axioms E593Separator.Closure
+#print axioms E593Separator.Closure.map
+#print axioms E593Separator.Closure.respects
+#print axioms E593Separator.optionPartition
+#print axioms E593Separator.Star
+#print axioms E593Separator.Local
+#print axioms E593Separator.Certificate
+#print axioms E593Separator.Step
+#print axioms E593Separator.extend
+#print axioms E593Separator.restrict
+#print axioms E593Separator.InternalStep
+#print axioms E593Separator.ConnectedPartition
+#print axioms E593Separator.Refines
+#print axioms E593Separator.step_incidence
+#print axioms E593Separator.step_projected
+#print axioms E593Separator.local_recovery
+#print axioms E593Separator.restrict_extend
+#print axioms E593Separator.extend_connected
+#print axioms E593Separator.extend_restrict
+#print axioms E593Separator.extend_injective
+#print axioms E593Separator.extend_refines_iff
+#print axioms E593Separator.exists_local_iff_connected
+#print axioms E593Separator.AwayStep
+#print axioms E593Separator.NoReturn
+#print axioms E593Separator.HasStarRoot
+#print axioms E593Separator.componentRoot
+#print axioms E593Separator.Certificate.noReturn
+#print axioms E593Separator.hasStarRoot_iff_of_related
+#print axioms E593Separator.componentRoot_at_star
+#print axioms E593Separator.componentRoot_eq_of_related
+#print axioms E593Separator.certificateOfNoReturn
+#print axioms E593Separator.nonempty_certificate_iff_noReturn
+#print axioms E593Separator.local_recovery_of_noReturn
+#print axioms E593Separator.incidenceGraph
+#print axioms E593Separator.away_incidence_survives
+#print axioms E593Separator.away_closure_reachable
+#print axioms E593Separator.noReturn_of_isAcyclic
+#print axioms E593Separator.certificateOfForest
+#print axioms E593Separator.partitionPartialOrder
+#print axioms E593Separator.forestPartitionOrderIso
+#print axioms E593Separator.forest_exists_unique_local
+#print axioms E593Separator.forest_local_recovery
+#print axioms Erdos593.TripleSystem.CanonicalAtom.canonical_separator_incidence_eq
+#print axioms Erdos593.TripleSystem.CanonicalAtom.canonicalSeparatorCertificate
+#print axioms Erdos593.TripleSystem.CanonicalAtom.canonicalAtomConnectedPartitionOrderIso
+#print axioms Erdos593.TripleSystem.CanonicalAtom.canonical_separator_local_recovery
+
+#print axioms E593Separator.Certificate.isAcyclic
+#print axioms E593Separator.isAcyclic_iff_nonempty_certificate
+#print axioms E593Separator.imageIncidence
+#print axioms E593Separator.FibreConnected
+#print axioms E593Separator.imageStar
+#print axioms E593Separator.imageRootAux
+#print axioms E593Separator.imageRootAux_eq
+#print axioms E593Separator.imageCertificate
+#print axioms E593Separator.imageIncidence_isAcyclic
+#print axioms E593Separator.image_support_inter_subsingleton
+#print axioms E593Separator.Partition.toSetoid
+#print axioms E593Separator.Partition.Block
+#print axioms E593Separator.Partition.block
+#print axioms E593Separator.Partition.block_eq_iff
+#print axioms E593Separator.Partition.block_surjective
+#print axioms E593Separator.ConnectedPartition.fibreConnected
+#print axioms E593Separator.connectedPartition_quotient_isAcyclic
+#print axioms E593Separator.incidence_isAcyclic_of_embedding
+#print axioms E593Separator.pullbackPartition
+#print axioms E593Separator.pullbackBlockMap
+#print axioms E593Separator.pullbackBlockMap_injective
+#print axioms E593Separator.pullbackBlockMap_surjective
+#print axioms E593Separator.SharedSeparator
+#print axioms E593Separator.star_subsingleton_of_not_shared
+#print axioms E593Separator.certificateRestoreTrivial
+#print axioms E593Separator.certificateRestrict
+#print axioms E593Separator.isAcyclic_iff_shared_pruning
+#print axioms Erdos593.TripleSystem.CanonicalAtom.partEdges
+#print axioms Erdos593.TripleSystem.CanonicalAtom.partIncident
+#print axioms Erdos593.TripleSystem.CanonicalAtom.IsSupportedDecomposition
+#print axioms Erdos593.TripleSystem.CanonicalAtom.partEdges_nonempty
+#print axioms Erdos593.TripleSystem.CanonicalAtom.partEdges_disjoint
+#print axioms Erdos593.TripleSystem.CanonicalAtom.IsSupportedDecomposition.support_inter_subsingleton
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedDecomposition_iff_manuscript
+#print axioms Erdos593.TripleSystem.CanonicalAtom.RunningSupportFamily
+#print axioms Erdos593.TripleSystem.CanonicalAtom.mem_union_mapped_parts
+#print axioms Erdos593.TripleSystem.CanonicalAtom.indecomposable_subset_running_part
+#print axioms Erdos593.TripleSystem.CanonicalAtom.parts_running_of_tail_order
+#print axioms Erdos593.TripleSystem.CanonicalAtom.decomposition_running_parts
+#print axioms Erdos593.TripleSystem.CanonicalAtom.atomRestriction_indivisible_for_decomposition
+#print axioms Erdos593.TripleSystem.CanonicalAtom.canonical_atom_in_unique_part
+#print axioms Erdos593.TripleSystem.CanonicalAtom.canonical_refines_supported_decomposition
+#print axioms Erdos593.TripleSystem.CanonicalAtom.restrictionLeviHom
+#print axioms Erdos593.TripleSystem.CanonicalAtom.coarsenedEdges
+#print axioms Erdos593.TripleSystem.CanonicalAtom.coarsened_incidence_iff
+#print axioms Erdos593.TripleSystem.CanonicalAtom.coarsened_part_connected
+#print axioms Erdos593.TripleSystem.CanonicalAtom.coarsenedEdges_supported
+#print axioms Erdos593.TripleSystem.CanonicalAtom.decompositionAtomRep
+#print axioms Erdos593.TripleSystem.CanonicalAtom.decompositionAtomRep_spec
+#print axioms Erdos593.TripleSystem.CanonicalAtom.inducedAtomPartition
+#print axioms Erdos593.TripleSystem.CanonicalAtom.induced_relation_on_edges
+#print axioms Erdos593.TripleSystem.CanonicalAtom.coarsened_induced_eq
+#print axioms Erdos593.TripleSystem.CanonicalAtom.induced_coarsened_eq
+#print axioms Erdos593.TripleSystem.CanonicalAtom.inducedAtomPartition_connected
+#print axioms Erdos593.TripleSystem.CanonicalAtom.SupportedPartitions
+#print axioms Erdos593.TripleSystem.CanonicalAtom.connectedAtomsSupportedOrderIso
+#print axioms Erdos593.TripleSystem.CanonicalAtom.partition_eq_of_subsingleton
+#print axioms Erdos593.TripleSystem.CanonicalAtom.nonshared_star_subsingleton
+#print axioms Erdos593.TripleSystem.CanonicalAtom.sharedStarOrderIso
+#print axioms Erdos593.TripleSystem.CanonicalAtom.canonicalStar_card
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedDecompositionProduct
+#print axioms Erdos593.TripleSystem.CanonicalAtom.obligatory_supported_decomposition_product
+#print axioms Erdos593.TripleSystem.CanonicalAtom.IsSupportedDecomposition.mk
+#print axioms Erdos593.TripleSystem.CanonicalAtom.IsSupportedDecomposition.connected
+#print axioms Erdos593.TripleSystem.CanonicalAtom.IsSupportedDecomposition.forest
+
+-- Standard partition-lattice interface: 26 focused-accepted declarations.
+#print axioms E593Standard.toSetoid
+#print axioms E593Standard.ofSetoid
+#print axioms E593Standard.partitionSetoidOrderIso
+#print axioms E593Standard.partitionSetoidOrderIso_rel
+#print axioms E593Standard.setoidReindex
+#print axioms E593Standard.setoidReindexOrderIso
+#print axioms E593Standard.setoidReindexOrderIso_rel
+#print axioms E593Standard.finiteCarrierEquiv
+#print axioms E593Standard.finitePartitionOrderIso
+#print axioms E593Standard.pointwiseOrderIso
+#print axioms E593Standard.pointwiseOrderIso_apply
+#print axioms Erdos593.TripleSystem.CanonicalAtom.starEquivFin
+#print axioms Erdos593.TripleSystem.CanonicalAtom.starStandardOrderIso
+#print axioms Erdos593.TripleSystem.CanonicalAtom.StandardLocalPartitions
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedStandardProduct
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedStandardProduct_rel
+#print axioms Erdos593.TripleSystem.CanonicalAtom.obligatory_supported_standard_product
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedInfimum
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedSupremum
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedInfimum_le
+#print axioms Erdos593.TripleSystem.CanonicalAtom.le_supportedInfimum
+#print axioms Erdos593.TripleSystem.CanonicalAtom.le_supportedSupremum
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedSupremum_le
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedInfimum_isGLB
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedSupremum_isLUB
+#print axioms Erdos593.TripleSystem.CanonicalAtom.obligatory_supported_has_bounds
+
+#print axioms Erdos593.TripleSystem.SupportedBlocks.support_inter_nonempty_of_partition
+#print axioms Erdos593.TripleSystem.SupportedBlocks.pointDeletion_not_connected_of_separation
+#print axioms Erdos593.TripleSystem.SupportedBlocks.exists_separation_of_pointDeletion_not_connected
+#print axioms Erdos593.TripleSystem.SupportedBlocks.pointNonseparable_iff_no_pointSeparation
+#print axioms Erdos593.TripleSystem.SupportedBlocks.hasPointSeparation_iff_edgeOnePointDecomposition
+#print axioms Erdos593.TripleSystem.SupportedBlocks.pointNonseparable_iff_onePointIndecomposable
+#print axioms Erdos593.TripleSystem.SupportedBlocks.connected_reduced_obligatory_pointNonseparable_iff
+#print axioms Erdos593.TripleSystem.SupportedBlocks.obligatory_restriction_allowed_of_pointNonseparable
+#print axioms Erdos593.TripleSystem.SupportedBlocks.isObligatory_implies_forall_supportedBlock_allowed
+#print axioms Erdos593.TripleSystem.edgeSupportSet_mono
+#print axioms Erdos593.TripleSystem.edgeRestrictionEmbeddingOfSubset_vertex_coe
+#print axioms Erdos593.TripleSystem.edgeRestrictionEmbeddingOfSubset_edge_coe
+#print axioms Erdos593.TripleSystem.SupportedBlocks.exists_maximal_set_superset
+#print axioms Erdos593.TripleSystem.SupportedBlocks.exists_disjoint_support_partition_of_not_connected
+#print axioms Erdos593.TripleSystem.SupportedBlocks.exists_original_partition_of_disconnected_restriction
+#print axioms Erdos593.TripleSystem.SupportedBlocks.exists_original_partition_of_pointSeparation
+#print axioms Erdos593.TripleSystem.SupportedBlocks.edgeRestriction_induction
+#print axioms Erdos593.TripleSystem.SupportedBlocks.exists_supportedBlock_superset
+#print axioms Erdos593.TripleSystem.SupportedBlocks.AllowedBlockType.isObligatory
+#print axioms Erdos593.TripleSystem.SupportedBlocks.restriction_isObligatory_of_forall_supportedBlock_allowed
+#print axioms Erdos593.TripleSystem.SupportedBlocks.isObligatory_iff_forall_supportedBlock_allowed
