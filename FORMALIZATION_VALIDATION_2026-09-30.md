@@ -1,23 +1,23 @@
 # Validation of the synchronized 30 September 2026 proof snapshot
 
 This source-only synchronization changes no theorem body, statement or dependency
-pin from the accepted classical-block integration. It brings the verified modular
+pin from the accepted classical-label integration. It brings the verified modular
 sources and generated standalone into both repositories using an explicit file
 allowlist. Private coordination records, service credentials, machine paths,
 unreviewed candidate proofs and unrelated research are not exported.
 
 ## Evidence
 
-Canonical run 66454 completed with scheduler and batch exit 0 in 19m01s:
-3,363 warning-fatal all-root jobs, 325 ordered standard-only axiom records and
+Canonical run 66460 completed with scheduler and batch exit 0 in 18m49s:
+3,364 warning-fatal all-root jobs, 329 ordered standard-only axiom records and
 deterministic standalone regeneration/replay. Final source-only reconciliation
-66455 completed with child, batch and scheduler exit 0 in one second. It checked
+66465 completed with child, batch and scheduler exit 0 in one second. It checked
 the actual live source, nine clean dependency pins, dependency link, original logs,
 executed tools and real process exits. It did not rerun Lean.
 
-Accepted source checkpoint: `95e421c081bbaef3b8b4036990f56df910b46f8d`.
+Accepted source checkpoint: `d97bbf0b15160853262985ebb19929541d2dc3e8`.
 Publicly reproducible identity is given by every SHA-256 entry in
-`validation/2026-09-30-classical-blocks/source-manifest.json`, not by access to a private
+`validation/2026-09-30-classical-labels/source-manifest.json`, not by access to a private
 Git commit. The six public-safe stdout files there are unedited actual originals;
 the empty standalone log is the actual retrieved zero-byte file.
 Operational wrappers and private coordination data are retained privately.
@@ -48,7 +48,9 @@ unrequested duplicate compute; no required branch protection is bypassed.
 
 ## Boundaries
 
-The unrestricted classical converse is included in this 232-module snapshot. The
+The unrestricted classical converse and conditional unique canonical-label
+identification are included in this 233-module snapshot. The latter assumes
+`Intrinsic F`; it does not weaken the former or prove core-isomorphism uniqueness. The
 complete expanded paper, later boundary/profile results and independent external
 audit remain incomplete. Manuscript, bibliography and attribution files are not
 replaced by this synchronization. No proof-site upload is included.

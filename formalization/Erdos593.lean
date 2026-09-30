@@ -203,6 +203,7 @@ import Erdos593.TripleSystem.CanonicalSeparatorApplication
 import Erdos593.TripleSystem.SupportedDecompositionProduct
 import Erdos593.TripleSystem.SupportedLatticeOperations
 import Erdos593.TripleSystem.SupportedClassicalBlockConverse
+import Erdos593.TripleSystem.SupportedClassicalBlockLabels
 
 /-!
 # Erdős Problem 593

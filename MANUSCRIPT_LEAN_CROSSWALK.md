@@ -14,12 +14,13 @@ an exhaustive statement-by-statement check of the extended manuscript remains op
 | Literal original-edge decomposition/product | `obligatory_supported_decomposition_product` | Verified |
 | Standard partition-product and lattice bounds | `obligatory_supported_standard_product`; `obligatory_supported_has_bounds` | Verified |
 | Unrestricted classical supported-block characterization | `SupportedBlocks.isObligatory_iff_forall_supportedBlock_allowed` | Verified; unrestricted finite statement, no Intrinsic premise |
-| Classical blocks as unique canonical atom labels; retained block ordering | Separate exact interfaces | Open |
+| Classical blocks as unique canonical atom labels | `SupportedBlocks.supportedBlock_iff_canonicalAtom` | Verified under `Intrinsic F`; unique actual label with exactly the original edge set |
+| Retained all-maximal-block running order | Separate exact interface | Open; label identification does not supply an ordering |
 | Grading, attachment profile/capacity realization and later enumeration | Separate retained manuscript statements | Open; existing product is not the whole result |
 | Atomic/theta original-carrier boundary endpoints | Supplied candidate branch | Not fully accepted |
 | Entire extended manuscript and final release | Exhaustive statement/evidence crosswalk | Incomplete |
 
-All verified rows refer to the 232-module snapshot detailed in
+All verified rows refer to the 233-module snapshot detailed in
 [CURRENT_FORMALIZATION_STATUS.md](CURRENT_FORMALIZATION_STATUS.md).
 Only standard foundational axiom dependencies were admitted in the permanent
 ordered audit. No hypothesis weakening, assumed `Intrinsic` converse, or
