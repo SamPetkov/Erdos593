@@ -14,8 +14,14 @@ import Mathlib.Combinatorics.SimpleGraph.Coloring.Constructions
 import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
 import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
 import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
+import Mathlib.Combinatorics.SimpleGraph.Connectivity.Subgraph
 import Mathlib.Combinatorics.SimpleGraph.Copy
+import Mathlib.Combinatorics.SimpleGraph.CycleGraph
+import Mathlib.Combinatorics.SimpleGraph.DeleteEdges
 import Mathlib.Combinatorics.SimpleGraph.Finite
+import Mathlib.Combinatorics.SimpleGraph.Hamiltonian
+import Mathlib.Combinatorics.SimpleGraph.Maps
+import Mathlib.Combinatorics.SimpleGraph.Matching
 import Mathlib.Combinatorics.SimpleGraph.Sum
 import Mathlib.Combinatorics.SimpleGraph.Walk.Maps
 import Mathlib.Data.Countable.Basic
@@ -27,6 +33,7 @@ import Mathlib.Data.Finset.Image
 import Mathlib.Data.Finset.Max
 import Mathlib.Data.Finset.Sort
 import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.Data.Nat.Find
 import Mathlib.Data.Nat.Pairing
@@ -39641,9 +39648,1667 @@ END SOURCE MODULE: Erdos593.TripleSystem.SupportedClassicalBlockLabels
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.AtomicBoundaryCore
+Source: Erdos593/TripleSystem/AtomicBoundaryCore.lean
+Normalized SHA-256: 5b87a6b891ea4fcfca6397494b971af25baa49ffededff79bdc5e541bb146079
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_AtomicBoundaryCore
+
+/-!
+# One extraction of the actual core for both atomic boundary cases
+
+This module uses the accepted canonical-atom base-count theorem directly.
+It does not depend on the candidate phase diagram, a supplied atom list,
+or a numerical shadow. All conclusions concern actual incidence isomorphisms.
+Candidate source; pinned Lean replay remains required.
+-/
+
+namespace E593AtomicBoundary
+
+open _root_.SimpleGraph Erdos593 Erdos593.TripleSystem
+open Erdos593.TripleSystem.CanonicalAtom
+
+universe u v
+
+/-- Incidence-preserving transport of private-vertex expansions. -/
+noncomputable def expansionIso
+    {V : Type u} {W : Type v} {G : SimpleGraph V} {H : SimpleGraph W}
+    (i : G ≃g H) : Iso (privateVertexExpansion G) (privateVertexExpansion H) where
+  vertexEquiv := Equiv.sumCongr i.toEquiv i.mapEdgeSet
+  edgeEquiv := i.mapEdgeSet
+  map_inc_iff := by
+    rintro (x | f) e
+    · change x ∈ (e : Sym2 V) ↔ i x ∈ Sym2.map i (e : Sym2 V)
+      rw [Sym2.mem_map]
+      exact ⟨fun hx => ⟨x, hx, rfl⟩,
+        fun ⟨y, hy, hyx⟩ => (i.injective hyx) ▸ hy⟩
+    · change f = e ↔ i.mapEdgeSet f = i.mapEdgeSet e
+      exact i.mapEdgeSet.injective.eq_iff.symm
+
+/-- Recover intrinsic structure without a candidate phase-diagram dependency. -/
+theorem intrinsic_of_reduced_obligatory
+    {V E : Type u} [Fintype V] [Fintype E]
+    (F : TripleSystem V E) (hred : F.HasNoIsolatedPoints)
+    (hobl : F.IsObligatory) : F.Intrinsic := by
+  let i : Iso F.isolatedReduction F :=
+    { vertexEquiv := Equiv.subtypeUnivEquiv (fun x => hred x)
+      edgeEquiv := Equiv.refl E
+      map_inc_iff := fun _ _ => Iff.rfl }
+  exact (Erdos593.TripleSystem.Iso.intrinsic_iff i).mp
+    ((isObligatory_iff_isolatedReduction_intrinsic F).mp hobl)
+
+/-- Every nontrivial reduced connected indecomposable intrinsic system has an
+actual two-connected bipartite core on `Fin s`, where n=m+s. The canonical
+atom, its full original-edge fibre, and the core graph are all derived. -/
+theorem core_on_fin
+    {V E : Type u} [Fintype V] [Fintype E]
+    [DecidableEq V] [DecidableEq E]
+    (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+    (hI : F.Intrinsic) (hconn : F.levi.Connected)
+    (hred : F.HasNoIsolatedPoints) (hi : OnePointIndecomposable F)
+    {s : ℕ} (hs : 4 ≤ s) (hsize : Nat.card V = Nat.card E + s) :
+    ∃ J : SimpleGraph (Fin s), IsTwoVertexConnected J ∧ J.Colorable 2 ∧
+      Nat.card J.edgeSet = Nat.card E ∧ Isomorphic F (privateVertexExpansion J) := by
+  classical
+  have hcard : Nat.card (Index F) = 1 :=
+    card_index_eq_one_of_onePointIndecomposable F hI hconn hred hi
+  obtain ⟨A, hA⟩ := Nat.card_eq_one_iff_exists.mp hcard
+  have hfibre : edges F hI.1 hI.2.1 A = Set.univ := by
+    ext e
+    change (atomOf F hI.1 hI.2.1 e = A) ↔ True
+    exact ⟨fun _ => trivial, fun _ => hA _⟩
+  have i : Iso (atomRestriction F hI.1 hI.2.1 A) F := by
+    change Iso (F.edgeRestriction (edges F hI.1 hI.2.1 A)) F
+    rw [hfibre]
+    exact F.edgeRestrictionUnivIso hred
+  cases A with
+  | singleton e hz =>
+      obtain ⟨j⟩ := atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+        F hI.1 hI.2.1 (Index.singleton e hz)
+      let ij := i.symm.trans j
+      have he : Nat.card E = 1 := by
+        simpa [SingleEdgeIndex] using Nat.card_congr ij.edgeEquiv
+      have hv : Nat.card V = 3 := by
+        calc
+          Nat.card V = Nat.card (F.edgeSet e) := Nat.card_congr ij.vertexEquiv
+          _ = 3 := F.edge_ncard e
+      omega
+  | cycleBlock C hC B =>
+      obtain ⟨j⟩ := atomRestriction_is_singleEdge_or_cycleBlockExpansion.{u, u, u}
+        F hI.1 hI.2.1 (Index.cycleBlock C hC B)
+      let J := cycleBlockCore F C B
+      let W := Erdos593.finiteEdgeEndpointType (BridgeBlock.contractedGraph F C)
+        (cycleBlockEdgeSet F C B) (cycleBlockEdgeSet_finite F C B)
+      let ij := i.symm.trans j
+      have he : Nat.card J.edgeSet = Nat.card E := by
+        exact (Nat.card_congr ij.edgeEquiv).symm
+      have hv : Nat.card W = s := by
+        have h := Nat.card_congr ij.vertexEquiv
+        change Nat.card V = Nat.card (W ⊕ J.edgeSet) at h
+        rw [Nat.card_sum, he] at h
+        omega
+      have hvf : Fintype.card W = s := by
+        simpa only [Nat.card_eq_fintype_card] using hv
+      let J' : SimpleGraph (Fin s) := J.overFin hvf
+      let eJ : J ≃g J' := J.overFinIso hvf
+      have ht := cycleBlockCore_isTwoVertexConnected F hI.1 hI.2.1 C hC B
+      have hb := cycleBlockCore_isBipartite F hI.1 hI.2.1 hI.2.2 C hC B
+      refine ⟨J', ?_, ?_, ?_, ⟨ij.trans (expansionIso eJ)⟩⟩
+      · exact TwoConnectedBipartiteSpectrum.two_connected_of_iso J J' eJ ht
+      · exact Colorable.of_hom eJ.symm.toHom hb
+      · exact (Nat.card_congr eJ.mapEdgeSet).symm.trans he
+
+end E593AtomicBoundary
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_AtomicBoundaryCore
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.AtomicBoundaryCore
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.SaturatedPathSeparation
+Source: Erdos593/Graph/SaturatedPathSeparation.lean
+Normalized SHA-256: 41815e3919ceb4e4d4972e91a494489ea3741ce75774fce7a54f0e90b3350f8a
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_SaturatedPathSeparation
+
+/-!
+# Separation of simple paths with saturated internal vertices
+
+The conclusions concern actual walks and actual subgraph adjacency. In
+particular, a degree pattern is not used as the definition of a theta graph.
+Candidate source; pinned elaboration and transitive-axiom replay remain required.
+-/
+
+namespace E593Theta
+
+open SimpleGraph
+
+universe u
+
+variable {V : Type u} [Fintype V] [DecidableEq V]
+variable {G : SimpleGraph V} [DecidableRel G.Adj]
+variable {a b : V}
+
+/-- The interior of an actual walk excludes both named endpoints. -/
+def interior (p : G.Walk a b) : Set V :=
+  {x | x ∈ p.support ∧ x ≠ a ∧ x ≠ b}
+
+omit [DecidableEq V] in
+/-- On an internal vertex of a simple path, ambient degree at most two
+forces every ambient edge there to belong to the path. -/
+theorem internal_adjacency_saturated (p : G.Walk a b) (hp : p.IsPath)
+    {x : V} (hx : x ∈ interior p) (hd : G.degree x ≤ 2) (y : V) :
+    p.toSubgraph.Adj x y ↔ G.Adj x y := by
+  classical
+  obtain ⟨i, hi, hil⟩ := (Walk.mem_support_iff_exists_getVert).mp hx.1
+  have hi0 : i ≠ 0 := by
+    intro h
+    subst i
+    exact hx.2.1 (by simpa using hi.symm)
+  have hilt : i < p.length := by
+    by_contra h
+    have he : i = p.length := by omega
+    subst i
+    exact hx.2.2 (by simpa using hi.symm)
+  have hlocal : (p.toSubgraph.neighborSet x).ncard = 2 := by
+    rw [← hi]
+    exact hp.ncard_neighborSet_toSubgraph_internal_eq_two hi0 hilt
+  have hamb : (G.neighborSet x).ncard ≤ 2 := by
+    rw [← Nat.card_coe_set_eq, Nat.card_eq_fintype_card,
+      G.card_neighborSet_eq_degree]
+    exact hd
+  have heq : p.toSubgraph.neighborSet x = G.neighborSet x :=
+    Set.eq_of_subset_of_ncard_le (p.toSubgraph.neighborSet_subset x)
+      (by omega) (Set.toFinite _)
+  change y ∈ p.toSubgraph.neighborSet x ↔ y ∈ G.neighborSet x
+  rw [heq]
+
+omit [Fintype V] [DecidableRel G.Adj] in
+/-- A path ending at b cannot enter a set through a saturated vertex away
+from a and b, when it starts outside and never visits a. This is the only
+walk induction needed for separation of the theta branches. -/
+theorem path_avoids_saturated_interior
+    (p : G.Walk a b)
+    (hsat : ∀ x, x ∈ interior p → ∀ y, G.Adj x y → y ∈ p.support)
+    {u : V} (q : G.Walk u b) (hq : q.IsPath)
+    (ha : a ∉ q.support) (hu : u ∉ p.support ∨ u = b) :
+    ∀ x, x ∈ q.support → x ∈ p.support → x = b := by
+  -- Quantify the comparison path after the walk being inducted on. This
+  -- keeps its endpoint dependence explicit in the induction hypothesis.
+  have avoid : ∀ {u v : V} (q : G.Walk u v) (p : G.Walk a v),
+      (∀ x, x ∈ interior p → ∀ y, G.Adj x y → y ∈ p.support) →
+      q.IsPath → a ∉ q.support → (u ∉ p.support ∨ u = v) →
+      ∀ x, x ∈ q.support → x ∈ p.support → x = v := by
+    intro u v q
+    induction q with
+    | nil =>
+        intro p _ _ _ _ x hx _
+        simpa using hx
+    | @cons u w v huw q ih =>
+        intro p hsat hq ha hu
+        have hparts := (Walk.cons_isPath_iff huw q).mp hq
+        have huv : u ≠ v := by
+          intro h
+          exact hparts.2 (h.symm ▸ q.end_mem_support)
+        have huout : u ∉ p.support := hu.resolve_right huv
+        have haw : a ∉ q.support := by
+          intro h
+          exact ha (by simp only [Walk.support_cons, List.mem_cons]; exact Or.inr h)
+        have hw : w ∉ p.support ∨ w = v := by
+          by_cases hwv : w = v
+          · exact Or.inr hwv
+          · left
+            intro hwp
+            have hwa : w ≠ a := by
+              intro h
+              exact haw (h ▸ q.start_mem_support)
+            exact huout (hsat w ⟨hwp, hwa, hwv⟩ u huw.symm)
+        intro x hx hxp
+        rw [Walk.support_cons, List.mem_cons] at hx
+        rcases hx with rfl | hx
+        · exact (huout hxp).elim
+        · exact ih p hsat hparts.1 haw hw x hx hxp
+  exact avoid q p hsat hq ha hu
+
+/-- Distinct first neighbours give internally vertex-disjoint simple a-b
+paths when the first path's internal vertices have degree at most two. -/
+theorem interiors_disjoint_of_snd_ne
+    (p q : G.Walk a b) (hp : p.IsPath) (hq : q.IsPath)
+    (hab : a ≠ b)
+    (hd : ∀ x, x ∈ interior p → G.degree x ≤ 2)
+    (hsnd : p.snd ≠ q.snd) :
+    Disjoint (interior p) (interior q) := by
+  classical
+  have hqn : ¬ q.Nil := Walk.not_nil_of_ne hab
+  have hsat : ∀ x, x ∈ interior p → ∀ y, G.Adj x y → y ∈ p.support := by
+    intro x hx y hxy
+    exact Walk.mem_support_of_adj_toSubgraph
+      ((internal_adjacency_saturated p hp hx (hd x hx) y).mpr hxy).symm
+  have ha : a ∉ q.tail.support := by
+    have hnd := hq.support_nodup
+    rw [← Walk.cons_support_tail hqn, List.nodup_cons] at hnd
+    exact hnd.1
+  have hstart : q.snd ∉ p.support ∨ q.snd = b := by
+    by_cases hqb : q.snd = b
+    · exact Or.inr hqb
+    · left
+      intro hmem
+      have hqa : q.snd ≠ a := (q.adj_snd hqn).ne.symm
+      have hqaPath : p.toSubgraph.Adj q.snd a :=
+        (internal_adjacency_saturated p hp ⟨hmem, hqa, hqb⟩
+          (hd q.snd ⟨hmem, hqa, hqb⟩) a).mpr (q.adj_snd hqn).symm
+      exact hsnd (hp.snd_of_toSubgraph_adj hqaPath.symm)
+  have havoid := path_avoids_saturated_interior p hsat q.tail hq.tail ha hstart
+  apply Set.disjoint_left.mpr
+  intro x hxp hxq
+  have hxTail : x ∈ q.tail.support := by
+    have hx := hxq.1
+    rw [← Walk.cons_support_tail hqn, List.mem_cons] at hx
+    exact hx.resolve_left hxq.2.1
+  exact hxq.2.2 (havoid x hxTail hxp.1)
+
+/-- Vertex and edge coverage for a family of a-b paths. Neighbours at a
+are represented by the first steps; all other vertices except b are
+saturated. Connectivity after deletion of b rules out a missing component.
+This lemma works for any nonempty index family, not only three paths. -/
+theorem saturated_paths_cover
+    {I : Type*} [Nonempty I]
+    (p : I → G.Walk a b) (hp : ∀ i, (p i).IsPath) (hab : a ≠ b)
+    (hsat : ∀ i x, x ∈ interior (p i) → G.degree x ≤ 2)
+    (hfirst : ∀ y, G.Adj a y → ∃ i, (p i).snd = y)
+    (hconn : (G.induce {x : V | x ≠ b}).Connected) :
+    (∀ x : V, ∃ i, x ∈ (p i).support) ∧
+      (∀ x y : V, G.Adj x y ↔ ∃ i, (p i).toSubgraph.Adj x y) := by
+  classical
+  let S : Set V := {x | ∃ i, x ∈ (p i).support}
+  have haS : a ∈ S := ⟨Classical.choice inferInstance, (p _).start_mem_support⟩
+  have hbS : b ∈ S := ⟨Classical.choice inferInstance, (p _).end_mem_support⟩
+  have hstep : ∀ x y, x ∈ S → x ≠ b → G.Adj x y →
+      ∃ i, (p i).toSubgraph.Adj x y := by
+    intro x y hx hxb hxy
+    by_cases hxa : x = a
+    · subst x
+      obtain ⟨i, hi⟩ := hfirst y hxy
+      exact ⟨i, hi ▸ (p i).toSubgraph_adj_snd (Walk.not_nil_of_ne hab)⟩
+    · obtain ⟨i, hi⟩ := hx
+      exact ⟨i, (internal_adjacency_saturated (p i) (hp i)
+        ⟨hi, hxa, hxb⟩ (hsat i x ⟨hi, hxa, hxb⟩) y).mpr hxy⟩
+  have hclosed : ∀ x y : {z : V // z ≠ b},
+      x.val ∈ S → (G.induce {z : V | z ≠ b}).Adj x y → y.val ∈ S := by
+    intro x y hx hxy
+    obtain ⟨i, hi⟩ := hstep x.val y.val hx x.property hxy
+    exact ⟨i, Walk.mem_support_of_adj_toSubgraph hi.symm⟩
+  have hwalk : ∀ x y : {z : V // z ≠ b},
+      (G.induce {z : V | z ≠ b}).Walk x y → x.val ∈ S → y.val ∈ S := by
+    intro x y w
+    induction w with
+    | nil => exact id
+    | cons h _ ih => exact fun hx => ih (hclosed _ _ hx h)
+  have hall : ∀ x : V, x ∈ S := by
+    intro x
+    by_cases hxb : x = b
+    · exact hxb.symm ▸ hbS
+    · obtain ⟨w⟩ := hconn.preconnected ⟨a, hab⟩ ⟨x, hxb⟩
+      exact hwalk _ _ w haS
+  refine ⟨hall, ?_⟩
+  intro x y
+  constructor
+  · intro hxy
+    by_cases hxb : x = b
+    · obtain ⟨i, hi⟩ := hstep y x (hall y) (by
+        intro h
+        exact hxy.ne (hxb.trans h.symm)) hxy.symm
+      exact ⟨i, hi.symm⟩
+    · exact hstep x y (hall x) hxb hxy
+  · rintro ⟨i, hi⟩
+    exact (p i).toSubgraph.adj_sub hi
+
+end E593Theta
+
+end Erdos593SelfContained_Module_Erdos593_Graph_SaturatedPathSeparation
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.SaturatedPathSeparation
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.ThetaPathData
+Source: Erdos593/Graph/ThetaPathData.lean
+Normalized SHA-256: 231f498f08a15e6777b361482d6a46f039838528321b59a2909c8baa6b98fe7c
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_ThetaPathData
+
+/-! # Literal path data, independent of the rank-two project library. -/
+
+namespace E593Theta
+
+open SimpleGraph
+
+universe u
+
+variable {V : Type u} [Fintype V] [DecidableEq V]
+variable {G : SimpleGraph V} [DecidableRel G.Adj]
+
+/-- A literal three-path presentation of the original graph. All paths live
+in G, and the last field states equality with its actual adjacency relation. -/
+structure ThreePaths (G : SimpleGraph V) (a b : V) where
+  ends_ne : a ≠ b
+  path : Fin 3 → G.Walk a b
+  simple : ∀ i, (path i).IsPath
+  first_injective : Function.Injective (fun i => (path i).snd)
+  disjoint : ∀ i j, i ≠ j → Disjoint (interior (path i)) (interior (path j))
+  covers_vertices : ∀ x : V, ∃ i, x ∈ (path i).support
+  covers_adjacency : ∀ x y : V, G.Adj x y ↔ ∃ i, (path i).toSubgraph.Adj x y
+
+namespace ThreePaths
+
+variable {a b : V} (P : ThreePaths G a b)
+
+omit [Fintype V] [DecidableEq V] [DecidableRel G.Adj] in
+/-- Every branch has positive edge length, since its endpoints are distinct. -/
+theorem length_pos (i : Fin 3) : 0 < (P.path i).length :=
+  Walk.not_nil_iff_lt_length.mp (Walk.not_nil_of_ne P.ends_ne)
+
+omit [Fintype V] [DecidableEq V] [DecidableRel G.Adj] in
+/-- Two length-one branches would repeat the same edge in a simple graph. -/
+theorem at_most_one_direct (i j : Fin 3)
+    (hi : (P.path i).length = 1) (hj : (P.path j).length = 1) : i = j := by
+  apply P.first_injective
+  have hsi : (P.path i).snd = b := by
+    change (P.path i).getVert 1 = b
+    rw [← hi]
+    simp
+  have hsj : (P.path j).snd = b := by
+    change (P.path j).getVert 1 = b
+    rw [← hj]
+    simp
+  exact hsi.trans hsj.symm
+
+end ThreePaths
+end E593Theta
+
+end Erdos593SelfContained_Module_Erdos593_Graph_ThetaPathData
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.ThetaPathData
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.ThetaGraphModel
+Source: Erdos593/Graph/ThetaGraphModel.lean
+Normalized SHA-256: 0d2a50906783d19bd362a267cfd43b7dc80432d705849586d4f80d34c0e01793
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_ThetaGraphModel
+
+/-!
+# The length-parametrized theta graph and its actual isomorphism
+
+The model below depends only on three natural lengths. Its vertices are two
+endpoints and tagged internal positions; adjacency is consecutive-position
+adjacency. It does not depend on an ambient graph or its degree pattern.
+-/
+
+namespace E593Theta
+
+open SimpleGraph
+
+universe u
+
+/-- Two branch vertices and the interior positions on each of three paths. -/
+abbrev Vertex (r : Fin 3 → ℕ) := Bool ⊕ ((i : Fin 3) × Fin (r i - 1))
+
+/-- Position t on branch i. Values zero and r_i are the common endpoints. -/
+def point (r : Fin 3 → ℕ) (i : Fin 3) (t : Fin (r i + 1)) : Vertex r :=
+  if h0 : t.val = 0 then .inl false
+  else if he : t.val = r i then .inl true
+  else .inr ⟨i, ⟨t.val - 1, by have := t.isLt; omega⟩⟩
+
+/-- The ordinary simple graph consisting of three chains with common endpoints.
+The explicit inequality enforces looplessness even for degenerate input lengths;
+the recognition theorem supplies strictly positive lengths. -/
+def thetaGraph (r : Fin 3 → ℕ) : SimpleGraph (Vertex r) where
+  Adj x y := x ≠ y ∧ ∃ (i : Fin 3) (j : Fin (r i)),
+    s(point r i j.castSucc, point r i j.succ) = s(x, y)
+  symm.symm x y h := by
+    obtain ⟨hxy, i, j, hj⟩ := h
+    exact ⟨hxy.symm, i, j, hj.trans Sym2.eq_swap⟩
+  loopless.irrefl x h := h.1 rfl
+
+namespace ThreePaths
+
+variable {V : Type u} [Fintype V] [DecidableEq V]
+variable {G : SimpleGraph V} [DecidableRel G.Adj] {a b : V}
+variable (P : ThreePaths G a b)
+
+/-- Actual edge lengths of the three constructed paths. -/
+def lengths (i : Fin 3) : ℕ := (P.path i).length
+
+/-- Evaluate theta coordinates at the actual vertices on the paths. -/
+def realize : Vertex P.lengths → V
+  | .inl false => a
+  | .inl true => b
+  | .inr ⟨i, j⟩ => (P.path i).getVert (j.val + 1)
+
+omit [Fintype V] [DecidableEq V] [DecidableRel G.Adj] in
+/-- Internal positions are genuinely internal; they cannot collapse to an end. -/
+theorem internal_position (i : Fin 3) (j : Fin (P.lengths i - 1)) :
+    (P.path i).getVert (j.val + 1) ∈ interior (P.path i) := by
+  have hj : j.val + 1 < (P.path i).length := by
+    have := j.isLt
+    change j.val < (P.path i).length - 1 at this
+    omega
+  refine ⟨(P.path i).getVert_mem_support _, ?_, ?_⟩
+  · intro h
+    have heq : (P.path i).getVert (j.val + 1) = (P.path i).getVert 0 := by
+      simpa using h
+    have he := (P.simple i).getVert_injOn
+      (by change j.val + 1 ≤ (P.path i).length; omega)
+      (by change 0 ≤ (P.path i).length; omega) heq
+    omega
+  · intro h
+    have heq : (P.path i).getVert (j.val + 1) =
+        (P.path i).getVert (P.path i).length := by simpa using h
+    have he := (P.simple i).getVert_injOn
+      (by change j.val + 1 ≤ (P.path i).length; omega)
+      (by change (P.path i).length ≤ (P.path i).length; rfl) heq
+    omega
+
+omit [Fintype V] [DecidableEq V] [DecidableRel G.Adj] in
+/-- Coordinate evaluation is injective, using path simplicity and the proved
+pairwise disjointness of interiors. -/
+theorem realize_injective : Function.Injective P.realize := by
+  rintro (c | ⟨i, j⟩) (d | ⟨i', j'⟩) h
+  · cases c <;> cases d
+    · rfl
+    · exact (P.ends_ne h).elim
+    · exact (P.ends_ne h.symm).elim
+    · rfl
+  · cases c
+    · exact ((P.internal_position i' j').2.1 h.symm).elim
+    · exact ((P.internal_position i' j').2.2 h.symm).elim
+  · cases d
+    · exact ((P.internal_position i j).2.1 h).elim
+    · exact ((P.internal_position i j).2.2 h).elim
+  · have hii : i = i' := by
+      by_contra hne
+      have hi := P.internal_position i j
+      have hj := P.internal_position i' j'
+      change (P.path i).getVert (j.val + 1) =
+        (P.path i').getVert (j'.val + 1) at h
+      exact Set.disjoint_left.mp (P.disjoint i i' hne) hi (h.symm ▸ hj)
+    subst i'
+    have heq : (P.path i).getVert (j.val + 1) =
+        (P.path i).getVert (j'.val + 1) := h
+    have hj := j.isLt
+    have hj' := j'.isLt
+    change j.val < (P.path i).length - 1 at hj
+    change j'.val < (P.path i).length - 1 at hj'
+    have hval := (P.simple i).getVert_injOn
+      (by change j.val + 1 ≤ (P.path i).length; omega)
+      (by change j'.val + 1 ≤ (P.path i).length; omega) heq
+    have he : j = j' := Fin.ext (by omega)
+    subst j'
+    rfl
+
+omit [Fintype V] [DecidableEq V] [DecidableRel G.Adj] in
+/-- Exact vertex coverage supplies surjectivity onto the original carrier. -/
+theorem realize_surjective : Function.Surjective P.realize := by
+  intro x
+  by_cases hxa : x = a
+  · exact ⟨.inl false, hxa.symm⟩
+  by_cases hxb : x = b
+  · exact ⟨.inl true, hxb.symm⟩
+  obtain ⟨i, hix⟩ := P.covers_vertices x
+  obtain ⟨j, hj, hjl⟩ := Walk.mem_support_iff_exists_getVert.mp hix
+  have hj0 : j ≠ 0 := by
+    intro h
+    subst j
+    exact hxa (by simpa using hj.symm)
+  have hjlt : j < (P.path i).length := by
+    by_contra h
+    have he : j = (P.path i).length := by omega
+    subst j
+    exact hxb (by simpa using hj.symm)
+  refine ⟨.inr ⟨i, ⟨j - 1, by change j - 1 < (P.path i).length - 1; omega⟩⟩, ?_⟩
+  change (P.path i).getVert (j - 1 + 1) = x
+  simpa only [Nat.sub_add_cancel (by omega : 1 ≤ j)] using hj
+
+omit [Fintype V] [DecidableEq V] [DecidableRel G.Adj] in
+/-- All endpoint and internal positions evaluate to the corresponding walk vertex. -/
+theorem realize_point (i : Fin 3) (t : Fin (P.lengths i + 1)) :
+    P.realize (point P.lengths i t) = (P.path i).getVert t.val := by
+  unfold point
+  split_ifs with h0 he
+  · simp [realize, h0]
+  · simp [realize, he, lengths]
+  · change (P.path i).getVert (t.val - 1 + 1) = (P.path i).getVert t.val
+    rw [Nat.sub_add_cancel (by omega : 1 ≤ t.val)]
+
+/-- A genuine graph isomorphism: the original graph and the fixed length model
+have exactly the same edges, not just the same degree sequence or counts. -/
+noncomputable def modelIso : thetaGraph P.lengths ≃g G where
+  toEquiv := Equiv.ofBijective P.realize ⟨P.realize_injective, P.realize_surjective⟩
+  map_rel_iff' := by
+    intro x y
+    change G.Adj (P.realize x) (P.realize y) ↔
+      x ≠ y ∧ ∃ (i : Fin 3) (j : Fin (P.lengths i)),
+        s(point P.lengths i j.castSucc, point P.lengths i j.succ) = s(x, y)
+    constructor
+    · intro hxy
+      obtain ⟨i, hi⟩ := (P.covers_adjacency _ _).mp hxy
+      obtain ⟨j, hj, hlt⟩ := (P.path i).toSubgraph_adj_iff.mp hi
+      refine ⟨fun h => hxy.ne (congrArg P.realize h), i, ⟨j, hlt⟩, ?_⟩
+      apply Sym2.map.injective P.realize_injective
+      simp only [Sym2.map_mk, P.realize_point]
+      exact hj
+    · rintro ⟨_, i, j, hj⟩
+      have hmap := congrArg (Sym2.map P.realize) hj
+      simp only [Sym2.map_mk, P.realize_point] at hmap
+      change s((P.path i).getVert j.val, (P.path i).getVert (j.val + 1)) =
+        s(P.realize x, P.realize y) at hmap
+      have hadj : G.Adj ((P.path i).getVert j.val) ((P.path i).getVert (j.val + 1)) :=
+        (P.path i).toSubgraph.adj_sub ((P.path i).toSubgraph_adj_getVert j.isLt)
+      change s(P.realize x, P.realize y) ∈ G.edgeSet
+      rw [← hmap]
+      exact hadj
+
+omit [DecidableEq V] [DecidableRel G.Adj] in
+/-- The sum of the three edge lengths is exactly one more than the number
+of original vertices. This uses the actual coordinate bijection. -/
+theorem sum_lengths : (∑ i : Fin 3, P.lengths i) = Nat.card V + 1 := by
+  classical
+  have hcard : Nat.card V = 2 + ∑ i : Fin 3, (P.lengths i - 1) := by
+    calc
+      Nat.card V = Fintype.card V := Nat.card_eq_fintype_card
+      _ = Fintype.card (Vertex P.lengths) := (Fintype.card_congr P.modelIso.toEquiv).symm
+      _ = 2 + ∑ i : Fin 3, (P.lengths i - 1) := by simp [Vertex]
+  have hsum : (∑ i : Fin 3, P.lengths i) =
+      (∑ i : Fin 3, (P.lengths i - 1)) + 3 := by
+    calc
+      _ = ∑ i : Fin 3, ((P.lengths i - 1) + 1) := by
+        apply Finset.sum_congr rfl
+        intro i _
+        have := P.length_pos i
+        change (P.path i).length = (P.path i).length - 1 + 1
+        omega
+      _ = _ := by simp only [Finset.sum_add_distrib]; simp
+  omega
+
+end ThreePaths
+
+variable {V : Type u} [Fintype V] [DecidableEq V]
+variable {G : SimpleGraph V} [DecidableRel G.Adj]
+
+omit [Fintype V] [DecidableEq V] [DecidableRel G.Adj] in
+/-- Two-colouring determines the parity of every actual walk. -/
+theorem two_colour_walk_parity (c : G.Coloring (Fin 2))
+    {x y : V} (p : G.Walk x y) : Even p.length ↔ c x = c y := by
+  induction p with
+  | nil => simp
+  | @cons x z y hxz p ih =>
+      have hne : c x ≠ c z := c.valid hxz
+      have htwo : ∀ x z y : Fin 2, x ≠ z → (x = y ↔ z ≠ y) := by decide
+      simpa only [Walk.length_cons, Nat.even_add_one, ih] using (htwo _ _ _ hne).symm
+
+omit [DecidableEq V] [DecidableRel G.Adj] in
+/-- Odd order in the bipartite rank-two case forces every branch length even. -/
+theorem ThreePaths.even_lengths_of_odd_card {a b : V} (P : ThreePaths G a b)
+    (hb : G.Colorable 2) (hodd : Odd (Nat.card V)) :
+    ∀ i : Fin 3, Even (P.lengths i) := by
+  obtain ⟨c⟩ := hb
+  have hpar : ∀ i j : Fin 3, Even (P.lengths i) ↔ Even (P.lengths j) := by
+    intro i j
+    exact (two_colour_walk_parity c (P.path i)).trans
+      (two_colour_walk_parity c (P.path j)).symm
+  have hsum := P.sum_lengths
+  have hsum3 : P.lengths 0 + (P.lengths 1 + (P.lengths 2 + 0)) = Nat.card V + 1 := by
+    simpa [Fin.sum_univ_succ] using hsum
+  have hzero : Even (P.lengths 0) := by
+    by_contra h0
+    have h1 : ¬Even (P.lengths 1) := fun h => h0 ((hpar 0 1).mpr h)
+    have h2 : ¬Even (P.lengths 2) := fun h => h0 ((hpar 0 2).mpr h)
+    rw [Nat.even_iff] at h0 h1 h2
+    rw [Nat.odd_iff] at hodd
+    omega
+  exact fun i => (hpar 0 i).mp hzero
+
+end E593Theta
+
+end Erdos593SelfContained_Module_Erdos593_Graph_ThetaGraphModel
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.ThetaGraphModel
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.FiniteCycleRecognition
+Source: Erdos593/Graph/FiniteCycleRecognition.lean
+Normalized SHA-256: d1ed5b84bd727a4ef596412b1488d3c7156017c9b4f68f5afd9336a93735c37a
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_FiniteCycleRecognition
+
+/-!
+# Recognizing a finite connected 2-regular graph
+
+A cycle is first obtained on the whole connected component. A spanning copy of
+`cycleGraph` is then upgraded to an isomorphism by surjectivity on each actual
+neighbor set. Thus a Hamiltonian cycle alone is NOT used to exclude chords.
+
+Candidate source: pinned compilation and the transitive axiom audit are required.
+-/
+
+namespace E593Boundary
+
+open SimpleGraph
+
+universe u v
+
+/-- Equal finite vertex counts and equal local degrees upgrade a graph copy to
+an isomorphism. The neighbor-set argument supplies reflection of adjacency. -/
+theorem copy_isomorphism_of_card_and_degrees
+    {V : Type u} {W : Type v} [Fintype V] [Fintype W]
+    (G : SimpleGraph V) (H : SimpleGraph W)
+    [DecidableRel G.Adj] [DecidableRel H.Adj]
+    (f : G.Copy H) (hcard : Fintype.card V = Fintype.card W)
+    (hdeg : ∀ x, G.degree x = H.degree (f x)) :
+    Nonempty (G ≃g H) := by
+  classical
+  have hbij : Function.Bijective f :=
+    (Fintype.bijective_iff_injective_and_card f).mpr ⟨f.injective, hcard⟩
+  have hreflect : ∀ x y, H.Adj (f x) (f y) → G.Adj x y := by
+    intro x y hxy
+    have hlocal : Function.Surjective (f.mapNeighborSet x) := by
+      apply Function.Bijective.surjective
+      apply (Fintype.bijective_iff_injective_and_card _).mpr
+      refine ⟨(f.mapNeighborSet x).injective, ?_⟩
+      simpa only [G.card_neighborSet_eq_degree, H.card_neighborSet_eq_degree]
+        using hdeg x
+    obtain ⟨z, hz⟩ := hlocal ⟨f y, hxy⟩
+    have hzy : (z : V) = y := f.injective (congrArg Subtype.val hz)
+    exact hzy ▸ z.property
+  refine ⟨{ toEquiv := Equiv.ofBijective f hbij, map_rel_iff' := ?_ }⟩
+  intro x y
+  exact ⟨hreflect x y, fun h => f.toHom.map_adj h⟩
+
+/-- The 2-regular degree hypothesis implies Mathlib's graph-of-cycles predicate. -/
+theorem isCycles_of_degree_eq_two
+    {V : Type u} [Fintype V] (G : SimpleGraph V) [DecidableRel G.Adj]
+    (hd : ∀ x, G.degree x = 2) : G.IsCycles := by
+  intro x _
+  change Nat.card (G.neighborSet x) = 2
+  rw [Nat.card_eq_fintype_card, G.card_neighborSet_eq_degree]
+  exact hd x
+
+/-- A finite connected 2-regular graph contains a Hamiltonian cycle based at
+any specified vertex. Its support is proved to cover the original carrier. -/
+theorem two_regular_hamiltonian_cycle
+    {V : Type u} [Fintype V] [DecidableEq V]
+    (G : SimpleGraph V) [DecidableRel G.Adj]
+    (hc : G.Connected) (hd : ∀ x, G.degree x = 2) (v : V) :
+    ∃ p : G.Walk v v, p.IsHamiltonianCycle := by
+  have hcyc := isCycles_of_degree_eq_two G hd
+  have hn : (G.neighborSet v).Nonempty := by
+    obtain ⟨w, hw⟩ := (G.degree_pos_iff_exists_adj v).mp (by rw [hd]; decide)
+    exact ⟨w, hw⟩
+  obtain ⟨p, hp, hverts⟩ :=
+    hcyc.exists_cycle_toSubgraph_verts_eq_connectedComponentSupp
+      (c := G.connectedComponentMk v) (v := v) rfl hn
+  have hall : ∀ x : V, x ∈ p.support := by
+    intro x
+    rw [← p.mem_verts_toSubgraph, hverts]
+    exact SimpleGraph.ConnectedComponent.sound (hc.preconnected x v)
+  have htail : p.tail.IsHamiltonian := by
+    apply hp.isPath_tail.isHamiltonian_of_mem
+    intro x
+    have hx := hall x
+    rw [← SimpleGraph.Walk.cons_support_tail hp.not_nil, List.mem_cons] at hx
+    rcases hx with rfl | hx
+    · exact p.tail.end_mem_support
+    · exact hx
+  exact ⟨p, ⟨hp, htail⟩⟩
+
+/-- Actual isomorphism, not just containment, with the cycle on all vertices. -/
+theorem connected_two_regular_iso_cycleGraph
+    {V : Type u} [Fintype V] [DecidableEq V]
+    (G : SimpleGraph V) [DecidableRel G.Adj]
+    (hc : G.Connected) (hd : ∀ x, G.degree x = 2) :
+    Nonempty (G ≃g SimpleGraph.cycleGraph (Fintype.card V)) := by
+  obtain ⟨v⟩ := hc.nonempty
+  obtain ⟨p, hp⟩ := two_regular_hamiltonian_cycle G hc hd v
+  have hn : 3 ≤ Fintype.card V := by
+    have hh := hp.isCycle.three_le_length
+    rw [hp.length_eq] at hh
+    exact hh
+  obtain ⟨f⟩ := (SimpleGraph.cycleGraph_isContained_iff (by omega :
+    2 < Fintype.card V)).mpr ⟨v, p, hp.isCycle, hp.length_eq⟩
+  have hcd : ∀ x : Fin (Fintype.card V),
+      (SimpleGraph.cycleGraph (Fintype.card V)).degree x = 2 := by
+    intro x
+    generalize hN : Fintype.card V = n at hn x ⊢
+    obtain ⟨r, hr⟩ := Nat.exists_eq_add_of_le hn
+    have hnr : n = r + 3 := by omega
+    subst hnr
+    exact SimpleGraph.cycleGraph_degree_three_le
+  obtain ⟨i⟩ := copy_isomorphism_of_card_and_degrees
+    (SimpleGraph.cycleGraph (Fintype.card V)) G f (by simp)
+    (fun x => (hcd x).trans (hd (f x)).symm)
+  exact ⟨i.symm⟩
+
+end E593Boundary
+
+end Erdos593SelfContained_Module_Erdos593_Graph_FiniteCycleRecognition
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.FiniteCycleRecognition
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.BoundaryCoreDegreePatterns
+Source: Erdos593/Graph/BoundaryCoreDegreePatterns.lean
+Normalized SHA-256: 22f196a8e84bf0a0cb1f60610ab245441744efffd49fa3ece3bf620e7b5e2d88
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_BoundaryCoreDegreePatterns
+
+/-!
+# Low-rank degree patterns for two-vertex-connected cores
+
+These lemmas expose the finite degree bookkeeping used at the atomic lower
+boundary.  They are statements about the actual graph and its actual degree
+function; no cycle/theta representation is inserted as a premise.
+
+Candidate source for local pinned Lean replay.
+-/
+
+namespace SimpleGraph.TwoConnectedBipartiteSpectrum
+
+open scoped Classical
+
+universe u
+
+/-- A finite two-vertex-connected graph of cycle rank one is literally
+2-regular.  Bipartiteness is not needed for this degree conclusion. -/
+theorem rank_one_degree_eq_two {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hr : SimpleGraph.FiniteCycleRank.cycleRank G = 1) :
+    ∀ x : V, G.degree x = 2 := by
+  classical
+  have hEuler := connected_cycleRank_euler G (two_connected_connected G htwo)
+  have hedge : Nat.card G.edgeSet = Nat.card V := by omega
+  have hdegrees : ∀ x, 2 ≤ G.degree x := by
+    intro x
+    have h := two_connected_min_degree G htwo x
+    simpa only [Nat.card_eq_fintype_card, G.card_neighborSet_eq_degree] using h
+  have hsum : (∑ x : V, G.degree x) = ∑ _x : V, (2 : ℕ) := by
+    calc
+      (∑ x : V, G.degree x) = 2 * G.edgeFinset.card :=
+        G.sum_degrees_eq_twice_card_edges
+      _ = 2 * Nat.card V := by
+        rw [G.edgeFinset_card, ← Nat.card_eq_fintype_card, hedge]
+      _ = ∑ _x : V, (2 : ℕ) := by
+        simp [Nat.card_eq_fintype_card, mul_comm]
+  intro x
+  by_contra hx
+  have hlt : 2 < G.degree x := by have := hdegrees x; omega
+  have hstrict : (∑ _y : V, (2 : ℕ)) < ∑ y : V, G.degree y :=
+    Finset.sum_lt_sum (fun y _ => hdegrees y) ⟨x, Finset.mem_univ x, hlt⟩
+  omega
+
+/-- At cycle rank two the total excess above minimum degree two is exactly two. -/
+theorem rank_two_degree_excess_sum {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hr : SimpleGraph.FiniteCycleRank.cycleRank G = 2) :
+    ∑ x : V, (G.degree x - 2) = 2 := by
+  classical
+  have hEuler := connected_cycleRank_euler G (two_connected_connected G htwo)
+  have hedge : Nat.card G.edgeSet = Nat.card V + 1 := by omega
+  have hdegrees : ∀ x, 2 ≤ G.degree x := by
+    intro x
+    have h := two_connected_min_degree G htwo x
+    simpa only [Nat.card_eq_fintype_card, G.card_neighborSet_eq_degree] using h
+  have hsumdeg : (∑ x : V, G.degree x) = 2 * (Nat.card V + 1) := by
+    calc
+      _ = 2 * G.edgeFinset.card := G.sum_degrees_eq_twice_card_edges
+      _ = 2 * Nat.card G.edgeSet := by rw [G.edgeFinset_card, Nat.card_eq_fintype_card]
+      _ = 2 * (Nat.card V + 1) := by rw [hedge]
+  have hsplit :
+      (∑ x : V, (G.degree x - 2)) + (∑ _x : V, (2 : ℕ)) =
+        ∑ x : V, G.degree x := by
+    rw [← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro x _
+    have := hdegrees x
+    omega
+  have htwoSum : (∑ _x : V, (2 : ℕ)) = 2 * Nat.card V := by
+    simp [Nat.card_eq_fintype_card, mul_comm]
+  rw [htwoSum, hsumdeg] at hsplit
+  omega
+
+/-- The rank-two degree excess has only the two elementary possibilities:
+one degree-four vertex, or two degree-three vertices.  The later
+2-connectivity argument rules out the first alternative at the odd atomic
+lower boundary. -/
+theorem rank_two_degree_pattern {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hr : SimpleGraph.FiniteCycleRank.cycleRank G = 2) :
+    (∃ x : V, G.degree x = 4 ∧ ∀ y : V, y ≠ x → G.degree y = 2) ∨
+    (∃ x y : V, x ≠ y ∧ G.degree x = 3 ∧ G.degree y = 3 ∧
+      ∀ z : V, z ≠ x → z ≠ y → G.degree z = 2) := by
+  classical
+  have hdegrees : ∀ x, 2 ≤ G.degree x := by
+    intro x
+    have h := two_connected_min_degree G htwo x
+    simpa only [Nat.card_eq_fintype_card, G.card_neighborSet_eq_degree] using h
+  have hsum := rank_two_degree_excess_sum G htwo hr
+  have hupper : ∀ x, G.degree x ≤ 4 := by
+    intro x
+    have hx : G.degree x - 2 ≤ ∑ y : V, (G.degree y - 2) :=
+      Finset.single_le_sum (f := fun y : V => G.degree y - 2)
+        (fun _ _ => Nat.zero_le _) (Finset.mem_univ x)
+    rw [hsum] at hx
+    have := hdegrees x
+    omega
+  by_cases hfour : ∃ x : V, G.degree x = 4
+  · obtain ⟨x, hx⟩ := hfour
+    left
+    refine ⟨x, hx, ?_⟩
+    have hxex : G.degree x - 2 = 2 := by omega
+    have herase := Finset.sum_erase_add (Finset.univ : Finset V)
+      (fun y => G.degree y - 2) (Finset.mem_univ x)
+    have hrest : ∑ y ∈ (Finset.univ.erase x), (G.degree y - 2) = 0 := by
+      rw [hxex] at herase
+      omega
+    intro y hy
+    have hymem : y ∈ (Finset.univ.erase x) := Finset.mem_erase.mpr ⟨hy, Finset.mem_univ y⟩
+    have hyzero := (Finset.sum_eq_zero_iff.mp hrest) y hymem
+    have := hdegrees y
+    omega
+  · right
+    let D : Finset V := Finset.univ.filter (fun x => G.degree x = 3)
+    have h23 : ∀ x : V, G.degree x = 2 ∨ G.degree x = 3 := by
+      intro x
+      have hlo := hdegrees x
+      have hhi := hupper x
+      have hn4 : G.degree x ≠ 4 := fun hx => hfour ⟨x, hx⟩
+      omega
+    have hcard : D.card = 2 := by
+      have hrewrite : (∑ x : V, (G.degree x - 2)) = D.card := by
+        calc
+          _ = ∑ x : V, if G.degree x = 3 then 1 else 0 := by
+            apply Finset.sum_congr rfl
+            intro x _
+            rcases h23 x with hx | hx
+            · simp [hx]
+            · simp [hx]
+          _ = D.card := by simp [D]
+      rw [hrewrite] at hsum
+      exact hsum
+    obtain ⟨x, y, hxy, hD⟩ := Finset.card_eq_two.mp hcard
+    have hxD : x ∈ D := by rw [hD]; simp
+    have hyD : y ∈ D := by rw [hD]; simp
+    have hx3 : G.degree x = 3 := (Finset.mem_filter.mp hxD).2
+    have hy3 : G.degree y = 3 := (Finset.mem_filter.mp hyD).2
+    refine ⟨x, y, hxy, hx3, hy3, ?_⟩
+    intro z hzx hzy
+    rcases h23 z with hz | hz
+    · exact hz
+    · have hzD : z ∈ D := Finset.mem_filter.mpr ⟨Finset.mem_univ z, hz⟩
+      rw [hD] at hzD
+      simp only [Finset.mem_insert, Finset.mem_singleton] at hzD
+      exact (hzD.elim hzx hzy).elim
+
+end SimpleGraph.TwoConnectedBipartiteSpectrum
+
+end Erdos593SelfContained_Module_Erdos593_Graph_BoundaryCoreDegreePatterns
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.BoundaryCoreDegreePatterns
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.BoundaryCoreRecognition
+Source: Erdos593/Graph/BoundaryCoreRecognition.lean
+Normalized SHA-256: 696bef192260b634a8662a7666bef1e3e10757715595daf78ca78df3fb6665b0
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_BoundaryCoreRecognition
+
+/-!
+# Cycle recognition and the branch vertices of rank-two canonical cores
+
+Deleting a vertex from a two-vertex-connected graph remains connected.
+Counting the remaining edges gives `degree v ≤ cycleRank G + 1`, ruling out
+the degree-four alternative in the previously supplied rank-two dichotomy.
+No path representation or graph isomorphism is put into a hypothesis.
+
+Candidate source: no kernel acceptance is asserted.
+-/
+
+namespace SimpleGraph.TwoConnectedBipartiteSpectrum
+
+open scoped Classical
+
+universe u
+
+/-- Exact Euler balance for the actual vertex-deleted graph.  Both graphs
+are connected by two-vertex-connectivity, and no subtraction is treated as
+integer subtraction without first proving the required cardinal bounds. -/
+theorem delete_vertex_cycleRank_add_degree
+    {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (x : V) :
+    SimpleGraph.FiniteCycleRank.cycleRank (G.induce {y : V | y ≠ x}) +
+      G.degree x = SimpleGraph.FiniteCycleRank.cycleRank G + 1 := by
+  classical
+  let D := G.induce {y : V | y ≠ x}
+  have hcD : D.Connected := htwo.2 x
+  have hcard0 : Nat.card {y : V // y ≠ x} = Nat.card V - 1 := by
+    simpa only [Nat.card_eq_fintype_card, Fintype.card_subtype_eq]
+      using Fintype.card_subtype_compl (fun y : V => y = x)
+  have hn : 3 ≤ Nat.card V := by
+    simpa only [Nat.card_eq_fintype_card] using htwo.1
+  have hcard : Nat.card {y : V // y ≠ x} + 1 = Nat.card V := by omega
+  have hset : ({y : V | y ≠ x} : Set V) = {x}ᶜ := by ext y; simp
+  have hedge : Nat.card D.edgeSet = Nat.card G.edgeSet - G.degree x := by
+    have hcomp : Nat.card (G.induce ({x}ᶜ : Set V)).edgeSet =
+        Nat.card G.edgeSet - G.degree x := by
+      have h := (G.card_edgeFinset_induce_compl_singleton x).trans
+        (G.card_edgeFinset_deleteIncidenceSet x)
+      simpa only [SimpleGraph.edgeFinset_card, ← Nat.card_eq_fintype_card] using h
+    exact (congrArg (fun s : Set V => Nat.card (G.induce s).edgeSet) hset).trans hcomp
+  have hdeg : G.degree x ≤ Nat.card G.edgeSet := by
+    simpa only [SimpleGraph.edgeFinset_card, ← Nat.card_eq_fintype_card]
+      using G.degree_le_card_edgeFinset x
+  have hED := connected_cycleRank_euler D hcD
+  have hEG := connected_cycleRank_euler G (two_connected_connected G htwo)
+  change Nat.card D.edgeSet + 1 =
+    SimpleGraph.FiniteCycleRank.cycleRank D + Nat.card {y : V // y ≠ x} at hED
+  change SimpleGraph.FiniteCycleRank.cycleRank D + G.degree x =
+    SimpleGraph.FiniteCycleRank.cycleRank G + 1
+  omega
+
+/-- Nonnegativity of the actual deleted-graph rank gives the local degree bound. -/
+theorem degree_le_cycleRank_add_one
+    {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (x : V) : G.degree x ≤ SimpleGraph.FiniteCycleRank.cycleRank G + 1 := by
+  have h := delete_vertex_cycleRank_add_degree G htwo x
+  omega
+
+/-- Equality in the same balance makes the vertex-deleted graph a tree. -/
+theorem delete_vertex_isTree_of_degree_eq_cycleRank_add_one
+    {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (x : V) (hd : G.degree x = SimpleGraph.FiniteCycleRank.cycleRank G + 1) :
+    (G.induce {y : V | y ≠ x}).IsTree := by
+  have h := delete_vertex_cycleRank_add_degree G htwo x
+  have hzero : SimpleGraph.FiniteCycleRank.cycleRank
+      (G.induce {y : V | y ≠ x}) = 0 := by omega
+  exact ⟨htwo.2 x,
+    (SimpleGraph.FiniteCycleRank.cycleRank_eq_zero_iff _).mp hzero⟩
+
+/-- The degree-four alternative is impossible in a two-vertex-connected graph
+of rank two: exactly two actual vertices have degree three. -/
+theorem rank_two_exact_branch_vertices
+    {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hr : SimpleGraph.FiniteCycleRank.cycleRank G = 2) :
+    ∃ x y : V, x ≠ y ∧ G.degree x = 3 ∧ G.degree y = 3 ∧
+      (∀ z : V, z ≠ x → z ≠ y → G.degree z = 2) ∧
+      (G.induce {z : V | z ≠ x}).IsTree ∧
+      (G.induce {z : V | z ≠ y}).IsTree := by
+  classical
+  rcases rank_two_degree_pattern G htwo hr with ⟨x, hx, _⟩ | ⟨x, y, hxy, hx, hy, hrest⟩
+  · have h := degree_le_cycleRank_add_one G htwo x
+    omega
+  · refine ⟨x, y, hxy, hx, hy, hrest, ?_, ?_⟩
+    · exact delete_vertex_isTree_of_degree_eq_cycleRank_add_one G htwo x (by omega)
+    · exact delete_vertex_isTree_of_degree_eq_cycleRank_add_one G htwo y (by omega)
+
+/-- A rank-one two-connected graph is actually isomorphic to the cycle on its
+whole carrier, not just known to have a 2-regular degree sequence. -/
+theorem rank_one_iso_cycleGraph
+    {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hr : SimpleGraph.FiniteCycleRank.cycleRank G = 1) :
+    Nonempty (G ≃g SimpleGraph.cycleGraph (Nat.card V)) := by
+  classical
+  have h := E593Boundary.connected_two_regular_iso_cycleGraph G
+    (two_connected_connected G htwo) (rank_one_degree_eq_two G htwo hr)
+  have hc : Fintype.card V = Nat.card V := (Nat.card_eq_fintype_card).symm
+  exact (congrArg (fun n : ℕ => Nonempty (G ≃g SimpleGraph.cycleGraph n)) hc).mp h
+
+/-- Bipartiteness turns the actual cycle isomorphism into an explicit even-cycle
+normal form, with at least four vertices. -/
+theorem bipartite_rank_one_even_cycle
+    {V : Type u} [Fintype V] (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hb : G.Colorable 2) (hr : SimpleGraph.FiniteCycleRank.cycleRank G = 1) :
+    ∃ t : ℕ, 2 ≤ t ∧ Nat.card V = 2 * t ∧
+      Nonempty (G ≃g SimpleGraph.cycleGraph (2 * t)) := by
+  obtain ⟨t, ht⟩ := even_order_of_rank_one G htwo hb hr
+  have hcard : Nat.card V = 2 * t := by omega
+  have hn : 3 ≤ Nat.card V := by simpa only [Nat.card_eq_fintype_card] using htwo.1
+  refine ⟨t, by omega, hcard, ?_⟩
+  exact (congrArg (fun n : ℕ => Nonempty (G ≃g SimpleGraph.cycleGraph n)) hcard).mp
+    (rank_one_iso_cycleGraph G htwo hr)
+
+end SimpleGraph.TwoConnectedBipartiteSpectrum
+
+end Erdos593SelfContained_Module_Erdos593_Graph_BoundaryCoreRecognition
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.BoundaryCoreRecognition
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.ThetaPathRecognition
+Source: Erdos593/Graph/ThetaPathRecognition.lean
+Normalized SHA-256: 1f3177241b55193b33f33090e1e4a2beccb1c23bf91f05d5dcc6ee3acc8cf226
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_ThetaPathRecognition
+
+/-!
+# Actual three-path recognition at cycle rank two
+
+The paths are chosen in a vertex-deleted graph; internal disjointness and
+coverage are derived using saturation. No ear-decomposition theorem or
+assumed theta certificate occurs among the input hypotheses.
+-/
+
+namespace E593Theta
+
+open SimpleGraph
+
+universe u
+
+variable {V : Type u} [Fintype V] [DecidableEq V]
+variable {G : SimpleGraph V} [DecidableRel G.Adj]
+
+omit [Fintype V] [DecidableEq V] [DecidableRel G.Adj] in
+/-- Starting with one prescribed neighbour of a, deletion connectivity gives
+a simple a-b path with precisely that first neighbour, including x=b. -/
+theorem path_with_first_neighbour {a b x : V} (hab : a ≠ b)
+    (hax : G.Adj a x) (hc : (G.induce {z : V | z ≠ a}).Connected) :
+    ∃ p : G.Walk a b, p.IsPath ∧ p.snd = x := by
+  classical
+  let D := G.induce {z : V | z ≠ a}
+  let X : {z : V // z ≠ a} := ⟨x, hax.ne.symm⟩
+  let B : {z : V // z ≠ a} := ⟨b, hab.symm⟩
+  obtain ⟨w⟩ := hc.preconnected X B
+  let q : D.Path X B := w.toPath
+  let f : D →g G := ⟨Subtype.val, fun h => h⟩
+  let r : G.Walk x b := q.val.map f
+  have hr : r.IsPath := q.property.map (show Function.Injective f from Subtype.val_injective)
+  have ha : a ∉ r.support := by
+    intro ha
+    change a ∈ (q.val.map f).support at ha
+    rw [Walk.support_map, List.mem_map] at ha
+    obtain ⟨y, _, hy⟩ := ha
+    exact y.property hy
+  refine ⟨Walk.cons hax r, (Walk.cons_isPath_iff hax r).mpr ⟨hr, ha⟩, ?_⟩
+  simp
+
+omit [DecidableEq V] [DecidableRel G.Adj] in
+/-- Full graph recognition: two-vertex-connectivity and actual cycle rank two
+produce exactly three internally disjoint paths that exhaust vertices and edges. -/
+theorem rank_two_three_paths (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hr : SimpleGraph.FiniteCycleRank.cycleRank G = 2) :
+    ∃ a b : V, Nonempty (ThreePaths G a b) := by
+  classical
+  obtain ⟨a, b, hab, ha, _, hdeg, _, _⟩ :=
+    SimpleGraph.TwoConnectedBipartiteSpectrum.rank_two_exact_branch_vertices G htwo hr
+  have hcard : Fintype.card (G.neighborSet a) = 3 := by
+    rw [G.card_neighborSet_eq_degree, ha]
+  let e : Fin 3 ≃ G.neighborSet a := (Fintype.equivFinOfCardEq hcard).symm
+  have hpaths : ∀ i : Fin 3, ∃ p : G.Walk a b, p.IsPath ∧ p.snd = (e i).val := by
+    intro i
+    exact path_with_first_neighbour hab (e i).property (htwo.2 a)
+  choose p hp hfirst using hpaths
+  have hinj : Function.Injective (fun i => (p i).snd) := by
+    intro i j h
+    apply e.injective
+    apply Subtype.ext
+    simpa only [hfirst] using h
+  have hsat : ∀ i x, x ∈ interior (p i) → G.degree x ≤ 2 := by
+    intro i x hx
+    exact (hdeg x hx.2.1 hx.2.2).le
+  have hcover := saturated_paths_cover p hp hab hsat (fun y hy => by
+    obtain ⟨i, hi⟩ := e.surjective ⟨y, hy⟩
+    exact ⟨i, (hfirst i).trans (congrArg Subtype.val hi)⟩) (htwo.2 b)
+  refine ⟨a, b, ⟨{
+    ends_ne := hab
+    path := p
+    simple := hp
+    first_injective := hinj
+    disjoint := ?_
+    covers_vertices := hcover.1
+    covers_adjacency := hcover.2 }⟩⟩
+  intro i j hij
+  exact interiors_disjoint_of_snd_ne (p i) (p j) (hp i) (hp j) hab
+    (hsat i) (fun h => hij (hinj h))
+
+end E593Theta
+
+end Erdos593SelfContained_Module_Erdos593_Graph_ThetaPathRecognition
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.ThetaPathRecognition
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.ThetaRecognition
+Source: Erdos593/Graph/ThetaRecognition.lean
+Normalized SHA-256: 71e7f20d63e880d8cd2bae7be85a1976aafd3fa882fd2d3f7c3a77fc3a1faf80
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_ThetaRecognition
+
+/-! # Unconditional rank-two graph recognition endpoints. Candidate source. -/
+
+namespace E593Theta
+
+open SimpleGraph
+
+universe u
+
+variable {V : Type u} [Fintype V] [DecidableEq V]
+variable {G : SimpleGraph V} [DecidableRel G.Adj]
+
+omit [DecidableEq V] [DecidableRel G.Adj] in
+/-- Literal rank-two recognition with positive lengths, the no-duplicate-direct-
+edge restriction, exact vertex count, and a genuine graph isomorphism. -/
+theorem rank_two_iso_theta (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hr : SimpleGraph.FiniteCycleRank.cycleRank G = 2) :
+    ∃ r : Fin 3 → ℕ, (∀ i, 0 < r i) ∧
+      (∀ i j, r i = 1 → r j = 1 → i = j) ∧
+      (∑ i : Fin 3, r i) = Nat.card V + 1 ∧
+      Nonempty (G ≃g thetaGraph r) := by
+  obtain ⟨a, b, ⟨P⟩⟩ := rank_two_three_paths G htwo hr
+  exact ⟨P.lengths, P.length_pos, P.at_most_one_direct, P.sum_lengths, ⟨P.modelIso.symm⟩⟩
+
+omit [DecidableEq V] [DecidableRel G.Adj] in
+/-- The even-theta model at odd order. Its three even path lengths are conclusions. -/
+theorem rank_two_odd_bipartite_iso_theta (G : SimpleGraph V)
+    (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G)
+    (hr : SimpleGraph.FiniteCycleRank.cycleRank G = 2)
+    (hb : G.Colorable 2) (hodd : Odd (Nat.card V)) :
+    ∃ r : Fin 3 → ℕ, (∀ i, 0 < r i) ∧ (∀ i, Even (r i)) ∧
+      (∑ i : Fin 3, r i) = Nat.card V + 1 ∧
+      Nonempty (G ≃g thetaGraph r) := by
+  obtain ⟨a, b, ⟨P⟩⟩ := rank_two_three_paths G htwo hr
+  exact ⟨P.lengths, P.length_pos, P.even_lengths_of_odd_card hb hodd,
+    P.sum_lengths, ⟨P.modelIso.symm⟩⟩
+
+end E593Theta
+
+end Erdos593SelfContained_Module_Erdos593_Graph_ThetaRecognition
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.ThetaRecognition
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.AtomicBoundaryNormalForms
+Source: Erdos593/TripleSystem/AtomicBoundaryNormalForms.lean
+Normalized SHA-256: 9a3e33d1f698ae48a99c604667f4105765e4844cd689e07b6a128f6f4e2547da
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_AtomicBoundaryNormalForms
+
+/-!
+# The original-system cycle/theta boundary, with no auxiliary rank parameters
+
+The cycle and theta proofs share one canonical-core extraction. The public
+statement mentions only obligatoriness, reducedness, connectivity, literal
+indecomposability, and the original vertex/edge counts. No beta, atom count,
+phase predicate, supplied core, or assumed presentation is an input.
+Candidate source; compilation and axiom review are not yet claimed.
+-/
+
+namespace E593AtomicBoundary
+
+open _root_.SimpleGraph Erdos593 Erdos593.TripleSystem
+open Erdos593.TripleSystem.CanonicalAtom
+
+universe u
+
+variable {V E : Type u} [Fintype V] [Fintype E]
+variable [DecidableEq V] [DecidableEq E]
+variable (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+
+omit [DecidableEq V] [DecidableEq E] [DecidableRel F.levi.Adj] in
+/-- At m=s, the actual core has rank one and is an even cycle. -/
+theorem cycle_boundary
+    (hI : F.Intrinsic) (hconn : F.levi.Connected)
+    (hred : F.HasNoIsolatedPoints) (hi : OnePointIndecomposable F)
+    {s : ℕ} (hs : 4 ≤ s) (hsize : Nat.card V = Nat.card E + s)
+    (he : Nat.card E = s) :
+    Even s ∧ Isomorphic F (privateVertexExpansion (cycleGraph s)) := by
+  classical
+  obtain ⟨J, ht, hb, hE, ⟨i⟩⟩ := core_on_fin F hI hconn hred hi hs hsize
+  have hEuler := TwoConnectedBipartiteSpectrum.connected_cycleRank_euler
+    J (TwoConnectedBipartiteSpectrum.two_connected_connected J ht)
+  have hr : FiniteCycleRank.cycleRank J = 1 := by
+    rw [hE, he, Nat.card_fin] at hEuler
+    omega
+  have hev := TwoConnectedBipartiteSpectrum.even_order_of_rank_one J ht hb hr
+  obtain ⟨j⟩ := TwoConnectedBipartiteSpectrum.rank_one_iso_cycleGraph J ht hr
+  refine ⟨by simpa only [Nat.card_fin] using hev, ?_⟩
+  exact Eq.mp
+    (congrArg (fun n : ℕ => Isomorphic F (privateVertexExpansion (cycleGraph n)))
+      (Nat.card_fin s))
+    ⟨i.trans (expansionIso j)⟩
+
+omit [DecidableEq V] [DecidableEq E] [DecidableRel F.levi.Adj] in
+/-- At odd surplus and m=s+1, the actual core is an even theta graph. -/
+theorem theta_boundary
+    (hI : F.Intrinsic) (hconn : F.levi.Connected)
+    (hred : F.HasNoIsolatedPoints) (hi : OnePointIndecomposable F)
+    {s : ℕ} (hs : 4 ≤ s) (hsize : Nat.card V = Nat.card E + s)
+    (hodd : Odd s) (he : Nat.card E = s + 1) :
+    ∃ r : Fin 3 → ℕ, (∀ i, 0 < r i) ∧ (∀ i, Even (r i)) ∧
+      (∑ i : Fin 3, r i) = s + 1 ∧
+      Isomorphic F (privateVertexExpansion (E593Theta.thetaGraph r)) := by
+  classical
+  obtain ⟨J, ht, hb, hE, ⟨i⟩⟩ := core_on_fin F hI hconn hred hi hs hsize
+  have hEuler := TwoConnectedBipartiteSpectrum.connected_cycleRank_euler
+    J (TwoConnectedBipartiteSpectrum.two_connected_connected J ht)
+  have hr : FiniteCycleRank.cycleRank J = 2 := by
+    rw [hE, he, Nat.card_fin] at hEuler
+    omega
+  obtain ⟨r, hpos, heven, hsum, ⟨j⟩⟩ :=
+    E593Theta.rank_two_odd_bipartite_iso_theta J ht hr hb
+      (by simpa only [Nat.card_fin] using hodd)
+  exact ⟨r, hpos, heven, by simpa only [Nat.card_fin] using hsum,
+    ⟨i.trans (expansionIso j)⟩⟩
+
+omit [DecidableEq V] [DecidableEq E] [DecidableRel F.levi.Adj] in
+/-- Direct manuscript endpoint at alpha(s)=s+(s mod 2). Both the core and the
+incidence-preserving normal form are conclusions; no phase theorem is assumed. -/
+theorem obligatory_atomic_alpha_boundary
+    (hobl : F.IsObligatory) (hred : F.HasNoIsolatedPoints)
+    (hconn : F.levi.Connected) (hi : OnePointIndecomposable F)
+    {s : ℕ} (hs : 4 ≤ s) (hsize : Nat.card V = Nat.card E + s)
+    (he : Nat.card E = s + s % 2) :
+    (Even s ∧ Isomorphic F (privateVertexExpansion (cycleGraph s))) ∨
+    (Odd s ∧ ∃ r : Fin 3 → ℕ, (∀ i, 0 < r i) ∧ (∀ i, Even (r i)) ∧
+      (∑ i : Fin 3, r i) = s + 1 ∧
+      Isomorphic F (privateVertexExpansion (E593Theta.thetaGraph r))) := by
+  have hI := intrinsic_of_reduced_obligatory F hred hobl
+  rcases Nat.even_or_odd s with hev | hod
+  · left
+    apply cycle_boundary F hI hconn hred hi hs hsize
+    simpa only [Nat.even_iff.mp hev, Nat.add_zero] using he
+  · right
+    refine ⟨hod, theta_boundary F hI hconn hred hi hs hsize hod ?_⟩
+    simpa only [Nat.odd_iff.mp hod] using he
+
+end E593AtomicBoundary
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_AtomicBoundaryNormalForms
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.AtomicBoundaryNormalForms
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Graph.IncidenceProfile
+Source: Erdos593/Graph/IncidenceProfile.lean
+Normalized SHA-256: a84efd3e4eca4919feaf02e82e8f85556c90f6d5c346f10e5d477b332339a77f
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Graph_IncidenceProfile
+
+namespace E593Profile
+
+/-- Actual bipartite incidence graph. Same formula as the accepted project's
+SimpleGraph.bipartiteIncidenceGraph; no projected overlap graph is used. -/
+def incidenceGraph {k t : ℕ} (R : Fin k → Fin t → Prop) :
+    SimpleGraph (Fin k ⊕ Fin t) :=
+  SimpleGraph.fromRel fun x y =>
+    match x, y with
+    | .inl a, .inr p => R a p
+    | _, _ => False
+
+/-- Exact forest, component count, attachment-capacity bound and profile. -/
+def Realizes {k t : ℕ} (c : ℕ) (weights : Fin t → ℕ)
+    (R : Fin k → Fin t → Prop) : Prop :=
+  (incidenceGraph R).IsAcyclic ∧
+  Nat.card (incidenceGraph R).ConnectedComponent = c ∧
+  (∀ a : Fin k, Nat.card {p : Fin t // R a p} ≤ 2) ∧
+  (∀ p : Fin t, Nat.card {a : Fin k // R a p} = weights p + 1)
+
+/-- Proposition for statement elaboration only; this definition proves nothing. -/
+def RequestedTheorem : Prop :=
+  ∀ (k c t : ℕ) (weights : Fin t → ℕ),
+    1 ≤ c → c ≤ k → (∀ p, 0 < weights p) →
+    (∑ p, weights p) = k - c →
+    ∃ R : Fin k → Fin t → Prop, Realizes c weights R
+
+section ParentForest
+
+variable {V : Type*}
+
+/-- A set closed under adjacency is closed under reachability. -/
+lemma mem_of_reachable_of_closed {G : SimpleGraph V} {S : Set V}
+    (hS : ∀ a b, G.Adj a b → a ∈ S → b ∈ S) {u v : V} (hr : G.Reachable u v) (hu : u ∈ S) :
+    v ∈ S := by
+  obtain ⟨p⟩ := hr
+  induction p with
+  | nil => exact hu
+  | cons hadj _ ih => exact ih (hS _ _ hadj hu)
+
+lemma height_le_of_reflTransGen {par : V → Option V} {h : V → ℕ}
+    (hh : ∀ x y, par x = some y → h y < h x) {x y : V}
+    (hd : Relation.ReflTransGen (fun a b => par a = some b) x y) : h y ≤ h x := by
+  induction hd with
+  | refl => exact le_rfl
+  | tail _ hst ih => have := hh _ _ hst; omega
+
+/-- A graph whose edges are exactly the parent links of a height-decreasing parent
+function is acyclic. -/
+theorem isAcyclic_of_parent {G : SimpleGraph V} (par : V → Option V) (h : V → ℕ)
+    (hadj : ∀ x y, G.Adj x y ↔ par x = some y ∨ par y = some x)
+    (hh : ∀ x y, par x = some y → h y < h x) : G.IsAcyclic := by
+  rw [SimpleGraph.isAcyclic_iff_forall_adj_isBridge]
+  have key : ∀ v w, par v = some w → G.IsBridge s(v, w) := by
+    intro v w hvw
+    rw [SimpleGraph.isBridge_iff]
+    intro hr
+    let S : Set V := {y | Relation.ReflTransGen (fun a b => par a = some b) y v}
+    have hS : ∀ a b, (G.deleteEdges {s(v, w)}).Adj a b → a ∈ S → b ∈ S := by
+      intro a b hab ha
+      rw [SimpleGraph.deleteEdges_adj] at hab
+      obtain ⟨hab, hne⟩ := hab
+      rcases (hadj a b).1 hab with hp | hp
+      · rcases Relation.ReflTransGen.cases_head ha with rfl | ⟨c, hc, hcv⟩
+        · rw [hvw] at hp
+          cases hp
+          exact absurd rfl hne
+        · rw [hc] at hp
+          cases hp
+          exact hcv
+      · exact Relation.ReflTransGen.head hp ha
+    have hw : w ∈ S := mem_of_reachable_of_closed hS hr Relation.ReflTransGen.refl
+    have h1 := height_le_of_reflTransGen hh hw
+    have h2 := hh _ _ hvw
+    omega
+  intro v w hvw
+  rcases (hadj v w).1 hvw with hp | hp
+  · exact key v w hp
+  · rw [Sym2.eq_swap]; exact key w v hp
+
+/-- In such a parent forest, connected components correspond to roots. -/
+theorem card_connectedComponent_of_parent {G : SimpleGraph V} (par : V → Option V) (h : V → ℕ)
+    (hadj : ∀ x y, G.Adj x y ↔ par x = some y ∨ par y = some x)
+    (hh : ∀ x y, par x = some y → h y < h x) :
+    Nat.card G.ConnectedComponent = Nat.card {v : V // par v = none} := by
+  symm
+  apply Nat.card_eq_of_bijective (fun r => G.connectedComponentMk r.1)
+  constructor
+  · rintro ⟨r1, hr1⟩ ⟨r2, hr2⟩ heq
+    simp only [SimpleGraph.ConnectedComponent.eq] at heq
+    let S : Set V := {y | Relation.ReflTransGen (fun a b => par a = some b) y r1}
+    have hS : ∀ a b, G.Adj a b → a ∈ S → b ∈ S := by
+      intro a b hab ha
+      rcases (hadj a b).1 hab with hp | hp
+      · rcases Relation.ReflTransGen.cases_head ha with rfl | ⟨c, hc, hcv⟩
+        · rw [hr1] at hp; cases hp
+        · rw [hc] at hp
+          cases hp
+          exact hcv
+      · exact Relation.ReflTransGen.head hp ha
+    have h2 : r2 ∈ S := mem_of_reachable_of_closed hS heq Relation.ReflTransGen.refl
+    rcases Relation.ReflTransGen.cases_head h2 with h3 | ⟨c, hc, _⟩
+    · exact Subtype.ext h3.symm
+    · rw [hr2] at hc; cases hc
+  · intro C
+    induction C using SimpleGraph.ConnectedComponent.ind with
+    | h v =>
+    induction hn : h v using Nat.strong_induction_on generalizing v with
+    | _ n ih =>
+    cases hv : par v with
+    | none => exact ⟨⟨v, hv⟩, rfl⟩
+    | some u =>
+      obtain ⟨r, hr⟩ := ih (h u) (hn ▸ hh v u hv) u rfl
+      refine ⟨r, ?_⟩
+      rw [hr, SimpleGraph.ConnectedComponent.eq]
+      exact ((hadj v u).2 (Or.inl hv)).reachable.symm
+
+end ParentForest
+
+section Construction
+
+variable {t : ℕ} (weights : Fin t → ℕ) (c : ℕ)
+
+/-- Child left vertices, as a sigma type. -/
+def childEquivSigma : {x : Fin t × ℕ // x.2 < weights x.1} ≃ Σ p, Fin (weights p) where
+  toFun x := ⟨x.1.1, ⟨x.1.2, x.2⟩⟩
+  invFun s := ⟨(s.1, s.2.val), s.2.isLt⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
+
+instance : Fintype {x : Fin t × ℕ // x.2 < weights x.1} :=
+  Fintype.ofEquiv _ (childEquivSigma weights).symm
+
+/-- Left carrier: the children of the right vertices plus `c` extra left vertices. -/
+abbrev LeftCarrier := {x : Fin t × ℕ // x.2 < weights x.1} ⊕ Fin c
+
+lemma card_leftCarrier : Fintype.card (LeftCarrier weights c) = (∑ p, weights p) + c := by
+  rw [Fintype.card_sum, Fintype.card_congr (childEquivSigma weights), Fintype.card_sigma]
+  simp
+
+/-- Parent (a right vertex) of a left vertex. -/
+def leftPar : LeftCarrier weights c → Option (Fin t)
+  | .inl x => some x.1.1
+  | .inr i => if h : i.val = 0 ∧ 0 < t then some ⟨0, h.2⟩ else none
+
+/-- Parent (a left vertex) of a right vertex. -/
+def rightPar (hpositive : ∀ p, 0 < weights p) (q : Fin t) : Option (LeftCarrier weights c) :=
+  if hq : q.val = 0 then none else some (.inl ⟨(⟨q.val - 1, by omega⟩, 0), hpositive _⟩)
+
+/-- Incidence relation on the left carrier. -/
+def relL (hpositive : ∀ p, 0 < weights p) (l : LeftCarrier weights c) (q : Fin t) : Prop :=
+  leftPar weights c l = some q ∨ rightPar weights c hpositive q = some l
+
+end Construction
+
+section Construction2
+
+variable {t : ℕ} (weights : Fin t → ℕ) (c : ℕ) (hpositive : ∀ p, 0 < weights p)
+
+/-- The base index of a left vertex: its attachment right vertex. -/
+def leftBase : LeftCarrier weights c → ℕ
+  | .inl x => x.1.1.val
+  | .inr _ => 0
+
+lemma relL_val {l : LeftCarrier weights c} {q : Fin t} (hl : relL weights c hpositive l q) :
+    q.val = leftBase weights c l ∨ q.val = leftBase weights c l + 1 := by
+  rcases l with x | i <;> simp only [relL, leftPar, rightPar, leftBase] at hl ⊢
+  · rcases hl with hl | hl
+    · left
+      rw [Option.some.injEq] at hl
+      rw [hl]
+    · split_ifs at hl with hq
+      rw [Option.some.injEq, Sum.inl.injEq] at hl
+      right
+      rw [← hl]
+      dsimp only
+      omega
+  · rcases hl with hl | hl
+    · split_ifs at hl with h
+      rw [Option.some.injEq] at hl
+      left
+      rw [← hl]
+    · split_ifs at hl; simp at hl
+
+lemma card_relL_left_le (l : LeftCarrier weights c) :
+    Nat.card {q : Fin t // relL weights c hpositive l q} ≤ 2 := by
+  have hinj : Function.Injective
+      (fun q : {q : Fin t // relL weights c hpositive l q} =>
+        decide (q.1.val ≤ leftBase weights c l)) := by
+    rintro ⟨q1, h1⟩ ⟨q2, h2⟩ heq
+    dsimp only at heq
+    have v1 := relL_val weights c hpositive h1
+    have v2 := relL_val weights c hpositive h2
+    simp only [decide_eq_decide] at heq
+    apply Subtype.ext
+    apply Fin.ext
+    dsimp only
+    omega
+  have := Nat.card_le_card_of_injective _ hinj
+  simpa using this
+
+lemma card_relL_right (hc : 0 < c) (q : Fin t) :
+    Nat.card {l : LeftCarrier weights c // relL weights c hpositive l q} = weights q + 1 := by
+  let f : Option (Fin (weights q)) → {l : LeftCarrier weights c // relL weights c hpositive l q} :=
+    fun o => match o with
+    | some j => ⟨.inl ⟨(q, j.val), j.isLt⟩, Or.inl rfl⟩
+    | none =>
+      if hq : q.val = 0 then
+        ⟨.inr ⟨0, hc⟩, Or.inl (by simp [leftPar, q.pos, Fin.ext_iff, hq])⟩
+      else
+        ⟨.inl ⟨(⟨q.val - 1, by omega⟩, 0), hpositive _⟩, Or.inr (by simp [rightPar, hq])⟩
+  have hf : Function.Bijective f := by
+    constructor
+    · intro o1 o2 h
+      rcases o1 with _ | j1 <;> rcases o2 with _ | j2 <;> simp only [f] at h ⊢ <;>
+        (try split_ifs at h) <;> simp_all [Fin.ext_iff] <;> omega
+    · rintro ⟨l, hl⟩
+      rcases l with ⟨⟨p, j⟩, hj⟩ | i
+      · simp only [relL, leftPar, rightPar] at hl
+        rcases hl with hl | hl
+        · rw [Option.some.injEq] at hl
+          subst hl
+          exact ⟨some ⟨j, hj⟩, rfl⟩
+        · split_ifs at hl with hq
+          simp only [Option.some.injEq, Sum.inl.injEq, Subtype.mk.injEq, Prod.mk.injEq] at hl
+          obtain ⟨rfl, rfl⟩ := hl
+          refine ⟨none, ?_⟩
+          simp [f, hq]
+      · simp only [relL, leftPar, rightPar] at hl
+        rcases hl with hl | hl
+        · split_ifs at hl with hi
+          rw [Option.some.injEq] at hl
+          have hq : q.val = 0 := by rw [← hl]
+          refine ⟨none, ?_⟩
+          simp [f, hq, Fin.ext_iff, hi.1]
+        · split_ifs at hl
+          simp at hl
+  rw [← Nat.card_eq_of_bijective f hf]
+  simp
+
+end Construction2
+
+section Transport
+
+variable {k t : ℕ} (weights : Fin t → ℕ) (c : ℕ) (hpositive : ∀ p, 0 < weights p)
+  (e : Fin k ≃ LeftCarrier weights c)
+
+/-- Parent function on the actual vertex type `Fin k ⊕ Fin t`. -/
+def parK : Fin k ⊕ Fin t → Option (Fin k ⊕ Fin t)
+  | .inl a => (leftPar weights c (e a)).map Sum.inr
+  | .inr q => (rightPar weights c hpositive q).map (Sum.inl ∘ e.symm)
+
+/-- Height function on the actual vertex type. -/
+def heightK : Fin k ⊕ Fin t → ℕ
+  | .inl a => match e a with
+    | .inl x => 2 * x.1.1.val + 1
+    | .inr _ => 1
+  | .inr q => 2 * q.val
+
+lemma incidenceGraph_adj_iff_parK (x y : Fin k ⊕ Fin t) :
+    (incidenceGraph (fun a q => relL weights c hpositive (e a) q)).Adj x y ↔
+      parK weights c hpositive e x = some y ∨ parK weights c hpositive e y = some x := by
+  rcases x with a | q <;> rcases y with b | r <;>
+    simp [incidenceGraph, parK, relL, Equiv.symm_apply_eq]
+  exact or_comm
+
+lemma heightK_lt (x y : Fin k ⊕ Fin t) (h : parK weights c hpositive e x = some y) :
+    heightK weights c e y < heightK weights c e x := by
+  rcases x with a | q
+  · simp only [parK] at h
+    cases hea : e a with
+    | inl x' =>
+      rw [hea] at h
+      simp only [leftPar, Option.map_some, Option.some.injEq] at h
+      subst h
+      simp [heightK, hea]
+    | inr i =>
+      rw [hea] at h
+      simp only [leftPar] at h
+      split_ifs at h
+      · simp only [Option.map_some, Option.some.injEq] at h
+        subst h
+        simp [heightK, hea]
+      · simp at h
+  · simp only [parK, rightPar] at h
+    split_ifs at h with hq
+    · simp at h
+    · simp only [Option.map_some, Option.some.injEq] at h
+      subst h
+      simp [heightK]
+      omega
+
+lemma card_roots (hc : 0 < c) :
+    Nat.card {v : Fin k ⊕ Fin t // parK weights c hpositive e v = none} = c := by
+  let g : Fin c → {v : Fin k ⊕ Fin t // parK weights c hpositive e v = none} := fun i =>
+    if h : i.val = 0 ∧ 0 < t then ⟨.inr ⟨0, h.2⟩, by simp [parK, rightPar]⟩
+    else ⟨.inl (e.symm (.inr i)), by simp [parK, leftPar, h]⟩
+  have hg : Function.Bijective g := by
+    constructor
+    · intro i j hij
+      by_cases hi : i.val = 0 ∧ 0 < t <;> by_cases hj : j.val = 0 ∧ 0 < t
+      · exact Fin.ext (by omega)
+      · simp only [g, dif_pos hi, dif_neg hj] at hij
+        simp at hij
+      · simp only [g, dif_neg hi, dif_pos hj] at hij
+        simp at hij
+      · simp only [g, dif_neg hi, dif_neg hj] at hij
+        simpa using hij
+    · rintro ⟨v, hv⟩
+      rcases v with a | q
+      · cases hea : e a with
+        | inl x => simp [parK, hea, leftPar] at hv
+        | inr i =>
+          have hi : ¬(i.val = 0 ∧ 0 < t) := by
+            intro h
+            simp [parK, hea, leftPar, h] at hv
+          refine ⟨i, ?_⟩
+          simp [g, hi, ← hea]
+      · have hq : q.val = 0 := by
+          by_contra hq
+          simp [parK, rightPar, hq] at hv
+        refine ⟨⟨0, hc⟩, ?_⟩
+        simp [g, q.pos, Fin.ext_iff, hq]
+  rw [← Nat.card_eq_of_bijective g hg]
+  simp
+
+end Transport
+
+theorem exists_incidence_forest
+    (k c t : ℕ) (weights : Fin t → ℕ)
+    (hc : 1 ≤ c) (hck : c ≤ k)
+    (hpositive : ∀ p, 0 < weights p)
+    (hsum : (∑ p, weights p) = k - c) :
+    ∃ R : Fin k → Fin t → Prop, Realizes c weights R := by
+  have hcard : Fintype.card (Fin k) = Fintype.card (LeftCarrier weights c) := by
+    rw [Fintype.card_fin, card_leftCarrier, hsum]
+    omega
+  let e : Fin k ≃ LeftCarrier weights c := Fintype.equivOfCardEq hcard
+  have hadj := incidenceGraph_adj_iff_parK weights c hpositive e
+  have hh := heightK_lt weights c hpositive e
+  refine ⟨fun a q => relL weights c hpositive (e a) q, ?_, ?_, ?_, ?_⟩
+  · exact isAcyclic_of_parent _ _ hadj hh
+  · rw [card_connectedComponent_of_parent _ _ hadj hh]
+    exact card_roots weights c hpositive e hc
+  · intro a
+    exact card_relL_left_le weights c hpositive (e a)
+  · intro p
+    rw [← card_relL_right weights c hpositive hc p]
+    exact Nat.card_congr (e.subtypeEquiv fun _ => Iff.rfl)
+
+end E593Profile
+
+end Erdos593SelfContained_Module_Erdos593_Graph_IncidenceProfile
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Graph.IncidenceProfile
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: ff7601b42d161a948097ac518b079e450acce842b295f8d3d93acfad21873de8
+Normalized SHA-256: 9da65a689c25e3cb3afeba35c9d15f720c32423d04716d2d95f8b03cef42f127
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

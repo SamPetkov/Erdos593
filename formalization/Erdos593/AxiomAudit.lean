@@ -1,3 +1,5 @@
+import Erdos593.TripleSystem.AtomicBoundaryNormalForms
+import Erdos593.Graph.IncidenceProfile
 import Erdos593.Graph.EdgeCycleSplice
 import Erdos593.TripleSystem.CanonicalAtomAmalgamOption
 import Erdos593.TripleSystem.CanonicalAtomBaseCount
@@ -410,3 +412,53 @@ import Erdos593.TripleSystem.CanonicalAtomAmalgamLabels
 #print axioms Erdos593.TripleSystem.SupportedBlocks.supportedBlock_iff_canonicalAtom
 
 #print axioms Erdos593.TripleSystem.CanonicalAtom.connected_atom_deficit_accounting
+
+#print axioms E593Boundary.copy_isomorphism_of_card_and_degrees
+#print axioms E593Boundary.isCycles_of_degree_eq_two
+#print axioms E593Boundary.two_regular_hamiltonian_cycle
+#print axioms E593Boundary.connected_two_regular_iso_cycleGraph
+#print axioms E593Theta.internal_adjacency_saturated
+#print axioms E593Theta.path_avoids_saturated_interior
+#print axioms E593Theta.interiors_disjoint_of_snd_ne
+#print axioms E593Theta.saturated_paths_cover
+#print axioms E593Theta.ThreePaths.length_pos
+#print axioms E593Theta.ThreePaths.at_most_one_direct
+#print axioms E593Theta.ThreePaths.internal_position
+#print axioms E593Theta.ThreePaths.realize_injective
+#print axioms E593Theta.ThreePaths.realize_surjective
+#print axioms E593Theta.ThreePaths.realize_point
+#print axioms E593Theta.ThreePaths.modelIso
+#print axioms E593Theta.ThreePaths.sum_lengths
+#print axioms E593Theta.two_colour_walk_parity
+#print axioms E593Theta.ThreePaths.even_lengths_of_odd_card
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.rank_one_degree_eq_two
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.rank_two_degree_excess_sum
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.rank_two_degree_pattern
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.delete_vertex_cycleRank_add_degree
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.degree_le_cycleRank_add_one
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.delete_vertex_isTree_of_degree_eq_cycleRank_add_one
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.rank_two_exact_branch_vertices
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.rank_one_iso_cycleGraph
+#print axioms SimpleGraph.TwoConnectedBipartiteSpectrum.bipartite_rank_one_even_cycle
+#print axioms E593Theta.path_with_first_neighbour
+#print axioms E593Theta.rank_two_three_paths
+#print axioms E593Theta.rank_two_iso_theta
+#print axioms E593Theta.rank_two_odd_bipartite_iso_theta
+#print axioms E593Profile.mem_of_reachable_of_closed
+#print axioms E593Profile.height_le_of_reflTransGen
+#print axioms E593Profile.isAcyclic_of_parent
+#print axioms E593Profile.card_connectedComponent_of_parent
+#print axioms E593Profile.card_leftCarrier
+#print axioms E593Profile.relL_val
+#print axioms E593Profile.card_relL_left_le
+#print axioms E593Profile.card_relL_right
+#print axioms E593Profile.incidenceGraph_adj_iff_parK
+#print axioms E593Profile.heightK_lt
+#print axioms E593Profile.card_roots
+#print axioms E593Profile.exists_incidence_forest
+#print axioms E593AtomicBoundary.expansionIso
+#print axioms E593AtomicBoundary.intrinsic_of_reduced_obligatory
+#print axioms E593AtomicBoundary.core_on_fin
+#print axioms E593AtomicBoundary.cycle_boundary
+#print axioms E593AtomicBoundary.theta_boundary
+#print axioms E593AtomicBoundary.obligatory_atomic_alpha_boundary
