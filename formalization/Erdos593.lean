@@ -189,6 +189,7 @@ import Erdos593.Graph.AtomRankConcentration
 import Erdos593.TripleSystem.CanonicalAtomRankInterpretation
 import Erdos593.TripleSystem.CanonicalAtomCoreRank
 import Erdos593.TripleSystem.CanonicalAtomExtremalCount
+import Erdos593.TripleSystem.CanonicalAtomDeficit
 import Erdos593.TripleSystem.CanonicalAtomContainment
 import Erdos593.TripleSystem.CanonicalAtomTransport
 import Erdos593.TripleSystem.EmbeddingRestrictionTransport

@@ -1,0 +1,616 @@
+'Erdos593.SimpleGraph.edgeCycle_splice' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.SimpleGraph.edgeCycleLinked_equivalence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.SimpleGraph.EdgeCycleBlock.incident_ofEdge_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.SimpleGraph.EdgeCycleBlock.eq_of_incident_two_vertices' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.SimpleGraph.EdgeCycleBlock.incidenceGraph_isAcyclic' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.SimpleGraph.edgesOnCommonCycle_of_cycles_share_two_vertices' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.SimpleGraph.edgesOnCommonCycle_of_edge_endpoints_and_cycle' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomOf_surjective' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomRestriction_is_singleEdge_or_cycleBlockExpansion' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.cycleBlockCore_isTwoVertexConnected' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.cycleBlockCore_isBipartite' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.cycleBlockCore_structure' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomSupport_inter_subsingleton' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomPointIncidenceGraph_isAcyclic' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.exists_atomRunningAssembly' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomSharedPointIncidenceGraph_isAcyclic' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.canonicalAtom_reconstruction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.exists_canonicityTransport' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.AtomGenerated.constructible' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomGenerated_of_constructible' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomGenerated_iff_constructible' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.isObligatory_iff_atomGenerated' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.onePointDecomposable_iff_edgeOnePointDecomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.oneTriple_onePointIndecomposable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.coreExpansion_onePointIndecomposable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.connected_reduced_obligatory_onePointIndecomposable_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.deleteHyperedge_inc' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.levi_incidence_not_bridge_iff_reachable_deleteHyperedge' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.no_incident_bridge_iff_deleteHyperedge_connected_on_edge' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.bridgeAtEveryEdge_iff_deleteHyperedge_separates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.privateVertexExpansion_core_reachable_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.privateVertexExpansion_componentEquiv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.privateVertexExpansion_component_card' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.exists_bipartite_shadow' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.privateVertexExpansion_shadow_parameters' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.exists_bipartite_shadow_subtraction' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.FiniteForestCounting.componentEquivOfReachable' depends on axioms: [Quot.sound]
+'SimpleGraph.FiniteForestCounting.card_edges_add_components' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.FiniteForestCounting.card_incidence_edges' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.FiniteForestCounting.sum_card_incidence_comm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.FiniteForestCounting.pruneComponentEquiv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.FiniteForestCounting.pruneGraphIso' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.sum_atomEdgeCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.two_le_pointMultiplicity_of_shared' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.levi_reachable_of_atomOf_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomPoint_componentEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.point_add_atom_count' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.exists_atomIncident' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.one_le_pointMultiplicity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.sum_atomPointCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.excess_add_components' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.levi_card_edges' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomSharedPoint_componentEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atom_surplus_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atom_euler_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.levi_euler_expression' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.shared_forest_excess_add_components' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.obligatory_incidenceCounts' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomRestriction_connected' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomRestriction_component_card' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomPointCount_eq_edge_add_core' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomLeviEuler_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.levi_euler_eq_sum_atomLeviEuler' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.surplus_eq_core_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.obligatory_canonical_counting' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.Spectrum.q_le_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.capacity_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.BipartiteSpectrumBounds.edge_count_components' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.BipartiteSpectrumBounds.vertex_count_components' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.BipartiteSpectrumBounds.bipartite_capacity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.BipartiteSpectrumBounds.parameter_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.obligatory_spectrum_necessity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.BipartiteSpectrumRealization.exists_connected' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.BipartiteSpectrumRealization.exists_shadow' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.exists_obligatory_spectrum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.q_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.two_le_q' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.q_le_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.q_le_self' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.q_shift_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.inverse_q_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.half_ceiling' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.fixed_order_bounds_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.exists_order_bounds_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.withIsolatedPoints_inc_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.IsObligatory.withIsolatedPoints' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.exists_connected_obligatory_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.exists_reduced_obligatory_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.exists_obligatory_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.exists_obligatory_fixed_order_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.exists_obligatory_order_components_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'SimpleGraph.FiniteCycleRank.card_components_eq_of_reachable_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'SimpleGraph.FiniteCycleRank.card_vertices_le_edges_add_components' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'SimpleGraph.FiniteCycleRank.cycleRank_int' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.FiniteCycleRank.cycleRank_eq_chords' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.FiniteCycleRank.cycleRank_eq_zero_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.levi_cycleRank' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.levi_cycleRank_int' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.obligatory_cycleRank_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.exists_obligatory_cycleRank_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.order_eq_iff_levi_isAcyclic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.strict_atom_capacity_concentration' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.BalancedBipartiteRigidity.even_order_isomorphic_complete_bipartite' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'SimpleGraph.BalancedBipartiteRigidity.odd_order_isomorphic_complete_bipartite' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.privateVertexExpansion_isomorphic_of_graphIso' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomCore_capacity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.isomorphic_atomRestriction_of_all_edges_same_atom' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.card_index_eq_one_of_near_capacity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.one_edge_isomorphic_complete_bipartite_expansion' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.two_edges_isomorphic_complete_bipartite_expansion' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.balanced_even_endpoint_rigidity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.balanced_odd_endpoint_rigidity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_connected' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_min_degree' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_mono' depends on axioms: [propext, Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_of_iso' depends on axioms: [propext, Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.connected_cycleRank_euler' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.minimum_order' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.even_order_of_rank_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.exists_even_seed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.exists_odd_seed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.two_connected_intermediate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.exists_of_rank_ge_two' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'SimpleGraph.TwoConnectedBipartiteSpectrum.exists_rank_one_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.Spectrum.q_add_strict' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.q_sum_add_card_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.Spectrum.sum_q_eq_q_sum_iff_card_eq_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomLeviEuler_eq_cycleRank' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.sum_atom_cycleRank' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.cycleBlock_atom_cycleRank_eq_core' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atom_cycleRank_eq_zero_iff_singleton' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atom_coreOrder_lower_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.connected_atom_q_budget' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atom_coreOrder_even_of_cycleRank_eq_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.exists_concentrated_atom_of_extremal_count' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.edgeRestriction_subset_or_subset_of_support_inter_subsingleton' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.edgeRestriction_subset_piece_of_runningEdgeAssembly' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.indecomposable_edgeRestriction_subset_atom' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.edgeRestriction_hasNoIsolatedPoints' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.onePointIndecomposable_iff_of_iso' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomRestriction_onePointIndecomposable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.Embedding.edgeRestriction_image_isomorphic' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.Embedding.edgeSupportSet_image' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomOf_amalgam_inl_ne_inr' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomOf_amalgam_inl_eq_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.exists_atomEquiv_option_of_unique_edges' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.card_index_amalgam_of_unique_edges' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.card_index_eq_one_of_onePointIndecomposable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.card_index_eq_one_of_unique_edges' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.OnePointAmalgamation.card_vertex_add_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.OnePointAmalgamation.amalgam_levi_connected' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.OnePointAmalgamation.amalgam_hasNoIsolatedPoints' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.exists_finite_attachment_parameters' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.connected_atom_count_necessity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.exists_connected_atom_count_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.exists_maximum_atom_count' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.spectrum_q_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.canonicalAtomCount_eq_card_index' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.reduced_obligatory_intrinsic_for_spectrum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.ConnectedAtomParameters.toIntrinsic' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.AllowedConnectedAtomCount.positive_rank_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.connected_positive_rank_atom_count_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.connected_atom_count_maximal_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.every_maximum_atom_count_structure' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.every_maximizer_structure' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'E593Separator.Partition' does not depend on any axioms
+'E593Separator.Partition.ext' does not depend on any axioms
+'E593Separator.Closure' does not depend on any axioms
+'E593Separator.Closure.map' does not depend on any axioms
+'E593Separator.Closure.respects' does not depend on any axioms
+'E593Separator.optionPartition' depends on axioms: [propext]
+'E593Separator.Star' does not depend on any axioms
+'E593Separator.Local' does not depend on any axioms
+'E593Separator.Certificate' does not depend on any axioms
+'E593Separator.Step' does not depend on any axioms
+'E593Separator.extend' does not depend on any axioms
+'E593Separator.restrict' does not depend on any axioms
+'E593Separator.InternalStep' does not depend on any axioms
+'E593Separator.ConnectedPartition' does not depend on any axioms
+'E593Separator.Refines' does not depend on any axioms
+'E593Separator.step_incidence' does not depend on any axioms
+'E593Separator.step_projected' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.local_recovery' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.restrict_extend' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.extend_connected' does not depend on any axioms
+'E593Separator.extend_restrict' depends on axioms: [propext, Quot.sound]
+'E593Separator.extend_injective' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.extend_refines_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.exists_local_iff_connected' depends on axioms: [propext, Quot.sound]
+'E593Separator.AwayStep' does not depend on any axioms
+'E593Separator.NoReturn' does not depend on any axioms
+'E593Separator.HasStarRoot' does not depend on any axioms
+'E593Separator.componentRoot' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.Certificate.noReturn' does not depend on any axioms
+'E593Separator.hasStarRoot_iff_of_related' does not depend on any axioms
+'E593Separator.componentRoot_at_star' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.componentRoot_eq_of_related' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.certificateOfNoReturn' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.nonempty_certificate_iff_noReturn' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.local_recovery_of_noReturn' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.incidenceGraph' depends on axioms: [propext, Quot.sound]
+'E593Separator.away_incidence_survives' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.away_closure_reachable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.noReturn_of_isAcyclic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.certificateOfForest' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.partitionPartialOrder' depends on axioms: [propext, Quot.sound]
+'E593Separator.forestPartitionOrderIso' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.forest_exists_unique_local' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.forest_local_recovery' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.canonical_separator_incidence_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.canonicalSeparatorCertificate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.canonicalAtomConnectedPartitionOrderIso' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.canonical_separator_local_recovery' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'E593Separator.Certificate.isAcyclic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.isAcyclic_iff_nonempty_certificate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.imageIncidence' does not depend on any axioms
+'E593Separator.FibreConnected' does not depend on any axioms
+'E593Separator.imageStar' does not depend on any axioms
+'E593Separator.imageRootAux' does not depend on any axioms
+'E593Separator.imageRootAux_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.imageCertificate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.imageIncidence_isAcyclic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.image_support_inter_subsingleton' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.Partition.toSetoid' does not depend on any axioms
+'E593Separator.Partition.Block' does not depend on any axioms
+'E593Separator.Partition.block' does not depend on any axioms
+'E593Separator.Partition.block_eq_iff' depends on axioms: [propext, Quot.sound]
+'E593Separator.Partition.block_surjective' does not depend on any axioms
+'E593Separator.ConnectedPartition.fibreConnected' depends on axioms: [propext, Quot.sound]
+'E593Separator.connectedPartition_quotient_isAcyclic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.incidence_isAcyclic_of_embedding' depends on axioms: [propext, Quot.sound]
+'E593Separator.pullbackPartition' does not depend on any axioms
+'E593Separator.pullbackBlockMap' depends on axioms: [Quot.sound]
+'E593Separator.pullbackBlockMap_injective' depends on axioms: [propext, Quot.sound]
+'E593Separator.pullbackBlockMap_surjective' depends on axioms: [Quot.sound]
+'E593Separator.SharedSeparator' does not depend on any axioms
+'E593Separator.star_subsingleton_of_not_shared' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.certificateRestoreTrivial' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Separator.certificateRestrict' does not depend on any axioms
+'E593Separator.isAcyclic_iff_shared_pruning' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.partEdges' does not depend on any axioms
+'Erdos593.TripleSystem.CanonicalAtom.partIncident' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.IsSupportedDecomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.partEdges_nonempty' does not depend on any axioms
+'Erdos593.TripleSystem.CanonicalAtom.partEdges_disjoint' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.IsSupportedDecomposition.support_inter_subsingleton' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.supportedDecomposition_iff_manuscript' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.RunningSupportFamily' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.mem_union_mapped_parts' depends on axioms: [propext, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.indecomposable_subset_running_part' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.parts_running_of_tail_order' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.decomposition_running_parts' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.atomRestriction_indivisible_for_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.canonical_atom_in_unique_part' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.canonical_refines_supported_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.restrictionLeviHom' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.coarsenedEdges' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.coarsened_incidence_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.coarsened_part_connected' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.coarsenedEdges_supported' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.decompositionAtomRep' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.decompositionAtomRep_spec' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.inducedAtomPartition' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.induced_relation_on_edges' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.coarsened_induced_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.induced_coarsened_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.inducedAtomPartition_connected' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.SupportedPartitions' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.connectedAtomsSupportedOrderIso' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.partition_eq_of_subsingleton' depends on axioms: [propext, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.nonshared_star_subsingleton' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.sharedStarOrderIso' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.canonicalStar_card' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.supportedDecompositionProduct' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.obligatory_supported_decomposition_product' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.IsSupportedDecomposition.mk' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.IsSupportedDecomposition.connected' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.IsSupportedDecomposition.forest' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'E593Standard.toSetoid' does not depend on any axioms
+'E593Standard.ofSetoid' does not depend on any axioms
+'E593Standard.partitionSetoidOrderIso' depends on axioms: [propext, Quot.sound]
+'E593Standard.partitionSetoidOrderIso_rel' depends on axioms: [propext, Quot.sound]
+'E593Standard.setoidReindex' depends on axioms: [Quot.sound]
+'E593Standard.setoidReindexOrderIso' depends on axioms: [propext, Quot.sound]
+'E593Standard.setoidReindexOrderIso_rel' depends on axioms: [propext, Quot.sound]
+'E593Standard.finiteCarrierEquiv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Standard.finitePartitionOrderIso' depends on axioms: [propext, Classical.choice, Quot.sound]
+'E593Standard.pointwiseOrderIso' depends on axioms: [propext, Quot.sound]
+'E593Standard.pointwiseOrderIso_apply' depends on axioms: [propext, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.starEquivFin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.starStandardOrderIso' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.StandardLocalPartitions' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.supportedStandardProduct' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.supportedStandardProduct_rel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.obligatory_supported_standard_product' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.supportedInfimum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.supportedSupremum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.supportedInfimum_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.le_supportedInfimum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.le_supportedSupremum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.supportedSupremum_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.supportedInfimum_isGLB' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.supportedSupremum_isLUB' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.obligatory_supported_has_bounds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.support_inter_nonempty_of_partition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.pointDeletion_not_connected_of_separation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.exists_separation_of_pointDeletion_not_connected' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.pointNonseparable_iff_no_pointSeparation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.hasPointSeparation_iff_edgeOnePointDecomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.pointNonseparable_iff_onePointIndecomposable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.connected_reduced_obligatory_pointNonseparable_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.obligatory_restriction_allowed_of_pointNonseparable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.isObligatory_implies_forall_supportedBlock_allowed' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.edgeSupportSet_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos593.TripleSystem.edgeRestrictionEmbeddingOfSubset_vertex_coe' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.edgeRestrictionEmbeddingOfSubset_edge_coe' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.exists_maximal_set_superset' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.exists_disjoint_support_partition_of_not_connected' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.exists_original_partition_of_disconnected_restriction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.exists_original_partition_of_pointSeparation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.edgeRestriction_induction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.exists_supportedBlock_superset' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.AllowedBlockType.isObligatory' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.restriction_isObligatory_of_forall_supportedBlock_allowed' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.isObligatory_iff_forall_supportedBlock_allowed' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.canonicalAtom_pointNonseparable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.pointNonseparable_subset_canonicalAtom' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.canonicalAtom_isSupportedBlock' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.SupportedBlocks.supportedBlock_iff_canonicalAtom' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Erdos593.TripleSystem.CanonicalAtom.connected_atom_deficit_accounting' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

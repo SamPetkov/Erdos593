@@ -1,0 +1,9 @@
+{
+  "source-manifest.json": "5b2726af3826edb2ccbd098ba353a5294e8a9d90acbbae2b7c2ae921211228ef",
+  "roots.log": "cd10ffe193e38986db56c556267bcd5725e90fb8dd0ca9b2334ec3016038bf1b",
+  "axioms.log": "a33ab365afa6e41b73468a77f49e0bfc8e9b2cea1e4399c0ecda812f6b27d914",
+  "regeneration-before.log": "cd8c7c76e9f7557e813941252903346315f4b01600d583fd90a93d379512b5e2",
+  "regeneration.log": "d20ac5ce4b8db4dc801ebdcca3853c67c593462769c06839b0ac099f017dd95e",
+  "regeneration-after.log": "cd8c7c76e9f7557e813941252903346315f4b01600d583fd90a93d379512b5e2",
+  "standalone.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
