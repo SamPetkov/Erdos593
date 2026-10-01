@@ -10,6 +10,7 @@ import Erdos593.TripleSystem.SupportedDecompositionProduct
 import Erdos593.TripleSystem.SupportedLatticeOperations
 import Erdos593.TripleSystem.SupportedClassicalBlockConverse
 import Erdos593.TripleSystem.SupportedClassicalBlockLabels
+import Erdos593.TripleSystem.CanonicalAtomDeficit
 import Erdos593.Graph.EdgeCycleBlocks
 import Erdos593.Graph.EdgeCycleBlockIncidence
 import Erdos593.Graph.EdgeCycleBlockIntersection
@@ -407,3 +408,5 @@ import Erdos593.TripleSystem.CanonicalAtomAmalgamLabels
 #print axioms Erdos593.TripleSystem.SupportedBlocks.pointNonseparable_subset_canonicalAtom
 #print axioms Erdos593.TripleSystem.SupportedBlocks.canonicalAtom_isSupportedBlock
 #print axioms Erdos593.TripleSystem.SupportedBlocks.supportedBlock_iff_canonicalAtom
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.connected_atom_deficit_accounting
