@@ -205,6 +205,8 @@ import Erdos593.TripleSystem.SupportedDecompositionProduct
 import Erdos593.TripleSystem.SupportedLatticeOperations
 import Erdos593.TripleSystem.SupportedClassicalBlockConverse
 import Erdos593.TripleSystem.SupportedClassicalBlockLabels
+import Erdos593.TripleSystem.AtomicBoundaryNormalForms
+import Erdos593.Graph.IncidenceProfile
 
 /-!
 # Erdős Problem 593
