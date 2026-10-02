@@ -1,17 +1,22 @@
 \documentclass[a4paper,11pt,reqno]{amsart}
 
-\usepackage[margin=1in]{geometry}
+\usepackage[textwidth=31pc,textheight=48pc,centering]{geometry}
 \usepackage[T1]{fontenc}
-\usepackage{newtxtext,newtxmath}
+\usepackage{lmodern}
 \usepackage{microtype}
-\usepackage{amsmath,mathtools}
+\usepackage{etoolbox}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{mathrsfs}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{enumitem}
-\usepackage{needspace}
-\usepackage{etoolbox}
 \usepackage{xurl}
 \usepackage[hidelinks,pdfencoding=auto,psdextra]{hyperref}
 \usepackage{bookmark}
+
+% Annals-like text dimensions; standard AMS author-review manuscript.
+% No journal banner, publication DOI, acceptance date or publisher copyright.
+\patchcmd{\abstract}{\leftmargin3pc}{\leftmargin1.5pc}{}%
+  {\ClassError{amsart}{Abstract margin patch failed}{Restore the standard abstract environment.}}
 
 \setcounter{secnumdepth}{1}
 \setcounter{tocdepth}{1}
@@ -47,30 +52,22 @@
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 
-\BeforeBeginEnvironment{theoremA}{\Needspace{8\baselineskip}}
-\BeforeBeginEnvironment{theorem}{\Needspace{6\baselineskip}}
-\BeforeBeginEnvironment{lemma}{\Needspace{6\baselineskip}}
-\BeforeBeginEnvironment{proposition}{\Needspace{6\baselineskip}}
-\BeforeBeginEnvironment{corollary}{\Needspace{5\baselineskip}}
-\BeforeBeginEnvironment{claim}{\Needspace{6\baselineskip}}
-\BeforeBeginEnvironment{definition}{\Needspace{5\baselineskip}}
-\BeforeBeginEnvironment{remark}{\Needspace{4\baselineskip}}
-\BeforeBeginEnvironment{proof}{\Needspace{4\baselineskip}}
 \hypersetup{
+  hidelinks,pdfencoding=auto,psdextra,
   pdftitle={Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra},
   pdfauthor={Samuil Petkov},
   pdfsubject={A canonical atom decomposition, exact finite spectra, and Lean verification for obligatory triple systems},
   pdfkeywords={Erdos Problem 593, obligatory triple systems, uncountable chromatic number, canonical decomposition, partition lattices, Lean 4},
-  pdfcreator={LaTeX with amsart},
+  pdfcreator={LaTeX with amsart; author-review manuscript},
   pdfproducer={pdfTeX},
   pdfdisplaydoctitle=true
 }
 
-\title[Obligatory triple systems]{Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra}
+\title[Obligatory triple systems]{Obligatory triple systems: canonical atoms and exact finite spectra}
 \author{Samuil Petkov}
 \address{École normale supérieure--PSL, 45 rue d'Ulm, 75005 Paris, France}
 \email{samuil.petkov@ens.psl.eu}
-\subjclass[2020]{Primary 05C65; Secondary 05C15, 05C63, 03E05}
+\subjclass[2020]{Primary 05C65; Secondary 05C15, 05C40, 05C63, 06A07, 03E05}
 \keywords{Erdős Problem 593, obligatory triple systems, uncountable chromatic number, canonical decomposition, partition lattices, Lean~4}
 \date{2 October 2026}
 
@@ -193,7 +190,7 @@ The later block-formulation corollary also uses Komjáth's block reduction
 
 A \emph{triple system} is a simple \(3\)-uniform hypergraph \(H=(V(H),E(H))\), so \(E(H)\subseteq[V(H)]^3\). A colouring \(c:V(H)\to\lambda\) is \emph{proper} when no hyperedge is monochromatic, and \(\chi(H)\) is the least cardinal \(\lambda\) admitting such a colouring. An embedding of a triple system \(F\) in \(H\) is an injective map \(f:V(F)\to V(H)\) such that \(f[e]\in E(H)\) for every \(e\in E(F)\); embeddings are not required to be induced. A finite triple system \(F\) is \emph{obligatory} if every triple system \(H\) with \(\chi(H)>\aleph_0\) contains an embedding of \(F\). A point is \emph{isolated} if it belongs to no hyperedge, and \(F^\circ\) denotes the result of deleting all isolated points.
 
-All ordinary graphs in this paper are simple. A triple system is \emph{linear} when any two distinct hyperedges meet in at most one point. Its \emph{Levi graph} \(I(F)\) is the bipartite graph with classes \(V(F)\) and \(E(F)\), where a point-node \(p\) is adjacent to a hyperedge-node \(e\) exactly when \(p\in e\). A \emph{bridge} is an edge of a graph whose deletion increases the number of connected components. A \emph{Berge cycle of length} \(\ell\ge2\) consists of distinct points \(p_0,\ldots,p_{\ell-1}\) and distinct hyperedges \(e_0,\ldots,e_{\ell-1}\) such that \(p_i\in e_i\cap e_{i+1}\), with indices modulo \(\ell\). Equivalently, it is a simple cycle of length \(2\ell\) in \(I(F)\).
+All ordinary graphs in this paper are simple. A triple system is \emph{linear} when any two distinct hyperedges meet in at most one point. Its \emph{Levi graph} \(I(F)\) is the bipartite graph with classes \(V(F)\) and \(E(F)\), where a point-node \(p\) is adjacent to a hyperedge-node \(e\) exactly when \(p\in e\). A \emph{bridge} is an edge of a graph whose deletion increases the number of connected components. A \emph{Berge cycle of length} \(\ell\ge2\) consists of distinct points \(p_0,\ldots,p_{\ell-1}\) and distinct hyperedges \(e_0,\ldots,e_{\ell-1}\) such that \(p_i\in e_i\cap e_{i+1}\), with indices modulo \(\ell\). Equivalently, it is a simple cycle of length \(2\ell\) in \(I(F)\). For graph terminology and the incidence-graph interpretation of hypergraph connectivity, see \citet[Chapters~1 and~3]{diestel2017} and \citet{bahmanian2015}.
 
 For a finite simple graph \(J\), its \emph{private-vertex expansion} \(J^+\) has vertex set
 \[
@@ -634,7 +631,7 @@ Every generator of \(\mathcal B\) satisfies the intrinsic conditions, and the co
 \begin{proof}
 For a bipartite graph \(J\), the expansion \(J^+\) is linear. Every hyperedge-node is joined to its private point by a bridge. A Berge cycle cannot use a private point, so the Berge cycles of \(J^+\) are precisely the ordinary graph cycles of \(J\), with the same lengths; these are even. Edgeless systems satisfy the conditions vacuously, and disjoint union plainly preserves them.
 
-Consider a one-point amalgamation. Hyperedges belonging to different factors intersect only in the identified point, so linearity is preserved. Its Levi graph is the vertex-sum of the two Levi graphs at a point-node. Every simple cycle in a vertex-sum lies wholly in one factor: a cycle crossing into the other factor would have to pass through the cut vertex twice. Consequently bridges in the factors remain bridges, and every Berge cycle lies in one factor and retains its parity.
+Consider a one-point amalgamation. Hyperedges belonging to different factors intersect only in the identified point, so linearity is preserved. Its Levi graph is the vertex-sum of the two Levi graphs at a point-node. Every simple cycle in a vertex-sum lies wholly in one factor: a cycle crossing into the other factor would have to pass through the cut vertex twice. Consequently bridges in the factors remain bridges, and every Berge cycle lies in one factor and retains its parity. This uses the standard cut-vertex structure of graph blocks \citep[Chapter~3]{diestel2017}; the corresponding hypergraph separation terminology is discussed in \citet{bahmanian2015}.
 \end{proof}
 
 Thus
@@ -783,7 +780,7 @@ $L$ containing a cycle.  Since every hyperedge-node has degree three and is
 incident with a bridge, its degree inside a cyclic block is two.  Suppressing
 the hyperedge-nodes in such a block $C$ gives a finite graph $J_C$ on the
 point-nodes of $C$.  It is simple by linearity and $2$-connected by standard
-block theory.  Its cycles correspond to Berge cycles of the same lengths, so
+block theory \citep{whitney1932,diestel2017}.  Its cycles correspond to Berge cycles of the same lengths, so
 $J_C$ is bipartite.
 
 For a hyperedge-node $e\in C$, the third incidence is a bridge.  Its point
@@ -1206,8 +1203,8 @@ F^\circ\text{ is linear},\\[1mm]
 
 All embeddings are non-induced, so additional host hyperedges on the image
 vertices are irrelevant.  The proof uses only ZFC, graph-colouring
-compactness, the classical Erd\H{o}s--Hajnal high-odd-girth theorem, and the
-standard Erd\H{o}s--Rado relation (8.1).  It assumes neither CH nor GCH and
+compactness \citep{debruijn1951}, the classical Erd\H{o}s--Hajnal high-odd-girth theorem \citep{erdoshajnal1966}, and the
+standard Erd\H{o}s--Rado relation (8.1) \citep{erdosrado1956}.  It assumes neither CH nor GCH and
 uses no forcing axiom or large-cardinal hypothesis.
 
 \section{Finite parameter consequences}\label{finite-parameter-consequences}
@@ -1226,8 +1223,10 @@ lie in one connected component after the hyperedge $e$ is deleted and all
 points are retained.  Consequently the bridge condition in Theorem~A is
 equivalent to the following hypergraph-native condition:
 \[
-\text{for every }e\in E(F^\circ),\text{ deleting }e\text{ separates its
-three points into at least two components.}
+\begin{gathered}
+\text{for every }e\in E(F^\circ),\text{ deleting }e\\
+\text{separates its three points into at least two components.}
+\end{gathered}
 \]
 \end{proposition}
 \begin{proof}
@@ -1744,7 +1743,7 @@ concentrating all positive rank in one minimum-order cyclic atom.
 Komj\'ath proved that a finite triple system is obligatory if and only if all
 of its $2$-connected components are obligatory \citep{komjath2001}.  General
 hypergraph block decomposition and its relation to the incidence graph are
-classical; see, for example, \citet{bahmanian2015}.  For the reduced
+classical; see \citet{whitney1932}, \citet[Chapter~3]{diestel2017}, and, for the hypergraph formulation, \citet{bahmanian2015}.  For the reduced
 $3$-uniform systems considered here, the canonical atoms in
 Theorem~\ref{theorem-canonical-atom-normal-form} are precisely these maximal
 nonseparable edge-supported blocks.  Thus the new content of the canonical
@@ -1835,15 +1834,18 @@ Restriction recovers the prescribed local partitions.  Conversely, a
 connected supported piece is recovered from its local identifications,
 since its atom nodes are connected through the shared points it contains.
 Thus the constructions are inverse and preserve refinement, proving
-\((\dagger)\).  This is the bond-lattice product in the present block-forest
-setting; compare \citet{simon2011}.
+\((\dagger)\).  For the related theory of connected set partitions and bond
+lattices, see \citet{simon2011} and \citet[Lecture~2]{stanley2007}.
+The factors here are full partition lattices on the atoms through each
+shared point, not the bond lattice of the incidence forest itself.
 
 Finally the canonical incidence forest has $k+|S(F)|$ vertices, $c$
 components and $\sum_p\mu(p)$ edges.  Hence
 \[
  \sum_p(\mu(p)-1)=k-c,
 \]
-which is also the rank of the product lattice.
+which is also the rank of the product lattice by the standard rank formula
+for partition lattices and their products \citep[Chapter~3]{stanley2012}.
 \end{proof}
 
 \begin{lemma}[Capacity-safe realization of every attachment profile]
@@ -1950,11 +1952,15 @@ partition $\lambda\vdash N$.  Lemma~\ref{lemma-local-decomposition-lattice-produ
 then gives exactly the product in \((\star\star)\).  Conversely every system
 has an excess profile partitioning $N$, so there are no other types.
 
-Finally
+Finally, the standard characteristic polynomial of the partition lattice
+\citep[Chapter~3]{stanley2012} is
 \[
  \chi_{\Pi_{r}}(x)=\prod_{j=1}^{r-1}(x-j),
 \]
-and characteristic polynomials multiply under direct products.  Hence the
+and characteristic polynomials multiply under direct products, by the
+product rule for M\"obius functions \citep{rota1964,stanley2012}.
+For the equivalent braid-arrangement viewpoint, see
+\citet[Lectures~1--2]{stanley2007}.  Hence the
 multiplicity of the root $j$ in the characteristic polynomial of the lattice
 in \((\star\star)\) is
 \[
@@ -1973,6 +1979,10 @@ factorization-lattice types; they do not identify all systems with the same
 numerical parameters.
 
 \section*{Formal verification and reproducibility}
+
+The implementation uses Lean~4 \citep{demoura2021} and the mathematical
+library Mathlib \citep{mathlib2020}.  These references describe the proof
+assistant and library, not the verification status of this manuscript.
 
 The self-contained Lean~4 source is available in the public
 \href{https://github.com/SamPetkov/Erdos593/blob/main/formalization/Erdos593SelfContained.lean}{\texttt{Erdos593} repository}.
@@ -2035,33 +2045,48 @@ of the extended development remains pending.
 
 The author thanks Tom de Groot for his advice on revising the manuscript for
 greater clarity.
+The author received no funding for this work and declares no competing
+interests.
 
 \section*{AI assistance}
 
 OpenAI's GPT-5.6 Pro through ChatGPT and Aristotle~\citep{achim-et-al-2025}
 were used in proof development, adversarial checking, editorial
-restructuring, and the Lean formalisation.  The author reviewed every
+restructuring, and the Lean formalisation.  In particular, ChatGPT reviews
+informed the checking and presentation of the local forest-counting and
+capacity arguments in Section~10; Aristotle supplied the abstract
+incidence-forest construction distinguished from fixed-atom realization in
+the verification section.  The author reviewed every
 incorporated suggestion and takes full responsibility for the arguments,
 citations, and final manuscript.
 
-\section*{Funding}
-The author received no funding for this work.
-
-\section*{Competing interests}
-The author declares no competing interests.
-
-\begin{thebibliography}{17}
+\begin{thebibliography}{99}
+\interlinepenalty=10000
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[Erd{\H{o}}s(1995)]{erdos1995}
-Paul Erd{\H{o}}s.
-\newblock On some problems in combinatorial set theory.
-\newblock \emph{Publikacije Instituta Matemati\v{c}kog (Beograd) (N.S.)},
-  57(71):\penalty0 61--65, 1995.
+\bibitem[Achim et~al.(2025)Achim, Best, Der, F{\'e}d{\'e}rico, Gukov,
+  Halpern-Leistner, Henningsgard, Kudryashov, Meiburg, Michelsen, Patterson,
+  Rodriguez, Scharff, Shanker, Sicca, Sowrirajan, Swope, Tamas, Tenev, Thomm,
+  Williams, and Wu]{achim-et-al-2025}
+Tudor Achim, Alex Best, Kevin Der, Math{\"i}s F{\'e}d{\'e}rico, Sergei Gukov,
+  Daniel Halpern-Leistner, Kirsten Henningsgard, Yury Kudryashov, Alexander
+  Meiburg, Martin Michelsen, Riley Patterson, Eric Rodriguez, Laura Scharff,
+  Vikram Shanker, Vladimir Sicca, Hari Sowrirajan, Aidan Swope, Matyas Tamas,
+  Vlad Tenev, Jonathan Thomm, Harold Williams, and Lawrence Wu.
+\newblock {Aristotle}: {IMO}-level automated theorem proving, 2025.
+\newblock URL \url{https://arxiv.org/abs/2510.01346}.
+\newblock arXiv:2510.01346.
+
+\bibitem[Bahmanian and \v{S}ajna(2015)]{bahmanian2015}
+M.~Amin Bahmanian and Mateja \v{S}ajna.
+\newblock Connection and separation in hypergraphs.
+\newblock \emph{Theory Appl. Graphs}, 2\penalty0 (2):\penalty0 Article~5, 2015.
+\newblock \doi{10.20429/tag.2015.020205}.
+\newblock URL \url{https://arxiv.org/abs/1504.04274}.
 
 \bibitem[Bloom(2026)]{bloom593}
 Thomas~F. Bloom.
@@ -2069,20 +2094,42 @@ Thomas~F. Bloom.
 \newblock \url{https://www.erdosproblems.com/593}, 2026.
 \newblock Accessed 11 July 2026.
 
-\bibitem[Li(2026)]{li2026}
-Eric Li.
-\newblock A resolution of {Erd{\H{o}}s Problems 593 and 1177}: Obligatory
-  triple systems and exact spectra.
-\newblock arXiv:2606.24882, submitted 23 June 2026.
-\newblock \doi{10.48550/arXiv.2606.24882}.
-\newblock URL \url{https://arxiv.org/abs/2606.24882}.
+\bibitem[de~Bruijn and Erd{\H{o}}s(1951)]{debruijn1951}
+Nicolaas~Govert de~Bruijn and Paul Erd{\H{o}}s.
+\newblock A colour problem for infinite graphs and a problem in the theory of
+  relations.
+\newblock \emph{Nederl. Akad. Wetensch. Proc. Ser. A}, 54\penalty0
+  (5):\penalty0 371--373, 1951.
+\newblock \doi{10.1016/S1385-7258(51)50053-7}.
 
-\bibitem[Wang et~al.(2026)Wang, Duan, Gerbner, and Hama Karim]{wang2026}
-Yichen Wang, Mengyu Duan, D{\'a}niel Gerbner, and Hilal Hama Karim.
-\newblock On the largest chromatic number of {$F$}-free hypergraphs.
-\newblock arXiv:2604.21551, 2026.
-\newblock \doi{10.48550/arXiv.2604.21551}.
-\newblock URL \url{https://arxiv.org/abs/2604.21551}.
+\bibitem[de~Moura and Ullrich(2021)]{demoura2021}
+Leonardo de~Moura and Sebastian Ullrich.
+\newblock The Lean~4 theorem prover and programming language.
+\newblock In Andr\'e Platzer and Geoff Sutcliffe, editors,
+  \emph{Automated Deduction---CADE~28}, volume~12699 of \emph{Lecture
+  Notes in Computer Science}, pages 625--635. Springer, Cham, 2021.
+\newblock \doi{10.1007/978-3-030-79876-5_37}.
+
+\bibitem[Diestel(2017)]{diestel2017}
+Reinhard Diestel.
+\newblock \emph{Graph Theory}, fifth edition.
+\newblock Graduate Texts in Mathematics, volume~173. Springer, Berlin,
+  2017.
+\newblock \doi{10.1007/978-3-662-53622-3}.
+
+\bibitem[Erd{\H{o}}s(1995)]{erdos1995}
+Paul Erd{\H{o}}s.
+\newblock On some problems in combinatorial set theory.
+\newblock \emph{Publikacije Instituta Matemati\v{c}kog (Beograd) (N.S.)},
+  57(71):\penalty0 61--65, 1995.
+
+\bibitem[Erd{\H{o}}s et~al.(1975)Erd{\H{o}}s, Galvin, and Hajnal]{egh1975}
+Paul Erd{\H{o}}s, Fred Galvin, and Andr{\'a}s Hajnal.
+\newblock On set-systems having large chromatic number and not containing
+  prescribed subsystems.
+\newblock In \emph{Infinite and Finite Sets (Keszthely, 1973)}, volume~10 of
+  \emph{Colloquia Mathematica Societatis J{\'a}nos Bolyai}, pages 425--513.
+  North-Holland, 1975.
 
 \bibitem[Erd{\H{o}}s and Hajnal(1966)]{erdoshajnal1966}
 Paul Erd{\H{o}}s and Andr{\'a}s Hajnal.
@@ -2098,20 +2145,12 @@ Paul Erd{\H{o}}s, Andr{\'a}s Hajnal, and Bruce~L. Rothschild.
   1971)}, volume 337 of \emph{Lecture Notes in Mathematics}, pages 531--538.
   Springer, Berlin and New York, 1973.
 
-\bibitem[Erd{\H{o}}s et~al.(1975)Erd{\H{o}}s, Galvin, and Hajnal]{egh1975}
-Paul Erd{\H{o}}s, Fred Galvin, and Andr{\'a}s Hajnal.
-\newblock On set-systems having large chromatic number and not containing
-  prescribed subsystems.
-\newblock In \emph{Infinite and Finite Sets (Keszthely, 1973)}, volume~10 of
-  \emph{Colloquia Mathematica Societatis J{\'a}nos Bolyai}, pages 425--513.
-  North-Holland, 1975.
-
-\bibitem[Komj{\'a}th(2001)]{komjath2001}
-P{\'e}ter Komj{\'a}th.
-\newblock Some remarks on obligatory subsystems of uncountably chromatic triple
-  systems.
-\newblock \emph{Combinatorica}, 21\penalty0 (2):\penalty0 233--238, 2001.
-\newblock \doi{10.1007/s004930100021}.
+\bibitem[Erd{\H{o}}s and Rado(1956)]{erdosrado1956}
+Paul Erd{\H{o}}s and Richard Rado.
+\newblock A partition calculus in set theory.
+\newblock \emph{Bull. Amer. Math. Soc.}, 62\penalty0
+  (5):\penalty0 427--489, 1956.
+\newblock \doi{10.1090/S0002-9904-1956-10036-0}.
 
 \bibitem[Hajnal and Komj{\'a}th(2008)]{hajnalkomjath2008}
 Andr{\'a}s Hajnal and P{\'e}ter Komj{\'a}th.
@@ -2120,6 +2159,13 @@ Andr{\'a}s Hajnal and P{\'e}ter Komj{\'a}th.
   1--13, 2008.
 \newblock \doi{10.1007/s10474-007-6231-2}.
 
+\bibitem[Komj{\'a}th(2001)]{komjath2001}
+P{\'e}ter Komj{\'a}th.
+\newblock Some remarks on obligatory subsystems of uncountably chromatic triple
+  systems.
+\newblock \emph{Combinatorica}, 21\penalty0 (2):\penalty0 233--238, 2001.
+\newblock \doi{10.1007/s004930100021}.
+
 \bibitem[Komj{\'a}th(2008)]{komjath2008}
 P{\'e}ter Komj{\'a}th.
 \newblock An uncountably chromatic triple system.
@@ -2127,35 +2173,36 @@ P{\'e}ter Komj{\'a}th.
   79--92, 2008.
 \newblock \doi{10.1007/s10474-008-7179-6}.
 
+\bibitem[Li(2026)]{li2026}
+Eric Li.
+\newblock A resolution of {Erd{\H{o}}s Problems 593 and 1177}: Obligatory
+  triple systems and exact spectra.
+\newblock arXiv:2606.24882, submitted 23 June 2026.
+\newblock \doi{10.48550/arXiv.2606.24882}.
+\newblock URL \url{https://arxiv.org/abs/2606.24882}.
+
+\bibitem[The mathlib Community(2020)]{mathlib2020}
+The mathlib Community.
+\newblock The Lean mathematical library.
+\newblock In \emph{Proceedings of the 9th ACM SIGPLAN International
+  Conference on Certified Programs and Proofs}, pages 367--381.
+  Association for Computing Machinery, New York, 2020.
+\newblock \doi{10.1145/3372885.3373824}.
+
 \bibitem[Reiher(2024)]{reiher2024}
 Christian Reiher.
 \newblock Obligatory hypergraphs.
-\newblock \emph{Proc. Amer. Math. Soc.}, 2024.
+\newblock arXiv:2403.11223, 2024.
 \newblock \doi{10.1090/proc/17021}.
 \newblock URL \url{https://arxiv.org/abs/2403.11223}.
-\newblock arXiv:2403.11223.
 
-\bibitem[de~Bruijn and Erd{\H{o}}s(1951)]{debruijn1951}
-Nicolaas~Govert de~Bruijn and Paul Erd{\H{o}}s.
-\newblock A colour problem for infinite graphs and a problem in the theory of
-  relations.
-\newblock \emph{Nederl. Akad. Wetensch. Proc. Ser. A}, 54\penalty0
-  (5):\penalty0 371--373, 1951.
-\newblock \doi{10.1016/S1385-7258(51)50053-7}.
-
-\bibitem[Erd{\H{o}}s and Rado(1956)]{erdosrado1956}
-Paul Erd{\H{o}}s and Richard Rado.
-\newblock A partition calculus in set theory.
-\newblock \emph{Bull. Amer. Math. Soc.}, 62\penalty0
-  (5):\penalty0 427--489, 1956.
-\newblock \doi{10.1090/S0002-9904-1956-10036-0}.
-
-\bibitem[Bahmanian and \v{S}ajna(2015)]{bahmanian2015}
-M.~Amin Bahmanian and Mateja \v{S}ajna.
-\newblock Connection and separation in hypergraphs.
-\newblock \emph{Theory Appl. Graphs}, 2\penalty0 (2):\penalty0 Article~5, 2015.
-\newblock \doi{10.20429/tag.2015.020205}.
-\newblock URL \url{https://arxiv.org/abs/1504.04274}.
+\bibitem[Rota(1964)]{rota1964}
+Gian-Carlo Rota.
+\newblock On the foundations of combinatorial theory. I. Theory of
+  M\"obius functions.
+\newblock \emph{Z. Wahrscheinlichkeitstheorie verw. Geb.}, 2:\penalty0
+  340--368, 1964.
+\newblock \doi{10.1007/BF00531932}.
 
 \bibitem[Simon et~al.(2011)Simon, Tittmann, and Trinks]{simon2011}
 Frank Simon, Peter Tittmann, and Martin Trinks.
@@ -2164,19 +2211,35 @@ Frank Simon, Peter Tittmann, and Martin Trinks.
 \newblock \doi{10.37236/501}.
 \newblock URL \url{https://arxiv.org/abs/1005.1726}.
 
-\Needspace{9\baselineskip}
-\bibitem[Achim et~al.(2025)Achim, Best, Der, F{\'e}d{\'e}rico, Gukov,
-  Halpern-Leistner, Henningsgard, Kudryashov, Meiburg, Michelsen, Patterson,
-  Rodriguez, Scharff, Shanker, Sicca, Sowrirajan, Swope, Tamas, Tenev, Thomm,
-  Williams, and Wu]{achim-et-al-2025}
-Tudor Achim, Alex Best, Kevin Der, Math{\"i}s F{\'e}d{\'e}rico, Sergei Gukov,
-  Daniel Halpern-Leistner, Kirsten Henningsgard, Yury Kudryashov, Alexander
-  Meiburg, Martin Michelsen, Riley Patterson, Eric Rodriguez, Laura Scharff,
-  Vikram Shanker, Vladimir Sicca, Hari Sowrirajan, Aidan Swope, Matyas Tamas,
-  Vlad Tenev, Jonathan Thomm, Harold Williams, and Lawrence Wu.
-\newblock {Aristotle}: {IMO}-level automated theorem proving, 2025.
-\newblock URL \url{https://arxiv.org/abs/2510.01346}.
-\newblock arXiv:2510.01346.
+\bibitem[Stanley(2007)]{stanley2007}
+Richard~P. Stanley.
+\newblock An introduction to hyperplane arrangements.
+\newblock In Ezra Miller, Victor Reiner, and Bernd Sturmfels, editors,
+  \emph{Geometric Combinatorics}, volume~13 of \emph{IAS/Park City
+  Mathematics Series}, pages 389--496. American Mathematical Society,
+  Providence, RI, 2007.
+\newblock URL \url{https://math.mit.edu/~rstan/arrangements/arr.html}.
+
+\bibitem[Stanley(2012)]{stanley2012}
+Richard~P. Stanley.
+\newblock \emph{Enumerative Combinatorics}, volume~1, second edition.
+\newblock Cambridge Studies in Advanced Mathematics, volume~49. Cambridge
+  University Press, Cambridge, 2012.
+\newblock \doi{10.1017/CBO9781139058520}.
+
+\bibitem[Wang et~al.(2026)Wang, Duan, Gerbner, and Hama Karim]{wang2026}
+Yichen Wang, Mengyu Duan, D{\'a}niel Gerbner, and Hilal Hama Karim.
+\newblock On the largest chromatic number of {$F$}-free hypergraphs.
+\newblock arXiv:2604.21551, 2026.
+\newblock \doi{10.48550/arXiv.2604.21551}.
+\newblock URL \url{https://arxiv.org/abs/2604.21551}.
+
+\bibitem[Whitney(1932)]{whitney1932}
+Hassler Whitney.
+\newblock Non-separable and planar graphs.
+\newblock \emph{Trans. Amer. Math. Soc.}, 34\penalty0 (2):\penalty0
+  339--362, 1932.
+\newblock \doi{10.1090/S0002-9947-1932-1501641-7}.
 
 \end{thebibliography}
 

@@ -1,5 +1,23 @@
 # Mathematics and Lean coverage audit — 2 October 2026
 
+## Journal-style follow-up scope
+
+The author requested Annals-like presentation and fuller, relevant attribution. This editorial follow-up retains the two-pass mathematical audit below; it does not enlarge its verdict. Against the second-pass source, 111 mathematical displays, 70 labels and 43 mathematical statements preserve their content and order, modulo one display line-wrap. References increase from 16 to 23 and citation commands from 34 to 51. All bibliography keys are cited, with matching inline/BibTeX entries. The bond-lattice wording is clarified: the local factors are partition lattices, not the bond lattice of the incidence forest. No new proof-assistant gate or independent external audit was performed.
+
+Formatting is based on [current Annals submission guidance](https://annals.math.princeton.edu/submission-guidelines) and restrained AMS practice, with Djalil Chafaï's [coauthored author manuscript](https://arxiv.org/abs/1907.05803) considered only as a presentation reference, not as mathematical input or wording to imitate. The installed Annals class lacks a required dependency; the compiled deliverable therefore uses `amsart`, without fake journal branding. Relevant MSC codes were checked against [MSC 2020](https://mathscinet.ams.org/mathscinet/search/mscbrowse.html?pc=05C). The existing date of 2 October 2026 remains appropriate for this substantive editorial revision.
+
+### Primary sources for added references
+
+- Diestel, *Graph Theory*, fifth edition: [publisher record](https://link.springer.com/book/10.1007/978-3-662-53622-3), connectivity/background, not a source for the new spectra.
+- Whitney, *Non-separable and planar graphs*: [original paper](https://www.math.ucdavis.edu/~saito/data/high-dimensions/whitney-graph.pdf), Transactions 34 (1932), 339–362.
+- Rota, Möbius functions: [publisher record](https://link.springer.com/article/10.1007/BF00531932), 2 (1964), 340–368.
+- Stanley, *Enumerative Combinatorics*, volume 1, second edition: [author's book page](https://math.mit.edu/~rstan/ec/ec1/) and [author's text](https://math.mit.edu/~rstan/ec/ec1.pdf), especially Chapter 3. Publication year 2012 is distinguished from the 2011 prepublication text.
+- Stanley, arrangements: [author's notes and publication details](https://math.mit.edu/~rstan/arrangements/arr.html), especially Lectures 1–2; the bond lattice of a forest is explicitly distinguished from a full partition lattice.
+- de Moura–Ullrich, Lean 4: [publisher's actual CADE 2021 chapter](https://link.springer.com/chapter/10.1007/978-3-030-79876-5_37), pages 625–635. An initially considered ITP DOI was rejected because it belongs to a different paper; it is not in the bibliography.
+- The mathlib Community: [authors' paper](https://arxiv.org/abs/1910.09336) and [current library references](https://leanprover-community.github.io/mathlib4_docs/references.html), CPP 2020, 367–381.
+
+The local Zotero API was unavailable; no Zotero setting or library was modified. New citations were verified through primary publisher/author sources. Reiher's [verified arXiv record](https://arxiv.org/abs/2403.11223) supplies the stable 2024 date; no unverified final journal pagination was invented. The exact journal submission requirements and any AI disclosure remain subject to the author's review before submission. Typography and a longer bibliography do not establish top-tier suitability or acceptance.
+
 ## Research brief
 
 Question: do the manuscript's supplied spectrum, local-product and capacity routes establish their stated conclusions, and does the verification section describe the actual accepted Lean scope faithfully?
