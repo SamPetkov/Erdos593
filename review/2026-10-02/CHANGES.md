@@ -1,4 +1,22 @@
-# Manuscript changes and comparison — 2 October 2026
+# Manuscript changes and comparison — updated 3 October 2026
+
+## New mathematical pass — 3 October
+
+The clean revised version is the existing open TeX file, edited in place. Medium English academic editing was used for the connective introduction and new subsection; mathematics received a separate adversarial review. Existing citations, attribution, 111 displays, 43 mathematical statements and 70 labels are preserved. Two statements, eight displays and three labels are intentionally added, not described as unchanged mathematics.
+
+| Passage | Previous version | Revised version | Reason |
+| --- | --- | --- | --- |
+| Rooted-abundance proof | The off-root part meets `S_v` “although both are subsets of A.” | Off-root vertices lie in `A`, contradicting `S_v ∩ A = ∅`. | `S_v` is not a subset of `A`; repair the supporting sentence without changing the valid proof route. |
+| Trace fibre terminology | General fibres `J_s^+` are called expansion atoms. | They are expansion pieces. | `J_s` may be disconnected or have cut vertices; these need not be canonical indecomposable atoms. |
+| Structural question in the introduction | Core constraints followed by a local-product description. | Adds the exact cyclic cost and prescribed-piece-number counts as their connection. | Explain how the new deductions advance the existing story rather than append unrelated facts. |
+| After the lattice spectrum | Only a summary distinguishing numerical and lattice types. | Exact budget `N+C+L=s-2-q(beta)` and its positive-atom/slack bound. | Bring the already accepted deficit arithmetic into the manuscript; distinguish its still-unformalized lattice-rank packaging. |
+| New counting corollary | Rank/count bounds were only proposals in review notes. | Original-piece-number generating polynomial, binomial/Stirling bounds, and exact equality profiles at every interior degree. | Give complete injections and strictness witnesses; avoid assuming the unfinished Lean cover theorem. |
+| Sharpness wording | Potentially ambiguous simultaneous attainment. | Each extremal profile attains its corresponding bound at every piece number. | One assembly cannot attain both different interior bounds when `N>=2`. |
+| Example | No concrete extremal assembly comparison. | `C4^+` plus two triples has four or five decomposition choices with the same atoms and parameters. | Make “rigid cyclic content, flexible assembly” testable and intelligible. |
+| Verification | Separately validated piece checkpoint; deficit/new count scope not explicit. | Canonical/final piece acceptance stated; deficit arithmetic distinguished from lattice rank; new count proof explicitly not a Lean endpoint. | Prevent whole-paper or service-green acceptance overclaim. |
+| Date and PDF | Substantive journal revision dated 2 October, matching PDF. | Source dated 3 October; retained PDF explicitly labeled 2 October and stale. | Date real mathematical revisions, not polls; editor compiler cannot initialize and no separate PDF was authorized. |
+
+Both monitors remain paused. This pass introduces no Lean/source/pin/cache/workflow change, compiler or proof-service request, external full audit, publication-readiness or novelty claim. See the current audit for the exact acceptance and remaining obligations.
 
 The clean TeX contains the entire revised manuscript. This comparison identifies the substantive changed paragraphs; it is not an invitation to replace the author's concurrent working copy blindly. The academic-humanizer guidance was used for restrained English revision, while mathematical changes were separately checked against their source obligations. Equations, variables, labels, citations and attribution are preserved unless a correction is identified below.
 

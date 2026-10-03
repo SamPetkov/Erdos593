@@ -69,7 +69,7 @@
 \email{samuil.petkov@ens.psl.eu}
 \subjclass[2020]{Primary 05C65; Secondary 05C15, 05C40, 05C63, 06A07, 03E05}
 \keywords{Erdős Problem 593, obligatory triple systems, uncountable chromatic number, canonical decomposition, partition lattices, Lean~4}
-\date{2 October 2026}
+\date{3 October 2026}
 
 \begin{document}
 
@@ -131,8 +131,11 @@ The classification also raises a finite structural question: which features
 of an obligatory system are forced by its cyclic content, and which can vary
 through one-point assembly?  The canonical atom normal form separates these
 two roles.  The parameter and atom-count spectra quantify the constraints
-on the cores and the number of atoms.  The local partition-lattice product
-then describes the freedom in assembling those atoms.  We develop these
+on the cores and the number of atoms.  An exact deficit identity measures
+the cost of splitting cyclic rank or increasing core order.  The local
+partition-lattice product describes the remaining assembly freedom, including
+sharp bounds on the number of decompositions with a prescribed number of
+pieces.  We develop these
 consequences alongside direct positive and negative proofs of the
 classification and its Lean formalisation.
 
@@ -579,7 +582,7 @@ Let \(A\) be one colour class. Then
 S_v\cap A=\varnothing\qquad(v\in A).
 \]
 
-Consequently \(H[A]\) contains no copy of \(F\). Indeed, if \(\varphi\) were such a copy and \(v=\varphi(r)\), its off-root part would have to meet \(S_v\) although both are subsets of \(A\). Since \(F\) is obligatory, every \(F\)-free triple system is countably chromatic. Thus each of the finitely many colour classes of \(D_B\) induces a countably chromatic subsystem. Tagging a vertex by its finite \(D_B\)-colour and its countable colour inside that class gives a countable proper colouring of \(H[B]\).
+Consequently \(H[A]\) contains no copy of \(F\). Indeed, if \(\varphi\) were such a copy and \(v=\varphi(r)\), its off-root part would have to meet \(S_v\). All those off-root vertices lie in \(A\), contradicting \(S_v\cap A=\varnothing\). Since \(F\) is obligatory, every \(F\)-free triple system is countably chromatic. Thus each of the finitely many colour classes of \(D_B\) induces a countably chromatic subsystem. Tagging a vertex by its finite \(D_B\)-colour and its countable colour inside that class gives a countable proper colouring of \(H[B]\).
 
 If \(H[R_m(F,r;H)]\) were countably chromatic as well, tagging the two sides would give a countable colouring of \(H\). This contradicts \(\chi(H)>\aleph_0\).
 \end{proof}
@@ -918,7 +921,7 @@ coordinate \(s\) are its \emph{core vertices}; the third vertex, whose
 coordinate properly extends \(s\), is its \emph{apex}.  The \emph{base fibre}
 \(K_s\) consists of all hyperedges of \(K\) based at \(s\), together with
 their incident vertices.  A base node is \emph{active} when its fibre is
-nonempty.  We first identify each fibre with an expansion atom and then show
+nonempty.  We first identify each fibre with an expansion piece and then show
 that the fibres form a forest of one-point overlaps.
 
 First set aside every isolated vertex of \(K\). Each is a one-vertex edgeless
@@ -932,7 +935,7 @@ longer sequence coordinate. We group the hyperedges of \(K\) by this
 coordinate and use the notation \(K_s\) from the dictionary.
 
 \medskip
-\noindent\textbf{Claim 6.3.1 (each base fibre is one expansion atom).}
+\noindent\textbf{Claim 6.3.1 (each base fibre is one expansion piece).}
 For every active base node \(s\), there is a finite subgraph \(J_s\) of
 \(G\) such that \(K_s\cong J_s^+\).
 
@@ -1035,8 +1038,8 @@ natural maps into \(K\) identify exactly the displayed common point and
 nothing else, so they assemble to an isomorphism onto the union of the
 factors already added. Different components of \(Q\), and the isolated
 factors removed at the start, are combined by disjoint union. This is the
-running-intersection step: Claim 6.3.1 supplies the expansion atoms, while
-Claims 6.3.2--6.3.4 certify that each new atom is attached along at most one
+running-intersection step: Claim 6.3.1 supplies the expansion pieces, while
+Claims 6.3.2--6.3.4 certify that each new piece is attached along at most one
 previous point.
 \end{proof}
 
@@ -1978,6 +1981,140 @@ such profile is realizable.  These assertions classify the available
 factorization-lattice types; they do not identify all systems with the same
 numerical parameters.
 
+\subsection{Cyclic costs and assembly freedom}
+\label{cyclic-costs-and-assembly-freedom}
+
+The atom-count bound and the local product measure complementary constraints.
+The first records how much cyclic structure costs; the second records the
+decomposition choices left after the atoms have been fixed.
+
+\begin{proposition}[Exact cyclic-cost budget]
+\label{proposition-cyclic-cost-budget}
+Let $F$ be connected, reduced and obligatory, with positive Levi cycle rank
+$\beta$.  Put $s=|V(F)|-|E(F)|$, let $k$ be its canonical atom count, and
+set $N=k-1$.  For the positive-rank atoms, write $r_i$ for the core rank,
+$v_i$ for the core order, and $h$ for their number.  Define
+\[
+ C=\sum_{r_i>0}q(r_i)-q(\beta),
+ \qquad
+ L=\sum_{r_i>0}\bigl(v_i-2-q(r_i)\bigr).
+\]
+Then
+\[
+ N+C+L=s-2-q(\beta),
+ \qquad C\ge h-1,\quad L\ge0.
+\]
+In particular,
+\[
+ N+(h-1)+L\le s-2-q(\beta).
+\]
+The cost $C+L$ is zero exactly when the atom count is maximal: there is one
+minimum-order cyclic atom carrying rank $\beta$, and all other atoms are
+single triples.
+\end{proposition}
+\begin{proof}
+Zero-rank atoms have core order two.  Equation (10.15) therefore gives
+\[
+ s=1+k+\sum_{r_i>0}q(r_i)+L,
+ \qquad \sum_{r_i>0}r_i=\beta.
+\]
+Substituting the definitions of $N$ and $C$ gives the identity.
+Lemma~\ref{lemma-minimum-order-fixed-cyclic-rank} gives $L\ge0$.
+Since $\beta>0$, there is at least one positive-rank atom.  The strict
+aggregation inequality in the proof of
+Theorem~\ref{theorem-exact-canonical-atom-count-spectrum} gives $C\ge h-1$.
+Thus zero cost forces $h=1$ and zero core-order slack; the converse follows
+from the same identity.
+\end{proof}
+
+Since $N=\operatorname{rk}\mathcal D(F)$, the budget also describes the rank
+available to the factorization lattice.  Splitting cyclic rank among atoms
+and increasing their core orders reduce this rank.  It is a numerical
+constraint, not a graph-edit-distance stability theorem or a uniqueness
+statement about the cores.
+
+\begin{corollary}[Sharp counts at a prescribed piece number]
+\label{corollary-sharp-piece-counts}
+Let $F$ be reduced and obligatory with at least one hyperedge, $k$ canonical
+atoms and $c$ connected components.  Put $N=k-c$ and let
+$\lambda=(\lambda_1,\ldots,\lambda_t)\vdash N$ be its attachment excess
+profile.  For $0\le j\le N$, define
+\[
+ d_j(F)=|\{D\in\mathcal D(F):|D|=k-j\}|,
+\]
+where $|D|$ counts the actual nonempty original-edge pieces.  Write $S(a,b)$
+for the number of partitions of an $a$-element set into $b$ blocks.  Then
+\[
+ \sum_{j=0}^{N}d_j(F)z^j
+ =\prod_{i=1}^{t}
+   \left(\sum_{r=0}^{\lambda_i}
+     S(\lambda_i+1,\lambda_i+1-r)z^r\right),
+\]
+and
+\[
+ \binom Nj\le d_j(F)\le S(N+1,N+1-j)
+ \qquad(0\le j\le N).
+\]
+If $N\ge2$, then for every $1\le j\le N-1$ the lower equality holds exactly
+when all shared points are binary, that is, $\lambda=(1,\ldots,1)$; the
+upper equality holds exactly when $\lambda=(N)$.  Each bound is attained
+at every $j$ by its corresponding extremal profile, even with the atom list
+and component count fixed.  For $N=0$ the generating polynomial is $1$, and for $N=1$ the
+two extremal profiles coincide.
+\end{corollary}
+\begin{proof}
+Let $\pi_i$ be the local partition at the $i$th shared point.  In the
+auxiliary forest from
+Lemma~\ref{lemma-local-decomposition-lattice-product}, delete the central
+point-nodes and their incident edges.  The remaining forest has
+$k+\sum_i|\pi_i|$ vertices and $\sum_i(\lambda_i+1)$ edges.  Every component
+contains an atom and corresponds to one actual piece.  Hence
+\[
+ |D|=k-\sum_i\bigl(\lambda_i+1-|\pi_i|\bigr).
+\]
+Independent local choices give the generating polynomial.  This is the
+standard partition-lattice enumeration
+\citep[Example~3.10.4]{stanley2012}; connected-partition polynomials and their
+articulation factorization are discussed in \citet[Sections~3--5]{simon2011}.
+
+For the lower bound, give the $i$th local set one anchor and $\lambda_i$
+ordinary elements.  A $j$-element subset of the total $N$ ordinary elements
+defines local partitions by joining its elements to their respective
+anchors and leaving all others singleton.  This is an injection into the
+choices counted by $d_j(F)$.
+
+For the upper bound, identify all local anchors to one anchor on a set of
+$N+1$ elements.  Fuse the anchor blocks of the local partitions and retain
+every other block.  Restriction to each anchored local set recovers its
+partition, so the map is injective.  A tuple of total excess $j$ gives
+$N+1-j$ blocks, proving the upper bound.  This construction also shows that
+merging two positive profile parts never decreases any coefficient.
+
+For strictness in the lower bound, suppose some $\lambda_i\ge2$.  Form an
+anchor-free pair in that group and choose $j-1$ of the remaining $N-2$
+ordinary elements to join their local anchors.  This tuple has excess $j$
+but is outside the lower image.  For strictness in the upper bound, suppose
+there are at least two profile groups.  Choose $j+1$ ordinary elements
+meeting two groups, put them in one anchor-free block and leave all other
+elements singleton.  This partition has $N+1-j$ blocks but is outside the
+upper image.  Both choices are possible for $1\le j\le N-1$.
+The two extremal profiles attain the respective bounds.  Finally,
+Lemma~\ref{lemma-capacity-safe-profile-realization} realizes both profiles
+using the same atoms and component count, with all global parameters
+preserved.
+\end{proof}
+
+For example, take $C_4^+$ and two single triples.  A chain assembly with two
+binary joints has decomposition polynomial $1+2z+z^2$; an assembly with both
+triples attached at one point of $C_4^+$ has polynomial $1+3z+z^2$.
+Both systems have twelve vertices, six hyperedges, three canonical atoms
+and cycle rank one, and both maximize the atom count for these parameters.
+Their four and five decomposition choices differ only because of attachment
+geometry.  Thus extremal cyclic concentration does not eliminate assembly
+freedom.  The counting inequalities above are elementary partition-lattice
+consequences; their role here is to quantify that freedom, not to assert a
+new general enumeration theorem.
+
 \section*{Formal verification and reproducibility}
 
 The implementation uses Lean~4 \citep{demoura2021} and the mathematical
@@ -2015,7 +2152,8 @@ minimal-generator classification, the finite parameter spectra, the connected at
 spectrum and its maximisers, the unrestricted classical-block equivalence,
 the forward atomic cycle and even-theta boundary forms, and the supported
 decomposition order isomorphism with local partition products.  A separately
-validated extension establishes the actual-piece/local-partition block-count
+validated extension has passed canonical and standalone replay and final
+source reconciliation for the actual-piece/local-partition block-count
 identity; these results retain their stated finiteness, structural and
 feasible-parameter hypotheses.  Delivery of the block-count checkpoint is
 tracked separately from the public repository snapshot.  The abstract
@@ -2032,6 +2170,18 @@ decomposable spectrum and decomposable equality classification also remain
 separate obligations.  The characteristic-polynomial recovery of the
 attachment profile is not claimed as an additional Lean endpoint.  Exact
 statement-by-statement coverage is tracked in the manuscript crosswalk.
+
+The accepted atom-deficit theorem supplies the arithmetic identity and
+positive-atom bound behind
+Proposition~\ref{proposition-cyclic-cost-budget}, under its exact structural,
+positive-rank and additive-count hypotheses.  Its identification with lattice
+rank still uses the manuscript's grading argument.  The generating polynomial,
+coefficient bounds and equality cases in
+Corollary~\ref{corollary-sharp-piece-counts} are proved here but are not yet
+additional Lean endpoints.  Counting by actual pieces uses the accepted
+product and block-count interfaces, not an assumption about covers in an
+ambient partition lattice; the fixed-atom sharpness assertion retains the
+separate assembly-realization obligation.
 
 The Lean development does not reproduce every intermediate prose lemma
 verbatim.  In particular, its negative direction uses a shift-graph host in

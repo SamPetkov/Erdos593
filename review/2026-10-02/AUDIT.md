@@ -1,4 +1,69 @@
-# Mathematics and Lean coverage audit — 2 October 2026
+# Mathematics and Lean coverage audit — updated 3 October 2026
+
+## Current bounded research brief and verdict — 3 October
+
+Question: which statements of the open manuscript already have exact accepted Lean support, do its supplied mathematical routes still establish their conclusions, and which short consequences best strengthen the cyclic-content/assembly story?
+
+Deliverable: an updated statement-level audit, minimal corrections in the existing open TeX, and at most two coherent mathematical additions with complete proofs. Acceptance requires explicit finite carriers and hypotheses, actual original-edge piece counts, checked edge cases, preserved attribution and earlier mathematics, and truthful separation of prose deductions, bounded diagnostics and kernel acceptance. A broad research campaign, new paid proof-service request, unreviewed compiler run, installation, replacement document/PDF, resuming clocks or publication is outside this pass. A genuinely new substantial Lean block or external campaign needs its own exact target/resource checkpoint; no such run is claimed here.
+
+Conventions: finite simple triple systems, injective non-induced embeddings, reducedness where component counts are used, actual canonical `Index` and original-edge quotient blocks. For the new budget: connected reduced obligatory `F`, positive Levi rank `beta`, `s=n-m`, `k` atoms, `N=k-1`; `C` is the splitting cost of positive core ranks and `L` their excess order. For counting: reduced obligatory nonempty-edge `F`, `c` components, `N=k-c`, attachment profile `lambda`, and `d_j` counts decompositions with exactly `k-j` actual pieces. These are integers, not physical units. Non-goals include core-isomorphism uniqueness, arbitrary majorization, global stability, exhaustive novelty clearance or claiming that numerical diagnostics prove a theorem.
+
+Methods/cost: bounded source and primary-literature inspection, parallel adversarial mathematics and actual Lean-declaration audits, elementary anchor injections, and small exact-integer diagnostics. The source-only checks take seconds; no Lean job or service submission is needed to establish the current coverage. Selected new arguments were checked independently by an actual helper against the saved source, not represented as an external full audit.
+
+**Verdict: not everything is formalized.** The classification is accepted, as are substantial structural extensions. The actual-piece extension now also has complete canonical/standalone/final-source acceptance, but its repository delivery is pending. The two mathematical additions are proved in the manuscript and source-reviewed; they are not two newly kernel-accepted endpoints. The bounded supplied-route audit found no further major mathematical failure, conditional on its explicitly stated earlier normal-form, closure and standard graph/lattice primitives. This is neither whole-paper certification nor a journal-readiness verdict.
+
+### Fresh acceptance and reproducibility checks
+
+- Exact piece source `bc36a54a0239a5c46d52752d7125d3259d7dd38a`, tree `677d2341cb0acd6e03ec96dcbd39adac65965d47`, clean immutable checkout: 254 source files, 246 modules, 383 permanent ordered standard-only audits. Acceptance SHA256 `565f1d1718dcc827dd5dc8d39433a1e8f86b15be2d93aebb9f7c1bc065d8fde1` records canonical66494 and final66495, not merely scheduler completion. The accepted module SHA256 remains `5e1907693defd0f146d8f1261e9bbbdb82cf71c84ea5d83731e6f8bbb052e2ce`.
+- A fresh source-only checker compared all 566 retained original/dispatch/retrieval Git blobs, including 510 canonical originals, at ledger `094748d25126fdcb7c69a469c4f1824bdde78ffa`: command0, byte equality PASS, no compiler/network. This does not create a new acceptance or independent reviewer.
+- DAG validation passed: 55 semantic nodes, 39 welded, 3 lean-validated, 2 candidate and 11 needs-review; there is no ready frozen theorem. Node counts are not a manuscript-coverage percentage.
+- Fresh GitHub readback: public draft PR49 head `d005d789d88678a11f03b27a260c1b62f5363608`, base `b5130a71f0b022fdf63c0a186f0892ab9b599f84`; private draft PR55 head `adfcc1ee7079d8e4b27caff8c0bb7689fc710fd9`, base `6992fecc6c480f3f95887741604d4596da8887c3`. These are the inspected pre-follow-up heads, not an assertion that the new piece source is on main. Recorded merged mains remain 245 modules/379 audits.
+- Static source comparisons preserve all 111 earlier displays, 43 earlier statements and 70 earlier labels as ordered subsequences. Intentional additions give totals 119 displays, 45 statements and 73 labels. All 23 bibliography entries remain cited; there are 53 citation commands and no unresolved source label/citation keys or mismatched environments.
+- Exact-integer diagnostics check 272 profiles for `N=0,...,12` and 2,918 coefficients, including every interior equality characterization. PASS is not an analytical proof or Lean evidence; the injections in the manuscript supply the proof.
+- The editor compiler fails at initialization with `Unable to find standard directories for platform`, before TeX diagnostics. No source repair can discharge that infrastructure error. No alternate PDF was compiled; the retained 35-page PDF is the **2 October version**, not a PDF of this revision. Source compilation and new layout remain unverified.
+- Both author-stopped automations are still actually `PAUSED`. No local Lean/video/user process, pin, cache, installation, proof service, Slurm or automation state was changed.
+
+### Conclusion-first audit of the new deductions
+
+| ID | Exact obligation | Needed by / route | Classification and source | Status |
+| --- | --- | --- | --- | --- |
+| C1 | `N+C+L=s-2-q(beta)` | Cyclic budget | Eq. (10.15), zero-rank core order two, definitions and integer algebra | Discharged |
+| O1 | Positive-rank atoms are nonempty; `C>=h-1`, `L>=0` | C1 and budget inequality | Positive total rank, minimum-core-order lemma, repeated strict aggregation | Discharged |
+| O2 | Zero cost iff one minimum-order positive atom and singleton remainder | Budget equality | O1 plus exact identity and existing atom-count maximizer theorem | Discharged |
+| C2 | `#D=k-sum(mu_i-#pi_i)` | Piece-number generating polynomial | Count vertices/edges/components of the atom-containing auxiliary forest after deleting central nodes; components identify actual original-edge pieces | Discharged; accepted Lean piece accounting corroborates counts, not grading |
+| O3 | Local partitions counted by Stirling numbers, independent under product | C2 polynomial | Existing local order product and standard finite partition enumeration | Discharged |
+| O4 | Binomial lower injection is one-to-one and preserves piece deficit | Lower coefficients | Select ordinary elements in anchored local groups; restriction recovers subset | Discharged |
+| O5 | Fusing anchor blocks is one-to-one and preserves piece deficit | Upper coefficients | Restriction recovers every local partition; glued block count is the sum minus the number of fusions | Discharged |
+| O6 | Anchor-free pair/mixed block gives missing choices at each interior degree | Exact equality profiles | `N>=2`, `1<=j<=N-1`; `j-1<=N-2`, `2<=j+1<=N` | Discharged |
+| O7 | The two extremal profiles can use the same fixed atoms and `c` | System-level sharpness | Existing capacity-safe realization, distinct ports, closure and original-atom identification | Discharged as prose; actual-system Lean transport remains open |
+
+The previous rooted-abundance sentence incorrectly put `S_v` inside a color class `A`; the corrected contradiction uses `S_v ∩ A = ∅`. General trace fibres are now expansion *pieces*, not canonical *atoms*. Neither correction changes a theorem conclusion or its valid proof route.
+
+### Exact Lean gaps and refinements to the older crosswalk
+
+The accepted actual supported product, arbitrary lattice operations and piece-accounting equation are already present. Do not reprove them. Canonical running assembly under `Intrinsic` is also accepted; the retained generic all-maximal-block running-order export is separate, not evidence that canonical assembly is missing.
+
+The strongest next block is actual supported covers/grading. Mathlib's `apply_covBy_apply_iff` and `Pi.covBy_iff` transfer a supported cover through the accepted product to a cover at exactly one shared-point coordinate. This does **not** allow a supported-subtype cover to be identified with a cover in the entire original-edge setoid lattice. The missing reusable finite-setoid lemma is: for finite `A`, `R covers S` iff `R<S` and `Nat.card (Quotient R)=Nat.card (Quotient S)+1`. Its two-block-merger proof must be supplied; merely saying partition lattices are graded conceals the obligation. Actual-piece deficit accounting then connects local changes to original block counts. No uncompiled design is called validated or ready.
+
+The other substantive gaps are distinct-port fixed-atom geometry, admission and canonical-label transport; componentwise atom-count realization and full factorization-lattice spectrum; complete phase/decomposable equality interfaces; sorted theta half-length packaging; characteristic-polynomial recovery; new enumeration/injection endpoints; the separate048 lane and exhaustive release crosswalk. The balanced complete-bipartite rigidity mathematics already has accepted even/odd exports in `BalancedEndpointRigidity.lean`; its floor/parity wrapper is a packaging gap, unlike the genuinely missing decomposable equality endpoint.
+
+Reducedness is essential for `k-c`: one triple plus one isolated point has `k=1`, two ambient Levi components, and a singleton decomposition lattice. The new counting corollary retains reducedness. A connected height statement also needs a nonempty edge carrier: a singleton isolated vertex has no atoms but one decomposition. Empty attachment profile, `N=0,1`, rank-one core parity and disconnected edge-containing components were explicitly checked.
+
+### Bounded exploration: selected and deferred directions
+
+| Direction | Mathematical assessment | Decision / formal boundary |
+| --- | --- | --- |
+| Exact cyclic-cost/assembly budget | Complete short deduction, links accepted deficit to the paper's structural constraint | Added with proof; arithmetic Lean support exists, lattice-rank packaging remains open |
+| Piece-number generating polynomial and strict extremal bounds | Complete anchor injections; each interior coefficient identifies its extremal profile | Added with proof and fixed-atom example; finite counting/injection endpoints still to formalize |
+| Boolean/distributive criterion | `D(F)` distributive iff every shared joint is binary, since a larger factor contains nondistributive `Pi_3` | Useful interpretation, but not another headline statement in this pass |
+| Profile recovery from characteristic roots/Möbius data | Already present; classical partition-lattice formula | Do not sell as a new discovery or duplicate the proof |
+| Stronger cost for several rank-at-least-two atoms | Short source-reviewed integer refinement exists in the earlier opportunities note | Deferred until it serves a concrete near-extremizer classification; not an accepted endpoint |
+| Certifying recognition | Intrinsic criterion supports finite obstruction/normal-form certificates; graph phase needs subsequent vertex-block extraction, not just Levi bipartiteness | Secondary potential appendix, not implemented or complexity-verified here |
+| General majorization, topology and further arbitrary embellishments | No complete new relevant theorem established by this pass | Not added or commissioned |
+
+The partition-lattice factor formula is checked against [Stanley's author text, Example 3.10.4, equation (3.35)](https://math.mit.edu/~rstan/ec/ec1.pdf). The articulation-factorization context is [Simon–Tittmann–Trinks, Sections 3–5](https://arxiv.org/html/1005.1726v2). The new material is a system-specific synthesis of classical tools, not novelty certification. A fresh comparison with [Li's v2](https://arxiv.org/html/2606.24882v2) preserves the classification chronology and distinguishes its uncountable chromatic spectra from these finite assembly counts; that bounded comparison is not an exhaustive literature search or evidence of priority.
+
+The academic-humanizer skill influenced only concise connective prose and terminology, with mathematical proof review kept separate. The source is dated 3 October because substantive reviewed mathematics was incorporated; paused monitors and polls did not change the date.
 
 ## Journal-style follow-up scope
 
