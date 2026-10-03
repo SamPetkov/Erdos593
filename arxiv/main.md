@@ -1,7 +1,7 @@
 # Obligatory Triple Systems: An Alternative Proof
 
 **Samuil Petkov**  
-21 July 2026
+24 July 2026
 
 **2020 Mathematics Subject Classification.** Primary 05C65; Secondary 05C15, 05C63, 03E05
 
@@ -25,17 +25,13 @@ For a finite graph $J$, write $J^+$ for its private-vertex expansion. Let $\math
 
 </div>
 
-Theorem A, including both the constructive and intrinsic formulations, was first proved by . Li also introduced the complete-rank one-apex sequence lift and exact bridge-trace theorem that organise the negative half of the proof . The author began developing the present argument before becoming aware of Li’s preprint, but, for the provenance reasons stated at the end of the paper, no claim of informational independence is made. This paper presents an alternative proof and a Lean formalisation of the finite classification. Its main expository difference is to replace the bridge-selector derivative theorem by an explicit base-fibre decomposition and support-incidence forest suited to machine checking.
+Li’s preprint, posted on 23 June 2026, contains the first publicly posted complete mathematical proof of Theorem A . It also introduced the complete-rank one-apex lift and bridge-trace method used in the negative direction . The present paper gives a different implementation, direct positive arguments, sharp finite parameter consequences, and a Lean formalisation of this implementation.
 
 The graph analogue was proved by Erdős and Hajnal: the obligatory finite graphs are exactly the bipartite graphs . The classical nonlinearity obstruction for uniform hypergraphs is due to Erdős, Hajnal, and Rothschild . Obligatory triple systems were studied further by , , , and ; the expansion theorem of supplies the positive atoms used below.
 
-#### Relation to Li’s proof.
-
-The classification theorem, complete-rank one-apex lift, bridge-trace architecture, selected-incidence decomposition, quotient forest, and running-intersection assembly all appear in Li’s preprint . The present paper makes no priority claim for those ingredients. Its alternative implementation gives direct proofs of the positive expansion atoms and closure statements in the notation used here, replaces the bridge-selector derivative formalism by an explicit base-fibre and support-incidence analysis, invokes the older Erdős–Hajnal high-odd-girth theorem directly, and supplies a complete Lean formalisation of this implementation.
-
 The proof is best read as two stories. On the positive side, a probabilistic rainbow lemma provides the local injectivity needed to force complete bipartite expansions. A rooted-abundance lemma then proves closure under one-point amalgamation, including at singular uncountable cardinals. Deleting the bridges of the Levi graph identifies each remaining active component with the expansion of a finite bipartite graph; the quotient graph is a forest, and its running-intersection property gives the required amalgamation order.
 
-On the negative side, we use Li’s one-apex sequence-lift strategy . The lift transfers uncountable chromatic number from a graph to a triple system while controlling every finite linear trace. We prove the required trace statement through expansion fibres and a support-incidence forest, so that the fibres are joined only at cut points. This prevents a bridge-free hyperedge-node or a Berge cycle from being assembled across different fibres. There are exactly three ways to fail the intrinsic test, and each has its own host: an Erdős–Rado linear host excludes nonlinearity, the lift of $K_{\omega_1}$ excludes a missing bridge, and a classical Erdős–Hajnal graph of uncountable chromatic number and prescribed odd girth excludes an odd Berge cycle.
+On the negative side, we use the one-apex sequence-lift strategy of . The lift transfers uncountable chromatic number from a graph to a triple system while controlling every finite linear trace. We prove the required trace statement through expansion fibres and a support-incidence forest, so that the fibres are joined only at cut points. This prevents a bridge-free hyperedge-node or a Berge cycle from being assembled across different fibres. There are exactly three ways to fail the intrinsic test, and each has its own host: an Erdős–Rado linear host excludes nonlinearity, the lift of $K_{\omega_1}$ excludes a missing bridge, and a classical Erdős–Hajnal graph of uncountable chromatic number and prescribed odd girth excludes an odd Berge cycle.
 
 All embeddings are injective and non-induced. The argument is carried out in ZFC. The imported results used as black boxes are the de Bruijn–Erdős compactness theorem , the Erdős–Hajnal high-odd-girth theorem , and the pair case of the Erdős–Rado partition theorem .
 
@@ -412,7 +408,7 @@ $$(2)\Longrightarrow(1). \tag{4.1}$$
 
 # The intrinsic decomposition
 
-The selected-incidence decomposition, quotient forest, and running-intersection architecture in this section follow the positive structural framework of . We give the full argument in the present notation because its explicit assembly order is also used by the Lean development.
+We give the selected-incidence decomposition and running-intersection argument in the explicit form used by the Lean development; compare the structural framework in .
 
 We prove $(2)\Longleftrightarrow(3)$. Isolated vertices may be ignored by Lemma 1.1.
 
@@ -516,7 +512,7 @@ $$(2)\Longleftrightarrow(3). \tag{5.3}$$
 
 # The sequence lift
 
-The one-apex construction and bridge-trace strategy were introduced by Li . We specialise the lift to $\omega_1$ and replace Li’s bridge-selector derivative formulation by a base-fibre and support-incidence decomposition convenient for formalisation. The detailed proof below is self-contained as an exposition, but it is not a claim of independent discovery.
+We use the one-apex construction and bridge-trace strategy of , specialised to $\omega_1$ and written as a base-fibre and support-incidence decomposition convenient for formalisation.
 
 #### The one-apex construction.
 
@@ -786,9 +782,148 @@ F^\circ\text{ is linear},\\[1mm]
 
 All embeddings are non-induced: additional host hyperedges on the image vertices are irrelevant throughout. The proof uses only ZFC, graph-colouring compactness, the classical Erdős–Hajnal high-odd-girth theorem, and the standard Erdős–Rado relation (8.1). It assumes neither CH nor GCH, and no forcing axiom or large-cardinal hypothesis.
 
+# Finite parameter consequences
+
+In this section a triple system is *connected* when its Levi graph is connected. We work first without isolated vertices. For an integer $r\ge1$, put $$q(r)=\left\lceil2\sqrt r\right\rceil.$$
+
+<div id="proposition-edge-deletion-bridge-condition" class="proposition">
+
+**Proposition 23** (Edge-deletion form of the bridge condition). *Let $F$ be a finite triple system and let $e=\{x,y,z\}\in E(F)$. The hyperedge-node $e$ has no incident bridge in $I(F)$ if and only if $x,y,z$ lie in one connected component after the hyperedge $e$ is deleted and all points are retained. Consequently the bridge condition in Theorem A is equivalent to the following hypergraph-native condition: $$\text{for every }e\in E(F^\circ),\text{ deleting }e\text{ separates its
+three points into at least two components.}$$*
+
+</div>
+
+<div class="proof">
+
+*Proof.* Fix $x\in e$. The Levi incidence $xe$ is not a bridge precisely when there is an alternative path from $e$ to $x$ after that incidence is deleted. A simple such path leaves $e$ through $y$ or $z$ and thereafter lies entirely in the Levi graph of $F-e$. Thus $xe$ is non-bridging exactly when $x$ is connected in $F-e$ to at least one of the other two points of $e$.
+
+If all three incidences at $e$ are non-bridging, no one of $x,y,z$ can form a singleton component among those three points. A partition of three points with this property has one block, so all three are connected in $F-e$. The converse follows by reversing the same paths. ◻
+
+</div>
+
+<div id="lemma-bipartite-shadow" class="lemma">
+
+**Lemma 24** (Bipartite shadow). *Let $F$ be an obligatory finite triple system with no isolated vertices and at least one hyperedge. There is a finite bipartite graph $J$, without isolated vertices, such that $$|E(J)|=|E(F)|,\qquad |V(J)|=|V(F)|-|E(F)|,$$ and $J$ has the same number of connected components as $F$. Conversely, for every finite bipartite graph $J$ without isolated vertices, the expansion $J^+$ is obligatory and has these parameter relations.*
+
+</div>
+
+<div class="proof">
+
+*Proof.* By Theorem A and Proposition <a href="#proposition-5.2-bridge-block-decomposition" data-reference-type="ref" data-reference="proposition-5.2-bridge-block-decomposition">14</a>, each connected component $H$ of $F$ is obtained by one-point amalgamations from connected expansion pieces $$J_1^+,\ldots,J_k^+,$$ where each $J_i$ is a connected bipartite graph. Disconnected graph pieces may simply be split into their connected components. Write $m_i=|E(J_i)|$ and $s_i=|V(J_i)|$. Since $H$ is connected, its $k$ pieces are joined by exactly $k-1$ one-point identifications. Hence $$|E(H)|=\sum_{i=1}^k m_i,
+\qquad
+|V(H)|=\sum_{i=1}^k(m_i+s_i)-(k-1).
+\tag{10.1}$$
+
+Take one-point sums of the ordinary graphs $J_1,\ldots,J_k$ along any tree on the $k$ indices. Before each identification, interchange the two bipartition classes of the new factor if necessary. The resulting graph $J_H$ is connected and bipartite, and (10.1) gives $$|E(J_H)|=|E(H)|,
+\qquad
+|V(J_H)|=|V(H)|-|E(H)|.$$ Taking the disjoint union of these shadows over the components of $F$ proves the forward assertion. The converse is the expansion-generator case of Theorem A, with the displayed counts immediate from the definition of $J^+$. ◻
+
+</div>
+
+<div id="theorem-order-size-component-spectrum" class="theorem">
+
+**Theorem 25** (Exact order–size–component spectrum). *Let $m\ge1$, $1\le c\le m$, and $n$ be integers. There exists an obligatory triple system $F$ with no isolated vertices, exactly $m$ hyperedges, exactly $n$ vertices, and exactly $c$ connected components if and only if $$\boxed{
+ m+2(c-1)+\left\lceil2\sqrt{m-c+1}\right\rceil
+ \le n\le 2m+c.
+}
+\tag{10.2}$$ Every integer in this interval occurs.*
+
+</div>
+
+<div class="proof">
+
+*Proof.* We first record the corresponding elementary graph fact. A connected simple bipartite graph with $r\ge1$ edges and $s$ vertices exists if and only if $$q(r)\le s\le r+1.
+\tag{10.3}$$ Indeed, connectedness gives $r\ge s-1$. If the bipartition has sizes $a,b$, then $$r\le ab\le\left\lfloor\frac{s^2}{4}\right\rfloor,$$ which is equivalent to $s\ge q(r)$. Conversely, $K_{\lfloor s/2\rfloor,\lceil s/2\rceil}$ contains a spanning tree, and starting with that tree and adding arbitrary unused edges realises every edge count between $s-1$ and $\lfloor s^2/4\rfloor$.
+
+Apply Lemma <a href="#lemma-bipartite-shadow" data-reference-type="ref" data-reference="lemma-bipartite-shadow">24</a>. Let the $c$ connected components of the shadow have positive edge counts $m_1,\ldots,m_c$, where $\sum_i m_i=m$. If their orders are $s_i$, then (10.3) gives $$\sum_{i=1}^c q(m_i)\le \sum_{i=1}^c s_i\le m+c.
+\tag{10.4}$$ For positive integers $a,b$, $$q(a)+q(b)\ge q(a+b-1)+2.
+\tag{10.5}$$ To see this, note that $$\sqrt a+\sqrt b\ge\sqrt{a+b-1}+1,$$ because, after squaring, the assertion reduces to $(a-1)(b-1)\ge0$; taking ceilings gives (10.5). Repeatedly applying (10.5) to the left side of (10.4) yields $$\sum_{i=1}^c q(m_i)
+\ge q(m-c+1)+2(c-1).$$ The shadow has $n-m$ vertices, so these inequalities give (10.2).
+
+For sharpness put $M=m-c+1$. Take $c-1$ components equal to $K_2$. By (10.3), a final connected bipartite component with $M$ edges can have every order from $q(M)$ through $M+1$. Their disjoint union therefore realises every shadow order from $q(M)+2(c-1)$ through $m+c$. Expanding it adds exactly $m$ private vertices and proves attainability of every integer in (10.2). ◻
+
+</div>
+
+<div id="corollary-connected-order-size-spectrum" class="corollary">
+
+**Corollary 26** (Connected and unrestricted spectra). *For $m\ge1$:*
+
+1.  *a connected obligatory triple system without isolated vertices has $m$ hyperedges and $n$ vertices if and only if $$m+\left\lceil2\sqrt m\right\rceil\le n\le2m+1;$$*
+
+2.  *without prescribing the number of components, a reduced obligatory triple system has $m$ hyperedges and $n$ vertices if and only if $$m+\left\lceil2\sqrt m\right\rceil\le n\le3m;$$*
+
+3.  *if isolated vertices are permitted, an obligatory triple system with $m$ hyperedges and $n$ vertices exists if and only if $$n\ge m+\left\lceil2\sqrt m\right\rceil.$$*
+
+</div>
+
+<div class="proof">
+
+*Proof.* The first assertion is Theorem <a href="#theorem-order-size-component-spectrum" data-reference-type="ref" data-reference="theorem-order-size-component-spectrum">25</a> with $c=1$. For the second, the connected interval covers through $2m+1$; for $n>2m+1$, take $c=n-2m$ and use the upper endpoint $n=2m+c$ of (10.2). The largest possible value is obtained from $m$ disjoint triples. The final assertion follows by adjoining arbitrary isolated vertices. ◻
+
+</div>
+
+<div id="corollary-fixed-order-size-spectrum" class="corollary">
+
+**Corollary 27** (Size spectrum at fixed order). *Let $c\ge1$ and $n\ge3c$. A reduced obligatory triple system with exactly $n$ vertices, $c$ connected components, and $m$ hyperedges exists if and only if $$\boxed{
+\left\lceil\frac{n-c}{2}\right\rceil
+\le m\le
+n-2c+4-\left\lceil2\sqrt{n-3c+4}\right\rceil.
+}
+\tag{10.6}$$ Consequently, a reduced obligatory triple system with exactly $c$ connected components and $n$ vertices exists if and only if $$n=3c,\qquad n=3c+2,\qquad\text{or}\qquad n\ge3c+4.
+\tag{10.7}$$*
+
+</div>
+
+<div class="proof">
+
+*Proof.* The upper-order inequality in (10.2) is equivalent to $m\ge\lceil(n-c)/2\rceil$. For the other inequality put $$M=m-c+1,\qquad N=n-3c+3.$$ It becomes $$M+\left\lceil2\sqrt M\right\rceil\le N.
+\tag{10.8}$$ For integers $N\ge3$ and $M\ge1$, the largest $M$ satisfying (10.8) is $$U=N+2-\left\lceil2\sqrt{N+1}\right\rceil.
+\tag{10.9}$$ Indeed, write $k=\lceil2\sqrt{N+1}\rceil$. Since $k^2\ge4(N+1)$, $$4U=4N+8-4k\le(k-2)^2,$$ so $\lceil2\sqrt U\rceil\le k-2$ and $U+\lceil2\sqrt U\rceil\le N$. On the other hand, $(k-1)^2<4(N+1)$ gives $$(k-3)^2<4(N+3-k)=4(U+1),$$ so $\lceil2\sqrt{U+1}\rceil\ge k-2$ and $(U+1)+\lceil2\sqrt{U+1}\rceil\ge N+1$. The left side of (10.8) is strictly increasing in $M$, proving (10.9). Translating back to $m$ gives (10.6).
+
+For (10.7), Corollary <a href="#corollary-connected-order-size-spectrum" data-reference-type="ref" data-reference="corollary-connected-order-size-spectrum">26</a> shows that a connected reduced obligatory system has order $3$, order $5$, or any order at least $7$. The first two statements come from $m=1,2$. For $m\ge3$, the connected intervals have no gaps because $\lceil2\sqrt{m+1}\rceil\le m+1$ for $m+1\ge4$. Thus every component has order $$3+r,\qquad r\in\{0,2\}\cup[4,\infty).$$ The sum of $c$ such increments is again $0$, $2$, or any integer at least $4$: use one nonzero increment and take all remaining increments to be zero. The increments $1$ and $3$ are impossible. This proves (10.7). ◻
+
+</div>
+
+<div id="corollary-levi-cycle-rank-spectrum" class="corollary">
+
+**Corollary 28** (Exact Levi cycle-rank spectrum). *Let $F$ be reduced and obligatory, with $m$ hyperedges, $n$ vertices, and $c$ connected components. The cyclomatic number of its Levi graph is $$\beta(I(F))=|E(I(F))|-|V(I(F))|+c=2m-n+c.
+\tag{10.10}$$ For fixed $m,c$, every integer in the interval $$0\le\beta(I(F))\le
+m-c+2-\left\lceil2\sqrt{m-c+1}\right\rceil
+\tag{10.11}$$ occurs, and no other value occurs. In particular, $$|V(F)|=2|E(F)|+c
+\quad\Longleftrightarrow\quad
+I(F)\text{ is a forest}.$$*
+
+</div>
+
+<div class="proof">
+
+*Proof.* The Levi graph has $n+m$ vertices, $3m$ incidence edges, and $c$ components, which gives (10.10). Substitution of the two endpoints in (10.2) gives (10.11), and every intermediate value occurs because every intermediate order does. A finite graph has cyclomatic number zero exactly when it is a forest. ◻
+
+</div>
+
+<div id="corollary-balanced-endpoint-rigidity" class="corollary">
+
+**Corollary 29** (Rigidity at balanced lower endpoints). *Let $F$ be connected, reduced, and obligatory.*
+
+1.  *If $|E(F)|=t^2$ and $|V(F)|=t^2+2t$, then $F\cong K_{t,t}^+$.*
+
+2.  *If $|E(F)|=t(t+1)$ and $|V(F)|=t(t+1)+2t+1$, then $F\cong K_{t,t+1}^+$.*
+
+*Here $t\ge1$, and the complete bipartite graphs are unique up to interchanging the two classes.*
+
+</div>
+
+<div class="proof">
+
+*Proof.* In either case the shadow from Lemma <a href="#lemma-bipartite-shadow" data-reference-type="ref" data-reference="lemma-bipartite-shadow">24</a> attains $|E(J)|=\lfloor|V(J)|^2/4\rfloor$. Equality forces every possible cross edge to be present and the two bipartition classes to be balanced, so the shadow is $K_{t,t}$ or $K_{t,t+1}$, respectively.
+
+For $t\ge2$ these complete bipartite graphs have no cut vertex. On the other hand, the shadow built from two or more connected expansion pieces is a nontrivial one-point sum and has a cut vertex. Hence the bridge-block reconstruction has only one piece, and $F$ is the expansion of the displayed complete bipartite graph. The cases $t=1$ are immediate. ◻
+
+</div>
+
 # Formal verification and reproducibility
 
-Li’s preprint, posted on 23 June 2026, contains the first publicly posted complete proof of Theorem A . The present Lean development is a separate formal verification of the alternative proof organised in this paper; it is not a line-by-line formalisation of Li’s manuscript and carries no priority claim. The self-contained Lean 4 source is available in the public [`Erdos593` repository](https://github.com/SamPetkov/Erdos593/blob/main/formalization/Erdos593SelfContained.lean). For every finite triple system $F$, the exported theorems establish $$\begin{aligned}
+The self-contained Lean 4 source is available in the public [`Erdos593` repository](https://github.com/SamPetkov/Erdos593/blob/main/formalization/Erdos593SelfContained.lean). The public commit history records a checked formalisation scaffold on [15 July 2026](https://github.com/SamPetkov/Erdos593/commit/ba37b8c511ab390c14a905110366d7cac1ffa08f) and the complete finite structural classification later that day in [commit `6fd00a7`](https://github.com/SamPetkov/Erdos593/commit/6fd00a76064401f3f10aabef474f59d3c6ecd6bf). To the author’s knowledge, this is the first publicly timestamped Lean formalisation of the finite structural theorem. Li’s arXiv v2, submitted on 23 July 2026, contains a separate formal verification of the broader results in his paper. No assertion of shared code or derivation between the two Lean developments is made. For every finite triple system $F$, the exported theorems establish $$\begin{aligned}
 \mathtt{F.IsObligatory}
 &\Longleftrightarrow \mathtt{F.isolatedReduction.Intrinsic},\\
 \mathtt{F.IsObligatory}
@@ -797,11 +932,11 @@ Li’s preprint, posted on 23 June 2026, contains the first publicly posted comp
 
 # Acknowledgments
 
-The author thanks Tom de Groot for his advice on revising the manuscript for greater clarity, and Eric Li for a productive discussion that improved the attribution and clarified how the present proof and formalisation differ from Li’s proof.
+The author thanks Tom de Groot for his advice on revising the manuscript for greater clarity. The author also thanks Eric Li for a discussion of the relationship between the two proofs.
 
-# AI assistance and provenance
+# AI assistance
 
-OpenAI’s GPT-5.6 Pro through ChatGPT and Aristotle  were used for proof development, adversarial checking, editorial restructuring, and the Lean formalisation. The author began developing the argument before becoming aware of Li’s preprint. During substantial proof and formalisation stages, the models were instructed to work without further internet access after an initial source-retrieval stage. That instruction is not an auditable guarantee that every model-generated suggestion was produced without external retrieval, and it does not establish informational independence. Accordingly, the paper makes no claim of informational independence and credits Li’s 23 June 2026 preprint as the first publicly posted complete proof. After the preprint was brought to the author’s attention, the manuscript was revised to identify the shared one-apex sequence-lift, bridge-trace, selected-incidence, quotient-forest, and running-intersection architecture at the points where it is used. The Lean development verifies the implementation presented here; it is not a line-by-line formalisation of Li’s manuscript. The author reviewed all incorporated suggestions and assumes full responsibility for the arguments, citations, and final manuscript.
+OpenAI’s GPT-5.6 Pro through ChatGPT and Aristotle  were used for proof development, adversarial checking, editorial restructuring, and the Lean formalisation. The author reviewed all incorporated suggestions and assumes full responsibility for the arguments, citations, and final manuscript.
 
 # Funding
 

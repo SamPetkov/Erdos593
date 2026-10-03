@@ -1,16 +1,16 @@
 cff-version: 1.2.0
 message: >-
   If you use material from this repository, please cite Samuil Petkov using
-  the metadata below and also cite Eric Li's prior complete proof,
-  arXiv:2606.24882, where the shared classification and proof architecture are
-  relevant.
+  the metadata below. Eric Li's arXiv:2606.24882 should be cited for the first
+  publicly posted complete mathematical proof of the classification and for
+  the one-apex bridge-trace method where it is used.
 title: "Obligatory Triple Systems: An Alternative Proof and Lean Verification"
 type: article
 authors:
   - family-names: Petkov
     given-names: Samuil
-version: 1.2.0
-date-released: 2026-07-21
+version: 1.3.0
+date-released: 2026-07-24
 url: "https://github.com/SamPetkov/Erdos593"
 repository-code: "https://github.com/SamPetkov/Erdos593"
 license: CC-BY-4.0
