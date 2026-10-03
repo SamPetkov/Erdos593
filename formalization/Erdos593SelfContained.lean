@@ -47,6 +47,7 @@ import Mathlib.Data.Setoid.Basic
 import Mathlib.Logic.Embedding.Basic
 import Mathlib.Logic.Equiv.Fin.Basic
 import Mathlib.Logic.Equiv.Sum
+import Mathlib.Order.Cover
 import Mathlib.Order.Fin.Basic
 import Mathlib.Order.TransfiniteIteration
 import Mathlib.Order.WellFounded
@@ -41588,9 +41589,492 @@ END SOURCE MODULE: Erdos593.TripleSystem.SupportedPieceAccountingCandidate
 ========================================================================== -/
 
 /- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.Order.FiniteSetoidCover
+Source: Erdos593/Order/FiniteSetoidCover.lean
+Normalized SHA-256: a846435a3630649ff0a8333c3ef44693a560fd2058c80192076a901d77a18e0f
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_Order_FiniteSetoidCover
+
+/-!
+# Covers of finite equivalence relations — source-only candidate
+
+Pinned dependency source: Mathlib 81a5d257c8e410db227a6665ed08f64fea08e997.
+This isolated module has not been compiled or accepted. No accepted project
+source, root, audit, package or evidence is changed by this candidate.
+
+The order is relation inclusion: `R < S` means that `S` is strictly coarser
+than `R`. Consequently quotient cardinality decreases along this order.
+The carrier need only be finite; it may be empty.
+-/
+
+namespace E593FiniteSetoid
+
+universe u
+
+variable {A : Type u}
+
+/-- The map induced by refinement is onto, including for empty carriers. -/
+theorem map_of_le_surjective {R S : Setoid A} (h : R ≤ S) :
+    Function.Surjective (Setoid.map_of_le h) := by
+  intro q
+  refine Quotient.inductionOn q ?_
+  intro a
+  exact ⟨Quotient.mk R a, rfl⟩
+
+/-- Quotient cardinality is antitone under relation inclusion. -/
+theorem quotient_card_antitone [Finite A] {R S : Setoid A} (h : R ≤ S) :
+    Nat.card (Quotient S) ≤ Nat.card (Quotient R) :=
+  Nat.card_le_card_of_surjective (Setoid.map_of_le h) (map_of_le_surjective h)
+
+/-- A strict coarsening of a finite equivalence relation strictly decreases
+the actual quotient cardinality. -/
+theorem quotient_card_strict_antitone [Finite A] {R S : Setoid A} (h : R < S) :
+    Nat.card (Quotient S) < Nat.card (Quotient R) := by
+  by_contra hc
+  have hinj : Function.Injective (Setoid.map_of_le h.le) :=
+    ((map_of_le_surjective h.le).bijective_of_nat_card_le (by omega)).1
+  have hSR : S ≤ R := by
+    intro a b hab
+    apply Quotient.exact
+    apply hinj
+    exact Quotient.sound hab
+  exact h.not_ge hSR
+
+/-- Collapse the selected point `q` onto a distinct point `p`, with codomain
+the actual complement of `q`. It removes exactly one point, not an abstract
+or assembly-list count. -/
+private noncomputable def collapsePoint {B : Type u} (p q : B) (hpq : p ≠ q)
+    (x : B) : {y : B // y ≠ q} := by
+  classical
+  exact if hx : x = q then ⟨p, hpq⟩ else ⟨x, hx⟩
+
+private theorem collapsePoint_surjective {B : Type u} (p q : B) (hpq : p ≠ q) :
+    Function.Surjective (collapsePoint p q hpq) := by
+  classical
+  intro x
+  refine ⟨x.val, ?_⟩
+  apply Subtype.ext
+  simp [collapsePoint, x.property]
+
+/-- Removing a specified point decreases the cardinality by one. A point
+is supplied only locally here; the cover theorem imposes no Nonempty premise. -/
+private theorem card_complement_point [Finite A] (a : A) :
+    Nat.card {x : A // x ≠ a} + 1 = Nat.card A := by
+  classical
+  letI : Fintype A := Fintype.ofFinite A
+  have hc : Fintype.card {x : A // x ≠ a} = Fintype.card A - 1 := by
+    simpa only [Fintype.card_subtype_eq] using
+      Fintype.card_subtype_compl (fun x : A => x = a)
+  have hp : 0 < Fintype.card A := Fintype.card_pos_iff.mpr ⟨a⟩
+  simp only [Nat.card_eq_fintype_card]
+  omega
+
+/-- Every strict finite coarsening contains a coarsening which merges exactly
+two of the original quotient classes. This is the constructive missing bridge,
+not a hypothesis that finite partition lattices are already graded. -/
+theorem exists_one_class_coarsening [Finite A] {R S : Setoid A} (hRS : R < S) :
+    ∃ T : Setoid A, R < T ∧ T ≤ S ∧
+      Nat.card (Quotient R) = Nat.card (Quotient T) + 1 := by
+  classical
+  obtain ⟨a, b, habS, habR⟩ : ∃ a b : A, S a b ∧ ¬R a b := by
+    by_contra! h
+    exact hRS.not_ge (fun x y hxy => h x y hxy)
+  let p : Quotient R := Quotient.mk R a
+  let q : Quotient R := Quotient.mk R b
+  have hpq : p ≠ q := fun h => habR (Quotient.exact h)
+  let f : A → {z : Quotient R // z ≠ q} :=
+    fun x => collapsePoint p q hpq (Quotient.mk R x)
+  let T : Setoid A := Setoid.ker f
+  have hRT : R ≤ T := by
+    intro x y hxy
+    change f x = f y
+    exact congrArg (collapsePoint p q hpq) (Quotient.sound hxy)
+  have habT : T a b := by
+    change collapsePoint p q hpq p = collapsePoint p q hpq q
+    apply Subtype.ext
+    simp [collapsePoint, hpq]
+  have hRTstrict : R < T :=
+    lt_iff_le_not_ge.mpr ⟨hRT, fun hTR => habR (hTR habT)⟩
+  let m : Quotient R → Quotient S := Setoid.map_of_le hRS.le
+  have hmpq : m p = m q := Quotient.sound habS
+  have hcollapse (z : Quotient R) : m (collapsePoint p q hpq z).val = m z := by
+    by_cases hz : z = q
+    · subst z
+      simpa [collapsePoint] using hmpq
+    · simp [collapsePoint, hz]
+  have hTS : T ≤ S := by
+    intro x y hxy
+    change f x = f y at hxy
+    have hmxy : m (f x).val = m (f y).val :=
+      congrArg (fun z : {z : Quotient R // z ≠ q} => m z.val) hxy
+    apply Quotient.exact
+    change m (Quotient.mk R x) = m (Quotient.mk R y)
+    exact (hcollapse (Quotient.mk R x)).symm.trans
+      (hmxy.trans (hcollapse (Quotient.mk R y)))
+  have hf : Function.Surjective f := by
+    intro z
+    obtain ⟨w, hw⟩ := collapsePoint_surjective p q hpq z
+    obtain ⟨x, hx⟩ : ∃ x : A, Quotient.mk R x = w := Quotient.mk_surjective w
+    exact ⟨x, by simpa [f, hx] using hw⟩
+  have hcard : Nat.card (Quotient T) = Nat.card {z : Quotient R // z ≠ q} :=
+    Nat.card_congr (Setoid.quotientKerEquivOfSurjective f hf)
+  refine ⟨T, hRTstrict, hTS, ?_⟩
+  rw [hcard]
+  exact (card_complement_point q).symm
+
+/-- A finite cover merges exactly two quotient classes. -/
+theorem quotient_card_of_covBy [Finite A] {R S : Setoid A} (hRS : R ⋖ S) :
+    Nat.card (Quotient R) = Nat.card (Quotient S) + 1 := by
+  obtain ⟨T, hRT, hTS, hcard⟩ := exists_one_class_coarsening hRS.lt
+  rcases hRS.eq_or_eq hRT.le hTS with hTR | hTS
+  · exact False.elim (hRT.ne hTR.symm)
+  · simpa only [hTS] using hcard
+
+/-- Conversely, the cardinality drop of one leaves no strict intermediate
+equivalence relation. -/
+theorem covBy_of_quotient_card [Finite A] {R S : Setoid A} (hRS : R < S)
+    (hcard : Nat.card (Quotient R) = Nat.card (Quotient S) + 1) : R ⋖ S := by
+  refine ⟨hRS, ?_⟩
+  intro T hRT hTS
+  have h1 := quotient_card_strict_antitone hRT
+  have h2 := quotient_card_strict_antitone hTS
+  omega
+
+/-- Exact finite cover criterion in relation-inclusion orientation. -/
+theorem covBy_iff_quotient_card [Finite A] {R S : Setoid A} :
+    R ⋖ S ↔ R < S ∧
+      Nat.card (Quotient R) = Nat.card (Quotient S) + 1 :=
+  ⟨fun h => ⟨h.lt, quotient_card_of_covBy h⟩,
+    fun h => covBy_of_quotient_card h.1 h.2⟩
+
+end E593FiniteSetoid
+
+end Erdos593SelfContained_Module_Erdos593_Order_FiniteSetoidCover
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.Order.FiniteSetoidCover
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedDecompositionCovers
+Source: Erdos593/TripleSystem/SupportedDecompositionCovers.lean
+Normalized SHA-256: 1140d7c1a8ee9e8a01c5dd069ab99ed41bff27bde85ac2a9e52ce8e5c9875b24
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedDecompositionCovers
+
+/-!
+# Covers of actual supported decompositions
+
+The source order is the existing supported-partition subtype on original edge
+indices, not the full partition lattice. Its accepted order isomorphisms give
+the exact covering relation: one actual shared-point factor covers, while every
+other factor is fixed. No assertion that a subtype cover is an ambient cover is
+used. Empty shared-point carriers are permitted.
+
+Candidate source only: pinned compilation, full-type and axiom review, canonical
+integration, and standalone/final reconciliation remain separate gates.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+open E593Separator
+
+universe u
+variable {V E : Type u} [Fintype V] [Fintype E]
+  [DecidableEq V] [DecidableEq E]
+variable (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+
+/-- A supported cover changes exactly one actual shared-point factor by a cover. -/
+theorem supportedPartitions_covBy_iff (hF : F.Intrinsic)
+    (D D' : SupportedPartitions F) :
+    D ⋖ D' ↔
+      ∃ p : ↥(sharedAtomPoints F hF.1 hF.2.1),
+        (supportedDecompositionProduct F hF D p) ⋖
+          (supportedDecompositionProduct F hF D' p) ∧
+        ∀ q ≠ p,
+          supportedDecompositionProduct F hF D q =
+            supportedDecompositionProduct F hF D' q := by
+  calc
+    D ⋖ D' ↔
+        (supportedDecompositionProduct F hF D) ⋖
+          (supportedDecompositionProduct F hF D') :=
+      (apply_covBy_apply_iff (supportedDecompositionProduct F hF)).symm
+    _ ↔ _ := Pi.covBy_iff
+
+/-- The changed coordinate of a supported cover is unique on the actual carrier. -/
+theorem supportedPartitions_covBy_iff_exists_unique (hF : F.Intrinsic)
+    (D D' : SupportedPartitions F) :
+    D ⋖ D' ↔
+      ∃! p : ↥(sharedAtomPoints F hF.1 hF.2.1),
+        (supportedDecompositionProduct F hF D p) ⋖
+          (supportedDecompositionProduct F hF D' p) ∧
+        ∀ q ≠ p,
+          supportedDecompositionProduct F hF D q =
+            supportedDecompositionProduct F hF D' q := by
+  constructor
+  · intro h
+    obtain ⟨p, hp, hfixed⟩ := (supportedPartitions_covBy_iff F hF D D').mp h
+    refine ⟨p, ⟨hp, hfixed⟩, ?_⟩
+    rintro q ⟨hq, _⟩
+    by_contra hqp
+    exact hq.ne (hfixed q hqp)
+  · rintro ⟨p, hp, _⟩
+    exact (supportedPartitions_covBy_iff F hF D D').mpr ⟨p, hp⟩
+
+/-- The same cover criterion after standardizing each original star, not its index. -/
+theorem supportedPartitions_standard_covBy_iff (hF : F.Intrinsic)
+    (D D' : SupportedPartitions F) :
+    D ⋖ D' ↔
+      ∃ p : ↥(sharedAtomPoints F hF.1 hF.2.1),
+        (supportedStandardProduct F hF D p) ⋖
+          (supportedStandardProduct F hF D' p) ∧
+        ∀ q ≠ p,
+          supportedStandardProduct F hF D q =
+            supportedStandardProduct F hF D' q := by
+  calc
+    D ⋖ D' ↔
+        (supportedStandardProduct F hF D) ⋖
+          (supportedStandardProduct F hF D') :=
+      (apply_covBy_apply_iff (supportedStandardProduct F hF)).symm
+    _ ↔ _ := Pi.covBy_iff
+
+/-- The original obligatoriness hypothesis supplies the structural proof internally. -/
+theorem obligatory_supportedPartitions_covBy_iff
+    (hobl : F.IsObligatory) (D D' : SupportedPartitions F) :
+    let hF : F.Intrinsic :=
+      ((isObligatory_iff_atomGenerated F).mp hobl).constructible.intrinsic
+    D ⋖ D' ↔
+      ∃ p : ↥(sharedAtomPoints F hF.1 hF.2.1),
+        (supportedDecompositionProduct F hF D p) ⋖
+          (supportedDecompositionProduct F hF D' p) ∧
+        ∀ q ≠ p,
+          supportedDecompositionProduct F hF D q =
+            supportedDecompositionProduct F hF D' q := by
+  dsimp only
+  exact supportedPartitions_covBy_iff F
+    (((isObligatory_iff_atomGenerated F).mp hobl).constructible.intrinsic) D D'
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedDecompositionCovers
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedDecompositionCovers
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedPieceDeficitAccounting
+Source: Erdos593/TripleSystem/SupportedPieceDeficitAccounting.lean
+Normalized SHA-256: a3045888c87bcf16166a1cb9ee6fce846faab2c4a15ae81eaea92f4ba0fb7839
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedPieceDeficitAccounting
+
+/-!
+# Actual supported-piece deficit, derived from the accepted counting identity
+
+The deficit counts mergers of actual original-edge pieces. The local formula is
+proved, not assumed. This source alone makes no maximal-chain or grading claim.
+Candidate: pinned warning-fatal compilation and actual full-type/axiom review
+are required before any acceptance.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+open E593Separator
+
+universe u
+variable {V E : Type u} [Fintype V] [Fintype E]
+  [DecidableEq V] [DecidableEq E]
+variable (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+
+/-- Deficit relative to the actual canonical atom carrier, not an assembly list. -/
+noncomputable def supportedPieceDeficit (D : SupportedPartitions F) : ℕ :=
+  Nat.card (Index F) - Nat.card D.val.Block
+
+/-- A local quotient cannot have more classes than the original incident atoms. -/
+theorem supportedProduct_block_card_le (hF : F.Intrinsic)
+    (D : SupportedPartitions F)
+    (p : ↥(sharedAtomPoints F hF.1 hF.2.1)) :
+    Nat.card ((supportedDecompositionProduct F hF D p).Block) ≤
+      pointMultiplicity F hF.1 hF.2.1 p.val := by
+  classical
+  haveI : Finite (Index F) :=
+    Finite.of_surjective _ (atomOf_surjective F hF.1 hF.2.1)
+  have h := Nat.card_le_card_of_surjective
+    (supportedDecompositionProduct F hF D p).block
+    (supportedDecompositionProduct F hF D p).block_surjective
+  simpa only [canonicalStar_card F hF.1 hF.2.1 p.val] using h
+
+/-- Exact local additive formula on the original shared-point carrier. -/
+theorem supportedPieceDeficit_eq_sum (hF : F.Intrinsic)
+    (D : SupportedPartitions F) :
+    supportedPieceDeficit F D =
+      ∑ p : ↥(sharedAtomPoints F hF.1 hF.2.1),
+        (pointMultiplicity F hF.1 hF.2.1 p.val -
+          Nat.card ((supportedDecompositionProduct F hF D p).Block)) := by
+  classical
+  have hsum := Finset.sum_tsub_distrib
+    (Finset.univ : Finset ↥(sharedAtomPoints F hF.1 hF.2.1))
+    (fun p _ => supportedProduct_block_card_le F hF D p)
+  rw [hsum]
+  have hcount := supportedPartitions_block_card_accounting F hF D
+  unfold supportedPieceDeficit
+  omega
+
+/-- Subtraction is justified: every original supported piece contains an atom. -/
+theorem supportedPieces_add_deficit (hF : F.Intrinsic)
+    (D : SupportedPartitions F) :
+    Nat.card D.val.Block + supportedPieceDeficit F D = Nat.card (Index F) := by
+  classical
+  have hle :
+      (∑ p : ↥(sharedAtomPoints F hF.1 hF.2.1),
+        Nat.card ((supportedDecompositionProduct F hF D p).Block)) ≤
+      ∑ p : ↥(sharedAtomPoints F hF.1 hF.2.1),
+        pointMultiplicity F hF.1 hF.2.1 p.val :=
+    Finset.sum_le_sum (fun p _ => supportedProduct_block_card_le F hF D p)
+  have hcount := supportedPartitions_block_card_accounting F hF D
+  unfold supportedPieceDeficit
+  omega
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedPieceDeficitAccounting
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedPieceDeficitAccounting
+========================================================================== -/
+
+/- ==========================================================================
+BEGIN SOURCE MODULE: Erdos593.TripleSystem.SupportedDecompositionGrading
+Source: Erdos593/TripleSystem/SupportedDecompositionGrading.lean
+Normalized SHA-256: 50e6ad4dc827ad5520d3e258187ecc5bc37ad3c74ccfb8104e4b8329feca5263
+========================================================================== -/
+section Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedDecompositionGrading
+
+/-!
+# Actual-piece grading of supported decompositions
+
+This adapter retains the actual original-edge quotient cardinality. Finite
+local partition covers are transported through the accepted order isomorphism;
+the accepted piece-count equation then identifies a supported cover with the
+loss of exactly one actual piece. No ambient-cover assertion, reducedness,
+connected-parent hypothesis, or nonempty-edge premise is used.
+
+Candidate only. In particular no maximal-chain-length or height endpoint is
+claimed by this source without its own subsequent exact statement and review.
+-/
+
+namespace Erdos593.TripleSystem.CanonicalAtom
+
+open E593Separator
+
+universe u
+
+private theorem partition_block_card_antitone {A : Type u} [Finite A]
+    {R S : Partition A} (h : R ≤ S) : Nat.card S.Block ≤ Nat.card R.Block :=
+  E593FiniteSetoid.quotient_card_antitone
+    ((E593Standard.partitionSetoidOrderIso A).monotone h)
+
+private theorem partition_block_card_strict_antitone {A : Type u} [Finite A]
+    {R S : Partition A} (h : R < S) : Nat.card S.Block < Nat.card R.Block :=
+  E593FiniteSetoid.quotient_card_strict_antitone
+    ((E593Standard.partitionSetoidOrderIso A).strictMono h)
+
+private theorem partition_block_card_of_covBy {A : Type u} [Finite A]
+    {R S : Partition A} (h : R ⋖ S) : Nat.card R.Block = Nat.card S.Block + 1 :=
+  E593FiniteSetoid.quotient_card_of_covBy
+    ((apply_covBy_apply_iff (E593Standard.partitionSetoidOrderIso A)).mpr h)
+
+variable {V E : Type u} [Fintype V] [Fintype E]
+  [DecidableEq V] [DecidableEq E]
+variable (F : TripleSystem V E) [DecidableRel F.levi.Adj]
+
+/-- Strict supported coarsening strictly decreases the actual original-edge piece count. -/
+theorem supportedPartitions_block_card_strict_antitone (hF : F.Intrinsic)
+    {D D' : SupportedPartitions F} (h : D < D') :
+    Nat.card D'.val.Block < Nat.card D.val.Block := by
+  classical
+  haveI : Finite (Index F) :=
+    Finite.of_surjective _ (atomOf_surjective F hF.1 hF.2.1)
+  have hprod := (supportedDecompositionProduct F hF).strictMono h
+  obtain ⟨hle, p, hp⟩ := Pi.lt_def.mp hprod
+  have hsum :
+      (∑ q : ↥(sharedAtomPoints F hF.1 hF.2.1),
+        Nat.card ((supportedDecompositionProduct F hF D' q).Block)) <
+      ∑ q : ↥(sharedAtomPoints F hF.1 hF.2.1),
+        Nat.card ((supportedDecompositionProduct F hF D q).Block) := by
+    apply Finset.sum_lt_sum
+    · intro q _
+      exact partition_block_card_antitone (hle q)
+    · exact ⟨p, Finset.mem_univ p, partition_block_card_strict_antitone hp⟩
+  have hD := supportedPartitions_block_card_accounting F hF D
+  have hD' := supportedPartitions_block_card_accounting F hF D'
+  omega
+
+/-- Each supported cover merges exactly two actual original-edge pieces. -/
+theorem supportedPartitions_block_card_of_covBy (hF : F.Intrinsic)
+    {D D' : SupportedPartitions F} (h : D ⋖ D') :
+    Nat.card D.val.Block = Nat.card D'.val.Block + 1 := by
+  classical
+  haveI : Finite (Index F) :=
+    Finite.of_surjective _ (atomOf_surjective F hF.1 hF.2.1)
+  obtain ⟨p, hp, hfixed⟩ := (supportedPartitions_covBy_iff F hF D D').mp h
+  let I := ↥(sharedAtomPoints F hF.1 hF.2.1)
+  let a : I → ℕ := fun q => Nat.card ((supportedDecompositionProduct F hF D q).Block)
+  let b : I → ℕ := fun q => Nat.card ((supportedDecompositionProduct F hF D' q).Block)
+  have hpcount : a p = b p + 1 := partition_block_card_of_covBy hp
+  have herase :
+      (∑ q ∈ (Finset.univ : Finset I).erase p, a q) =
+        ∑ q ∈ (Finset.univ : Finset I).erase p, b q := by
+    apply Finset.sum_congr rfl
+    intro q hq
+    exact congrArg (fun R : Partition (Star (atomIncident F hF.1 hF.2.1) q.val) =>
+      Nat.card R.Block)
+      (hfixed q (Finset.mem_erase.mp hq).1)
+  have ha := Finset.add_sum_erase (Finset.univ : Finset I) a (Finset.mem_univ p)
+  have hb := Finset.add_sum_erase (Finset.univ : Finset I) b (Finset.mem_univ p)
+  have hsum : (∑ q : I, a q) = (∑ q : I, b q) + 1 := by omega
+  have hD := supportedPartitions_block_card_accounting F hF D
+  have hD' := supportedPartitions_block_card_accounting F hF D'
+  change Nat.card D.val.Block + _ = Nat.card (Index F) + ∑ q : I, a q at hD
+  change Nat.card D'.val.Block + _ = Nat.card (Index F) + ∑ q : I, b q at hD'
+  omega
+
+/-- Cover recognition in the supported subtype by actual piece count, in refinement order. -/
+theorem supportedPartitions_covBy_iff_block_card (hF : F.Intrinsic)
+    (D D' : SupportedPartitions F) :
+    D ⋖ D' ↔ D < D' ∧ Nat.card D.val.Block = Nat.card D'.val.Block + 1 := by
+  constructor
+  · intro h
+    exact ⟨h.lt, supportedPartitions_block_card_of_covBy F hF h⟩
+  · rintro ⟨h, hcard⟩
+    refine ⟨h, ?_⟩
+    intro T hDT hTD'
+    have h1 := supportedPartitions_block_card_strict_antitone F hF hDT
+    have h2 := supportedPartitions_block_card_strict_antitone F hF hTD'
+    omega
+
+/-- The actual atom-relative deficit increases by one precisely at supported covers. -/
+theorem supportedPartitions_covBy_iff_piece_deficit (hF : F.Intrinsic)
+    (D D' : SupportedPartitions F) :
+    D ⋖ D' ↔ D < D' ∧ supportedPieceDeficit F D' = supportedPieceDeficit F D + 1 := by
+  have hD := supportedPieces_add_deficit F hF D
+  have hD' := supportedPieces_add_deficit F hF D'
+  rw [supportedPartitions_covBy_iff_block_card F hF D D']
+  constructor
+  · rintro ⟨h, hcard⟩
+    exact ⟨h, by omega⟩
+  · rintro ⟨h, hdeficit⟩
+    exact ⟨h, by omega⟩
+
+end Erdos593.TripleSystem.CanonicalAtom
+
+end Erdos593SelfContained_Module_Erdos593_TripleSystem_SupportedDecompositionGrading
+/- ==========================================================================
+END SOURCE MODULE: Erdos593.TripleSystem.SupportedDecompositionGrading
+========================================================================== -/
+
+/- ==========================================================================
 BEGIN SOURCE MODULE: Erdos593
 Source: Erdos593.lean
-Normalized SHA-256: c3526ff3d8f15b2e52094e5f2aae5e38f7f2904b76b7773086fa33ba2756e0c3
+Normalized SHA-256: 536bf0511bf16481f44057bf018532251528d030f28f90969ef69953ba0e1825
 ========================================================================== -/
 section Erdos593SelfContained_Module_Erdos593
 

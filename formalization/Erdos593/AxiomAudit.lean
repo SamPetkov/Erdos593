@@ -1,3 +1,7 @@
+import Erdos593.Order.FiniteSetoidCover
+import Erdos593.TripleSystem.SupportedDecompositionCovers
+import Erdos593.TripleSystem.SupportedPieceDeficitAccounting
+import Erdos593.TripleSystem.SupportedDecompositionGrading
 import Erdos593.TripleSystem.SupportedPieceAccountingCandidate
 import Erdos593.TripleSystem.AtomicBoundaryNormalForms
 import Erdos593.Graph.IncidenceProfile
@@ -468,3 +472,22 @@ import Erdos593.TripleSystem.CanonicalAtomAmalgamLabels
 #print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPartitions_full_block_card_accounting
 #print axioms Erdos593.TripleSystem.CanonicalAtom.nonshared_piece_incidence_card
 #print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPartitions_block_card_accounting
+
+#print axioms E593FiniteSetoid.map_of_le_surjective
+#print axioms E593FiniteSetoid.quotient_card_antitone
+#print axioms E593FiniteSetoid.quotient_card_strict_antitone
+#print axioms E593FiniteSetoid.exists_one_class_coarsening
+#print axioms E593FiniteSetoid.quotient_card_of_covBy
+#print axioms E593FiniteSetoid.covBy_of_quotient_card
+#print axioms E593FiniteSetoid.covBy_iff_quotient_card
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPartitions_covBy_iff
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPartitions_covBy_iff_exists_unique
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPartitions_standard_covBy_iff
+#print axioms Erdos593.TripleSystem.CanonicalAtom.obligatory_supportedPartitions_covBy_iff
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedProduct_block_card_le
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPieceDeficit_eq_sum
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPieces_add_deficit
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPartitions_block_card_strict_antitone
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPartitions_block_card_of_covBy
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPartitions_covBy_iff_block_card
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPartitions_covBy_iff_piece_deficit

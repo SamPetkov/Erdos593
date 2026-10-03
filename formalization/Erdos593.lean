@@ -208,6 +208,10 @@ import Erdos593.TripleSystem.SupportedClassicalBlockLabels
 import Erdos593.TripleSystem.AtomicBoundaryNormalForms
 import Erdos593.Graph.IncidenceProfile
 import Erdos593.TripleSystem.SupportedPieceAccountingCandidate
+import Erdos593.Order.FiniteSetoidCover
+import Erdos593.TripleSystem.SupportedDecompositionCovers
+import Erdos593.TripleSystem.SupportedPieceDeficitAccounting
+import Erdos593.TripleSystem.SupportedDecompositionGrading
 
 /-!
 # Erdős Problem 593
