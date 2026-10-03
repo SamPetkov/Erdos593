@@ -1,0 +1,2396 @@
+\documentclass[a4paper,11pt,reqno]{amsart}
+
+\usepackage[textwidth=31pc,textheight=48pc,centering]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{etoolbox}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{mathrsfs}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{enumitem}
+\usepackage{xurl}
+\usepackage[hidelinks,pdfencoding=auto,psdextra]{hyperref}
+\usepackage{bookmark}
+
+% Annals-like text dimensions; standard AMS author-review manuscript.
+% No journal banner, publication DOI, acceptance date or publisher copyright.
+\patchcmd{\abstract}{\leftmargin3pc}{\leftmargin1.5pc}{}%
+  {\ClassError{amsart}{Abstract margin patch failed}{Restore the standard abstract environment.}}
+
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{1}
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{3em}
+\setlist[itemize]{leftmargin=2em,itemsep=0.12em,topsep=0.35em}
+\setlist[enumerate]{leftmargin=2.2em,itemsep=0.12em,topsep=0.35em}
+\allowdisplaybreaks[2]
+\raggedbottom
+\Urlmuskip=0mu plus 1mu
+\frenchspacing
+\tolerance=1800
+\pretolerance=500
+\ifdefined\pdfgentounicode
+  \pdfgentounicode=1
+\fi
+
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\passthrough}[1]{#1}
+\newcommand{\proofpart}[1]{%
+  \par\smallskip\noindent\textit{#1.}\enspace\ignorespaces}
+
+\theoremstyle{plain}
+\newtheorem*{theoremA}{Theorem A}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem*{claim}{Claim}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\hypersetup{
+  hidelinks,pdfencoding=auto,psdextra,
+  pdftitle={Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra},
+  pdfauthor={Samuil Petkov},
+  pdfsubject={A canonical atom decomposition, exact finite spectra, and Lean verification for obligatory triple systems},
+  pdfkeywords={Erdos Problem 593, obligatory triple systems, uncountable chromatic number, canonical decomposition, partition lattices, Lean 4},
+  pdfcreator={LaTeX with amsart; author-review manuscript},
+  pdfproducer={pdfTeX},
+  pdfdisplaydoctitle=true
+}
+
+\title[Obligatory triple systems]{Obligatory triple systems: canonical atoms and exact finite spectra}
+\author{Samuil Petkov}
+\address{École normale supérieure--PSL, 45 rue d'Ulm, 75005 Paris, France}
+\email{samuil.petkov@ens.psl.eu}
+\subjclass[2020]{Primary 05C65; Secondary 05C15, 05C40, 05C63, 06A07, 03E05}
+\keywords{Erdős Problem 593, obligatory triple systems, uncountable chromatic number, canonical decomposition, partition lattices, Lean~4}
+\date{3 October 2026}
+
+\begin{document}
+
+\begin{abstract}
+Erdős Problem~593 asks which finite triple systems occur in every triple
+system of uncountable chromatic number.  We give an independent proof of the
+classification and use its canonical decomposition to determine exact
+finite spectra.  After isolated vertices are removed, a system is
+obligatory if and only if it is linear, every hyperedge-node of its Levi
+graph is incident with a bridge, and every Berge cycle has even length.
+Such a system is a forest assembly of single triples and private-vertex
+expansions of finite $2$-connected bipartite graphs.  The cyclic ranks and
+core orders constrain the possible atom counts, while the attachment
+profile determines the one-point factorization lattice as a product of
+partition lattices.  We obtain exact parameter, atom-count and lattice
+spectra, including the parity obstruction at cycle rank one.  The
+classification is verified in Lean~4; the scope of verification for the
+extensions is recorded separately.  All arguments are in ZFC.
+\end{abstract}
+
+\maketitle
+
+\section*{Introduction}\label{introduction}
+
+Although the host systems are infinite, the classification is determined by
+finite structure.  A finite triple system is \emph{obligatory} if it occurs
+in every triple system of uncountable chromatic number.  Erdős asked for a
+characterisation of these finite systems \citep{erdos1995}; the question is
+catalogued as Erdős Problem~593 \citep{bloom593}.  We give both constructive
+and intrinsic descriptions of the answer.
+
+For a finite graph $J$, write $J^+$ for its private-vertex expansion.  Let
+$\mathcal B$ be the smallest class containing $J^+$ for every finite
+bipartite graph $J$ and every finite edgeless triple system, and closed under
+finite disjoint unions and one-point amalgamations.  Membership in
+$\mathcal B$ is understood up to triple-system isomorphism.  If $F$ is a
+triple system, let $F^\circ$ denote the system obtained by deleting its
+isolated vertices.
+
+\begin{theoremA}\label{theorem-a-exact-characterisation}
+For every finite triple system $F$, the following are equivalent:
+\begin{enumerate}
+\item $F$ is obligatory;
+\item $F\in\mathcal B$;
+\item $F^\circ$ is linear, every hyperedge-node of $I(F^\circ)$ is incident
+with a bridge, and every Berge cycle of $F^\circ$ has even length.
+\end{enumerate}
+\end{theoremA}
+
+The classification first appeared in Li's preprint, posted on 23 June 2026
+\citep[Theorem~1.1]{li2026}.  The present proof and Lean implementation were
+developed independently.  Both proofs use one-apex sequence lifts and Levi
+bridges, but their finite trace arguments differ: Li uses a bridge-trace
+formulation and graph derivatives \citep[Sections~3--4 and Theorem~4.6]{li2026},
+whereas we decompose traces into expansion fibres and a support-incidence
+forest.  We cite Li's work for chronology and comparison; none of its results
+is used below as a black box.
+The classification also raises a finite structural question: which features
+of an obligatory system are forced by its cyclic content, and which can vary
+through one-point assembly?  The canonical atom normal form separates these
+two roles.  The parameter and atom-count spectra quantify the constraints
+on the cores and the number of atoms.  An exact deficit identity measures
+the cost of splitting cyclic rank or increasing core order.  The local
+partition-lattice product describes the remaining assembly freedom, including
+sharp bounds on the number of decompositions with a prescribed number of
+pieces.  We develop these
+consequences alongside direct positive and negative proofs of the
+classification and its Lean formalisation.
+
+The graph analogue was proved by Erdős and Hajnal: the obligatory finite
+graphs are exactly the bipartite graphs
+\citep[Corollary~5.6 and Theorem~7.4]{erdoshajnal1966}.  The classical
+nonlinearity obstruction for uniform hypergraphs is due to Erdős, Hajnal,
+and Rothschild \citep[Theorem~2, p.~532]{ehr1973}.  Obligatory triple
+systems were studied further by \citet{egh1975}, \citet{komjath2001},
+\citet{hajnalkomjath2008}, and \citet{komjath2008}; the expansion theorem of
+\citet[Theorem~1.2]{reiher2024} supplies the positive atoms used below.
+
+Uncountable chromatic number is essential here.  For finite hosts,
+\citet[Proposition~1.3(ii)]{wang2026} record that the weak chromatic numbers
+of $F$-free uniform hypergraphs are bounded exactly when $F$ contains no Berge
+cycle.  This does not classify obligatory systems: the expansion $C_4^+$
+contains a Berge cycle and can be avoided by finite triple systems of
+arbitrarily large chromatic number, yet it occurs in every uncountably
+chromatic triple system by Theorem~A.  Finite high-chromatic avoidance and
+uncountable obligatoriness are therefore different questions.
+
+The proof separates into positive and negative directions.  For the positive
+direction, a probabilistic rainbow lemma provides the local injectivity
+needed to force complete bipartite expansions.  A rooted-abundance lemma then
+establishes closure under one-point amalgamation, including at singular
+uncountable cardinals.  After the bridges of the Levi graph are deleted, each
+remaining active component is the expansion of a finite bipartite graph.  The
+quotient is a forest, whose running-intersection property determines a valid
+amalgamation order.
+
+For the negative direction, we use an independently developed one-apex
+sequence lift; \citet[Sections~3--4]{li2026} gives a parallel formulation.
+The lift transfers uncountable chromatic
+number from a graph to a triple system while controlling every finite linear
+trace.  The trace theorem is proved by decomposing the trace into expansion
+fibres whose support-incidence graph is a forest, so distinct fibres can meet
+only at cut points.  Consequently, neither a bridge-free hyperedge-node nor a
+Berge cycle can be assembled across fibres.  Each of the three failures of
+the intrinsic criterion has a corresponding host: an Erdős--Rado linear host
+excludes nonlinearity, the lift of $K_{\omega_1}$ excludes a missing bridge,
+and a classical Erdős--Hajnal graph of uncountable chromatic number whose odd
+girth exceeds a prescribed finite bound excludes an odd Berge cycle.
+
+All embeddings are injective and non-induced, and the argument is carried out
+in ZFC.  For the classification proof, the imported black-box inputs are the de Bruijn--Erdős
+compactness theorem \citep[Theorem~1, pp.~371--373]{debruijn1951}, the
+Erdős--Hajnal high-odd-girth theorem
+\citep[Theorem~7.4, p.~76]{erdoshajnal1966}, and the pair case of the
+Erdős--Rado partition theorem
+\citep[Theorem~4(i), formula~(95), p.~471]{erdosrado1956}.
+The later block-formulation corollary also uses Komjáth's block reduction
+\citep{komjath2001}.
+
+\section{Preliminaries}\label{conventions-and-definitions}
+
+A \emph{triple system} is a simple \(3\)-uniform hypergraph \(H=(V(H),E(H))\), so \(E(H)\subseteq[V(H)]^3\). A colouring \(c:V(H)\to\lambda\) is \emph{proper} when no hyperedge is monochromatic, and \(\chi(H)\) is the least cardinal \(\lambda\) admitting such a colouring. An embedding of a triple system \(F\) in \(H\) is an injective map \(f:V(F)\to V(H)\) such that \(f[e]\in E(H)\) for every \(e\in E(F)\); embeddings are not required to be induced. A finite triple system \(F\) is \emph{obligatory} if every triple system \(H\) with \(\chi(H)>\aleph_0\) contains an embedding of \(F\). A point is \emph{isolated} if it belongs to no hyperedge, and \(F^\circ\) denotes the result of deleting all isolated points.
+
+All ordinary graphs in this paper are simple. A triple system is \emph{linear} when any two distinct hyperedges meet in at most one point. Its \emph{Levi graph} \(I(F)\) is the bipartite graph with classes \(V(F)\) and \(E(F)\), where a point-node \(p\) is adjacent to a hyperedge-node \(e\) exactly when \(p\in e\). A \emph{bridge} is an edge of a graph whose deletion increases the number of connected components. A \emph{Berge cycle of length} \(\ell\ge2\) consists of distinct points \(p_0,\ldots,p_{\ell-1}\) and distinct hyperedges \(e_0,\ldots,e_{\ell-1}\) such that \(p_i\in e_i\cap e_{i+1}\), with indices modulo \(\ell\). Equivalently, it is a simple cycle of length \(2\ell\) in \(I(F)\). For graph terminology and the incidence-graph interpretation of hypergraph connectivity, see \citet[Chapters~1 and~3]{diestel2017} and \citet{bahmanian2015}.
+
+For a finite simple graph \(J\), its \emph{private-vertex expansion} \(J^+\) has vertex set
+\[
+V(J)\mathbin{\dot\cup}\{p_a:a\in E(J)\}
+\]
+and hyperedges \(\{u,v,p_{\{u,v\}}\}\) for \(\{u,v\}\in E(J)\), where the points \(p_a\) are new and pairwise distinct. A \emph{one-point amalgamation} of vertex-disjoint triple systems \(F_0,F_1\) is obtained by choosing \(x_i\in V(F_i)\), identifying \(x_0\) with \(x_1\), and making no other identifications or new hyperedges. Finite disjoint unions and finite edgeless systems include the empty cases.
+
+\paragraph{Finite reductions.}\label{finite-reductions}
+
+\begin{lemma}[Isolated-vertex reduction]\label{lemma-1.1-isolated-vertex-reduction}
+
+Let \(F\) be a finite triple system and let \(F^\circ\) be obtained by deleting all isolated vertices. Then
+
+\[
+F\text{ is obligatory}\iff F^\circ\text{ is obligatory},
+\]
+
+and
+
+\[
+F\in\mathcal B\iff F^\circ\in\mathcal B.
+\]
+
+\end{lemma}
+\begin{proof}
+If \(F^\circ\) is obligatory and \(H\) has uncountable chromatic number, then \(H\) has infinitely many vertices. After embedding the finite system \(F^\circ\), map the isolated vertices of \(F\) injectively to unused host vertices. Containment is non-induced, so additional host edges are irrelevant. The converse follows because \(F^\circ\) is a subhypergraph of \(F\).
+
+For membership in \(\mathcal B\), the implication \(F^\circ\in\mathcal B\Rightarrow F\in\mathcal B\) follows by taking the disjoint union with a finite edgeless system.
+
+For the converse, use structural induction on a construction of \(F\) in \(\mathcal B\). If \(F=J^+\), delete the isolated graph vertices of \(J\) to obtain \(J_0\); then \((J^+)^\circ=J_0^+\in\mathcal B\). If \(F\) is edgeless, its reduction is the empty edgeless system. Reduction commutes with disjoint union.
+
+Suppose finally that \(F\) is a one-point amalgamation of \(F_0\) and
+\(F_1\), identifying \(x_i\in V(F_i)\). By induction,
+\(F_0^\circ,F_1^\circ\in\mathcal B\). If both selected vertices are
+nonisolated in their factors, then \(F^\circ\) is the one-point amalgamation
+of the two reductions at those vertices. If exactly one selected vertex is
+nonisolated, the isolated side disappears at the identified point and
+\(F^\circ\) is the disjoint union of the two reductions. The same description
+applies when both selected vertices are isolated, because the identified
+point is then deleted. Hence \(F^\circ\in\mathcal B\) in every case.
+\end{proof}
+
+We may therefore suppress isolated vertices in the substantive argument and
+restore them at the end.
+
+\begin{lemma}[Finite deletion]\label{lemma-1.2-finite-deletion}
+
+If \(\chi(H)>\aleph_0\) and \(S\subseteq V(H)\) is finite, then
+
+\[
+\chi(H-S)>\aleph_0.
+\]
+
+\end{lemma}
+\begin{proof}
+Otherwise a countable colouring of \(H-S\), together with finitely many fresh colours for \(S\), would colour \(H\) countably.
+\end{proof}
+
+\paragraph{Colouring and closure tools.}\label{colouring-and-closure-tools}
+
+\begin{lemma}[Two elementary colouring facts]\label{lemma-1.3-two-elementary-colouring-facts}
+
+We use the following two facts repeatedly.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  If \(E(H)=E_1\cup\cdots\cup E_r\) and every \((V(H),E_i)\) is countably chromatic, then \(H\) is countably chromatic.
+\item
+  If a graph \(G\) admits an orientation in which every vertex has outdegree at most \(d<\omega\), then \(\chi(G)\le 2d+1\).
+\end{enumerate}
+
+\end{lemma}
+\begin{proof}
+For the first assertion, take the product of the \(r\) countable colourings.
+
+For the second, every finite subgraph has at most \(d|V|\) edges and therefore a vertex of degree at most \(2d\). It is \((2d+1)\)-colourable by greedy deletion. The de Bruijn--Erdős compactness theorem \citep[Theorem~1]{debruijn1951} then gives a \((2d+1)\)-colouring of all of \(G\).
+\end{proof}
+
+\begin{lemma}[Closure-chain lemma]\label{lemma-1.4-closure-chain-lemma}
+
+Let \(\kappa\) be an uncountable cardinal, let \(1\le r<\omega\), and let
+
+\[
+\Phi:[\kappa]^r\longrightarrow[\kappa]^{<\omega}
+\]
+
+have uniformly finite values. There is an increasing continuous chain
+
+\[
+\varnothing=M_0\subseteq M_1\subseteq\cdots
+\subseteq M_i\subseteq\cdots\qquad(i<\operatorname{cf}\kappa)
+\]
+
+such that
+
+\[
+\bigcup_{i<\operatorname{cf}\kappa}M_i=\kappa,
+\qquad |M_i|<\kappa,
+\]
+
+and every \(M_i\) is \(\Phi\)-closed:
+
+\[
+a\in[M_i]^r\quad\Longrightarrow\quad\Phi(a)\subseteq M_i.
+\]
+
+\end{lemma}
+\begin{proof}
+Choose sets \(A_i\subseteq\kappa\), each of cardinality below \(\kappa\), whose union is \(\kappa\). At a successor stage close \(M_i\cup A_i\) under \(\Phi\), iterating the operation \(\omega\) times. Since \(\Phi\) is finitary and finite-valued, this does not increase an infinite cardinal below \(\kappa\). At a limit stage take the union. A union of an increasing chain of sets closed under a finitary operation remains closed; and because the stage is below \(\operatorname{cf}\kappa\), its cardinality remains below \(\kappa\).
+\end{proof}
+
+Write
+
+\[
+I_i=M_{i+1}\setminus M_i.
+\]
+
+Then \((I_i)_{i<\operatorname{cf}\kappa}\) partitions \(\kappa\), and \(M_i=\bigcup_{j<i}I_j\).
+
+\section{A bipartite subgraph lemma}\label{the-graph-lemma-needed-for-the-expansion-atom}
+
+The following finite complete-bipartite lemma is a consequence of
+\citet[Corollary~5.6, p.~72]{erdoshajnal1966}.  We give a short
+closure-chain proof because the construction will also be used later.
+
+\begin{lemma}[Uncountable chromatic number forces complete bipartite graphs]\label{lemma-2.1-uncountable-chromatic-number-forces-complete-bipartite-graphs}
+
+For every positive integer \(n\), every graph of uncountable chromatic number contains \(K_{n,n}\).
+
+\end{lemma}
+\begin{proof}
+Suppose otherwise, and choose a \(K_{n,n}\)-free graph \(G\) of uncountable chromatic number whose vertex cardinality \(\kappa\) is minimal.
+
+For \(A\in[\kappa]^n\), let
+
+\[
+N(A)=\{v\in\kappa:v\text{ is adjacent to every member of }A\}.
+\]
+
+Because \(G\) is \(K_{n,n}\)-free, \(|N(A)|<n\). Apply Lemma 1.4 to \(A\mapsto N(A)\), and let \(M_i,I_i\) be the resulting chain and layers.
+
+By minimality of \(\kappa\), every induced graph \(G[I_i]\) is countably chromatic. Let \(G^\times\) consist of the edges joining distinct layers, and orient each such edge from the later endpoint toward the earlier endpoint. If \(v\in I_i\) had \(n\) earlier neighbours, those neighbours would form an \(n\)-set \(A\subseteq M_i\), and closure would give
+
+\[
+v\in N(A)\subseteq M_i,
+\]
+
+contrary to \(v\in I_i\). Thus the orientation of \(G^\times\) has outdegree at most \(n-1\). By Lemma 1.3, \(G^\times\) is finitely colourable.
+
+Colour each \(G[I_i]\) with colours in \(\omega\), reusing the same palette on all layers, and combine this with a finite proper colouring of \(G^\times\). The resulting countable product colouring is proper on all of \(G\), a contradiction.
+\end{proof}
+
+\section{Bipartite expansions}\label{private-vertex-expansions-of-bipartite-graphs-are-obligatory}
+
+\paragraph{Rainbow bipartite submatrices.}\label{rainbow-bipartite-submatrices}
+
+\begin{lemma}[Rainbow bipartite submatrices]\label{lemma-3.1-rainbow-bipartite-submatrices}
+
+For all positive integers \(n,t\), there exists \(q=q(n,t)\) with the following property. Suppose the edges of \(K_{q,q}\) are coloured, with an arbitrary colour set, so that at every vertex each individual colour occurs on fewer than \(t\) incident edges. Then there are \(n\)-element subsets \(X'\) and \(Y'\) of the two vertex classes such that all \(n^2\) edges between \(X'\) and \(Y'\) have distinct colours.
+
+\end{lemma}
+\begin{proof}
+Choose independent uniformly random \(n\)-subsets \(X'\) and \(Y'\). For every unordered pair \(P\) of distinct same-coloured edges, let \(I_P\) be the indicator that both edges of \(P\) lie in the selected \(K_{n,n}\), and put
+\[
+ Z=\sum_P I_P.
+\]
+Thus \(Z=0\) exactly when all selected edges have distinct colours.
+
+Let \(m_\gamma\) be the number of edges of colour \(\gamma\). The local bound gives
+
+\[
+m_\gamma\le(t-1)q.
+\]
+
+At a fixed vertex and for a fixed colour \(\gamma\), fewer than \(t\)
+incident edges have colour \(\gamma\). Summing
+\(\binom{d_{v,\gamma}}2\le(d_{v,\gamma})(t-1)/2\) over the \(2q\)
+vertices shows that the number of same-coloured pairs sharing a vertex is
+at most \((t-1)q^2\). The total number of same-coloured pairs is at most
+
+\[
+\sum_\gamma\binom{m_\gamma}{2}
+\le \frac12\bigl(\max_\gamma m_\gamma\bigr)\sum_\gamma m_\gamma
+\le \frac12(t-1)q^3.
+\]
+
+If the two edges share a vertex in the left class, their exact selection
+probability is
+\[
+ \frac nq\frac{(n)_2}{(q)_2};
+\]
+the same formula holds when the shared vertex is on the right. If the two
+edges are disjoint, the exact probability is
+\[
+ \left(\frac{(n)_2}{(q)_2}\right)^2.
+\]
+For \(q\ge2n\), these are at most \(2n^3/q^3\) and \(4n^4/q^4\),
+respectively. By linearity of expectation,
+
+\[
+\mathbb{E}\!\left[Z\right]
+ \le\frac{2(t-1)n^3}{q}+\frac{2(t-1)n^4}{q}.
+\]
+
+This is below \(1\) for sufficiently large \(q\). Since \(Z\) is
+integer-valued and nonnegative, it cannot satisfy \(Z\ge1\) for every
+choice when \(\mathbb{E}\!\left[Z\right]<1\). Hence some choice has \(Z=0\), and the
+selected \(K_{n,n}\) is rainbow.
+\end{proof}
+
+\paragraph{The complete bipartite expansion atom.}\label{the-complete-bipartite-expansion-atom}
+\begin{proposition}[The complete bipartite expansion atom]\label{proposition-3.2-the-complete-bipartite-expansion-atom}
+
+For every positive integer \(n\), the triple system \(K_{n,n}^{+}\) is obligatory.
+
+\end{proposition}
+\begin{proof}
+Suppose not. Choose a \(K_{n,n}^{+}\)-free triple system
+
+\[
+H=(\kappa,E)
+\]
+
+with \(\chi(H)>\aleph_0\) and with \(\kappa\) minimal.
+
+For a pair \(xy\), write
+
+\[
+d_H(xy)=|\{z:\{x,y,z\}\in E\}|.
+\]
+
+Set \(t=3n^2+1\) and define a graph \(R\) on \(\kappa\) by
+
+\[
+xy\in E(R)\quad\Longleftrightarrow\quad d_H(xy)\ge t.
+\]
+
+\medskip\noindent\textbf{Claim 3.2.1 (the graph \(R\) is countably chromatic).}
+
+Otherwise Lemma 2.1 gives a \(K_{n,n}\) in \(R\), with core vertex set \(C\), \(|C|=2n\). For each of its \(n^2\) graph edges \(xy\), choose a third vertex \(p_{xy}\) with
+
+\[
+\{x,y,p_{xy}\}\in E,
+\]
+
+avoiding \(C\) and all previously chosen private vertices. At every stage fewer than \(2n+n^2<t\) vertices are forbidden, while \(xy\) has at least \(t\) possible third vertices. Thus the \(p_{xy}\) can be chosen distinct and outside \(C\), producing a copy of \(K_{n,n}^{+}\), a contradiction. \(\square\)
+
+Let
+
+\[
+E_1=\{e\in E:\text{some pair contained in }e\text{ is an edge of }R\},
+\qquad E_2=E\setminus E_1.
+\]
+
+A proper colouring of \(R\) is a proper colouring of \((\kappa,E_1)\), since every \(E_1\)-edge contains an \(R\)-edge. Hence \(\chi(\kappa,E_1)\le\aleph_0\), and therefore
+
+\[
+\chi(\kappa,E_2)>\aleph_0. \tag{3.1}
+\]
+
+For a pair \(xy\), define
+
+\[
+\Phi(xy)=
+\begin{cases}
+\{z:\{x,y,z\}\in E\},&d_H(xy)<t,\\
+\varnothing,&d_H(xy)\ge t.
+\end{cases}
+\]
+
+Apply Lemma 1.4 to \(\Phi\), obtaining \(M_i,I_i\).
+
+Every \(e\in E_2\) has at least two vertices in its highest layer. Indeed, suppose the highest layer met \(e\) only in \(z\in I_i\). Then the other pair \(xy=e\setminus\{z\}\) lies in \(M_i\). Since \(e\in E_2\), \(xy\notin R\), so \(d_H(xy)<t\). Closure gives \(z\in\Phi(xy)\subseteq M_i\), a contradiction.
+
+Thus every \(E_2\)-edge is either contained in one layer, or has exactly two vertices in its highest layer \(I_i\) and its third vertex in \(M_i\). Let \(E_i^*\) be the \(E_2\)-edges contained in \(I_i\). Since \(|I_i|<\kappa\) and \(H\) is \(K_{n,n}^{+}\)-free, minimality of \(\kappa\) gives \(\chi(I_i,E_i^*)\le\aleph_0\). Consequently
+
+\[
+E^*=\bigcup_iE_i^*
+\]
+
+is countably chromatic. By (3.1), the remaining crossing-edge system
+
+\[
+E^{**}=E_2\setminus E^*
+\]
+
+has uncountable chromatic number.
+
+For each \(i\), define a graph \(G_i\) on \(I_i\) by declaring \(xy\in E(G_i)\) when there is a \(\beta\in M_i\) such that \(\{x,y,\beta\}\in E^{**}\). If every \(G_i\) were countably chromatic, colour each \(I_i\) properly in \(G_i\), using the same countable palette on every layer. Every edge of \(E^{**}\) would then have differently coloured top-layer vertices, giving a countable colouring of \((\kappa,E^{**})\), a contradiction. Hence some \(G_i\) is uncountably chromatic.
+
+Choose \(q=q(n,t)\) from Lemma 3.1. Lemma 2.1 gives a \(K_{q,q}\) in \(G_i\), with sides \(X,Y\). For every \(xy\in X\times Y\), choose
+
+\[
+\beta_{xy}\in M_i
+\]
+
+such that \(\{x,y,\beta_{xy}\}\in E^{**}\), and regard \(\beta_{xy}\) as the colour of the edge \(xy\).
+
+This edge-colouring is locally \((t-1)\)-bounded. For example, if for fixed \(x\) and fixed \(\beta\) there were \(t\) different vertices \(y\) with \(\beta_{xy}=\beta\), then the pair \(\{x,\beta\}\) would have codegree at least \(t\). It would belong to \(R\), forcing the triples \(\{x,y,\beta\}\) into \(E_1\), contrary to their membership in \(E^{**}\subseteq E_2\). The same argument applies at vertices of \(Y\).
+
+Lemma 3.1 gives \(n\)-sets \(X'\subseteq X\), \(Y'\subseteq Y\) for which the \(\beta_{xy}\), \(x\in X'\), \(y\in Y'\), are all distinct. They lie in \(M_i\), whereas \(X'\cup Y'\subseteq I_i\), so none is a core vertex. The triples
+
+\[
+\{x,y,\beta_{xy}\},
+\qquad x\in X',\ y\in Y',
+\]
+
+form \(K_{n,n}^{+}\), the final contradiction.
+\end{proof}
+
+\begin{corollary}[Every finite bipartite expansion is obligatory]\label{corollary-3.3-every-finite-bipartite-expansion-is-obligatory}
+
+If \(J\) is any finite bipartite graph, then \(J^+\) is obligatory.
+
+\end{corollary}
+\begin{proof}
+Embed the two vertex classes of \(J\) in the two classes of some \(K_{n,n}\). Then \(J^+\) is a subhypergraph of \(K_{n,n}^+\). Obligatoriness is downward closed under non-induced containment: a copy of the larger finite system contains a copy of the smaller one. Apply Proposition 3.2.
+\end{proof}
+
+Corollary~3.3 also follows from \citet[Theorem~1.2]{reiher2024}.  The
+argument above gives a direct proof in the notation used here.
+
+\section{Closure properties}\label{closure-of-obligatoriness-under-the-operations-defining-mathcal-b}
+
+Closure under disjoint unions and one-point amalgamations is known; see
+\citet[pp.~233--238]{komjath2001} and the summary in
+\citet[p.~1]{reiher2024}.  We include complete proofs because the subsequent
+argument uses the rooted-abundance construction explicitly.
+
+\paragraph{Disjoint-union closure.}\label{disjoint-union-closure}
+
+\begin{lemma}[Disjoint-union closure]\label{lemma-4.1-disjoint-union-closure}
+
+The class of finite obligatory triple systems is closed under finite disjoint unions.
+
+\end{lemma}
+\begin{proof}
+Let \(F_1,F_2\) be obligatory and let \(H\) be uncountably chromatic. First find a copy of \(F_1\). Delete its finite vertex set. By Lemma 1.2 the remaining triple system is still uncountably chromatic, so it contains \(F_2\). The two copies are disjoint. Iteration proves the finite case.
+\end{proof}
+
+\paragraph{Rooted abundance and one-point amalgamation.}\label{rooted-abundance-and-one-point-amalgamation}
+
+\begin{definition}[Rooted abundance]\label{definition-4.2-rooted-abundance}
+
+Let \((F,r)\) be a finite rooted triple system with \(|V(F)|>1\). For a triple system \(H\) and \(m\ge1\), let \(R_m(F,r;H)\) be the set of vertices \(v\) for which there are \(m\) rooted copies of \(F\), all sending \(r\) to \(v\), whose off-root vertex sets are pairwise disjoint.
+
+\end{definition}
+\begin{lemma}[Rooted-abundance lemma]\label{lemma-4.3-rooted-abundance-lemma}
+
+If \((F,r)\) is finite, \(|V(F)|>1\), and \(F\) is obligatory, and if
+\(\chi(H)>\aleph_0\), then
+
+\[
+\chi\bigl(H[R_m(F,r;H)]\bigr)>\aleph_0.
+\]
+
+\end{lemma}
+\begin{proof}
+Put
+
+\[
+B=V(H)\setminus R_m(F,r;H).
+\]
+
+For each \(v\in B\), consider the family of off-root vertex sets of all
+copies of \(F\) rooted at \(v\). Because
+\(v\notin R_m(F,r;H)\), this family has matching number at most \(m-1\).
+Choose a maximal pairwise disjoint subfamily. It contains at most \(m-1\)
+members; let \(S_v\) be their union. Then
+
+\[
+|S_v|\le(m-1)(|V(F)|-1)=:D.
+\]
+
+By maximality, \(S_v\) meets the off-root part of every rooted copy at \(v\).
+Otherwise that off-root set would be disjoint from every member of the
+chosen subfamily and could be added to it.
+
+Form a graph \(D_B\) on \(B\) by joining \(v\) to each member of \(S_v\cap B\). If an edge is generated in both directions, assign it to one of its generators, and orient it away from that generator. Every vertex has outdegree at most \(D\), so Lemma 1.3 gives a finite proper colouring of \(D_B\).
+
+Let \(A\) be one colour class. Then
+
+\[
+S_v\cap A=\varnothing\qquad(v\in A).
+\]
+
+Consequently \(H[A]\) contains no copy of \(F\). Indeed, if \(\varphi\) were such a copy and \(v=\varphi(r)\), its off-root part would have to meet \(S_v\). All those off-root vertices lie in \(A\), contradicting \(S_v\cap A=\varnothing\). Since \(F\) is obligatory, every \(F\)-free triple system is countably chromatic. Thus each of the finitely many colour classes of \(D_B\) induces a countably chromatic subsystem. Tagging a vertex by its finite \(D_B\)-colour and its countable colour inside that class gives a countable proper colouring of \(H[B]\).
+
+If \(H[R_m(F,r;H)]\) were countably chromatic as well, tagging the two sides would give a countable colouring of \(H\). This contradicts \(\chi(H)>\aleph_0\).
+\end{proof}
+
+\begin{proposition}[One-point amalgamation closure]\label{proposition-4.4-one-point-amalgamation-closure}
+
+The class of finite obligatory triple systems is closed under one-point amalgamations.
+
+\end{proposition}
+\begin{proof}
+Let \(F_1,F_2\) be obligatory, with selected vertices \(r_1,r_2\), and let \(F\) be their one-point amalgamation. If one factor consists only of its selected vertex, the assertion is immediate. Otherwise set
+
+\[
+m=|V(F_2)|.
+\]
+
+By Lemma 4.3, the set
+
+\[
+R=R_m(F_1,r_1;H)
+\]
+
+induces an uncountably chromatic subsystem of every uncountably chromatic \(H\). Hence \(H[R]\) contains a copy of \(F_2\); write \(\varphi\) for its embedding and let \(v=\varphi(r_2)\).
+
+At \(v\) there are \(m\) rooted copies of \(F_1\) with pairwise disjoint off-root sets. The set \(\varphi(V(F_2)\setminus\{r_2\})\) has \(m-1\) vertices, so it meets at most \(m-1\) of those off-root sets. One rooted \(F_1\)-copy therefore avoids the \(F_2\)-copy outside \(v\). Their union is the required one-point amalgamation.
+\end{proof}
+
+Corollary 3.3, Lemma 4.1, Proposition 4.4, and the trivial edgeless case prove
+
+\[
+(2)\Longrightarrow(1). \tag{4.1}
+\]
+
+\section{The intrinsic decomposition}\label{equivalence-of-the-constructive-and-intrinsic-descriptions}
+
+We state the selected-incidence decomposition and its running-intersection
+argument in the explicit form used by the Lean development.  For a distinct
+structural formulation, compare \citet[Sections~4--5]{li2026}.
+
+We prove \((2)\Longleftrightarrow(3)\). Isolated vertices may be ignored by Lemma 1.1.
+
+\paragraph{Forward preservation.}\label{forward-preservation}
+
+\begin{proposition}[The intrinsic conditions are preserved by the generators and operations]\label{proposition-5.1-the-intrinsic-conditions-are-preserved-by-the-generators-and-operations}
+
+Every generator of \(\mathcal B\) satisfies the intrinsic conditions, and the conditions are preserved under finite disjoint unions and one-point amalgamations.
+
+\end{proposition}
+\begin{proof}
+For a bipartite graph \(J\), the expansion \(J^+\) is linear. Every hyperedge-node is joined to its private point by a bridge. A Berge cycle cannot use a private point, so the Berge cycles of \(J^+\) are precisely the ordinary graph cycles of \(J\), with the same lengths; these are even. Edgeless systems satisfy the conditions vacuously, and disjoint union plainly preserves them.
+
+Consider a one-point amalgamation. Hyperedges belonging to different factors intersect only in the identified point, so linearity is preserved. Its Levi graph is the vertex-sum of the two Levi graphs at a point-node. Every simple cycle in a vertex-sum lies wholly in one factor: a cycle crossing into the other factor would have to pass through the cut vertex twice. Consequently bridges in the factors remain bridges, and every Berge cycle lies in one factor and retains its parity. This uses the standard cut-vertex structure of graph blocks \citep[Chapter~3]{diestel2017}; the corresponding hypergraph separation terminology is discussed in \citet{bahmanian2015}.
+\end{proof}
+
+Thus
+
+\[
+(2)\Longrightarrow(3). \tag{5.1}
+\]
+
+\paragraph{Bridge-block reconstruction.}\label{bridge-block-reconstruction}
+
+\begin{proposition}[Bridge-block decomposition]\label{proposition-5.2-bridge-block-decomposition}
+
+Suppose \(F\) is finite, has no isolated vertices, and satisfies the three intrinsic conditions. Then \(F\in\mathcal B\).
+
+\end{proposition}
+\begin{proof}
+If \(E(F)=\varnothing\), then the assumption that \(F\) has no isolated vertices gives \(V(F)=\varnothing\), and \(F\) is an edgeless generator. Hence assume \(E(F)\ne\varnothing\). Put \(L=I(F)\), let \(B(L)\) be its set of bridges, and let \(\mathscr C\) be the set of connected components of \(L-B(L)\).
+
+Consider a hyperedge-node \(e\). Since \(e\) is incident with a bridge and has degree three, it has at most two nonbridge incidences. It cannot have exactly one: a nonbridge incidence lies on a cycle, and that cycle must leave \(e\) through a second nonbridge incidence. Therefore every hyperedge-node has either no nonbridge incidences or exactly two.
+
+\paragraph{The nontrivial components.}\label{the-nontrivial-components}
+
+Let \(C\in\mathscr C\) contain a nonbridge incidence. Every hyperedge-node \(e\in C\) has exactly two point-neighbours in \(C\). Contract each such \(e\) to an ordinary graph edge between those two point-neighbours. This produces a finite graph \(J_C\).
+
+The graph \(J_C\) is simple: parallel edges would correspond to two hyperedges of \(F\) sharing two points, contrary to linearity. Every cycle in \(J_C\) gives a Berge cycle of the same length in \(F\). Hence \(J_C\) has no odd cycle and is bipartite.
+
+Each hyperedge-node \(e\in C\) has a third point-neighbour \(p_e\) across a bridge. These third points satisfy:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(p_e\notin C\); otherwise a path in \(C\) from \(p_e\) to \(e\), together with the incidence \(ep_e\), would place that incidence on a cycle.
+\item
+  If \(e\ne f\) lie in \(C\), then \(p_e\ne p_f\); otherwise a path in \(C\) from \(e\) to \(f\), together with \(ep_e\) and \(p_ff\), would place those bridge incidences on a cycle.
+\end{enumerate}
+
+Define a map from \(J_C^+\) to the subsystem \(P_C\) formed by these
+hyperedges as follows. Send every graph vertex of \(J_C\) to the
+corresponding point-node of \(C\), send the private vertex indexed by the
+contracted edge associated with \(e\) to \(p_e\), and send that expanded edge
+to the hyperedge \(e\) of \(F\). The two observations above show that the
+vertex map is injective: the private points are pairwise distinct and lie
+outside \(C\). Every \(e\) has exactly the two contracted endpoints and
+\(p_e\) as its three vertices, so this map is incidence-preserving and
+surjective on the vertices and hyperedges of \(P_C\). Hence it is an
+isomorphism \(J_C^+\cong P_C\).
+
+\paragraph{Components consisting of one hyperedge-node.}\label{components-consisting-of-one-hyperedge-node}
+
+If a hyperedge-node \(e\) has no nonbridge incidence, it is an isolated component after the bridges are deleted. Its single triple is the expansion of a one-edge bipartite graph. Thus every hyperedge of \(F\) belongs to a piece \(P_C\) isomorphic to \(J^+\) for a finite bipartite graph \(J\). The hyperedge sets of these pieces partition \(E(F)\). Their vertex sets cover \(V(F)\): every point is incident with a hyperedge, and it either lies in that hyperedge-node's bridge-deleted component or is the point endpoint of a bridge leaving it.
+
+\paragraph{Quotient forest.}\label{quotient-forest}
+
+Contract every component of \(L-B(L)\). The original bridges become edges of a quotient multigraph \(T\). Two distinct bridges cannot join the same pair of bridge-deleted components: paths inside those two components, together with the two bridges, would form a cycle containing both, contradicting that they are bridges. Thus \(T\) is a simple graph.
+
+To see that \(T\) is a forest, suppose that it contained a cycle. Within
+each contracted component on this cycle, choose a path joining the
+endpoints of the two incident quotient edges. Concatenating these paths
+with the corresponding bridges gives a closed walk in \(L\) that traverses
+each of those bridges exactly once. This is impossible: deleting a bridge
+separates its endpoints, so every closed walk crosses the resulting cut an
+even number of times. Hence \(T\) is a forest.
+
+A vertex \(C\in V(T)=\mathscr C\) is called \emph{active} if the bridge-deleted component \(C\) contains a hyperedge-node. For an active \(C\), the piece \(P_C\) consists of the hyperedges represented in \(C\), all point-nodes of \(C\), and the point endpoints of bridge incidences leaving hyperedge-nodes in \(C\). An inactive component contains no hyperedge-node and hence no incidence of \(L-B(L)\), so it is a singleton point-node.
+
+Every hyperedge now belongs to a bipartite expansion piece.  It remains to
+order the pieces so that each new piece meets the assembled system in at most
+one point.  The quotient forest records the attachment geometry needed for
+this running-intersection property.
+
+\begin{claim}[5.2.1. Running intersection]
+
+Every component of \(T\) contains an active vertex, because \(F\) has no isolated vertices. Choose an active root in each component, and order the active vertices by nondecreasing depth, with arbitrary order among equal-depth vertices. When an active component \(C\) is added, its piece \(P_C\) meets the union of the earlier pieces in at most one point.
+
+\end{claim}
+\begin{proof}[Proof of the claim]
+For a point \(p\in V(F)\), let \(X(p)\in\mathscr C\) be the component of \(L-B(L)\) containing the point-node \(p\). The active pieces containing \(p\) are precisely \(P_{X(p)}\), when \(X(p)\) is active, together with the pieces \(P_D\) at active neighbours \(D\) of \(X(p)\) whose corresponding original bridge has point endpoint \(p\). Thus the vertices of \(T\) indexing pieces that contain \(p\) are contained in the closed star centred at \(X(p)\).
+
+Suppose that \(p\in P_C\) also lies in an earlier piece. If \(X(p)=C\),
+every other piece containing \(p\) is indexed by a neighbour of \(C\). A tree
+has only one neighbour of \(C\) at smaller depth, namely its parent, so only
+that piece can be earlier. If \(X(p)\ne C\), then \(C\) is a neighbour of
+\(X(p)\). The vertex \(X(p)\) cannot be a child of \(C\), because then both
+\(X(p)\) and every other vertex in its closed star would be deeper than
+\(C\). Hence \(X(p)\) is the parent of \(C\). In either case, \(p\) is the
+point endpoint of the unique parent edge of \(C\). The same reasoning applies
+to every point shared with an earlier piece, so all such points coincide with
+this parent point \(p_C\), and
+
+\[
+P_C\cap\bigcup_{D\text{ earlier}}P_D\subseteq\{p_C\}.
+\]
+
+For a root active component the intersection is empty.
+\end{proof}
+
+Starting with the root piece in each component, add the active pieces in this
+order. If the new intersection is empty, use a disjoint union. If it is the
+singleton \(\{p_C\}\), use a one-point amalgamation at that point. Several
+earlier pieces may already contain the same inactive attachment point, but
+the new step still identifies only that one existing vertex.
+
+The identity maps from the pieces into \(F\) assemble inductively to an
+incidence isomorphism onto the union of the pieces already added.  By the
+running-intersection claim, the next piece and the preceding union are either
+disjoint or meet exactly at the point used in the amalgamation, so no
+unintended identification is introduced.  The piece hyperedge sets are
+disjoint and partition \(E(F)\), and their vertex sets cover \(V(F)\).
+After all active pieces have been added, the resulting subsystem is \(F\).
+Different components of \(T\) are combined by disjoint union, proving
+\(F\in\mathcal B\).
+\end{proof}
+
+This proves
+
+\[
+(3)\Longrightarrow(2). \tag{5.2}
+\]
+
+Combining (5.1) and (5.2),
+
+\[
+(2)\Longleftrightarrow(3). \tag{5.3}
+\]
+
+\begin{theorem}[Canonical atom normal form]
+\label{theorem-canonical-atom-normal-form}
+Let $F$ be a finite triple system without isolated points satisfying the three
+intrinsic conditions in Theorem~A.  Its hyperedges admit a canonical partition
+into \emph{atoms} with the following properties.
+\begin{enumerate}
+\item Every atom is either one triple or $J^+$ for a finite $2$-connected
+simple bipartite graph $J$.
+\item Two distinct atoms meet in at most one point.  The bipartite incidence
+graph between atoms and points belonging to at least two atoms is a forest.
+\item The atom partition, the nontrivial cores $J$ up to graph isomorphism, and
+the atom--point forest are determined by $F$.
+\end{enumerate}
+Conversely, every forest assembly of these atoms by disjoint unions and
+one-point amalgamations satisfies the intrinsic conditions.
+\end{theorem}
+\begin{proof}
+Let $L=I(F)$.  A \emph{cyclic block} is a maximal $2$-connected subgraph of
+$L$ containing a cycle.  Since every hyperedge-node has degree three and is
+incident with a bridge, its degree inside a cyclic block is two.  Suppressing
+the hyperedge-nodes in such a block $C$ gives a finite graph $J_C$ on the
+point-nodes of $C$.  It is simple by linearity and $2$-connected by standard
+block theory \citep{whitney1932,diestel2017}.  Its cycles correspond to Berge cycles of the same lengths, so
+$J_C$ is bipartite.
+
+For a hyperedge-node $e\in C$, the third incidence is a bridge.  Its point
+endpoint lies outside $C$, since otherwise that incidence would lie on a
+cycle.  These third points are pairwise distinct as $e$ varies in $C$;
+otherwise a path inside $C$ between two hyperedge-nodes, completed through the
+common third point, would put both bridge incidences on a cycle.  The
+hyperedges represented in $C$ therefore form exactly $J_C^+$.
+
+A hyperedge-node outside every cyclic block has no nonbridge incidence and
+contributes one single-triple atom.  Thus the atoms partition the hyperedges.
+Two atoms cannot share two points, since paths inside the two atoms would
+produce a Levi cycle crossing two cyclic blocks.  Similarly, a cycle in the
+atom--shared-point incidence graph expands to a closed Levi walk and hence to
+a Levi cycle crossing atom boundaries.  The incidence graph is therefore a
+forest.  Cyclic blocks and the block--cut forest are canonical, proving the
+forward statement.  The converse follows because an atomic expansion is
+linear, has a private bridge at each hyperedge-node, and has only even Berge
+cycles, while a forest of one-point sums preserves these properties.
+\end{proof}
+
+Call a connected triple system with at least one hyperedge \emph{one-point
+indecomposable} if it cannot be written as a one-point amalgamation of two
+systems that both contain a hyperedge.
+
+\begin{corollary}[Minimal generators and one-point indecomposables]
+\label{corollary-minimal-generators-indecomposables}
+Up to isomorphism, the class $\mathcal B$ is generated by finite edgeless
+systems, one triple, and $J^+$ for finite $2$-connected simple bipartite graphs
+$J$, under finite disjoint unions and one-point amalgamations.  A connected
+reduced obligatory system with at least one hyperedge is
+one-point indecomposable if and only if it is one triple or $J^+$ for a finite
+$2$-connected simple bipartite graph $J$.
+\end{corollary}
+\begin{proof}
+The theorem decomposes every reduced member of $\mathcal B$ into the displayed
+atoms; isolated points are restored by an edgeless factor.  If the atom forest
+has at least two atom-nodes, a leaf atom separates from the rest at its unique
+shared point.  Conversely, one triple is indecomposable, and if $J$ is
+$2$-connected then deleting any point of $J^+$ cannot separate its
+hyperedge-nodes into two nonempty classes: a private point is a leaf, while a
+core point leaves $J$ connected.  Hence $J^+$ is indecomposable.
+\end{proof}
+
+\section{The sequence lift}\label{the-sequence-lift-used-in-the-avoidance-constructions}
+
+We use a one-apex construction specialised to $\omega_1$, presented through
+base fibres and their support-incidence graph to match the formalisation.
+\citet[Sections~3--4 and Theorem~4.6]{li2026} gives an alternative one-apex
+and bridge-trace formulation.
+
+\paragraph{The one-apex construction.}\label{the-one-apex-construction}
+
+Let \(G=(X,A)\) be an arbitrary graph, where \(A=E(G)\) is also regarded as an alphabet. Let
+
+\[
+T=A^{<\omega_1}
+\]
+
+be the tree of all sequences of graph edges of countable ordinal length. For \(s\in T\) and \(x\in X\), write \(x_s=(s,x)\).
+
+\begin{definition}[The one-apex lift]\label{definition-6.1-the-one-apex-lift}
+
+Define the triple system \(\mathcal L(G)\) by
+
+\[
+V(\mathcal L(G))=T\times X.
+\]
+
+For \(s\in T\), an edge \(a=\{x,y\}\in A\), a sequence \(t\in T\) extending \(s^\frown a\), and \(z\in X\), put
+
+\[
+\{x_s,y_s,z_t\}\in E(\mathcal L(G)). \tag{6.1}
+\]
+
+The two vertices \(x_s,y_s\) form the base pair and \(z_t\) is the apex. Since \(t\) properly extends \(s\), these are three distinct vertices. In the resulting triple, the sequence node occurring twice uniquely identifies \(s\); its two graph labels identify the edge \(a=\{x,y\}\), and the remaining vertex identifies \(t,z\). Thus each hyperedge arises from unique data, up to interchanging \(x\) and \(y\), and the system is simple and \(3\)-uniform.
+
+\end{definition}
+
+\paragraph{Chromatic and finite-trace properties.}\label{chromatic-and-finite-trace-properties}
+
+\begin{lemma}[Chromatic lower bound]\label{lemma-6.2-chromatic-lower-bound}
+
+If \(\chi(G)>\aleph_0\), then
+
+\[
+\chi(\mathcal L(G))>\aleph_0.
+\]
+
+\end{lemma}
+\begin{proof}
+Suppose \(c:T\times X\to\omega\) is proper. For every \(s\in T\), the restriction \(x\mapsto c(x_s)\) is a countable colouring of \(G\). Hence there is an edge
+
+\[
+a_s=\{x_s^0,x_s^1\}\in E(G)
+\]
+
+whose two vertices at node \(s\) have a common colour \(k_s\).
+
+Construct \(s_\alpha\in A^\alpha\) for \(\alpha<\omega_1\) by
+
+\[
+s_0=\varnothing,
+\qquad s_{\alpha+1}=s_\alpha^\frown a_{s_\alpha},
+\]
+
+and at limit ordinals take unions.
+
+If \(\alpha<\beta\), then \(s_\beta\) extends \(s_\alpha^\frown a_{s_\alpha}\). If \(k_{s_\alpha}=k_{s_\beta}\), take either endpoint \(z\) of the monochromatic edge at \(s_\beta\). By (6.1),
+
+\[
+\{(s_\alpha,x_{s_\alpha}^0),
+  (s_\alpha,x_{s_\alpha}^1),
+  (s_\beta,z)\}
+\]
+
+is a monochromatic hyperedge. Therefore the colours \(k_{s_\alpha}\), \(\alpha<\omega_1\), are pairwise distinct, impossible in \(\omega\).
+\end{proof}
+
+The following trace theorem uses the fibre decomposition described above.
+Li gives a parallel bridge-trace formulation \citep[Theorem~4.6]{li2026}.
+
+\begin{theorem}[Finite linear trace decomposition]\label{theorem-6.3-exact-finite-linear-trace-theorem}
+
+Every finite, not necessarily induced, linear subhypergraph \(K\) of
+\(\mathcal L(G)\) is obtainable, by finite disjoint unions and one-point
+amalgamations, from systems \(J^+\) where \(J\) is a finite subgraph of
+\(G\).
+
+\end{theorem}
+\begin{proof}
+We use three local objects in the assembly.  A \emph{base node} is a sequence
+\(s\) at which a lift hyperedge begins.  The two vertices with sequence
+coordinate \(s\) are its \emph{core vertices}; the third vertex, whose
+coordinate properly extends \(s\), is its \emph{apex}.  The \emph{base fibre}
+\(K_s\) consists of all hyperedges of \(K\) based at \(s\), together with
+their incident vertices.  A base node is \emph{active} when its fibre is
+nonempty.  We first identify each fibre with an expansion piece and then show
+that the fibres form a forest of one-point overlaps.
+
+First set aside every isolated vertex of \(K\). Each is a one-vertex edgeless
+factor, hence isomorphic to \(J^+\) for a one-vertex edgeless subgraph \(J\)
+of \(G\), and may be restored by disjoint union at the end. We may therefore
+assume that every vertex of \(K\) lies in a hyperedge.
+
+Every hyperedge of \(\mathcal L(G)\) has a unique base node: exactly two of
+its vertices have sequence coordinate \(s\), while the apex has a strictly
+longer sequence coordinate. We group the hyperedges of \(K\) by this
+coordinate and use the notation \(K_s\) from the dictionary.
+
+\medskip
+\noindent\textbf{Claim 6.3.1 (each base fibre is one expansion piece).}
+For every active base node \(s\), there is a finite subgraph \(J_s\) of
+\(G\) such that \(K_s\cong J_s^+\).
+
+\smallskip
+\begin{proof}[Proof of Claim 6.3.1]
+
+For a fixed graph edge \(a=\{x,y\}\in E(G)\), at most one hyperedge of \(K_s\) can have base pair \(\{x_s,y_s\}\), since two such hyperedges would share two vertices and violate linearity. Let \(J_s\) be the finite subgraph of \(G\) whose edges are precisely the graph edges used by hyperedges of \(K_s\), with vertex set consisting of their endpoints.
+
+Define a map \(J_s^+\to K_s\) by sending each graph vertex \(x\in V(J_s)\)
+to the core vertex \(x_s\), and by sending the private vertex of
+\(a=\{x,y\}\) to the apex of the unique hyperedge of \(K_s\) with base pair
+\(\{x_s,y_s\}\). Distinct graph edges have distinct apices: if \(z_t\)
+were the apex for \(a\) and \(a'\), the coordinate of \(t\) immediately
+after \(s\) would have to equal both \(a\) and \(a'\). No apex is a core
+vertex, because an apex has sequence coordinate strictly extending \(s\),
+whereas every core vertex has coordinate \(s\). The map is therefore
+injective, and by construction it is bijective on hyperedges and preserves
+each incidence. Hence \(K_s\cong J_s^+\).
+\end{proof}
+
+\medskip
+\noindent\textbf{Claim 6.3.2 (two fibres have at most one common point).}
+For distinct active base nodes \(s\) and \(u\),
+\[
+|V(K_s)\cap V(K_u)|\le 1.
+\]
+
+\smallskip
+\begin{proof}[Proof of Claim 6.3.2]
+If a point \(z_t\) lies in both \(K_s\) and \(K_u\), then both \(s\) and
+\(u\) are prefixes of \(t\), so they are comparable. Suppose
+\(s\subsetneq u\). A common point cannot be a core point of \(K_s\); it is
+an apex of \(K_s\). The graph edge used by its hyperedge in \(K_s\) is the
+coordinate of \(u\) immediately following \(s\). Hence all points in
+\(K_s\cap K_u\) would be apices of the same base edge of \(K_s\). There is
+at most one such apex. Therefore
+
+\[
+|V(K_s)\cap V(K_u)|\le1. \tag{6.2}
+\]
+\end{proof}
+
+Let \(Q\) be the bipartite incidence graph of the base fibres. Its left
+class is the set of active base nodes. Its right class consists of points
+that lie in at least two fibres. Join a base node \(s\) to a point \(p\)
+exactly when \(p\in V(K_s)\).
+
+\medskip
+\noindent\textbf{Claim 6.3.3 (the overlap graph is a forest).}
+The graph \(Q\) is acyclic.
+
+\smallskip
+\begin{proof}[Proof of Claim 6.3.3]
+Suppose that \(Q\) has a cycle, and choose on it a base node \(s\) of
+minimum sequence length. Its two neighbouring base nodes on the cycle are
+proper descendants of \(s\). The two intervening shared points are distinct,
+so they are distinct apices in \(K_s\), arising from two distinct graph edges
+\(a\ne a'\). Thus the two neighbouring base nodes lie in different immediate
+branches below \(s\), one beginning with \(a\) and the other with \(a'\).
+
+Starting from one neighbour of \(s\), every base node on the remaining
+part of the cycle lies in the same immediate branch below \(s\). Indeed,
+consecutive base nodes share a point and are therefore comparable. For two
+comparable proper descendants of \(s\), the first sequence coordinate after
+\(s\) is the same, so a length-two step through a shared point cannot move
+from one immediate branch to another. Induction along the remaining path
+therefore keeps every base node in the first branch, contradicting that its
+final node lies in the other branch. Hence \(Q\) is acyclic.
+\end{proof}
+
+Root each component of \(Q\) at a base node, and order its base nodes by
+nondecreasing even distance from the root. For a nonroot base node \(s\), let
+\(p_s\) be the point-node adjacent to \(s\) on the path to the root.
+
+\begin{claim}[6.3.4. Base-fibre running intersection]
+
+Every earlier factor that meets \(K_s\) meets it at \(p_s\).
+
+\end{claim}
+\begin{proof}[Proof of Claim 6.3.4]
+Suppose \(K_u\) is earlier and contains a point
+\(p\in K_s\). Then \(Q\) contains the length-two path \(s-p-u\). Let the
+distance of \(s\) from the root be \(2d\). The point-node \(p\) has distance
+either \(2d-1\) or \(2d+1\). In the second case \(u\) has distance \(2d+2\),
+so it cannot be earlier. Thus \(p\) has distance \(2d-1\), and the uniqueness
+of the path to the root in the tree \(Q\) gives \(p=p_s\). This also covers
+an earlier sibling \(u\), which shares the same parent point \(p_s\).
+\end{proof}
+
+\medskip
+\noindent\textbf{Claim 6.3.5 (the ordered fibres assemble to \(K\)).}
+Let \(U_s\) be the union of the factors preceding \(K_s\). Equation (6.2)
+and Claim 6.3.4 give
+\[
+V(K_s)\cap U_s\subseteq\{p_s\}.
+\]
+Starting with the root factor, add the remaining factors in this order by
+disjoint unions or one-point amalgamations as appropriate. At each step the
+natural maps into \(K\) identify exactly the displayed common point and
+nothing else, so they assemble to an isomorphism onto the union of the
+factors already added. Different components of \(Q\), and the isolated
+factors removed at the start, are combined by disjoint union. This is the
+running-intersection step: Claim 6.3.1 supplies the expansion pieces, while
+Claims 6.3.2--6.3.4 certify that each new piece is attached along at most one
+previous point.
+\end{proof}
+
+\begin{corollary}[Restrictions on finite linear traces]\label{corollary-6.4-restrictions-on-finite-linear-traces}
+
+Every finite linear \(K\subseteq\mathcal L(G)\) satisfies:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  every hyperedge-node of \(I(K)\) is incident with a bridge;
+\item
+  every Berge cycle of \(K\) is contained in a single factor \(J_s^+\);
+\item
+  a Berge cycle of length \(\ell\) in \(K\) yields an ordinary cycle of length \(\ell\) in \(G\).
+\end{enumerate}
+
+\end{corollary}
+\begin{proof}
+In every \(J_s^+\) the incidence with the private vertex is a bridge. Bridgehood is preserved by one-point amalgamation. A simple Levi cycle cannot cross a one-point cut, so every Berge cycle lies in one factor. Berge cycles in \(J_s^+\) are exactly ordinary graph cycles in \(J_s\).
+\end{proof}
+
+\section{A classical high-odd-girth input}\label{uncountably-chromatic-graphs-of-large-odd-girth}
+
+For the odd-cycle obstruction we use the following classical graph theorem
+directly, without passing through a shift-graph surrogate.
+
+\begin{theorem}[Erdős--Hajnal]\label{theorem-7.1-high-odd-girth}
+For every positive integer $m$ there is a graph $G$ such that
+\[
+\chi(G)>\aleph_0
+\]
+and $G$ contains no odd cycle of length at most $m$.
+\end{theorem}
+
+\begin{proof}[Source]
+Theorem~7.4 of \citet[p.~76]{erdoshajnal1966}, as quoted in
+\citet[Theorem~C, p.~428]{egh1975}, gives for every positive integer $i$ an
+uncountably chromatic graph containing no cycle $C_{2j+1}$ for $0<j<i$.
+Choose $i$ so that $2i-1\ge m$.
+\end{proof}
+
+\section{Avoidance hosts}\label{the-avoidance-hosts}
+
+The intrinsic criterion can fail in three ways: nonlinearity, a missing
+bridge, or an odd Berge cycle.  \citet[Sections~2--4]{li2026} organises the
+negative direction in a parallel way.  We prove the first two avoidance
+constructions in our notation and apply the Erdős--Hajnal theorem from
+Section~7 to the third.
+
+We prove
+
+\[
+\neg(3)\Longrightarrow\neg(1).
+\]
+
+\paragraph{Nonlinearity obstruction.}\label{nonlinearity-obstruction}
+
+\begin{proposition}[Avoidance of every nonlinear finite triple system]\label{proposition-8.1-avoidance-of-every-nonlinear-finite-triple-system}
+
+There is an uncountably chromatic linear triple system. Consequently, every finite nonlinear triple system is non-obligatory.
+
+\end{proposition}
+\begin{proof}
+We use the Erd\H{o}s--Rado relation
+\citep[Theorem~4(i), formula~(95), p.~471]{erdosrado1956}
+
+\[
+(2^{\aleph_0})^+\longrightarrow(\aleph_1)^2_{\aleph_0}. \tag{8.1}
+\]
+
+Let \(\kappa=(2^{\aleph_0})^+\). Define a triple system \(T_\kappa\) whose vertices are the pairs in \([\kappa]^2\), and whose hyperedges are
+
+\[
+\bigl\{
+\{\alpha,\beta\},
+\{\alpha,\gamma\},
+\{\beta,\gamma\}
+\bigr\},
+\qquad \alpha<\beta<\gamma<\kappa.
+\]
+
+This triple system is linear: two distinct triangles of a complete graph cannot share two graph edges, because two graph edges of a triangle determine the third edge and the three underlying vertices.
+
+It is uncountably chromatic. A countable vertex-colouring of \(T_\kappa\) is a countable edge-colouring of \(K_\kappa\). By (8.1) there is a monochromatic subset of cardinality \(\aleph_1\), and in particular a monochromatic graph triangle. This is a monochromatic hyperedge of \(T_\kappa\).
+
+If a finite triple system \(F\) is nonlinear, it has two distinct edges sharing at least two vertices. No injective embedding of those edges can exist in the linear host \(T_\kappa\). Thus \(T_\kappa\) is \(F\)-free.
+\end{proof}
+
+\paragraph{Missing-bridge obstruction.}\label{missing-bridge-obstruction}
+
+\begin{proposition}[Avoidance when the bridge condition fails]\label{proposition-8.2-avoidance-when-the-bridge-condition-fails}
+
+Let \(F\) be finite and linear, and suppose some hyperedge-node of \(I(F^\circ)\) is incident with no bridge. Then \(F\) is non-obligatory.
+
+\end{proposition}
+\begin{proof}
+This is the $K_{\omega_1}$ specialisation of the sequence lift defined above.
+Li gives an alternative missing-bridge obstruction \citep[Section~4]{li2026}.
+By Lemma 1.1 it suffices to avoid \(F^\circ\),
+so assume that \(F\) has no isolated vertices.
+Take \(G=K_{\omega_1}\). Then \(\chi(G)>\aleph_0\), and Lemma 6.2 gives
+
+\[
+\chi(\mathcal L(G))>\aleph_0.
+\]
+
+If \(F\) appeared in \(\mathcal L(G)\), retain exactly the host hyperedges corresponding to the edges of \(F\). Because the embedding is injective and \(F\) is linear, these selected host hyperedges form a finite linear subhypergraph isomorphic to \(F\). Corollary 6.4 says that every hyperedge-node of such a trace is incident with a bridge, contradicting the chosen hyperedge of \(F\). Therefore \(\mathcal L(K_{\omega_1})\) is an uncountably chromatic \(F\)-free host.
+\end{proof}
+
+\paragraph{Odd-cycle obstruction.}\label{odd-cycle-obstruction}
+
+\begin{proposition}[Avoidance of an odd Berge cycle]\label{proposition-8.3-avoidance-of-an-odd-berge-cycle}
+
+Let \(F\) be finite and linear, and suppose \(F^\circ\) has an odd Berge cycle. Then \(F\) is non-obligatory.
+
+\end{proposition}
+\begin{proof}
+Suppress isolated vertices and put $m=|E(F)|$.  By Theorem~7.1 choose a graph
+$G$ with $\chi(G)>\aleph_0$ and no odd cycle of length at most $m$.  Lemma~6.2
+gives $\chi(\mathcal L(G))>\aleph_0$.
+
+Suppose that $F$ embeds in $\mathcal L(G)$ and retain exactly the host
+hyperedges corresponding to the edges of $F$.  The selected trace is finite
+and linear.  Corollary~6.4 localises every Berge cycle in one expansion fibre
+and sends a Berge cycle of length $\ell$ to an ordinary cycle of the same
+length in $G$.  The given odd Berge cycle has $\ell\le m$, contradicting the
+choice of $G$.  Thus $\mathcal L(G)$ is an uncountably chromatic $F$-free
+host.
+\end{proof}
+
+The three propositions cover every failure of the intrinsic conditions and
+therefore prove
+
+\[
+\neg(3)\Longrightarrow\neg(1). \tag{8.2}
+\]
+
+\section{Proof of the classification}\label{conclusion}
+
+Sections~3 and 4 establish \((2)\Longrightarrow(1)\), Section~5 establishes
+\((2)\Longleftrightarrow(3)\), and Section~8 proves the contrapositive
+\(\neg(3)\Longrightarrow\neg(1)\).  Together these implications prove all
+equivalences in Theorem~A.  In particular,
+
+\begingroup\small
+\[
+\begin{gathered}
+F\text{ is obligatory}
+\iff
+F\in\mathcal B,\\[1mm]
+F\in\mathcal B
+\iff
+\begin{array}{l}
+F^\circ\text{ is linear},\\[1mm]
+\text{every hyperedge-node of }I(F^\circ)
+\text{ is incident with a bridge},\\[1mm]
+\text{every Berge cycle of }F^\circ\text{ has even length}.
+\end{array}
+\end{gathered}
+\]
+\endgroup
+
+All embeddings are non-induced, so additional host hyperedges on the image
+vertices are irrelevant.  The proof uses only ZFC, graph-colouring
+compactness \citep{debruijn1951}, the classical Erd\H{o}s--Hajnal high-odd-girth theorem \citep{erdoshajnal1966}, and the
+standard Erd\H{o}s--Rado relation (8.1) \citep{erdosrado1956}.  It assumes neither CH nor GCH and
+uses no forcing axiom or large-cardinal hypothesis.
+
+\section{Finite parameter consequences}\label{finite-parameter-consequences}
+
+In this section, a triple system is \emph{connected} when its Levi graph is
+connected.  We first exclude isolated vertices.  For an integer $r\ge1$, set
+\[
+q(r)=\left\lceil2\sqrt r\right\rceil.
+\]
+
+\begin{proposition}[Edge-deletion form of the bridge condition]
+\label{proposition-edge-deletion-bridge-condition}
+Let $F$ be a finite triple system and let $e=\{x,y,z\}\in E(F)$.  The
+hyperedge-node $e$ has no incident bridge in $I(F)$ if and only if $x,y,z$
+lie in one connected component after the hyperedge $e$ is deleted and all
+points are retained.  Consequently the bridge condition in Theorem~A is
+equivalent to the following hypergraph-native condition:
+\[
+\begin{gathered}
+\text{for every }e\in E(F^\circ),\text{ deleting }e\\
+\text{separates its three points into at least two components.}
+\end{gathered}
+\]
+\end{proposition}
+\begin{proof}
+Fix $x\in e$.  The Levi incidence $xe$ is not a bridge precisely when there
+is an alternative path from $e$ to $x$ after that incidence is deleted.  A
+simple such path leaves $e$ through $y$ or $z$ and thereafter lies entirely
+in the Levi graph of $F-e$.  Thus $xe$ is non-bridging exactly when $x$ is
+connected in $F-e$ to at least one of the other two points of $e$.
+
+If all three incidences at $e$ are non-bridging, no one of $x,y,z$ can form a
+singleton component among those three points.  A partition of three points
+with this property has one block, so all three are connected in $F-e$.  The
+converse follows by reversing the same paths.
+\end{proof}
+
+\begin{lemma}[Bipartite shadow]
+\label{lemma-bipartite-shadow}
+Let $F$ be an obligatory finite triple system with no isolated vertices and
+at least one hyperedge.  There is a finite bipartite graph $J$, without
+isolated vertices, such that
+\[
+|E(J)|=|E(F)|,\qquad |V(J)|=|V(F)|-|E(F)|,
+\]
+and $J$ has the same number of connected components as $F$.  Conversely, for
+every finite bipartite graph $J$ without isolated vertices, the expansion
+$J^+$ is obligatory and has these parameter relations.
+\end{lemma}
+\begin{proof}
+By Theorem~A and Proposition~\ref{proposition-5.2-bridge-block-decomposition},
+each connected component $H$ of $F$ is obtained by one-point amalgamations
+from connected expansion pieces
+\[
+J_1^+,\ldots,J_k^+,
+\]
+where each $J_i$ is a connected bipartite graph.  Disconnected graph pieces
+may simply be split into their connected components.  Write
+$m_i=|E(J_i)|$ and $s_i=|V(J_i)|$.  Since $H$ is connected, its $k$ pieces
+are joined by exactly $k-1$ one-point identifications.  Hence
+\[
+|E(H)|=\sum_{i=1}^k m_i,
+\qquad
+|V(H)|=\sum_{i=1}^k(m_i+s_i)-(k-1).
+\tag{10.1}
+\]
+
+Take one-point sums of the ordinary graphs $J_1,\ldots,J_k$ along any tree on
+the $k$ indices.  Before each identification, interchange the two
+bipartition classes of the new factor if necessary.  The resulting graph
+$J_H$ is connected and bipartite, and (10.1) gives
+\[
+|E(J_H)|=|E(H)|,
+\qquad
+|V(J_H)|=|V(H)|-|E(H)|.
+\]
+Taking the disjoint union of these shadows over the components of $F$ proves
+the forward assertion.  The converse is the expansion-generator case of
+Theorem~A, with the displayed counts immediate from the definition of $J^+$.
+\end{proof}
+
+\begin{theorem}[Exact order--size--component spectrum]
+\label{theorem-order-size-component-spectrum}
+Let $m\ge1$, $1\le c\le m$, and $n$ be integers.  There exists an obligatory
+triple system $F$ with no isolated vertices, exactly $m$ hyperedges, exactly
+$n$ vertices, and exactly $c$ connected components if and only if
+\[
+\boxed{
+ m+2(c-1)+\left\lceil2\sqrt{m-c+1}\right\rceil
+ \le n\le 2m+c.
+}
+\tag{10.2}
+\]
+Every integer in this interval occurs.
+\end{theorem}
+\begin{proof}
+We begin with the corresponding elementary graph fact.  A connected simple
+bipartite graph with $r\ge1$ edges and $s$ vertices exists if and only if
+\[
+q(r)\le s\le r+1.
+\tag{10.3}
+\]
+Indeed, connectedness gives $r\ge s-1$.  If the bipartition has sizes $a,b$,
+then
+\[
+r\le ab\le\left\lfloor\frac{s^2}{4}\right\rfloor,
+\]
+which is equivalent to $s\ge q(r)$.  Conversely,
+$K_{\lfloor s/2\rfloor,\lceil s/2\rceil}$ contains a spanning tree, and
+starting with that tree and adding arbitrary unused edges realises every edge
+count between $s-1$ and $\lfloor s^2/4\rfloor$.
+
+Apply Lemma~\ref{lemma-bipartite-shadow}.  Let the $c$ connected components of
+the shadow have positive edge counts $m_1,\ldots,m_c$, where
+$\sum_i m_i=m$.  If their orders are $s_i$, then (10.3) gives
+\[
+\sum_{i=1}^c q(m_i)\le \sum_{i=1}^c s_i\le m+c.
+\tag{10.4}
+\]
+For positive integers $a,b$,
+\[
+q(a)+q(b)\ge q(a+b-1)+2.
+\tag{10.5}
+\]
+To see this, note that
+\[
+\sqrt a+\sqrt b\ge\sqrt{a+b-1}+1,
+\]
+because, after squaring, the assertion reduces to
+$(a-1)(b-1)\ge0$; taking ceilings gives (10.5).  Repeatedly
+applying (10.5) to the left side of (10.4) yields
+\[
+\sum_{i=1}^c q(m_i)
+\ge q(m-c+1)+2(c-1).
+\]
+The shadow has $n-m$ vertices, so these inequalities give (10.2).
+
+For sharpness put $M=m-c+1$.  Take $c-1$ components equal to $K_2$.  By
+(10.3), a final connected bipartite component with $M$ edges can have every
+order from $q(M)$ through $M+1$.  Their disjoint union therefore realises
+every shadow order from $q(M)+2(c-1)$ through $m+c$.  Expanding it adds
+exactly $m$ private vertices and proves attainability of every integer in
+(10.2).
+\end{proof}
+
+\begin{corollary}[Connected and unrestricted spectra]
+\label{corollary-connected-order-size-spectrum}
+For $m\ge1$:
+\begin{enumerate}
+\item a connected obligatory triple system without isolated vertices has
+$m$ hyperedges and $n$ vertices if and only if
+\[
+m+\left\lceil2\sqrt m\right\rceil\le n\le2m+1;
+\]
+\item without prescribing the number of components, a reduced obligatory
+triple system has $m$ hyperedges and $n$ vertices if and only if
+\[
+m+\left\lceil2\sqrt m\right\rceil\le n\le3m;
+\]
+\item if isolated vertices are permitted, an obligatory triple system with
+$m$ hyperedges and $n$ vertices exists if and only if
+\[
+n\ge m+\left\lceil2\sqrt m\right\rceil.
+\]
+\end{enumerate}
+\end{corollary}
+\begin{proof}
+The first assertion is Theorem~\ref{theorem-order-size-component-spectrum}
+with $c=1$.  For the second, the connected interval covers through $2m+1$;
+for $n>2m+1$, take $c=n-2m$ and use the upper endpoint $n=2m+c$ of (10.2).
+The largest possible value is obtained from $m$ disjoint triples.  The final
+assertion follows by adjoining arbitrary isolated vertices.
+\end{proof}
+
+\begin{corollary}[Size spectrum at fixed order]
+\label{corollary-fixed-order-size-spectrum}
+Let $c\ge1$ and $n\ge3c$.  A reduced obligatory triple system with exactly
+$n$ vertices, $c$ connected components, and $m$ hyperedges exists if and only
+if
+\[
+\boxed{
+\left\lceil\frac{n-c}{2}\right\rceil
+\le m\le
+n-2c+4-\left\lceil2\sqrt{n-3c+4}\right\rceil.
+}
+\tag{10.6}
+\]
+Consequently, a reduced obligatory triple system with exactly $c$ connected
+components and $n$ vertices exists if and only if
+\[
+n=3c,\qquad n=3c+2,\qquad\text{or}\qquad n\ge3c+4.
+\tag{10.7}
+\]
+\end{corollary}
+\begin{proof}
+The upper-order inequality in (10.2) is equivalent to
+$m\ge\lceil(n-c)/2\rceil$.  For the other inequality put
+\[
+M=m-c+1,\qquad N=n-3c+3.
+\]
+It becomes
+\[
+M+\left\lceil2\sqrt M\right\rceil\le N.
+\tag{10.8}
+\]
+For integers $N\ge3$ and $M\ge1$, the largest $M$ satisfying (10.8) is
+\[
+U=N+2-\left\lceil2\sqrt{N+1}\right\rceil.
+\tag{10.9}
+\]
+Indeed, write $k=\lceil2\sqrt{N+1}\rceil$.  Since
+$k^2\ge4(N+1)$,
+\[
+4U=4N+8-4k\le(k-2)^2,
+\]
+so $\lceil2\sqrt U\rceil\le k-2$ and
+$U+\lceil2\sqrt U\rceil\le N$.  On the other hand,
+$(k-1)^2<4(N+1)$ gives
+\[
+(k-3)^2<4(N+3-k)=4(U+1),
+\]
+so $\lceil2\sqrt{U+1}\rceil\ge k-2$ and
+$(U+1)+\lceil2\sqrt{U+1}\rceil\ge N+1$.  The left side of (10.8) is
+strictly increasing in $M$, proving (10.9).  Translating back to $m$ gives
+(10.6).
+
+For (10.7), Corollary~\ref{corollary-connected-order-size-spectrum} shows that
+a connected reduced obligatory system has order $3$, order $5$, or any order
+at least $7$.  The first two statements come from $m=1,2$.  For $m\ge3$, the
+connected intervals have no gaps because
+$\lceil2\sqrt{m+1}\rceil\le m+1$ for $m+1\ge4$.  Thus every component has
+order
+\[
+3+r,\qquad r\in\{0,2\}\cup[4,\infty).
+\]
+The sum of $c$ such increments is again $0$, $2$, or any integer at least
+$4$: use one nonzero increment and take all remaining increments to be zero.
+The increments $1$ and $3$ are impossible.  This proves (10.7).
+\end{proof}
+
+\begin{corollary}[Exact Levi cycle-rank spectrum]
+\label{corollary-levi-cycle-rank-spectrum}
+Let $F$ be reduced and obligatory, with $m$ hyperedges, $n$ vertices, and $c$
+connected components.  The cyclomatic number of its Levi graph is
+\[
+\beta(I(F))=|E(I(F))|-|V(I(F))|+c=2m-n+c.
+\tag{10.10}
+\]
+For fixed $m,c$, every integer in the interval
+\[
+0\le\beta(I(F))\le
+m-c+2-\left\lceil2\sqrt{m-c+1}\right\rceil
+\tag{10.11}
+\]
+occurs, and no other value occurs.  In particular,
+\[
+|V(F)|=2|E(F)|+c
+\quad\Longleftrightarrow\quad
+I(F)\text{ is a forest}.
+\]
+\end{corollary}
+\begin{proof}
+The Levi graph has $n+m$ vertices, $3m$ incidence edges, and $c$ components,
+which gives (10.10).  Substitution of the two endpoints in (10.2) gives
+(10.11), and every intermediate value occurs because every intermediate order
+does.  A finite graph has cyclomatic number zero exactly when it is a forest.
+\end{proof}
+
+\begin{corollary}[Rigidity at balanced lower endpoints]
+\label{corollary-balanced-endpoint-rigidity}
+Let $F$ be connected, reduced, and obligatory.
+\begin{enumerate}
+\item If $|E(F)|=t^2$ and $|V(F)|=t^2+2t$, then
+$F\cong K_{t,t}^+$.
+\item If $|E(F)|=t(t+1)$ and $|V(F)|=t(t+1)+2t+1$, then
+$F\cong K_{t,t+1}^+$.
+\end{enumerate}
+Here $t\ge1$, and the complete bipartite graphs are unique up to interchanging
+the two classes.
+\end{corollary}
+\begin{proof}
+In either case the shadow from Lemma~\ref{lemma-bipartite-shadow} attains
+$|E(J)|=\lfloor|V(J)|^2/4\rfloor$.  Equality forces every possible cross edge
+to be present and the two bipartition classes to be balanced, so the shadow is
+$K_{t,t}$ or $K_{t,t+1}$, respectively.
+
+For $t\ge2$ these complete bipartite graphs have no cut vertex.  On the other
+hand, the shadow built from two or more connected expansion pieces is a
+nontrivial one-point sum and has a cut vertex.  Hence the bridge-block
+reconstruction has only one piece, and $F$ is the expansion of the displayed
+complete bipartite graph.  The cases $t=1$ are immediate.
+\end{proof}
+
+\subsection{Canonical atoms and structural spectra}
+\label{canonical-atoms-and-structural-spectra}
+
+For a connected reduced obligatory system $F$, put
+\[
+s=|V(F)|-|E(F)|,
+\qquad
+\beta=2|E(F)|-|V(F)|+1.
+\]
+Thus $s$ is the order of a connected bipartite shadow and $\beta$ is its
+cycle rank.  Let $a(F)$ denote the number of canonical atoms from
+Theorem~\ref{theorem-canonical-atom-normal-form}.
+
+\begin{lemma}[Minimum order at fixed cyclic rank]
+\label{lemma-minimum-order-fixed-cyclic-rank}
+Let $J$ be a finite $2$-connected simple bipartite graph of cycle rank
+$r=|E(J)|-|V(J)|+1\ge1$.  Then
+\[
+|V(J)|\ge 2+q(r).
+\tag{10.12}
+\]
+For $r\ge2$, every order $v\ge2+q(r)$ occurs.  For $r=1$, the possible orders
+are exactly the even integers $v\ge4$.
+\end{lemma}
+\begin{proof}
+Writing $v=|V(J)|$, the bipartite extremal bound gives
+\[
+r\le\left\lfloor\frac{v^2}{4}\right\rfloor-v+1
+ =\left\lfloor\frac{(v-2)^2}{4}\right\rfloor,
+\]
+which is equivalent to (10.12).  If $v$ is even, start with the spanning cycle
+$C_v$ in the balanced complete bipartite graph and add edges until the desired
+rank is reached.  If $v$ is odd, start with $C_{v-1}$ and add the remaining
+vertex with two neighbours in the opposite bipartition class; this is
+$2$-connected and has rank two.  Add arbitrary missing cross-edges.  These
+constructions realise every allowed $r\ge2$.  A $2$-connected graph of rank one
+is a cycle, which is bipartite exactly when its order is even.
+\end{proof}
+
+\begin{theorem}[Exact canonical atom-count spectrum]
+\label{theorem-exact-canonical-atom-count-spectrum}
+Fix nonnegative integers $s,\beta$ satisfying either $\beta=0$ and $s\ge2$,
+or $\beta\ge1$ and $s\ge2+q(\beta)$.  Let $F$ range over connected reduced
+obligatory systems with at least one hyperedge, shadow order $s$ and cycle
+rank $\beta$.  The possible values $k=a(F)$ are exactly
+\[
+\begin{array}{ll}
+\beta=0:
+  & k=s-1,\\[1mm]
+\beta=1:
+  & 1\le k\le s-3,\quad k\equiv s+1\pmod 2,\\[1mm]
+\beta\ge2:
+  & 1\le k\le s-1-q(\beta).
+\end{array}
+\tag{10.13}
+\]
+For $\beta\ge1$, the maximum is
+\[
+a_{\max}(s,\beta)=s-1-q(\beta).
+\tag{10.14}
+\]
+Every maximiser has one minimum-order cyclic atom carrying the full rank
+$\beta$, and every other atom is one triple.  The parity obstruction in the
+rank-one line is the only gap in any atom-count spectrum.
+\end{theorem}
+\begin{proof}
+Let the atom cores be $J_i$, with $v_i=|V(J_i)|$,
+$e_i=|E(J_i)|$, and $r_i=e_i-v_i+1$.  Since a tree of $k$ atoms makes
+$k-1$ one-point identifications,
+\[
+s=1+\sum_i(v_i-1),
+\qquad
+\beta=\sum_i r_i.
+\tag{10.15}
+\]
+If $\beta=0$, every atom is one triple and (10.15) gives $k=s-1$.
+If $\beta=1$, there is one cyclic atom, whose core is an even cycle of order
+$v\ge4$; the remaining atoms are single triples, so
+$s=k+v-1$.  This is exactly the middle line of (10.13).
+
+Suppose $\beta\ge2$.  For positive integers $a,b$, the inequality
+$\sqrt a+\sqrt b\ge\sqrt{a+b-1}+1$ follows after squaring from
+$(a-1)(b-1)\ge0$.  Hence
+$q(a)+q(b)\ge q(a+b-1)+2\ge q(a+b)+1$, where the second
+inequality uses that $q$ increases by at most one between consecutive integers.
+Together with Lemma~\ref{lemma-minimum-order-fixed-cyclic-rank}, repeated
+application gives
+\[
+s\ge1+k+q(\beta),
+\]
+so $k\le s-1-q(\beta)$.  Conversely, for every integer in the displayed
+interval choose one cyclic core of rank $\beta$ and order $s-k+1$, supplied by
+the lemma, and attach $k-1$ single-triple atoms.  Equality in (10.14) forces
+one positive-rank atom and minimum order, proving the rigidity statement.
+\end{proof}
+
+The rigidity in the maximum concerns the distribution of cyclic rank:
+all positive rank lies in one minimum-order atom.  It does not assert that
+the numerical parameters determine the graph-isomorphism type of that
+atom's core.
+
+For $s\ge3$, define
+\[
+\alpha(s)=
+\begin{cases}
+s,&s\text{ even},\\
+s+1,&s\text{ odd},
+\end{cases}
+\qquad
+\delta(s)=\left\lfloor\frac{(s-1)^2}{4}\right\rfloor+1.
+\]
+
+\begin{theorem}[Indecomposability phase diagram]
+\label{theorem-indecomposability-phase-diagram}
+Apart from the single triple $(|E(F)|,|V(F)|)=(1,3)$, a connected reduced
+one-point-indecomposable obligatory system with shadow order $s$ and $m$
+hyperedges exists if and only if
+\[
+s\ge4,
+\qquad
+\alpha(s)\le m\le\left\lfloor\frac{s^2}{4}\right\rfloor.
+\tag{10.16}
+\]
+A connected reduced one-point-decomposable obligatory system exists if and
+only if
+\[
+s\ge3,
+\qquad
+s-1\le m\le\delta(s).
+\tag{10.17}
+\]
+Consequently, for $s\ge3$, the feasible connected parameters split into three exact zones:
+\[
+\begin{array}{rcl}
+s-1\le m<\alpha(s)
+ &\Longrightarrow& \text{every system is decomposable},\\
+\alpha(s)\le m\le\delta(s)
+ &\Longrightarrow& \text{both behaviours occur},\\
+\delta(s)<m\le\lfloor s^2/4\rfloor
+ &\Longrightarrow& \text{every system is indecomposable}.
+\end{array}
+\tag{10.18}
+\]
+For $m\ge2$, the last zone is equivalently
+\[
+s\le\left\lceil2\sqrt{m-1}\right\rceil.
+\tag{10.19}
+\]
+\end{theorem}
+\begin{proof}
+By Corollary~\ref{corollary-minimal-generators-indecomposables}, the nontrivial
+indecomposable systems are $J^+$ with $J$ finite, simple, bipartite and
+$2$-connected.  If $|V(J)|=s$ and $|E(J)|=m$, minimum degree two gives
+$m\ge s$; equality makes $J$ a cycle and therefore forces $s$ even.  The
+upper bound is the usual $m\le\lfloor s^2/4\rfloor$.  Even cycles, and for odd
+$s$ a cycle on $s-1$ vertices plus one new vertex with two neighbours, give
+the lower endpoints; adding cross-edges fills the intervals.
+
+A decomposable system admits a connected bipartite shadow with a cut vertex.
+If its bipartition sizes are $a+b=s$ and the cut vertex lies in the $a$-side,
+then deleting it gives components with sizes $(a_i,b_i)$ and
+\[
+m\le b+\sum_i a_i b_i
+ \le b+(a-1)(b-1)=ab-a+1.
+\]
+The symmetric estimate gives $m\le ab-\min(a,b)+1\le\delta(s)$.  The bound is
+sharp: take a connected bipartite graph on $s-1$ vertices with $m-1$ edges and
+adjoin one leaf.  This also fills every value in (10.17).  The three zones and
+the elementary inversion (10.19) follow.
+\end{proof}
+
+\begin{corollary}[Rigidity on the structural boundaries]
+\label{corollary-structural-boundary-rigidity}
+Let $F$ be connected, reduced and obligatory, with shadow order $s$ and
+$m=|E(F)|$ hyperedges.
+\begin{enumerate}
+\item If $F$ is indecomposable, $s$ is even and $m=s$, then
+$F\cong C_s^+$.
+\item If $F$ is indecomposable, $s$ is odd and $m=s+1$, then
+$F\cong\Theta(2a,2b,2c)^+$ for positive $a\le b\le c$ with
+$a+b+c=(s+1)/2$.
+\item If $F$ is indecomposable and $m=\lfloor s^2/4\rfloor$, then
+$F\cong K_{\lfloor s/2\rfloor,\lceil s/2\rceil}^+$.
+\item If $F$ is decomposable and $m=\delta(s)$, then $F$ is a one-point
+amalgamation of $K_{a,b}^+$ and one triple, where
+$a+b=s-1$ and $|a-b|\le1$.
+\end{enumerate}
+Here $\Theta(p,q,r)$ is the theta graph with three internally disjoint paths
+of lengths $p,q,r$ and common endpoints.
+\end{corollary}
+\begin{proof}
+The first and third assertions are the equality cases of minimum degree and
+the bipartite extremal bound.  In the second case
+$\sum_v(\deg v-2)=2$.  A single degree-four vertex would be a cut vertex, so
+there are exactly two degree-three vertices and all others have degree two;
+the three resulting paths have the same parity.  Their total length is
+$s+1$, which is even, so all three paths are even.  For the fourth assertion
+when $s\ge5$, choose the shadow by assembling the canonical atom cores.  Its
+cyclic blocks are precisely the nontrivial canonical cores.  Equality in the cut-vertex estimate
+forces a balanced complete bipartite graph on $s-1$ vertices plus one leaf,
+and hence the displayed complete-bipartite atom and one singleton atom.
+The tree cases $s=3,4$ are immediate.
+\end{proof}
+
+\begin{proposition}[Componentwise atom-count spectrum]
+\label{proposition-componentwise-atom-count-spectrum}
+Let $F$ be reduced and obligatory with at least one hyperedge and $c\ge1$
+connected components, shadow order
+$s=|V(F)|-|E(F)|$, cycle rank
+$\beta=2|E(F)|-|V(F)|+c$, and $k$ canonical atoms.  For every feasible
+$(s,\beta,c)$, the possible values of $k$ are exactly
+\[
+\begin{array}{ll}
+\beta=0:
+  & k=s-c,\\[1mm]
+\beta=1:
+  & c\le k\le s-c-2,\quad k\equiv s-c\pmod2,\\[1mm]
+\beta\ge2:
+  & c\le k\le s-c-q(\beta).
+\end{array}
+\tag{10.20}
+\]
+The parameters themselves are feasible exactly when $s\ge2c$ for $\beta=0$
+and $s\ge2c+q(\beta)$ for $\beta\ge1$.
+\end{proposition}
+\begin{proof}
+If the atom cores are $J_i$, a forest with $k$ atom-nodes and $c$ components
+makes $k-c$ identifications.  Hence
+\[
+s=c+\sum_i(|V(J_i)|-1),
+\qquad
+\beta=\sum_i\bigl(|E(J_i)|-|V(J_i)|+1\bigr).
+\]
+The connected proof applies componentwise.  Necessity gives the lower atom
+floor $k\ge c$ and the three upper formulas.  For sufficiency, take $c-1$
+single-triple components and realise the corresponding connected atom count
+in the remaining component.  The feasibility thresholds follow by
+concentrating all positive rank in one minimum-order cyclic atom.
+\end{proof}
+
+\begin{remark}[Blocks and the earlier reduction]
+\label{remark-komjath-block-reduction}
+Komj\'ath proved that a finite triple system is obligatory if and only if all
+of its $2$-connected components are obligatory \citep{komjath2001}.  General
+hypergraph block decomposition and its relation to the incidence graph are
+classical; see \citet{whitney1932}, \citet[Chapter~3]{diestel2017}, and, for the hypergraph formulation, \citet{bahmanian2015}.  For the reduced
+$3$-uniform systems considered here, the canonical atoms in
+Theorem~\ref{theorem-canonical-atom-normal-form} are precisely these maximal
+nonseparable edge-supported blocks.  Thus the new content of the canonical
+atom theorem is not the existence of a block decomposition, but the exact
+identification of the block types that can occur in an obligatory triple
+system, together with the quantitative spectra derived from them.
+\end{remark}
+
+\begin{corollary}[Block formulation of the classification]
+\label{corollary-block-formulation}
+Let $F$ be a finite triple system.  After isolated points are deleted, $F$ is
+obligatory if and only if every nonempty block of $F^\circ$ is either one
+triple or $J^+$ for a finite $2$-connected simple bipartite graph $J$.
+\end{corollary}
+\begin{proof}
+If $E(F^\circ)=\varnothing$, then $F^\circ$ is empty and the assertion follows
+from Lemma~\ref{lemma-1.1-isolated-vertex-reduction}.  Otherwise suppose first
+that $F$ is obligatory.  Lemma~\ref{lemma-1.1-isolated-vertex-reduction}
+gives that $F^\circ$ is obligatory, and Komj\'ath's reduction gives
+obligatoriness of each of its blocks.  A block is one-point indecomposable,
+so Corollary~\ref{corollary-minimal-generators-indecomposables} gives exactly
+the displayed list.
+
+Conversely, each displayed block is obligatory by the positive expansion
+result (the one-triple case included).  Komj\'ath's reduction therefore makes
+$F^\circ$ obligatory, and Lemma~\ref{lemma-1.1-isolated-vertex-reduction}
+restores the isolated points.
+\end{proof}
+
+\begin{lemma}[Local product for one-point decompositions]
+\label{lemma-local-decomposition-lattice-product}
+Let $F$ be reduced and obligatory with at least one hyperedge.  Let
+$\mathcal A(F)$ be its canonical atoms, let $S(F)$ be the points belonging to
+at least two atoms, and put
+\[
+ \mu(p)=|\{A\in\mathcal A(F):p\in V(A)\}|.
+\]
+Let $\mathcal D(F)$ be the set of partitions of $E(F)$ into nonempty connected
+supported pieces such that two pieces meet in at most one point and the
+piece--shared-point incidence graph is a forest, ordered by refinement.  Then
+$\mathcal D(F)$ is a lattice and
+\[
+ \mathcal D(F)\cong\prod_{p\in S(F)}\Pi_{\mu(p)},
+ \tag{\(\dagger\)}
+\]
+where $\Pi_r$ denotes the partition lattice of an $r$-element set.  If $F$
+has $k$ canonical atoms and $c$ connected components, then
+\[
+ \operatorname{rk}\mathcal D(F)=k-c
+   =\sum_{p\in S(F)}(\mu(p)-1).
+ \tag{\(\ddagger\)}
+\]
+The empty product in \((\dagger)\) is the one-element lattice.
+\end{lemma}
+\begin{proof}
+A supported one-point forest decomposition cannot split a block: if two
+hyperedges of one block lay in different pieces, the unique path between
+those pieces in the piece--shared-point forest would contain a point whose
+deletion separates the two hyperedges, contradicting nonseparability of the
+block.  Thus every element of $\mathcal D(F)$ is a coarsening of the canonical
+atom decomposition.
+
+For a shared point $p$, restrict such a coarsening to the set of the
+$\mu(p)$ atoms through $p$; this gives an element of $\Pi_{\mu(p)}$.
+Conversely, choose independently a partition of the atoms through every
+shared point and take the equivalence relation on all atoms generated by
+these local identifications.  To track its classes without contracting
+overlapping subtrees, replace the star at each shared point $p$ by the
+following two-level tree.  Retain a central node $p$, insert one node $(p,B)$
+for each block $B$ of the prescribed local partition, join $p$ to $(p,B)$,
+and join $(p,B)$ to each atom in $B$.  Replacing a star of a forest by a tree
+with the same attachment nodes preserves acyclicity, so the resulting
+auxiliary graph is a forest.
+
+Delete the edges from the central nodes $p$ to their nodes $(p,B)$.  The
+components containing atoms are vertex-disjoint and correspond
+exactly to the generated equivalence classes; their atom unions are
+connected supported pieces.  Two different blocks at one $p$ cannot lie in
+the same component, since a path between them, together with their two edges
+to $p$, would give a cycle in the auxiliary graph.  Contract these
+components in the full auxiliary graph, with the deleted edges restored,
+while retaining the central nodes $p$.  There are
+therefore no repeated incidences between a piece and $p$.  Delete each
+degree-one central node, which is now internal to one piece.  The resulting
+graph is precisely the piece--shared-point incidence graph and is still a
+forest.  In particular, two pieces cannot meet at two shared points.
+Restriction recovers the prescribed local partitions.  Conversely, a
+connected supported piece is recovered from its local identifications,
+since its atom nodes are connected through the shared points it contains.
+Thus the constructions are inverse and preserve refinement, proving
+\((\dagger)\).  For the related theory of connected set partitions and bond
+lattices, see \citet{simon2011} and \citet[Lecture~2]{stanley2007}.
+The factors here are full partition lattices on the atoms through each
+shared point, not the bond lattice of the incidence forest itself.
+
+Finally the canonical incidence forest has $k+|S(F)|$ vertices, $c$
+components and $\sum_p\mu(p)$ edges.  Hence
+\[
+ \sum_p(\mu(p)-1)=k-c,
+\]
+which is also the rank of the product lattice by the standard rank formula
+for partition lattices and their products \citep[Chapter~3]{stanley2012}.
+\end{proof}
+
+\begin{lemma}[Capacity-safe realization of every attachment profile]
+\label{lemma-capacity-safe-profile-realization}
+Fix pairwise disjoint canonical atoms $A_1,\ldots,A_k$ and an integer
+$1\le c\le k$.  For every integer partition
+\[
+ \lambda=(\lambda_1,\ldots,\lambda_t)\vdash k-c
+\]
+(with the empty partition allowed when $k=c$), there is a forest assembly of
+the $A_i$ into exactly $c$ connected components whose shared-point excess
+profile is $\lambda$; that is, its nontrivial shared points have
+multiplicities $\lambda_i+1$.  Every atom is incident with at most two
+distinct shared points.  Consequently, for a fixed atom list and fixed $c$,
+all these assemblies have the same order, size, shadow order and cycle rank.
+\end{lemma}
+\begin{proof}
+Put $N=k-c$.  If $N=0$, take the $k=c$ atoms as separate components.  Assume
+$N>0$.  Use $N+1$ atoms in one nontrivial component and leave the remaining
+$c-1$ atoms as singleton components.
+
+If $t=1$, identify one chosen vertex from each of the $N+1=\lambda_1+1$
+active atoms to one common shared point.  If $t\ge2$, arrange shared points
+$p_1,\ldots,p_t$ in a chain.  Use $t-1$ atoms as connectors, the $i$th
+connector meeting $p_i$ and $p_{i+1}$.  The two endpoint shared points already
+have one incident connector and the internal shared points have two.  Supply
+the remaining incidences with leaf atoms so that
+$\deg(p_i)=\lambda_i+1$.  The number of required leaf atoms is
+\[
+ \lambda_1+\lambda_t+\sum_{i=2}^{t-1}(\lambda_i-1)
+   =N-t+2,
+\]
+so together with the $t-1$ connectors this uses exactly $N+1$ atoms.  Every
+connector atom uses two distinct vertices and every leaf atom one; canonical
+atoms have at least three vertices, so the identifications can be made with
+distinct ports inside each atom.  The atom--shared-point incidence graph is a
+tree and has the required multiplicities.
+
+Disjoint union and one-point amalgamation preserve obligatoriness by
+Lemma~\ref{lemma-4.1-disjoint-union-closure} and
+Proposition~\ref{proposition-4.4-one-point-amalgamation-closure}.
+Each shared point separates the incident atom branches in this forest
+assembly.  A nonseparable supported block therefore cannot contain edges
+from two different atoms: the intervening shared point would separate
+those edges.  Each supplied atom is itself one-point indecomposable, so its
+image is a maximal nonseparable supported block.  By
+Theorem~\ref{theorem-canonical-atom-normal-form}, these images are precisely
+the canonical atoms of the assembled system.  Thus the constructed profile
+is the canonical attachment profile, not merely an auxiliary incidence
+pattern.
+
+Any forest assembly of the fixed $k$ atoms into $c$ components makes exactly
+$k-c$ vertex identifications.  Thus
+\[
+ |E(F)|=\sum_i|E(A_i)|,
+ \qquad
+ |V(F)|=\sum_i|V(A_i)|-(k-c),
+\]
+so the stated global parameters do not depend on the chosen profile.
+\end{proof}
+
+\begin{corollary}[Exact one-point factorization-lattice spectrum]
+\label{corollary-factorization-lattice-spectrum}
+Fix a feasible triple $(s,\beta,c)$ for reduced obligatory systems with at
+least one hyperedge, where
+\[
+ s=|V(F)|-|E(F)|,
+ \qquad
+ \beta=2|E(F)|-|V(F)|+c,
+ \qquad
+ q(r)=\left\lceil2\sqrt r\right\rceil.
+\]
+As $F$ ranges over all such systems with these fixed parameters, put $k$ for
+its number of canonical atoms and $N=k-c$.  The possible values of $N$ are
+exactly
+\[
+\begin{array}{ll}
+\beta=0:&N=s-2c,\\[1mm]
+\beta=1:&0\le N\le s-2c-2,\quad N\equiv s-2c\pmod2,\\[1mm]
+\beta\ge2:&0\le N\le s-2c-q(\beta).
+\end{array}
+\tag{\(\star\)}
+\]
+For every allowed $N$, the possible lattice isomorphism types of
+$\mathcal D(F)$ are precisely
+\[
+ \prod_{i=1}^t\Pi_{\lambda_i+1},
+ \qquad
+ \lambda=(\lambda_1,\ldots,\lambda_t)\vdash N,
+ \tag{\(\star\star\)}
+\]
+where for $N=0$ the empty partition gives the one-element lattice.  Every
+lattice in \((\star\star)\) occurs, and different partitions $\lambda$ give
+nonisomorphic lattices.
+\end{corollary}
+\begin{proof}
+The rank spectrum \((\star)\) is
+Proposition~\ref{proposition-componentwise-atom-count-spectrum} after
+subtracting $c$ from the atom count $k$.  Fix an allowed $N$ and choose one
+system with $k=N+c$ atoms and the prescribed global parameters.  By
+Lemma~\ref{lemma-capacity-safe-profile-realization}, its fixed atom list can be
+reassembled with the same $c$ and the same global parameters to realize every
+partition $\lambda\vdash N$.  Lemma~\ref{lemma-local-decomposition-lattice-product}
+then gives exactly the product in \((\star\star)\).  Conversely every system
+has an excess profile partitioning $N$, so there are no other types.
+
+Finally, the standard characteristic polynomial of the partition lattice
+\citep[Chapter~3]{stanley2012} is
+\[
+ \chi_{\Pi_{r}}(x)=\prod_{j=1}^{r-1}(x-j),
+\]
+and characteristic polynomials multiply under direct products, by the
+product rule for M\"obius functions \citep{rota1964,stanley2012}.
+For the equivalent braid-arrangement viewpoint, see
+\citet[Lectures~1--2]{stanley2007}.  Hence the
+multiplicity of the root $j$ in the characteristic polynomial of the lattice
+in \((\star\star)\) is
+\[
+ |\{i:\lambda_i\ge j\}|.
+\]
+These multiplicities recover the partition $\lambda$, so distinct partitions
+give nonisomorphic lattices.
+\end{proof}
+
+The numerical and lattice spectra record different parts of the same
+decomposition.  The shadow order, cyclic rank and component count restrict
+the possible excess $N=k-c$.  For each allowed $N$, the attachment profile
+$\lambda\vdash N$ determines the product of partition lattices, and every
+such profile is realizable.  These assertions classify the available
+factorization-lattice types; they do not identify all systems with the same
+numerical parameters.
+
+\subsection{Cyclic costs and assembly freedom}
+\label{cyclic-costs-and-assembly-freedom}
+
+The atom-count bound and the local product measure complementary constraints.
+The first records how much cyclic structure costs; the second records the
+decomposition choices left after the atoms have been fixed.
+
+\begin{proposition}[Exact cyclic-cost budget]
+\label{proposition-cyclic-cost-budget}
+Let $F$ be connected, reduced and obligatory, with positive Levi cycle rank
+$\beta$.  Put $s=|V(F)|-|E(F)|$, let $k$ be its canonical atom count, and
+set $N=k-1$.  For the positive-rank atoms, write $r_i$ for the core rank,
+$v_i$ for the core order, and $h$ for their number.  Define
+\[
+ C=\sum_{r_i>0}q(r_i)-q(\beta),
+ \qquad
+ L=\sum_{r_i>0}\bigl(v_i-2-q(r_i)\bigr).
+\]
+Then
+\[
+ N+C+L=s-2-q(\beta),
+ \qquad C\ge h-1,\quad L\ge0.
+\]
+In particular,
+\[
+ N+(h-1)+L\le s-2-q(\beta).
+\]
+The cost $C+L$ is zero exactly when the atom count is maximal: there is one
+minimum-order cyclic atom carrying rank $\beta$, and all other atoms are
+single triples.
+\end{proposition}
+\begin{proof}
+Zero-rank atoms have core order two.  Equation (10.15) therefore gives
+\[
+ s=1+k+\sum_{r_i>0}q(r_i)+L,
+ \qquad \sum_{r_i>0}r_i=\beta.
+\]
+Substituting the definitions of $N$ and $C$ gives the identity.
+Lemma~\ref{lemma-minimum-order-fixed-cyclic-rank} gives $L\ge0$.
+Since $\beta>0$, there is at least one positive-rank atom.  The strict
+aggregation inequality in the proof of
+Theorem~\ref{theorem-exact-canonical-atom-count-spectrum} gives $C\ge h-1$.
+Thus zero cost forces $h=1$ and zero core-order slack; the converse follows
+from the same identity.
+\end{proof}
+
+Since $N=\operatorname{rk}\mathcal D(F)$, the budget also describes the rank
+available to the factorization lattice.  Splitting cyclic rank among atoms
+and increasing their core orders reduce this rank.  It is a numerical
+constraint, not a graph-edit-distance stability theorem or a uniqueness
+statement about the cores.
+
+\begin{corollary}[Sharp counts at a prescribed piece number]
+\label{corollary-sharp-piece-counts}
+Let $F$ be reduced and obligatory with at least one hyperedge, $k$ canonical
+atoms and $c$ connected components.  Put $N=k-c$ and let
+$\lambda=(\lambda_1,\ldots,\lambda_t)\vdash N$ be its attachment excess
+profile.  For $0\le j\le N$, define
+\[
+ d_j(F)=|\{D\in\mathcal D(F):|D|=k-j\}|,
+\]
+where $|D|$ counts the actual nonempty original-edge pieces.  Write $S(a,b)$
+for the number of partitions of an $a$-element set into $b$ blocks.  Then
+\[
+ \sum_{j=0}^{N}d_j(F)z^j
+ =\prod_{i=1}^{t}
+   \left(\sum_{r=0}^{\lambda_i}
+     S(\lambda_i+1,\lambda_i+1-r)z^r\right),
+\]
+and
+\[
+ \binom Nj\le d_j(F)\le S(N+1,N+1-j)
+ \qquad(0\le j\le N).
+\]
+If $N\ge2$, then for every $1\le j\le N-1$ the lower equality holds exactly
+when all shared points are binary, that is, $\lambda=(1,\ldots,1)$; the
+upper equality holds exactly when $\lambda=(N)$.  Each bound is attained
+at every $j$ by its corresponding extremal profile, even with the atom list
+and component count fixed.  For $N=0$ the generating polynomial is $1$, and for $N=1$ the
+two extremal profiles coincide.
+\end{corollary}
+\begin{proof}
+Let $\pi_i$ be the local partition at the $i$th shared point.  In the
+auxiliary forest from
+Lemma~\ref{lemma-local-decomposition-lattice-product}, delete the central
+point-nodes and their incident edges.  The remaining forest has
+$k+\sum_i|\pi_i|$ vertices and $\sum_i(\lambda_i+1)$ edges.  Every component
+contains an atom and corresponds to one actual piece.  Hence
+\[
+ |D|=k-\sum_i\bigl(\lambda_i+1-|\pi_i|\bigr).
+\]
+Independent local choices give the generating polynomial.  This is the
+standard partition-lattice enumeration
+\citep[Example~3.10.4]{stanley2012}; connected-partition polynomials and their
+articulation factorization are discussed in \citet[Sections~3--5]{simon2011}.
+
+For the lower bound, give the $i$th local set one anchor and $\lambda_i$
+ordinary elements.  A $j$-element subset of the total $N$ ordinary elements
+defines local partitions by joining its elements to their respective
+anchors and leaving all others singleton.  This is an injection into the
+choices counted by $d_j(F)$.
+
+For the upper bound, identify all local anchors to one anchor on a set of
+$N+1$ elements.  Fuse the anchor blocks of the local partitions and retain
+every other block.  Restriction to each anchored local set recovers its
+partition, so the map is injective.  A tuple of total excess $j$ gives
+$N+1-j$ blocks, proving the upper bound.  This construction also shows that
+merging two positive profile parts never decreases any coefficient.
+
+For strictness in the lower bound, suppose some $\lambda_i\ge2$.  Form an
+anchor-free pair in that group and choose $j-1$ of the remaining $N-2$
+ordinary elements to join their local anchors.  This tuple has excess $j$
+but is outside the lower image.  For strictness in the upper bound, suppose
+there are at least two profile groups.  Choose $j+1$ ordinary elements
+meeting two groups, put them in one anchor-free block and leave all other
+elements singleton.  This partition has $N+1-j$ blocks but is outside the
+upper image.  Both choices are possible for $1\le j\le N-1$.
+The two extremal profiles attain the respective bounds.  Finally,
+Lemma~\ref{lemma-capacity-safe-profile-realization} realizes both profiles
+using the same atoms and component count, with all global parameters
+preserved.
+\end{proof}
+
+For example, take $C_4^+$ and two single triples.  A chain assembly with two
+binary joints has decomposition polynomial $1+2z+z^2$; an assembly with both
+triples attached at one point of $C_4^+$ has polynomial $1+3z+z^2$.
+Both systems have twelve vertices, six hyperedges, three canonical atoms
+and cycle rank one, and both maximize the atom count for these parameters.
+Their four and five decomposition choices differ only because of attachment
+geometry.  Thus extremal cyclic concentration does not eliminate assembly
+freedom.  The counting inequalities above are elementary partition-lattice
+consequences; their role here is to quantify that freedom, not to assert a
+new general enumeration theorem.
+
+\section*{Formal verification and reproducibility}
+
+The implementation uses Lean~4 \citep{demoura2021} and the mathematical
+library Mathlib \citep{mathlib2020}.  These references describe the proof
+assistant and library, not the verification status of this manuscript.
+
+The self-contained Lean~4 source is available in the public
+\href{https://github.com/SamPetkov/Erdos593/blob/main/formalization/Erdos593SelfContained.lean}{\texttt{Erdos593} repository}.
+The repository contains a classification implementation in
+\href{https://github.com/SamPetkov/Erdos593/commit/6fd00a76064401f3f10aabef474f59d3c6ecd6bf}{commit \texttt{6fd00a7}},
+whose Git timestamp is 15 July 2026.  A dated public validation record is
+\href{https://github.com/SamPetkov/Erdos593/actions/runs/29682191161}{the successful GitHub Actions run of 19 July 2026},
+at commit \texttt{88ce701}.  A Git timestamp alone does not establish the date
+of public disclosure or priority.  Li's arXiv v2, submitted on 23 July 2026,
+reports a separate formal verification of the broader results in his paper.
+These records do not date either author's private work, and no shared code
+or derivation between the two Lean developments is asserted.
+For every finite triple system $F$, the exported theorems establish
+\[
+\begin{aligned}
+\mathtt{F.IsObligatory}
+&\Longleftrightarrow \mathtt{F.isolatedReduction.Intrinsic},\\
+\mathtt{F.IsObligatory}
+&\Longleftrightarrow \mathtt{Constructible\ F.isolatedReduction}.
+\end{aligned}
+\]
+These exported theorems verify both directions of the classification,
+including the isolated-vertex reduction.  Here ``finite'' describes the
+system $F$ being classified.  The host triple systems are not assumed finite;
+they are quantified within the documented ambient-universe convention of the
+formalisation.
+
+Further accepted Lean results cover the canonical-atom normal form and
+minimal-generator classification, the finite parameter spectra, the connected atom-count
+spectrum and its maximisers, the unrestricted classical-block equivalence,
+the forward atomic cycle and even-theta boundary forms, and the supported
+decomposition order isomorphism with local partition products.  A separately
+validated extension has passed canonical and standalone replay and final
+source reconciliation for the actual-piece/local-partition block-count
+identity; these results retain their stated finiteness, structural and
+feasible-parameter hypotheses.  Delivery of the block-count checkpoint is
+tracked separately from the public repository snapshot.  The abstract
+capacity-two incidence-forest construction
+has also been validated, but it does not yet formalise assembly of an arbitrary
+fixed list of actual atoms.
+
+Verification of the extended manuscript is therefore partial.  Remaining
+interfaces include grading and covers, fixed-atom profile realization and
+canonical-label fidelity after assembly, the componentwise atom-count and full factorization-lattice
+spectra, the all-maximal-block running-order statement, and sorted theta
+parameter normalization.  The full indecomposability phase diagram,
+decomposable spectrum and decomposable equality classification also remain
+separate obligations.  The characteristic-polynomial recovery of the
+attachment profile is not claimed as an additional Lean endpoint.  Exact
+statement-by-statement coverage is tracked in the manuscript crosswalk.
+
+The accepted atom-deficit theorem supplies the arithmetic identity and
+positive-atom bound behind
+Proposition~\ref{proposition-cyclic-cost-budget}, under its exact structural,
+positive-rank and additive-count hypotheses.  Its identification with lattice
+rank still uses the manuscript's grading argument.  The generating polynomial,
+coefficient bounds and equality cases in
+Corollary~\ref{corollary-sharp-piece-counts} are proved here but are not yet
+additional Lean endpoints.  Counting by actual pieces uses the accepted
+product and block-count interfaces, not an assumption about covers in an
+ambient partition lattice; the fixed-atom sharpness assertion retains the
+separate assembly-realization obligation.
+
+The Lean development does not reproduce every intermediate prose lemma
+verbatim.  In particular, its negative direction uses a shift-graph host in
+place of the paper's high-odd-girth input, and its closure construction uses
+a singular-safe layering rather than the displayed cofinality-indexed chain.
+These are distinct proof routes to the classification.  Kernel validation
+supplements rather than replaces mathematical review; a full external audit
+of the extended development remains pending.
+
+\section*{Acknowledgments}
+
+The author thanks Tom de Groot for his advice on revising the manuscript for
+greater clarity.
+The author received no funding for this work and declares no competing
+interests.
+
+\section*{AI assistance}
+
+OpenAI's GPT-5.6 Pro through ChatGPT and Aristotle~\citep{achim-et-al-2025}
+were used in proof development, adversarial checking, editorial
+restructuring, and the Lean formalisation.  In particular, ChatGPT reviews
+informed the checking and presentation of the local forest-counting and
+capacity arguments in Section~10; Aristotle supplied the abstract
+incidence-forest construction distinguished from fixed-atom realization in
+the verification section.  The author takes full responsibility for the
+arguments, citations, and final manuscript; newly incorporated material in
+this review draft remains subject to the author's review.
+
+\begin{thebibliography}{99}
+\interlinepenalty=10000
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Achim et~al.(2025)Achim, Best, Der, F{\'e}d{\'e}rico, Gukov,
+  Halpern-Leistner, Henningsgard, Kudryashov, Meiburg, Michelsen, Patterson,
+  Rodriguez, Scharff, Shanker, Sicca, Sowrirajan, Swope, Tamas, Tenev, Thomm,
+  Williams, and Wu]{achim-et-al-2025}
+Tudor Achim, Alex Best, Kevin Der, Math{\"i}s F{\'e}d{\'e}rico, Sergei Gukov,
+  Daniel Halpern-Leistner, Kirsten Henningsgard, Yury Kudryashov, Alexander
+  Meiburg, Martin Michelsen, Riley Patterson, Eric Rodriguez, Laura Scharff,
+  Vikram Shanker, Vladimir Sicca, Hari Sowrirajan, Aidan Swope, Matyas Tamas,
+  Vlad Tenev, Jonathan Thomm, Harold Williams, and Lawrence Wu.
+\newblock {Aristotle}: {IMO}-level automated theorem proving, 2025.
+\newblock URL \url{https://arxiv.org/abs/2510.01346}.
+\newblock arXiv:2510.01346.
+
+\bibitem[Bahmanian and \v{S}ajna(2015)]{bahmanian2015}
+M.~Amin Bahmanian and Mateja \v{S}ajna.
+\newblock Connection and separation in hypergraphs.
+\newblock \emph{Theory Appl. Graphs}, 2\penalty0 (2):\penalty0 Article~5, 2015.
+\newblock \doi{10.20429/tag.2015.020205}.
+\newblock URL \url{https://arxiv.org/abs/1504.04274}.
+
+\bibitem[Bloom(2026)]{bloom593}
+Thomas~F. Bloom.
+\newblock Erd{\H{o}}s problem 593.
+\newblock \url{https://www.erdosproblems.com/593}, 2026.
+\newblock Accessed 11 July 2026.
+
+\bibitem[de~Bruijn and Erd{\H{o}}s(1951)]{debruijn1951}
+Nicolaas~Govert de~Bruijn and Paul Erd{\H{o}}s.
+\newblock A colour problem for infinite graphs and a problem in the theory of
+  relations.
+\newblock \emph{Nederl. Akad. Wetensch. Proc. Ser. A}, 54\penalty0
+  (5):\penalty0 371--373, 1951.
+\newblock \doi{10.1016/S1385-7258(51)50053-7}.
+
+\bibitem[de~Moura and Ullrich(2021)]{demoura2021}
+Leonardo de~Moura and Sebastian Ullrich.
+\newblock The Lean~4 theorem prover and programming language.
+\newblock In Andr\'e Platzer and Geoff Sutcliffe, editors,
+  \emph{Automated Deduction---CADE~28}, volume~12699 of \emph{Lecture
+  Notes in Computer Science}, pages 625--635. Springer, Cham, 2021.
+\newblock \doi{10.1007/978-3-030-79876-5_37}.
+
+\bibitem[Diestel(2017)]{diestel2017}
+Reinhard Diestel.
+\newblock \emph{Graph Theory}, fifth edition.
+\newblock Graduate Texts in Mathematics, volume~173. Springer, Berlin,
+  2017.
+\newblock \doi{10.1007/978-3-662-53622-3}.
+
+\bibitem[Erd{\H{o}}s(1995)]{erdos1995}
+Paul Erd{\H{o}}s.
+\newblock On some problems in combinatorial set theory.
+\newblock \emph{Publikacije Instituta Matemati\v{c}kog (Beograd) (N.S.)},
+  57(71):\penalty0 61--65, 1995.
+
+\bibitem[Erd{\H{o}}s et~al.(1975)Erd{\H{o}}s, Galvin, and Hajnal]{egh1975}
+Paul Erd{\H{o}}s, Fred Galvin, and Andr{\'a}s Hajnal.
+\newblock On set-systems having large chromatic number and not containing
+  prescribed subsystems.
+\newblock In \emph{Infinite and Finite Sets (Keszthely, 1973)}, volume~10 of
+  \emph{Colloquia Mathematica Societatis J{\'a}nos Bolyai}, pages 425--513.
+  North-Holland, 1975.
+
+\bibitem[Erd{\H{o}}s and Hajnal(1966)]{erdoshajnal1966}
+Paul Erd{\H{o}}s and Andr{\'a}s Hajnal.
+\newblock On chromatic number of graphs and set-systems.
+\newblock \emph{Acta Math. Acad. Sci. Hungar.}, 17\penalty0
+  (1--2):\penalty0 61--99, 1966.
+\newblock \doi{10.1007/BF02020444}.
+
+\bibitem[Erd{\H{o}}s et~al.(1973)Erd{\H{o}}s, Hajnal, and Rothschild]{ehr1973}
+Paul Erd{\H{o}}s, Andr{\'a}s Hajnal, and Bruce~L. Rothschild.
+\newblock On chromatic number of graphs and set-systems.
+\newblock In \emph{Cambridge Summer School in Mathematical Logic (Cambridge,
+  1971)}, volume 337 of \emph{Lecture Notes in Mathematics}, pages 531--538.
+  Springer, Berlin and New York, 1973.
+
+\bibitem[Erd{\H{o}}s and Rado(1956)]{erdosrado1956}
+Paul Erd{\H{o}}s and Richard Rado.
+\newblock A partition calculus in set theory.
+\newblock \emph{Bull. Amer. Math. Soc.}, 62\penalty0
+  (5):\penalty0 427--489, 1956.
+\newblock \doi{10.1090/S0002-9904-1956-10036-0}.
+
+\bibitem[Hajnal and Komj{\'a}th(2008)]{hajnalkomjath2008}
+Andr{\'a}s Hajnal and P{\'e}ter Komj{\'a}th.
+\newblock Obligatory subsystems of triple systems.
+\newblock \emph{Acta Math. Hungar.}, 119\penalty0 (1--2):\penalty0
+  1--13, 2008.
+\newblock \doi{10.1007/s10474-007-6231-2}.
+
+\bibitem[Komj{\'a}th(2001)]{komjath2001}
+P{\'e}ter Komj{\'a}th.
+\newblock Some remarks on obligatory subsystems of uncountably chromatic triple
+  systems.
+\newblock \emph{Combinatorica}, 21\penalty0 (2):\penalty0 233--238, 2001.
+\newblock \doi{10.1007/s004930100021}.
+
+\bibitem[Komj{\'a}th(2008)]{komjath2008}
+P{\'e}ter Komj{\'a}th.
+\newblock An uncountably chromatic triple system.
+\newblock \emph{Acta Math. Hungar.}, 121\penalty0 (1--2):\penalty0
+  79--92, 2008.
+\newblock \doi{10.1007/s10474-008-7179-6}.
+
+\bibitem[Li(2026)]{li2026}
+Eric Li.
+\newblock A resolution of {Erd{\H{o}}s Problems 593 and 1177}: Obligatory
+  triple systems and exact spectra.
+\newblock arXiv:2606.24882, submitted 23 June 2026.
+\newblock \doi{10.48550/arXiv.2606.24882}.
+\newblock URL \url{https://arxiv.org/abs/2606.24882}.
+
+\bibitem[The mathlib Community(2020)]{mathlib2020}
+The mathlib Community.
+\newblock The Lean mathematical library.
+\newblock In \emph{Proceedings of the 9th ACM SIGPLAN International
+  Conference on Certified Programs and Proofs}, pages 367--381.
+  Association for Computing Machinery, New York, 2020.
+\newblock \doi{10.1145/3372885.3373824}.
+
+\bibitem[Reiher(2024)]{reiher2024}
+Christian Reiher.
+\newblock Obligatory hypergraphs.
+\newblock arXiv:2403.11223, 2024.
+\newblock \doi{10.1090/proc/17021}.
+\newblock URL \url{https://arxiv.org/abs/2403.11223}.
+
+\bibitem[Rota(1964)]{rota1964}
+Gian-Carlo Rota.
+\newblock On the foundations of combinatorial theory. I. Theory of
+  M\"obius functions.
+\newblock \emph{Z. Wahrscheinlichkeitstheorie verw. Geb.}, 2:\penalty0
+  340--368, 1964.
+\newblock \doi{10.1007/BF00531932}.
+
+\bibitem[Simon et~al.(2011)Simon, Tittmann, and Trinks]{simon2011}
+Frank Simon, Peter Tittmann, and Martin Trinks.
+\newblock Counting connected set partitions of graphs.
+\newblock \emph{Electron. J. Combin.}, 18\penalty0 (1):\penalty0 P14, 2011.
+\newblock \doi{10.37236/501}.
+\newblock URL \url{https://arxiv.org/abs/1005.1726}.
+
+\bibitem[Stanley(2007)]{stanley2007}
+Richard~P. Stanley.
+\newblock An introduction to hyperplane arrangements.
+\newblock In Ezra Miller, Victor Reiner, and Bernd Sturmfels, editors,
+  \emph{Geometric Combinatorics}, volume~13 of \emph{IAS/Park City
+  Mathematics Series}, pages 389--496. American Mathematical Society,
+  Providence, RI, 2007.
+\newblock URL \url{https://math.mit.edu/~rstan/arrangements/arr.html}.
+
+\bibitem[Stanley(2012)]{stanley2012}
+Richard~P. Stanley.
+\newblock \emph{Enumerative Combinatorics}, volume~1, second edition.
+\newblock Cambridge Studies in Advanced Mathematics, volume~49. Cambridge
+  University Press, Cambridge, 2012.
+\newblock \doi{10.1017/CBO9781139058520}.
+
+\bibitem[Wang et~al.(2026)Wang, Duan, Gerbner, and Hama Karim]{wang2026}
+Yichen Wang, Mengyu Duan, D{\'a}niel Gerbner, and Hilal Hama Karim.
+\newblock On the largest chromatic number of {$F$}-free hypergraphs.
+\newblock arXiv:2604.21551, 2026.
+\newblock \doi{10.48550/arXiv.2604.21551}.
+\newblock URL \url{https://arxiv.org/abs/2604.21551}.
+
+\bibitem[Whitney(1932)]{whitney1932}
+Hassler Whitney.
+\newblock Non-separable and planar graphs.
+\newblock \emph{Trans. Amer. Math. Soc.}, 34\penalty0 (2):\penalty0
+  339--362, 1932.
+\newblock \doi{10.1090/S0002-9947-1932-1501641-7}.
+
+\end{thebibliography}
+
+\end{document}
