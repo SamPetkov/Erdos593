@@ -1,0 +1,1307 @@
+{
+  "configuration": "unchanged default Erdos593 Lean library; no hooks or executable targets",
+  "external_imports": [
+    "Init",
+    "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+    "Mathlib.Algebra.BigOperators.Group.Finset.Piecewise",
+    "Mathlib.Algebra.BigOperators.Group.Finset.Sigma",
+    "Mathlib.Algebra.Order.BigOperators.Group.Finset",
+    "Mathlib.Algebra.Order.Floor.Ring",
+    "Mathlib.Analysis.SpecialFunctions.Sqrt",
+    "Mathlib.Combinatorics.Compactness",
+    "Mathlib.Combinatorics.Hall.Basic",
+    "Mathlib.Combinatorics.SimpleGraph.Acyclic",
+    "Mathlib.Combinatorics.SimpleGraph.Basic",
+    "Mathlib.Combinatorics.SimpleGraph.Bipartite",
+    "Mathlib.Combinatorics.SimpleGraph.Coloring.Constructions",
+    "Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex",
+    "Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected",
+    "Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite",
+    "Mathlib.Combinatorics.SimpleGraph.Connectivity.Subgraph",
+    "Mathlib.Combinatorics.SimpleGraph.Copy",
+    "Mathlib.Combinatorics.SimpleGraph.CycleGraph",
+    "Mathlib.Combinatorics.SimpleGraph.DeleteEdges",
+    "Mathlib.Combinatorics.SimpleGraph.Finite",
+    "Mathlib.Combinatorics.SimpleGraph.Hamiltonian",
+    "Mathlib.Combinatorics.SimpleGraph.Maps",
+    "Mathlib.Combinatorics.SimpleGraph.Matching",
+    "Mathlib.Combinatorics.SimpleGraph.Sum",
+    "Mathlib.Combinatorics.SimpleGraph.Walk.Maps",
+    "Mathlib.Data.Countable.Basic",
+    "Mathlib.Data.Fin.Basic",
+    "Mathlib.Data.Fin.Embedding",
+    "Mathlib.Data.Fin.Tuple.Embedding",
+    "Mathlib.Data.Finset.Card",
+    "Mathlib.Data.Finset.Image",
+    "Mathlib.Data.Finset.Max",
+    "Mathlib.Data.Finset.Sort",
+    "Mathlib.Data.Fintype.BigOperators",
+    "Mathlib.Data.Fintype.Card",
+    "Mathlib.Data.Fintype.EquivFin",
+    "Mathlib.Data.Nat.Find",
+    "Mathlib.Data.Nat.Pairing",
+    "Mathlib.Data.Prod.Lex",
+    "Mathlib.Data.Set.Card",
+    "Mathlib.Data.Set.Card.Arithmetic",
+    "Mathlib.Data.Set.Finite.Lemmas",
+    "Mathlib.Data.Set.Finite.Range",
+    "Mathlib.Data.Set.PowersetCard",
+    "Mathlib.Data.Setoid.Basic",
+    "Mathlib.Logic.Embedding.Basic",
+    "Mathlib.Logic.Equiv.Fin.Basic",
+    "Mathlib.Logic.Equiv.Sum",
+    "Mathlib.Order.Fin.Basic",
+    "Mathlib.Order.TransfiniteIteration",
+    "Mathlib.Order.WellFounded",
+    "Mathlib.SetTheory.Cardinal.Aleph",
+    "Mathlib.SetTheory.Cardinal.Arithmetic",
+    "Mathlib.SetTheory.Cardinal.Basic",
+    "Mathlib.SetTheory.Cardinal.Continuum",
+    "Mathlib.SetTheory.Cardinal.Finite",
+    "Mathlib.SetTheory.Cardinal.Order",
+    "Mathlib.SetTheory.Cardinal.Ordinal",
+    "Mathlib.SetTheory.Cardinal.Pigeonhole",
+    "Mathlib.SetTheory.Ordinal.Rank",
+    "Mathlib.Tactic",
+    "Mathlib.Tactic.FinCases",
+    "Mathlib.Tactic.GCongr",
+    "Mathlib.Tactic.Linarith",
+    "Mathlib.Tactic.Order",
+    "Mathlib.Tactic.Push",
+    "Mathlib.Tactic.Ring",
+    "Mathlib.Tactic.Tauto"
+  ],
+  "only_separate_local_module": "Erdos593.AxiomAudit",
+  "ordered_modules": [
+    {
+      "module": "Erdos593.Graph.Bridge",
+      "path": "Erdos593/Graph/Bridge.lean",
+      "source_sha256": "2d2576a0b6c7c478f87c90aaddb48e04197a757ffe3232f3812b3e4d46014e2a"
+    },
+    {
+      "module": "Erdos593.Graph.BridgeFree",
+      "path": "Erdos593/Graph/BridgeFree.lean",
+      "source_sha256": "384f5a5a0ff8de39362daa2b1e737d1a5f2c05a4f690ff0bd2190d2760e35b52"
+    },
+    {
+      "module": "Erdos593.Graph.EdgeCycleSplice",
+      "path": "Erdos593/Graph/EdgeCycleSplice.lean",
+      "source_sha256": "6cfba30b8d21da122e55d0d2f1803bc0dee356f9687b47eba94755376f8ea3ac"
+    },
+    {
+      "module": "Erdos593.Graph.EdgeCycleBlocks",
+      "path": "Erdos593/Graph/EdgeCycleBlocks.lean",
+      "source_sha256": "23d9d86145595a038643e37e1e97508b46ff5cc764d18da827f82a5fc8e2febd"
+    },
+    {
+      "module": "Erdos593.Graph.EdgeCycleBlockIncidence",
+      "path": "Erdos593/Graph/EdgeCycleBlockIncidence.lean",
+      "source_sha256": "866d985802a3753a94cdb7d5e643b82d6d107fddad3543cbd7c233f135145740"
+    },
+    {
+      "module": "Erdos593.Graph.TwoVertexCycleSplice",
+      "path": "Erdos593/Graph/TwoVertexCycleSplice.lean",
+      "source_sha256": "907a99a5e4fde20ef76723fe389efac32e331d88f7915cabbd8924162b8e1ff1"
+    },
+    {
+      "module": "Erdos593.Graph.EdgeCycleChord",
+      "path": "Erdos593/Graph/EdgeCycleChord.lean",
+      "source_sha256": "4a4b0244eae07a4889e17f3d8510dd04844fc1af748310eb9929d70927a68cb2"
+    },
+    {
+      "module": "Erdos593.Graph.EdgeCycleBlockIntersection",
+      "path": "Erdos593/Graph/EdgeCycleBlockIntersection.lean",
+      "source_sha256": "a82cf315f0948d2be90b27e96b245cbda5947a3fa2cfbe688f2676eff16dc8c5"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrder",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportForestOrder.lean",
+      "source_sha256": "fc44639585038e980516bcd2f5db9dc50d7a9f6d297fabef65b242905452afd8"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrder",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrder.lean",
+      "source_sha256": "b4dac99c8ae35478542ae7a4803998ed19ec84771cdf4c27fab0df0c317a4206"
+    },
+    {
+      "module": "Erdos593.Graph.EdgeCycleBlockIncidenceForest",
+      "path": "Erdos593/Graph/EdgeCycleBlockIncidenceForest.lean",
+      "source_sha256": "a053b252373196ef6b3e1b2a4774303da3b38538364bcb0d1394bbe15f3c5783"
+    },
+    {
+      "module": "Erdos593.Graph.BridgeQuotient",
+      "path": "Erdos593/Graph/BridgeQuotient.lean",
+      "source_sha256": "3d4e7bfab70ef7dcb4acfa58d65782a5971df0568ffc437c5264c6df9bdf9f63"
+    },
+    {
+      "module": "Erdos593.Graph.CompleteBipartite",
+      "path": "Erdos593/Graph/CompleteBipartite.lean",
+      "source_sha256": "24f8c091dcbc10ed536a7d06ae19fbd11bdb2fd76439f494dbaf73e94e82e0f8"
+    },
+    {
+      "module": "Erdos593.Graph.CompleteBipartiteCopy",
+      "path": "Erdos593/Graph/CompleteBipartiteCopy.lean",
+      "source_sha256": "0537f28e241dd08181471dae06d0724ddea4ca5aec4edd3a8d48d6c20252bbd4"
+    },
+    {
+      "module": "Erdos593.Graph.CompleteBipartiteEdges",
+      "path": "Erdos593/Graph/CompleteBipartiteEdges.lean",
+      "source_sha256": "c10bafbfc2300a3b97838c02319266f02829dfcb6a7c70acb6b5e0f016b861d3"
+    },
+    {
+      "module": "Erdos593.Graph.FiniteOutdegreeColoring",
+      "path": "Erdos593/Graph/FiniteOutdegreeColoring.lean",
+      "source_sha256": "757731c27aa486fb75fc04d1bd5e8390ac9d11fa9dca4374faad2b9de6081477"
+    },
+    {
+      "module": "Erdos593.Graph.CountableColoring",
+      "path": "Erdos593/Graph/CountableColoring.lean",
+      "source_sha256": "8fad2fdbd39049ac244232961213cf72d999b8c1934218c062c135b04709ecbe"
+    },
+    {
+      "module": "Erdos593.Graph.FiniteClosureLayering",
+      "path": "Erdos593/Graph/FiniteClosureLayering.lean",
+      "source_sha256": "d9a827e9fc58ee92fb76ec7e7a346d1598eb6e568577319a53a8f5abf65faacb"
+    },
+    {
+      "module": "Erdos593.Graph.CompleteBipartiteLayering",
+      "path": "Erdos593/Graph/CompleteBipartiteLayering.lean",
+      "source_sha256": "cb14bbbecd65c9c4b4707c132a419b5576d52283a9e336253109b24707d9d140"
+    },
+    {
+      "module": "Erdos593.Graph.FiniteClosureCardinality",
+      "path": "Erdos593/Graph/FiniteClosureCardinality.lean",
+      "source_sha256": "a751194cd6dbb8b0122e4827104a52cefbb3ffd7c675b0ebb585a9e448ed3e75"
+    },
+    {
+      "module": "Erdos593.Graph.FiniteClosureLayeringConstruction",
+      "path": "Erdos593/Graph/FiniteClosureLayeringConstruction.lean",
+      "source_sha256": "746928bbd59a0d687c2013f81c0b09ac3ef919e25b9b33b96e412e77b158acdf"
+    },
+    {
+      "module": "Erdos593.Graph.MinimalBadCore",
+      "path": "Erdos593/Graph/MinimalBadCore.lean",
+      "source_sha256": "c63566c8c53f10205dbc16af2b1705d94580886b0ea201bd40911e562269acad"
+    },
+    {
+      "module": "Erdos593.Graph.NonInducedFactor",
+      "path": "Erdos593/Graph/NonInducedFactor.lean",
+      "source_sha256": "ef491e20207e432910c6c38d55e1275c00b444594680dbf8266edfa162ab7a6f"
+    },
+    {
+      "module": "Erdos593.Graph.Parity",
+      "path": "Erdos593/Graph/Parity.lean",
+      "source_sha256": "2146915b6213e1949a659f4a7c18245a534a271f8c0dcd371c708386c5e40995"
+    },
+    {
+      "module": "Erdos593.Graph.OddClosedWalk",
+      "path": "Erdos593/Graph/OddClosedWalk.lean",
+      "source_sha256": "6d59bd650e4e734e516cc1610657cfe7d57c5b69f384e5cda16f2a92f82b899d"
+    },
+    {
+      "module": "Erdos593.Graph.FiniteEdgeFactor",
+      "path": "Erdos593/Graph/FiniteEdgeFactor.lean",
+      "source_sha256": "776d922984903b62cfeeae85002b4798b29f67b3c10aeb4c5ecf8d788b60ec5e"
+    },
+    {
+      "module": "Erdos593.Graph.RainbowBipartite",
+      "path": "Erdos593/Graph/RainbowBipartite.lean",
+      "source_sha256": "5a68125e00f74b07a0c340c32e9b7df7f827f0898e859b40c4dc9313b74424a3"
+    },
+    {
+      "module": "Erdos593.Graph.RainbowPositiveSize",
+      "path": "Erdos593/Graph/RainbowPositiveSize.lean",
+      "source_sha256": "07e593da56c2b252c40e3969a52630ae859be0b18314507d9295c1764551a835"
+    },
+    {
+      "module": "Erdos593.Graph.RootedTree",
+      "path": "Erdos593/Graph/RootedTree.lean",
+      "source_sha256": "dcd71edb0873c874102833f981328982ae54133a34690ee4129556adc6325987"
+    },
+    {
+      "module": "Erdos593.Graph.ShiftGraph",
+      "path": "Erdos593/Graph/ShiftGraph.lean",
+      "source_sha256": "1573ef32c4af70c03048e94e9e9e28aba79dd4ac50db5d470755a7b2bec24408"
+    },
+    {
+      "module": "Erdos593.Graph.ShiftGraphChromatic",
+      "path": "Erdos593/Graph/ShiftGraphChromatic.lean",
+      "source_sha256": "950a36a017f1482d08a70eedbe814448dc7964a79a20062c537733f465d921ae"
+    },
+    {
+      "module": "Erdos593.Graph.ShiftGraphOddGirth",
+      "path": "Erdos593/Graph/ShiftGraphOddGirth.lean",
+      "source_sha256": "83f669ece3f8928c046f0cbfa50ccfa3fbf78cdb24758ee2aa817fb1205c603e"
+    },
+    {
+      "module": "Erdos593.Graph.ShiftGraphHost",
+      "path": "Erdos593/Graph/ShiftGraphHost.lean",
+      "source_sha256": "0d7fea1dd5198eb91f1ad5ead887a1a5d80727e4ac4143d646d96d8ae9b3f2f8"
+    },
+    {
+      "module": "Erdos593.TripleSystem.Basic",
+      "path": "Erdos593/TripleSystem/Basic.lean",
+      "source_sha256": "69f255a9b613d90e7173f15b1499875ab374653fba971265e47ee9e0318aed11"
+    },
+    {
+      "module": "Erdos593.TripleSystem.Embedding",
+      "path": "Erdos593/TripleSystem/Embedding.lean",
+      "source_sha256": "3d57ccc88a3af6a696bfa59cc77b5b28fcc5046a867730d912b2f7a947cf7285"
+    },
+    {
+      "module": "Erdos593.TripleSystem.EdgeRestriction",
+      "path": "Erdos593/TripleSystem/EdgeRestriction.lean",
+      "source_sha256": "0435e5f79927a45b5ae21b597f2f910d122eac6c58e2fcf928e3e8b9d8f6bd09"
+    },
+    {
+      "module": "Erdos593.TripleSystem.Isolated",
+      "path": "Erdos593/TripleSystem/Isolated.lean",
+      "source_sha256": "b6b14641cb9cf0951ff7564cbacc6ed641fbe550ef9279d8189885d2dfd3cae2"
+    },
+    {
+      "module": "Erdos593.TripleSystem.Isomorph",
+      "path": "Erdos593/TripleSystem/Isomorph.lean",
+      "source_sha256": "2dc9fd1b84ca7299fff7d6d8c786429f5eb5e1fc7b3899a7dfe90e720599e3cd"
+    },
+    {
+      "module": "Erdos593.TripleSystem.Levi",
+      "path": "Erdos593/TripleSystem/Levi.lean",
+      "source_sha256": "a666b40f90c05232f5ce5e80148adfbaf3583e70157254cfd0e198cee3e1dd7b"
+    },
+    {
+      "module": "Erdos593.TripleSystem.Intrinsic",
+      "path": "Erdos593/TripleSystem/Intrinsic.lean",
+      "source_sha256": "764cf4d904aa0f59607e4d5bfe1eaa3710240051be5446d6e5f6776b54c29356"
+    },
+    {
+      "module": "Erdos593.TripleSystem.IsomorphIntrinsic",
+      "path": "Erdos593/TripleSystem/IsomorphIntrinsic.lean",
+      "source_sha256": "caaff78364a977f09204b8854bbdb65f21c35a9e511d4479c78fc690c784f4fa"
+    },
+    {
+      "module": "Erdos593.TripleSystem.EmbeddingEdgeRestriction",
+      "path": "Erdos593/TripleSystem/EmbeddingEdgeRestriction.lean",
+      "source_sha256": "803f764f5c2c6fd4598be6095ed8db2295e06f34c1c1e81f1956afa65b4d2049"
+    },
+    {
+      "module": "Erdos593.TripleSystem.EmbeddingLinearity",
+      "path": "Erdos593/TripleSystem/EmbeddingLinearity.lean",
+      "source_sha256": "a0620820d49404bd9c11b776637cd4b0073bd90b4334310522dcb8d80d379858"
+    },
+    {
+      "module": "Erdos593.TripleSystem.Expansion",
+      "path": "Erdos593/TripleSystem/Expansion.lean",
+      "source_sha256": "8eedb4203064487022b53cda4fcc165cc6919c6aa325ce2e27aaea0737685387"
+    },
+    {
+      "module": "Erdos593.TripleSystem.BridgeBlocks",
+      "path": "Erdos593/TripleSystem/BridgeBlocks.lean",
+      "source_sha256": "9aba1790a3fc7b9309417d9ec2d38f606dbc688b79c2876ffebb8f81c2fa4cc3"
+    },
+    {
+      "module": "Erdos593.TripleSystem.BridgeBlockContraction",
+      "path": "Erdos593/TripleSystem/BridgeBlockContraction.lean",
+      "source_sha256": "2d31369b0b9785bb5049efe1b2c5a37a678893b75d49914f1a6cae26328e3a13"
+    },
+    {
+      "module": "Erdos593.TripleSystem.BridgeBlockCycleLift",
+      "path": "Erdos593/TripleSystem/BridgeBlockCycleLift.lean",
+      "source_sha256": "b271376bb03c29a6e3ab2ed238bc0af3020e296a3576063703fb260f1e864fd0"
+    },
+    {
+      "module": "Erdos593.TripleSystem.BridgeBlockExpansion",
+      "path": "Erdos593/TripleSystem/BridgeBlockExpansion.lean",
+      "source_sha256": "71cc3aff8a6262d199c09f62b0b52be5b076379bd728d2ecd388ce3158e298c7"
+    },
+    {
+      "module": "Erdos593.TripleSystem.BridgeBlockPackaging",
+      "path": "Erdos593/TripleSystem/BridgeBlockPackaging.lean",
+      "source_sha256": "4ec2c413b4695c03986cbc934a5eeb2abbc2887e3afb5f746fc09986fcc535f8"
+    },
+    {
+      "module": "Erdos593.TripleSystem.DisjointUnion",
+      "path": "Erdos593/TripleSystem/DisjointUnion.lean",
+      "source_sha256": "7d75bab9b19c11f1ed4e0678ad42569a17c0521679d3c981a8a6f3e52c2fe62a"
+    },
+    {
+      "module": "Erdos593.TripleSystem.OnePointAmalgamation",
+      "path": "Erdos593/TripleSystem/OnePointAmalgamation.lean",
+      "source_sha256": "fb9c09d0f0f5cb33604f1d1f8eb17f4c3c24d8a61d16579c33531f947935891b"
+    },
+    {
+      "module": "Erdos593.TripleSystem.Constructive",
+      "path": "Erdos593/TripleSystem/Constructive.lean",
+      "source_sha256": "0ea120054992eaf91d39327764896821aae3c4c197085f7cb061b31aa9dd4af3"
+    },
+    {
+      "module": "Erdos593.TripleSystem.BridgeBlockRestriction",
+      "path": "Erdos593/TripleSystem/BridgeBlockRestriction.lean",
+      "source_sha256": "15b0937010587d9a0d5742a06e0c8351266f3e7bb339f165b45f4ae801a8a8ad"
+    },
+    {
+      "module": "Erdos593.TripleSystem.DisjointUnionForward",
+      "path": "Erdos593/TripleSystem/DisjointUnionForward.lean",
+      "source_sha256": "d2424b0718b06471891c8b7374e925d91f1e6a1405daed4edce9b64a7e4271b3"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ExpansionIntrinsic",
+      "path": "Erdos593/TripleSystem/ExpansionIntrinsic.lean",
+      "source_sha256": "3ba58aab4a728ddb3555c99dae3338bbb444b38f5fbe9c831747dffd20da1f7d"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ForwardExpansion",
+      "path": "Erdos593/TripleSystem/ForwardExpansion.lean",
+      "source_sha256": "f2d0e538c25698185822d5ece04308f194ab07900ea2e29fae09a385f779d1a2"
+    },
+    {
+      "module": "Erdos593.TripleSystem.OnePointAmalgamationIntrinsic",
+      "path": "Erdos593/TripleSystem/OnePointAmalgamationIntrinsic.lean",
+      "source_sha256": "5486e976e4355ef912d5186fd6a3b20744fa28eb73e14baa9ea3c9156cc85ff1"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ConstructiveForward",
+      "path": "Erdos593/TripleSystem/ConstructiveForward.lean",
+      "source_sha256": "9302572ebd04b80b17a4de2b3091a25a519047a9a7db6a565d16088273d8d409"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SingleEdgePiece",
+      "path": "Erdos593/TripleSystem/SingleEdgePiece.lean",
+      "source_sha256": "1c39e02f57d345bc718f73cfbc754ecac5c86d976cd75c3234e6dbf85b85ee8e"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SingleEdgePieceConstructible",
+      "path": "Erdos593/TripleSystem/SingleEdgePieceConstructible.lean",
+      "source_sha256": "f574e1077d0339bb93a697e85533681949c53c3b3dc5820257294e0761156dd8"
+    },
+    {
+      "module": "Erdos593.TripleSystem.DegenerateBridgeBlock",
+      "path": "Erdos593/TripleSystem/DegenerateBridgeBlock.lean",
+      "source_sha256": "ad403556d9dacdcd008722754013f665da4fdf8fc72d333b114245b88389a728"
+    },
+    {
+      "module": "Erdos593.TripleSystem.EdgeRestrictionFull",
+      "path": "Erdos593/TripleSystem/EdgeRestrictionFull.lean",
+      "source_sha256": "12eb2f2a0df092135d8944c6dfc5be9f258b8decc516d11dfbc5a48ed0f92e99"
+    },
+    {
+      "module": "Erdos593.TripleSystem.EdgeRestrictionReconstruction",
+      "path": "Erdos593/TripleSystem/EdgeRestrictionReconstruction.lean",
+      "source_sha256": "9eb6c092c33f1ae1fd5bf172bf37062eb2e4257bcea793e82097d64c8e4d1daf"
+    },
+    {
+      "module": "Erdos593.TripleSystem.BridgeBlockRunningIntersection",
+      "path": "Erdos593/TripleSystem/BridgeBlockRunningIntersection.lean",
+      "source_sha256": "69950a69e53f6e268b55da4bea2e57ad359647fd13152f183b9fef85f3d498bf"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomPartition",
+      "path": "Erdos593/TripleSystem/CanonicalAtomPartition.lean",
+      "source_sha256": "180c96b4b7b111560cb698e14cf68b27896176e1d4a99e41ca17efd700937d02"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomTypeDichotomy",
+      "path": "Erdos593/TripleSystem/CanonicalAtomTypeDichotomy.lean",
+      "source_sha256": "26f4b68e3e7a89d4a7e423f83be8acf45e1e0a3dc8a77b7257cd7895301b3cef"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomCoreStructure",
+      "path": "Erdos593/TripleSystem/CanonicalAtomCoreStructure.lean",
+      "source_sha256": "325785979400758a5a32072883e30e357044c1fbc5be1f924d8f9af595309354"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomForestReconstruction",
+      "path": "Erdos593/TripleSystem/CanonicalAtomForestReconstruction.lean",
+      "source_sha256": "2e7b0b66b7e9eaa0424a672a84a24df21d54612359b3d62cedf61095e0c5ade4"
+    },
+    {
+      "module": "Erdos593.TripleSystem.BridgeSelector",
+      "path": "Erdos593/TripleSystem/BridgeSelector.lean",
+      "source_sha256": "7b917cb0cca037dcbb045f369e2f3f86926496b0f84bb8ee048f82d377315d4b"
+    },
+    {
+      "module": "Erdos593.TripleSystem.Obligatory",
+      "path": "Erdos593/TripleSystem/Obligatory.lean",
+      "source_sha256": "b42f62ffe884c9c2b969184303e65675c7a5839df93ff72d25efbf87deee7229"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ObligatoryDisjointUnion",
+      "path": "Erdos593/TripleSystem/ObligatoryDisjointUnion.lean",
+      "source_sha256": "4dbb6df0efe3dd17cdb5f470e381fdd4daa77be19dd31a9dc2de7ad9ce7788b2"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ObligatoryIsolatedReduction",
+      "path": "Erdos593/TripleSystem/ObligatoryIsolatedReduction.lean",
+      "source_sha256": "b45ab8f9921a5adb58898f377a2cd102f3357e9feb4db7840f76415a1fa3d2ed"
+    },
+    {
+      "module": "Erdos593.TripleSystem.FiniteLinearImageTrace",
+      "path": "Erdos593/TripleSystem/FiniteLinearImageTrace.lean",
+      "source_sha256": "c94982d54d1376dddb52e6cd8fdea68c19192bf6320ee090768406388d56c421"
+    },
+    {
+      "module": "Erdos593.TripleSystem.PairCodegree",
+      "path": "Erdos593/TripleSystem/PairCodegree.lean",
+      "source_sha256": "9a926daeb31f1173d4086201c56f9519fb7023ad72064f7c5be811eef648973e"
+    },
+    {
+      "module": "Erdos593.TripleSystem.HighPairGraph",
+      "path": "Erdos593/TripleSystem/HighPairGraph.lean",
+      "source_sha256": "7ef8ce893808c5b86b728d848cac6fec2092c16c4e411e40f16f3640d9178a20"
+    },
+    {
+      "module": "Erdos593.TripleSystem.HighPairSelection",
+      "path": "Erdos593/TripleSystem/HighPairSelection.lean",
+      "source_sha256": "8f4118138e39a64a20350a449ef020b08aa8292bef19ad828753806c43a6b4f8"
+    },
+    {
+      "module": "Erdos593.TripleSystem.RainbowExpansionEmbedding",
+      "path": "Erdos593/TripleSystem/RainbowExpansionEmbedding.lean",
+      "source_sha256": "d62090180590c353e38ff36dfa032f1b774b7beaf346f7327103a20d89406643"
+    },
+    {
+      "module": "Erdos593.TripleSystem.HighPairMatrix",
+      "path": "Erdos593/TripleSystem/HighPairMatrix.lean",
+      "source_sha256": "ba9a08ecabddb0b74838c4e118d7e7ab1940af7f5130a5cab89346684f2c5b77"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ObligatoryAtoms",
+      "path": "Erdos593/TripleSystem/ObligatoryAtoms.lean",
+      "source_sha256": "9d644c7e3bc07aa01856b31c757fedf832d5cff4608f772644dfccf9401a14fa"
+    },
+    {
+      "module": "Erdos593.TripleSystem.HighPairAtomBridge",
+      "path": "Erdos593/TripleSystem/HighPairAtomBridge.lean",
+      "source_sha256": "0a76dae64d343806647f5e699337eec2903e7cab1beb9f865d4df3882da28493"
+    },
+    {
+      "module": "Erdos593.TripleSystem.PredicateColoring",
+      "path": "Erdos593/TripleSystem/PredicateColoring.lean",
+      "source_sha256": "f2cc959a46c425a71e1fcb12276ccb5be856457bc6773c7a45f242830b89850a"
+    },
+    {
+      "module": "Erdos593.TripleSystem.HighPairEdgeColoring",
+      "path": "Erdos593/TripleSystem/HighPairEdgeColoring.lean",
+      "source_sha256": "7322148c5a5c1e0f8319147078d58fd9d7fca4927b92eba53713aa61ecff62ff"
+    },
+    {
+      "module": "Erdos593.TripleSystem.HighPairObligatory",
+      "path": "Erdos593/TripleSystem/HighPairObligatory.lean",
+      "source_sha256": "b1849b119f0526b068b810b1b762ec0713316d4e23a66b2c796cad6982c50cbe"
+    },
+    {
+      "module": "Erdos593.TripleSystem.NonlinearObstruction",
+      "path": "Erdos593/TripleSystem/NonlinearObstruction.lean",
+      "source_sha256": "5ff8e193a9c0edcca6cf09998c1a717dc3af46dd61f572eba95d22d5ba56657e"
+    },
+    {
+      "module": "Erdos593.TripleSystem.TriangleHostLinearity",
+      "path": "Erdos593/TripleSystem/TriangleHostLinearity.lean",
+      "source_sha256": "b54ab203646bbb6485f0360f8506e290b33da712b363fcf46c92c9cde87eb65a"
+    },
+    {
+      "module": "Erdos593.TripleSystem.TriangleHostRamsey",
+      "path": "Erdos593/TripleSystem/TriangleHostRamsey.lean",
+      "source_sha256": "1569d108a8c5f335dbc2bdb01a83227660d1d1ca97b6b8475069483c887f1c9f"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CardinalPairPartition",
+      "path": "Erdos593/TripleSystem/CardinalPairPartition.lean",
+      "source_sha256": "e1fdb2b513b9f337d8fd567055ccd428a8dc584947590ed6b03e4862f0685d0f"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.PairTransport",
+      "path": "Erdos593/TripleSystem/ErdosRado/PairTransport.lean",
+      "source_sha256": "c755a6694447c62e790c6d2cc3933c96f367edd7d7631c34c567bfa37518d58d"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRadoCarrier",
+      "path": "Erdos593/TripleSystem/ErdosRadoCarrier.lean",
+      "source_sha256": "ad0d97c7fc8f6ff59a16ce9a7bc140306dae3cad4e9cf963c7bb87dd349acdc6"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.CanonicalTrace",
+      "path": "Erdos593/TripleSystem/ErdosRado/CanonicalTrace.lean",
+      "source_sha256": "cfbf59837d53e9f323e008a99163e918d1bca9e3a1f80e12a5b7f8b1a8c129b6"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.TransfiniteIteration",
+      "path": "Erdos593/TripleSystem/ErdosRado/TransfiniteIteration.lean",
+      "source_sha256": "7cca14245f7a059f43f9af89711f16f9bd5dda70e723cc96c677095c7a96e3e2"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.TraceExtension",
+      "path": "Erdos593/TripleSystem/ErdosRado/TraceExtension.lean",
+      "source_sha256": "838c36e0b150f52df5b1b47e335edfee3acaa05554aff8f98588ed36eddfa2ae"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.TraceLimit",
+      "path": "Erdos593/TripleSystem/ErdosRado/TraceLimit.lean",
+      "source_sha256": "2bbd2745179a39c793778c09a25ffe6780f50b8343b8df5f4625ebc37db121f5"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.TraceGraph",
+      "path": "Erdos593/TripleSystem/ErdosRado/TraceGraph.lean",
+      "source_sha256": "23e3804d194bf21e20b16ad151de76c3f71509edd9186693012beeb6ac383b31"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.SourceRecursion",
+      "path": "Erdos593/TripleSystem/ErdosRado/SourceRecursion.lean",
+      "source_sha256": "fdc89134c1593a6d0eaa1e58fa6ea4ab0485386108fee0964f20a2e5f917d14d"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.SourceCanonical",
+      "path": "Erdos593/TripleSystem/ErdosRado/SourceCanonical.lean",
+      "source_sha256": "469376f94ad685d17c13d06daffadcbef6210d85aad3de3849e59179d8a561d6"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.SourceRunInvariant",
+      "path": "Erdos593/TripleSystem/ErdosRado/SourceRunInvariant.lean",
+      "source_sha256": "8f11cd216fefc654044dde4a219c1119fac48aa7954d99b02d931dc568bc3a14"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.SourceCoherence",
+      "path": "Erdos593/TripleSystem/ErdosRado/SourceCoherence.lean",
+      "source_sha256": "a01d403a341945a4309189c53f2c1736d83acb6fb02bc1aff798d9c4ef98585a"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.SourceTerminal",
+      "path": "Erdos593/TripleSystem/ErdosRado/SourceTerminal.lean",
+      "source_sha256": "c4b6c9c78bac7cd3b47636bc8a66ae440b6433d3553de4ffc4087b7b22e79db8"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.SourceEndhomogeneous",
+      "path": "Erdos593/TripleSystem/ErdosRado/SourceEndhomogeneous.lean",
+      "source_sha256": "230f8d5f465bae1107ace82c23450aeb32dc6838a88eae4a13a1871240902488"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.CanonicalTree",
+      "path": "Erdos593/TripleSystem/ErdosRado/CanonicalTree.lean",
+      "source_sha256": "7b1816fc7af19d3e7108e99b933958fbb928b66a826d29c4ca21d7da8e3c43cb"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.CanonicalLevelCode",
+      "path": "Erdos593/TripleSystem/ErdosRado/CanonicalLevelCode.lean",
+      "source_sha256": "2b5896c5946d2be55ce29fb5b15b82d615aa238a3f3cdecd3eef29910bde6c0b"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.ErdosRadoCardinalArithmetic",
+      "path": "Erdos593/TripleSystem/ErdosRado/ErdosRadoCardinalArithmetic.lean",
+      "source_sha256": "f3d377337a94cdd5d8744b3f8c9618e3948cd89f696944cde1663622b38917ee"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.EndhomogeneousLift",
+      "path": "Erdos593/TripleSystem/ErdosRado/EndhomogeneousLift.lean",
+      "source_sha256": "11824790669482e7035771a24bc7a33c162c3bffdb7e296484df189a58fc91b8"
+    },
+    {
+      "module": "Erdos593.TripleSystem.TriangleHostRamseyChromatic",
+      "path": "Erdos593/TripleSystem/TriangleHostRamseyChromatic.lean",
+      "source_sha256": "ed98db2e972312fb896710474097a37c3301cd332fa7188c37dfd4caf3b6a2c1"
+    },
+    {
+      "module": "Erdos593.TripleSystem.TriangleHostRamseyTransport",
+      "path": "Erdos593/TripleSystem/TriangleHostRamseyTransport.lean",
+      "source_sha256": "9a8619db067749a26d3c960dc02d825b8a83d037196f0db65fb9ebd057bd3468"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ObligatoryBipartiteReduction",
+      "path": "Erdos593/TripleSystem/ObligatoryBipartiteReduction.lean",
+      "source_sha256": "4b4577db30d105778662972ef4ce51f244b234cc9b7f600804d3acb2aefbe167"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ObligatoryOnePointAmalgamation",
+      "path": "Erdos593/TripleSystem/ObligatoryOnePointAmalgamation.lean",
+      "source_sha256": "c0f8c2c4c2cc955308526b741c06998a2f9646d3702b8a4c731da293f9e151c6"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ObligatoryConstructible",
+      "path": "Erdos593/TripleSystem/ObligatoryConstructible.lean",
+      "source_sha256": "5c9545e461c00aa28e3076b2785a6083875b5f202cda8945629275df0e5b0bf5"
+    },
+    {
+      "module": "Erdos593.TripleSystem.RainbowLocalBound",
+      "path": "Erdos593/TripleSystem/RainbowLocalBound.lean",
+      "source_sha256": "72858d62fed4456b3f5418785dd10589755874702393d504837592aa883c22fa"
+    },
+    {
+      "module": "Erdos593.TripleSystem.MinimalBadCore",
+      "path": "Erdos593/TripleSystem/MinimalBadCore.lean",
+      "source_sha256": "a14767c9890b45a27430e6752fb7872139d6d732adcdc969accc93a0fce627b7"
+    },
+    {
+      "module": "Erdos593.TripleSystem.LowCodegreeClosure",
+      "path": "Erdos593/TripleSystem/LowCodegreeClosure.lean",
+      "source_sha256": "98a839a0609a68f6302f4dac69d0b97f46cfedc84c5a32e2ffd4772a4f44b2a4"
+    },
+    {
+      "module": "Erdos593.TripleSystem.LowCodegreeLayering",
+      "path": "Erdos593/TripleSystem/LowCodegreeLayering.lean",
+      "source_sha256": "60dc904f69f890fde730f5240399b43d70303c3c05eb8121433602ec4f4f78d8"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SameRankColoring",
+      "path": "Erdos593/TripleSystem/SameRankColoring.lean",
+      "source_sha256": "8574d22c9337e053492aefc2dbdcbf44e21a16b2b5d7e9ca41235fd2015a4ddc"
+    },
+    {
+      "module": "Erdos593.TripleSystem.LowCrossingAtomBridge",
+      "path": "Erdos593/TripleSystem/LowCrossingAtomBridge.lean",
+      "source_sha256": "3e78b81ff9864e291cdc6276939ff341c4c9039cb912489dc292b86aa51bd140"
+    },
+    {
+      "module": "Erdos593.TripleSystem.LowCrossingColoring",
+      "path": "Erdos593/TripleSystem/LowCrossingColoring.lean",
+      "source_sha256": "5e36f273827064f08c14105f09a944659ea077a6eeda34507f9ab6925c8b0b88"
+    },
+    {
+      "module": "Erdos593.TripleSystem.LowEdgeRankClassification",
+      "path": "Erdos593/TripleSystem/LowEdgeRankClassification.lean",
+      "source_sha256": "014959f9ce0adc6aaca67cc6eaa00feb2c9bce30a38c848dd3f49cf10c395796"
+    },
+    {
+      "module": "Erdos593.TripleSystem.PositiveAtomColoringAssembly",
+      "path": "Erdos593/TripleSystem/PositiveAtomColoringAssembly.lean",
+      "source_sha256": "78315a2e8f7328a8029ce13006efc7f1d94b5543c9b8edb900b094f066001f0f"
+    },
+    {
+      "module": "Erdos593.TripleSystem.PositiveAtomClassical",
+      "path": "Erdos593/TripleSystem/PositiveAtomClassical.lean",
+      "source_sha256": "020356fd503c8b332d987d34651fc893a108a5715e096308ff1c7125afdade6d"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.SourceSystem",
+      "path": "Erdos593/TripleSystem/ErdosRado/SourceSystem.lean",
+      "source_sha256": "26d09c25df09fa2ca099027ba9b4f20450cbd6759715949a383ed3a8bb8da0be"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ErdosRado.Theorem",
+      "path": "Erdos593/TripleSystem/ErdosRado/Theorem.lean",
+      "source_sha256": "c38343524ef74537aefd5d25c958d694734c7463cb310f41a43c983754011f7f"
+    },
+    {
+      "module": "Erdos593.TripleSystem.TriangleHostRamseyUnconditional",
+      "path": "Erdos593/TripleSystem/TriangleHostRamseyUnconditional.lean",
+      "source_sha256": "fbb8b05fde1a31487a4e8201aefebb7cdbb06942f68211896af9899ee339b606"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CompleteBipartiteAtomObligatory",
+      "path": "Erdos593/TripleSystem/CompleteBipartiteAtomObligatory.lean",
+      "source_sha256": "52c570c6725ef2fbb2834c70e7938d4b9f4a1c411fa8fa31582d7299f1a6d830"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ConstructiblePositiveObligatory",
+      "path": "Erdos593/TripleSystem/ConstructiblePositiveObligatory.lean",
+      "source_sha256": "4e3520205a8ecb6c09e7db096306548a7af227e6a5adb480f7a4f980a0e669e5"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLift",
+      "path": "Erdos593/TripleSystem/SequenceLift.lean",
+      "source_sha256": "49e3f06462566bd06f47f867d206f185f0efe96c555ccb40b340be1fbce3da95"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftChromatic",
+      "path": "Erdos593/TripleSystem/SequenceLiftChromatic.lean",
+      "source_sha256": "01fc356cb3f6b0e339a0f879f20763c9862fc0418eee8890942057eb5628d429"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftTrace",
+      "path": "Erdos593/TripleSystem/SequenceLiftTrace.lean",
+      "source_sha256": "6fa3d866d8b245a61a5e11e4480068dc7c48285338dbbb171fd0d12da7dfd5cc"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseNode",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseNode.lean",
+      "source_sha256": "0a503be8cf2e3ba6b6689cc1b260fac8321cd2342c3dd4037121aba594e27555"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseNormalForm",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseNormalForm.lean",
+      "source_sha256": "bee6830053e21b5a90c1daa4be6ba06417dae4a7994324c7adc3ff7e21738cd4"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseLetter",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseLetter.lean",
+      "source_sha256": "e383f211854677f5dd5aca94b1a6f33a1cbc6fe30aff860a29462b56588b4615"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftFiniteTrace",
+      "path": "Erdos593/TripleSystem/SequenceLiftFiniteTrace.lean",
+      "source_sha256": "23963ca11c8c01f3a918a8e4db556db7a1fe78f3c2b747c8df5b30ee065b7d87"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiber",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiber.lean",
+      "source_sha256": "11b46a9907a39fadc1bab6b8227b9719de232099692783c3a856c6ab790b3f19"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberIndex",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberIndex.lean",
+      "source_sha256": "2b6cc061fd49738eacd7e0f358ed3d191a8fe81b3e0078b9a5e4a0cec16254aa"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberPartition",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberPartition.lean",
+      "source_sha256": "2ef76da3556a2115d7bdc4b13b1687dd7e6e05274cd599bafa4f17a8cd8c824a"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseApex",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseApex.lean",
+      "source_sha256": "6d39787e1048ed98080e5ef3628b087ca97b146445333eafcef1a31cea19bc3e"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseIncidence",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseIncidence.lean",
+      "source_sha256": "a678c3f4a3dbf5dc8b2545cfa66f92df1cd8ef3479095d514692206e8b944d1d"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseLetterSubgraph",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseLetterSubgraph.lean",
+      "source_sha256": "5814598d365d71ca8f3b18ef90e1c5a5e98af7df0ac19faa6dc9f61eded267e3"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberEquiv",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberEquiv.lean",
+      "source_sha256": "6fd0506f6efe7d6703fb4cb97dc4d81bbcac481aa054b3e7909cfe81737e6e27"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberFactor",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberFactor.lean",
+      "source_sha256": "785d6037da2223980aa34c9241cb8ef3ff1c2d0866ef9773a95cde682cd4d552"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberExpansion",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberExpansion.lean",
+      "source_sha256": "0e385dedc24fa929ecadedcd5d02dcc15dbff8bd6293c03ebfedc28bfb02e0bc"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberConstructible",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberConstructible.lean",
+      "source_sha256": "147dcf705e1e69a4e005b9f7e2fd39d983a465d035bd428b130823013a4ca56f"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberObligatory",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberObligatory.lean",
+      "source_sha256": "65590e7b4955d71913011e528fd23d61052a7582d92c88de9cbce9ebe801a069"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupport",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupport.lean",
+      "source_sha256": "849579a30fc4ce9ab259f392d2c1dbc6c3ebe0acf8e594ba857ce3a06192e658"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIndex",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIndex.lean",
+      "source_sha256": "97eac82992974611798568b63f551e5057a747e53075b09f3bbca22a55e5d469"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberAssembly",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberAssembly.lean",
+      "source_sha256": "67f0752be6de29f8d50566a83b3fcb655f38fb90faaafc887a08c19057163e27"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportRunningOrder",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportRunningOrder.lean",
+      "source_sha256": "5cc3a71f89fb2252eaa7a12efc0442b4b6fa5c6f136bc0a2acd268feee40a7ed"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportRunningOrderEndpoints",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportRunningOrderEndpoints.lean",
+      "source_sha256": "0e285cc156b5c07e298f08e86636575e343faf91d7dafba65ab078da8a4afcf6"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportTailDegree",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportTailDegree.lean",
+      "source_sha256": "7f7d5f1fce699334ebda9fe28a88a3a9116b4f2d2e93125db5d2de502c8489bf"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportTailDegreeEndpoints",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportTailDegreeEndpoints.lean",
+      "source_sha256": "f40edd45685e60edde7cb301bf3cdd97d6924eb40e930f15067868a76ac78702"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportOverlapGraph",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportOverlapGraph.lean",
+      "source_sha256": "3674681a775f8170d9554521d8b5c9af5d27bb8addfb5f04e2e73c981a94a8c8"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderBridge",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportForestOrderBridge.lean",
+      "source_sha256": "b9088347f7638471615141db5784c01a981d69aaa790567dec51aa1e5d49fd42"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportForestOrderEndpoints",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportForestOrderEndpoints.lean",
+      "source_sha256": "894b0f81eb339bbd835b5edb6580532b034d809c3b1eccc79319c5b011273600"
+    },
+    {
+      "module": "Erdos593.TripleSystem.FiniteLiftGenerated",
+      "path": "Erdos593/TripleSystem/FiniteLiftGenerated.lean",
+      "source_sha256": "596489d453238e0b462ef15f79c6ecfe0e0740d657198e65a1808bc6242b5884"
+    },
+    {
+      "module": "Erdos593.TripleSystem.FiniteLiftGeneratedBridge",
+      "path": "Erdos593/TripleSystem/FiniteLiftGeneratedBridge.lean",
+      "source_sha256": "63e92178c50b1b953e09735b186a3252b088119c748557cb151bc46881553822"
+    },
+    {
+      "module": "Erdos593.TripleSystem.FiniteLiftGeneratedBergeCycleTrace",
+      "path": "Erdos593/TripleSystem/FiniteLiftGeneratedBergeCycleTrace.lean",
+      "source_sha256": "6ed8247f2925486424aea939a9fdbadb2839e4db6ec69bf300c866f9954705bb"
+    },
+    {
+      "module": "Erdos593.TripleSystem.FiniteLiftGeneratedConstructible",
+      "path": "Erdos593/TripleSystem/FiniteLiftGeneratedConstructible.lean",
+      "source_sha256": "9ca61a717e8030c4f606937bc229d343223a4a467160262bef3b1e46bcad6712"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftFiniteLiftGenerated",
+      "path": "Erdos593/TripleSystem/SequenceLiftFiniteLiftGenerated.lean",
+      "source_sha256": "b5423805d97385bf05f8251be17be36077bd2f26fd867731e3575020e6073f7d"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftFiniteLiftGeneratedEndpoints",
+      "path": "Erdos593/TripleSystem/SequenceLiftFiniteLiftGeneratedEndpoints.lean",
+      "source_sha256": "e122e694bd278746b8bce9cec6849743492012154af84eb5a0fc7ab1898c63b5"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceGraph",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceGraph.lean",
+      "source_sha256": "d3b001bf0ba60735129549d29a7ab7aff3e0b5b4b0fc4b3c711a2c32cde98723"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportBranchGeometry",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportBranchGeometry.lean",
+      "source_sha256": "28f9007f900640727ea05579d77183cf5a51fafac5a628fa068132279376b3e4"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAcyclic",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceAcyclic.lean",
+      "source_sha256": "eab732a8902543b1e14df01b75d412ec483adf4675034596b6d948b68ffbf02e"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrderBridge",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrderBridge.lean",
+      "source_sha256": "033b06a350ded943399f5a19206091b35015dd6c66bb48d1aaa878bf6c530200"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceForestOrderEndpoints.lean",
+      "source_sha256": "8442924467891689fd93adf40321d5dc63d32b9437aa44373049d13e26cf6882"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberSupportIncidenceAcyclicEndpoints.lean",
+      "source_sha256": "504463dfaac2cd9fd04d55696ad214661f697d3a07b742f06298aec3362fef41"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftEmbeddedSourceEndpoints",
+      "path": "Erdos593/TripleSystem/SequenceLiftEmbeddedSourceEndpoints.lean",
+      "source_sha256": "668d3e85f4584ddf80d0f734f5a726f36d88e4da73d8f4d682b4ee8d2a0aac15"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftEmbeddedSourceIntrinsic",
+      "path": "Erdos593/TripleSystem/SequenceLiftEmbeddedSourceIntrinsic.lean",
+      "source_sha256": "284902dccffa9ba5701f6efe00abfe05424f35b155d5635b49841d2debe34b6f"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftShiftObstruction",
+      "path": "Erdos593/TripleSystem/SequenceLiftShiftObstruction.lean",
+      "source_sha256": "9af1a23c36fe65892a0bc4d4befc9965fbc9e36c2d6db082fbf029943cc686b0"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftEmbeddedSourceBridge",
+      "path": "Erdos593/TripleSystem/SequenceLiftEmbeddedSourceBridge.lean",
+      "source_sha256": "e3a7f1a7dacff681253fa2d96a72c4dd7afefef739f0b57f1a0eff1166d46213"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftMissingBridgeObstruction",
+      "path": "Erdos593/TripleSystem/SequenceLiftMissingBridgeObstruction.lean",
+      "source_sha256": "8acc4108b1cd5f5dab96a1147f8e77fae36389e72a1ceac0360e94cb9aca1e6b"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftMissingBridgeUnconditional",
+      "path": "Erdos593/TripleSystem/SequenceLiftMissingBridgeUnconditional.lean",
+      "source_sha256": "1bef3816465291784e20a6832892af3b684d358f2acd4c82557deeea1184d281"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ShiftGraphBergeObstruction",
+      "path": "Erdos593/TripleSystem/ShiftGraphBergeObstruction.lean",
+      "source_sha256": "c040c8d5cdf0bf03cdc5a978588d4f7e78e758a07aeddd611b129f158b216960"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ObligatoryClassification",
+      "path": "Erdos593/TripleSystem/ObligatoryClassification.lean",
+      "source_sha256": "de3925c2b51bb79c86c6e5dc4e4bc2a13c47578fff5a9460594b3b56fefd7d44"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberGlobalSpine",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberGlobalSpine.lean",
+      "source_sha256": "26312dc76e3e6ca9e5db3e25f1de3c811248426c478b272842740fc83971bb9d"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberCardinality",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberCardinality.lean",
+      "source_sha256": "466ce983f560805597a04e7877b5493ba11bfdfeb10f6a0d417f19e41b76be2e"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberTraceSum",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberTraceSum.lean",
+      "source_sha256": "b289c912f737548834eda7c728e231fff8c80466e34e4f23e0e40fcdbf56eacb"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterEquiv",
+      "path": "Erdos593/TripleSystem/SequenceLiftTaggedBaseLetterEquiv.lean",
+      "source_sha256": "4edc394af20638af0ee3baae76bc5e7ba7a0c2d92902220bf19f902629e4bbf9"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftTaggedBaseLetterSourceEquiv",
+      "path": "Erdos593/TripleSystem/SequenceLiftTaggedBaseLetterSourceEquiv.lean",
+      "source_sha256": "4a17e0313c7337d7e45029a4149280f948ad9c7ffd551482a5bf7d372663ba4c"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseApexEquiv",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseApexEquiv.lean",
+      "source_sha256": "fcc5e8b4994e24d9d2312704892bb7a53a83cbcb36f5ec86ad127dfa644744e5"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftBaseFiberIndexApexEquiv",
+      "path": "Erdos593/TripleSystem/SequenceLiftBaseFiberIndexApexEquiv.lean",
+      "source_sha256": "30063490cf73c8f2b4b08115990bb1676760d80ce7fa1eb8fb6c36d6a8e0f282"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftTaggedBaseApexEquiv",
+      "path": "Erdos593/TripleSystem/SequenceLiftTaggedBaseApexEquiv.lean",
+      "source_sha256": "2f5f5a9d1ce5b93779e386a2411858d5dd65adb182ce1e83558dc9e98451de32"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SequenceLiftTaggedBaseApexSourceEquiv",
+      "path": "Erdos593/TripleSystem/SequenceLiftTaggedBaseApexSourceEquiv.lean",
+      "source_sha256": "01246c1f56022819a4da8164520e0d69b20dabfd70e0ff41777b58a4ac930a18"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomCanonicity",
+      "path": "Erdos593/TripleSystem/CanonicalAtomCanonicity.lean",
+      "source_sha256": "0f4b29c4745e0815db5bb262d712d9ccfbf57ebc592a1df8936246f813600cec"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomMinimalGenerators",
+      "path": "Erdos593/TripleSystem/CanonicalAtomMinimalGenerators.lean",
+      "source_sha256": "123ca3cb66fc94bfdac799a3486f5da60fbd173f25a7c512d662a7db0d03caad"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SpanningEdgeDeletion",
+      "path": "Erdos593/TripleSystem/SpanningEdgeDeletion.lean",
+      "source_sha256": "646eecfe52ce166f6702e3e160ee30f9cd843cb47e35fc480155cdcdad6e24fb"
+    },
+    {
+      "module": "Erdos593.TripleSystem.ExpansionComponents",
+      "path": "Erdos593/TripleSystem/ExpansionComponents.lean",
+      "source_sha256": "10abd3fd0dfee1b4725c3eb509f2bd57b314d4475d48e69cdeab335ede19b190"
+    },
+    {
+      "module": "Erdos593.TripleSystem.BipartiteShadow",
+      "path": "Erdos593/TripleSystem/BipartiteShadow.lean",
+      "source_sha256": "f679a6e26b7f8e23109311dad0542f78260fbc66578702c07ec5227234ae26f4"
+    },
+    {
+      "module": "Erdos593.Graph.FiniteForestCounting",
+      "path": "Erdos593/Graph/FiniteForestCounting.lean",
+      "source_sha256": "093a494a646fab2a4f579391d398a800c52978d2645b1d91df4ad3a382f9d918"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomCounting",
+      "path": "Erdos593/TripleSystem/CanonicalAtomCounting.lean",
+      "source_sha256": "8256fbe9139bac74e07fbb8b90beb514895e44b2d8b05417e344909299801e9b"
+    },
+    {
+      "module": "Erdos593.Graph.BipartiteSpectrumBounds",
+      "path": "Erdos593/Graph/BipartiteSpectrumBounds.lean",
+      "source_sha256": "a6456ba25f6f0e49ed9c12009b9213ae47632cedcdbd5731ef74e262676d7cba"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SpectrumNecessity",
+      "path": "Erdos593/TripleSystem/SpectrumNecessity.lean",
+      "source_sha256": "593cbe4a74876e99b5798da4f1b7380b90fd58a707ebd75296b05f0df0b5ddaa"
+    },
+    {
+      "module": "Erdos593.Graph.BipartiteSpectrumRealization",
+      "path": "Erdos593/Graph/BipartiteSpectrumRealization.lean",
+      "source_sha256": "2ab847bf11da44b09f9476164cf25c823d4000b0c278978a392d6d9d1a000113"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SpectrumRealization",
+      "path": "Erdos593/TripleSystem/SpectrumRealization.lean",
+      "source_sha256": "15f6bf0bcf61c548d675280b642218db77dadbdd6d82986ed3b7780962270d6f"
+    },
+    {
+      "module": "Erdos593.Graph.SpectrumCorollaryArithmetic",
+      "path": "Erdos593/Graph/SpectrumCorollaryArithmetic.lean",
+      "source_sha256": "a6bf834c815a31103acab67a73cb6e29df04fb90aba980a927a4f4e22862550b"
+    },
+    {
+      "module": "Erdos593.TripleSystem.IsolatedPointExtension",
+      "path": "Erdos593/TripleSystem/IsolatedPointExtension.lean",
+      "source_sha256": "94fdabc454451af7e7825022e5f25ffb1d37ec04d0a06ad079ac8ddc44838be4"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SpectrumCorollaries",
+      "path": "Erdos593/TripleSystem/SpectrumCorollaries.lean",
+      "source_sha256": "81c7f0e702835e17f3927d00c6a9be7159a5be59060ca027792213299bb43823"
+    },
+    {
+      "module": "Erdos593.Graph.FiniteCycleRank",
+      "path": "Erdos593/Graph/FiniteCycleRank.lean",
+      "source_sha256": "2a03b0b9dc386b76fabed04aed2fbca0a037319f05774c7a2c61c1501ca1d7f4"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CycleRankSpectrum",
+      "path": "Erdos593/TripleSystem/CycleRankSpectrum.lean",
+      "source_sha256": "74ae88112d083d7f2da83d6205eb7c589e5f43117ac62a679e4ad954ff32d9e0"
+    },
+    {
+      "module": "Erdos593.Graph.BalancedBipartiteRigidity",
+      "path": "Erdos593/Graph/BalancedBipartiteRigidity.lean",
+      "source_sha256": "2d9af9b5e5d0563a2fff220054353684583e84a2efc017c762ec4b0de9137c25"
+    },
+    {
+      "module": "Erdos593.TripleSystem.BalancedEndpointRigidity",
+      "path": "Erdos593/TripleSystem/BalancedEndpointRigidity.lean",
+      "source_sha256": "9202065e2490964ab003c32ff237b762487b71b068bd043030d8d708f5d5368d"
+    },
+    {
+      "module": "Erdos593.Graph.TwoConnectedBipartiteSpectrum",
+      "path": "Erdos593/Graph/TwoConnectedBipartiteSpectrum.lean",
+      "source_sha256": "94aa6d8e8b2364ec9d8dee0dd732cc9713e378094dc36cfeda79526735914c65"
+    },
+    {
+      "module": "Erdos593.Graph.AtomRankConcentration",
+      "path": "Erdos593/Graph/AtomRankConcentration.lean",
+      "source_sha256": "ce9b920d92098cfa6f5fa7060b93f4f11304a1b4279e4ac96f1d29471fbf90a8"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomRankInterpretation",
+      "path": "Erdos593/TripleSystem/CanonicalAtomRankInterpretation.lean",
+      "source_sha256": "8c9b953aa2b225e50b9b10125cf8fc5367a0053324fd6a0c8d17a4dd3c785f24"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomCoreRank",
+      "path": "Erdos593/TripleSystem/CanonicalAtomCoreRank.lean",
+      "source_sha256": "abf22ccb199fb4e27472f3b0cae10c941707d0a598dc43fec7662f3c55123c9c"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomExtremalCount",
+      "path": "Erdos593/TripleSystem/CanonicalAtomExtremalCount.lean",
+      "source_sha256": "ae361213babb9123247bdc68119396422ccb8dceea87aa568295d7ee9187ecf5"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomDeficit",
+      "path": "Erdos593/TripleSystem/CanonicalAtomDeficit.lean",
+      "source_sha256": "9503b8f32dcd53f87db1c792c471bc296dc39279423756e0fb2c75592b1bd177"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomContainment",
+      "path": "Erdos593/TripleSystem/CanonicalAtomContainment.lean",
+      "source_sha256": "ac7ab98552ece1cec62d121d5dd1e5da5151b38445795189ddcecbb91d789f5d"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomTransport",
+      "path": "Erdos593/TripleSystem/CanonicalAtomTransport.lean",
+      "source_sha256": "825eed31ffad6168caeb534c2f92aa8680f544c7f06be3866fc93677c5db10a8"
+    },
+    {
+      "module": "Erdos593.TripleSystem.EmbeddingRestrictionTransport",
+      "path": "Erdos593/TripleSystem/EmbeddingRestrictionTransport.lean",
+      "source_sha256": "6bb9312a5a598105a6b42ef20ad711168699902d61893e27f24da14cdc4301dc"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomAmalgamLabels",
+      "path": "Erdos593/TripleSystem/CanonicalAtomAmalgamLabels.lean",
+      "source_sha256": "17ae8fe4d280cb3a2f2d30be885f7909692e682ee126ddd886eb7b8beac64e55"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomAmalgamOption",
+      "path": "Erdos593/TripleSystem/CanonicalAtomAmalgamOption.lean",
+      "source_sha256": "a3deb68177c8af77d9cc1d6f440bbe77a8cfb34da3d6452e362d8eb759f19e24"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomBaseCount",
+      "path": "Erdos593/TripleSystem/CanonicalAtomBaseCount.lean",
+      "source_sha256": "cf6318090928ae0ede98446c5e365a89974877e65b513eda1fa0ee2f1717aa11"
+    },
+    {
+      "module": "Erdos593.TripleSystem.OnePointAmalgamationGeometry",
+      "path": "Erdos593/TripleSystem/OnePointAmalgamationGeometry.lean",
+      "source_sha256": "2646a21fac1166f81ebc2ad86f91b681c336b33de64214fd8592ec2c08106d4b"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomFiniteAttachment",
+      "path": "Erdos593/TripleSystem/CanonicalAtomFiniteAttachment.lean",
+      "source_sha256": "bcfd586f1e401b12a991bee0ea7afbbb1a748b22cc4b87172c0f66892540b1e9"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomCountSpectrum",
+      "path": "Erdos593/TripleSystem/CanonicalAtomCountSpectrum.lean",
+      "source_sha256": "1d2cc49e28876eca5fbe6466c8fca2b766f934fe9d1740e8c3209893f8032ff4"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalAtomMaximizer",
+      "path": "Erdos593/TripleSystem/CanonicalAtomMaximizer.lean",
+      "source_sha256": "597e923140f7221d39279fb98b1e8f96e23789a559df9e3eaa1ce30ac35b6fe5"
+    },
+    {
+      "module": "Erdos593.Separator.SeparatorCertificate",
+      "path": "Erdos593/Separator/SeparatorCertificate.lean",
+      "source_sha256": "206cfdd8c0639f35c20a68c2288af16efcf1d053d227e9af82f5a55eb90ef9c9"
+    },
+    {
+      "module": "Erdos593.Separator.SeparatorNoReturn",
+      "path": "Erdos593/Separator/SeparatorNoReturn.lean",
+      "source_sha256": "64980049b8ce0e70ed43a1342b3c4f98d9101c882bf9ef625bad6e563ade1826"
+    },
+    {
+      "module": "Erdos593.Separator.SeparatorForest",
+      "path": "Erdos593/Separator/SeparatorForest.lean",
+      "source_sha256": "b8be1dfabf2db273b696a2a3b2ded463202181303d8914ab61ec3ba1e55afcd7"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalSeparatorApplication",
+      "path": "Erdos593/TripleSystem/CanonicalSeparatorApplication.lean",
+      "source_sha256": "72736b94418147204bb4a084920db8b6707e2def1eba0ecfca0c97598007bf07"
+    },
+    {
+      "module": "Erdos593.Separator.SeparatorCoarsening",
+      "path": "Erdos593/Separator/SeparatorCoarsening.lean",
+      "source_sha256": "97992addc8535449b7de1e23e93966e0fb2664e20ad84228106aa226f3d773c0"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedDecomposition",
+      "path": "Erdos593/TripleSystem/SupportedDecomposition.lean",
+      "source_sha256": "31f3aa3c7c88cbbed495c471b241352f257a16008220b48cc499c2e14b5c757c"
+    },
+    {
+      "module": "Erdos593.TripleSystem.CanonicalCoarsening",
+      "path": "Erdos593/TripleSystem/CanonicalCoarsening.lean",
+      "source_sha256": "5625dae79090347b5ab3d3aa0c9eac6dce226b755fd26664147c57546ee4bd8c"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedDecompositionProduct",
+      "path": "Erdos593/TripleSystem/SupportedDecompositionProduct.lean",
+      "source_sha256": "12db65b50fb6e60e91baf7f86fc4b5dc999f755546f93876a9185d8347ee56d4"
+    },
+    {
+      "module": "Erdos593.TripleSystem.StandardPartitionBridge",
+      "path": "Erdos593/TripleSystem/StandardPartitionBridge.lean",
+      "source_sha256": "3bfc6148e84d5283db0e3a7c0b872310c264d9d3296bafc5d4e851f5bf4e95d9"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedStandardPartitions",
+      "path": "Erdos593/TripleSystem/SupportedStandardPartitions.lean",
+      "source_sha256": "8a57f74012a926adaf10775bdaa7eaac137acc472bd8e1f5c9bf4e51eb1ee129"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedLatticeOperations",
+      "path": "Erdos593/TripleSystem/SupportedLatticeOperations.lean",
+      "source_sha256": "95e7f3a52b8d35879b592f4989b08d949f08ee2d91952842ff3a827dac811a41"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedPointSeparation",
+      "path": "Erdos593/TripleSystem/SupportedPointSeparation.lean",
+      "source_sha256": "e36f7cf81239ce013f8b27ed080080bda9b75c56643a4f81c4fae2cbcc8e4f67"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedPointIndecomposable",
+      "path": "Erdos593/TripleSystem/SupportedPointIndecomposable.lean",
+      "source_sha256": "49ff719dd36b8117e97d8ce866d54f1b7eb1ab535c5b394d503c39312af7f2f3"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedClassicalBlockForward",
+      "path": "Erdos593/TripleSystem/SupportedClassicalBlockForward.lean",
+      "source_sha256": "837f39294617109b0269da0a6d48ba18438742fdd1cacc03f2fd4d84c505e168"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedRestrictionTransport",
+      "path": "Erdos593/TripleSystem/SupportedRestrictionTransport.lean",
+      "source_sha256": "7daddfb2af273ad1df319d4b90f11eb76b02a5e30004461ac9d731d004a08fb5"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedDisconnectedSplit",
+      "path": "Erdos593/TripleSystem/SupportedDisconnectedSplit.lean",
+      "source_sha256": "d3dffb763b55685ec752a0b5c3b7f8e9aa6e70998eaf07e074588bff712b2ec2"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedClassicalBlockConverse",
+      "path": "Erdos593/TripleSystem/SupportedClassicalBlockConverse.lean",
+      "source_sha256": "68d06a6a1aa24e60055df91bedc2f5e9a8022eca88629e8b34f12e402b1877c9"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedClassicalBlockLabels",
+      "path": "Erdos593/TripleSystem/SupportedClassicalBlockLabels.lean",
+      "source_sha256": "95a805a0344333f27e09268dc27972e3a9b316c5bc8bc66d1e93bd54a2433a8d"
+    },
+    {
+      "module": "Erdos593.TripleSystem.AtomicBoundaryCore",
+      "path": "Erdos593/TripleSystem/AtomicBoundaryCore.lean",
+      "source_sha256": "5b87a6b891ea4fcfca6397494b971af25baa49ffededff79bdc5e541bb146079"
+    },
+    {
+      "module": "Erdos593.Graph.SaturatedPathSeparation",
+      "path": "Erdos593/Graph/SaturatedPathSeparation.lean",
+      "source_sha256": "41815e3919ceb4e4d4972e91a494489ea3741ce75774fce7a54f0e90b3350f8a"
+    },
+    {
+      "module": "Erdos593.Graph.ThetaPathData",
+      "path": "Erdos593/Graph/ThetaPathData.lean",
+      "source_sha256": "231f498f08a15e6777b361482d6a46f039838528321b59a2909c8baa6b98fe7c"
+    },
+    {
+      "module": "Erdos593.Graph.ThetaGraphModel",
+      "path": "Erdos593/Graph/ThetaGraphModel.lean",
+      "source_sha256": "0d2a50906783d19bd362a267cfd43b7dc80432d705849586d4f80d34c0e01793"
+    },
+    {
+      "module": "Erdos593.Graph.FiniteCycleRecognition",
+      "path": "Erdos593/Graph/FiniteCycleRecognition.lean",
+      "source_sha256": "d1ed5b84bd727a4ef596412b1488d3c7156017c9b4f68f5afd9336a93735c37a"
+    },
+    {
+      "module": "Erdos593.Graph.BoundaryCoreDegreePatterns",
+      "path": "Erdos593/Graph/BoundaryCoreDegreePatterns.lean",
+      "source_sha256": "22f196a8e84bf0a0cb1f60610ab245441744efffd49fa3ece3bf620e7b5e2d88"
+    },
+    {
+      "module": "Erdos593.Graph.BoundaryCoreRecognition",
+      "path": "Erdos593/Graph/BoundaryCoreRecognition.lean",
+      "source_sha256": "696bef192260b634a8662a7666bef1e3e10757715595daf78ca78df3fb6665b0"
+    },
+    {
+      "module": "Erdos593.Graph.ThetaPathRecognition",
+      "path": "Erdos593/Graph/ThetaPathRecognition.lean",
+      "source_sha256": "1f3177241b55193b33f33090e1e4a2beccb1c23bf91f05d5dcc6ee3acc8cf226"
+    },
+    {
+      "module": "Erdos593.Graph.ThetaRecognition",
+      "path": "Erdos593/Graph/ThetaRecognition.lean",
+      "source_sha256": "71e7f20d63e880d8cd2bae7be85a1976aafd3fa882fd2d3f7c3a77fc3a1faf80"
+    },
+    {
+      "module": "Erdos593.TripleSystem.AtomicBoundaryNormalForms",
+      "path": "Erdos593/TripleSystem/AtomicBoundaryNormalForms.lean",
+      "source_sha256": "9a3e33d1f698ae48a99c604667f4105765e4844cd689e07b6a128f6f4e2547da"
+    },
+    {
+      "module": "Erdos593.Graph.IncidenceProfile",
+      "path": "Erdos593/Graph/IncidenceProfile.lean",
+      "source_sha256": "a84efd3e4eca4919feaf02e82e8f85556c90f6d5c346f10e5d477b332339a77f"
+    },
+    {
+      "module": "Erdos593.TripleSystem.SupportedPieceAccountingCandidate",
+      "path": "Erdos593/TripleSystem/SupportedPieceAccountingCandidate.lean",
+      "source_sha256": "5e1907693defd0f146d8f1261e9bbbdb82cf71c84ea5d83731e6f8bbb052e2ce"
+    },
+    {
+      "module": "Erdos593",
+      "path": "Erdos593.lean",
+      "source_sha256": "c3526ff3d8f15b2e52094e5f2aae5e38f7f2904b76b7773086fa33ba2756e0c3"
+    }
+  ]
+}
