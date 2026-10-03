@@ -18,8 +18,34 @@ literature pass.
 The live source previously contained 23 references, not the 16 in the retained
 2 October PDF. This pass adds 11 substantive references, bringing both the inline
 bibliography and matching BibTeX file to **34 entries**, all cited in the text.
-There are **64 citation commands**. Static checks found no missing, uncited or
+There are **67 citation commands** after the requested introduction expansion.
+Static checks found no missing, uncited or
 duplicate keys. Reference count is not a quality or impact measure.
+
+## Expanded contribution overview — author follow-up
+
+The introduction now contains a dedicated **Finite structure beyond the
+classification** overview after the classification and Li chronology. This is
+source-grounded exposition of existing manuscript results, not a new theorem or
+an additional claim of Lean acceptance. Medium scholarly editing preserves the
+classification's attribution and the exact hypotheses of each result group.
+
+| Original introduction | Revised passage | Claim-scope check |
+| --- | --- | --- |
+| Two compact paragraphs listed structure, constraints and choices | Defines reduced obligatory systems, positive edge count, n, m, c, s and Levi cycle rank before discussing the finite results | Reducedness is no isolated vertices, not a synonym for nonempty edges; both conditions are retained separately |
+| Normal form and numerical spectra were mentioned generically | Explains the admissible atoms, exact parameter and atom-count spectra, rank-one parity, connected phase diagram and structural equality forms | Classical block theory is credited; the phase diagram explicitly requires connectedness and does not imply uniqueness of every core |
+| The local product was only a roadmap pointer | Explains actual original-edge decompositions, local partition factors, rank N=k-c, fixed-atom every-profile realization and profile recovery from lattice type | These are the existing manuscript statements under reduced obligatory/nonempty-edge scope, not all-system isomorphism classification or fully accepted Lean realization |
+| The deficit identity was described as a cost | Explains the connected positive-rank budget and how splitting cyclic rank or surplus core order consumes available assembly rank | Does not extend the budget to zero rank or assert a metric stability theorem |
+| Prescribed-piece bounds were named without their content | Gives the actual d_j bounds, binary/common-joint interior equality profiles and same-atoms four-versus-five example | Counts nonempty original-edge pieces; N=0 and N=1 retain the corollary's separate boundary conventions |
+| Partial formalization was a short pointer | Identifies unfinished profile/lattice/maximal-chain/height/counting interfaces immediately beside the result overview | No editorial revision is presented as kernel acceptance, complete formalization or a full external audit |
+
+Whitney/Diestel, Stanley and Comtet are cited beside the corresponding classical
+ingredients in the overview. No new bibliography key or novelty/priority claim
+is introduced. The clean revision is the existing open TeX, not a replacement
+document. All 119 display environments, 45 mathematical statement bodies and
+73 ordered labels remain fixed under the bounded structural screen. The editor
+compiler was called after these edits and again failed at initialization, so
+the historical PDF and current compilation/layout limitations below still apply.
 
 ## Paragraph-by-paragraph comparison and provenance
 

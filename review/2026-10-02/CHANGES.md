@@ -14,7 +14,8 @@
 
 Both the inline bibliography and references.bib now contain 34 cited entries,
 up from 23 in the immediately preceding source and 16 in the historical PDF.
-There are 64 citation commands. CITATION_REVIEW.md supplies primary provenance,
+There are 67 citation commands after the requested introduction expansion.
+CITATION_REVIEW.md supplies primary provenance,
 comparison notes and access limitations. No uncited entries were added.
 
 All 119 existing displays, 45 theorem/definition statement bodies and 73 ordered
@@ -29,6 +30,23 @@ the same platform-directory initialization failure after these edits, not a
 successful PDF build. The unchanged PDF remains historical and current layout
 is unverified. This follow-up updates only the public draft; no private PR55
 update, monitor restart or manuscript merge is included.
+
+## Author follow-up: finite mathematics beyond the classification
+
+The introduction's two short roadmap paragraphs are replaced by a dedicated
+overview of the paper's finite contribution. It defines the numerical parameters
+and separates canonical types, exact feasibility/atom counts and connected
+phase boundaries, profile-controlled lattice types and fixed-atom realization,
+the connected positive-rank budget, and counts at each actual piece number.
+The same-atoms four-versus-five example explains why assembly geometry is not
+determined by cyclic concentration. Classical block, partition-lattice and
+Stirling ingredients are cited without adding bibliography padding.
+
+Reducedness, nonempty-edge scope and obligatoriness are explicit. Connected
+phase/budget results are not extended to arbitrary disconnected systems, and
+lattice/profile recovery is not presented as full system-isomorphism recovery.
+The overview ends with the partial Lean boundary. CITATION_REVIEW.md gives the
+paragraph-by-paragraph comparison; no proof or theorem statement was changed.
 
 ## New mathematical pass — 3 October
 

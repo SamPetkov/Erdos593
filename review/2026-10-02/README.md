@@ -3,10 +3,13 @@
 ## Current source — 34 references; PDF remains historical
 
 Read the saved TeX source, matching references.bib and [citation review](CITATION_REVIEW.md).
-The source now has 34 references and 64 citation commands, with every entry cited.
+The source now has 34 references and 67 citation commands, with every entry cited.
 Eleven additions support the finite/uncountable contrast, classical graph
 decomposition, partition-lattice factors and formal-verification scope. An early
-roadmap organizes the finite results as structure, constraints and assembly choices.
+overview after the classification explains the finite results beyond solving
+Problem 593: canonical atoms, exact numerical spectra and phase boundaries,
+profile-controlled lattice types, cyclic costs, and sharp counts by actual
+piece number. It distinguishes manuscript proofs from accepted Lean interfaces.
 The GATE benchmark informs exposition standards, not claims of equivalent impact.
 
 The accepted supported-cover/piece-deficit/cover-increment block is now on

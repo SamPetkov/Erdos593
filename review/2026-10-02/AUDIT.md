@@ -21,7 +21,8 @@ compiler-success/source-only captures are not silently promoted to a new full
 acceptance by this editorial audit.
 
 The new literature and exposition pass increases the source to 34 references
-and 64 citation commands. The 119 existing displays, 45 statement bodies and
+and 67 citation commands after the author's requested contribution overview.
+The 119 existing displays, 45 statement bodies and
 73 ordered labels are preserved by a bounded source screen; citations and
 proof-prose context have their own review in CITATION_REVIEW.md. No new theorem
 or external-checker use is inferred from a citation. The built-in editor still

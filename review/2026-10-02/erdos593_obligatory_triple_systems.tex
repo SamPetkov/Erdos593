@@ -127,32 +127,86 @@ formulation and graph derivatives \citep[Sections~3--4 and Theorem~4.6]{li2026},
 whereas we decompose traces into expansion fibres and a support-incidence
 forest.  We cite Li's work for chronology and comparison; none of its results
 is used below as a black box.
-The classification also raises a finite structural question: which features
-of an obligatory system are forced by its cyclic content, and which can vary
-through one-point assembly?  The canonical atom normal form separates these
-two roles.  The parameter and atom-count spectra quantify the constraints
-on the cores and the number of atoms.  An exact deficit identity measures
-the cost of splitting cyclic rank or increasing core order.  The local
-partition-lattice product describes the remaining assembly freedom, including
-sharp bounds on the number of decompositions with a prescribed number of
-pieces.  We develop these
-consequences alongside direct positive and negative proofs of the
-classification and its Lean formalisation.
+\paragraph{Finite structure beyond the classification.}
+Theorem~A answers an embedding question about infinite hosts.  The further
+results concern a different question: how much finite structure is fixed by
+cyclic content, and how much remains free under one-point assembly?  The finite
+systems considered in this overview are reduced (they have no isolated
+vertices), obligatory, and have at least one hyperedge.  Write \(n=|V(F)|\),
+\(m=|E(F)|\), and \(c\) for their number of components; put \(s=n-m\) and
+\(\beta=2m-n+c\), the Levi cycle rank.  The
+canonical normal form identifies the atoms as single triples and expansions
+of finite \(2\)-connected bipartite graphs
+(Theorem~\ref{theorem-canonical-atom-normal-form}).  Block decomposition itself
+is classical \citep{whitney1932,diestel2017}; the point here is the exact list
+of allowable block types and what it implies about the systems assembled
+from them.
 
-The finite analysis proceeds from structure to constraints to choices.
-The canonical normal form in
-Theorem~\ref{theorem-canonical-atom-normal-form} identifies the pieces that
-cannot be split at a point.  Section~\ref{finite-parameter-consequences}
-determines which numerical parameters and atom counts are possible.
-The local product in
-Lemma~\ref{lemma-local-decomposition-lattice-product} then records how
-the atoms can be grouped into supported pieces.  These are different kinds
-of information: the example following
-Corollary~\ref{corollary-sharp-piece-counts} has the same atoms and global
-parameters but four or five decomposition choices, depending on attachment
-geometry.  The classification and several structural extensions have
-accepted Lean implementations; the final verification section distinguishes
-these from manuscript results whose formal interfaces are still incomplete.
+The numerical consequences are exact existence statements, not only bounds.
+Theorem~\ref{theorem-order-size-component-spectrum} determines every feasible
+order, size and component count.
+Theorem~\ref{theorem-exact-canonical-atom-count-spectrum} and
+Proposition~\ref{proposition-componentwise-atom-count-spectrum} then determine
+all possible canonical atom counts \(k\) at fixed \(s,\beta,c\), including
+the parity obstruction when \(\beta=1\).  For connected systems, the
+indecomposability phase diagram
+separates parameter ranges where every system is decomposable, where both
+behaviours occur, and where every system is indecomposable
+(Theorem~\ref{theorem-indecomposability-phase-diagram}).  Its boundary cases
+identify cycle, even-theta and complete-bipartite expansions, and the
+extremal decomposable assembly
+(Corollary~\ref{corollary-structural-boundary-rigidity}).  These conclusions
+do not say that numerical parameters determine every core up to isomorphism.
+
+The remaining freedom is described by a lattice, not another numerical
+invariant.  At each point \(p\) shared by \(\mu(p)\) canonical atoms, one may
+choose a partition of those atoms independently.  The supported one-point
+forest decompositions of the original hyperedge set, ordered by refinement,
+therefore form \(\mathcal D(F)\cong\prod_{p\in S(F)}\Pi_{\mu(p)}\), where
+\(S(F)\) is the set of shared points and \(\Pi_r\) is the partition lattice
+on \(r\) elements (Lemma~\ref{lemma-local-decomposition-lattice-product}).
+Its rank is \(N=k-c\).  Every integer partition \(\lambda\vdash N\) is
+realized as an attachment excess profile by reassembling the same atoms
+with the same component count, order, size and cycle rank
+(Lemma~\ref{lemma-capacity-safe-profile-realization}).  This gives the exact
+factorization-lattice spectrum: its types are
+\(\prod_i\Pi_{\lambda_i+1}\), and the classical characteristic polynomials
+of partition lattices \citep[Chapter~3]{stanley2012} recover \(\lambda\)
+(Corollary~\ref{corollary-factorization-lattice-spectrum}).  The classification
+is of lattice types,
+not of all triple systems with the same parameters.
+
+Cyclic content and assembly freedom are linked by an exact budget.  For a
+connected system of positive cycle rank, the lattice rank \(N=k-1\), the
+cost of distributing positive rank among several atoms, and the total
+core-order excess above the fixed-rank minima sum to
+\(s-2-\lceil2\sqrt{\beta}\rceil\)
+(Proposition~\ref{proposition-cyclic-cost-budget}).  Thus rank splitting
+and excess core order reduce the available decomposition rank.  Zero cost
+means that one minimum-order cyclic atom carries all positive rank and
+the remaining atoms are single triples; it does not imply a unique
+isomorphism type for the cyclic core.
+
+Assembly geometry also controls the number of decompositions at each
+prescribed piece count.  If \(d_j(F)\) counts decompositions into exactly
+\(k-j\) nonempty original-edge pieces, then
+\(\binom Nj\le d_j(F)\le S(N+1,N+1-j)\) for \(0\le j\le N\), where
+\(S(a,b)\) is a second-kind Stirling number \citep{comtet1974}.
+For \(N\ge2\), equality at any interior \(j\) characterizes binary joints
+at the lower bound and a single common joint at the upper bound
+(Corollary~\ref{corollary-sharp-piece-counts}).  Both extremal profiles can
+be attained with the atom list and component count fixed.  The example
+following that corollary has identical atoms and global parameters but
+four or five decomposition choices.  These counting consequences quantify
+the freedom left by the canonical structure; they are not assertions of
+new general Stirling-number identities.
+
+The classification and substantial structural extensions have accepted
+Lean implementations.  The final verification section records the exact
+boundary: full profile realization, lattice spectra, maximal-chain and
+height endpoints, and the new counting statements still have unfinished
+formal interfaces.  The finite results above have manuscript proofs;
+they are not all claimed as accepted Lean exports.
 
 The graph analogue was proved by Erdős and Hajnal: the obligatory finite
 graphs are exactly the bipartite graphs
