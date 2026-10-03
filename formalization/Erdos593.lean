@@ -207,6 +207,7 @@ import Erdos593.TripleSystem.SupportedClassicalBlockConverse
 import Erdos593.TripleSystem.SupportedClassicalBlockLabels
 import Erdos593.TripleSystem.AtomicBoundaryNormalForms
 import Erdos593.Graph.IncidenceProfile
+import Erdos593.TripleSystem.SupportedPieceAccountingCandidate
 
 /-!
 # Erdős Problem 593

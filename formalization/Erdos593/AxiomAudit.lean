@@ -1,3 +1,4 @@
+import Erdos593.TripleSystem.SupportedPieceAccountingCandidate
 import Erdos593.TripleSystem.AtomicBoundaryNormalForms
 import Erdos593.Graph.IncidenceProfile
 import Erdos593.Graph.EdgeCycleSplice
@@ -462,3 +463,8 @@ import Erdos593.TripleSystem.CanonicalAtomAmalgamLabels
 #print axioms E593AtomicBoundary.cycle_boundary
 #print axioms E593AtomicBoundary.theta_boundary
 #print axioms E593AtomicBoundary.obligatory_atomic_alpha_boundary
+
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedDecompositionProduct_apply_eq
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPartitions_full_block_card_accounting
+#print axioms Erdos593.TripleSystem.CanonicalAtom.nonshared_piece_incidence_card
+#print axioms Erdos593.TripleSystem.CanonicalAtom.supportedPartitions_block_card_accounting
