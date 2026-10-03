@@ -44,8 +44,9 @@ ingredients in the overview. No new bibliography key or novelty/priority claim
 is introduced. The clean revision is the existing open TeX, not a replacement
 document. All 119 display environments, 45 mathematical statement bodies and
 73 ordered labels remain fixed under the bounded structural screen. The editor
-compiler was called after these edits and again failed at initialization, so
-the historical PDF and current compilation/layout limitations below still apply.
+compiler was called after these edits and again failed at initialization.
+The later native build described below supersedes the earlier PDF/layout
+limitation without changing this source or its mathematical contents.
 
 ## Paragraph-by-paragraph comparison and provenance
 
@@ -97,8 +98,21 @@ log-concave. Schmitt's lemma is not quoted without its family hypotheses.
 
 The built-in compiler was called on the existing open TeX after the citation
 edits and returned `Unable to find standard directories for platform`. It gave
-no TeX syntax diagnostic and produced no new PDF. Source compilation and current
-layout remain **unverified**. The unchanged PDF in this packet is the
-**2 October historical version**, with16 displayed references; it does not
-show this34-reference revision. No replacement document/tab/PDF or TeX
-installation was created. The open source remains the current review version.
+no TeX syntax diagnostic and produced no PDF. This platform limitation remains;
+it is not relabeled a successful editor build.
+
+The author's subsequent request for a current local PDF authorized a native
+build of the exact same saved source. Three serial passes of the existing MiKTeX
+pdfLaTeX returned zero with package installation and shell execution disabled.
+The current 40-page PDF contains bibliography entries [1] through [34], the
+3 October date and MSC codes, and no unresolved references/citations, rerun
+requests, overfull/underfull boxes or TeX errors. The last two reference states
+agree. All pages were rendered and visually checked; key introduction, proof,
+new-result, verification and bibliography pages were also checked at page scale.
+The expected shell-escape-disabled warning is retained. The exact PDF SHA256 is
+`e8dbf2cfa64fe2525ebd1203f277b5d6b39a49124cb343860a7edcffed52a144`;
+its source remains `ae148bd6c2c0c5a49ec9018615a69c614b3693b57b3691ea8fc83b481bde9d68`.
+No TeX installation, source replacement, mathematical revision or Lean replay
+was needed. The old 16-reference PDF is preserved locally and in Git history.
+Successful typesetting does not supply missing Lean proofs or a full external
+mathematical audit. The existing source/editor remains open and current.

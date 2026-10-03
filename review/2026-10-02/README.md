@@ -1,6 +1,6 @@
 # Erdős 593 manuscript review — literature and exposition follow-up, 3 October 2026
 
-## Current source — 34 references; PDF remains historical
+## Current source and PDF — 3 October 2026
 
 Read the saved TeX source, matching references.bib and [citation review](CITATION_REVIEW.md).
 The source now has 34 references and 67 citation commands, with every entry cited.
@@ -24,14 +24,27 @@ separately. This is not full mathematical or Lean certification. Maximal flags,
 height, fixed-atom realization and other remaining interfaces are not promoted
 by an editorial revision.
 
-**The unchanged PDF is the 2 October version and contains 16 references.** It does
-not show this source revision. The built-in editor compiler still fails at
-initialization (`Unable to find standard directories for platform`); current
-source compilation/layout is **unverified**. No replacement PDF or installation.
-Both stopped monitors remain paused. The earlier pass records below are historical
-where their counts, delivery status or future-private workflow differ.
+The accompanying [PDF](erdos593_obligatory_triple_systems.pdf) is now a fresh
+40-page build of the exact saved 3 October source, with all 34 references.
+Three serial passes of the existing MiKTeX pdfLaTeX returned zero; automatic
+package installation and shell execution were disabled. The last two reference
+states agree. There are no unresolved references/citations, rerun requests,
+overfull/underfull boxes or TeX errors. The expected shell-escape-disabled
+warning is retained. All 40 pages were rendered and visually checked, including
+page-scale checks of the introduction, local-product proof, new budget/counting
+passages, verification boundary and bibliography. PDF SHA256:
+`e8dbf2cfa64fe2525ebd1203f277b5d6b39a49124cb343860a7edcffed52a144`.
+The source SHA256 is
+`ae148bd6c2c0c5a49ec9018615a69c614b3693b57b3691ea8fc83b481bde9d68`.
 
-Start with the revised [TeX source](erdos593_obligatory_triple_systems.tex), [change comparison](CHANGES.md) and [mathematics and Lean audit](AUDIT.md). **The retained PDF is the 2 October version; it does not contain the 3 October mathematical additions.** The built-in editor compiler fails at initialization, before reading TeX. No replacement PDF was compiled against the author's instruction to retain this editor/document. The source revision's compilation and layout are therefore unverified. [references.bib](references.bib) remains synchronized with the source's inline bibliography.
+The built-in editor's initialization failure remains a separate platform
+limitation; it is not described as successful compilation. This local native
+build required no installation and changed no mathematical source. The earlier
+2 October PDF is preserved locally and in Git history, not presented as current.
+Both stopped monitors remain paused. The earlier pass records below are historical
+where their counts, delivery, PDF or future-private workflow differ.
+
+Start with the revised [PDF](erdos593_obligatory_triple_systems.pdf), [TeX source](erdos593_obligatory_triple_systems.tex), [change comparison](CHANGES.md) and [mathematics and Lean audit](AUDIT.md). [references.bib](references.bib) remains synchronized with the source's inline bibliography. A clean PDF build verifies typesetting, not completion of the extended manuscript's Lean coverage or a full external mathematical audit.
 
 ## Latest bounded pass — 3 October
 
@@ -70,4 +83,6 @@ The earlier author-requested review used Codex self-review and real supplementar
 3. Formal verification and reproducibility: whether every qualification is visible and consistent with the audit.
 4. The remainder of the paper: chronology, attribution, definitions and proof details outside the bounded second-pass audit still merit the author's full review.
 
-The public and private packets are intended to be byte-identical. No private coordination directory, credentials or original private service logs are part of this export.
+The earlier mirrored-packet workflow is superseded by the author's public-only
+instruction. This follow-up updates only the public review packet. No private
+coordination directory, credentials or original private service logs are exported.

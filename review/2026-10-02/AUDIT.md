@@ -25,9 +25,15 @@ and 67 citation commands after the author's requested contribution overview.
 The 119 existing displays, 45 statement bodies and
 73 ordered labels are preserved by a bounded source screen; citations and
 proof-prose context have their own review in CITATION_REVIEW.md. No new theorem
-or external-checker use is inferred from a citation. The built-in editor still
-fails initialization; current TeX compilation and layout are unverified. The
-PDF below is the unchanged 2 October version.
+or external-checker use is inferred from a citation. The exact saved source now
+has a verified native 40-page PDF: three MiKTeX pdfLaTeX passes returned zero,
+the last two reference states agree, all 34 bibliography entries appear, and
+all pages were rendered and visually checked. No unresolved references/citations,
+rerun requests, overfull/underfull boxes or TeX errors remain; the expected
+shell-escape-disabled warning is retained. Automatic package installation and
+shell execution were disabled. This is typesetting evidence, not a new Lean
+result or full external audit. The built-in editor initialization failure remains
+separate. The old 2 October PDF is preserved locally and in Git history.
 
 Future development is public-only. The final harmonization does not authorize
 future private PRs, directives or duplicate delivery. Both monitors stay paused.

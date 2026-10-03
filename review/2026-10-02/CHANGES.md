@@ -26,10 +26,16 @@ unrelated inference work. No chronology, authorship, hypothesis, numerical
 diagnostic, Lean source or workflow was changed by this editorial pass.
 
 The open TeX remains the current review source. The built-in compiler returned
-the same platform-directory initialization failure after these edits, not a
-successful PDF build. The unchanged PDF remains historical and current layout
-is unverified. This follow-up updates only the public draft; no private PR55
-update, monitor restart or manuscript merge is included.
+a platform-directory initialization failure, not a successful PDF build.
+Under the author's subsequent request for the current local PDF, the existing
+MiKTeX runtime built this exact source in three zero-exit passes, with package
+installation and shell execution disabled. The current 40-page PDF includes all
+34 references; reference state stabilized, all pages were rendered and visually
+checked, and there are no unresolved references/citations, rerun requests,
+overfull/underfull boxes or TeX errors. The expected shell-escape-disabled warning
+is retained. Source and mathematical contents are unchanged by this delivery.
+The old 2 October PDF remains preserved locally and in Git history. This update
+is public-only; no private PR55 update, Lean replay or monitor restart is included.
 
 ## Author follow-up: finite mathematics beyond the classification
 
