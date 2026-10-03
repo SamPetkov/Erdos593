@@ -1,5 +1,35 @@
 # Manuscript changes and comparison — updated 3 October 2026
 
+## Literature and reader-staging pass — 3 October
+
+| Passage | Prior form | Current revision |
+| --- | --- | --- |
+| Introduction | Finite versus uncountable contrast lacked historical lead-in | Adds Erdős1959 and Erdős–Lovász1975 before the unchanged modern F-free contrast |
+| Result hierarchy | Finite consequences introduced in one dense paragraph | Adds a roadmap: canonical structure, numerical constraints, then attachment choices; points to the existing equal-parameter/four-versus-five example |
+| Cardinal inputs | Exact imported statements already listed | Adds Erdős–Hajnal–Máté–Rado as background, not a replacement black box |
+| Canonical decomposition | Structural graph proof | Adds bridge/biconnected algorithmic context with Tarjan references; no runtime certification claim |
+| Partition-lattice story | Local products and profile recovery | Adds binary versus ternary-joint context and a properly qualified direct-factor comparison |
+| Piece counts | Existing Stirling enumeration and profile comparison | Gives the counting convention a Comtet citation and separates Lieb's classical row results from our profile bounds |
+| Formal verification | Cover extension accepted locally, delivery pending | Records merged public PR51 and distinguishes formal-statement review from external verified typechecking |
+
+Both the inline bibliography and references.bib now contain 34 cited entries,
+up from 23 in the immediately preceding source and 16 in the historical PDF.
+There are 64 citation commands. CITATION_REVIEW.md supplies primary provenance,
+comparison notes and access limitations. No uncited entries were added.
+
+All 119 existing displays, 45 theorem/definition statement bodies and 73 ordered
+labels pass the preservation screen. The new explanatory binary/ternary-joint
+observation is not called a newly accepted Lean theorem. The GATE comparison is
+used for exposition standards, not to claim equal research impact or to cite
+unrelated inference work. No chronology, authorship, hypothesis, numerical
+diagnostic, Lean source or workflow was changed by this editorial pass.
+
+The open TeX remains the current review source. The built-in compiler returned
+the same platform-directory initialization failure after these edits, not a
+successful PDF build. The unchanged PDF remains historical and current layout
+is unverified. This follow-up updates only the public draft; no private PR55
+update, monitor restart or manuscript merge is included.
+
 ## New mathematical pass — 3 October
 
 The clean revised version is the existing open TeX file, edited in place. Medium English academic editing was used for the connective introduction and new subsection; mathematics received a separate adversarial review. Existing citations, attribution, 111 displays, 43 mathematical statements and 70 labels are preserved. Two statements, eight displays and three labels are intentionally added, not described as unchanged mathematics.

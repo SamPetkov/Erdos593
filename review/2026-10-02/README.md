@@ -1,4 +1,32 @@
-# Erdős 593 manuscript review — mathematical follow-up, 3 October 2026
+# Erdős 593 manuscript review — literature and exposition follow-up, 3 October 2026
+
+## Current source — 34 references; PDF remains historical
+
+Read the saved TeX source, matching references.bib and [citation review](CITATION_REVIEW.md).
+The source now has 34 references and 64 citation commands, with every entry cited.
+Eleven additions support the finite/uncountable contrast, classical graph
+decomposition, partition-lattice factors and formal-verification scope. An early
+roadmap organizes the finite results as structure, constraints and assembly choices.
+The GATE benchmark informs exposition standards, not claims of equivalent impact.
+
+The accepted supported-cover/piece-deficit/cover-increment block is now on
+[public main via PR51](https://github.com/SamPetkov/Erdos593/pull/51): 250 modules,
+401 ordered standard-only audits. The final harmonization checked 258 accepted
+source files and 73 shared status/evidence files byte-identical in the two repositories.
+**All further development is public-only.** No private manuscript PR was updated.
+
+The existing 119 displays, 45 statement bodies and 73 ordered labels remain unchanged
+under the bounded source screen; proof prose and citation relevance were reviewed
+separately. This is not full mathematical or Lean certification. Maximal flags,
+height, fixed-atom realization and other remaining interfaces are not promoted
+by an editorial revision.
+
+**The unchanged PDF is the 2 October version and contains 16 references.** It does
+not show this source revision. The built-in editor compiler still fails at
+initialization (`Unable to find standard directories for platform`); current
+source compilation/layout is **unverified**. No replacement PDF or installation.
+Both stopped monitors remain paused. The earlier pass records below are historical
+where their counts, delivery status or future-private workflow differ.
 
 Start with the revised [TeX source](erdos593_obligatory_triple_systems.tex), [change comparison](CHANGES.md) and [mathematics and Lean audit](AUDIT.md). **The retained PDF is the 2 October version; it does not contain the 3 October mathematical additions.** The built-in editor compiler fails at initialization, before reading TeX. No replacement PDF was compiled against the author's instruction to retain this editor/document. The source revision's compilation and layout are therefore unverified. [references.bib](references.bib) remains synchronized with the source's inline bibliography.
 

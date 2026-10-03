@@ -1,5 +1,38 @@
 # Mathematics and Lean coverage audit — updated 3 October 2026
 
+## Latest source and repository reconciliation — 3 October
+
+The supported-cover, actual-piece deficit and cover-increment extension is now
+accepted through pinned canonical run 66570 and source-only final run 66573,
+and included on public main through merged PR51. Exact public main is
+`6b477f87a0358fc88d7a39e629076d15c2410844`: 250 modules, 401 ordered permanent
+standard-only axiom records and deterministic standalone. The final one-time
+public/private reconciliation checked all 258 accepted source files and 73
+shared status/evidence files against actual merged Git blobs. Self-review is
+recorded honestly as `independent=false`; a full external audit remains pending.
+Public PR CI37149298479 passed both required checks on the exact delivery head.
+
+This closes the earlier proposed finite-setoid/supported-cover/deficit bridge,
+not every remaining manuscript interface. Maximal flags, equal chain lengths,
+height, actual fixed-atom geometry/realization, componentwise and full lattice
+spectra, generic all-maximal-block running order, theta parameter packaging,
+enumeration and exhaustive release crosswalk remain distinct gates. Later
+compiler-success/source-only captures are not silently promoted to a new full
+acceptance by this editorial audit.
+
+The new literature and exposition pass increases the source to 34 references
+and 64 citation commands. The 119 existing displays, 45 statement bodies and
+73 ordered labels are preserved by a bounded source screen; citations and
+proof-prose context have their own review in CITATION_REVIEW.md. No new theorem
+or external-checker use is inferred from a citation. The built-in editor still
+fails initialization; current TeX compilation and layout are unverified. The
+PDF below is the unchanged 2 October version.
+
+Future development is public-only. The final harmonization does not authorize
+future private PRs, directives or duplicate delivery. Both monitors stay paused.
+Older audit sections below retain historical evidence and are superseded where
+their reference counts, cover-gap or repository-delivery status differ.
+
 ## Current bounded research brief and verdict — 3 October
 
 Question: which statements of the open manuscript already have exact accepted Lean support, do its supplied mathematical routes still establish their conclusions, and which short consequences best strengthen the cyclic-content/assembly story?
