@@ -1,4 +1,42 @@
-# Erdős 593 manuscript review — literature and exposition follow-up, 3 October 2026
+# Erdős 593 manuscript review — front matter, story and references, 4 October 2026
+
+## Current review version — 4 October 2026
+
+Read the [current PDF](erdos593_obligatory_triple_systems.pdf) and matching
+[open-document source](erdos593_obligatory_triple_systems.tex). This is a fresh
+42-page build, not the historical 16-reference PDF. The bibliography now has
+**38 cited references**, numbered by **first appearance**, with 72 citation
+commands and a synchronized [BibTeX file](references.bib).
+
+The date sits beneath the author; MSC codes and keywords follow the abstract,
+rather than appearing in footnotes below the first theorem. The abstract and
+introduction foreground the finite spectra, fixed-atom profile freedom, cyclic
+budget and sharp actual-piece counts beyond the classification. Their exact
+finite, connected-positive-rank and interior-equality restrictions are retained.
+
+Only implementation, exported interfaces and validation provenance have moved
+to Appendix A. The canonical structure, spectra, profile realization and
+counting proofs remain in the main text. All 119 displays, 45 mathematical
+statement bodies and 43 proof environments are unchanged from the previous
+public review source. All 73 old labels remain, with one new appendix label.
+[CITATION_REVIEW.md](CITATION_REVIEW.md) gives paragraph comparisons and primary
+provenance for the four new references.
+
+Three serial passes of the existing MiKTeX pdfLaTeX returned zero; installation
+and shell execution were disabled. Reference states agree, all 42 pages were
+rendered and checked, and there are no unresolved citations/references, rerun
+requests, overfull/underfull boxes or TeX errors. The expected disabled-shell
+warning is retained. The built-in editor still fails at platform initialization;
+the successful native build is recorded separately, not attributed to it.
+
+Source SHA256: `7a6416962c4b17791114209714b37377878e700c4988fbfc78fefd4e0f96cf08`.
+PDF SHA256: `5e5ce1df94e4fc4abe22aed652bf957d7b0c33294b202b110db783d5060f160b`.
+
+This is an editorial and source-based review, not new Lean acceptance, a full
+external audit or a journal-readiness claim. Whole-manuscript formalization is
+still incomplete. Accepted proof source, pins and workflows are unchanged.
+Development is **public-only** and both stopped monitors remain paused. Earlier
+dated sections below are historical where their counts, formatting or PDF differ.
 
 ## Current source and PDF — 3 October 2026
 

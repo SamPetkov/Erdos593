@@ -18,6 +18,26 @@
 \patchcmd{\abstract}{\leftmargin3pc}{\leftmargin1.5pc}{}%
   {\ClassError{amsart}{Abstract margin patch failed}{Restore the standard abstract environment.}}
 
+% Author-review layout: metadata belongs with the abstract, not in footnotes
+% below the first theorem. The ordinary AMS metadata commands are retained.
+\makeatletter
+\def\@adminfootnotes{%
+  \let\@makefnmark\relax \let\@thefnmark\relax
+  \ifx\@empty\thankses\else \@footnotetext{%
+    \def\par{\let\par\@par}\@setthanks}%
+  \fi}
+\newcommand{\paper@frontmatter}{%
+  \par\smallskip\begingroup\small
+  \setlength{\parindent}{0pt}%
+  \setlength{\parskip}{0.25\baselineskip}%
+  \textit{2020 Mathematics Subject Classification.}\enspace\@subjclass.\par
+  \textit{Keywords.}\enspace\@keywords.\par
+  \endgroup}
+\patchcmd{\@maketitle}{\@setabstract}%
+  {\begin{center}\small\@date\end{center}\@setabstract\paper@frontmatter}{}%
+  {\ClassError{amsart}{Front-matter placement patch failed}{Restore the standard AMS title block.}}
+\makeatother
+
 \setcounter{secnumdepth}{1}
 \setcounter{tocdepth}{1}
 \setlength{\parindent}{1.5em}
@@ -69,25 +89,34 @@
 \email{samuil.petkov@ens.psl.eu}
 \subjclass[2020]{Primary 05C65; Secondary 05C15, 05C40, 05C63, 06A07, 03E05}
 \keywords{Erdős Problem 593, obligatory triple systems, uncountable chromatic number, canonical decomposition, partition lattices, Lean~4}
-\date{3 October 2026}
+\date{4 October 2026}
 
 \begin{document}
 
 \begin{abstract}
 Erdős Problem~593 asks which finite triple systems occur in every triple
 system of uncountable chromatic number.  We give an independent proof of the
-classification and use its canonical decomposition to determine exact
-finite spectra.  After isolated vertices are removed, a system is
-obligatory if and only if it is linear, every hyperedge-node of its Levi
-graph is incident with a bridge, and every Berge cycle has even length.
-Such a system is a forest assembly of single triples and private-vertex
-expansions of finite $2$-connected bipartite graphs.  The cyclic ranks and
-core orders constrain the possible atom counts, while the attachment
-profile determines the one-point factorization lattice as a product of
-partition lattices.  We obtain exact parameter, atom-count and lattice
-spectra, including the parity obstruction at cycle rank one.  The
-classification is verified in Lean~4; the scope of verification for the
-extensions is recorded separately.  All arguments are in ZFC.
+classification and develop its finite structural consequences.  After
+isolated vertices are removed, a system is obligatory if and only if it is
+linear, every hyperedge-node of its Levi graph is incident with a bridge,
+and every Berge cycle has even length.  Its canonical atoms are single
+triples and private-vertex expansions of finite $2$-connected bipartite
+graphs.  For reduced obligatory systems with at least one hyperedge, we
+determine the exact parameter and atom-count spectra, including the parity
+obstruction at cycle rank one.  The supported one-point factorizations form
+a product of partition lattices: every attachment excess profile can be
+realized with the atoms and component count fixed, and the lattice type
+recovers that profile.  For connected systems of positive cycle rank, an
+exact budget relates cyclic-rank splitting and excess core order to the
+available factorization rank.  At every prescribed original-edge piece
+count we obtain sharp binomial and Stirling-number bounds, with binary
+joints and a common joint as the interior equality cases.  The two
+extremal assemblies can have the same atoms and global parameters.
+These results separate the constraints imposed by cyclic content from
+the freedom of assembly.  The classification and specified structural
+extensions are verified in Lean~4; profile realization, full lattice
+spectra and the new counting endpoints are not yet fully formalized.
+All arguments are in ZFC.
 \end{abstract}
 
 \maketitle
@@ -127,7 +156,7 @@ formulation and graph derivatives \citep[Sections~3--4 and Theorem~4.6]{li2026},
 whereas we decompose traces into expansion fibres and a support-incidence
 forest.  We cite Li's work for chronology and comparison; none of its results
 is used below as a black box.
-\paragraph{Finite structure beyond the classification.}
+\subsection*{Finite structure beyond the classification}
 Theorem~A answers an embedding question about infinite hosts.  The further
 results concern a different question: how much finite structure is fixed by
 cyclic content, and how much remains free under one-point assembly?  The finite
@@ -141,6 +170,14 @@ of finite \(2\)-connected bipartite graphs
 is classical \citep{whitney1932,diestel2017}; the point here is the exact list
 of allowable block types and what it implies about the systems assembled
 from them.
+
+The finite results give two complementary classifications.  The numerical
+spectra determine which global parameters and canonical atom counts are
+possible.  The local partition product determines which decompositions
+remain available once the atoms have been fixed.  Neither classification
+alone captures the other: even assemblies with identical atoms, order,
+size and cycle rank can have different factorization lattices and different
+numbers of decompositions.
 
 The numerical consequences are exact existence statements, not only bounds.
 Theorem~\ref{theorem-order-size-component-spectrum} determines every feasible
@@ -202,11 +239,23 @@ the freedom left by the canonical structure; they are not assertions of
 new general Stirling-number identities.
 
 The classification and substantial structural extensions have accepted
-Lean implementations.  The final verification section records the exact
-boundary: full profile realization, lattice spectra, maximal-chain and
-height endpoints, and the new counting statements still have unfinished
-formal interfaces.  The finite results above have manuscript proofs;
-they are not all claimed as accepted Lean exports.
+Lean implementations.  The distinction is between the mathematical results
+proved in the manuscript and the exact interfaces already exported by Lean,
+not between a numerical test and a proof.  Full profile realization, lattice
+spectra, maximal-chain and height endpoints, and the new counting statements
+still have unfinished formal interfaces.  The finite results above have
+manuscript proofs; they are not all claimed as accepted Lean exports.
+Appendix~\ref{appendix-formalization} records the implementation routes,
+validation records and remaining obligations without interrupting the
+mathematical arguments.
+
+\subsection*{Context and proof strategy}
+
+The private-vertex expansion $J^+$ also appears in finite extremal
+hypergraph theory.  Kostochka, Mubayi and Verstra{\"e}te study its
+Tur{\'a}n extremal function \citep{kostochkamubayiverstraete2015}.
+Here the same operation supplies the canonical cyclic pieces, but
+the host condition is uncountable chromatic number rather than edge density.
 
 The graph analogue was proved by Erdős and Hajnal: the obligatory finite
 graphs are exactly the bipartite graphs
@@ -221,6 +270,10 @@ In the finite setting, arbitrarily large chromatic number is compatible with
 arbitrarily large girth: Erd\H{o}s proved this for graphs
 \citep[pp.~35--37]{erdos1959}, and Erd\H{o}s and Lov\'asz established a
 uniform-hypergraph counterpart \citep[Theorem~1$'$]{erdoslovasz1975}.
+Later constructions control sparsity quantitatively: Kostochka and R{\"o}dl
+obtain high-girth uniform hypergraphs with controlled maximum degree
+\citep[Theorem~3]{kostochkarodl2010}, while Alon, Kostochka, Reiniger, West
+and Zhu give an explicit construction \citep[Theorem~3.2]{alonetal2016}.
 Uncountable chromatic number is essential here.  For finite hosts,
 \citet[Proposition~1.3(ii)]{wang2026} record that the weak chromatic numbers
 of $F$-free uniform hypergraphs are bounded exactly when $F$ contains no Berge
@@ -2210,8 +2263,33 @@ The individual factors are reversed rows of second-kind Stirling numbers,
 whose generating-function and concavity properties are classical
 \citep{lieb1968}.  The bounds above instead compare different attachment
 profiles at fixed total excess.
+Pitman's probabilistic representations and coefficient bounds give further
+context for these classical Stirling rows \citep{pitman1997}.  Our question
+is which products of the rows are realized by attachment profiles, not a
+new general identity for Stirling numbers.
 
-\section*{Formal verification and reproducibility}
+\section*{Scope of formal verification}
+
+The classification and specified finite structural extensions have verified
+Lean~4 implementations \citep{demoura2021,mathlib2020}.  The accepted results
+include the canonical atoms, finite parameter and connected atom-count spectra,
+classical-block identification, local decomposition products, actual-piece
+accounting and supported-cover increments.  They use the original carriers
+and retain their exact finiteness and structural hypotheses.
+
+Verification of the extended manuscript is not complete.  In particular,
+fixed-atom profile realization, the full lattice spectra, maximal-chain and
+height endpoints, the complete phase/equality interfaces and the new
+coefficient bounds remain distinct obligations.  The arithmetic deficit
+theorem supports the cyclic-budget calculation, but does not by itself
+identify every remaining geometric or lattice endpoint.  The proofs in the
+main text establish the manuscript conclusions; successful typechecking of
+other statements cannot replace them.  Implementation details, exact exported
+types, validation chronology and the remaining crosswalk are separated into
+Appendix~\ref{appendix-formalization}.
+
+\appendix
+\section{Formalization interfaces and reproducibility}\label{appendix-formalization}
 
 The implementation uses Lean~4 \citep{demoura2021} and the mathematical
 library Mathlib \citep{mathlib2020}.  These references describe the proof
@@ -2330,154 +2408,17 @@ this review draft remains subject to the author's review.
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[Achim et~al.(2025)Achim, Best, Der, F{\'e}d{\'e}rico, Gukov,
-  Halpern-Leistner, Henningsgard, Kudryashov, Meiburg, Michelsen, Patterson,
-  Rodriguez, Scharff, Shanker, Sicca, Sowrirajan, Swope, Tamas, Tenev, Thomm,
-  Williams, and Wu]{achim-et-al-2025}
-Tudor Achim, Alex Best, Kevin Der, Math{\"i}s F{\'e}d{\'e}rico, Sergei Gukov,
-  Daniel Halpern-Leistner, Kirsten Henningsgard, Yury Kudryashov, Alexander
-  Meiburg, Martin Michelsen, Riley Patterson, Eric Rodriguez, Laura Scharff,
-  Vikram Shanker, Vladimir Sicca, Hari Sowrirajan, Aidan Swope, Matyas Tamas,
-  Vlad Tenev, Jonathan Thomm, Harold Williams, and Lawrence Wu.
-\newblock {Aristotle}: {IMO}-level automated theorem proving, 2025.
-\newblock URL \url{https://arxiv.org/abs/2510.01346}.
-\newblock arXiv:2510.01346.
-
-\bibitem[Avigad and Harrison(2014)]{avigadharrison2014}
-Jeremy Avigad and John Harrison.
-\newblock Formally verified mathematics.
-\newblock \emph{Commun. ACM}, 57\penalty0 (4):\penalty0 66--75, 2014.
-\newblock \doi{10.1145/2591012}.
-
-\bibitem[Bahmanian and \v{S}ajna(2015)]{bahmanian2015}
-M.~Amin Bahmanian and Mateja \v{S}ajna.
-\newblock Connection and separation in hypergraphs.
-\newblock \emph{Theory Appl. Graphs}, 2\penalty0 (2):\penalty0 Article~5, 2015.
-\newblock \doi{10.20429/tag.2015.020205}.
-\newblock URL \url{https://arxiv.org/abs/1504.04274}.
-
-\bibitem[Bloom(2026)]{bloom593}
-Thomas~F. Bloom.
-\newblock Erd{\H{o}}s problem 593.
-\newblock \url{https://www.erdosproblems.com/593}, 2026.
-\newblock Accessed 11 July 2026.
-
-\bibitem[Carneiro(2025)]{carneiro2025}
-Mario Carneiro.
-\newblock Lean4Lean: Verifying a typechecker for Lean, in Lean.
-\newblock arXiv:2403.14064v3, revised 14 September 2025.
-\newblock URL \url{https://arxiv.org/abs/2403.14064v3}.
-
-\bibitem[Comtet(1974)]{comtet1974}
-Louis Comtet.
-\newblock \emph{Advanced Combinatorics: The Art of Finite and Infinite Expansions}.
-\newblock D. Reidel, Dordrecht, 1974.
-\newblock \doi{10.1007/978-94-010-2196-8}.
-
-\bibitem[de~Bruijn and Erd{\H{o}}s(1951)]{debruijn1951}
-Nicolaas~Govert de~Bruijn and Paul Erd{\H{o}}s.
-\newblock A colour problem for infinite graphs and a problem in the theory of
-  relations.
-\newblock \emph{Nederl. Akad. Wetensch. Proc. Ser. A}, 54\penalty0
-  (5):\penalty0 371--373, 1951.
-\newblock \doi{10.1016/S1385-7258(51)50053-7}.
-
-\bibitem[de~Moura and Ullrich(2021)]{demoura2021}
-Leonardo de~Moura and Sebastian Ullrich.
-\newblock The Lean~4 theorem prover and programming language.
-\newblock In Andr\'e Platzer and Geoff Sutcliffe, editors,
-  \emph{Automated Deduction---CADE~28}, volume~12699 of \emph{Lecture
-  Notes in Computer Science}, pages 625--635. Springer, Cham, 2021.
-\newblock \doi{10.1007/978-3-030-79876-5_37}.
-
-\bibitem[Diestel(2017)]{diestel2017}
-Reinhard Diestel.
-\newblock \emph{Graph Theory}, fifth edition.
-\newblock Graduate Texts in Mathematics, volume~173. Springer, Berlin,
-  2017.
-\newblock \doi{10.1007/978-3-662-53622-3}.
-
-\bibitem[Erd{\H{o}}s(1959)]{erdos1959}
-Paul Erd{\H{o}}s.
-\newblock Graph theory and probability.
-\newblock \emph{Canad. J. Math.}, 11:\penalty0 34--38, 1959.
-\newblock \doi{10.4153/CJM-1959-003-9}.
-
 \bibitem[Erd{\H{o}}s(1995)]{erdos1995}
 Paul Erd{\H{o}}s.
 \newblock On some problems in combinatorial set theory.
 \newblock \emph{Publikacije Instituta Matemati\v{c}kog (Beograd) (N.S.)},
   57(71):\penalty0 61--65, 1995.
 
-\bibitem[Erd{\H{o}}s et~al.(1975)Erd{\H{o}}s, Galvin, and Hajnal]{egh1975}
-Paul Erd{\H{o}}s, Fred Galvin, and Andr{\'a}s Hajnal.
-\newblock On set-systems having large chromatic number and not containing
-  prescribed subsystems.
-\newblock In \emph{Infinite and Finite Sets (Keszthely, 1973)}, volume~10 of
-  \emph{Colloquia Mathematica Societatis J{\'a}nos Bolyai}, pages 425--513.
-  North-Holland, 1975.
-
-\bibitem[Erd{\H{o}}s and Hajnal(1966)]{erdoshajnal1966}
-Paul Erd{\H{o}}s and Andr{\'a}s Hajnal.
-\newblock On chromatic number of graphs and set-systems.
-\newblock \emph{Acta Math. Acad. Sci. Hungar.}, 17\penalty0
-  (1--2):\penalty0 61--99, 1966.
-\newblock \doi{10.1007/BF02020444}.
-
-\bibitem[Erd{\H{o}}s et~al.(1984)Erd{\H{o}}s, Hajnal, M{\'a}t{\'e}, and Rado]{ehmr1984}
-Paul Erd{\H{o}}s, Andr{\'a}s Hajnal, Attila M{\'a}t{\'e}, and Richard Rado.
-\newblock \emph{Combinatorial Set Theory: Partition Relations for Cardinals}.
-\newblock Studies in Logic and the Foundations of Mathematics, volume~106.
-  North-Holland, Amsterdam, and Akad{\'e}miai Kiad{\'o}, Budapest, 1984.
-
-\bibitem[Erd{\H{o}}s et~al.(1973)Erd{\H{o}}s, Hajnal, and Rothschild]{ehr1973}
-Paul Erd{\H{o}}s, Andr{\'a}s Hajnal, and Bruce~L. Rothschild.
-\newblock On chromatic number of graphs and set-systems.
-\newblock In \emph{Cambridge Summer School in Mathematical Logic (Cambridge,
-  1971)}, volume 337 of \emph{Lecture Notes in Mathematics}, pages 531--538.
-  Springer, Berlin and New York, 1973.
-
-\bibitem[Erd{\H{o}}s and Lov{\'a}sz(1975)]{erdoslovasz1975}
-Paul Erd{\H{o}}s and L{\'a}szl{\'o} Lov{\'a}sz.
-\newblock Problems and results on 3-chromatic hypergraphs and some related questions.
-\newblock In Andr{\'a}s Hajnal, Richard Rado, and Vera~T. S{\'o}s, editors,
-  \emph{Infinite and Finite Sets}, volume~10 of \emph{Colloquia Mathematica
-  Societatis J{\'a}nos Bolyai}, pages 609--627. North-Holland, Amsterdam, 1975.
-\newblock URL \url{https://www.renyi.hu/~p_erdos/1975-34.pdf}.
-
-\bibitem[Erd{\H{o}}s and Rado(1956)]{erdosrado1956}
-Paul Erd{\H{o}}s and Richard Rado.
-\newblock A partition calculus in set theory.
-\newblock \emph{Bull. Amer. Math. Soc.}, 62\penalty0
-  (5):\penalty0 427--489, 1956.
-\newblock \doi{10.1090/S0002-9904-1956-10036-0}.
-
-\bibitem[Gr{\"a}tzer(2011)]{gratzer2011}
-George Gr{\"a}tzer.
-\newblock \emph{Lattice Theory: Foundation}.
-\newblock Birkh{\"a}user, Basel, 2011.
-\newblock \doi{10.1007/978-3-0348-0018-1}.
-
-\bibitem[Hajnal and Komj{\'a}th(2008)]{hajnalkomjath2008}
-Andr{\'a}s Hajnal and P{\'e}ter Komj{\'a}th.
-\newblock Obligatory subsystems of triple systems.
-\newblock \emph{Acta Math. Hungar.}, 119\penalty0 (1--2):\penalty0
-  1--13, 2008.
-\newblock \doi{10.1007/s10474-007-6231-2}.
-
-\bibitem[Komj{\'a}th(2001)]{komjath2001}
-P{\'e}ter Komj{\'a}th.
-\newblock Some remarks on obligatory subsystems of uncountably chromatic triple
-  systems.
-\newblock \emph{Combinatorica}, 21\penalty0 (2):\penalty0 233--238, 2001.
-\newblock \doi{10.1007/s004930100021}.
-
-\bibitem[Komj{\'a}th(2008)]{komjath2008}
-P{\'e}ter Komj{\'a}th.
-\newblock An uncountably chromatic triple system.
-\newblock \emph{Acta Math. Hungar.}, 121\penalty0 (1--2):\penalty0
-  79--92, 2008.
-\newblock \doi{10.1007/s10474-008-7179-6}.
+\bibitem[Bloom(2026)]{bloom593}
+Thomas~F. Bloom.
+\newblock Erd{\H{o}}s problem 593.
+\newblock \url{https://www.erdosproblems.com/593}, 2026.
+\newblock Accessed 11 July 2026.
 
 \bibitem[Li(2026)]{li2026}
 Eric Li.
@@ -2487,19 +2428,81 @@ Eric Li.
 \newblock \doi{10.48550/arXiv.2606.24882}.
 \newblock URL \url{https://arxiv.org/abs/2606.24882}.
 
-\bibitem[Lieb(1968)]{lieb1968}
-Elliott~H. Lieb.
-\newblock Concavity properties and a generating function for Stirling numbers.
-\newblock \emph{J. Combin. Theory}, 5\penalty0 (2):\penalty0 203--206, 1968.
-\newblock \doi{10.1016/S0021-9800(68)80057-2}.
+\bibitem[Whitney(1932)]{whitney1932}
+Hassler Whitney.
+\newblock Non-separable and planar graphs.
+\newblock \emph{Trans. Amer. Math. Soc.}, 34\penalty0 (2):\penalty0
+  339--362, 1932.
+\newblock \doi{10.1090/S0002-9947-1932-1501641-7}.
 
-\bibitem[The mathlib Community(2020)]{mathlib2020}
-The mathlib Community.
-\newblock The Lean mathematical library.
-\newblock In \emph{Proceedings of the 9th ACM SIGPLAN International
-  Conference on Certified Programs and Proofs}, pages 367--381.
-  Association for Computing Machinery, New York, 2020.
-\newblock \doi{10.1145/3372885.3373824}.
+\bibitem[Diestel(2017)]{diestel2017}
+Reinhard Diestel.
+\newblock \emph{Graph Theory}, fifth edition.
+\newblock Graduate Texts in Mathematics, volume~173. Springer, Berlin,
+  2017.
+\newblock \doi{10.1007/978-3-662-53622-3}.
+
+\bibitem[Stanley(2012)]{stanley2012}
+Richard~P. Stanley.
+\newblock \emph{Enumerative Combinatorics}, volume~1, second edition.
+\newblock Cambridge Studies in Advanced Mathematics, volume~49. Cambridge
+  University Press, Cambridge, 2012.
+\newblock \doi{10.1017/CBO9781139058520}.
+
+\bibitem[Comtet(1974)]{comtet1974}
+Louis Comtet.
+\newblock \emph{Advanced Combinatorics: The Art of Finite and Infinite Expansions}.
+\newblock D. Reidel, Dordrecht, 1974.
+\newblock \doi{10.1007/978-94-010-2196-8}.
+
+\bibitem[Kostochka et~al.(2015)Kostochka, Mubayi, and Verstra{\"e}te]{kostochkamubayiverstraete2015}
+Alexandr Kostochka, Dhruv Mubayi, and Jacques Verstra{\"e}te.
+\newblock Tur{\'a}n problems and shadows III: Expansions of graphs.
+\newblock \emph{SIAM J. Discrete Math.}, 29\penalty0 (2):\penalty0 868--876, 2015.
+\newblock \doi{10.1137/140977138}.
+
+\bibitem[Erd{\H{o}}s and Hajnal(1966)]{erdoshajnal1966}
+Paul Erd{\H{o}}s and Andr{\'a}s Hajnal.
+\newblock On chromatic number of graphs and set-systems.
+\newblock \emph{Acta Math. Acad. Sci. Hungar.}, 17\penalty0
+  (1--2):\penalty0 61--99, 1966.
+\newblock \doi{10.1007/BF02020444}.
+
+\bibitem[Erd{\H{o}}s et~al.(1973)Erd{\H{o}}s, Hajnal, and Rothschild]{ehr1973}
+Paul Erd{\H{o}}s, Andr{\'a}s Hajnal, and Bruce~L. Rothschild.
+\newblock On chromatic number of graphs and set-systems.
+\newblock In \emph{Cambridge Summer School in Mathematical Logic (Cambridge,
+  1971)}, volume 337 of \emph{Lecture Notes in Mathematics}, pages 531--538.
+  Springer, Berlin and New York, 1973.
+
+\bibitem[Erd{\H{o}}s et~al.(1975)Erd{\H{o}}s, Galvin, and Hajnal]{egh1975}
+Paul Erd{\H{o}}s, Fred Galvin, and Andr{\'a}s Hajnal.
+\newblock On set-systems having large chromatic number and not containing
+  prescribed subsystems.
+\newblock In \emph{Infinite and Finite Sets (Keszthely, 1973)}, volume~10 of
+  \emph{Colloquia Mathematica Societatis J{\'a}nos Bolyai}, pages 425--513.
+  North-Holland, 1975.
+
+\bibitem[Komj{\'a}th(2001)]{komjath2001}
+P{\'e}ter Komj{\'a}th.
+\newblock Some remarks on obligatory subsystems of uncountably chromatic triple
+  systems.
+\newblock \emph{Combinatorica}, 21\penalty0 (2):\penalty0 233--238, 2001.
+\newblock \doi{10.1007/s004930100021}.
+
+\bibitem[Hajnal and Komj{\'a}th(2008)]{hajnalkomjath2008}
+Andr{\'a}s Hajnal and P{\'e}ter Komj{\'a}th.
+\newblock Obligatory subsystems of triple systems.
+\newblock \emph{Acta Math. Hungar.}, 119\penalty0 (1--2):\penalty0
+  1--13, 2008.
+\newblock \doi{10.1007/s10474-007-6231-2}.
+
+\bibitem[Komj{\'a}th(2008)]{komjath2008}
+P{\'e}ter Komj{\'a}th.
+\newblock An uncountably chromatic triple system.
+\newblock \emph{Acta Math. Hungar.}, 121\penalty0 (1--2):\penalty0
+  79--92, 2008.
+\newblock \doi{10.1007/s10474-008-7179-6}.
 
 \bibitem[Reiher(2024)]{reiher2024}
 Christian Reiher.
@@ -2508,19 +2511,78 @@ Christian Reiher.
 \newblock \doi{10.1090/proc/17021}.
 \newblock URL \url{https://arxiv.org/abs/2403.11223}.
 
-\bibitem[Rota(1964)]{rota1964}
-Gian-Carlo Rota.
-\newblock On the foundations of combinatorial theory. I. Theory of
-  M\"obius functions.
-\newblock \emph{Z. Wahrscheinlichkeitstheorie verw. Geb.}, 2:\penalty0
-  340--368, 1964.
-\newblock \doi{10.1007/BF00531932}.
+\bibitem[Erd{\H{o}}s(1959)]{erdos1959}
+Paul Erd{\H{o}}s.
+\newblock Graph theory and probability.
+\newblock \emph{Canad. J. Math.}, 11:\penalty0 34--38, 1959.
+\newblock \doi{10.4153/CJM-1959-003-9}.
 
-\bibitem[Schmitt(1994)]{schmitt1994}
-William~R. Schmitt.
-\newblock Incidence Hopf algebras.
-\newblock \emph{J. Pure Appl. Algebra}, 96\penalty0 (3):\penalty0 299--330, 1994.
-\newblock \doi{10.1016/0022-4049(94)90105-8}.
+\bibitem[Erd{\H{o}}s and Lov{\'a}sz(1975)]{erdoslovasz1975}
+Paul Erd{\H{o}}s and L{\'a}szl{\'o} Lov{\'a}sz.
+\newblock Problems and results on 3-chromatic hypergraphs and some related questions.
+\newblock In Andr{\'a}s Hajnal, Richard Rado, and Vera~T. S{\'o}s, editors,
+  \emph{Infinite and Finite Sets}, volume~10 of \emph{Colloquia Mathematica
+  Societatis J{\'a}nos Bolyai}, pages 609--627. North-Holland, Amsterdam, 1975.
+\newblock URL \url{https://www.renyi.hu/~p_erdos/1975-34.pdf}.
+
+\bibitem[Kostochka and R{\"o}dl(2010)]{kostochkarodl2010}
+A.~V. Kostochka and V.~R{\"o}dl.
+\newblock Constructions of sparse uniform hypergraphs with high chromatic number.
+\newblock \emph{Random Structures Algorithms}, 36\penalty0 (1):\penalty0 46--56, 2010.
+\newblock \doi{10.1002/rsa.20293}.
+
+\bibitem[Alon et~al.(2016)Alon, Kostochka, Reiniger, West, and Zhu]{alonetal2016}
+Noga Alon, Alexandr Kostochka, Benjamin Reiniger, Douglas~B. West, and Xuding Zhu.
+\newblock Coloring, sparseness and girth.
+\newblock \emph{Israel J. Math.}, 214\penalty0 (1):\penalty0 315--331, 2016.
+\newblock \doi{10.1007/s11856-016-1361-2}.
+
+\bibitem[Wang et~al.(2026)Wang, Duan, Gerbner, and Hama Karim]{wang2026}
+Yichen Wang, Mengyu Duan, D{\'a}niel Gerbner, and Hilal Hama Karim.
+\newblock On the largest chromatic number of {$F$}-free hypergraphs.
+\newblock arXiv:2604.21551, 2026.
+\newblock \doi{10.48550/arXiv.2604.21551}.
+\newblock URL \url{https://arxiv.org/abs/2604.21551}.
+
+\bibitem[de~Bruijn and Erd{\H{o}}s(1951)]{debruijn1951}
+Nicolaas~Govert de~Bruijn and Paul Erd{\H{o}}s.
+\newblock A colour problem for infinite graphs and a problem in the theory of
+  relations.
+\newblock \emph{Nederl. Akad. Wetensch. Proc. Ser. A}, 54\penalty0
+  (5):\penalty0 371--373, 1951.
+\newblock \doi{10.1016/S1385-7258(51)50053-7}.
+
+\bibitem[Erd{\H{o}}s and Rado(1956)]{erdosrado1956}
+Paul Erd{\H{o}}s and Richard Rado.
+\newblock A partition calculus in set theory.
+\newblock \emph{Bull. Amer. Math. Soc.}, 62\penalty0
+  (5):\penalty0 427--489, 1956.
+\newblock \doi{10.1090/S0002-9904-1956-10036-0}.
+
+\bibitem[Erd{\H{o}}s et~al.(1984)Erd{\H{o}}s, Hajnal, M{\'a}t{\'e}, and Rado]{ehmr1984}
+Paul Erd{\H{o}}s, Andr{\'a}s Hajnal, Attila M{\'a}t{\'e}, and Richard Rado.
+\newblock \emph{Combinatorial Set Theory: Partition Relations for Cardinals}.
+\newblock Studies in Logic and the Foundations of Mathematics, volume~106.
+  North-Holland, Amsterdam, and Akad{\'e}miai Kiad{\'o}, Budapest, 1984.
+
+\bibitem[Bahmanian and \v{S}ajna(2015)]{bahmanian2015}
+M.~Amin Bahmanian and Mateja \v{S}ajna.
+\newblock Connection and separation in hypergraphs.
+\newblock \emph{Theory Appl. Graphs}, 2\penalty0 (2):\penalty0 Article~5, 2015.
+\newblock \doi{10.20429/tag.2015.020205}.
+\newblock URL \url{https://arxiv.org/abs/1504.04274}.
+
+\bibitem[Tarjan(1974)]{tarjan1974}
+R.~Endre Tarjan.
+\newblock A note on finding the bridges of a graph.
+\newblock \emph{Inform. Process. Lett.}, 2\penalty0 (6):\penalty0 160--161, 1974.
+\newblock \doi{10.1016/0020-0190(74)90003-9}.
+
+\bibitem[Tarjan(1972)]{tarjan1972}
+Robert Tarjan.
+\newblock Depth-first search and linear graph algorithms.
+\newblock \emph{SIAM J. Comput.}, 1\penalty0 (2):\penalty0 146--160, 1972.
+\newblock \doi{10.1137/0201010}.
 
 \bibitem[Simon et~al.(2011)Simon, Tittmann, and Trinks]{simon2011}
 Frank Simon, Peter Tittmann, and Martin Trinks.
@@ -2538,38 +2600,78 @@ Richard~P. Stanley.
   Providence, RI, 2007.
 \newblock URL \url{https://math.mit.edu/~rstan/arrangements/arr.html}.
 
-\bibitem[Stanley(2012)]{stanley2012}
-Richard~P. Stanley.
-\newblock \emph{Enumerative Combinatorics}, volume~1, second edition.
-\newblock Cambridge Studies in Advanced Mathematics, volume~49. Cambridge
-  University Press, Cambridge, 2012.
-\newblock \doi{10.1017/CBO9781139058520}.
+\bibitem[Gr{\"a}tzer(2011)]{gratzer2011}
+George Gr{\"a}tzer.
+\newblock \emph{Lattice Theory: Foundation}.
+\newblock Birkh{\"a}user, Basel, 2011.
+\newblock \doi{10.1007/978-3-0348-0018-1}.
 
-\bibitem[Tarjan(1972)]{tarjan1972}
-Robert Tarjan.
-\newblock Depth-first search and linear graph algorithms.
-\newblock \emph{SIAM J. Comput.}, 1\penalty0 (2):\penalty0 146--160, 1972.
-\newblock \doi{10.1137/0201010}.
+\bibitem[Rota(1964)]{rota1964}
+Gian-Carlo Rota.
+\newblock On the foundations of combinatorial theory. I. Theory of
+  M\"obius functions.
+\newblock \emph{Z. Wahrscheinlichkeitstheorie verw. Geb.}, 2:\penalty0
+  340--368, 1964.
+\newblock \doi{10.1007/BF00531932}.
 
-\bibitem[Tarjan(1974)]{tarjan1974}
-R.~Endre Tarjan.
-\newblock A note on finding the bridges of a graph.
-\newblock \emph{Inform. Process. Lett.}, 2\penalty0 (6):\penalty0 160--161, 1974.
-\newblock \doi{10.1016/0020-0190(74)90003-9}.
+\bibitem[Schmitt(1994)]{schmitt1994}
+William~R. Schmitt.
+\newblock Incidence Hopf algebras.
+\newblock \emph{J. Pure Appl. Algebra}, 96\penalty0 (3):\penalty0 299--330, 1994.
+\newblock \doi{10.1016/0022-4049(94)90105-8}.
 
-\bibitem[Wang et~al.(2026)Wang, Duan, Gerbner, and Hama Karim]{wang2026}
-Yichen Wang, Mengyu Duan, D{\'a}niel Gerbner, and Hilal Hama Karim.
-\newblock On the largest chromatic number of {$F$}-free hypergraphs.
-\newblock arXiv:2604.21551, 2026.
-\newblock \doi{10.48550/arXiv.2604.21551}.
-\newblock URL \url{https://arxiv.org/abs/2604.21551}.
+\bibitem[Lieb(1968)]{lieb1968}
+Elliott~H. Lieb.
+\newblock Concavity properties and a generating function for Stirling numbers.
+\newblock \emph{J. Combin. Theory}, 5\penalty0 (2):\penalty0 203--206, 1968.
+\newblock \doi{10.1016/S0021-9800(68)80057-2}.
 
-\bibitem[Whitney(1932)]{whitney1932}
-Hassler Whitney.
-\newblock Non-separable and planar graphs.
-\newblock \emph{Trans. Amer. Math. Soc.}, 34\penalty0 (2):\penalty0
-  339--362, 1932.
-\newblock \doi{10.1090/S0002-9947-1932-1501641-7}.
+\bibitem[Pitman(1997)]{pitman1997}
+Jim Pitman.
+\newblock Probabilistic bounds on the coefficients of polynomials with only real zeros.
+\newblock \emph{J. Combin. Theory Ser. A}, 77\penalty0 (2):\penalty0 279--303, 1997.
+\newblock \doi{10.1006/jcta.1997.2747}.
+
+\bibitem[de~Moura and Ullrich(2021)]{demoura2021}
+Leonardo de~Moura and Sebastian Ullrich.
+\newblock The Lean~4 theorem prover and programming language.
+\newblock In Andr\'e Platzer and Geoff Sutcliffe, editors,
+  \emph{Automated Deduction---CADE~28}, volume~12699 of \emph{Lecture
+  Notes in Computer Science}, pages 625--635. Springer, Cham, 2021.
+\newblock \doi{10.1007/978-3-030-79876-5_37}.
+
+\bibitem[The mathlib Community(2020)]{mathlib2020}
+The mathlib Community.
+\newblock The Lean mathematical library.
+\newblock In \emph{Proceedings of the 9th ACM SIGPLAN International
+  Conference on Certified Programs and Proofs}, pages 367--381.
+  Association for Computing Machinery, New York, 2020.
+\newblock \doi{10.1145/3372885.3373824}.
+
+\bibitem[Avigad and Harrison(2014)]{avigadharrison2014}
+Jeremy Avigad and John Harrison.
+\newblock Formally verified mathematics.
+\newblock \emph{Commun. ACM}, 57\penalty0 (4):\penalty0 66--75, 2014.
+\newblock \doi{10.1145/2591012}.
+
+\bibitem[Carneiro(2025)]{carneiro2025}
+Mario Carneiro.
+\newblock Lean4Lean: Verifying a typechecker for Lean, in Lean.
+\newblock arXiv:2403.14064v3, revised 14 September 2025.
+\newblock URL \url{https://arxiv.org/abs/2403.14064v3}.
+
+\bibitem[Achim et~al.(2025)Achim, Best, Der, F{\'e}d{\'e}rico, Gukov,
+  Halpern-Leistner, Henningsgard, Kudryashov, Meiburg, Michelsen, Patterson,
+  Rodriguez, Scharff, Shanker, Sicca, Sowrirajan, Swope, Tamas, Tenev, Thomm,
+  Williams, and Wu]{achim-et-al-2025}
+Tudor Achim, Alex Best, Kevin Der, Math{\"i}s F{\'e}d{\'e}rico, Sergei Gukov,
+  Daniel Halpern-Leistner, Kirsten Henningsgard, Yury Kudryashov, Alexander
+  Meiburg, Martin Michelsen, Riley Patterson, Eric Rodriguez, Laura Scharff,
+  Vikram Shanker, Vladimir Sicca, Hari Sowrirajan, Aidan Swope, Matyas Tamas,
+  Vlad Tenev, Jonathan Thomm, Harold Williams, and Lawrence Wu.
+\newblock {Aristotle}: {IMO}-level automated theorem proving, 2025.
+\newblock URL \url{https://arxiv.org/abs/2510.01346}.
+\newblock arXiv:2510.01346.
 
 \end{thebibliography}
 

@@ -1,4 +1,43 @@
-# Mathematics and Lean coverage audit — updated 3 October 2026
+# Mathematics and Lean coverage audit — updated 4 October 2026
+
+## Bounded editorial/source check — 4 October
+
+The classification and accepted structural extensions remain accepted, but the
+entire extended manuscript is not formalized. No Lean, Aristotle, AXLE, Slurm,
+Pro request or accepted-gate replay was launched for this presentation pass.
+Accepted Lean source, pins, workflows and mathematical evidence are unchanged.
+Self-review remains `independent=false`; actual supplementary read-only source
+and PDF checks are not a full external audit.
+
+Against public review base `1289aaea5b5e725bd64caf50e688538b5ac2c4af`, the exact
+new source `7a6416962c4b17791114209714b37377878e700c4988fbfc78fefd4e0f96cf08`
+preserves all 119 displays, 45 mathematical statement bodies, 43 proof
+environments and 73 original labels. The only new label names Appendix A.
+The 38 inline references and 38 BibTeX keys match; all are cited, and manual
+bibliography order equals first-citation order (72 citation commands).
+This token-preservation screen is not a proof or novelty certificate.
+
+The abstract and introduction retain reduced obligatory/nonempty-edge scope
+for finite spectra and profiles, connected positive-rank scope for the budget,
+and interior restrictions for the sharp equality cases. No core-isomorphism
+uniqueness, complete fixed-atom Lean realization, maximal-chain/height endpoint
+or new Stirling theorem is inferred. All main mathematical proofs stay in the
+body; only implementation/reproducibility material is moved to Appendix A.
+
+The exact 42-page native PDF has SHA256
+`5e5ce1df94e4fc4abe22aed652bf957d7b0c33294b202b110db783d5060f160b`.
+Three bounded below-normal compiler passes returned zero in 10.609 seconds,
+with package installation and shell execution disabled. Peak observed working
+set was 137,986,048 bytes; minimum observed free RAM was 2,101,559,296 bytes.
+These are TeX resource observations, not authorization to lower Lean's distinct
+video-first safeguards. All pages were rendered and visually checked; no TeX
+errors, unresolved references/citations, rerun requests or bad boxes remain.
+The harmless disabled-shell warning and editor initialization failure are
+retained honestly. Typesetting supplies no missing Lean theorem.
+
+The comparison/provenance notes in CITATION_REVIEW.md document the scholarly
+revision. Public-only development and paused monitors are unchanged. Previous
+sections below are historical where their delivery, coverage or PDF differs.
 
 ## Latest source and repository reconciliation — 3 October
 

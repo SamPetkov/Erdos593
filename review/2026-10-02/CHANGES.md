@@ -1,4 +1,30 @@
-# Manuscript changes and comparison — updated 3 October 2026
+# Manuscript changes and comparison — updated 4 October 2026
+
+## Front matter, contribution narrative and selective appendix — 4 October
+
+| Passage | Previous form | Revised form and scope |
+| --- | --- | --- |
+| Date, MSC and keywords | Standard AMS administrative footnotes on the first page | Date beneath the author, compact MSC/keywords immediately after the abstract; semantic AMS commands retained, no duplicate footnotes |
+| Abstract | Classification and a compact inventory of finite extensions | Gives the fixed-atom profile/lattice story, connected positive-rank budget and sharp actual-piece counting more space, with explicit partial Lean scope |
+| Introduction | Dense overview followed by background | Two unnumbered subsections separate finite contributions from context/proof strategy; adds a short explanation of numerical versus assembly classification |
+| Verification material | Full implementation and validation section in the body | Brief scope statement in the main text, full unchanged technical/provenance material in Appendix A; no central mathematical proof moved |
+| Expansion context | Private-vertex expansion introduced without finite Turán comparison | Cites Kostochka–Mubayi–Verstraëte2015 for the same construction and explicitly distinguishes host conditions |
+| Finite high-chromatic context | Erdős/Erdős–Lovász followed by modern F-free contrast | Adds Kostochka–Rödl2010 and Alon et al.2016 at their finite construction results, not as uncountable inputs |
+| Counting context | Lieb's Stirling-row attribution | Adds Pitman1997 for probabilistic/coefficient background without calling classical row results new |
+| Reference numbers | Alphabetical bibliography | First-citation order; four additions give 38 cited references and 72 citation commands |
+
+The clean revision is the same open TeX document. Medium academic editing
+preserves factual meaning, chronology, attribution and exact mathematical
+scope. All 119 displays, 45 mathematical statement bodies, 43 proof environments
+and 73 previous labels are unchanged; one appendix label is added. No new
+mathematical theorem, Lean proof, novelty judgment or publication claim is added.
+
+The current PDF is a 42-page, three-pass zero-exit build of this exact source.
+All pages were rendered and checked; references resolve and no bad boxes remain.
+No installation or shell execution was enabled. The old 3 October PDF remains
+preserved separately. Development is public-only; clocks remain paused.
+
+Earlier dated sections below are historical where their counts or layout differ.
 
 ## Literature and reader-staging pass — 3 October
 

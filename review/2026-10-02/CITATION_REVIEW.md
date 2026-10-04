@@ -1,4 +1,72 @@
-# Literature and exposition review — 3 October 2026
+# Literature and exposition review — 4 October 2026
+
+## Current bounded pass and paragraph comparison — 4 October
+
+The author requested visible metadata, a stronger account of the finite
+mathematics beyond the classification, references in first-citation order,
+and an appendix restricted to mathematically secondary technical material.
+The pass follows that scope. It does not add a theorem, imitate any researcher's
+wording, claim research priority or certify complete Lean coverage.
+
+| Paragraph/material | Previous treatment | Clean revision and preservation check |
+| --- | --- | --- |
+| Abstract | Shorter overview of classification and extensions | Expands profile/lattice freedom, connected positive-rank cyclic budget and sharp counts by original-edge pieces; explicitly distinguishes manuscript proofs from unfinished Lean endpoints |
+| Finite contribution introduction | One compact narrative | Separates numerical feasibility from assembly freedom and explains why identical atoms/global parameters need not fix decomposition choices; all existing hypotheses and result pointers retained |
+| First-page metadata | Standard AMS date/MSC/keyword footnotes | Moves date below author and MSC/keywords after abstract; standard metadata commands retained, thanks not suppressed, rendered page checked |
+| Main verification paragraphs | Full validation history in main text | Short scope statement stays in main; unchanged implementation/types/provenance/limitations go to Appendix A; mathematical proofs stay in main |
+| Expansion-context paragraph | No direct finite Turán comparison | Adds the exact same private-vertex graph expansion and states that the present host condition is different |
+| Finite-host contrast paragraph | Classical high-girth existence, then F-free contrast | Adds later degree-controlled and explicit finite constructions with precise theorem pointers; does not substitute them for an uncountable input |
+| Final counting-context paragraph | Lieb's classical row attribution | Adds Pitman's coefficient/probabilistic context, keeping profile comparison distinct from a new Stirling identity |
+| Bibliography | Alphabetical order, 34 entries | First appearance order, 38 entries, every entry cited, no missing/duplicate keys; 72 citation commands |
+
+All 119 displays, 45 mathematical statement bodies and 43 proof environments
+are preserved exactly under the source screen; the supplementary reader also
+checked all 46 statement/remark environments. All 73 old labels remain; the
+sole new label names Appendix A. These screens and source reviews are bounded,
+not a whole-paper proof/novelty certificate or full external audit.
+
+### Four new primary-source readings
+
+| Entry | Actually read passage and claim supported | Primary source |
+| --- | --- | --- |
+| Kostochka–Mubayi–Verstraëte2015, SIAM JDM29(2),868–876, DOI10.1137/140977138 | Publisher PDF p.868, definition of graph expansion with a different new vertex per edge; supports the construction/finite Turán contrast only | [Author-hosted publisher paper](https://www.kostochk.web.illinois.edu/docs/2016/siam15-mv.pdf) |
+| Kostochka–Rödl2010, RSA36(1),46–56, DOI10.1002/rsa.20293 | Publisher PDF pp.46–47, cycle/girth convention and Theorem3; supports finite high-girth non-k-colourability with controlled maximum degree | [Author-hosted publisher paper](https://www.kostochk.web.illinois.edu/docs/2012/rsa10r.pdf) |
+| Alon–Kostochka–Reiniger–West–Zhu2016, Israel J.Math214(1),315–331, DOI10.1007/s11856-016-1361-2 | Introduction and §3.1/Theorem3.2 on p.321; supports the explicit finite uniform-hypergraph construction, not its separate list-colouring claims | [Author-hosted publisher paper](https://www.kostochk.web.illinois.edu/docs/2017/ijm16arwz.pdf) |
+| Pitman1997, JCTA77(2),279–303, DOI10.1006/jcta.1997.2747 | Author report Proposition1 and second-kind Stirling discussion on printed pp.14–15; supports probabilistic/coefficient context and credits earlier classical row results | [Berkeley author report](https://statistics.berkeley.edu/sites/default/files/tech-reports/453.pdf) |
+
+Both the primary-source helper and the main reviewer read these exact relevant
+passages. The first two PDF routes intermittently failed on a fresh URL request
+but successful cached primary reads worked; failures are not represented as
+full-text successes. RSA appeared online in2009; its printed journal citation
+is2010. Pitman's report is the author version, not a claim to have read the
+unavailable publisher full text. Harper and Lovász1968 were considered but
+not added because readable primary text was unavailable. Stam's random-partition
+sampler was read but omitted because sampling is not part of this pass. Tutte
+was omitted as redundant with the existing graph references. No padding or
+new general real-rootedness/majorization result is asserted.
+
+The local Zotero API/connector checks timed out in this pass; they supplied no
+new library content. No Zotero process was restarted and no library entry was
+changed. Direct primary-source reading supplied the four additions instead.
+
+### Exact typesetting boundary
+
+The new saved source is
+`7a6416962c4b17791114209714b37377878e700c4988fbfc78fefd4e0f96cf08`.
+The matching 42-page PDF is
+`5e5ce1df94e4fc4abe22aed652bf957d7b0c33294b202b110db783d5060f160b`.
+Three bounded below-normal MiKTeX passes returned zero with installation and
+shell execution disabled; final reference states agree. All pages were rendered
+and visually checked, and there are no unresolved references/citations, rerun
+requests, overfull/underfull boxes or TeX errors. The harmless disabled-shell
+warning remains. The built-in editor initialization failure is separate, not
+relabeled successful. No Lean job, proof service, new Pro request, private write
+or clock restart occurred. Academic-humanizer clean-source/comparison practice
+guided this scholarly revision; it does not confer full audit or journal status.
+
+The earlier 3 October sections below are historical where current counts,
+layout, bibliography order or PDF differ. Their primary-source provenance is
+preserved.
 
 This is an author-review draft. It is not a whole-paper mathematical certificate,
 an external audit, a novelty judgment or a prediction of journal acceptance.
