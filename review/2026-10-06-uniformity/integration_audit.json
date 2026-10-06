@@ -11,6 +11,7 @@
     "bloom593",
     "li2026",
     "reiher2024",
+    "egh1975",
     "whitney1932",
     "diestel2017",
     "stanley2012",
@@ -18,7 +19,6 @@
     "kostochkamubayiverstraete2015",
     "erdoshajnal1966",
     "ehr1973",
-    "egh1975",
     "komjath2001",
     "hajnalkomjath2008",
     "komjath2008",
@@ -65,5 +65,29 @@
     "Add an explicit statement that none of the new all-uniformity results is Lean-verified.",
     "Extend the existing AI-assistance disclosure to cover the new mathematics.",
     "Retain first-citation bibliography order after the new introductory Reiher citation; all 38 entries are preserved verbatim."
-  ]
+  ],
+  "previous_extension_commit": "ed904185796a91e38b009ffe2e504eea11507cb9",
+  "previous_extension_repository_path": "review/2026-10-06-uniformity/erdos593_obligatory_uniform_hypergraphs.tex",
+  "previous_extension_tex_sha256": "c70c320c89eb0595bfb8cd1de31e5a3170a37b2d0591fe9019ce0ffd1b38f9d8",
+  "previous_sections_1_to_11_sha256": "a5caa6d727488c98fdead798e93fc51c48106e83a49b895f5882fb5f76feb879",
+  "sections_1_to_11_preserved_exactly_from_previous_extension": true,
+  "continuation_changes": [
+    "Add Theorem C for the exact uncountable avoidance spectrum.",
+    "Broaden the PDF title from finite spectra to finite and chromatic spectra.",
+    "Include chromatic spectra in the PDF scope metadata.",
+    "Broaden the manuscript title while retaining its existing form.",
+    "Date the continuation in the author's Paris time zone.",
+    "Add the exact-cardinal consequences to the abstract without rewriting the finite-development summary.",
+    "Keep the abstract's formal-verification boundary explicit.",
+    "Move the expanded verification qualification after the new spectrum overview.",
+    "Introduce Theorem C, the bounded-intersection method and the finite-family distinction with precise attribution.",
+    "Record the classical inputs to the additional proofs.",
+    "Add Section 12: exact lift cap, finite linear families, bounded-intersection calibration, all-cardinal spectra and a mixed-family counterexample.",
+    "Extend the formal-verification exclusion to all new Section 12 results.",
+    "Extend the existing AI-assistance disclosure to the new mathematics."
+  ],
+  "new_section_label": "exact-spectra-extension",
+  "new_section_label_count": 14,
+  "new_results_lean_formalized": false,
+  "new_results_external_peer_reviewed": false
 }

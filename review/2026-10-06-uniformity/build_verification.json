@@ -1,23 +1,101 @@
 {
-  "pages": 50,
+  "pages": 57,
+  "compiler": "pdfTeX / TeX Live 2023",
+  "build_passes": 3,
+  "shell_escape": false,
   "warnings": [],
-  "locations": {
-    "Theorem B": [
-      2
-    ],
-    "11. The classification in every finite uniformity": [
-      37
-    ],
-    "Classification in finite uniformity": [
-      38
-    ],
-    "Finite spectra at every uniformity": [
-      43
-    ],
-    "Scope of formal verification": [
-      44
-    ]
+  "unresolved_references_or_citations": false,
+  "overfull_or_underfull_boxes": false,
+  "introduction_theorem_pages": {
+    "Theorem B": 2,
+    "Theorem C": 3
   },
-  "pdf_sha256": "ef723e6fb3e6be1ec752e899a16c3562ea1f91c9f7e6bb4631d4341b31a6f4f1",
-  "tex_sha256": "c70c320c89eb0595bfb8cd1de31e5a3170a37b2d0591fe9019ce0ffd1b38f9d8"
+  "section_pages": {
+    "Section 11": [
+      38,
+      45
+    ],
+    "Section 12": [
+      45,
+      52
+    ],
+    "Scope of formal verification": 52
+  },
+  "new_labels": {
+    "exact-spectra-extension": {
+      "number": "12",
+      "page": 45
+    },
+    "exact-lift-subsection": {
+      "number": "12",
+      "page": 45
+    },
+    "exact-lift-cap": {
+      "number": "12.1",
+      "page": 45
+    },
+    "exact-successor-lift-order": {
+      "number": "2",
+      "page": 46
+    },
+    "exact-linear-family-subsection": {
+      "number": "12",
+      "page": 46
+    },
+    "exact-linear-family-avoidance": {
+      "number": "12.2",
+      "page": 46
+    },
+    "exact-calibration": {
+      "number": "12",
+      "page": 47
+    },
+    "exact-reservoir-step": {
+      "number": "12.3",
+      "page": 47
+    },
+    "exact-bounded-calibration": {
+      "number": "12.4",
+      "page": 49
+    },
+    "exact-all-cardinals": {
+      "number": "12.5",
+      "page": 49
+    },
+    "exact-spectrum-subsection": {
+      "number": "12",
+      "page": 50
+    },
+    "exact-avoidance-spectrum": {
+      "number": "12.7",
+      "page": 50
+    },
+    "exact-mixed-family-obstruction-section": {
+      "number": "12",
+      "page": 51
+    },
+    "exact-mixed-family-obstruction": {
+      "number": "12.8",
+      "page": 51
+    }
+  },
+  "visually_reviewed_pages": [
+    1,
+    2,
+    3,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52
+  ],
+  "pdf_sha256": "a5f3c380bd69fe93516b510e9f77d58f33c6fcda667f152dca5f21b1faf32ee8",
+  "tex_sha256": "623492994372ba7a6f8ff845b23851e56004089044f60c00922f418195a9e87e",
+  "new_section_independent_internal_mathematical_readings": 3,
+  "new_section_integrating_assistant_review": true,
+  "external_peer_review_claimed": false,
+  "new_lean_validation_claimed": false
 }

@@ -1,116 +1,67 @@
---- baseline-2026-10-04/erdos593_obligatory_triple_systems.tex
-+++ revision-2026-10-07/erdos593_obligatory_uniform_hypergraphs.tex
-@@ -62,6 +62,8 @@
- 
+--- uniformity-draft-2026-10-06/erdos593_obligatory_uniform_hypergraphs.tex
++++ spectra-continuation-2026-10-07/erdos593_obligatory_uniform_hypergraphs.tex
+@@ -63,6 +63,7 @@
  \theoremstyle{plain}
  \newtheorem*{theoremA}{Theorem A}
-+\newtheorem*{theoremB}{Theorem B}
+ \newtheorem*{theoremB}{Theorem B}
 +\newtheorem*{theoremC}{Theorem C}
  \newtheorem{theorem}{Theorem}[section]
  \newtheorem{lemma}[theorem]{Lemma}
  \newtheorem{proposition}[theorem]{Proposition}
-@@ -74,22 +76,22 @@
+@@ -75,22 +76,22 @@
  
  \hypersetup{
    hidelinks,pdfencoding=auto,psdextra,
--  pdftitle={Obligatory Triple Systems: Canonical Atoms and Exact Finite Spectra},
+-  pdftitle={Obligatory Uniform Hypergraphs: Canonical Atoms and Exact Finite Spectra},
 +  pdftitle={Obligatory Uniform Hypergraphs: Canonical Atoms and Exact Spectra},
    pdfauthor={Samuil Petkov},
--  pdfsubject={A canonical atom decomposition, exact finite spectra, and Lean verification for obligatory triple systems},
--  pdfkeywords={Erdos Problem 593, obligatory triple systems, uncountable chromatic number, canonical decomposition, partition lattices, Lean 4},
+-  pdfsubject={Classification and finite structure in every finite uniformity; Lean verification for the specified triple-system results},
 +  pdfsubject={Classification, finite structure and exact chromatic spectra in every finite uniformity; Lean verification for the specified triple-system results},
-+  pdfkeywords={Erdos Problem 593, obligatory uniform hypergraphs, uncountable chromatic number, canonical decomposition, partition lattices, Lean 4},
+   pdfkeywords={Erdos Problem 593, obligatory uniform hypergraphs, uncountable chromatic number, canonical decomposition, partition lattices, Lean 4},
    pdfcreator={LaTeX with amsart; author-review manuscript},
    pdfproducer={pdfTeX},
    pdfdisplaydoctitle=true
  }
  
--\title[Obligatory triple systems]{Obligatory triple systems: canonical atoms and exact finite spectra}
+-\title[Obligatory uniform hypergraphs]{Obligatory uniform hypergraphs: canonical atoms and exact finite spectra}
 +\title[Obligatory uniform hypergraphs]{Obligatory uniform hypergraphs: canonical atoms and exact spectra}
  \author{Samuil Petkov}
  \address{École normale supérieure--PSL, 45 rue d'Ulm, 75005 Paris, France}
  \email{samuil.petkov@ens.psl.eu}
  \subjclass[2020]{Primary 05C65; Secondary 05C15, 05C40, 05C63, 06A07, 03E05}
--\keywords{Erdős Problem 593, obligatory triple systems, uncountable chromatic number, canonical decomposition, partition lattices, Lean~4}
--\date{4 October 2026}
-+\keywords{Erdős Problem 593, obligatory uniform hypergraphs, uncountable chromatic number, canonical decomposition, partition lattices, Lean~4}
+ \keywords{Erdős Problem 593, obligatory uniform hypergraphs, uncountable chromatic number, canonical decomposition, partition lattices, Lean~4}
+-\date{6 October 2026}
 +\date{7 October 2026}
  
  \begin{document}
  
-@@ -101,7 +103,10 @@
- linear, every hyperedge-node of its Levi graph is incident with a bridge,
- and every Berge cycle has even length.  Its canonical atoms are single
- triples and private-vertex expansions of finite $2$-connected bipartite
--graphs.  For reduced obligatory systems with at least one hyperedge, we
-+graphs.  We extend this classification and canonical description to every
-+fixed finite uniformity $r\ge3$, with at least $r-2$ bridge incidences
-+required at each hyperedge-node.  The proof iterates a finite linear trace
-+lemma over hypergraph bases.  For reduced obligatory systems with at least one hyperedge, we
- determine the exact parameter and atom-count spectra, including the parity
- obstruction at cycle rank one.  The supported one-point factorizations form
- a product of partition lattices: every attachment excess profile can be
-@@ -113,9 +118,16 @@
- joints and a common joint as the interior equality cases.  The two
+@@ -118,11 +119,15 @@
  extremal assemblies can have the same atoms and global parameters.
  These results separate the constraints imposed by cyclic content from
--the freedom of assembly.  The classification and specified structural
--extensions are verified in Lean~4; profile realization, full lattice
--spectra and the new counting endpoints are not yet fully formalized.
-+the freedom of assembly.  The finite structural spectra extend to all
+ the freedom of assembly.  The finite structural spectra extend to all
+-finite uniformities under a corresponding change of parameters.  The
 +finite uniformities under a corresponding change of parameters.  Every
 +non-obligatory finite system can also be avoided at each prescribed
 +uncountable chromatic cardinal.  We prove simultaneous avoidance for
 +finite linear families and exact chromatic calibration with bounded
 +edge intersections, together with explicit bounds on host order.  The
-+triple-system classification and specified structural extensions are
-+verified in Lean~4; profile realization, full lattice spectra, the new
+ triple-system classification and specified structural extensions are
+ verified in Lean~4; profile realization, full lattice spectra, the new
+-counting endpoints and the higher-uniformity extension are not yet fully
+-formalized.
 +counting endpoints, the higher-uniformity extension and the chromatic
 +spectra are not yet fully formalized.
  All arguments are in ZFC.
  \end{abstract}
  
-@@ -156,6 +168,90 @@
- whereas we decompose traces into expansion fibres and a support-incidence
- forest.  We cite Li's work for chronology and comparison; none of its results
- is used below as a black box.
-+\subsection*{Extension to all finite uniformities}
-+The finite linear trace argument can be iterated beyond triples.  For a
-+finite graph $J$ and an integer $r\ge3$, write $J^{[r]}$ for the hypergraph
-+obtained by adding $r-2$ distinct private vertices to every edge of $J$.
-+Let $\mathcal B_r$ be the class generated by these expansions of finite
-+bipartite graphs and by finite edgeless systems, under finite disjoint
-+unions and one-point amalgamations.  As throughout the paper, embeddings
-+are injective and non-induced, and proper vertex colourings have no
-+monochromatic edge.
-+
-+\begin{theoremB}
-+For every fixed integer $r\ge3$ and every finite simple $r$-uniform
-+hypergraph $F$, the following are equivalent:
-+\begin{enumerate}
-+\item $F$ occurs in every $r$-uniform hypergraph of uncountable chromatic number;
-+\item $F\in\mathcal B_r$;
-+\item after isolated vertices are removed, $F$ is linear, each hyperedge-node
-+of its Levi graph is incident with at least $r-2$ bridges, and every
-+Berge cycle has even length.
-+\end{enumerate}
-+\end{theoremB}
-+
-+Theorem~\ref{uniform-classification} proves this extension.  Reiher's
-+expansion theorem already supplies the positive generators for every
-+uniformity \citep[Theorem~1.2]{reiher2024}.  The additional step is the
-+finite linear trace lemma with a hypergraph base: projection preserves
-+linearity, and one-private-vertex inflation commutes with the forest
-+assembly.  Iterating the lift therefore reduces the negative direction to
-+the same high-odd-girth graph input used for triples.  The bridge
-+requirement increases with $r$; the example in
-+Remark~\ref{uniform-four-edge-example} shows why one bridge no longer
-+suffices at uniformity four.
-+
-+The canonical atoms in this generality are single $r$-edges and
-+$J^{[r]}$ with $J$ a finite $2$-connected bipartite graph.  Writing
-+$s=n-(r-2)m$ and $\beta=(r-1)m-n+c$ transports the finite spectra,
-+factorization products and fixed-atom profiles below to every finite
+@@ -200,10 +205,52 @@
+ $J^{[r]}$ with $J$ a finite $2$-connected bipartite graph.  Writing
+ $s=n-(r-2)m$ and $\beta=(r-1)m-n+c$ transports the finite spectra,
+ factorization products and fixed-atom profiles below to every finite
+-uniformity (Corollary~\ref{uniform-finite-spectra}).  The new results in
+-Section~\ref{uniform-extension} have manuscript proofs; they are not
+-additional Lean-verified endpoints.  The detailed triple-system argument
+-and its finite structure remain in Sections~1--10.
 +uniformity (Corollary~\ref{uniform-finite-spectra}).  The detailed
 +triple-system argument and its finite structure remain in Sections~1--10.
 +
@@ -157,36 +108,14 @@
 +The new results in Sections~\ref{uniform-extension}
 +and~\ref{exact-spectra-extension} have manuscript proofs; they are
 +not additional Lean-verified endpoints.
-+
+ 
  \subsection*{Finite structure beyond the classification}
  Theorem~A answers an embedding question about infinite hosts.  The further
- results concern a different question: how much finite structure is fixed by
-@@ -238,7 +334,7 @@
- the freedom left by the canonical structure; they are not assertions of
- new general Stirling-number identities.
- 
--The classification and substantial structural extensions have accepted
-+The triple-system classification and substantial structural extensions have accepted
- Lean implementations.  The distinction is between the mathematical results
- proved in the manuscript and the exact interfaces already exported by Lean,
- not between a numerical test and a proof.  Full profile realization, lattice
-@@ -306,7 +402,7 @@
- girth exceeds a prescribed finite bound excludes an odd Berge cycle.
- 
- All embeddings are injective and non-induced, and the argument is carried out
--in ZFC.  For the classification proof, the imported black-box inputs are the de Bruijn--Erdős
-+in ZFC.  For the triple-system classification proof, the imported black-box inputs are the de Bruijn--Erdős
- compactness theorem \citep[Theorem~1, pp.~371--373]{debruijn1951}, the
- Erdős--Hajnal high-odd-girth theorem
- \citep[Theorem~7.4, p.~76]{erdoshajnal1966}, and the pair case of the
-@@ -315,7 +411,15 @@
- The later block-formulation corollary also uses Komjáth's block reduction
- \citep{komjath2001}.
- For general background on cardinal partition relations, see
--\citet{ehmr1984}; the specific imported statements are those listed above.
-+\citet{ehmr1984}; the specific imported statements are those listed above.  The extension
-+in Section~\ref{uniform-extension} additionally uses the all-uniformity
-+expansion theorem of Reiher and nonlinearity obstruction of
+@@ -367,7 +414,12 @@
+ \citet{ehmr1984}; the specific imported statements are those listed above.  The extension
+ in Section~\ref{uniform-extension} additionally uses the all-uniformity
+ expansion theorem of Reiher and nonlinearity obstruction of
+-Erdős--Hajnal--Rothschild, in the precise forms cited there.
 +Erdős--Hajnal--Rothschild, in the precise forms cited there.  The
 +chromatic spectra in Section~\ref{exact-spectra-extension} also use
 +Erdős--Galvin--Hajnal's simultaneous-colour construction; the
@@ -196,463 +125,10 @@
  
  \section{Preliminaries}\label{conventions-and-definitions}
  
-@@ -2268,14 +2372,992 @@
- is which products of the rows are realized by attachment profiles, not a
- new general identity for Stirling numbers.
+@@ -2773,6 +2825,523 @@
+ remaining assertions.
+ \end{proof}
  
-+\section{The classification in every finite uniformity}
-+\label{uniform-extension}
-+
-+The same structural criterion extends to every finite uniformity, with the
-+number of required bridge incidences increasing with the edge size.  The
-+positive expansions are supplied by Reiher's theorem for all uniformities
-+\citep[Theorem~1.2]{reiher2024}.  For the negative direction, we iterate the
-+one-apex construction from Section~\ref{the-sequence-lift-used-in-the-avoidance-constructions}
-+and \citet[Sections~3--4]{li2026}, allowing a hypergraph of arbitrary finite
-+uniformity at its base.  The decisive point is that a finite linear trace
-+projects to finite \emph{linear} base systems at every stage of the iteration.
-+
-+Fix an integer $r\ge3$.  All $r$-uniform hypergraphs below are simple, and
-+embeddings are injective and non-induced.  A proper vertex colouring has
-+no monochromatic edge.  For a finite graph $J$, let
-+$J^{[r]}$ be its $r$-uniform private expansion: add $r-2$ new vertices to
-+each graph edge, with all these added vertices distinct.  Thus
-+$J^{[3]}=J^+$.  Let $\mathcal B_r$ be the class generated, up to isomorphism,
-+by $J^{[r]}$ for finite bipartite graphs $J$ and by finite edgeless systems,
-+under finite disjoint unions and one-point amalgamations.  The Levi graph,
-+Berge cycles and isolated reduction have the same definitions as before,
-+with each hyperedge-node now of degree $r$.
-+
-+\begin{theorem}[Classification in finite uniformity]
-+\label{uniform-classification}
-+For every integer $r\ge3$ and every finite $r$-uniform hypergraph $F$, the
-+following are equivalent:
-+\begin{enumerate}
-+\item $F$ occurs in every $r$-uniform hypergraph of uncountable chromatic number;
-+\item $F\in\mathcal B_r$;
-+\item $F^\circ$ is linear, every hyperedge-node of $I(F^\circ)$ is incident
-+with at least $r-2$ bridges, and every Berge cycle of $F^\circ$ has even length.
-+\end{enumerate}
-+\end{theorem}
-+
-+For $r=3$ this is Theorem~A.  At $r=2$, the bridge requirement becomes
-+vacuous and the cycle condition is the classical bipartite characterization
-+\citep{erdoshajnal1966}.  We first prove the trace statement needed for the
-+higher-uniformity negative direction.
-+
-+\subsection{A lift with a hypergraph base}
-+\label{uniform-hypergraph-lift}
-+
-+If $D$ is a $k$-uniform hypergraph, write $D^+$ for its
-+$(k+1)$-uniform \emph{one-private-vertex inflation}: each edge receives one
-+new vertex, used by no other edge.  On graphs this agrees with the expansion
-+notation used earlier, and $(J^{[k]})^+\cong J^{[k+1]}$.
-+
-+Let $H=(X,A)$ be a $k$-uniform hypergraph, where $k\ge2$ and $A=E(H)$ is
-+regarded as an alphabet.  Put $T=A^{<\omega_1}$ and write
-+$\ell(s)=\operatorname{dom}(s)$ for the ordinal length of $s\in T$.
-+Define
-+$\mathcal L(H)$ on $T\times X$ by including exactly the edges
-+\begin{equation}\label{uniform-lift-edge}
-+ \{(s,x):x\in a\}\cup\{(t,z)\},
-+ \qquad a\in A,\quad s^\frown a\preccurlyeq t,\quad z\in X,
-+\end{equation}
-+where $\preccurlyeq$ denotes the prefix order.  The $k$ vertices at $s$ are
-+the base and the vertex at $t$ is the apex.  Since $t$ properly extends $s$,
-+these are $k+1$ distinct vertices.  The node occurring $k\ge2$ times
-+uniquely identifies the base, so each edge has unique defining data.
-+
-+\begin{lemma}[Chromatic lower bound for the rank-raising lift]
-+\label{uniform-lift-chromatic}
-+If $\chi(H)>\aleph_0$, then $\chi(\mathcal L(H))>\aleph_0$.
-+\end{lemma}
-+\begin{proof}
-+Suppose that $c:T\times X\to\omega$ is proper.  At each $s\in T$, its
-+restriction to $\{s\}\times X$ has a monochromatic $H$-edge $a_s$, of
-+colour $q_s$.  Recursively set $s_0=\varnothing$ and
-+$s_{\alpha+1}=s_\alpha^\frown a_{s_\alpha}$, taking unions at countable
-+limit ordinals.  For $\alpha<\beta<\omega_1$, the node $s_\beta$ extends
-+$s_\alpha^\frown a_{s_\alpha}$.  If
-+$q_{s_\alpha}=q_{s_\beta}$, any vertex of the monochromatic base edge at
-+$s_\beta$ can serve as an apex for the base edge at $s_\alpha$, producing
-+a monochromatic edge of $\mathcal L(H)$.  Thus the colours $q_{s_\alpha}$
-+are pairwise distinct for $\alpha<\omega_1$, a contradiction.
-+\end{proof}
-+
-+\begin{lemma}[Finite linear traces over a hypergraph base]
-+\label{uniform-lift-trace}
-+Let $k\ge2$ and let $H$ be a $k$-uniform hypergraph.  Every finite linear
-+subhypergraph $K\subseteq\mathcal L(H)$ is obtained by disjoint unions and
-+one-point amalgamations from systems $D^+$, where $D$ is a finite linear
-+subhypergraph of $H$, and finite edgeless systems.  Each such $D$ has at most
-+$|E(K)|$ edges.
-+\end{lemma}
-+\begin{proof}
-+Set aside the isolated vertices of $K$.  For each node $s$ supporting at
-+least one selected edge, let $K_s$ consist of the edges of $K$ based at $s$
-+and all their incident vertices.
-+
-+\proofpart{The fibre pieces}
-+No two distinct edges of $K_s$ can use the same base $a\in E(H)$: they
-+would share $k\ge2$ vertices, contrary to linearity.  Let $D_s\subseteq H$
-+consist of the bases used at $s$, with their incident vertices.  Two of
-+these bases meet in at most one vertex, because their corresponding
-+$K$-edges do.  Thus $D_s$ is linear.  Moreover, distinct bases have distinct
-+apices.  If a point $(t,z)$ were an apex for both $a$ and $a'$, then the
-+coordinate of $t$ immediately following $s$ would equal both $a$ and $a'$.
-+An apex cannot be a core vertex of $K_s$, since its node properly extends
-+$s$.  Sending each base vertex $x$ to $(s,x)$ and its private inflation
-+vertex to the corresponding apex therefore gives $D_s^+\cong K_s$.
-+The number of edges of $D_s$ is exactly the number of edges of $K_s$.
-+
-+\proofpart{Intersections of fibres}
-+If $(t,z)$ belongs to both $K_s$ and $K_u$, then $s,u$ are prefixes of $t$
-+and hence are comparable.  Suppose $s\subsetneq u$.  A common point is
-+necessarily an apex of $K_s$, and the base of its edge is the coordinate
-+$u(\ell(s))$.  All common points would consequently be apices for this one
-+base.  There is at most one selected edge with that base and one apex of
-+that edge.  Hence distinct fibres meet in at most one point.
-+
-+\proofpart{The support forest}
-+Let $Q$ be the bipartite graph between active base nodes and points
-+belonging to at least two fibres, with adjacency given by membership.
-+Suppose $Q$ contains a cycle and choose on it a base node $s$ of minimum
-+length.  The two adjacent base nodes along the cycle are proper descendants
-+of $s$.  Their two shared points with $K_s$ are distinct apices, so they
-+come from distinct bases $a,a'$.  The adjacent nodes therefore lie in
-+different immediate branches below $s$.
-+
-+On the remaining path of the cycle, consecutive base nodes are comparable.
-+Every node on that path has length at least $\ell(s)$ and is different from
-+$s$.  A node with these properties that is comparable with a proper
-+descendant of $s$ is again a proper descendant of $s$: it either extends
-+that descendant or is its prefix of length greater than $\ell(s)$.  Comparable
-+proper descendants have the same coordinate immediately after $s$.
-+Induction along the path therefore keeps all its nodes in a single branch
-+below $s$, contradicting the two different branches at its endpoints.
-+Thus $Q$ is a forest.
-+
-+\proofpart{Assembly}
-+Root each component of $Q$ at a base node and order its base nodes by
-+nondecreasing distance from the root.  For a nonroot node $s$, let $p_s$
-+be its parent point.  If an earlier fibre $K_u$ meets $K_s$ at $p$, then
-+$s-p-u$ is a path in $Q$.  The point $p$ cannot be a child of $s$, since
-+every other base node adjacent to that child has greater depth.  Therefore
-+$p=p_s$.  Each new fibre meets the preceding union in at most this one
-+point, so the ordered fibres assemble by one-point amalgamations.
-+Different components and the removed isolated vertices are combined by
-+disjoint union.  The natural maps into $K$ identify exactly these common
-+points; their union is an isomorphism onto $K$.
-+\end{proof}
-+
-+The restriction to linear traces is essential here.  It is not imposed on
-+the base host $H$, or on $\mathcal L(H)$ itself.
-+
-+\begin{lemma}[Inflation and assembly]
-+\label{uniform-inflation-assembly}
-+One-private-vertex inflation commutes, up to isomorphism, with finite
-+disjoint unions and one-point amalgamations.  In particular, if $D$ is
-+assembled from systems $J_i^{[k]}$, then $D^+$ is assembled from the
-+corresponding systems $J_i^{[k+1]}$ in the same way.
-+\end{lemma}
-+\begin{proof}
-+Index each new private vertex by its original edge.  The edge sets of
-+one-point factors are disjoint because their edges have size at least two.
-+After the factors are inflated, identify their selected old vertices and
-+make no identification of new private vertices.  This gives exactly the
-+inflation of their amalgamation.  The argument applies to any selected
-+old vertex, including one that was private in an earlier expansion.
-+Disjoint unions are immediate, and inflation leaves edgeless systems
-+unchanged.
-+\end{proof}
-+
-+For a graph $G$, define the iterated hosts
-+\[
-+ H_2(G)=G,\qquad H_j(G)=\mathcal L(H_{j-1}(G))\quad(j\ge3).
-+\]
-+
-+\begin{proposition}[Iterated finite traces]
-+\label{uniform-iterated-traces}
-+For every $r\ge2$, each finite linear subhypergraph $K\subseteq H_r(G)$
-+is assembled by disjoint unions and one-point amalgamations from
-+$J^{[r]}$, with $J$ a finite subgraph of $G$, and finite edgeless systems.
-+Every graph $J$ used in this construction has at most $|E(K)|$ edges.
-+If $\chi(G)>\aleph_0$, then $\chi(H_r(G))>\aleph_0$.
-+\end{proposition}
-+\begin{proof}
-+For $r=2$, take the finite graph $K$ itself, with the convention
-+$J^{[2]}=J$.  At the next stage,
-+Lemma~\ref{uniform-lift-trace} expresses $K$ as a forest assembly of
-+$D_s^+$, where each $D_s$ is a finite linear trace in $H_{r-1}(G)$.
-+Apply induction to $D_s$ and then Lemma~\ref{uniform-inflation-assembly}.
-+This changes every constituent $J^{[r-1]}$ into $J^{[r]}$ and preserves
-+the assembly.  Since $|E(D_s)|=|E(K_s)|\le|E(K)|$, the asserted bound on
-+constituent edge counts also follows by induction.  The chromatic assertion
-+is repeated application of Lemma~\ref{uniform-lift-chromatic}.
-+\end{proof}
-+
-+\subsection{Reconstruction and obligatory systems}
-+\label{uniform-reconstruction}
-+
-+\begin{lemma}[Intrinsic reconstruction]
-+\label{uniform-intrinsic-equivalence}
-+A finite reduced $r$-uniform hypergraph belongs to $\mathcal B_r$ if and
-+only if it is linear, every hyperedge-node has at least $r-2$ incident
-+Levi bridges, and every Berge cycle is even.
-+\end{lemma}
-+\begin{proof}
-+For $J^{[r]}$ with $J$ bipartite, the $r-2$ private incidences at each
-+hyperedge are bridges.  Its Berge cycles are exactly the graph cycles of
-+$J$.  One-point amalgamation preserves linearity and bridges, and every
-+Levi cycle of a one-point sum is contained in one factor.  These
-+observations prove preservation of all three conditions.
-+
-+Conversely, let $L=I(F)$ and delete all bridges.  At each hyperedge-node
-+there are at most two surviving incidences.  There cannot be exactly one,
-+since any nonbridge incidence lies on a cycle, which uses a second
-+nonbridge incidence at that node.  Thus the surviving degree is zero or
-+two.  In a nontrivial remaining component $C$, suppress the hyperedge-nodes
-+to obtain a graph $J_C$ on its point-nodes.  Linearity excludes parallel
-+edges, and its cycles correspond to Berge cycles in $F$, so $J_C$ is
-+simple and bipartite.
-+
-+Every hyperedge-node in $C$ has $r-2$ further point-neighbours, across
-+bridges.  Each lies outside $C$, since a path inside $C$ would otherwise
-+give an alternative route around that bridge.  No such neighbour can
-+belong to two different hyperedges represented in $C$: an internal path
-+between those hyperedge-nodes and their two incidences to the common
-+point would again put bridges on a cycle.  The hyperedges represented in
-+$C$, with all their vertices, therefore form exactly $J_C^{[r]}$.
-+A hyperedge-node of surviving degree zero gives a single $r$-edge,
-+which is $K_2^{[r]}$.
-+
-+Contract the bridge-deleted components.  The bridges give a simple forest
-+$T$: a loop, parallel pair or quotient cycle would provide an alternative
-+route around an original bridge.  A component is active if it contains a
-+hyperedge-node; the inactive components are singleton point-nodes.  The
-+pieces just constructed partition the original hyperedge set and cover
-+all its vertices.
-+
-+For a point $p$, let $X(p)$ be its bridge-deleted component.  The pieces
-+containing $p$ are the piece at $X(p)$ when this component is active,
-+together with active neighbours whose connecting bridge has point
-+endpoint $p$.  Root each tree at an active component and order active
-+components by depth.  If the piece at $C$ shares $p$ with an earlier
-+piece, then either $X(p)=C$, in which case the earlier neighbour is its
-+parent, or $X(p)$ is the parent of $C$.  It cannot be a child, whose
-+other neighbouring active components all have greater depth.  In both
-+cases $p$ is the point endpoint of the unique parent edge of $C$.
-+Consequently each piece meets the preceding union in at most one point.
-+The running-intersection assembly from Proposition~5.2 now applies
-+without change.  If $F$ has no edges, reducedness makes it empty, which
-+is an edgeless generator.
-+\end{proof}
-+
-+\begin{proof}[Proof of Theorem~\ref{uniform-classification}]
-+Isolated vertices can be deleted and restored exactly as in Lemma~1.1.
-+The same structural induction proves that this reduction preserves
-+membership in $\mathcal B_r$.  We may therefore assume $F$ is reduced;
-+the empty case is immediate.  Lemma~\ref{uniform-intrinsic-equivalence}
-+establishes $(2)\Longleftrightarrow(3)$.
-+
-+For $(2)\Longrightarrow(1)$, Reiher's theorem makes every $J^{[r]}$ with
-+$J$ finite bipartite obligatory \citep[Theorem~1.2]{reiher2024}.  The
-+disjoint-union proof of Lemma~4.1 applies in any finite uniformity.  So do
-+the rooted-abundance proof and the one-point amalgamation proof in
-+Lemma~4.3 and Proposition~4.4: the bound
-+$(m-1)(|V(F)|-1)$ on a hitting set for off-root copies does not depend on
-+uniformity, and the auxiliary bounded-outdegree graph is unchanged.
-+Thus obligatoriness is preserved by the operations defining
-+$\mathcal B_r$.
-+
-+For $(1)\Longrightarrow(2)$, a nonlinear finite $r$-uniform hypergraph is
-+not obligatory by the Erd\H{o}s--Hajnal--Rothschild nonlinearity
-+obstruction \citep[Theorem~2]{ehr1973}; its all-uniformity scope is also
-+recorded in \citet[Section~1]{reiher2024}.  It remains to treat linear
-+$F\notin\mathcal B_r$.  Put $m=|E(F)|\ge1$.  By Theorem~7.1 choose a
-+graph $G$ of uncountable chromatic number with no odd cycle of length at
-+most $m$.  Proposition~\ref{uniform-iterated-traces} makes $H_r(G)$
-+uncountably chromatic.  If $F$ embedded in this host, retain exactly the
-+host hyperedges corresponding to its image.  They form a finite linear
-+trace, which the proposition assembles from graph expansions $J^{[r]}$
-+with $J\subseteq G$ and $|E(J)|\le m$.  Each such $J$ is bipartite:
-+an odd cycle in it would have length at most $|E(J)|\le m$, contrary
-+to the choice of $G$.  This would give $F\in\mathcal B_r$, a
-+contradiction.  Hence $H_r(G)$ is an uncountably chromatic $F$-free host.
-+\end{proof}
-+
-+The avoidance host depends on the finite edge bound $m$.  No claim is made
-+that one uncountably chromatic host has only obligatory finite subgraphs;
-+the trace assertion used above is restricted to linear subhypergraphs of
-+the required finite size.
-+
-+\begin{corollary}[Canonical atoms in finite uniformity]
-+\label{uniform-canonical-atoms}
-+A finite reduced obligatory $r$-uniform hypergraph has a canonical
-+partition of its hyperedges into single $r$-edges and systems $J^{[r]}$
-+with $J$ finite, simple, bipartite and $2$-connected.  Distinct atoms meet
-+in at most one point, and their incidence graph with shared points is a
-+forest.  These atoms are precisely its one-point indecomposable
-+edge-supported blocks.
-+\end{corollary}
-+\begin{proof}
-+Every hyperedge-node has at most two nonbridge incidences.  In each cyclic
-+block of the Levi graph it therefore has degree two, and it cannot
-+belong to two different cyclic blocks.  Suppressing the hyperedge-nodes
-+gives a simple $2$-connected bipartite graph $J$.  Its other $r-2$
-+incidences per edge are bridges, with endpoints outside the block and
-+pairwise distinct between its edges, by the same alternative-path
-+argument as in Lemma~\ref{uniform-intrinsic-equivalence}.  Thus the
-+edges of this block form $J^{[r]}$.  A hyperedge-node in no cyclic block
-+has only bridge incidences and gives a single-edge atom.
-+
-+For completeness, the atom forest can be read directly from the
-+block--cut forest of the Levi graph.  Assign each bridge block to the
-+atom containing its hyperedge endpoint.  A cyclic-block atom consists
-+of that block, its hyperedge-node cut vertices and the bridge blocks
-+assigned to them; a single-edge atom consists of its hyperedge-node
-+and its incident bridge blocks.  Each such set is connected in the
-+block--cut forest, and the sets for different atoms are disjoint.
-+Contract these connected sets.  The remaining nodes are point-nodes;
-+discard those incident with only one atom.  The resulting graph is
-+exactly the atom--shared-point incidence graph and is still a forest.
-+In particular two atoms cannot share two points.  This construction
-+also proves canonicity.  Finally, a component containing several atoms
-+has a leaf atom that separates at its unique shared point.  Within an
-+expansion of a $2$-connected graph, deleting a point-node from the Levi
-+graph cannot separate its hyperedge-nodes into two nonempty classes:
-+a private point is a leaf, and deleting a core point leaves the core
-+connected.  This gives the claimed indecomposable blocks.
-+\end{proof}
-+
-+\begin{remark}[The increased bridge requirement is strict]
-+\label{uniform-four-edge-example}
-+Consider the $4$-uniform hypergraph with five edges
-+\[
-+ \begin{aligned}
-+ e&=\{a_1,a_2,a_3,p\},&
-+ f&=\{b_1,b_2,b_3,q\},\\
-+ g_i&=\{a_i,b_i,c_i,d_i\}\qquad&&(i=1,2,3),
-+ \end{aligned}
-+\]
-+where all displayed vertices are distinct.  It is linear.  After its
-+point leaves are removed, its Levi graph consists of three internally
-+disjoint paths $e-a_i-g_i-b_i-f$, each of length four.  Every simple
-+cycle uses two of these paths and hence has Levi length eight, or Berge
-+length four.  Each edge has a bridge incidence, but $e$ and $f$ have
-+exactly one, to $p$ and $q$ respectively.  The requirement of two bridge
-+incidences in Theorem~\ref{uniform-classification} therefore excludes
-+this system.  In particular, retaining the triple-system requirement
-+of only one bridge would give a false higher-uniformity characterization.
-+\end{remark}
-+
-+\subsection{Finite structure in higher uniformity}
-+\label{uniform-finite-transfer}
-+
-+The classification in Theorem~\ref{uniform-classification} also transports
-+the finite structure of Section~\ref{finite-parameter-consequences}.
-+Fix an integer $r\ge3$.  As in the triple case, all systems in this
-+subsection are finite, reduced, obligatory and have at least one edge.
-+Their canonical atoms are single $r$-edges and the expansions $J^{[r]}$
-+of finite $2$-connected simple bipartite graphs
-+(Corollary~\ref{uniform-canonical-atoms}).  Put
-+\[
-+ n=|V(F)|,\qquad m=|E(F)|,\qquad
-+ s=n-(r-2)m,\qquad \beta=(r-1)m-n+c,
-+\]
-+where $c$ is the number of connected components.  Thus $\beta$ is the
-+cycle rank of the Levi graph, and $s$ is the order of a bipartite shadow.
-+
-+\begin{corollary}[Finite spectra at every uniformity]
-+\label{uniform-finite-spectra}
-+Let $m\ge1$, $1\le c\le m$, and $n$ be integers.  A reduced obligatory $r$-uniform
-+hypergraph with $n$ vertices, $m$ edges and $c$ components exists if and
-+only if
-+\[
-+ \boxed{
-+ (r-2)m+2(c-1)+\left\lceil2\sqrt{m-c+1}\right\rceil
-+ \le n\le (r-1)m+c.
-+ }
-+\]
-+Every integer in this interval occurs.
-+
-+With the definitions of $s,\beta,c$ above, the canonical atom-count
-+spectra and their feasibility conditions in
-+Theorem~\ref{theorem-exact-canonical-atom-count-spectrum} and
-+Proposition~\ref{proposition-componentwise-atom-count-spectrum} are
-+unchanged, retaining the connectedness hypothesis of the former.
-+For connected systems, the indecomposability phase diagram and its boundary
-+descriptions in Theorem~\ref{theorem-indecomposability-phase-diagram}
-+and Corollary~\ref{corollary-structural-boundary-rigidity} are likewise
-+unchanged when $J^+$ is replaced by $J^{[r]}$ and a single triple by a
-+single $r$-edge; the singleton exception is now $(m,n)=(1,r)$.
-+
-+Let $\mathcal D_r(F)$ denote the partitions of the original edge set into
-+nonempty connected supported pieces that pairwise meet in at most one
-+point and whose piece--shared-point incidence graph is a forest, ordered
-+by refinement.  If $k$ is the number of canonical atoms and $\mu(p)$
-+is their multiplicity at a shared point, then
-+\[
-+ \mathcal D_r(F)\cong\prod_p\Pi_{\mu(p)},
-+ \qquad
-+ \operatorname{rk}\mathcal D_r(F)=k-c.
-+\]
-+The exact lattice spectrum of
-+Corollary~\ref{corollary-factorization-lattice-spectrum}, the cyclic
-+budget of Proposition~\ref{proposition-cyclic-cost-budget}, and the
-+piece-count bounds and equality cases of
-+Corollary~\ref{corollary-sharp-piece-counts} hold with the same formulas
-+and their stated hypotheses.  Every integer partition $\lambda\vdash k-c$
-+is still realizable as an attachment excess profile with the actual atom
-+list and component count fixed.
-+\end{corollary}
-+
-+\begin{proof}
-+For a singleton atom take its core to be $K_2$.  Write $v_i,e_i$ for the
-+orders and sizes of all canonical cores.  The atom--point forest makes
-+exactly $k-c$ vertex identifications, so
-+\[
-+ m=\sum_i e_i,\qquad
-+ n=\sum_i\bigl(v_i+(r-2)e_i\bigr)-(k-c).
-+\]
-+Consequently
-+\[
-+ s=c+\sum_i(v_i-1),\qquad
-+ \beta=\sum_i(e_i-v_i+1).
-+\]
-+Separately within each of the $c$ original components, take one-point sums
-+of the ordinary cores, with bipartitions interchanged as needed.  Their
-+disjoint union is a simple bipartite shadow with $s$ vertices, $m$ edges
-+and $c$ components.  Conversely the expansion $J^{[r]}$ of any such
-+shadow has exactly these parameters.  The ordinary bipartite-graph
-+calculation in the proof of
-+Theorem~\ref{theorem-order-size-component-spectrum} therefore gives the
-+displayed interval and every integer realization.
-+
-+The two additive identities are precisely those used for the atom-count
-+spectra and the cyclic budget.  Their bounds, the core constructions at
-+each allowed rank and order, and the one-point assemblies that attain
-+them remain available.  One-point indecomposability still means having
-+one canonical atom.  The same minimum-degree and cut-vertex arguments
-+on the ordinary cores thus give the phase diagram and boundary cases.
-+
-+For the lattice statements, a supported forest decomposition cannot
-+split a canonical atom.  The local star replacement and disjoint
-+component contractions in the proof of
-+Lemma~\ref{lemma-local-decomposition-lattice-product} apply to the
-+canonical atom--point forest without reference to edge size.  They give
-+the displayed product and its rank.  To realize a prescribed excess
-+profile, use the chain-and-leaves construction of
-+Lemma~\ref{lemma-capacity-safe-profile-realization}.  Each connector
-+uses two distinct vertices, whereas every supplied atom has at least
-+$r\ge3$ vertices.  The resulting shared points separate atom branches,
-+so the supplied atoms remain the actual canonical atoms of the assembly.
-+This construction preserves the displayed additive counts.  The
-+profile recovery and the counting injections consequently have exactly
-+the same domains, ranks and actual piece numbers as before, proving all
-+remaining assertions.
-+\end{proof}
-+
 +\section{Exact chromatic spectra and simultaneous avoidance}
 +\label{exact-spectra-extension}
 +
@@ -1172,40 +648,34 @@
 +
  \section*{Scope of formal verification}
  
--The classification and specified finite structural extensions have verified
-+The triple-system classification and specified finite structural extensions have verified
- Lean~4 implementations \citep{demoura2021,mathlib2020}.  The accepted results
- include the canonical atoms, finite parameter and connected atom-count spectra,
- classical-block identification, local decomposition products, actual-piece
- accounting and supported-cover increments.  They use the original carriers
- and retain their exact finiteness and structural hypotheses.
-+
-+The higher-uniformity results of Section~\ref{uniform-extension},
-+including the iterated trace lemma, classification, canonical atoms and
+ The triple-system classification and specified finite structural extensions have verified
+@@ -2784,8 +3353,10 @@
+ 
+ The higher-uniformity results of Section~\ref{uniform-extension},
+ including the iterated trace lemma, classification, canonical atoms and
+-finite transfer, are proved in the manuscript and have not been
+-formalized in Lean.  They are outside the coverage of every existing
 +finite transfer, and the exact chromatic spectra, reservoir calibration
 +and finite-family results of Section~\ref{exact-spectra-extension},
 +are proved in the manuscript and have not been formalized in Lean.
 +They are outside the coverage of every existing
-+export listed in Appendix~\ref{appendix-formalization}.
+ export listed in Appendix~\ref{appendix-formalization}.
  
  Verification of the extended manuscript is not complete.  In particular,
- fixed-atom profile realization, the full lattice spectra, maximal-chain and
-@@ -2396,7 +3478,11 @@
- informed the checking and presentation of the local forest-counting and
+@@ -2908,7 +3479,9 @@
  capacity arguments in Section~10; Aristotle supplied the abstract
  incidence-forest construction distinguished from fixed-atom realization in
--the verification section.  The author takes full responsibility for the
-+the verification section.  ChatGPT was also used to develop and check
+ the verification section.  ChatGPT was also used to develop and check
+-the higher-uniformity argument in Section~\ref{uniform-extension}.
 +the higher-uniformity argument in Section~\ref{uniform-extension}
 +and the exact chromatic and finite-family arguments in
 +Section~\ref{exact-spectra-extension}.
-+The author takes full responsibility for the
+ The author takes full responsibility for the
  arguments, citations, and final manuscript; newly incorporated material in
  this review draft remains subject to the author's review.
- 
-@@ -2428,52 +3514,12 @@
- \newblock \doi{10.48550/arXiv.2606.24882}.
- \newblock URL \url{https://arxiv.org/abs/2606.24882}.
+@@ -2948,53 +3521,6 @@
+ \newblock \doi{10.1090/proc/17021}.
+ \newblock URL \url{https://arxiv.org/abs/2403.11223}.
  
 -\bibitem[Whitney(1932)]{whitney1932}
 -Hassler Whitney.
@@ -1253,19 +723,15 @@
 -\newblock In \emph{Cambridge Summer School in Mathematical Logic (Cambridge,
 -  1971)}, volume 337 of \emph{Lecture Notes in Mathematics}, pages 531--538.
 -  Springer, Berlin and New York, 1973.
-+\bibitem[Reiher(2024)]{reiher2024}
-+Christian Reiher.
-+\newblock Obligatory hypergraphs.
-+\newblock arXiv:2403.11223, 2024.
-+\newblock \doi{10.1090/proc/17021}.
-+\newblock URL \url{https://arxiv.org/abs/2403.11223}.
- 
+-
  \bibitem[Erd{\H{o}}s et~al.(1975)Erd{\H{o}}s, Galvin, and Hajnal]{egh1975}
  Paul Erd{\H{o}}s, Fred Galvin, and Andr{\'a}s Hajnal.
-@@ -2483,6 +3529,53 @@
+ \newblock On set-systems having large chromatic number and not containing
+@@ -3002,6 +3528,53 @@
+ \newblock In \emph{Infinite and Finite Sets (Keszthely, 1973)}, volume~10 of
    \emph{Colloquia Mathematica Societatis J{\'a}nos Bolyai}, pages 425--513.
    North-Holland, 1975.
- 
++
 +\bibitem[Whitney(1932)]{whitney1932}
 +Hassler Whitney.
 +\newblock Non-separable and planar graphs.
@@ -1312,21 +778,6 @@
 +\newblock In \emph{Cambridge Summer School in Mathematical Logic (Cambridge,
 +  1971)}, volume 337 of \emph{Lecture Notes in Mathematics}, pages 531--538.
 +  Springer, Berlin and New York, 1973.
-+
+ 
  \bibitem[Komj{\'a}th(2001)]{komjath2001}
  P{\'e}ter Komj{\'a}th.
- \newblock Some remarks on obligatory subsystems of uncountably chromatic triple
-@@ -2503,13 +3596,6 @@
- \newblock \emph{Acta Math. Hungar.}, 121\penalty0 (1--2):\penalty0
-   79--92, 2008.
- \newblock \doi{10.1007/s10474-008-7179-6}.
--
--\bibitem[Reiher(2024)]{reiher2024}
--Christian Reiher.
--\newblock Obligatory hypergraphs.
--\newblock arXiv:2403.11223, 2024.
--\newblock \doi{10.1090/proc/17021}.
--\newblock URL \url{https://arxiv.org/abs/2403.11223}.
- 
- \bibitem[Erd{\H{o}}s(1959)]{erdos1959}
- Paul Erd{\H{o}}s.

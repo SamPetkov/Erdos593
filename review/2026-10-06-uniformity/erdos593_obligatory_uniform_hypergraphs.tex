@@ -63,6 +63,7 @@
 \theoremstyle{plain}
 \newtheorem*{theoremA}{Theorem A}
 \newtheorem*{theoremB}{Theorem B}
+\newtheorem*{theoremC}{Theorem C}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -75,22 +76,22 @@
 
 \hypersetup{
   hidelinks,pdfencoding=auto,psdextra,
-  pdftitle={Obligatory Uniform Hypergraphs: Canonical Atoms and Exact Finite Spectra},
+  pdftitle={Obligatory Uniform Hypergraphs: Canonical Atoms and Exact Spectra},
   pdfauthor={Samuil Petkov},
-  pdfsubject={Classification and finite structure in every finite uniformity; Lean verification for the specified triple-system results},
+  pdfsubject={Classification, finite structure and exact chromatic spectra in every finite uniformity; Lean verification for the specified triple-system results},
   pdfkeywords={Erdos Problem 593, obligatory uniform hypergraphs, uncountable chromatic number, canonical decomposition, partition lattices, Lean 4},
   pdfcreator={LaTeX with amsart; author-review manuscript},
   pdfproducer={pdfTeX},
   pdfdisplaydoctitle=true
 }
 
-\title[Obligatory uniform hypergraphs]{Obligatory uniform hypergraphs: canonical atoms and exact finite spectra}
+\title[Obligatory uniform hypergraphs]{Obligatory uniform hypergraphs: canonical atoms and exact spectra}
 \author{Samuil Petkov}
 \address{École normale supérieure--PSL, 45 rue d'Ulm, 75005 Paris, France}
 \email{samuil.petkov@ens.psl.eu}
 \subjclass[2020]{Primary 05C65; Secondary 05C15, 05C40, 05C63, 06A07, 03E05}
 \keywords{Erdős Problem 593, obligatory uniform hypergraphs, uncountable chromatic number, canonical decomposition, partition lattices, Lean~4}
-\date{6 October 2026}
+\date{7 October 2026}
 
 \begin{document}
 
@@ -118,11 +119,15 @@ joints and a common joint as the interior equality cases.  The two
 extremal assemblies can have the same atoms and global parameters.
 These results separate the constraints imposed by cyclic content from
 the freedom of assembly.  The finite structural spectra extend to all
-finite uniformities under a corresponding change of parameters.  The
+finite uniformities under a corresponding change of parameters.  Every
+non-obligatory finite system can also be avoided at each prescribed
+uncountable chromatic cardinal.  We prove simultaneous avoidance for
+finite linear families and exact chromatic calibration with bounded
+edge intersections, together with explicit bounds on host order.  The
 triple-system classification and specified structural extensions are
 verified in Lean~4; profile realization, full lattice spectra, the new
-counting endpoints and the higher-uniformity extension are not yet fully
-formalized.
+counting endpoints, the higher-uniformity extension and the chromatic
+spectra are not yet fully formalized.
 All arguments are in ZFC.
 \end{abstract}
 
@@ -200,10 +205,52 @@ The canonical atoms in this generality are single $r$-edges and
 $J^{[r]}$ with $J$ a finite $2$-connected bipartite graph.  Writing
 $s=n-(r-2)m$ and $\beta=(r-1)m-n+c$ transports the finite spectra,
 factorization products and fixed-atom profiles below to every finite
-uniformity (Corollary~\ref{uniform-finite-spectra}).  The new results in
-Section~\ref{uniform-extension} have manuscript proofs; they are not
-additional Lean-verified endpoints.  The detailed triple-system argument
-and its finite structure remain in Sections~1--10.
+uniformity (Corollary~\ref{uniform-finite-spectra}).  The detailed
+triple-system argument and its finite structure remain in Sections~1--10.
+
+\subsection*{Prescribing the chromatic cardinal}
+The structural answer does not depend on which uncountable chromatic
+cardinal is prescribed.  The next theorem strengthens the negative
+direction from an avoiding host to a host of any specified uncountable
+chromatic number.
+
+\begin{theoremC}
+Fix a finite integer $r\ge3$ and a finite simple $r$-uniform
+hypergraph $F$.  If $F\notin\mathcal B_r$, then for every uncountable
+cardinal $\kappa$ there is an $F$-free $r$-uniform hypergraph $H$
+with $\chi(H)=\kappa$.  If $F$ is linear, one may also require
+$|V(H)|\le2^{<\kappa}$.  If $F\in\mathcal B_r$, no such host exists.
+\end{theoremC}
+
+Here $2^{<\kappa}=\sup_{\nu<\kappa}2^\nu$, with the supremum
+taken over cardinals.  Theorem~\ref{exact-avoidance-spectrum} proves
+the assertion, including singular $\kappa$.
+Li established the triple-system spectrum \citep[Theorem~7.1]{li2026}.
+For linear forbidden systems in higher uniformity, the key identity is
+$\chi(\mathcal L_\kappa(H))=\min\{\chi(H),\kappa\}$ for the
+sequence lift of height $\kappa$.  It combines exact chromatic control
+with the finite trace theorem already used for the classification.
+
+Nonlinear forbidden systems require a different construction.
+We extend Li's reservoir method \citep[Section~6]{li2026} to add several
+old vertices to a labelled base edge.  With the simultaneous-colour
+systems of Erd\H{o}s--Galvin--Hajnal \citep[Corollary~12.3]{egh1975},
+this gives, for $1\le i\le r-2$, an $r$-uniform host with pairwise
+edge intersections at most $i$, chromatic number exactly $\mu^+$,
+and order at most $\beth_{\lceil(r-1)/i\rceil}(\mu)$.
+Here $\beth_0(\mu)=\mu$ and $\beth_{j+1}(\mu)=2^{\beth_j(\mu)}$.
+The order bounds are in ZFC; the corresponding optimal GCH thresholds
+are classical consequences of Erd\H{o}s--Galvin--Hajnal.
+
+The same lift avoids any finite family of linear non-obligatory systems
+simultaneously.  This family theorem has a real boundary: for every
+uniformity there is a finite mixed family whose members are individually
+avoidable at every uncountable cardinal, while their simultaneous
+omission forces countable chromatic number
+(Proposition~\ref{exact-mixed-family-obstruction}).
+The new results in Sections~\ref{uniform-extension}
+and~\ref{exact-spectra-extension} have manuscript proofs; they are
+not additional Lean-verified endpoints.
 
 \subsection*{Finite structure beyond the classification}
 Theorem~A answers an embedding question about infinite hosts.  The further
@@ -367,7 +414,12 @@ For general background on cardinal partition relations, see
 \citet{ehmr1984}; the specific imported statements are those listed above.  The extension
 in Section~\ref{uniform-extension} additionally uses the all-uniformity
 expansion theorem of Reiher and nonlinearity obstruction of
-Erdős--Hajnal--Rothschild, in the precise forms cited there.
+Erdős--Hajnal--Rothschild, in the precise forms cited there.  The
+chromatic spectra in Section~\ref{exact-spectra-extension} also use
+Erdős--Galvin--Hajnal's simultaneous-colour construction; the
+finite-family counterexample uses Hajnal--Komjáth's linearly
+obligatory loose seven-cycle.  The exact statements are cited where
+they enter the proofs.
 
 \section{Preliminaries}\label{conventions-and-definitions}
 
@@ -2773,6 +2825,523 @@ the same domains, ranks and actual piece numbers as before, proving all
 remaining assertions.
 \end{proof}
 
+\section{Exact chromatic spectra and simultaneous avoidance}
+\label{exact-spectra-extension}
+
+We now prescribe the chromatic number of the avoiding hosts.  The
+sequence lift treats linear forbidden systems, while a labelled
+reservoir construction treats nonlinear ones.  Together they give
+the full uncountable avoidance spectrum and explain the distinction
+between individual and simultaneous avoidance.
+For a family $\mathcal F$ of finite hypergraphs, a host is
+$\mathcal F$-free if it contains no member of $\mathcal F$.
+
+\subsection{Exact chromatic number of the sequence lift}
+\label{exact-lift-subsection}
+
+For an infinite cardinal $\kappa$, let $\mathcal L_\kappa(H)$ denote
+the construction in \eqref{uniform-lift-edge}, with
+$T=E(H)^{<\kappa}$ in place of $E(H)^{<\omega_1}$.
+Thus an edge has a $k$-edge as its base at $s$ and one apex at a node
+$t\succeq s^\frown a$.  The rank-raising lift admits an exact
+calibration, including at singular heights.
+
+\begin{lemma}[Sharp chromatic cap]
+\label{exact-lift-cap}
+Let $\kappa$ be an infinite cardinal and let $H$ be a $k$-uniform
+hypergraph with nonempty vertex set, where $k\ge2$ is finite.  Then
+\[
+ \chi\bigl(\mathcal L_\kappa(H)\bigr)
+   =\min\{\chi(H),\kappa\}.
+\]
+\end{lemma}
+
+\begin{proof}
+A proper colouring of $H$ induces a proper colouring of the lift by
+giving $(s,x)$ the colour of $x$: the base of every lifted edge is
+already nonmonochromatic.  Independently, colouring $(s,x)$ by its
+ordinal length $\ell(s)<\kappa$ is proper, because an apex has
+strictly greater length than its base.  These give both upper bounds.
+If $H$ is edgeless, both sides of the claimed equality are one.
+
+For the lower bound, suppose that $\theta<\chi(H)$ and
+$\theta<\kappa$, and consider a colouring
+$c:E(H)^{<\kappa}\times V(H)\to\theta$.
+At every node $s$, its restriction to $\{s\}\times V(H)$ has a
+monochromatic $H$-edge $a_s$, of some colour $b_s$.
+Starting with $s_0=\varnothing$, recursively put
+$s_{\alpha+1}=s_\alpha^\frown a_{s_\alpha}$ and take unions at
+limit ordinals.  The node $s_\alpha$ has length $\alpha<\kappa$,
+so every stage needed here lies in the tree.
+Since $\theta<\kappa$, there are $\alpha<\beta<\kappa$ with
+$b_{s_\alpha}=b_{s_\beta}$.
+The base $a_{s_\alpha}$ at $s_\alpha$, together with any vertex of
+the selected monochromatic base at $s_\beta$ as apex, is a
+monochromatic edge of $\mathcal L_\kappa(H)$.
+Thus no such $\theta$ colours suffice.  The recursion uses ordinal
+lengths and unions and does not assume that $\kappa$ is regular.
+\end{proof}
+
+Write
+\[
+ H_{2,\kappa}(G)=G,\qquad
+ H_{j,\kappa}(G)=\mathcal L_\kappa(H_{j-1,\kappa}(G))
+ \quad(j\ge3).
+\]
+Lemma~\ref{uniform-lift-trace} and
+Proposition~\ref{uniform-iterated-traces} remain valid for these
+hosts.  Their finite-trace proofs use only the prefix order, the
+unique base and apex of a selected edge, and finitely many active
+nodes; the tree height plays no further role.  In particular, every
+finite linear trace $K\subseteq H_{r,\kappa}(G)$ is assembled from
+$J^{[r]}$ with $J\subseteq G$ finite and
+$|E(J)|\le|E(K)|$, together with finite edgeless systems.
+The lemma also gives
+\[
+ \chi(G)=\kappa
+ \quad\Longrightarrow\quad
+ \chi(H_{r,\kappa}(G))=\kappa.
+\]
+
+At a successor $\kappa=\mu^+$, the order of these iterated hosts
+has a bound independent of $r$.  Put $\rho=2^\mu$.
+For any finite-uniform $H$ with $|V(H)|\le\rho$ we have
+$|E(H)|\le\rho$, and hence
+\begin{equation}\label{exact-successor-lift-order}
+ |E(H)^{<\mu^+}|
+ \le\mu^+\cdot\rho^\mu
+ =\rho,
+ \qquad
+ |V(\mathcal L_{\mu^+}(H))|\le\rho.
+\end{equation}
+Here every ordinal below $\mu^+$ has cardinality at most $\mu$,
+and $(2^\mu)^\mu=2^\mu$.  Thus a graph of order $\mu^+$ starts
+a finite iteration all of whose hosts have order at most $2^\mu$.
+
+\subsection{Simultaneous avoidance of finite linear families}
+\label{exact-linear-family-subsection}
+
+We use the cardinal form of the classical graph input: for every
+uncountable cardinal $\kappa$ and positive integer $m$, there is a
+graph $G$ with
+\[
+ |V(G)|=\chi(G)=\kappa
+\]
+and no odd cycle of length at most $m$
+\citep[Theorem~7.4, p.~76]{erdoshajnal1966}; this exact statement is
+also recorded in \citet[Theorem~C, p.~428]{egh1975}.
+For an infinite cardinal $\kappa$, write
+$2^{<\kappa}=\sup_{\nu<\kappa}2^\nu$, where the supremum runs
+over cardinals $\nu$.
+
+\begin{theorem}[Simultaneous linear-family avoidance]
+\label{exact-linear-family-avoidance}
+Let $r\ge3$ be finite, and let $\mathcal F$ be a finite family of
+finite linear $r$-uniform hypergraphs.  The following are equivalent:
+\begin{enumerate}
+\item No member of $\mathcal F$ belongs to $\mathcal B_r$.
+\item For every uncountable cardinal $\kappa$, there is an
+      $\mathcal F$-free $r$-uniform hypergraph $H$ with
+      $\chi(H)=\kappa$ and $|V(H)|\le2^{<\kappa}$.
+\item There is an $\mathcal F$-free $r$-uniform hypergraph of
+      uncountable chromatic number.
+\end{enumerate}
+The hosts in this assertion are not required to be linear.
+\end{theorem}
+
+\begin{proof}
+The second assertion implies the third, and the third implies the
+first by Theorem~\ref{uniform-classification}.
+Suppose the first assertion holds.
+For each $F\in\mathcal F$, choose a connected component $C_F$
+that does not belong to $\mathcal B_r$.
+Such a component exists because membership in $\mathcal B_r$ is
+componentwise, either by its intrinsic criterion or by disjoint-union
+closure.  Each $C_F$ is linear and has at least one edge, since
+isolated vertices belong to $\mathcal B_r$.
+Put
+\[
+ m=\max\bigl(\{1\}\cup
+          \{|E(C_F)|:F\in\mathcal F\}\bigr).
+\]
+
+First let $\kappa=\mu^+$, where $\mu$ is infinite, and take an
+exact-$\kappa$ graph $G$ of order $\kappa$ with no odd cycle of
+length at most $m$.
+The host $H=H_{r,\kappa}(G)$ has chromatic number $\kappa$ and,
+by \eqref{exact-successor-lift-order}, order at most $2^\mu$.
+If some $C_F$ embedded in $H$, its image would be a finite linear
+trace assembled from $J^{[r]}$ with $J\subseteq G$ and
+$|E(J)|\le|E(C_F)|\le m$.
+Each such $J$ is bipartite: a nonbipartite $J$ would contain an odd
+cycle of length at most $|E(J)|\le m$.
+The assembly would therefore put $C_F$ in $\mathcal B_r$, a
+contradiction.  Thus $H$ avoids every $C_F$ and hence every $F$.
+Since $2^{<\mu^+}=2^\mu$, this proves the required bound at
+successors.
+
+If $\kappa$ is an uncountable limit cardinal, choose uncountable
+successors $\kappa_j=\mu_j^+$, for $j<\operatorname{cf}(\kappa)$,
+cofinal in $\kappa$.
+For each $j$ use the preceding construction with the same components
+$C_F$, and take the disjoint union of the resulting hosts $H_j$.
+Every $C_F$ is connected, so an embedding of it into this union
+would lie in one summand.  The union therefore remains $C_F$-free
+for every $F$, and is consequently $\mathcal F$-free.
+Its chromatic number is $\sup_j\kappa_j=\kappa$, and its order
+is at most
+\[
+ \operatorname{cf}(\kappa)\cdot\sup_j2^{\mu_j}
+ \le 2^{<\kappa}.
+\]
+The last inequality uses
+$2^{<\kappa}\ge\sup_{\nu<\kappa}\nu^+=\kappa$ at a limit
+cardinal.  Passing first to connected forbidden components is what
+makes this disjoint-union step valid even when the original members
+of $\mathcal F$ are disconnected.
+\end{proof}
+
+\subsection{Exact calibration with bounded intersections}
+\label{exact-calibration}
+
+We use the simultaneous-colour property of Erd\H{o}s--Galvin--Hajnal
+\citep[Definition~6.2, p.~448]{egh1975}.  An edge labelling
+$\ell:E(S)\to I$ has property $P(S,I,\kappa)$ if every colouring
+$c:V(S)\to\theta$ with $0<\theta<\kappa$ has one colour $a<\theta$
+such that every label in $I$ occurs on an edge contained in
+$c^{-1}\{a\}$.  For nonempty $I$, this implies $\chi(S)\ge\kappa$.
+The following lemma extends Li's reservoir calibration for triple
+systems \citep[Section~6]{li2026}: it adds several old vertices to
+each base edge while retaining an explicit proper colouring.
+
+\begin{lemma}[Reservoir calibration]
+\label{exact-reservoir-step}
+Let $\mu$ be infinite, put $\kappa=\mu^+$, and fix a label set $I$
+of cardinality $2^\mu$.  Suppose $\sigma\ge2^\mu$ and
+$\operatorname{cf}(\sigma)>\mu$.  Let $k\ge2$ and $1\le d\le i$
+be finite integers.  Suppose that $S$ is a simple $k$-uniform
+hypergraph on at most $\sigma$ vertices, distinct edges of $S$
+meet in at most $i$ vertices, and $P(S,I,\kappa)$ holds.
+Then there is a simple $(k+d)$-uniform hypergraph $L$ such that
+distinct edges meet in at most $i$ vertices and
+\[
+ |V(L)|\le2^\sigma,\qquad \chi(L)=\kappa.
+\]
+\end{lemma}
+
+\begin{proof}
+Put $R=\sigma^+$ and $\Lambda=2^\sigma$.  Then $R\le\Lambda$ and
+$\Lambda^\sigma=\Lambda$.  Fix $q:R\to\kappa$ whose fibres are
+cofinal in $R$; a partition of $R$ into $\kappa$ sets of cardinality
+$R$ supplies such a map.  Take pairwise disjoint levels
+$(V_\alpha)_{\alpha<R}$ of cardinality $\Lambda$.
+Write $V_{<\alpha}=\bigcup_{\beta<\alpha}V_\beta$, and let
+$\operatorname{rk}(x)=\alpha$ for $x\in V_\alpha$.
+
+An admissible reservoir at level $\alpha$ is a family
+$\mathbf X=(X_p)_{p\in I}$ of pairwise disjoint subsets of
+$V_{<\alpha}$, each empty or of cardinality $\sigma$, such that
+$q(\operatorname{rk}(x))\ne q(\alpha)$ whenever $x\in\bigcup_pX_p$.
+There are at most $\Lambda$ such families at each level: each
+coordinate has at most $\Lambda^\sigma=\Lambda$ possibilities,
+and $|I|\le\sigma$.
+For every admissible $\mathbf X$, install $\sigma$ labelled copies
+of $S$ in $V_\alpha$, with all installed copies at that level
+mutually vertex-disjoint.  This requires at most
+$\Lambda\cdot\sigma\cdot\sigma=\Lambda$ vertices.
+
+In a copy $B$ installed for $\mathbf X$, call $e\in E(B)$ active
+when $X_{\ell(e)}\ne\varnothing$.  Choose $d$-element sets
+$A_B(e)\subseteq X_{\ell(e)}$ for the active edges, pairwise
+disjoint within $B$.  These choices are possible because
+$|E(S)|\le\sigma$, $d$ is finite, and every nonempty reservoir
+has cardinality $\sigma$.  Put $V(L)=\bigcup_{\alpha<R}V_\alpha$
+and take as edges precisely the sets
+\[
+ e\cup A_B(e)\qquad(e\text{ active in an installed copy }B).
+\]
+All choices are fixed before considering a vertex colouring.
+
+The highest-level vertices of an edge recover its base edge and
+its installed copy, so $L$ is simple and $(k+d)$-uniform.
+For two edges in the same copy, the old vertex sets are disjoint,
+so their intersection has size at most $i$.  Edges from different
+copies at one level have disjoint bases and can intersect only
+in their old vertex sets, of size $d$.  For edges based at different
+levels, the intersection is contained in the $d$ old vertices of
+the higher edge.  Thus the intersection bound $i$ is preserved.
+The map $x\mapsto q(\operatorname{rk}(x))$ is a proper
+$\kappa$-colouring by reservoir admissibility, and
+$|V(L)|=R\Lambda=\Lambda$.
+
+To prove the lower bound, consider any $c:V(L)\to\theta$ with
+$0<\theta<\kappa$, and write $C_a=c^{-1}\{a\}$.
+Call a colour large when $|C_a|\ge\sigma$, and let $D$ be the
+union of the other colour classes.  There are at most $\mu$
+colours, so $\operatorname{cf}(\sigma)>\mu$ gives $|D|<\sigma$.
+At least one colour is large.
+For $\xi<\kappa$, let
+$Q_\xi=\bigcup\{V_\beta:q(\beta)=\xi\}$.
+A fixed large colour $a$ has at most one value $\xi$ for which
+$|C_a\setminus Q_\xi|<\sigma$: two such values would express
+$C_a$ as a union of two sets of cardinality below $\sigma$.
+Since there are at most $\mu$ large colours, choose
+$\xi<\mu^+$ exceptional for none of them.
+
+Assign distinct labels $p_a\in I$ to the large colours and choose
+$X_{p_a}\in[C_a\setminus Q_\xi]^\sigma$, putting all other
+$X_p=\varnothing$.  Their union has size $\sigma$, so its ranks
+are bounded in $R=\sigma^+$.  Choose
+$\alpha\in q^{-1}\{\xi\}$ above those ranks.
+This is an admissible reservoir at level $\alpha$.
+Fewer than $\sigma$ of its $\sigma$ disjoint installed copies
+meet $D$, since the copies meeting $D$ inject into $D$.
+Choose an installed copy $B$ avoiding $D$.
+
+By $P(S,I,\kappa)$ applied to $c|_B$, some colour $a$ contains
+a base edge of every label.  It is large because $B$ avoids $D$.
+In particular, there is a monochromatic base edge $e$ of label
+$p_a$.  It is active, and
+$A_B(e)\subseteq X_{p_a}\subseteq C_a$.
+Thus $e\cup A_B(e)$ is a monochromatic edge of $L$.
+No colouring with fewer than $\kappa$ colours is proper, proving
+$\chi(L)=\kappa$.
+\end{proof}
+
+Define $\beth_0(\mu)=\mu$ and
+$\beth_{j+1}(\mu)=2^{\beth_j(\mu)}$ for finite $j$.
+
+\begin{theorem}[Exact bounded-intersection calibration]
+\label{exact-bounded-calibration}
+Let $\mu$ be an infinite cardinal, $r\ge3$ finite, and
+$1\le i\le r-2$.  Put $t=\lceil(r-1)/i\rceil$.
+There is a simple $r$-uniform hypergraph $L$ whose distinct edges
+intersect in at most $i$ vertices and such that
+\[
+ \chi(L)=\mu^+,\qquad |V(L)|\le\beth_t(\mu).
+\]
+In particular, for $i=1$ there is a linear $r$-uniform hypergraph
+of chromatic number exactly $\mu^+$ on at most
+$\beth_{r-1}(\mu)$ vertices.
+\end{theorem}
+
+\begin{proof}
+Write $k=r-i$, $j=\min\{i,k-1\}$ and $m=t-1$.
+Then $k\ge2$, $m\ge1$, $1\le j<k$, and $k\le mj+1$.
+Indeed, if $i\le k-1$, then $j=i$ and
+$m=\lceil(k-1)/i\rceil$; otherwise $j=k-1$ and $m=1$.
+
+Erd\H{o}s--Galvin--Hajnal's Corollary~12.3
+\citep[p.~485]{egh1975} gives a $(k,j)$-system $S$ of size
+$\sigma=\beth_m(\mu)$ with
+$P^*(S,\sigma,\mu^+,j)$.
+Taking $V(S)=\bigcup E(S)$ gives $|V(S)|\le\sigma$.
+Here distinct edges of a $(k,j)$-system intersect in at most $j$
+vertices, and their stronger property $P^*$ implies $P$.
+Coarsen the $\sigma$ labels by a surjection onto a set $I$ of
+cardinality $2^\mu\le\sigma$; the property $P$ is preserved.
+Since $m\ge1$, K\"onig's theorem gives
+\[
+ \operatorname{cf}(\sigma)
+ =\operatorname{cf}(2^{\beth_{m-1}(\mu)})
+ >\beth_{m-1}(\mu)\ge\mu.
+\]
+Apply Lemma~\ref{exact-reservoir-step} with $d=i$.
+The output has rank $k+i=r$, intersection bound $i$, chromatic
+number exactly $\mu^+$, and order at most
+$2^\sigma=\beth_t(\mu)$.
+\end{proof}
+
+\begin{corollary}[All uncountable chromatic cardinals]
+\label{exact-all-cardinals}
+For every finite $r\ge3$, every $1\le i\le r-2$, and every
+uncountable cardinal $\kappa$, there is a simple $r$-uniform
+hypergraph of chromatic number exactly $\kappa$ whose distinct
+edges intersect in at most $i$ vertices.  If $\kappa$ is a limit
+cardinal and $t=\lceil(r-1)/i\rceil$, the host can be chosen
+with order at most $\sup_{\aleph_0\le\mu<\kappa}\beth_t(\mu)$.
+In particular, its order is exactly $\kappa$ when $\kappa$ is
+an uncountable strong limit cardinal.
+\end{corollary}
+
+\begin{proof}
+The successor case is Theorem~\ref{exact-bounded-calibration}.
+For a limit cardinal $\kappa$, take a cofinal family of uncountable
+successor cardinals $\kappa_\eta<\kappa$ and form a disjoint union
+of the corresponding hosts.  The intersection bound is preserved,
+and the chromatic number of the union is
+$\sup_\eta\kappa_\eta=\kappa$.
+Put $M=\sup_{\aleph_0\le\mu<\kappa}\beth_t(\mu)$.  Since
+$M\ge\kappa$, the union has order at most
+$\operatorname{cf}(\kappa)\cdot M=M$.  At a strong limit
+$\kappa$, every finite iterate $\beth_t(\mu)$ with $\mu<\kappa$
+is below $\kappa$, so $M=\kappa$; the reverse order bound
+follows from $\chi(H)\le|V(H)|$.
+This argument includes singular cardinals.
+\end{proof}
+
+\begin{remark}[Classical size benchmark]
+Conditional optimality under GCH already follows from
+Erd\H{o}s--Galvin--Hajnal.  Their Corollary~2.2
+\citep[p.~433]{egh1975} implies that an $(r,i)$-system on at most
+$\mu^{+m}$ vertices is $\mu$-colourable when $r\ge mi+2$.
+Taking $m=t-1$ gives the ZFC lower bound
+$|V(H)|\ge\mu^{+t}$ whenever $\chi(H)>\mu$.
+Under GCH, their Corollary~12.3, applied directly with rank $r$
+and parameter $t$, supplies such a host on $\mu^{+t}$ vertices.
+Applying Corollary~2.2 again with base $\mu^+$ and parameter
+$t-1$ gives chromatic number at most $\mu^+$, hence exactly
+$\mu^+$.  Thus the exact GCH threshold is a classical consequence.
+The construction above combines their simultaneous-colour bases
+with Li's reservoir method to retain exact chromatic calibration
+in ZFC.  At the remaining endpoint $i=r-1$, the complete
+$r$-uniform hypergraph on $\mu^+$ vertices already has order
+and chromatic number $\mu^+$.
+\end{remark}
+
+\subsection{The uncountable avoidance spectrum}
+\label{exact-spectrum-subsection}
+
+For a finite $r$-uniform hypergraph $F$, define its uncountable
+avoidance spectrum to be the class
+\[
+ \operatorname{Spec}^{\mathrm{unc}}_r(F)=
+ \{\kappa>\aleph_0:
+      \text{some $F$-free $r$-uniform $H$ has $\chi(H)=\kappa$}\},
+\]
+where $\kappa$ ranges over cardinals.
+For a nonlinear $F$, put
+\[
+ \tau(F)=\max\{|e\cap f|:e,f\in E(F),\ e\ne f\}.
+\]
+Thus $2\le\tau(F)\le r-1$.
+
+\begin{theorem}[Exact uncountable avoidance spectra]
+\label{exact-avoidance-spectrum}
+For every finite $r\ge3$ and finite $r$-uniform hypergraph $F$,
+\[
+ \operatorname{Spec}^{\mathrm{unc}}_r(F)=
+ \begin{cases}
+  \varnothing,&F\in\mathcal B_r,\\[2pt]
+  \{\kappa:\kappa>\aleph_0\text{ is a cardinal}\},
+       &F\notin\mathcal B_r.
+ \end{cases}
+\]
+If $F\notin\mathcal B_r$ and $\kappa=\mu^+$ with $\mu$ infinite,
+an $F$-free host of chromatic number $\kappa$ can be chosen with
+\[
+ |V(H)|\le
+ \begin{cases}
+  2^\mu,&F\text{ is linear},\\[2pt]
+  \beth_{\lceil(r-1)/(\tau(F)-1)\rceil}(\mu),
+       &F\text{ is nonlinear}.
+ \end{cases}
+\]
+For linear $F\notin\mathcal B_r$, the stronger bound
+$|V(H)|\le2^{<\kappa}$ holds at every uncountable $\kappa$.
+\end{theorem}
+
+\begin{proof}
+If $F\in\mathcal B_r$, the classification theorem makes $F$
+obligatory, so the spectrum is empty.
+If $F$ is linear and does not belong to $\mathcal B_r$, apply
+Theorem~\ref{exact-linear-family-avoidance} to the singleton family
+$\{F\}$.
+
+Suppose instead that $F$ is nonlinear, and set $i=\tau(F)-1$.
+Then $1\le i\le r-2$.
+For $\kappa=\mu^+$, Theorem~\ref{exact-bounded-calibration}
+supplies an $r$-uniform host of chromatic number $\kappa$, of order
+at most $\beth_{\lceil(r-1)/i\rceil}(\mu)$, in which distinct
+edges intersect in at most $i$ points.
+This host is $F$-free: an embedding of $F$ would preserve the
+$\tau(F)=i+1$ shared vertices of a pair of its edges.
+This proves both the successor assertion and its stated order bound.
+
+For an uncountable limit $\kappa$, choose cofinal uncountable
+successors and take a disjoint union of the corresponding hosts
+with the same intersection bound $i$.
+The union still has pairwise edge intersections at most $i$ and
+therefore omits $F$; its chromatic number is the supremum of the
+successor chromatic numbers, namely $\kappa$.
+This completes all cases, including singular cardinals.
+\end{proof}
+
+The triple-system spectrum is established in
+\citet[Theorem~7.1]{li2026}.
+Here the classification in every uniformity and the bounded-intersection
+calibration extend the dichotomy to all finite $r\ge3$.
+The quantitative bounds are witness bounds; no minimum order is
+asserted for an individual forbidden hypergraph.
+
+\subsection{A finite-family obstruction in every uniformity}
+\label{exact-mixed-family-obstruction-section}
+
+The assumption that every forbidden member is linear in the simultaneous
+avoidance result cannot be dropped.  The following construction extends
+the triple-system example used by \citet[Section~7]{li2026} in connection
+with Erd\H{o}s Problem~\#1177.
+
+\begin{proposition}[Individually avoidable, jointly obligatory]
+\label{exact-mixed-family-obstruction}
+For every finite $r\ge3$ there is a finite family $\mathcal F_r$ of
+finite simple $r$-uniform hypergraphs such that no member of
+$\mathcal F_r$ is obligatory, but every $\mathcal F_r$-free
+$r$-uniform hypergraph has countable chromatic number.
+\end{proposition}
+
+\begin{proof}
+For $2\le t\le r-1$, let $N_{r,t}$ consist of two $r$-edges whose
+intersection has size $t$, with no isolated vertices, and put
+\[
+ \mathcal N_r=\{N_{r,t}:2\le t\le r-1\}.
+\]
+A simple $r$-uniform host avoids $\mathcal N_r$ precisely when it is
+linear.  Every member of $\mathcal N_r$ is non-obligatory, by the
+classical nonlinear obstruction \citep{ehr1973}.
+
+Let $C_7^{[3]}$ be the private triple expansion of the $7$-cycle.
+Define $\mathcal E_r$ to contain one representative of each isomorphism
+type of a reduced linear $r$-uniform hypergraph $E$ with exactly seven
+edges $e_1,\ldots,e_7$ such that there are triples
+$a_j\subseteq e_j$ for which the triple system
+$\{a_1,\ldots,a_7\}$ is isomorphic to $C_7^{[3]}$.
+This is a finite family: every such $E$ has at most $7r$ vertices.
+It is nonempty, since $C_7^{[r]}$ is a member.
+Every $E\in\mathcal E_r$ retains the seven distinct cycle vertices
+and seven distinct edges of the displayed loose triple cycle, so it
+contains a Berge cycle of odd length seven.  Hence no member of
+$\mathcal E_r$ belongs to $\mathcal B_r$, and the classification
+theorem shows that each is non-obligatory.
+
+Set $\mathcal F_r=\mathcal N_r\cup\mathcal E_r$, and suppose that
+an $r$-uniform host $H$ has uncountable chromatic number.
+If $H$ is nonlinear, it contains a member of $\mathcal N_r$.
+If $H$ is linear, choose a triple $a_e\subseteq e$ from every edge
+$e\in E(H)$, and let $H_3$ be the resulting triple system on $V(H)$.
+The chosen triples are distinct and form a linear triple system,
+because the original edges meet pairwise in at most one point.
+Every proper colouring of $H_3$ is a proper colouring of $H$, so
+\[
+ \chi(H_3)\ge\chi(H)>\aleph_0.
+\]
+The theorem of Hajnal--Komj\'ath that $C_7^{[3]}$ is linearly
+obligatory \citep{hajnalkomjath2008} supplies a copy of that triple
+system in $H_3$.  Restore the seven original $r$-edges from which
+its triples were selected, and take their union as vertex set.
+The resulting reduced seven-edge subhypergraph of $H$ is a member
+of $\mathcal E_r$ up to isomorphism.  Thus every uncountably
+chromatic host contains a member of $\mathcal F_r$, as required.
+\end{proof}
+
+For $r=3$, the family $\mathcal E_3$ consists only of
+$C_7^{[3]}$, and $\mathcal N_3$ consists only of two triples meeting
+in two points.  For larger $r$, the definition of $\mathcal E_r$
+allows all identifications among the added points that preserve
+linearity.  This finite completion family is needed because choosing
+triples from a linear $r$-uniform host does not force the restored
+edges to have globally private added vertices.
+
 \section*{Scope of formal verification}
 
 The triple-system classification and specified finite structural extensions have verified
@@ -2784,8 +3353,10 @@ and retain their exact finiteness and structural hypotheses.
 
 The higher-uniformity results of Section~\ref{uniform-extension},
 including the iterated trace lemma, classification, canonical atoms and
-finite transfer, are proved in the manuscript and have not been
-formalized in Lean.  They are outside the coverage of every existing
+finite transfer, and the exact chromatic spectra, reservoir calibration
+and finite-family results of Section~\ref{exact-spectra-extension},
+are proved in the manuscript and have not been formalized in Lean.
+They are outside the coverage of every existing
 export listed in Appendix~\ref{appendix-formalization}.
 
 Verification of the extended manuscript is not complete.  In particular,
@@ -2908,7 +3479,9 @@ informed the checking and presentation of the local forest-counting and
 capacity arguments in Section~10; Aristotle supplied the abstract
 incidence-forest construction distinguished from fixed-atom realization in
 the verification section.  ChatGPT was also used to develop and check
-the higher-uniformity argument in Section~\ref{uniform-extension}.
+the higher-uniformity argument in Section~\ref{uniform-extension}
+and the exact chromatic and finite-family arguments in
+Section~\ref{exact-spectra-extension}.
 The author takes full responsibility for the
 arguments, citations, and final manuscript; newly incorporated material in
 this review draft remains subject to the author's review.
@@ -2947,6 +3520,14 @@ Christian Reiher.
 \newblock arXiv:2403.11223, 2024.
 \newblock \doi{10.1090/proc/17021}.
 \newblock URL \url{https://arxiv.org/abs/2403.11223}.
+
+\bibitem[Erd{\H{o}}s et~al.(1975)Erd{\H{o}}s, Galvin, and Hajnal]{egh1975}
+Paul Erd{\H{o}}s, Fred Galvin, and Andr{\'a}s Hajnal.
+\newblock On set-systems having large chromatic number and not containing
+  prescribed subsystems.
+\newblock In \emph{Infinite and Finite Sets (Keszthely, 1973)}, volume~10 of
+  \emph{Colloquia Mathematica Societatis J{\'a}nos Bolyai}, pages 425--513.
+  North-Holland, 1975.
 
 \bibitem[Whitney(1932)]{whitney1932}
 Hassler Whitney.
@@ -2994,14 +3575,6 @@ Paul Erd{\H{o}}s, Andr{\'a}s Hajnal, and Bruce~L. Rothschild.
 \newblock In \emph{Cambridge Summer School in Mathematical Logic (Cambridge,
   1971)}, volume 337 of \emph{Lecture Notes in Mathematics}, pages 531--538.
   Springer, Berlin and New York, 1973.
-
-\bibitem[Erd{\H{o}}s et~al.(1975)Erd{\H{o}}s, Galvin, and Hajnal]{egh1975}
-Paul Erd{\H{o}}s, Fred Galvin, and Andr{\'a}s Hajnal.
-\newblock On set-systems having large chromatic number and not containing
-  prescribed subsystems.
-\newblock In \emph{Infinite and Finite Sets (Keszthely, 1973)}, volume~10 of
-  \emph{Colloquia Mathematica Societatis J{\'a}nos Bolyai}, pages 425--513.
-  North-Holland, 1975.
 
 \bibitem[Komj{\'a}th(2001)]{komjath2001}
 P{\'e}ter Komj{\'a}th.
