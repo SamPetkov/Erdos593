@@ -1,0 +1,23 @@
+{
+  "pages": 50,
+  "warnings": [],
+  "locations": {
+    "Theorem B": [
+      2
+    ],
+    "11. The classification in every finite uniformity": [
+      37
+    ],
+    "Classification in finite uniformity": [
+      38
+    ],
+    "Finite spectra at every uniformity": [
+      43
+    ],
+    "Scope of formal verification": [
+      44
+    ]
+  },
+  "pdf_sha256": "ef723e6fb3e6be1ec752e899a16c3562ea1f91c9f7e6bb4631d4341b31a6f4f1",
+  "tex_sha256": "c70c320c89eb0595bfb8cd1de31e5a3170a37b2d0591fe9019ce0ffd1b38f9d8"
+}

@@ -1,0 +1,175 @@
+REVISION NOTE: THE HIGHER-UNIFORMITY EXTENSION
+6 October 2026
+
+1. WHAT HAS BEEN ADDED
+
+The manuscript now contains a complete ordinary mathematical proof of a
+classification for every fixed finite uniformity r >= 3. Its existing triple
+classification and finite development remain intact in Sections 1-10. The
+extension is stated as Theorem B in the introduction and proved as Theorem 11.1.
+
+For a finite simple r-uniform hypergraph F, the following are equivalent:
+
+  (i) F embeds into every r-uniform hypergraph of uncountable chromatic number.
+
+  (ii) F is generated from private r-uniform expansions of finite bipartite
+       graphs and finite edgeless systems by finite disjoint unions and
+       one-point amalgamations.
+
+  (iii) After isolated vertices are removed, F is linear, every hyperedge-node
+        of its Levi graph has at least r-2 incident bridges, and every Berge
+        cycle is even.
+
+Embeddings are injective and non-induced. Chromatic number uses proper vertex
+colourings with no monochromatic edge. The host has the same uniformity as F.
+A bridge incidence is not required to terminate at a point of global degree one.
+
+The canonical atoms are single r-edges and private r-uniform expansions of
+finite simple 2-connected bipartite graphs. This is Corollary 11.7.
+
+2. THE NEW PROOF MECHANISM
+
+Lemma 11.3 extends the one-apex sequence lift to a k-uniform base hypergraph H.
+The lift is (k+1)-uniform and preserves uncountable chromatic number. Every
+finite linear trace decomposes into pieces D_s^+, where D_s is a finite linear
+subhypergraph of H and the superscript adds one private vertex per edge.
+
+Three details support the induction. A base edge cannot be used twice in a
+linear trace because its k >= 2 vertices would be shared. Distinct bases in a
+single fibre have distinct apices because they prescribe different next branch
+symbols. The fibre/shared-point incidence graph is a forest: at a shortest
+source node on a hypothetical cycle, the two neighbours would lie in different
+immediate branches, while the remaining path cannot change that branch.
+
+Lemma 11.4 then shows that inflation commutes with one-point assembly. This
+includes attachment at a point that was private in an earlier expansion. At
+each inflation step only the newly added private vertices must remain distinct.
+
+Starting with a graph G and iterating the lift gives r-uniform hosts H_r(G).
+Proposition 11.5 shows that every finite linear trace K in H_r(G) is a forest
+assembly of J^[r], with J a finite subgraph of G and |E(J)| <= |E(K)|.
+
+For a finite forbidden system F with m edges, take G of uncountable chromatic
+number without odd cycles of length at most m. All graph constituents arising
+from an m-edge trace are then bipartite. Thus an embedding of a linear F
+outside the claimed class would be impossible. The classical nonlinear
+obstruction deals with nonlinear F. Reiher's positive theorem and the known
+closure operations establish the other implication.
+
+The witness depends on m. The argument does not require a single host all of
+whose finite traces are obligatory. Intermediate hosts need not be linear;
+linearity is retained for the finite projected traces where the induction uses it.
+
+3. WHY THE HIGHER BRIDGE THRESHOLD MATTERS
+
+Remark 11.8 gives a five-edge 4-uniform system:
+
+  e = {a1,a2,a3,p}, f = {b1,b2,b3,q},
+  g_i = {a_i,b_i,c_i,d_i}, i = 1,2,3,
+
+with all named vertices distinct except for the displayed repetitions. It is
+linear and all its Berge cycles have length four. Every edge has a bridge
+incidence, but e and f have only one each. The four-uniform criterion requires
+two, so the system is non-obligatory. Merely carrying over the triple threshold
+of one bridge would give an incorrect characterization.
+
+4. FINITE CONSEQUENCES
+
+For a reduced nonempty obligatory r-uniform hypergraph, put
+
+  n = |V(F)|, m = |E(F)|, c = number of components,
+  s = n-(r-2)m, beta = (r-1)m-n+c.
+
+Corollary 11.9 proves that at prescribed m >= 1 and 1 <= c <= m, the possible
+orders n are exactly the integers in
+
+  (r-2)m + 2(c-1) + ceil(2 sqrt(m-c+1)) <= n <= (r-1)m+c.
+
+The atom-count spectra, connected indecomposability phase diagram, canonical
+factorization products, fixed-atom attachment profiles, cyclic budget, and
+piece-count bounds transfer with the stated parameter change and the original
+hypotheses. The proof uses additive counts of the ordinary graph cores. It does
+not assume that arbitrary attachment ports on a larger-uniformity atom can be
+copied vertex for vertex into a triple-system atom. Fixed-atom profile realization
+uses the existing construction requiring at most two distinct ports per atom.
+
+These are exact FINITE structural spectra. The revision does not claim exact
+chromatic-cardinal avoidance spectra in higher uniformities or a new resolution
+of Erdős Problem 1177.
+
+5. LITERATURE POSITIONING
+
+Li's currently checked arXiv v2, dated 23 July 2026, states the classification
+and exact chromatic-cardinal results for triple systems. Its graph-based
+one-apex construction is closely related to the lift in the existing manuscript.
+The original acknowledgement of Li's earlier triple classification is retained.
+Source: Eric Li, A Resolution of Erdős Problems 593 and 1177: Obligatory Triple
+Systems and Exact Spectra, arXiv:2606.24882v2.
+https://arxiv.org/html/2606.24882v2
+
+Reiher already proves that private expansions of finite complete bipartite
+graphs are obligatory in every finite uniformity. His introduction also records
+the applicable closure properties and nonlinear obstruction. Thus the positive
+all-uniformity direction is existing mathematics and is explicitly credited.
+Source: Christian Reiher, Obligatory hypergraphs, Theorem 1.2 and Section 1.
+https://arxiv.org/html/2403.11223v1
+https://doi.org/10.1090/proc/17021
+
+The all-uniformity nonlinear obstruction is the consequence of Theorem 2 in
+Erdős, Hajnal and Rothschild, On chromatic number of graphs and set systems
+(1973), p. 532. The starting graph with large odd girth is the same
+Erdős-Hajnal input already used in the original manuscript.
+https://www.renyi.hu/~p_erdos/1973-13.pdf
+https://www.renyi.hu/~p_erdos/1966-07.pdf
+
+The extension is stronger than the classification statements in those primary
+sources. The targeted search did not locate an existing full all-uniformity
+classification. That bounded search is not a proof of first priority. The precise
+contribution to emphasize is the hypergraph-base finite linear trace lemma,
+its iteration, and the resulting classification with r-2 bridge incidences.
+
+6. VERIFICATION AND REVIEW STATUS
+
+The section has undergone three separate internal AI proof readings, together
+with the integrating assistant's review. These are not external peer reviews.
+The checks covered base-trace linearity, apex uniqueness, the support forest,
+inflation at earlier private points, the inductive edge bound, intrinsic
+reconstruction, canonical blocks, the four-uniform example and the finite
+transfer. A sequence-length ambiguity was corrected to use the ordinal
+ell(s) = dom(s). No remaining mathematical blocker was identified in these checks.
+
+The new results have not been formalized in Lean. The existing Lean development
+was not modified or newly replayed as part of this revision. The abstract,
+introduction and verification summary distinguish the old triple-system
+exports from the new manuscript proofs. The author's review and an external
+expert's assessment of the new theorem and literature positioning remain needed.
+
+The final PDF has 50 pages. The source compiles without warnings, unresolved
+references or citations, or overfull/underfull boxes. The main front matter and
+the entire new proof section were inspected visually. Sections 1-10 are exactly
+preserved in source; all bibliography entries are unchanged in content.
+
+7. PUBLICATION ASSESSMENT
+
+My assessment is that the broader classification substantially improves the
+paper's publication case relative to a new presentation of the triple theorem
+with finite corollaries. This assessment depends on the new proof and its
+priority surviving ordinary specialist scrutiny; it is not an acceptance forecast.
+
+Journal of Combinatorial Theory, Series B is an ambitious first target worth
+considering. Its stated scope emphasizes graph and hypergraph theory and major
+structural advances. Its policy also explicitly imposes higher standards on very
+long papers, so the 50-page length is a material editorial consideration. The
+introduction now makes the extension visible as Theorem B; the full earlier
+development is retained in accordance with the author's preference for its prose.
+https://shop.elsevier.com/journals/journal-of-combinatorial-theory-series-b/0095-8956
+
+European Journal of Combinatorics is a credible alternative given its stated
+interest in mathematical structures arising from combinatorial problems and
+full-length research papers on important topics.
+https://shop.elsevier.com/journals/european-journal-of-combinatorics/0195-6698
+
+The strongest accurate description is: "We extend the classification of
+obligatory triple systems to every finite uniformity by iterating a finite
+linear trace lemma over hypergraph bases, and obtain the corresponding canonical
+atoms and exact finite structural spectra."
