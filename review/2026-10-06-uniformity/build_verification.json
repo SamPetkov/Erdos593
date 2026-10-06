@@ -1,101 +1,70 @@
 {
-  "pages": 57,
+  "pages": 65,
   "compiler": "pdfTeX / TeX Live 2023",
-  "build_passes": 3,
+  "final_build_passes": 3,
   "shell_escape": false,
   "warnings": [],
   "unresolved_references_or_citations": false,
   "overfull_or_underfull_boxes": false,
-  "introduction_theorem_pages": {
-    "Theorem B": 2,
-    "Theorem C": 3
-  },
-  "section_pages": {
-    "Section 11": [
-      38,
-      45
-    ],
-    "Section 12": [
-      45,
-      52
-    ],
-    "Scope of formal verification": 52
-  },
   "new_labels": {
-    "exact-spectra-extension": {
-      "number": "12",
-      "page": 45
+    "density-extension": {
+      "number": "13",
+      "page": 52
     },
-    "exact-lift-subsection": {
-      "number": "12",
-      "page": 45
+    "density-expansion-identity": {
+      "number": "3",
+      "page": 53
     },
-    "exact-lift-cap": {
-      "number": "12.1",
-      "page": 45
+    "density-matching": {
+      "number": "13.1",
+      "page": 53
     },
-    "exact-successor-lift-order": {
-      "number": "2",
-      "page": 46
+    "density-transfer": {
+      "number": "13.2",
+      "page": 54
     },
-    "exact-linear-family-subsection": {
-      "number": "12",
-      "page": 46
+    "density-source-limits": {
+      "number": "13.3",
+      "page": 55
     },
-    "exact-linear-family-avoidance": {
-      "number": "12.2",
-      "page": 46
+    "density-obligatory-atom": {
+      "number": "13.4",
+      "page": 57
     },
-    "exact-calibration": {
-      "number": "12",
-      "page": 47
+    "density-nie-spiro": {
+      "number": "13.5",
+      "page": 57
     },
-    "exact-reservoir-step": {
-      "number": "12.3",
-      "page": 47
-    },
-    "exact-bounded-calibration": {
-      "number": "12.4",
-      "page": 49
-    },
-    "exact-all-cardinals": {
-      "number": "12.5",
-      "page": 49
-    },
-    "exact-spectrum-subsection": {
-      "number": "12",
-      "page": 50
-    },
-    "exact-avoidance-spectrum": {
-      "number": "12.7",
-      "page": 50
-    },
-    "exact-mixed-family-obstruction-section": {
-      "number": "12",
-      "page": 51
-    },
-    "exact-mixed-family-obstruction": {
-      "number": "12.8",
-      "page": 51
+    "density-forcing-separation": {
+      "number": "13.6",
+      "page": 58
     }
   },
   "visually_reviewed_pages": [
     1,
-    2,
-    3,
-    45,
-    46,
-    47,
-    48,
-    49,
-    50,
-    51,
-    52
+    4,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    65
   ],
-  "pdf_sha256": "a5f3c380bd69fe93516b510e9f77d58f33c6fcda667f152dca5f21b1faf32ee8",
-  "tex_sha256": "623492994372ba7a6f8ff845b23851e56004089044f60c00922f418195a9e87e",
-  "new_section_independent_internal_mathematical_readings": 3,
-  "new_section_integrating_assistant_review": true,
+  "final_minor_grammar_change_affected_only_page": 53,
+  "pdf_sha256": "d7f26f05625721f0535527aaf6ddf512591a0ae2dfec995a0e78f398bf691914",
+  "tex_sha256": "98e0e6dfca9ba059f3514dd0f15183e42790ab5a9ed0e087c70c550ae8cc6c07",
+  "independent_internal_transfer_readings": 2,
+  "integrating_assistant_mathematical_review": true,
+  "separate_primary_literature_audit": true,
   "external_peer_review_claimed": false,
-  "new_lean_validation_claimed": false
+  "new_lean_validation_claimed": false,
+  "external_rank_layer_proof_independently_certified": false,
+  "source_scope": "Conditional on the rank-layer limit in the pinned OpenAI preprint; the complete new transfer is proved in Section 13."
 }

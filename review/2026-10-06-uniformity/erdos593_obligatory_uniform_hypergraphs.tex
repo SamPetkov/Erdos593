@@ -64,6 +64,7 @@
 \newtheorem*{theoremA}{Theorem A}
 \newtheorem*{theoremB}{Theorem B}
 \newtheorem*{theoremC}{Theorem C}
+\newtheorem*{theoremD}{Theorem D}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -123,11 +124,16 @@ finite uniformities under a corresponding change of parameters.  Every
 non-obligatory finite system can also be avoided at each prescribed
 uncountable chromatic cardinal.  We prove simultaneous avoidance for
 finite linear families and exact chromatic calibration with bounded
-edge intersections, together with explicit bounds on host order.  The
+edge intersections, together with explicit bounds on host order.
+Conditional on a recent rank-layer estimate of OpenAI, we also
+construct a single obligatory atom in every uniformity that violates
+the Sidorenko density bound.  The same graph has no Sidorenko
+expansion, giving a counterexample to the expansion conjecture of
+Nie--Spiro under that input.  The
 triple-system classification and specified structural extensions are
 verified in Lean~4; profile realization, full lattice spectra, the new
-counting endpoints, the higher-uniformity extension and the chromatic
-spectra are not yet fully formalized.
+counting endpoints, the higher-uniformity extension, chromatic
+spectra and density transfer are not yet fully formalized.
 All arguments are in ZFC.
 \end{abstract}
 
@@ -251,6 +257,39 @@ omission forces countable chromatic number
 The new results in Sections~\ref{uniform-extension}
 and~\ref{exact-spectra-extension} have manuscript proofs; they are
 not additional Lean-verified endpoints.
+
+\subsection*{Obligatory atoms and finite density inequalities}
+The atom description leads to a further question: does obligatoriness
+impose the lower bound on copies predicted by a random host of the
+same density?  The next result separates these properties within a
+single cyclic atom.
+
+\begin{theoremD}
+Assume the rank-layer limit in OpenAI's
+\emph{A counterexample to Sidorenko's conjecture} \citep{openai161}.
+There is an explicit $2$-connected bipartite graph $J$ with $35$
+vertices and $66$ edges such that its private expansion $J^{[r]}$
+is not Sidorenko for any finite $r\ge2$, with $J^{[2]}=J$.
+For every $r\ge3$, the expansion is one canonical obligatory atom
+with $66$ edges, $66r-97$ vertices and cyclic rank $32$.
+\end{theoremD}
+
+Here a finite $r$-uniform pattern $F$ is Sidorenko if every finite
+host $G$ satisfies $t(F,G)\ge p_r(G)^{|E(F)|}$, where $t$ counts all
+homomorphisms and $p_r(G)=r!|E(G)|/|V(G)|^r$.
+Nie--Spiro conjectured that every bipartite graph admits a Sidorenko
+expansion in some uniformity \citep[Conjecture~5.1]{niespiro2025}.
+Theorem~D supplies a counterexample under the stated rank-layer input.
+
+The graph and its density deficit originate in \citet{openai161}.
+The new transfer uses more than that deficit: in the source's
+mean-one kernel family, every proper edge-subgraph of $J$ has density
+tending to one.  We prove this additional limit and use an average
+over matchings to realize the required graph marginals by symmetric
+$r$-kernels.  Section~\ref{density-extension} gives these proofs and
+a finite-density separation witnessed by $C_4^{[r]}$.
+The long finite-field estimate remains a cited preprint input;
+the transfer has not been formalized in Lean.
 
 \subsection*{Finite structure beyond the classification}
 Theorem~A answers an embedding question about infinite hosts.  The further
@@ -3342,6 +3381,496 @@ linearity.  This finite completion family is needed because choosing
 triples from a linear $r$-uniform host does not force the restored
 edges to have globally private added vertices.
 
+\section{Obligatory atoms and Sidorenko expansions}
+\label{density-extension}
+
+The canonical description also connects obligatoriness with a finite
+counting question.  A bipartite private expansion can be forced by
+uncountable chromatic number while having fewer copies than the random
+density benchmark in a finite host.  We establish this for a single
+canonical atom in every uniformity, using the specific graph and
+rank-layer construction of OpenAI \citep{openai161}.
+
+The conclusions about that graph in this section are conditional on
+the rank-layer limit in the pinned version of the preprint.  We give
+the transfer proofs, including an additional proper-subgraph limit
+extracted from its coordinate expansion.  The preprint's finite-field
+estimate is an external input.  The classification and chromatic
+spectra in the preceding sections do not use it.
+
+The distinction is also relevant to a published conjecture of
+Nie--Spiro \citep[Conjecture~5.1]{niespiro2025}, which asks whether
+every bipartite graph has a Sidorenko private expansion in some
+uniformity.  The same fixed graph below has no such expansion.
+The transfer requires constructing an actual symmetric hypergraph
+kernel; a graph density counterexample alone does not provide one.
+
+\subsection{Marginals and matching symmetrization}
+
+All probability spaces below are finite and all their atoms have
+positive mass.  For a symmetric nonnegative $r$-variable kernel $U$
+and a finite simple $r$-uniform hypergraph $F$, put
+\[
+ t(F,U)=\mathbb E\prod_{e\in E(F)}U((X_v)_{v\in e}),
+\]
+where the $X_v$ are independent samples.  Symmetry makes the ordering
+within an edge immaterial.  Write $p(U)=\mathbb E U$.
+For a finite simple $r$-uniform host $G$ of order $n>0$, use
+\[
+ t(F,G)=\frac{\operatorname{Hom}(F,G)}{n^{|V(F)|}},
+ \qquad p_r(G)=\frac{r!\,|E(G)|}{n^r}.
+\]
+Thus all edge-preserving maps are counted, including noninjective maps.
+We call $F$ \emph{Sidorenko} if
+$t(F,G)\ge p_r(G)^{|E(F)|}$ for every such host.  This is the
+ordinary hypergraph homomorphism-density convention of
+\citet{conlonleesidorenko2024} and \citet{niespiro2025}.
+For $n\ge r$, the normalization $p_r(G)$ differs from
+$|E(G)|/\binom nr$ by the
+factor $(n)_r/n^r$, which tends to one as $n$ tends to infinity.
+
+For a simple graph $J$, let $J^{[r]}$ be its private $r$-uniform
+expansion, with $r-2$ distinct new vertices on each graph edge.
+The convention at rank two is $J^{[2]}=J$.
+The two-variable marginal of $U$ is
+\[
+ M_U(x,y)=\mathbb E_{Z_3,\ldots,Z_r}U(x,y,Z_3,\ldots,Z_r).
+\]
+The private vertices occur in exactly one edge, so Fubini's theorem gives
+\begin{equation}\label{density-expansion-identity}
+ t(J^{[r]},U)=t(J,M_U),\qquad p(U)=\mathbb E M_U.
+\end{equation}
+An arbitrary graph kernel need not be such a marginal.  The next
+construction supplies the marginals needed here.
+
+\begin{lemma}[Matching symmetrization]\label{density-matching}
+Let $V$ be a finite symmetric nonnegative kernel with
+$\mathbb E_y V(x,y)=1$ for every $x$.  For an integer $r\ge2$, let
+$\mathcal M_r$ be the set of matchings of size $\lfloor r/2\rfloor$
+in the complete graph on $[r]$, and define
+\[
+ U_r(x_1,\ldots,x_r)=
+ \frac{1}{|\mathcal M_r|}
+ \sum_{M\in\mathcal M_r}\prod_{\{a,b\}\in M}V(x_a,x_b).
+\]
+Then $U_r$ is symmetric and nonnegative, has mean one, and
+\[
+ M_{U_r}=1+\lambda_r(V-1),\qquad
+ \lambda_r=\frac{2\lfloor r/2\rfloor}{r(r-1)}
+ =\begin{cases}(r-1)^{-1},&r\text{ even},\\ r^{-1},&r\text{ odd}.
+ \end{cases}
+\]
+\end{lemma}
+\begin{proof}
+Each matching product has mean one, because its factors have disjoint
+variable sets.  In its two-variable marginal, a matching containing
+$\{1,2\}$ contributes $V(x_1,x_2)$.  Every other matching contributes
+one: any partner of vertex $1$ or $2$ is integrated out using the
+constant row integral, and the remaining disjoint pairs have mean one.
+The proportion of matchings containing a given pair is their common
+number of edges divided by $\binom r2$, namely $\lambda_r$.
+Permutation invariance of the set of matchings proves symmetry.
+\end{proof}
+
+\begin{lemma}[Transfer from proper-subgraph limits]
+\label{density-transfer}
+Let $J$ be a finite graph with $m\ge1$ edges.
+Suppose there are finite symmetric nonnegative kernels $V_q$ with
+constant row integral one such that
+\[
+ t(J_A,V_q)\longrightarrow1\quad(A\subsetneq E(J)),\qquad
+ t(J,V_q)\longrightarrow a<1,
+\]
+where $J_A=(V(J),A)$.
+Then, for every integer $r\ge2$, there is a symmetric
+$[0,1]$-valued $r$-kernel $W$ with $0<p(W)<1$ and
+\[
+ t(J^{[r]},W)<p(W)^m.
+\]
+There is also a finite simple $r$-uniform host with the same strict
+inequality.
+\end{lemma}
+\begin{proof}
+For any fixed $0<\lambda\le1$, expansion over subsets of $E(J)$ gives
+\begin{align*}
+ t(J,1+\lambda(V_q-1))
+ &=\sum_{A\subseteq E(J)}
+       \lambda^{|A|}(1-\lambda)^{m-|A|}t(J_A,V_q)\\
+ &\longrightarrow 1+\lambda^m(a-1)<1.
+\end{align*}
+Apply Lemma~\ref{density-matching} with $\lambda=\lambda_r$.
+By \eqref{density-expansion-identity}, the resulting $U_r$ has mean
+one and $t(J^{[r]},U_r)<1$ for all sufficiently large $q$.
+Here $r$ is fixed before $q$ is chosen; the limiting deficit is
+$(1-a)\lambda_r^m$, so the required index may depend on $r$.
+Choose such a $q$, let $L=\max U_r$, and put $W=U_r/L$.
+The strict inequality implies that $U_r$ is nonconstant; its mean is
+one, so $L>1$.  Homogeneity gives the required inequality with
+$p(W)=1/L\in(0,1)$.
+
+For the finite-host assertion, sample $n$ independent labels from the
+finite probability space, and include each $r$-set independently,
+conditional on those labels, with probability given by $W$.
+Let $G_n$ be the resulting simple $r$-uniform hypergraph and write
+$F=J^{[r]}$, $v=|V(F)|$, $p=p(W)$, and $\tau=t(F,W)<p^m$.
+An injective vertex map from $F$ uses distinct target edges, whence
+\[
+ \mathbb E t(F,G_n)\le \tau+\binom v2/n,\qquad
+ \mathbb E p_r(G_n)=\frac{(n)_r}{n^r}p.
+ \]
+Consequently, for sufficiently large $n$,
+\[
+ \mathbb E t(F,G_n)<\bigl(\mathbb E p_r(G_n)\bigr)^m
+             \le \mathbb E\bigl[p_r(G_n)^m\bigr],
+\]
+the final inequality being Jensen's inequality.
+Some realization therefore has $t(F,G_n)<p_r(G_n)^m$.
+\end{proof}
+
+\subsection{The source pattern and its proper-subgraph limits}
+
+Let $\mathcal T$ be the following $22$ triples on
+$P=\{0,\ldots,12\}$, in the order used by \citep{openai161}:
+\[
+\begin{array}{llll}
+\{0,1,3\}&\{0,1,9\}&\{0,2,3\}&\{0,2,9\}\\
+\{1,3,10\}&\{1,7,10\}&\{1,7,12\}&\{1,9,12\}\\
+\{2,3,4\}&\{2,4,9\}&\{3,4,11\}&\{3,10,11\}\\
+\{4,8,9\}&\{4,8,11\}&\{5,6,7\}&\{5,6,11\}\\
+\{5,7,10\}&\{5,10,11\}&\{6,7,12\}&\{6,8,11\}\\
+\{6,8,12\}&\{8,9,12\}.&&
+\end{array}
+\]
+Let $J$ be the bipartite incidence graph between $P$ and $\mathcal T$.
+It has $35$ vertices and $66$ edges.  Every point pair occurring in a
+face occurs in exactly two faces, and the graph joining faces that
+share a pair is connected.  These are the first assertions of the finite-complex proposition
+in \citep[Section~2]{openai161}, and are also directly checkable
+from the displayed list.
+
+For a rectangular kernel $W:\mathcal X\times\mathcal Y\to[0,\infty)$
+and $B\subseteq E(J)$, the notation $t_{P,\mathcal T}(J_B,W)$
+means that the vertices in $P$ are sampled from $\mathcal X$ and
+those in $\mathcal T$ from $\mathcal Y$, independently.  Write
+$W^\top(y,x)=W(x,y)$ for the transpose.
+
+\begin{proposition}[The source supplies the transfer hypotheses]
+\label{density-source-limits}
+Assume the rank-layer limit stated in \citep[Section~3]{openai161}.
+Then the graph $J$ admits kernels $V_q$ satisfying all hypotheses
+of Lemma~\ref{density-transfer}.
+\end{proposition}
+\begin{proof}
+We keep the source's dimension, type distributions, activation laws,
+thinning probabilities, and positive dilution parameter fixed before
+letting the odd prime $q$ tend to infinity.
+Let $\mathcal K$ be its fixed finite coordinate set.  The matrix
+coordinates range over the additive group of symmetric $D$-by-$D$
+matrices over $\mathbb F_q$, for a fixed sufficiently large even $D$.
+The source uses nonnegative normalized indicators $K_\xi$ of the
+rank-$D/2$ layers with determinant sign $\xi$.  Its rectangular
+kernel has the form
+\[
+ W_q((a,x),(b,y))
+ =\mathbb E_{S,\xi\mid a,b}
+       \prod_{\gamma\in S}K_{\xi_\gamma}(x^\gamma-y^\gamma),
+\]
+where every matrix coordinate is uniform and independent, and
+$\mathbb E K_\xi=1$.  The laws depend on the types but not on the matrices.
+For each fixed $x^\gamma$, the difference $x^\gamma-Y^\gamma$ is
+uniform; the same is true of $X^\gamma-y^\gamma$ for fixed
+$y^\gamma$.  Integrating the product coordinate by coordinate gives
+one for every pair of types.  Averaging over the opposite type shows
+that $W_q$ has row and column integrals identically one, including
+after thinning and dilution.
+
+We next prove the proper-subgraph assertion, which is not a stated
+conclusion of the source's coordinate-expansion lemma.
+Write $\mathscr C=E(J)$ for its source incidences and $\mathcal P$
+for the $33$ point pairs occurring in the faces.
+At a source corner $(i,j)$ there are two pairs $e,f\subset j$
+containing $i$.
+For an activation law on a coordinate set $S$ and signs $\xi$, set
+\[
+ \phi_\alpha=\mathbf1_{\{\alpha\subseteq S\}}
+                   \prod_{\gamma\in\alpha}\xi_\gamma,\qquad
+ A(\alpha,\beta)=\mathbb E(\phi_\alpha\phi_\beta).
+\]
+Here $\alpha,\beta\subseteq\mathcal K$, and $\phi_\alpha$ is defined
+to be zero when $\alpha\not\subseteq S$.  The source's laws have
+$\mathbb E\phi_\alpha=0$ for every nonempty
+$\alpha$, so $A(\alpha,\varnothing)=A(\varnothing,\alpha)=0$ for
+nonempty $\alpha$.
+
+Fix $B\subsetneq\mathscr C$ and a type assignment.
+In the proof of the coordinate-expansion lemma, force the activation
+at every omitted source incidence in $\mathscr C\setminus B$ to be
+$S=\varnothing$, and retain the original laws at the other incidences.
+These modified laws may depend on the individual source incidence,
+even when two incidences have the same type pair; we therefore repeat
+the proof, rather than invoke its type-pair statement verbatim.
+After independently sampling the law at each incidence, each
+coordinate has some active incidence set to which the source's
+rank-layer lemma applies.  That lemma is uniform over every subset
+of $\mathscr C$ and every sign choice.  There are finitely many
+configurations, so its $o(1)$ error survives the finite products and
+averages exactly as in the original proof.
+The resulting limiting expression is
+\[
+ \sum_{\substack{\alpha_e\subseteq\mathcal K\\(e\in\mathcal P)}}
+       \prod_{(i,j)\in\mathscr C}
+       A_{i,j}(\alpha_{e(i,j)},\alpha_{f(i,j)}).
+\]
+At an omitted corner the factor is zero unless both adjacent pair
+labels are empty.  At every other corner an empty label and a
+nonempty label also give zero by the first-moment identity.
+Hence, in any nonzero term, emptiness propagates to all three pair
+labels of a face and then across every shared-pair adjacency.
+There is an omitted corner, and the face-neighbor graph is
+connected, so every pair label must be empty.
+The all-empty term equals one.
+After averaging over the finitely many type assignments, this proves
+\[
+ t_{P,\mathcal T}(J_B,W_q)\longrightarrow1.
+ \]
+The reversed-difference version of the rank-layer lemma gives the
+same conclusion for the transposed rectangular kernel.
+
+For the full incidence set, the source's signed coefficient and
+dilution construction instead gives
+\[
+ t_{P,\mathcal T}(J,W_q)\longrightarrow
+    1+\varepsilon^{13}t_0,\qquad
+ t_{P,\mathcal T}(J,W_q^\top)\longrightarrow
+    1+\varepsilon^{22}t_1,
+\]
+where $t_0<0$, and $\varepsilon>0$ is fixed small enough that the
+product of these two limits is some $a<1$.
+These are the dilution limits and strict product inequality
+proved in \citep[Section~3]{openai161}.
+
+On the product probability space of the two rectangular sides, put
+\[
+ V_q((x,y),(x',y'))=W_q(x,y')W_q(x',y).
+\]
+This is symmetric and nonnegative.  Its row integral is one by the
+exact row and column identities for $W_q$.
+For any $B\subseteq\mathscr C$, bipartiteness separates the variables
+in the two factors, giving
+\[
+ t(J_B,V_q)=
+ t_{P,\mathcal T}(J_B,W_q)\,
+ t_{P,\mathcal T}(J_B,W_q^\top).
+\]
+Thus every proper $B$ has limit one, and the full pattern has limit
+$a<1$, as required.
+\end{proof}
+
+\subsection{Obligatory atoms without a Sidorenko expansion}
+
+\begin{theorem}[An obligatory atom below the random-density bound]
+\label{density-obligatory-atom}
+Assume the rank-layer limit in \citep[Section~3]{openai161}.
+For every integer $r\ge3$, the hypergraph $A_r=J^{[r]}$ is an
+obligatory canonical cyclic atom with
+\[
+ |E(A_r)|=66,\qquad |V(A_r)|=66r-97,\qquad
+ \beta(A_r)=32.
+\]
+Here $\beta$ is the cycle rank of the connected Levi graph.
+Nevertheless, there is a finite simple $r$-uniform host $G$ with
+\[
+ t(A_r,G)<p_r(G)^{66}.
+\]
+Here obligatoriness concerns injective non-induced containment in
+every uncountably chromatic host, whereas $t$ counts all
+homomorphisms in a finite host.
+\end{theorem}
+\begin{proof}
+First $J$ is $2$-connected.
+After deleting a point-node, each pair of neighboring faces still
+shares at least the other point of its common pair.  Connectivity
+of the face-neighbor graph therefore connects all remaining face
+nodes, and every remaining point attaches to one of them.
+After deleting a face-node $j=\{a,b,c\}$, the other face on each of
+$\{a,b\}$, $\{a,c\}$ and $\{b,c\}$ provides a two-edge incidence
+path connecting that pair of points while avoiding $j$.
+Thus the three neighbors of $j$ remain in one component.
+Replacing every passage through $j$ by these paths shows that
+$J-j$ remains connected.
+Consequently no vertex of $J$ is a cut vertex.
+
+The graph is bipartite, so its private expansion is obligatory by
+Reiher's bipartite-expansion theorem \cite[Theorem 1.2]{reiher2024}.
+Since the core $J$ is $2$-connected,
+Corollary~\ref{uniform-canonical-atoms} identifies $A_r$ as one
+cyclic atom.  Equivalently, its cyclic incidence block is the
+subdivision of $J$, and all its other incidence edges go to the
+private degree-one vertices.
+The counts follow from the expansion:
+\[
+ |V(A_r)|=35+66(r-2),\qquad
+ \beta(A_r)=(r-1)66-|V(A_r)|+1=32.
+\]
+Finally apply Proposition~\ref{density-source-limits} and
+Lemma~\ref{density-transfer}.
+\end{proof}
+
+\begin{corollary}[Failure of the expansion conjecture]
+\label{density-nie-spiro}
+Under the rank-layer hypothesis of
+Theorem~\ref{density-obligatory-atom}, there is a bipartite graph
+$J$ such that $J^{[r]}$ is not Sidorenko for every integer $r\ge2$.
+Consequently Conjecture~5.1 of Nie--Spiro \cite{niespiro2025} is false.
+\end{corollary}
+\begin{proof}
+Use the same $35$-vertex graph $J$.
+For $r\ge3$, apply Theorem~\ref{density-obligatory-atom}.
+The case $r=2$ follows from Lemma~\ref{density-transfer}, or directly
+from the source counterexample, since $J^{[2]}=J$.
+The private expansion used by Nie--Spiro is exactly $J^{[r]}$ here.  Their Conjecture~5.1 asserts that every
+bipartite graph has a Sidorenko expansion at some rank $r\ge2$;
+this one graph has none.
+\end{proof}
+
+This corollary does not settle the general converse question posed
+in Nie--Spiro's Question~5.2.  The proof uses the additional
+proper-subgraph limits of this particular graph's witness family,
+not a transfer theorem for every non-Sidorenko graph.
+
+\subsection{Equality at the random benchmark does not force other densities}
+
+The density deficit has a further consequence.  Interpolation adapts
+the graph argument in \citep[Section~8]{openai161} to the actual
+hypergraph kernels constructed above.  We state the consequence as
+three explicit limits.
+
+\begin{corollary}[Two densities do not determine the four-cycle density]
+\label{density-forcing-separation}
+Under the rank-layer hypothesis of Theorem~\ref{density-obligatory-atom},
+for every $r\ge3$ there are $p\in(0,1)$ and finite simple
+$r$-uniform hosts $G_n$ of orders tending to infinity such that
+\[
+ p_r(G_n)\longrightarrow p,\qquad
+ t(A_r,G_n)\longrightarrow p^{66},
+\]
+but
+\[
+ t(C_4^{[r]},G_n)\longrightarrow q>p^4.
+\]
+Thus matching the edge and $A_r$ densities of a constant kernel
+does not determine even the density of the obligatory expansion
+$C_4^{[r]}$.
+\end{corollary}
+\begin{proof}
+Write $Q_U=M_U$ for the pair marginal in
+\eqref{density-expansion-identity}.
+Take the negative kernel $U_-$ of mean $p\in(0,1)$ from
+Lemma~\ref{density-transfer}, and let $Q_-=Q_{U_-}$.
+It has mean $p$ and is nonconstant, since otherwise
+$t(A_r,U_-)=t(J,Q_-)=p^{66}$.
+
+On the balanced sign space $\{-1,1\}$ choose
+\[
+ 0<\delta\le \frac{\min(p,1-p)}{\binom r2},
+ \qquad
+ U_+(z_1,\ldots,z_r)
+   =p+\delta\sum_{1\le a<b\le r}z_a z_b.
+\]
+This kernel is symmetric, takes values in $[0,1]$, and has mean $p$.
+Its pair marginal is
+$Q_+(a,b)=p+\delta ab$: every other summand contains an independently
+integrated sign to its first power.
+Expansion and sign averaging therefore give
+\[
+ t(A_r,U_+)=t(J,Q_+)
+ =\sum_{\substack{A\subseteq E(J)\\
+                    d_A(v)\text{ even for every }v}}
+             p^{66-|A|}\delta^{|A|}
+ >p^{66}.
+\]
+The empty set contributes $p^{66}$; all terms are nonnegative, and
+the edge set of a cycle contributes positively.  The graph $J$
+has a cycle because it has $66$ edges and only $35$ vertices.
+
+Lift $U_-$ and $U_+$ to the independent coordinates of the product
+of their finite probability spaces and put
+\[
+ U_s=(1-s)U_-+sU_+,\qquad 0\le s\le1.
+\]
+Every $U_s$ is symmetric, $[0,1]$-valued, and has mean $p$.
+The function $s\mapsto t(A_r,U_s)$ is a polynomial with endpoint
+values strictly below and above $p^{66}$.
+Thus some $s_*\in(0,1)$ gives equality.
+Its pair marginal is
+\[
+ Q_s((x,a),(y,b))=(1-s)Q_-(x,y)+s(p+\delta ab).
+\]
+The centered summands depend on independent coordinate pairs and
+both have mean zero.  Orthogonality gives
+\[
+ \|Q_s-p\|_2^2
+  =(1-s)^2\|Q_--p\|_2^2+s^2\delta^2>0
+ \qquad(0\le s\le1).
+\]
+In particular $Q=Q_{s_*}$ is nonconstant.
+
+For completeness, every finite symmetric nonnegative kernel $Q$
+of mean $p$ satisfies $t(C_4,Q)\ge p^4$, with equality only when
+$Q$ is constant.  Indeed, put
+$d(x)=\mathbb E_zQ(x,z)$ and $c(x,y)=\mathbb E_zQ(x,z)Q(y,z)$.
+Two applications of Cauchy--Schwarz give
+\[
+ t(C_4,Q)=\mathbb E_{x,y}c(x,y)^2
+   \ge\bigl(\mathbb E_z d(z)^2\bigr)^2\ge p^4.
+\]
+Equality forces $d(x)=p$ and $c(x,y)=p^2$ on every positive-mass
+atom and atom pair.  Diagonal pairs then give
+\[
+ \mathbb E_z(Q(x,z)-p)^2=c(x,x)-2p\,d(x)+p^2=0.
+\]
+Thus equality forces constancy.  Applied to the present $Q$, this
+shows
+\[
+ t(C_4^{[r]},U_{s_*})=t(C_4,Q)>p^4.
+\]
+
+It remains to pass to finite simple hosts with all three limits.
+Sample $n$ independent vertex labels and then, conditionally
+independently, include each $r$-set with probability $U_{s_*}$ of
+its labels.  For every fixed finite simple $r$-uniform $A$,
+injective maps give the kernel density, and the fraction of vertex
+maps having a collision is $O_A(n^{-1})$.  Consequently
+\[
+ \mathbb E t(A,G_n)=t(A,U_{s_*})+O_A(n^{-1}).
+\]
+The contributions from two vertex maps are independent whenever
+their images are disjoint.  Overlapping pairs form an
+$O_A(n^{-1})$ fraction, so
+$\operatorname{Var}(t(A,G_n))=O_A(n^{-1})$.
+Chebyshev's inequality with tolerance $n^{-1/4}$, followed by a
+union bound for the single edge, $A_r$, and $C_4^{[r]}$, gives
+positive probability that all three desired approximations hold
+for each sufficiently large $n$.
+Choose one such realization for each $n$.
+These deterministic hosts have the three asserted limits.
+\end{proof}
+
+
+The density $p$ in this corollary can depend on $r$.  Both test
+patterns are obligatory, yet the equality for one leaves a strict
+excess for the other.  This compares their finite homomorphism
+densities with the constant-kernel benchmark.
+
+The earlier linear non-Sidorenko examples of
+\citet[Theorem~3.1]{conlonleesidorenko2024} include systems of odd
+girth.  The present $A_r$ has only even Berge cycles, satisfies the
+bridge criterion, and is one canonical atom.  Its obstruction lies
+within the obligatory class.  The graph counterexample and its
+finite-field construction are due to \citet{openai161}; the
+additional conclusions here come from the proper-subgraph limits,
+matching transfer, and canonical identification.
+
 \section*{Scope of formal verification}
 
 The triple-system classification and specified finite structural extensions have verified
@@ -3358,6 +3887,16 @@ and finite-family results of Section~\ref{exact-spectra-extension},
 are proved in the manuscript and have not been formalized in Lean.
 They are outside the coverage of every existing
 export listed in Appendix~\ref{appendix-formalization}.
+
+The density transfer and its consequences in
+Section~\ref{density-extension} have not been formalized here.
+They use the rank-layer limit of \citet{openai161} as an explicit
+external hypothesis.  The source repository describes a Lean
+formalization of its finite graph counterexample; that description
+does not verify the additional proper-subgraph extraction or the
+hypergraph transfer in this manuscript.  No replay of that external
+formalization is claimed.
+
 
 Verification of the extended manuscript is not complete.  In particular,
 fixed-atom profile realization, the full lattice spectra, maximal-chain and
@@ -3481,7 +4020,9 @@ incidence-forest construction distinguished from fixed-atom realization in
 the verification section.  ChatGPT was also used to develop and check
 the higher-uniformity argument in Section~\ref{uniform-extension}
 and the exact chromatic and finite-family arguments in
-Section~\ref{exact-spectra-extension}.
+Section~\ref{exact-spectra-extension}.  ChatGPT was used to
+identify the external density construction and to develop and check
+the transfer arguments in Section~\ref{density-extension}.
 The author takes full responsibility for the
 arguments, citations, and final manuscript; newly incorporated material in
 this review draft remains subject to the author's review.
@@ -3528,6 +4069,22 @@ Paul Erd{\H{o}}s, Fred Galvin, and Andr{\'a}s Hajnal.
 \newblock In \emph{Infinite and Finite Sets (Keszthely, 1973)}, volume~10 of
   \emph{Colloquia Mathematica Societatis J{\'a}nos Bolyai}, pages 425--513.
   North-Holland, 1975.
+
+\bibitem[OpenAI(2026)]{openai161}
+OpenAI.
+\newblock A counterexample to {Sidorenko}'s conjecture.
+\newblock OpenAI Math Release preprint, 23 September 2026.
+\newblock Repository release of 6 October 2026, pinned to commit
+  \texttt{adc7f1241b42e322a6451854ab7e4b4c146bf78a}.
+\newblock \href{https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-counterexample-to-Sidorenkos-conjecture-September-23-2026/paper.pdf}{Versioned manuscript and source in \texttt{openai/math}}.
+
+\bibitem[Nie and Spiro(2025)]{niespiro2025}
+Jiaxi Nie and Sam Spiro.
+\newblock Sidorenko hypergraphs and random {Tur\'an} numbers.
+\newblock \emph{Combinatorial Theory}, 5\penalty0 (4):\penalty0
+  Article 10, 19 pp., 2025.
+\newblock \doi{10.5070/C65465676}.
+\newblock URL \url{https://escholarship.org/uc/item/0c25t471}.
 
 \bibitem[Whitney(1932)]{whitney1932}
 Hassler Whitney.
@@ -3717,6 +4274,13 @@ Jim Pitman.
 \newblock Probabilistic bounds on the coefficients of polynomials with only real zeros.
 \newblock \emph{J. Combin. Theory Ser. A}, 77\penalty0 (2):\penalty0 279--303, 1997.
 \newblock \doi{10.1006/jcta.1997.2747}.
+
+\bibitem[Conlon et~al.(2024)Conlon, Lee, and Sidorenko]{conlonleesidorenko2024}
+David Conlon, Joonkyung Lee, and Alexander Sidorenko.
+\newblock Extremal numbers and {Sidorenko}'s conjecture.
+\newblock \emph{International Mathematics Research Notices},
+  2024\penalty0 (13):\penalty0 10285--10297, 2024.
+\newblock \doi{10.1093/imrn/rnae071}.
 
 \bibitem[de~Moura and Ullrich(2021)]{demoura2021}
 Leonardo de~Moura and Sebastian Ullrich.

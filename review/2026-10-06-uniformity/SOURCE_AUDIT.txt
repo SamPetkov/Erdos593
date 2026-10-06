@@ -1,0 +1,338 @@
+SOURCE AND TRANSFER AUDIT
+Compiled 7 October 2026 for the author-review manuscript.
+
+The following are detailed internal research records. The current integrated
+draft resolves the notation qualifications mentioned in the proof record.
+The external rank-layer estimate remains a stated hypothesis. Suggestions
+for further comparisons in the literature record are not additional claims
+of the manuscript. No external peer review or formal verification is claimed.
+
+PART I. MATHEMATICAL TRANSFER
+
+# Independent audit of the Family 161 transfer to obligatory atoms
+
+## Verdict and source boundary
+
+The proposed transfer is mathematically sound, conditional on the rank-layer limit in the pinned Family 161 manuscript. This audit read the full local `family161/kernel.tex`, `complex.tex`, `introduction.tex`, and `consequences.tex`. It independently checked the deductions from that limit; it does not claim to have independently re-proved the source's finite-field transverse and singular-tail estimates.
+
+The outcome is substantive for E593: in every finite uniformity r >= 3 there is a SINGLE canonical cyclic obligatory atom with 66 edges which fails the random-density homomorphism lower bound. The following checks resolve the main possible transfer gaps.
+
+## 1. The source graph is 2-connected
+
+Let H be the point-face incidence graph of the source complex. Every pair lies in exactly two faces, the face-neighbour graph is connected, and every point belongs to a face. Thus H is connected.
+
+Delete a point-node i. Each pair shared by two adjacent faces still contains at least one other point, so every path in the face-neighbour graph lifts to a walk connecting its face-nodes in H-i. Every remaining point-node still attaches to a face. Hence H-i is connected.
+
+Delete a face-node j={a,b,c}. For each of its pairs ab, ac, bc, the other face on that pair gives a two-edge path between its endpoints avoiding j. All three neighbours of j therefore remain connected. Since H was connected, every component of H-j contains a neighbour of j, and H-j is connected.
+
+Consequently H is a simple 2-connected bipartite graph. As a supplementary finite check, parsing ONLY the first face table gives 22 distinct faces, 33 pairs each of multiplicity two, 35 incidence vertices, 66 incidence edges, and connectedness after every single-vertex deletion. The written proof above is independent of that computation.
+
+For its r-private expansion F_r=H^[r], the existing canonical-atom theorem therefore gives one cyclic atom, with
+
+    e(F_r)=66,  v(F_r)=35+66(r-2)=66r-97,
+    beta(F_r)=66-35+1=32.
+
+## 2. Exact regularity of the source kernels
+
+For each fixed x=(a,(x^k)), integrating W_q(x,y) in y gives one EXACTLY, not just asymptotically. Conditional on each y-type and each sampled activation, every difference x^k-y^k is uniform, the active coordinates are independent, and each rank-layer kernel has integral one. Averaging the activation and type laws preserves one. The analogous argument integrating x for fixed y also gives one. Thinning and the inactive dilution type preserve both identities.
+
+For the crossed kernel
+
+    V_q((x,y),(x',y'))=W_q(x,y') W_q(x',y),
+
+the integral in (x',y') is consequently the product of two ones. Thus V_q is symmetric, nonnegative, and exactly 1-regular on its finite probability space. In particular its mean is exactly one.
+
+## 3. Every proper spanning edge-subgraph has density tending to one
+
+Keep all finite construction parameters, including the dilution, fixed as q tends to infinity. Let A be any proper subset of the 66 source incidences, and write H_A for the spanning graph with this edge set. In the expansion of its rectangular kernel density, give every omitted source incidence the deterministic empty activation.
+
+At an omitted corner the local factor is one only when both adjacent pair labels are empty, and is zero otherwise. At all retained corners the zero-moment condition still forbids one empty and one nonempty adjacent label. Thus all three pair labels on the affected face are empty. Connected face adjacency propagates emptiness to every face and every pair. Only the all-empty label assignment survives, with contribution one.
+
+The source rank-layer lemma quantifies over every active incidence subset B, uniformly over the fixed finite family of signs. It therefore applies to this expansion. The finite sum/product error argument in the coordinate-expansion proof gives
+
+    t_(I,J)(H_A,W_q) -> 1,
+    t_(I,J)(H_A,W_q^top) -> 1.
+
+Isolated vertices of H_A cause no difficulty: their sampled types and matrices integrate to one. Repeated types also cause no difficulty: distinct source vertices still have independent matrix samples, and distinct source incidences have independent activation samples conditional on types.
+
+PROOF-WRITING CAVEAT: the displayed coordinate-expansion lemma is formulated with a law depending only on a type pair. Deleting one source incidence can make the law incidence-dependent when type pairs repeat. Repeat its finite expansion proof with the omitted incidences forced inactive; do not call this a literal substitution into its narrower statement. This costs only one paragraph and avoids a real scope mismatch.
+
+The crossed product factors in the two independent coordinate orientations, so t(H_A,V_q)->1 for every proper A. For the full H, the source construction gives t(H,V_q)->a<1. The limit is nonnegative, as each density is nonnegative.
+
+For every fixed 0<lambda<=1, expand the nonnegative mixture rather than centered products:
+
+    t(H,(1-lambda)+lambda V_q)
+      = sum_(A subset E(H)) lambda^|A| (1-lambda)^(66-|A|) t(H_A,V_q)
+      -> 1 + lambda^66 (a-1) < 1.
+
+Choose q only AFTER fixing lambda (and hence after fixing r below). Uniformity in unbounded r or a single q serving every r is neither required nor asserted.
+
+## 4. Maximum-matching symmetrization
+
+For any symmetric nonnegative finite 1-regular kernel V, average
+
+    R_r(z_1,...,z_r)=average_M product_(ab in M) V(z_a,z_b)
+
+over all maximum matchings of the complete graph on [r]. Permutations of [r] permute this family, so R_r is symmetric. Every matching product has mean one because its pairs have disjoint vertex variables, so R_r has mean one.
+
+Integrate out all but z_1,z_2. If 12 is a matching edge, the marginal is V(z_1,z_2). Otherwise each incident partner integrates away to one by exact 1-regularity, and every remaining pair integrates to one. The marginal is therefore
+
+    Q_r=(1-lambda_r)+lambda_r V,
+    lambda_r=1/(r-1) for even r, and lambda_r=1/r for odd r.
+
+These probabilities also follow from dividing floor(r/2) by binom(r,2). They are strictly positive for every fixed r>=3.
+
+Each of the r-2 private vertices on an expansion edge occurs on that edge alone. Fubini therefore gives the EXACT identity
+
+    t(H^[r],R_r)=t(H,Q_r).
+
+With V=V_q and sufficiently large q, this is less than one, whereas the mean of R_r is one. The kernel is finite and bounded; scaling by its maximum L produces U_r in [0,1], with mean p=1/L and
+
+    t(F_r,U_r)<p^66.
+
+Strictness forces L>1, so 0<p<1. No graph-kernel Sidorenko inequality is being applied to an arbitrary pair marginal without constructing a symmetric r-kernel that realizes it: the matching average explicitly supplies that realization.
+
+## 5. Transfer to finite simple r-uniform hosts
+
+Use the all-homomorphisms convention
+
+    t(F,G)=Hom(F,G)/N^v(F),
+    p_r(G)=r! e(G)/N^r=t(single r-edge,G).
+
+Sample N independent vertex labels from U_r's finite probability space and, conditional on them, sample each unordered r-set independently with its U_r probability. This produces a finite SIMPLE r-uniform host.
+
+Put v=66r-97, tau=t(F_r,U_r), and Delta=p^66-tau>0. Every globally injective map of F_r has homomorphism probability exactly tau. The proportion of noninjective maps is at most binom(v,2)/N, so
+
+    E t(F_r,G_N) <= tau + binom(v,2)/N.
+
+No independence for noninjective maps is assumed. The edge-density expectation is exactly
+
+    E p_r(G_N) = ((N)_r/N^r) p.
+
+Since (N)_r/N^r >= 1-binom(r,2)/N, Bernoulli's inequality and Jensen give
+
+    (E p_r(G_N))^66 >= p^66(1-66 binom(r,2)/N),
+    E[p_r(G_N)^66] >= (E p_r(G_N))^66.
+
+Thus any integer N>=v satisfying
+
+    N > [binom(v,2)+66 binom(r,2) p^66]/Delta
+
+has some realization with t(F_r,G_N)<p_r(G_N)^66. Such a realization has an edge. Ordinary density e(G_N)/binom(N,r) differs from p_r by the usual falling-factorial correction; do not silently identify the two at finite N.
+
+## 6. Optional explicit density-forcing separation
+
+This extra consequence is also sound, but an explicit formulation avoids ambiguity among hypergraph quasirandomness conventions.
+
+Take U_- above of mean p in (0,1), with symmetric pair marginal Q_-. This marginal is nonconstant, since t(H,Q_-)<p^66. On independent balanced signs define
+
+    U_+(a_1,...,a_r)=p+delta sum_(i<j) a_i a_j,
+    0<delta<=min(p,1-p)/binom(r,2).
+
+It is symmetric, [0,1]-valued, and of mean p. Its pair marginal is p+delta ab. Expanding t(H,p+delta ab) leaves precisely the even-degree edge subsets, all with nonnegative coefficients. H contains a cycle, so this density is strictly larger than p^66.
+
+On the product vertex space interpolate U_s=(1-s)U_-+sU_+. All kernels remain symmetric, [0,1]-valued, and of mean p. Their pair marginals are Q_s=(1-s)Q_-+s(p+delta ab). The two centered terms depend on independent coordinate pairs, so
+
+    ||Q_s-p||_2^2=(1-s)^2||Q_--p||_2^2+s^2 delta^2>0.
+
+Continuity supplies s* in (0,1) with t(F_r,U_s*)=p^66. The nonconstant symmetric pair marginal on a finite positive-atom space satisfies t(C4,Q_s*)>p^4 by the source's two-Cauchy--Schwarz equality argument. Hence
+
+    t(C4^[r],U_s*)>p^4.
+
+Sampling and choosing deterministic realizations gives finite simple r-hosts of increasing orders with
+
+    p_r(G_N)->p,
+    t(F_r,G_N)->p^66,
+    t(C4^[r],G_N)->q>p^4.
+
+For each fixed test the expectation error is O(1/N). Indicators for two maps with disjoint images are independent; overlapping pairs constitute O(1/N), giving variance O(1/N). Chebyshev and a union bound for the three tests justify simultaneous convergence. This is a concrete failure of these two densities to determine all random-hypergraph densities. It does not need a claim about a named hypergraph forcing conjecture.
+
+## Final assessment
+
+No gap was found in the core transfer. The incidence-dependent activation qualification and finite host density normalization should be made explicit. Imported Family 161 hypotheses and its unverified-here finite-field input must be attributed accurately. Family 176, by comparison, already formalizes its arbitrary-group-orbit hierarchy and supplies only a direct existing corollary; it should not be advertised as new E593 mathematics.
+
+PART II. PRIMARY LITERATURE COMPARISON
+
+SIDORENKO EXPANSION TRANSFER: PRIMARY-SOURCE AND SCOPE AUDIT
+Checked 6 October 2026. Internal research note; no manuscript edits.
+
+Main finding
+------------
+The proposed fixed bipartite graph J whose private expansions J^[r] fail
+Sidorenko for every finite r >= 2 directly contradicts Nie--Spiro's
+published Conjecture 5.1. This is stronger and more precise positioning
+than simply producing another non-Sidorenko linear hypergraph. The
+argument uses a strengthened property extracted from OpenAI family 161;
+it is not an application of a known theorem saying every graph
+counterexample lifts. No claim of first priority is established by this
+bounded search.
+
+1. Closest primary paper: exact published version checked
+--------------------------------------------------------
+Jiaxi Nie and Sam Spiro, "Sidorenko hypergraphs and random Turan numbers",
+Combinatorial Theory 5(4) (2025), article #10, 19 pages.
+DOI: https://doi.org/10.5070/C65465676
+Journal landing page: https://escholarship.org/uc/item/0c25t471
+Published PDF: https://escholarship.org/content/qt0c25t471/qt0c25t471.pdf
+ArXiv: https://arxiv.org/abs/2309.12873
+
+The final PDF says published 20 December 2025. Its archive cover and
+running heads both use 2025, although the author's homepage currently
+lists 2026. Cite the final PDF's bibliographic year. Final numbering:
+
+* Corollary 1.14, p.7: Sidorenko hypergraphs have Sidorenko expansions.
+* Theorem 1.13, p.6: quantitative upper bound on expansion Sidorenko
+  exponents. It supplies no converse preservation of failure.
+* Conjecture 5.1, p.15: every bipartite graph has a Sidorenko expansion
+  in some uniformity r >= 2.
+* Questions 5.2--5.3, p.16: converse issues, including whether all
+  expansions of every non-bipartite graph fail Sidorenko.
+
+The proposed result refutes Conjecture 5.1 but does not settle the
+general converse question. Old arXiv numbering is Corollary 1.12 and
+Theorem 1.11; do not mix it with the published numbering.
+
+Local copies: nie_spiro_2025_published.pdf and nie_spiro_published.txt
+in this directory. The PDF has one repository cover plus 19 article pages.
+
+2. Independent primary confirmation that no general lifting theorem was known
+----------------------------------------------------------------------------
+Jiaxi Nie and Sam Spiro, "Random Turan Problems for Hypergraph Expansions",
+arXiv:2408.03406v2, December 2024.
+https://arxiv.org/abs/2408.03406
+https://arxiv.org/pdf/2408.03406
+
+Definition 2, p.3, is exactly private edge expansion. The discussion
+immediately after Theorem 2.1, p.4, expressly states that it is unknown
+whether a non-Sidorenko hypergraph can possess a Sidorenko expansion,
+and cites the earlier Question 5.2. Consequently the proper-subgraph
+limit property and symmetric nonnegative extension in our proof cannot
+be omitted merely by citing general expansion folklore.
+
+3. Prior linear hypergraph counterexamples and the exact distinction
+------------------------------------------------------------------
+David Conlon, Joonkyung Lee and Alexander Sidorenko, "Extremal numbers
+and Sidorenko's conjecture", International Mathematics Research Notices
+2024(13), 10285--10297.
+https://doi.org/10.1093/imrn/rnae071
+https://arxiv.org/abs/2307.04588
+https://arxiv.org/pdf/2307.04588 (v2, 26 May 2024)
+
+Theorem 1.3 covers linear hypergraphs containing a loose triangle;
+Theorem 3.1 covers linear hypergraphs whose shortest loose cycle is odd.
+Their higher-skeleton generalization after Theorem 3.1 uses an even
+subgraph with an odd number of skeleton edges. Section 5 discusses
+local Sidorenko properties; their Section 3 witnesses fail locally.
+
+Our J^[r] has only even Berge cycles, because any Berge cycle avoids
+private vertices and gives a cycle of bipartite J. Hence neither
+odd-girth criterion applies. The higher-skeleton variant supplies no
+shortcut: a skeleton edge of size at least three uses a private vertex,
+which cannot have even degree if at most one skeleton edge is selected
+from each expanded edge. At skeleton size two, surviving edges lie in
+J, whose even subgraphs have even total edge count.
+
+Do not add a claimed new Turan lower-bound improvement from Theorem 1.1:
+for |E|=66 and |V|=66r-97 its deletion exponent is 97/65, whereas a
+star already gives Omega(n^(r-1)). The source itself makes a similar
+distinction for its grid examples.
+
+4. Related perturbation method, not an expansion theorem
+-------------------------------------------------------
+David Conlon, Joonkyung Lee and Leo Versteegen, "Around the positive
+graph conjecture", arXiv:2404.17467 (2024); author's page lists it as
+to appear in Combinatorics, Probability and Computing.
+https://arxiv.org/abs/2404.17467
+https://www.its.caltech.edu/~dconlon/pgc.pdf
+
+Proposition 3.5 isolates a nonpositive subgraph through vanishing
+proper-subgraph moments; Theorem 3.6 concerns connected 2-regular
+linear hypergraphs. This is a useful methodological antecedent for
+isolating a density defect. Neither statement realizes a graph kernel
+as a marginal of a symmetric nonnegative higher-order kernel. The
+private degree-one vertices also exclude our examples from Theorem 3.6.
+
+5. Explicit local comparison available at no additional conjectural cost
+-----------------------------------------------------------------------
+Laszlo Lovasz, "Subgraph densities in signed graphons and the local
+Simonovits--Sidorenko conjecture", Electronic Journal of Combinatorics
+18(1) (2011), P127, 21 pages.
+https://doi.org/10.37236/614
+https://www.combinatorics.org/ojs/index.php/eljc/article/download/v18i1p127/pdf/
+
+Theorem 5.1, p.19, gives t(J,W) >= 1 for bipartite J with m edges,
+mean(W)=1 and ||W-1||_infinity <= 1/(4m).
+
+Our deduction: the identity t(J^[r],U)=t(J,M_2 U), preservation of mean,
+and the contraction ||M_2 U-1||_infinity <= ||U-1||_infinity imply the
+same sufficient condition for J^[r], independently of r. For the source
+J, the explicit radius is 1/264. This gives a precise uniform-neighborhood
+property despite failure of the global inequality. Specify the norm:
+CLS Section 5 uses a cut-norm definition around 1/2, so the elementary
+L-infinity argument alone should not be described as settling their
+cut-norm formulation.
+
+6. Audit of the actual OpenAI source and attribution boundary
+------------------------------------------------------------
+OpenAI, "A counterexample to Sidorenko's conjecture", 23 September 2026,
+family 161, pinned commit adc7f1241b42e322a6451854ab7e4b4c146bf78a.
+https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-counterexample-to-Sidorenkos-conjecture-September-23-2026
+
+Checked local full introduction.tex, kernel.tex and consequences.tex,
+and searched the source collection for expansion/hypergraph/matching/
+proper-subgraph statements. Its main result is the 35-vertex, 66-edge
+bipartite graph counterexample; the recorded consequences are tensor
+amplification, injective-copy deficits and failure of graph forcing.
+No uniform-hypergraph expansion result, matching symmetrization, or
+reference to the Nie--Spiro expansion conjecture appears there.
+
+The exact stronger input is extracted, not a verbatim source theorem:
+
+* kernel.tex eq:kernel-activation and normalization give constant row
+  and column integrals by translation invariance, even after dilution.
+* lem:rank-layer is uniform over all subsets of source incidences.
+* lem:kernel-expansion and eq:kernel-disjoint-zero give propagation of
+  nonempty pair labels through the connected face-neighbor graph.
+  Applying that proof to source-incidence-specific laws, with empty
+  activation on a missing incidence, proves proper-edge-subgraph
+  densities tend to one.
+* eq:kernel-dilution and eq:kernel-product-gap fix the limiting deficit.
+* eq:kernel-crossed-product symmetrizes and factors oriented densities.
+
+The source's difficult finite-field lemma and its negative coefficient
+remain imported dependencies. The present argument should credit
+OpenAI for those, prove the stronger input explicitly, and identify
+the matching construction and expansion consequence as this note's
+deductions. GitHub availability is not independent verification or
+peer review of that imported result.
+
+7. Mathematical scope of the transfer and bounded novelty conclusion
+-------------------------------------------------------------------
+The matching average realizes the pair marginal 1+lambda_r(V-1), where
+lambda_r = 1/(r-1) for even r and 1/r for odd r. Proper-subgraph limits
+give the limiting deficit (1-a)lambda_r^66, strictly positive for every
+fixed finite r. The finite q may depend on r; no uniform q for all
+unbounded r is asserted. Nonnegative finite kernels may be normalized
+into [0,1], and ordinary sampling produces finite simple hosts.
+
+This does not mean arbitrary graph counterexamples lift, nor that
+non-Sidorenko behavior is monotone under taking supergraphs. It also
+does not show all proper subgraphs of J are Sidorenko: the equalities
+hold only along this particular witness sequence.
+
+The positive obligatory assertion for private bipartite expansions
+already follows from Reiher's earlier theorem. Our intrinsic structure
+theory additionally identifies the expansions as individual canonical
+atoms and records their bridge profile, but should not absorb credit
+for the earlier positive inclusion.
+
+Targeted current searches included Sidorenko expansions, matching
+symmetrization, pair marginals, proper-subgraph moments, and later
+mentions of Nie--Spiro Conjecture 5.1. The primary papers above contain
+no competing all-uniformity bipartite expansion counterexample. A
+2025 Sidorenko-exponent paper by Hyunwoo Lee (arXiv:2509.08680) concerns
+other positive/exponent classes and yielded no expansion transfer.
+This is a bounded-search nonfinding, not certified priority. The most
+defensible significance claim, once the proof and imported input are
+accepted, is the direct contradiction of the stated published
+Conjecture 5.1 together with obligatory canonical atom examples.
