@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-07",
+  "reviewer": "/root/density_binder_audit",
+  "kind": "Actual separate-agent read-only public delivery source review",
+  "independent_external": false,
+  "compiler_or_version_invoked": false,
+  "network_invoked_in_this_delivery_review": false,
+  "git_or_public_file_mutation": false,
+  "delivery_root": "C:/Users/petko/e593-frontmatter-story-public-20261004/review/2026-10-07-density-directions",
+  "original_root": "C:/Users/petko/OneDrive - Université Paris Sciences et Lettres/Documents/Erdos/research/e593-density-development-20261007",
+  "scope": "Six candidate Lean blobs, mathematical fragment, bibliography, comparison/source reviews, source-copy manifest, README, next-obligations, Armstrong attribution and actual execution-status record. This is not canonical source promotion or a full external mathematical audit.",
+  "literal_copy_check": {
+    "manifest": "source-copy-manifest.json",
+    "manifest_sha256": "e99481104cbdd31ef21eb393e44558cbab73185023c1e2bdf57a1160132e181e",
+    "actual_manifest_entries_checked": 15,
+    "all_actual_hashes_match": true,
+    "mechanism": "Read each actual delivered file and recompute SHA256 with Get-FileHash against every manifest property. Compare the six candidate files and prose/Bib source copies with their original source files.",
+    "resolved_copy_fault": "The preliminary packet added one final LF to the source copies. Root repaired that transport-only fault before final review. Final literal SHA checks pass; no semantic-equivalence substitute or dual mismatched-SHA waiver is used.",
+    "candidate_blobs": [
+      {"path": "candidates/Erdos593/DensityCandidates/LowRankBipartiteNormalForms.lean", "sha256": "8156d37769957caacd12c0e40bdd0e953deba8a621d0a52df0c00b88ef3fbbf4", "original": "d1/LowRankBipartiteNormalForms.lean", "byte_identical": true},
+      {"path": "candidates/Erdos593/DensityCandidates/ComplexCertificate.lean", "sha256": "467e063329942f5a0366051d9330613a6cfcc965cfed76c1e29de86f583da019", "original": "d2/ComplexCertificate.lean", "byte_identical": true},
+      {"path": "candidates/Erdos593/DensityCandidates/ExposureSparsityCandidate.lean", "sha256": "c1f4b7bfddaaa9e32d3b37d88819ba16bfca13126d59ee9f56b0c50d25593e0d", "original": "d2/ExposureSparsityCandidate.lean", "byte_identical": true},
+      {"path": "candidates/Erdos593/DensityCandidates/RatioCandidate.lean", "sha256": "3fee81cbde524ca98fc5b1b4e9ecbcc8248a4993d5e4954a2a71d4d6ab99a92b", "original": "d2/RatioCandidate.lean", "byte_identical": true},
+      {"path": "candidates/Erdos593/DensityCandidates/ComplexSparsityCandidate.lean", "sha256": "12d80da2abb7974e5fdb44fb99c218993af5565f5a2bc30e77ee9316452d2185", "original": "d2/ComplexSparsityCandidate.lean", "byte_identical": true},
+      {"path": "candidates/Erdos593/DensityCandidates/FinitePortContraction.lean", "sha256": "de46591242e468fcad188660888d2b21215eac12cd7b61fcdaf298ed844b0845", "original": "d3/FinitePortContraction.lean", "byte_identical": true}
+    ],
+    "other_checked_copy_hashes": {
+      "development-results.tex": "0cb6992730823eae92bf77ed31bd7445b0198f121ceb3c7d256ad2634a18f4b7",
+      "references.bib": "3550dba19cffa0dc68488439d70169e666bdd0465fd9980bdf8984b364c96c34",
+      "publication-comparison.json": "94cf1e14199bdd60a765ba7790c068a877f254d4d6cc0d2ff73909fe57934a7e",
+      "manuscript-source-review.json": "a3e832d53518aba4e362fe7311861c9e6f18c2ace4779815587bbe8b17969885",
+      "source-checkpoints/low-rank.json": "4417490d4c723c01ef766e14a7073c5c87e2e831c117f48b61b2fb8d689f4138",
+      "source-checkpoints/balancedness.json": "132e9ea7af6693855fecf99f2b60434466ce5e40caba19f9e8c9c7d673983ede",
+      "source-checkpoints/ports.json": "c1947bf94f3125dacf1d7d2ef14c06b6ae7ce46022085bae7186007e5d091177",
+      "source-checkpoints/binder-body-review.json": "3eaf92221700be17d881e22f15721812e83fdfa398e0cab8f38cf89d231fc7e4",
+      "next-obligations.json": "0337a64d8040d2dd6a2c265f6b0ecfcab5f0068056237df7a6937883e467d4db"
+    }
+  },
+  "source_statement_fidelity": {
+    "D1": "The prose is a single-atom analytical corollary, explicitly consuming the canonical expansion description and published both-parity theta density results. The four Lean declarations are only the actual finite low-rank structural/parity bridge. No theta presentation or desired inequality is inserted as a premise, and no all-uniformity/higher-density Lean completion is claimed.",
+    "D2": "The fragment matches the literal two exposure orders and fresh-point vectors. The selected-incidence candidates derive universal sparsity and proper-count strictness, rather than assume them. The actual r-expansion geometry and literal graph/hypergraph ratio endpoints remain listed as pending. The random-host positive-excess gain is explicitly conditional; threshold equality gives no gain, and a polynomial gain is only asserted under a fixed n^epsilon margin.",
+    "D3": "The statement explicitly requires the full original vertex partition as well as the edge partition, retains all ports, and fixes endpoint input ordering when symmetry is dropped. Normalized probability interpretation and algebraic signed-weight interpretation are distinguished. The exact density equality is not a Sidorenko closure or covariance-sign claim; canonical d/a/endpoint and isolated-vertex adapters remain pending.",
+    "full_binder_and_body_record": "source-checkpoints/binder-body-review.json matches the independently performed bounded audit at SHA3eaf9222. Generic carrier data are legitimate conditional inputs, not a disguised completed canonical source endpoint.",
+    "verdict": "PASS for the expressly scoped source-development packet, not proof-assistant acceptance or publication-readiness certification."
+  },
+  "citations": {
+    "actual_cited_keys": ["imliliu2024", "openai161", "niespiro2025"],
+    "actual_bib_keys": ["imliliu2024", "openai161", "niespiro2025"],
+    "missing_keys": [],
+    "uncited_keys": [],
+    "source_precision": "Im–Li–Liu is cited for both the even and odd theta scopes. The OpenAI finite-complex source is pinned to the actual release commit and exact section URL. Nie–Spiro uses the publisher DOI/journal metadata and retains the arXiv identifier for the formula actually checked by the source reviewer; an unverified publication theorem number is not added.",
+    "verification_limit": "Read the actual fragment/Bib and its recorded primary-source checks completely. Citation closure was independently recomputed here. This delivery reviewer did not fetch publishers or literature again under the read-only/no-network assignment.",
+    "bibliography_scope": "The three-entry bibliography is a supplementary fragment bibliography, not a replacement of the main manuscript's bibliography or citation count."
+  },
+  "actual_status_fidelity": {
+    "validation_record_sha256": "2852b34e8686dabccffc6960133790af2cabcbb71925fa842d804d23af6d5871",
+    "read_actual_originals": ["originals-r1/focused-report.json", "originals-r1/focused-report.log", "originals-r1/wrapper-66840.log", "dispatch-r2/fresh-queue.stdout", "dispatch-r2/fresh-queue.result.json"],
+    "first_attempt": "Actual runner traceback rejects a Windows absolute provenance path through native POSIX Path.is_absolute in validate_plan, before a Lean child. FAILED1:0/wrapper1 is preserved; no mathematical diagnostic or compiler success is inferred.",
+    "second_route": "The supplied fresh queue result has real command0 and another RUNNING node01 allocation. Current validation status honestly records queue-guard stop before r2 upload/dispatch, no second job ID and zero compiler runs; it does not claim success or reset the 1-of-2 consumed job budget.",
+    "review_status": "Codex self-review independent=false; actual helper checks supplement it; external full audit, full historical artifact lineage and canonical/standalone/final gates are pending.",
+    "verdict": "PASS at this frozen status snapshot. Any future r2 transition requires a successor actual status review; this report cannot certify later compiler output."
+  },
+  "publication_safe_allowlist": {
+    "current_regular_files": 20,
+    "paths": [
+      ".gitattributes",
+      "README.md",
+      "armstrong-workflow.md",
+      "development-results.tex",
+      "references.bib",
+      "publication-comparison.json",
+      "manuscript-source-review.json",
+      "next-obligations.json",
+      "source-copy-manifest.json",
+      "validation-status.json",
+      "source-checkpoints/low-rank.json",
+      "source-checkpoints/balancedness.json",
+      "source-checkpoints/ports.json",
+      "source-checkpoints/binder-body-review.json",
+      "candidates/Erdos593/DensityCandidates/LowRankBipartiteNormalForms.lean",
+      "candidates/Erdos593/DensityCandidates/ComplexCertificate.lean",
+      "candidates/Erdos593/DensityCandidates/ExposureSparsityCandidate.lean",
+      "candidates/Erdos593/DensityCandidates/RatioCandidate.lean",
+      "candidates/Erdos593/DensityCandidates/ComplexSparsityCandidate.lean",
+      "candidates/Erdos593/DensityCandidates/FinitePortContraction.lean"
+    ],
+    "credential_private_coordination_pattern_scan": "No API-key assignments, token/private-key patterns or .agent-coordination references found in this packet. Local source/helper path provenance is not a secret and is intentionally distinguished from exporting private coordination.",
+    "excluded": "No credential/configuration file, private coordination ledger, full private Pro transcript, remote SSH original logs, compiled artifact, accepted root import/audit, existing main manuscript/bibliography, attribution or workflow file is included in the inspected packet.",
+    "newline_preservation": "The packet-local .gitattributes is exactly '* -text', scoped to these byte-preserved review artifacts.",
+    "attribution": "Armstrong's pinned workflow and CC BY4.0 attribution are explicit; no upstream code is copied or installed, and complete upstream sealing-workflow compliance is not asserted.",
+    "claim_limit": "This is a directory-level publication-safety review. No Git commit, push or PR diff was created/inspected here; root must separately verify the exact outgoing changed-path allowlist and Git blob hashes.",
+    "planned_addition": "A byte-identical public copy of this delivery-source-review.json is safe as source-review evidence. It is not a new acceptance record."
+  },
+  "additional_current_hashes": {
+    "README.md": "87e8e04a4235818f8eeff1990eb00d74fecb23f0f09656bf931898e7f5874123",
+    "armstrong-workflow.md": "ce354f76f237083af41f719d3f0378b39d42a082aca8f34255691d0eaca7be08",
+    ".gitattributes": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+  },
+  "final_verdict": "PASS_FOR_NARROW_PUBLIC_REVIEW_PACKET_DELIVERY. Candidate source and analytical deduction scopes are faithful and publication-safe at the recorded hashes. No new theorem is marked Lean-accepted, no accepted project root is promoted, and no whole-paper/journal/novelty or full external audit completion is certified."
+}

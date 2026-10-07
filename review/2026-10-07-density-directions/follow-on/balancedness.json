@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-07",
+  "scope": "Author-confirmed bounded source-only follow-on with theorem and conjectural directions equally visible. No frozen Lean/source/manuscript/main/Git/compiler/version/remotejob/service/clock changes.",
+  "formal_status": "Analytical research fragment only; no new accepted Lean declarations. Prior focused budget remains spent; previous frozen candidates and accepted project stay unchanged.",
+  "theorems": [
+    {
+      "id": "T1",
+      "title": "Known private-expansion transform and exact maximizer correspondence",
+      "primary_credit": "Nie-Spiro, Random Turan Problems for Hypergraph Expansions, arXiv2408.03406v2, Lemma4.2 already gives the general uniform-hypergraph transform. Do not present the graph specialization as new mathematics.",
+      "url": "https://arxiv.org/html/2408.03406v2#S4",
+      "quantifiers": "For every finite simple graph G with at least two edges, every integer r>=2, and pairwise disjoint private vertex sets of size r-2 disjoint from V(G), its private expansion satisfies mr(G^[r])=m2(G)/(1+(r-2)m2(G)). No connectivity, bipartiteness, balance or Sidorenko assumption is required.",
+      "density_domain": "ms(F)=max over actual subgraphs Q subset F with v(Q)>s of (e(Q)-1)/(v(Q)-s). It is undefined when this finite domain is empty. Vertices not incident with selected edges are allowed, and numerator subtraction is not truncated.",
+      "maximizer_statement": "An eligible expanded subgraph attains positive mr iff it has at least two edges, has no vertex outside the union of its selected edges, and the corresponding actual core edges on their incident support attain m2(G). Thus the exact maximizing edge-subsets are independent of uniformity.",
+      "balance_statement": "Whole-graph density-balancedness and density-strict-balancedness are each equivalent before and after private expansion. The cited paper's conventional strictness definition assumes at least three edges; our explicit two-edge statement extends the same density comparison literally.",
+      "proof": [
+        "Two distinct simple graph edges have 3 or4 incident vertices, so m2(G)>0. Zero/one-edge selections cannot maximize. Adding a selected isolate strictly decreases a positive ratio.",
+        "Every f>=2 selected core-edge set with incident support v has expanded support cardinality v+(r-2)f and positive denominator v+(r-2)f-r.",
+        "Its expanded density is T_r(d2)=d2/(1+(r-2)d2). T_r is strictly increasing on positive values. Projection and expansion give both maximum inequalities and equality correspondence.",
+        "Whole-graph ratios transform by the same formula. A balanced graph with >=2edges cannot have isolates. Proper maximizers therefore correspond exactly, proving strictness equivalence."
+      ],
+      "degenerate_cases": [
+        "One edge on n>=3vertices: both maxima are0; literal strict comparison holds exactly when n=3. Extra isolates beyond one yield proper zero-density maximizers.",
+        "Edgeless n>r: literal m2=-1/(n-2), mr=-1/(n-r); the formula holds but these negative values are not positive random extremal parameters.",
+        "Edgeless 3<=n<=r: m2 exists but mr does not; the formula cannot be asserted. At n=r its denominator would be zero.",
+        "K2 and its private expansion: both eligible-subgraph domains are empty under this definition; no zero convention is invented.",
+        "A forest with >=2edges and an adjacent pair has m2=1 and mr=1/(r-1). A matching with >=2edges has m2=1/2 and mr=1/r.",
+        "A connected tree with >=3edges is balanced but not strict, because a proper two-edge path maximizes. Two-edge trees and two-edge matchings satisfy the literal strict condition."
+      ],
+      "status": "Complete analytical proof; known literature formula, useful actual-carrier/equality formalization target, not a new Lean result or novelty claim."
+    },
+    {
+      "id": "T2",
+      "title": "Spanning triangular exposure classes certify canonical balanced cores",
+      "quantifiers": "For N>=1,t>=2, an indexed triangular family on the same N+2actualpointlabels is partitioned into t disjoint ordered classes, each with exactly Nfaces. Each face has3distinct points and every later face has a point absent from all previous faces of its class. Face labels are distinct; repeated pointsets across different classes are permitted. A simple triangular-complex realization is a subcase, not assumed to exist for every N,t.",
+      "conclusions": {
+        "two_vertex_connected": true,
+        "edge_count": "3tN",
+        "vertex_count": "(t+1)N+2",
+        "cycle_rank": "(2t-1)N-1",
+        "strict_two_density": "m2=(3tN-1)/((t+1)N), equality only for the full actual incidence graph",
+        "private_expansion_density": "mr=(3tN-1)/((t+1)N+(r-2)(3tN-1)) for r>=2",
+        "canonical_atom_scope": "For r>=3, the bipartite2connectedcore shape is admitted as a single obligatory private-expansion atom by the higher-uniformity classification; its density inequality is NOT inferred."
+      },
+      "proof": [
+        "Exposure union lowerbound is N+2 and ambient size is N+2. Thus every class spans all points, and every face after the first introduces exactly one point and retains exactly two earlier points. This saturation is essential, not optional.",
+        "Deleting any point leaves each ordered class connected: initial face retains>=2points, later faces always retain an earlier attachment point. Deleting a face label leaves another full class connecting all points; every remaining face attaches to that backbone. Thus the full incidence graph is2vertexconnected.",
+        "For arbitrary selected point/face counts a,b, fully selected faces are <=t(a-2) when a>=2. Hence e<=min(3b,2b+t(a-2)); also e<=ab, a<=N+2,b<=tN. Non-induced selections only decrease e.",
+        "For a>=3 let x=a-2. If b<=tx, (3b-1)/(x+b) increases with b and is bounded by D_x=(3tx-1)/((t+1)x)<=D_N.",
+        "If b>=tx,t>=3, the other bound (2b+tx-1)/(x+b) is non-increasing in b, with derivative sign1-(t-2)x<=0; it is bounded by D_x. For t=2 it equals2-1/(x+b), bounded using x<=N,b<=2N.",
+        "Equality forces x=N,b=tN,e=3tN. The t=3,x=1 plateau first forces N=1 and then b=tN, so it gives no proper equality case.",
+        "Small point selections a0/1have negative/<=1density. For a2, density<=2-1/b<D_N, using b<=2N when t2 and D_N>=2 when t>=3. These discharge all eligible selected-subgraph cases."
+      ],
+      "tight_examples": [
+        "N=11,t=2 recovers35vertices66edgesrank32andm2=65/33.",
+        "N=1 is K3,t with indexed repeated triangles. This is a valid simple incidence graph, but NOT a distinct-triangle complex for t>=2.",
+        "N=2,t=2 can use all4triples on4points, partitioned into2two-face exposure classes; the incidence graph is the cube, with m2=11/6 and rank5.",
+        "Necessity diagnostic: on5points take2indexedclasses both ordered abc,ade. They are fresh and span all5points withN2, but are not saturated atN+2. Pointa is a cutvertex; wholegraph9vertices12edges hasdensity11/7, while the2abcfaces on3points have5vertices6edges anddensity5/3>11/7. Thus removing saturation can break both conclusions."
+      ],
+      "review": "Actual separate adversarial helper plus its strict-density helper reviewed26exactobligations, with0open in follow-on-generalization-audit.json. Source-only analytical PASS; no kernel or external audit.",
+      "novelty": "A derived certificate theorem useful for this paper's structural story. No priority claim; its relation to existing incidence/arboricity formulations has not been exhaustively surveyed. The expansion formula is explicitly known and must be attributed separately."
+    },
+    {
+      "id": "T3",
+      "title": "Unconditional random-host deletion benchmark",
+      "quantifiers": "For fixed N,t,r and a fixed incidence-core expansion F from T2, let alpha=1/mr=r-2+(t+1)N/(3tN-1), gamma=r-alpha=2-(t+1)N/(3tN-1). G^r_n,rho has independent r-edge inclusion probability rho.",
+      "statements": [
+        "If rho*n^alpha->0 and rho*n^r->infinity, a.a.s. ex(G^r_n,rho,F)=(1-o(1))*rho*binom(n,r).",
+        "For rho>=n^-alpha, independent thinning to rho'=n^-alpha/logn gives a.a.s. ex(G^r_n,rho,F)>=n^{gamma-o(1)}."
+      ],
+      "proof": "Expected F-copy count divided by expected host-edge count is O(n^{v(F)-r}rho^{e(F)-1})=O((rho*n^alpha)^{e(F)-1}). Markov plus binomial edge concentration permit deleting one edge per remaining copy at o(1)edge loss. Above the deletion scale, randomized thinning has near-full retained edge count n^gamma/logn with high joint probability, implying an existential F-free subgraph for a.a.s. original hosts.",
+      "scope": "No Sidorenko excess, kernel counterexample, positive gain or matching upper bound is assumed. This is a deletion/near-full-retention scale, NOT the first-appearance threshold. gamma is independent of uniformity by the known expansion transform.",
+      "status": "Elementary complete analytical benchmark, not a new probabilistic theorem or Lean acceptance."
+    }
+  ],
+  "quantitative_extraction_target": {
+    "id": "C1",
+    "title": "Source-backed quantitative regular-witness extraction and validation",
+    "exact_quantifiers": "For the fixed35vertex66edgecoreJ and Ar=J^[r], there exist c,C>0,r0 such that every integer r>=r0admits a finite uniformprobabilityspaceOmega_r of size<=r^C and a symmetric one-coordinate-regular kernelU_r:Omega_r^r->[0,1], meanp_r>=r^{-Cr}, with t(Ar,U_r)<=(1-c*r^-66)*p_r^66.",
+    "status": "Extraction/validation target, NOT advertised as a new open conjecture. Neither the currently audited transfer nor this source-only follow-on proves it as a complete synthesized theorem. No novelty or sharpness claim. Primary power savings, proper-B flatness and exact regularity have source-derived checks; polynomial size bounds are extractable. Complete synthesis/rational type-prior uniformization/external-input validation remain before claiming the full family.",
+    "why_substantive": "Would replace each-fixed-uniformity existence by an explicit uniformity-dependent witness and yield s(Ar)>=c'/(r^67logr), hence quantified sparse-random gain from the same canonical atom.",
+    "exact_missing_input": "For every sufficiently large oddprimeq, synthesize a symmetric nonnegative regular mean1pairkernelKq on uniformOmega_q with |Omega_q|,||Kq||infinity<=C0*q^B, every proper J-edge-subgraph moment withinC0*q^-etaof1, and fullJmoment<=1-c0, for fixedB,eta,c0>0. Proper-B activation propagation and exact row/column regularity have actual source-derived helper checks. Remaining work is the complete synthesis/rational type-prior uniformization/external-input validation, NOT an absence of source rates.",
+    "primary_quantitative_check": "The bounded pinned primary check found transverse local/product O_D(q^-1/2), tail power savings>=1/6 and residual>=1, hence fixed-D rank-layer O_D(q^-1/6) extractable despite final o(1) wording. Activation support<=7 gives Wsup<=C_D*q^(7*b(D/2)), crossedVsup<=C_D*q^(14*b(D/2)); fixed-prior alphabet is O(q^(132*b(D))). The inspected source uses oddprimes, not every primepower. These source-described/extractable estimates do not by themselves prove the full requested family or C1. Exact provenance/audit limits are in follow-on-quantitative-source-check.json.",
+    "complete_conditional_route": [
+      "Average products of Kq over maximum matchings of rcoordinates. Every product has mean1 and one-coordinate marginal1. A fixed coordinate pair is matched with probability lambda_r=1/(r-1) for evenr and1/r for oddr, so the pairprofile is M=1+lambda_r(Kq-1). Distinct private edge-ports give t(Ar,W)=t(J,M).",
+      "Choose an oddprimeq polynomially large in r so moment error<=c0*lambda_r^66/2. The exact positive edge-subset expansion gives t(J,M)<=1-c0*lambda_r^66/2.",
+      "The matching extension has maximum<=max(1,||Kq||infinity)^floor(r/2). Normalize to[0,1]. Its mean is at least r^{-Cr}, its alphabet remains polynomial, and the relative deficit is at least c*r^-66.",
+      "Because -log(1-delta)>=delta and -logp<=Crlogr, the kernel excess is at least c'/(r^67logr); standard finite-host approximation transfers lower bounds on the supremum s. This conversion is analytical/external, not formalized here."
+    ],
+    "simpler_alternative": "The nonnegative regular single-pair average W_r=(1/binom(r,2))*sum_{i<j}Kq(Xi,Xj) has pairmarginal1+mu_r(Kq-1) with mu_r=1/binom(r,2), and maximum<=||Kq||infinity. Under the same rate input, it gives relative deficit c*r^-132 while keeping mean>=r^-C. This witness-size/normalization versus density-loss tradeoff avoids assuming the stronger polynomial-mean r^-66 target.",
+    "definition_and_algebra_scope": "All t(F,U) values are expectations over independent uniform vertex samples and count noninjective maps. One-coordinate regularity integrates all but one coordinate to the mean. The moment expansion has positive coefficients lambda^|S|(1-lambda)^(66-|S|) summing to1; proper-subgraph error costs at most epsilon*(1-lambda^66), while the full term gains c0*lambda^66. Normalization by an upper bound B>1 yields p=1/B without changing the relative deficit. The s lower bound follows from -log(1-delta)>=delta and -logp<=Crlogr; the external finite-host conversion is still separate.",
+    "falsification_and_validation": [
+      "Complete the proper-edge-subgraph extraction using the actual fixed-D power savings; verify exact regularity and rational type-prior passage to a uniform finite space rather than declaring the input solved from rank-layer asymptotics alone.",
+      "Check actual field-alphabet size and rank-layer supremum normalization; matching products can make the mean r^{-Cr}, so do not assert p>=r^-C for that route.",
+      "If the complete quantitative family cannot be synthesized and validated, keep C1 as an extraction/validation target; do not invent constants, advertise it as a new open conjecture, or claim acceptance.",
+      "No broad search or new compiler/service attempt is authorized by this fragment."
+    ]
+  },
+  "conjectural_direction": {
+    "id": "C2",
+    "title": "Polynomial-mean witnesses without losing the matching-scale deficit",
+    "exact_quantifiers": "For the same fixed35vertex66edgecoreJ and Ar=J^[r], do there exist c,C>0,r0 such that EVERY integer r>=r0admits a uniformOmega_r with |Omega_r|<=r^C and a symmetric one-coordinate-regular U_r:Omega_r^r->[0,1], meanp_r>=r^-C, with t(Ar,U_r)<=(1-c*r^-66)*p_r^66?",
+    "status": "Unproved working conjectural question; no novelty, established-openness or sharpness certificate. The desired improvement is not assumed to exist.",
+    "why_substantive": "The matching route has relative gap r^-66 but mean r^-Cr; the single-pair route has polynomial mean but relative gap r^-132. This exact question asks whether the two advantages can be combined. If true it improves the excess lower bound to c'/(r^66logr).",
+    "proof_routes": [
+      "Sharper normalization/tail control in a regular pair-marginal lift, preserving exact regularity and the relative r^-66 gap",
+      "A different direct bounded regular witness for Ar, with a polynomial alphabet and polynomial mean; it need not reproduce the same pair marginal"
+    ],
+    "exact_falsification_standard": "One sufficient disproof: for EVERY fixedC>0, along an unbounded sequence ofr the supremum positive relative deficit (1-t(Ar,U)/p(U)^66)_+ over ALL uniform symmetric regular [0,1]kernels with |Omega|<=r^C andp>=r^-C is o(r^-66). Failure or exponential normalization of the particular matching lift does NOT refute this existence question.",
+    "scope": "Same fixed incidence atom and quantitative abundance story; no broad research programme, no assumed positive Sidorenko excess as an input to the balance theorem, and no new compiler/service campaign."
+  },
+  "primary_sources": [
+    {
+      "citekey": "niespiro_expansions2024",
+      "authors": "Jiaxi Nie and Sam Spiro",
+      "title": "Random Turan Problems for Hypergraph Expansions",
+      "arxiv": "2408.03406v2",
+      "url": "https://arxiv.org/html/2408.03406v2",
+      "used_scope": "Definition of r-density and strict balance; Lemma4.2 exact known transform; no new claim of its novelty"
+    },
+    {
+      "citekey": "niespiro2025",
+      "url": "https://arxiv.org/pdf/2309.12873",
+      "used_scope": "Correct msdefinition inSection1.2 and Sidorenko-excess/randomTurantheorem. Helper noticed proofCor1.8printedreciprocaltypo; do not copyit into manuscript."
+    },
+    {
+      "citekey": "openai161",
+      "url": "https://raw.githubusercontent.com/openai/math/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-counterexample-to-Sidorenkos-conjecture-September-23-2026/build/sections/complex.tex",
+      "used_scope": "Actual finite incidence certificate, not quantitative rank-layer estimates"
+    }
+  ],
+  "cost_and_next_checkpoint": "Source-only bounded mathematics. A later actual-carrier expansion Lean module can formalize T1's projection/support/maximizer equivalence, then generalize the finite exposure module to T2. The probabilistic deletion proof and quantitative external-family input are separate. No finished-manuscript/fullformalization/journal-readiness claim is warranted."
+}

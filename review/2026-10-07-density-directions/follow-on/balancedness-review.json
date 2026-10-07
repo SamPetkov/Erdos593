@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-07",
+  "review_kind": "Bounded adversarial analytical/source-only audit of the proof supplied in the parent task message",
+  "scope": "No compiler, Git operation, network request, service dispatch, manuscript edit or private-repository write",
+  "review_identity": {
+    "root_of_this_audit": "Codex d2_exposure_generalization_audit",
+    "independent_external_audit": false,
+    "actual_helper": "strict_density_edge_audit separately checked arbitrary-subgraph inequalities and all equality cases; analytical verdict PASS",
+    "kernel_validation": false
+  },
+  "audit_boundary": {
+    "parameters": "Integers N>=1 and t>=2; n=N+2",
+    "point_carrier": "A set P of exactly n distinct point labels",
+    "face_carrier": "t disjoint classes of indexed face nodes, each class containing exactly N nodes",
+    "certificate": "Each class is ordered. Every face is a three-element subset of P. For every face after the first, a designated point lies in that face and in no earlier face of that class. The first face has three distinct points. Different face labels may have equal point sets across different classes.",
+    "incidence_graph": "The finite simple bipartite graph on the disjoint union of P and all tN face labels, with an edge for each point membership in its face",
+    "subgraph_quantifier": "Every vertex and edge subgraph Q of the incidence graph with v(Q)>=3, including non-induced subgraphs and retained isolated vertices",
+    "density_convention": "d2(Q)=(e(Q)-1)/(v(Q)-2) with ordinary signed integer subtraction followed by real division; the eligible denominator is positive",
+    "conclusion": "J is connected and remains connected after deletion of any one point or face node, hence is 2-vertex-connected. Its counts are v=(t+1)N+2, e=3tN and beta=e-v+1=(2t-1)N-1. Its 2-density is d=(3tN-1)/((t+1)N), attained only by the whole graph. Consequently J is strictly 2-balanced.",
+    "accepted_primitives": [
+      "Finite-set cardinality and disjoint-carrier counting",
+      "The supplied earliest-retained-face/fresh-point argument for every nonempty selected subcollection",
+      "Connectivity preserved when new vertices attach to an already connected graph",
+      "Finite induction on the exposure prefix",
+      "Elementary rational inequalities, positive-denominator cross multiplication and equality conditions"
+    ],
+    "non_goals": [
+      "Novelty or priority of this elementary generalized certificate theorem",
+      "Sidorenko failure of any member of the family",
+      "Existence of a simple distinct-pointset family for every pair N,t",
+      "Random Turan results or external analytic transfer",
+      "Lean source or kernel acceptance"
+    ]
+  },
+  "obligation_graph": [
+    {"claim": "C0", "route": "R0 primary", "rule": "Combine counts, vertex-deletion connectivity and universal strict density comparison", "and": ["C1", "C2", "C3", "C4", "O1", "O2"]},
+    {"claim": "C1", "route": "R1 primary", "rule": "Freshness plus exact ambient saturation", "and": ["H0", "C5", "O3"]},
+    {"claim": "C2", "route": "R2 primary", "rule": "Induct on an exposure prefix on its exposed point carrier", "and": ["C1", "O4", "O5", "O6"]},
+    {"claim": "C3", "route": "R3 primary", "rule": "Separate point-deletion and face-deletion cases", "and": ["C1", "C2", "O7", "O8", "O9"]},
+    {"claim": "C4", "route": "R4 primary", "rule": "Partition by selected point count, then by selected face count", "and": ["H0", "C5", "O10", "O11", "C6", "O12", "O13"]},
+    {"claim": "C5", "route": "R5 primary", "rule": "Take the earliest retained face and the distinct later globally fresh points", "and": ["H0", "O14"]},
+    {"claim": "C6", "route": "R6 primary", "rule": "Monotonic rational comparisons for x=a-2>=1", "and": ["O10", "O11", "O15", "O16", "O17", "O18"]}
+  ],
+  "critical_findings": [
+    "No demonstrated failing obligation or counterexample was found in the supplied route.",
+    "Saturation is essential: N faces on exactly N+2 ambient point labels forces each full class to cover all points and each later face to add exactly one point. Merely possessing a freshness certificate on an arbitrarily larger ambient point set would not establish the stated connectivity.",
+    "The connectivity induction must run on the exposed prefix point carrier, not on all n ambient points before they have been exposed. Future ambient point labels would otherwise be isolated vertices. This is an explicit scope clarification of the supplied route, not an additional hypothesis.",
+    "The two old points of each new face need only belong to the previous union; they need not be contained together in one earlier face. The supplied connectivity route uses only the former fact. No stronger tight-hypergraph-tree premise is required.",
+    "The face-deletion route depends on t>=2 and on disjoint indexed classes. It uses a different complete class that still spans all point labels. Repeated point sets across distinct face labels do not invalidate this step.",
+    "For t=3 and x=1, the upper rational bound is constant in b. It is still strictly below the whole-graph density when N>1. If N=1, b>=3 and b<=tN force b=3, and equality requires all nine edges. There is no exceptional proper maximizer.",
+    "The cases a=0,1,2 must be checked separately. Eligibility v>=3 supplies b>=3,2,1 respectively and makes all used denominators positive.",
+    "Equality of selected counts forces equality of the actual finite vertex and incidence carriers. This includes proper edge selections on the whole vertex carrier and is not restricted to induced subgraphs.",
+    "For distinct pointset face families, existence imposes an additional combinatorial feasibility constraint. For example N=1,t>=2 is realizable as an indexed incidence graph K_(3,t), but not as a simple triangular hypergraph with distinct face point sets. The theorem is conditional on the supplied certificate and makes no universal realization claim."
+  ],
+  "dependency_table": [
+    {"id": "C0", "exact_claim": "The combined counts, 2-vertex-connectivity and strict 2-balancedness conclusions", "needed_by": ["root"], "route": "R0", "classification": "root", "support": "C1-C4 and O1-O2", "status": "discharged"},
+    {"id": "H0", "exact_claim": "N>=1, t>=2, the common point carrier has N+2 labels, and t disjoint N-face ordered triangular classes have the stated freshness certificates", "needed_by": ["C1", "C4", "C5"], "route": "hypothesis instantiation", "classification": "hypothesis", "support": "Exact supplied contract", "status": "discharged"},
+    {"id": "C1", "exact_claim": "Each class covers P; each prefix of k>=1 faces has k+2 point labels; each later face meets the earlier union in exactly two distinct points and adds exactly one new point", "needed_by": ["C0", "C2", "C3"], "route": "R1", "classification": "major claim", "support": "H0,C5,O3", "status": "discharged"},
+    {"id": "C2", "exact_claim": "Every exposure prefix is connected on its exposed point carrier and remains connected after deletion of any point in that carrier", "needed_by": ["C0", "C3"], "route": "R2", "classification": "major claim", "support": "C1 and prefix induction O4-O6", "status": "discharged"},
+    {"id": "C3", "exact_claim": "The full incidence graph is connected after deletion of any one point or face node", "needed_by": ["C0"], "route": "R3", "classification": "major claim", "support": "C1,C2,O7-O9", "status": "discharged"},
+    {"id": "C4", "exact_claim": "For every eligible Q, d2(Q)<=d, with equality only for Q=J", "needed_by": ["C0"], "route": "R4", "classification": "major claim", "support": "C5,O10-O13,C6", "status": "discharged"},
+    {"id": "C5", "exact_claim": "Any nonempty h-face subcollection from one class spans at least h+2 points", "needed_by": ["C1", "C4"], "route": "R5", "classification": "major claim", "support": "H0,O14", "status": "discharged"},
+    {"id": "C6", "exact_claim": "For 3<=a<=N+2, x=a-2 and 0<=b<=tN, the two supplied edge bounds imply (e-1)/(x+b)<=d, with equality only at x=N,b=tN,e=3tN", "needed_by": ["C4"], "route": "R6", "classification": "major claim", "support": "O10,O11,O15-O18", "status": "discharged"},
+    {"id": "O1", "exact_claim": "v(J)=(t+1)N+2 and e(J)=3tN", "needed_by": ["C0"], "route": "R0", "classification": "definition", "support": "Disjoint point/face carriers and exactly three incidences per face", "status": "discharged"},
+    {"id": "O2", "exact_claim": "v(J)>=5; connectedness gives beta=e-v+1=(2t-1)N-1, and the whole graph attains d", "needed_by": ["C0"], "route": "R0", "classification": "algebraic/logical step", "support": "H0,O1,C3 and positive denominator (t+1)N", "status": "discharged"},
+    {"id": "O3", "exact_claim": "The N+2 ambient upper bound and the N+2 exposure lower bound force saturation; every later increment is exactly one", "needed_by": ["C1"], "route": "R1", "classification": "algebraic/logical step", "support": "C5 applied to the full class, monotonic prefix union, and the sum of N-1 increments each at least one", "status": "discharged"},
+    {"id": "O4", "exact_claim": "The first exposure prefix is the three-leaf incidence star, connected and still connected after any point deletion", "needed_by": ["C2"], "route": "R2 base", "classification": "definition", "support": "A face has exactly three distinct point labels", "status": "discharged"},
+    {"id": "O5", "exact_claim": "When an old point is deleted, at least one of the two distinct old attachment points survives, so the new face and its new point attach to the connected prior graph", "needed_by": ["C2"], "route": "R2 induction", "classification": "algebraic/logical step", "support": "C1 and the induction hypothesis on the prefix carrier", "status": "discharged"},
+    {"id": "O6", "exact_claim": "When the new point is deleted, the new face attaches to both old points of the connected prior graph; without deletion all new vertices attach as well", "needed_by": ["C2"], "route": "R2 induction", "classification": "algebraic/logical step", "support": "C1 and prior prefix connectedness", "status": "discharged"},
+    {"id": "O7", "exact_claim": "After any point deletion, each full class remains connected on the common nonempty P-minus-point carrier; their union is connected", "needed_by": ["C3"], "route": "R3 point case", "classification": "proved earlier", "support": "C1,C2 and n-1>=2", "status": "discharged"},
+    {"id": "O8", "exact_claim": "After any face deletion, a complete different class spans and connects all P, and every remaining face node attaches to that base", "needed_by": ["C3"], "route": "R3 face case", "classification": "algebraic/logical step", "support": "t>=2, disjoint class labels, C1,C2 and three point neighbors for every remaining face", "status": "discharged"},
+    {"id": "O9", "exact_claim": "Point deletion and face deletion exhaust all vertices of the disjoint incidence carrier", "needed_by": ["C3"], "route": "R3 exhaustiveness", "classification": "definition", "support": "Bipartite carrier P plus indexed face labels", "status": "discharged"},
+    {"id": "O10", "exact_claim": "Every selected subgraph has a<=N+2, b<=tN, e<=3b and e<=ab", "needed_by": ["C4", "C6"], "route": "R4/R6", "classification": "definition", "support": "Selected finite carriers; each selected face has at most three incidences and at most a selected point neighbors", "status": "discharged"},
+    {"id": "O11", "exact_claim": "For a>=2, at most t(a-2) selected face nodes have all three selected neighbors, and e<=2b+t(a-2)", "needed_by": ["C4", "C6"], "route": "R4/R6", "classification": "proved earlier", "support": "C5 bounds complete faces per class; every other face contributes at most two selected incidences; deleting incidences preserves the inequality", "status": "discharged"},
+    {"id": "O12", "exact_claim": "For a=2,1,0 and a+b>=3, the density is strictly below d", "needed_by": ["C4"], "route": "R4 small cases", "classification": "algebraic/logical step", "support": "For a=2: density<=2-1/b, b>=1; if t=2 use b<=2N and 2-1/(2N)<2-1/(3N)=d, while t>=3 gives 2<=d. For a=1 use b>=2,e<=b and density<=1<d. For a=0 use b>=3,e=0 and negative density. Always d>=5/3.", "status": "discharged"},
+    {"id": "O13", "exact_claim": "Equality a=N+2,b=tN,e=3tN forces Q=J, including actual edges; every other eligible selection is strictly below d", "needed_by": ["C4"], "route": "R4 equality", "classification": "algebraic/logical step", "support": "Subset plus equal cardinality on each finite carrier; edge subset has the full 3tN incidence cardinality", "status": "discharged"},
+    {"id": "O14", "exact_claim": "The earliest retained face contributes three points; each subsequent retained face contributes a point absent from all earlier retained faces, and these additional points are distinct", "needed_by": ["C5"], "route": "R5", "classification": "algebraic/logical step", "support": "Triangular face and ordered freshness hypotheses", "status": "discharged"},
+    {"id": "O15", "exact_claim": "For x>=1 and b<=tx, (3b-1)/(x+b) is strictly increasing in b, so density<=D(x)=(3tx-1)/((t+1)x); D(x) is strictly increasing in positive x", "needed_by": ["C6"], "route": "R6 low-b case", "classification": "algebraic/logical step", "support": "Positive denominators; first monotonicity numerator 3x+1>0; D(x)=3t/(t+1)-1/((t+1)x)", "status": "discharged"},
+    {"id": "O16", "exact_claim": "For t>=3,x>=1,b>=tx, Q(b)=(2b+tx-1)/(x+b) is nonincreasing in b and Q(tx)=D(x)", "needed_by": ["C6"], "route": "R6 high-b,t>=3", "classification": "algebraic/logical step", "support": "Q(b)=2+((t-2)x-1)/(x+b) with numerator coefficient nonnegative", "status": "discharged"},
+    {"id": "O17", "exact_claim": "The only plateau of O16 is t=3,x=1, and it produces no proper graph equality", "needed_by": ["C6"], "route": "R6 plateau", "classification": "algebraic/logical step", "support": "D(x)<D(N) unless x=N. Plateau with x=N therefore has N=1; b>=3 and b<=3N force b=3, and equality then requires e=9.", "status": "discharged"},
+    {"id": "O18", "exact_claim": "For t=2,x>=1,b>=2x, density<=2-1/(x+b)<=2-1/(3N)=d, with equality only when x=N,b=2N,e=6N", "needed_by": ["C6"], "route": "R6 high-b,t=2", "classification": "algebraic/logical step", "support": "x<=N,b<=2N imply x+b<=3N; equality of the sum of these independent upper bounds forces both saturated", "status": "discharged"}
+  ],
+  "verdict": {
+    "label": "FOLLOWS",
+    "meaning": "Every obligation on the supplied analytical route is discharged for the exact indexed-family contract above. This is an analytical/source-only verdict, not Lean validation, external certification or novelty confirmation.",
+    "decisive_nodes": ["C1", "C2", "C3", "C4", "O13", "O17"],
+    "recommended_next_step": "If retaining this generalization, freeze an exact theorem declaration with N>=1,t>=2, actual disjoint point/face carriers and the exposure certificate. Reuse the source-only fresh-subcollection lemma but separately formalize saturation, deletion connectivity, general-t incidence bounds and all strict equality cases before any manuscript promotion."
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "recorded_date": "2026-10-07",
+  "scope": "Bounded read-only primary-source audit of the density of private hypergraph expansions. No compiler, service dispatch, Git action, manuscript edit or independent external certification.",
+  "question": "For a finite simple graph G and integer r >= 2, when is m_r(G^[r]) = m_2(G) / (1 + (r-2) m_2(G)) valid, and is the identity already explicit in primary literature?",
+  "verdict": "The general identity is already explicitly stated and proved by Nie and Spiro. Credit it as a known density-transfer lemma; do not claim it as new mathematics. The planned actual-carrier Lean transport is still useful verification work.",
+  "primary_sources": [
+    {
+      "authors": ["Jiaxi Nie", "Sam Spiro"],
+      "title": "Random Turan Problems for Hypergraph Expansions",
+      "arxiv_version": "2408.03406v2",
+      "url": "https://arxiv.org/html/2408.03406v2",
+      "pdf_url": "https://arxiv.org/pdf/2408.03406v2",
+      "locations": ["Introduction: r-density definition", "Definition 2: expansion", "Lemma 4.2, PDF pages 17-18", "Theorem 2.1: strict balancedness/random Turan setting"],
+      "checked_statement": "For an r0-uniform hypergraph F with r0 >= 2 and at least two edges, and integer r >= r0, 1/d_r(F^(r)) = r-r0 + 1/d_r0(F). Its density maximum is over subgraphs with at least two edges. Expansion adds distinct fresh private vertices per edge.",
+      "proof_checked": "A maximizing base subgraph expands to give one inequality. A maximizing expanded subgraph contracts to original vertices; private vertex counts give the reverse inequality.",
+      "formalization_caution": "The identity includes r=r0. The trailing printed strict upper bound d_r(F^(r)) < 1/(r-r0) should only be formalized over real numbers with r>r0.",
+      "quotation_words": 0
+    },
+    {
+      "authors": ["Jiaxi Nie", "Sam Spiro"],
+      "title": "Sidorenko Hypergraphs and Random Turan Numbers",
+      "arxiv_version": "2309.12873v2",
+      "url": "https://arxiv.org/html/2309.12873v2",
+      "pdf_url": "https://arxiv.org/pdf/2309.12873",
+      "locations": ["Section 1.2, PDF page 3: m_r definition", "Definition 2, PDF page 5: expansion", "Proof of Corollary 1.8, PDF page 9"],
+      "checked_statement": "Here m_r uses subgraphs with more than r vertices. Definition 2 adds r-k degree-one vertices per k-edge. With at least two edges this convention agrees with the positive density maximum used in 2408.03406.",
+      "source_typo_caution": "The opening line in the proof of Corollary 1.8 prints the reciprocal of the Section 1.2 balancedness formula. The later threshold examples use the Section 1.2 convention. Cite the definition rather than copying that line.",
+      "general_identity_located": false,
+      "quotation_words": 0
+    },
+    {
+      "authors": ["Jiaxi Nie", "Sam Spiro"],
+      "title": "Random Turan Problems for K_s,t Expansions",
+      "arxiv_version": "2412.09367v1",
+      "url": "https://arxiv.org/html/2412.09367v1",
+      "location": "Proof of Theorem 1.3",
+      "checked_special_case": "The proof explicitly computes d_r(K_s,t^(r)) = (st-1)/((r-2)st+s+t-r), and thus its reciprocal as r-2+(s+t-2)/(st-1).",
+      "quotation_words": 0
+    }
+  ],
+  "local_mathematical_contract": {
+    "objects": "Finite simple graph G. Each original edge gets r-2 fresh vertices, private to that edge and disjoint from original vertices. Subgraphs need not be induced. No connectedness, bipartiteness, Sidorenko or balancedness hypothesis is needed for the density identity.",
+    "safe_domain": "At least two distinct edges and integer r >= 2. All relevant positive-density denominators are strictly positive.",
+    "selected_edge_formula": "For a selected original edge set with e>=2 and u incident original vertices, the support expansion has e edges and u+(r-2)e vertices. Therefore (e-1)/(u+(r-2)e-r) = x/(1+(r-2)x), where x=(e-1)/(u-2)>0.",
+    "maximum_argument": "The transform x -> x/(1+(r-2)x) is strictly increasing on x>0. Extra isolated vertices lower a positive density, so maximizing over all arbitrary subgraphs reduces to selected edge supports. Finite maxima then transform exactly.",
+    "fixed_edge_count_caution": "The number of selected edges must be preserved by the actual private-port carrier transport. Replacing an arbitrary selection by an induced graph can add edges; a formalization based on exact selected edge supports avoids this mismatch.",
+    "isolate_caution": "Original isolates and unused private vertices can be omitted by subgraphs and do not change the positive maximum. They do change whole-graph ratios. A graph with positive density and an original isolate cannot be strictly balanced under the arbitrary-subgraph definition.",
+    "strict_balancedness_follow_on": "For a base graph with at least three edges, strict balancedness is preserved by private expansion: strict monotonicity handles proper edge selections and extra vertices make the denominator larger. This is an elementary consequence to be proved with the chosen exact carrier conventions, not credited as a new research theorem without further novelty review."
+  },
+  "edge_cases_and_conventions": [
+    {
+      "case": "r=2",
+      "result": "No new ports; the formula is the identity m_2(G)=m_2(G). Do not divide by r-2 for a strict upper bound."
+    },
+    {
+      "case": "Exactly one edge, no isolates",
+      "result": "The >=2-edge density domain is empty. The >r-vertex domain in 2309.12873 is also empty. The primary identity does not assign a value here."
+    },
+    {
+      "case": "Exactly one edge with at least one isolate",
+      "result": "The >r-vertex convention gives zero. The >=2-edge convention remains undefined. A separately declared zero extension would make the displayed transformation valid, but it is not part of Lemma 4.2."
+    },
+    {
+      "case": "Edgeless graph",
+      "result": "Do not silently extend the positive-density theorem. Under the >2-vertex convention a graph on n>=3 vertices has negative maximum -1/(n-2); after expansion there are no ports and the >r domain can be empty. For n>r the rational transform does yield -1/(n-r), but at n=r its denominator is zero and for n<r the target domain is empty. These are separate cases, not a uniform extension."
+    },
+    {
+      "case": "Empty graph or fewer than three original vertices",
+      "result": "Density domains may be empty. Any totalized Lean definition needs an explicit default and separate theorem."
+    },
+    {
+      "case": "Alternative single-edge convention",
+      "result": "Some applications explicitly assign graph K2 density 1/2 and r-edge density 1/r. Those assignments fit the same rational expression, but they must not be attributed to the checked definitions without a separate cited convention."
+    }
+  ],
+  "novelty_and_delivery": {
+    "formula_novelty": "Already explicit: Nie-Spiro Lemma 4.2. This bounded search does not establish the earliest appearance.",
+    "specific_35_vertex_66_edge_application": "The certified sparsity/equality argument for this exact graph may be a useful new application. With m_2=65/33 the known transform gives m_r=65/(65r-97), and reciprocal r-97/65. Its value is its link to the specific counterexample, not novelty of the general transform.",
+    "random_turan_status": "The density identity and graph sparsity certificate do not establish non-Sidorenko behavior or an external rank-layer estimate. The nontrivial random Turan consequence remains conditional on its separately stated analytic input.",
+    "lean_status": "No compilation or kernel acceptance performed by this source audit.",
+    "review_identity": "Parent-directed bounded source review, with one actual helper independently checking 2309.12873. Not a full external mathematical audit."
+  }
+}
