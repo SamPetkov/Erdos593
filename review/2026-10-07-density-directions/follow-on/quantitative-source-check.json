@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-07",
+  "scope": "One bounded pinned primary-source check, now frozen. No exhaustive external proof audit, compiler, service, Git or manuscript action.",
+  "source_commit": "adc7f1241b42e322a6451854ab7e4b4c146bf78a",
+  "source_repository": "https://github.com/openai/math",
+  "source_prefix": "https://raw.githubusercontent.com/openai/math/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-counterexample-to-Sidorenkos-conjecture-September-23-2026/build/sections/",
+  "selected_sources_checked": [
+    "kernel.tex: lem:rank-layer; lem:kernel-expansion; eq:kernel-zero-moments; activation, priors and dilution; prop:negative-kernel",
+    "transverse.tex: lem:local-transverse; eq:transverse-subset-moments; eq:transverse-signed-mass; prop:transverse-limit",
+    "tail.tex: prop:singular-tail and final rank-layer proof, especially the minimum-exponent savings",
+    "orbits.tex: matrix chart cardinality, eq:orbits-normalizers, chart comparison",
+    "consequences.tex: tensor/finite-host consequences, checked only to separate their scope from C1"
+  ],
+  "source_statement_summary": "The printed rank-layer lemma is uniform o(1) for fixed sufficiently large even D, odd primes q, all incidence subsets and sign choices. Its transverse proof gives O_D(q^-1/2). The tail proof records minimum saving 1/6 and stronger residual savings. The source constructs a fixed symmetric counterexample on a finite probability space; it does not state the complete polynomial-size, uniform-space, proper-edge-flat family C1.",
+  "outcome": "Do not say the source lacks a polynomial rate. A uniform fixed-D O_D(q^-1/6) rank-layer rate is extractable from its displayed bounds. The complete quantitative family needs source-mapped synthesis and validation, not a new broad search. C1 remains unaccepted, and its novelty/open-problem status is not established.",
+  "extracted_mathematical_steps": [
+    {
+      "id": "Q1",
+      "claim": "At one fixed even D meeting all source thresholds, rank-layer errors are uniformly O_D(q^-1/6).",
+      "status": "Extraction checked against displayed exponent savings; not the printed final theorem wording. Constants depend on fixed D and the fixed complex."
+    },
+    {
+      "id": "Q2",
+      "claim": "For every proper B subset of the 66 source incidence edges, t(J_B,W_q)=1+O_D(q^-1/6), also for the transpose.",
+      "proof_contract": "In a parity term an absent corner forces both adjacent pair labels empty. At a present corner a mixed empty/nonempty pair vanishes by zero moments. Thus each face is all-empty or all-nonempty. A missing corner and the connected face-neighbor graph force all labels empty. Type repetitions do not correlate independent source samples.",
+      "status": "Actual helper source-derived logical check passed. This is an extracted extension of the full-J coordinate expansion, not an explicitly printed proper-subgraph theorem."
+    },
+    {
+      "id": "Q3",
+      "claim": "W_q has exact row and column integral one, and the crossed symmetric kernel V_q((x,y),(x',y'))=W_q(x,y')W_q(x',y) has exact one-coordinate regularity and mean one.",
+      "proof_contract": "For a fixed matrix-coordinate vector, integration over the opposite uniform matrix coordinates makes each normalized difference layer average one. Independent coordinates preserve this for every activation choice and every type pair. Type averaging and the crossed product preserve the identities.",
+      "status": "Source-derived extraction checked, not an explicitly printed marginal-regularity theorem."
+    },
+    {
+      "id": "Q4",
+      "claim": "With b(s)=s(s+1)/2 and fixed D, the activation supports of size at most seven give ||W_q||_infinity <= C_D q^{7b(D/2)} and ||V_q||_infinity <= C_D q^{14b(D/2)} for large odd primes.",
+      "proof_contract": "Each signed rank-layer maximum is O_D(q^{b(D/2)}); inactive activation contributes one. Multiply at most seven factors, average, and then form the crossed product.",
+      "status": "Elementary bound extracted from the actual construction; not a supplied numerical effective constant."
+    },
+    {
+      "id": "Q5",
+      "claim": "Exact uniform finite atom spaces can be obtained by fixed rational type priors, with cardinality at most C_D q^{132b(D)}.",
+      "proof_contract": "The source uses real priors, so its probability space is not already asserted uniform. Choose rational priors and dilution probability sufficiently close to the fixed choices to preserve the negative limiting coefficient; finite coefficient dependence is continuous. Matrix coordinates stay uniform. Replicate type atoms according to a common fixed denominator. No rationality of the real-valued kernel weights is required. There are 66 coordinates on each of the two crossed factors.",
+      "status": "A separate rationalization/uniformization lemma is still required in a complete written proof; this bounded audit checked the route, not effective denominators or full finite-host output."
+    }
+  ],
+  "full_family_boundary": {
+    "printed_in_primary_source": false,
+    "source_backed_candidate": "For a fixed sufficiently large even D and all sufficiently large odd primes q, extract a symmetric regular nonnegative mean-one uniform-space kernel with polynomial alphabet and supremum, all proper-J moments within C q^-1/6 of one, and full-J moment at most 1-c0 for a fixed c0>0.",
+    "not_independently_established_here": "The external rank-layer counting proof was not exhaustively re-audited or kernel-validated. The complete family and C1 were not compiled or accepted. The selected-source check narrows the extraction obligations; it does not certify the whole external proof.",
+    "source_domain_correction": "The pinned source treats odd primes, not every prime power. Odd primes suffice for a polynomial-in-uniformity choice of q; do not strengthen the input to all prime powers without proof.",
+    "constants_correction": "D is fixed before q. Its sufficient threshold includes an existential bound involving M_* and C_*, as well as D>1641; 1642 alone is not claimed to suffice for the whole proof. No complete explicit numerical D, q threshold, rational denominator or final witness size was extracted.",
+    "recommended_C1_wording": "Replace 'missing polynomial rate' by 'source-backed quantitative extraction and uniformization target'. Keep C1 unproved/unaccepted until the synthesis, external-input validation, matching extension and finite-host transfer are separately checked. Do not advertise it as a genuinely new open conjecture based on the source's qualitative headline wording."
+  },
+  "review": {
+    "source_reading": "Main source audit plus an actual helper reading transverse.tex and tail.tex completely and checking proper-edge propagation and marginal regularity.",
+    "external_full_audit": false,
+    "lean_or_service_acceptance": false,
+    "changes": "Only this owned JSON record was added; earlier frozen theorem candidates, manuscript and repository states were untouched."
+  },
+  "quotation_words": 0
+}

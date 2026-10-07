@@ -1,0 +1,83 @@
+% Editorial research benchmark, not a replacement manuscript or proof certificate.
+% Primary-source scope and claim-control comparison are recorded in the sibling JSON.
+
+\subsection{What would make the extended paper substantive?}
+
+There is no defensible promise that this paper will exceed the ``least
+valuable'' member of OpenAI's mathematical release.  Mathematical value is
+not a single ordered quantity, and the release contains results at different
+stages of verification.  Its own README warns that some unformalized outputs
+may have issues.  A useful benchmark is instead an exact additional theorem,
+a sharp boundary or obstruction, a reusable method, and a faithful account
+of the proof and its dependencies.
+
+The comparison should also start from the correct chronology.  Li's preprint,
+first submitted on 23 June 2026, already states the triple-system
+classification and exact uncountable avoidance spectrum.  Our current
+draft acknowledges this priority and the independent development of its
+proof.  The added mathematical case must therefore rest on genuinely
+additional structural or density results, not on presenting the same
+classification as a first solution.
+
+Three primary-source benchmarks illustrate distinct contribution shapes.
+The Sidorenko manuscript specifies a $35$-vertex, $66$-edge bipartite
+counterexample and a finite simple witnessing host.  Its documented Lean
+endpoint excludes the separate forcing consequence.  The van der Waerden
+manuscript states one absolute threshold for
+$W_r(k)>k^{10^{-5}k\lfloor\log_2r\rfloor}$ for every $r\ge2$;
+the explicit uniform quantifiers are part of the claim.  The threshold
+decomposition manuscript obtains bounded fixed pieces from a major
+companion input, but expressly does not require their separate embeddings
+to agree on shared vertices.  These are source-described contributions,
+not independent correctness verdicts or a ranking of the collection.
+
+For our paper, the strongest potential additions are not the elementary
+finite-sum contraction or the private-expansion density transformation
+already proved by Nie--Spiro.  Subject to full proof and prior-art audits,
+the current draft's universal marginal-realization theorem, sharp
+uniformity and girth-dependent estimates, higher-uniformity structural
+classification, and exact fixed-atom assembly geometry are stronger
+candidates for the main contribution.  A conditional consequence of the
+external rank-layer construction must retain that condition, even when
+the resulting all-uniformity conclusion is useful.
+
+The three follow-on directions fit this argument as boundaries and tests.
+Low-rank recognition identifies a positive single-atom regime without
+settling the next rank or general assembly closure.  Incidence
+balancedness supplies an explicit certificate rather than a new general
+density-transformation formula.  Full port profiles expose the information
+needed to combine atoms; the contraction identity alone supplies neither
+an inequality nor a positive correlation sign.  A proved, checkable
+compatibility criterion or a genuine obstruction would add more than
+several further formal restatements of the identity.
+
+The conjectural directions should receive equally visible treatment, as
+the author requested.  Each needs exact quantifiers, a relation to existing
+results, boundary cases, evidence, and a concrete route to falsification.
+They remain conjectures: equal exposition cannot replace a proof of the
+principal theorem.  The new Lean candidates also remain uncompiled after
+the two recorded precompiler runner failures.  A source-reviewed argument,
+a formal statement and a successfully audited Lean export are different
+deliverables.
+
+The coherent story is the distinction between forcing and density.
+Uncountable chromatic number selects allowable canonical atoms; finite
+density depends on their cyclic content and on compatible attachment
+profiles.  Exact assembly geometry then describes what can vary while
+the atoms remain fixed.  One complete new theorem along this chain can
+support a substantive research paper.  The present checkpoint does not
+yet certify that result, whole-paper formalization, novelty, or a journal
+outcome.
+
+\paragraph{Primary-source pointers.}
+\begin{itemize}
+\item OpenAI catalogue and verification caveat:
+\url{https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/README.md}.
+\item Li, version~2:
+\url{https://arxiv.org/abs/2606.24882v2}.
+\item Nie--Spiro's private-expansion density transformation, Lemma~4.2:
+\url{https://arxiv.org/html/2408.03406v2}.
+\item Selected manuscripts and exact Lean scopes: the pinned
+\texttt{openai/math} catalogue, families~160, 161 and~175; individual
+source paths and inspected theorem locations are in the sibling JSON.
+\end{itemize}

@@ -1,0 +1,303 @@
+% Separate research fragment, 7 October 2026. No frozen source, accepted root,
+% open manuscript or compiler state is changed by this fragment.
+% Analytical proofs are distinguished from Lean acceptance and conjectures.
+
+\subsection{Expansion preserves the densest core selections}
+
+For a finite $s$-uniform hypergraph $F$ with $v(F)>s$, write
+\[
+ m_s(F)=\max_{Q\subseteq F,\ v(Q)>s}
+           \frac{e(Q)-1}{v(Q)-s}.
+\]
+Vertices not incident with a selected edge are permitted in $Q$.
+Here balancedness means that the whole eligible graph attains this maximum;
+strictness additionally excludes every proper eligible maximizer. The usual
+definition in the cited expansion paper is restricted to at least three
+edges; our explicit two-edge and one-edge discussion uses this literal
+density-comparison extension, not a change to that paper's convention.
+For a graph $G$, its private $r$-expansion replaces every edge $uv$ by
+$\{u,v\}\cup P_{uv}$, where the sets $P_{uv}$ have size $r-2$, are pairwise
+disjoint, and avoid the original vertices. Original isolated vertices are retained.
+
+\begin{proposition}[The known expansion transform, with equality cases]
+Let $G$ be a finite simple graph with at least two edges, and let $r\ge2$.
+Then
+\[
+ m_r(G^{[r]})
+   =\frac{m_2(G)}{1+(r-2)m_2(G)},\qquad
+ \frac1{m_r(G^{[r]})}=r-2+\frac1{m_2(G)}.
+\]
+The graph is $2$-balanced if and only if its expansion is $r$-balanced,
+and the corresponding strict-balancedness conditions are equivalent.
+More precisely, an eligible selected expanded subgraph attains $m_r$
+if and only if it has at least two edges, contains no vertex outside their
+union, and its selected core edges with their incident vertices attain $m_2$.
+\end{proposition}
+
+The transform itself is already Nie--Spiro's Lemma~4.2, which is stated
+more generally for expansions of uniform hypergraphs
+\citep{niespiro_expansions2024}. We use it as an attributed structural
+bridge, not as a new result.
+
+\begin{proof}
+Two distinct graph edges have three or four incident vertices, so $m_2(G)>0$.
+A maximizer therefore has at least two edges and no isolated selected vertex:
+zero- and one-edge selections have nonpositive density, while deleting an
+isolated selected vertex strictly increases positive density.
+For a set $S$ of $f\ge2$ core edges, let $v$ be the number of its incident
+vertices. Its expanded edge union has exactly $v+(r-2)f$ vertices. Hence
+\[
+ \frac{f-1}{v+(r-2)f-r}
+   =T_r\left(\frac{f-1}{v-2}\right),\qquad
+ T_r(x)=\frac{x}{1+(r-2)x}.
+\]
+All denominators are positive, and $T_r$ is strictly increasing for $x>0$.
+Every expanded edge selection projects to one core edge selection, and extra
+selected vertices strictly lower its positive density. Taking maxima gives
+the identity and the stated correspondence of equality cases.
+
+The whole-graph ratio transforms by the same formula, proving balancedness
+equivalence. A balanced graph with at least two edges cannot have isolated
+vertices. Thus a proper expanded maximizer corresponds to a proper core
+maximizer, and conversely a proper core maximizer expands to a proper one.
+This proves strictness equivalence, including the two-edge cases.
+\end{proof}
+
+The domain restrictions matter. A single edge with at least one isolated
+vertex has $m_2=m_r=0$; it is strictly balanced exactly when there is one
+isolated vertex. An edgeless graph on $n>r$ vertices has the literal values
+$m_2=-1/(n-2)$ and $m_r=-1/(n-r)$, so the algebraic identity also holds there;
+these negative values are not used as positive random extremal parameters.
+If the eligible-subgraph domain is empty, its maximum is undefined here.
+In particular $K_2$ and its expansion have no eligible subgraph, and an
+edgeless graph with $3\le n\le r$ has a defined $m_2$ but no defined $m_r$.
+No arbitrary zero convention is inserted into the theorem.
+
+For an edge-containing forest with at least two edges, $m_2=1$ if it has
+two adjacent edges, and $m_2=1/2$ if it is a matching. The corresponding
+expanded values are $1/(r-1)$ and $1/r$. A connected tree with at least
+three edges is balanced but not strictly balanced, because a proper
+two-edge path is already a maximizer.
+
+\subsection{A family certified by spanning triangular exposure orders}
+
+Let $N\ge1$ and $t\ge2$. Consider $tN$ distinct face labels, partitioned
+into $t$ ordered classes of $N$ labels each, and a common set of $N+2$
+point labels. Every face contains exactly three distinct points. In every
+class, each face after the first has a distinguished point absent from all
+earlier faces. Repeated point-triples in different face classes are allowed;
+the ordinary simple triangular-complex case is a special case. Face labels
+remain distinct vertices in the bipartite incidence graph $J$.
+
+\begin{proposition}[Spanning exposure certificate]
+Under these hypotheses, $J$ is $2$-vertex-connected and strictly $2$-balanced.
+Its exact parameters are
+\[
+ e(J)=3tN,\quad v(J)=(t+1)N+2,\quad
+ m_2(J)=\frac{3tN-1}{(t+1)N},\quad
+ \beta(J)=(2t-1)N-1.
+\]
+Consequently its private $r$-expansion is strictly $r$-balanced with
+\[
+ m_r(J^{[r]})=
+ \frac{3tN-1}{(t+1)N+(r-2)(3tN-1)}.
+\]
+For $r\ge3$, this gives a bipartite $2$-connected core admissible as a
+single obligatory atom under the higher-uniformity classification.
+The certificate says nothing by itself about Sidorenko's inequality.
+\end{proposition}
+
+\begin{proof}
+The first face of a class uses three points, and its other $N-1$ faces
+each introduce a fresh point. Since the entire ambient point set has size
+$N+2$, each class spans all points and every later face introduces exactly
+one point while meeting the earlier union in exactly two points.
+After deleting any point, this ordered incidence construction stays connected:
+the first face retains at least two points, and every later face retains an
+old point through which it attaches. After deleting any face label, another
+complete class connects all point labels; every remaining face attaches to
+those points. Thus deleting any vertex leaves a connected graph.
+
+Consider any selected incidence subgraph with $a$ point nodes, $b$ face
+nodes and $e$ edges. If $a\ge2$, each class contributes at most $a-2$
+complete faces: the earliest of any $h\ge1$ retained faces supplies three
+points and every later retained face supplies its fresh point, so their
+union has at least $h+2$ points. Hence
+\[
+ e\le\min\{3b,\ 2b+t(a-2)\}.
+\]
+Also $e\le ab$, $a\le N+2$ and $b\le tN$. Selections with $a=0$ have
+negative density, those with $a=1$ have density at most one, and those
+with $a=2$ have density at most $2-1/b$. All are strictly below the
+whole-graph value $D_N=(3tN-1)/((t+1)N)$ whenever their denominator is positive.
+For $t=2$, use $b\le2N$; for $t\ge3$, use $D_N\ge2$.
+
+It remains to consider $a\ge3$. Put $x=a-2$, so $1\le x\le N$, and
+$D_x=(3tx-1)/((t+1)x)$. If $b\le tx$, then
+\[
+ \frac{e-1}{x+b}\le\frac{3b-1}{x+b}\le D_x\le D_N,
+\]
+because the middle fraction is strictly increasing in $b$ and $D_x$
+is strictly increasing in $x$. If $b\ge tx$ and $t\ge3$, then
+$(2b+tx-1)/(x+b)$ is non-increasing in $b$: its derivative has sign
+$1-(t-2)x\le0$. The same upper bound $D_x\le D_N$ follows.
+If $t=2$, the remaining expression is $2-1/(x+b)$; the bounds
+$x\le N$ and $b\le2N$ give $2-1/(x+b)\le2-1/(3N)=D_N$.
+
+Equality in either route forces $x=N$ and $b=tN$; it also forces
+$e=3tN$. This is the full incidence graph. The apparent plateau
+$t=3,x=1$ creates no extra equality case: equality with $D_N$ first
+forces $N=1$, after which $b\ge t$ and $b\le tN$ force $b=t$.
+Every proper eligible subgraph is therefore strict. The exact counts
+and connected cycle rank follow, and the expansion claim uses the
+preceding transform.
+\end{proof}
+
+For $t=2,N=11$, the parameters are $35$ vertices, $66$ edges and rank $32$,
+recovering the incidence example already under study. The case $N=1$
+is $K_{3,t}$ when repeated point-triples are allowed. For a simple
+triangular complex, $N=2,t=2$ is realized by the four triples on four
+points and gives the cube graph, with $m_2=11/6$ and cycle rank five.
+Neither example is offered as a new Sidorenko theorem.
+
+The spanning-size hypothesis is sharp for this route. On five points,
+take two classes both ordered as $abc,ade$. They have the same freshness
+property with $N=2$, and both span all five points, but the common point
+$a$ is a cut vertex. The whole incidence graph has density $11/7$,
+whereas the two copies of $abc$ on their three points have density $5/3$.
+Thus a freshness certificate alone, without the exact $N+2$ saturation,
+does not imply balancedness or the required connectivity.
+
+\subsection{The unconditional random-host benchmark}
+
+Let $F$ be a fixed strictly balanced private expansion from the preceding
+certificate, and put $\alpha=1/m_r(F)$ and $\gamma=r-\alpha$. Then
+\[
+ \alpha=r-2+\frac{(t+1)N}{3tN-1},\qquad
+ \gamma=2-\frac{(t+1)N}{3tN-1}.
+\]
+Thus the deletion-scale exponent $\gamma$ is independent of uniformity.
+This is a random Tur\'an deletion scale, not the first-appearance threshold.
+It does not require positive Sidorenko excess.
+
+If $\rho n^\alpha\to0$ and $\rho n^r\to\infty$, then asymptotically
+almost surely
+\[
+ \operatorname{ex}(G^{(r)}_{n,\rho},F)
+       =(1-o(1))\,\rho\binom nr.
+\]
+Indeed, the expected number of copies divided by the expected edge count
+is $O((\rho n^\alpha)^{e(F)-1})=o(1)$. Markov's inequality and edge-count
+concentration show that removing one edge from every remaining copy loses
+only an $o(1)$ fraction of the host edges. If $\rho\ge n^{-\alpha}$,
+independent thinning to probability $n^{-\alpha}/\log n$ gives instead
+\[
+ \operatorname{ex}(G^{(r)}_{n,\rho},F)\ge n^{\gamma-o(1)}
+ \quad\text{asymptotically almost surely}.
+\]
+These elementary benchmark bounds must not be confused with a polynomial
+gain from non-Sidorenko excess or with a matching upper bound.
+
+\subsection{Quantitative extraction and an equally visible conjectural direction}
+
+\paragraph{Source-backed extraction and validation target.}
+Let $J$ be the fixed $35$-vertex, $66$-edge incidence core, and let
+$A_r=J^{[r]}$. There exist constants $c,C>0$ and $r_0$ such that, for every
+integer $r\ge r_0$, there is a finite uniform probability space $\Omega_r$
+with $|\Omega_r|\le r^C$ and a symmetric, one-coordinate-regular kernel
+$U_r:\Omega_r^r\to[0,1]$ of mean $p_r\ge r^{-Cr}$ satisfying
+\[
+t(A_r,U_r)\le(1-c r^{-66})p_r^{66}.
+\]
+Here $t(F,U)$ is the expectation of the product of $U$ over the edges of
+$F$, with independent uniform samples at all vertices, including all
+noninjective assignments. One-coordinate regularity means that integrating
+all but any one coordinate gives the same constant $p_r$.
+This is a quantitative target, not a statement established by the currently
+audited rank-layer transfer, and its originality has not been certified.
+In particular, it is not advertised as a newly identified open conjecture:
+the source contains the power savings needed for a quantitative extraction.
+It would imply $s(A_r)\ge c'/(r^{67}\log r)$ after the usual kernel-to-finite-host
+approximation, and hence a quantified random-host gain.
+
+The exact unverified extraction is a polynomial-rate proper-subgraph-flat
+family: symmetric regular nonnegative pair kernels $K_q$ of mean one with
+$|\Omega_q|,\|K_q\|_\infty\le C_0q^B$, every proper edge-subgraph moment
+within $C_0q^{-\eta}$ of one, and the full $J$-moment at most $1-c_0$,
+for constants $B,\eta,c_0>0$ and every sufficiently large odd prime $q$.
+The primary source does contain power savings: its transverse estimates are
+$O_D(q^{-1/2})$, and the tail estimates support a fixed-dimension
+$O_D(q^{-1/6})$ rank-layer extraction, although its final statement uses
+$o(1)$. Bounds polynomial in $q$ for the alphabet and kernel supremum are
+likewise extractable for fixed $D$~\citep{openai161}. Proper-edge flatness
+and exact row/column regularity have separate source-derived checks.
+Thus a lack of source rates is not the obstruction. What remains unproved
+as a complete synthesis in this bounded audit is the full uniform-space
+family above, including rational type-prior replication and validation of
+the external rank-layer input. Those tasks are not discharged by reading
+an asymptotic headline alone.
+
+Given that input, choose an odd prime $q$ polynomially large in $r$ so the moment error
+is at most $(c_0/2)\lambda_r^{66}$, where $\lambda_r\asymp1/r$ is the matching
+profile coefficient. The exact edge-subset expansion gives a relative
+deficit at least $(c_0/2)\lambda_r^{66}$. The finite matching extension is
+nonnegative and regular, with maximum at most
+$\max\{1,\|K_q\|_\infty\}^{\lfloor r/2\rfloor}$; normalization therefore
+gives $p_r\ge r^{-Cr}$. This is a complete conditional route, not a substitute
+for proving the stated polynomial-rate input.
+
+For completeness, the matching extension averages
+$\prod_{ij\in M}K_q(X_i,X_j)$ over all maximum matchings $M$ of the $r$
+coordinates. Each term has mean one and constant one-coordinate marginals,
+because $K_q$ is regular of mean one. A fixed coordinate pair is matched
+with probability $1/(r-1)$ for even $r$ and $1/r$ for odd $r$; integrating
+the other coordinates therefore gives $1+\lambda_r(K_q-1)$. Distinct
+private ports in $A_r$ then give $t(A_r,W_r)=t(J,1+\lambda_r(K_q-1))$.
+Expanding the product over the $66$ core edges uses nonnegative coefficients
+$\lambda_r^{|S|}(1-\lambda_r)^{66-|S|}$ summing to one. Proper-subgraph
+errors cost at most $\varepsilon(1-\lambda_r^{66})$, whereas the full term
+gains $c_0\lambda_r^{66}$. The chosen error makes the net gain at least
+$(c_0/2)\lambda_r^{66}$. If the extension is normalized by an upper bound
+$B_r>1$, then $p_r=B_r^{-1}$ and the relative deficit is unchanged.
+Finally $-\log(1-\delta)\ge\delta$ and $-\log p_r\le Cr\log r$ give the
+stated excess lower bound. These are finite algebraic steps; the analytic
+rate input and kernel-to-finite-host conversion remain separate.
+
+A simpler one-pair average avoids the matching extension: use
+$W_r=\binom r2^{-1}\sum_{i<j}K_q(X_i,X_j)$. Its pair marginal is
+$1+\binom r2^{-1}(K_q-1)$ and its maximum is polynomially bounded.
+Under the same rate input, it gives the weaker relative deficit
+$c r^{-132}$ but the stronger normalization $p_r\ge r^{-C}$.
+This trade-off identifies a concrete question about witness complexity,
+rather than another unqualified existence assertion.
+
+\paragraph{Working conjectural direction: remove the exponential normalization loss.}
+For the same fixed $J$ and $A_r$, do there exist $c,C>0$ and $r_0$ such
+that every integer $r\ge r_0$ admits a uniform space $\Omega_r$ with
+$|\Omega_r|\le r^C$ and a symmetric, one-coordinate-regular
+$U_r:\Omega_r^r\to[0,1]$ satisfying
+\[
+ p_r\ge r^{-C},\qquad
+ t(A_r,U_r)\le(1-c r^{-66})p_r^{66}?
+\]
+This stronger target combines the polynomial mean of the one-pair lift
+with the larger deficit of the matching lift. Neither current route proves
+it. If true, it would improve the excess bound to
+$s(A_r)\ge c'/(r^{66}\log r)$. No novelty, established-openness or sharpness
+claim is attached to this working question.
+
+A proof would need sharper normalization control for a regular lift or a
+different witness, rather than merely reusing the matching supremum bound.
+Failure of that particular construction is not a counterexample to the
+question. One sufficient disproof would be a uniform trade-off bound: for
+every fixed $C$, along an unbounded sequence of $r$ the supremum of
+\[
+ \left(1-\frac{t(A_r,U)}{p(U)^{66}}\right)_+
+\]
+over all such uniform regular kernels with $|\Omega|\le r^C$ and
+$p(U)\ge r^{-C}$ is $o(r^{-66})$. This makes the proof and falsification
+obligations exact without presuming that the desired improvement exists.
+
+% Formal status: the transform and this follow-on theorem are analytical;
+% no new Lean source or compiler attempt is included in this fragment.
+% Frozen candidate counters and the accepted root remain unchanged.

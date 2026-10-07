@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-07",
+  "reviewer_agent": "/root/followon_packet_review",
+  "status": "PASS_BOUNDED_COMPLETE_SOURCE_AND_ANALYTICAL_REVIEW",
+  "review_identity": {
+    "separate_agent": true,
+    "external_independent_audit": false,
+    "blind_review": false,
+    "kernel_or_compiler_acceptance": false,
+    "meaning": "A distinct agent read the listed final source files completely and checked the supplied analytical arguments and cross-file claim scope. This is not external peer review, formal proof acceptance or a global novelty assessment.",
+    "additional_helper": "/root/followon_packet_review/packet_low_rank_check independently derived the low-rank classification and checked the marginal-clique lemma from the four complete sources; its marginal_lemma_check helper also checked the counting factors, capacity and obstruction. Both returned scoped PASS."
+  },
+  "confirmation_and_freeze": {
+    "brief_read_first": true,
+    "brief_status": "AUTHOR_CONFIRMED_BOUNDED_FOLLOW_ON_EQUAL_THEOREM_CONJECTURE_SPACE",
+    "final_D2_freeze_received_from_root": true,
+    "final_changed_D2_story_editorial_and_bibliography_reread": true,
+    "no_historical_ratio_audit_rebound": true,
+    "hash_rule": "The verdict applies only to the exact SHA-256 values below. A later source change requires an appropriately scoped reread; this review does not retroactively bind a historical ratio audit to final D2 bytes."
+  },
+  "source_root": "C:/Users/petko/OneDrive - Université Paris Sciences et Lettres/Documents/Erdos/research/e593-density-development-20261007",
+  "complete_reviewed_sources": [
+    {"path":"follow-on-research-brief.json","sha256":"83f2056e839d5a2687c0a8ddba813a588e2020130cedeea75562b897e153678f"},
+    {"path":"follow-on-low-rank.tex","sha256":"7a1a8aa51df0b0251acc60ea7a908b7de00fcb37ed74f9bdfbfbd744b6a0e307"},
+    {"path":"follow-on-low-rank.json","sha256":"31fd1c39058df224edf3c8086ac1fab2c3c67278651c78f5dc5700a5bc77f05c"},
+    {"path":"follow-on-ports.tex","sha256":"af20f273c1f749ac6bf99516c520bf9bb71fb140794afcaaf1a7fd6d02ca7751"},
+    {"path":"follow-on-ports.json","sha256":"779a3a562133e47cb6d6e72aaef86bb5623e8bc691ea4544811cfafa85e42d93"},
+    {"path":"follow-on-marginal-cliques.tex","sha256":"b79d9ed5955d179b861b75d2fdf4ea03fea0a3ff4eb6159a6af7d2e308cd456c"},
+    {"path":"follow-on-marginal-cliques.json","sha256":"1493516c3a9b7ed7b7fd15b5e48af2d788acff72e6669ed87e9f6ef513cc9d95"},
+    {"path":"d2/follow-on-balancedness.tex","sha256":"0ca45423bc46c729cdda970228433cd59010c2e526d9cb5c72b67fad2bb79623"},
+    {"path":"d2/follow-on-balancedness.json","sha256":"ca995fb9586877061189baeb9a669be3cc5f7d63d4ae9dadb4402208c7b05e9e"},
+    {"path":"follow-on-story.tex","sha256":"5436d019efcdb9ed5fd481ebf88210003fee69cade97c014b0d11b283e9eb622"},
+    {"path":"follow-on-editorial-review.json","sha256":"d5ccb650cfb9dbb65f04497e3059365a096e9dd8a951e01dd73197a041bc9b7e"},
+    {"path":"follow-on-references.bib","sha256":"f9ac356e80186e9ad2602071c3a7580cce3bc4a14daae114d03381f17a8dd005"},
+    {"path":"follow-on-quality-comparison.tex","sha256":"c2b178a11c562d55c46042f8c1ec59fb6b968a3569685894703d58f2083dea84"},
+    {"path":"follow-on-quality-comparison.json","sha256":"d8174ac59ab55103f9d7331e0ec9b6c7255a3da8ed27a353bcf568f4d9b91fc0"},
+    {"path":"d2/follow-on-quantitative-source-check.json","sha256":"384b01a85adfa4b87db58423d34ff11ac0707c94dac0f8859ca92716f5924fcf"}
+  ],
+  "complete_read_supporting_sources": [
+    {"path":"d2/follow-on-generalization-audit.json","sha256":"2893c48b811e8ce7dd77d49537487e00bffaaf59e1e1dae53ce7d3000710246f","scope":"Complete source review of the supplied 26-obligation analytical certificate; not Lean acceptance."},
+    {"path":"d2/follow-on-literature.json","sha256":"fff3fd7ce35ba179e7fb46af59331c09a2eb08030b322cd1ac7a1b9f6c8f2846","scope":"Complete recorded provenance and convention comparison read; external documents were not fetched by this reviewer."},
+    {"path":"follow-on-ports-review.json","sha256":"8ce8ea3b63e2b50317f920689df3c1f3868c13fd4c1c2124d1b137a94cad02d8","scope":"Complete existing hash-bound separate-agent review read; its reviewed source hashes match this packet."},
+    {"path":"follow-on-marginal-cliques-source-review.json","sha256":"c7702fbc51aafc5ca9478700e48e052d028f48d6c7bfbb0a8e52b1b667d6d5c5","scope":"Complete existing hash-bound 26-obligation review read; its reviewed source hashes match this packet."},
+    {"path":"development-results.tex","sha256":"0cb6992730823eae92bf77ed31bd7445b0198f121ceb3c7d256ad2634a18f4b7","scope":"Complete source reread for consistency and inherited density/excess notation; no promotion of its frozen Lean candidates."}
+  ],
+  "public_readme": {
+    "path": "C:/Users/petko/e593-frontmatter-story-public-20261004/review/2026-10-07-density-directions/README.md",
+    "sha256": "31387e92669e8bab788958b153807638085d74563fa979c2e034d9b3c6c16dc0",
+    "read_completely": true,
+    "result": "PASS_SOURCE_SCOPE",
+    "finding": "The follow-on summary agrees with the reviewed sources, states the two precompiler failures and 2/2 spent/stopped status, distinguishes six source candidates from the five-module focused proposal, and excludes accepted-root/full-formalization/external-audit claims. Creation-time pending metadata is superseded only for matching hashes by completed sibling reviews.",
+    "boundary": "This review inspected the README itself. Staged-copy byte identity, source-copy manifest completion and historical runner/cache lineage are separate root checks, not inferred from this README."
+  },
+  "checks": [
+    {
+      "id": "D1_rank_three_structure",
+      "result": "PASS",
+      "finding": "The degree bound, excess partitions, no-loop argument, cubic multigraph enumeration, positive path lengths, parity condition, original simplicity constraint and subdivision converse yield exactly B4, T221, alternating-double C4 and K4. B4 is a suppressed multigraph, not a simple core. Known generalized-theta inequalities are attributed; the universal residual density cases remain unproved here."
+    },
+    {
+      "id": "D1_binary_marginal_restriction",
+      "result": "PASS",
+      "finding": "Positive weights, nonnegativity and full coordinate symmetry make vanishing binary diagonal marginals force U=0 for r>=3. The same-carrier qualification and essential hypotheses are retained, and no converse equivalence with arbitrary graph kernels is inferred."
+    },
+    {
+      "id": "fixed_carrier_clique_feasibility",
+      "result": "PASS",
+      "finding": "Both iff directions are valid with w_S=(r-2)!u_S product(mu on S), E U=r(r-1)sum_S w_S and capacity w_S<=(r-2)!product(mu on S) precisely for U<=1. The r=2, insufficient support and zero-mass cases and the K4-minus-cd obstruction are correct. The final synthesis explicitly separates unrestricted nonnegative realization from the additional unit-capacity condition."
+    },
+    {
+      "id": "D2_transform_and_maximizers",
+      "result": "PASS",
+      "finding": "For at least two core edges the positive-support reduction, exact private-vertex count, increasing transform and maximizing-subgraph correspondence establish balancedness and strictness equivalence. Degenerate signed/undefined domains and one-edge cases are separated. The general transformation is credited to Nie-Spiro rather than presented as new mathematics."
+    },
+    {
+      "id": "D2_exposure_connectivity_and_strict_density",
+      "result": "PASS",
+      "finding": "Exact N+2 saturation forces every class to span and every later face to add exactly one point. Deleting points or face labels preserves connectivity. The inequalities cover arbitrary selected vertex-and-edge subgraphs, including isolates and small selected point counts. The t=3,x=1 plateau yields no proper equality case. Counts, cycle rank, examples and the failure when saturation is removed are correct."
+    },
+    {
+      "id": "D2_random_host_benchmark",
+      "result": "PASS",
+      "finding": "The expected-copy/edge ratio, Markov deletion, edge concentration and thinning give the stated fixed-pattern asymptotics under the displayed probability hypotheses. The exponent gamma is independent of r. Deletion scale is correctly distinguished from first appearance and from an additional positive-excess gain or a matching upper bound."
+    },
+    {
+      "id": "D2_quantitative_conditional_algebra",
+      "result": "PASS_CONDITIONAL_ON_DECLARED_EXTERNAL_FAMILY",
+      "finding": "The maximum-matching lift has pair coefficient 1/(r-1) for even r and 1/r for odd r, exact mean-one regularity and the displayed supremum bound. Positive edge-subset coefficients give the r^-66 relative gap and r^-Cr mean conditionally on the complete family. The pair average gives r^-132 gap with polynomial mean. The logarithmic excess factors are correct. Odd primes suffice for polynomial q selection; no all-prime-power or explicit D=1642 claim is introduced."
+    },
+    {
+      "id": "D2_quantitative_source_scope_and_question",
+      "result": "PASS_WITH_DECLARED_EXTERNAL_AUDIT_LIMITS",
+      "finding": "The frozen source-check record supports extractable fixed-D O_D(q^-1/6) rates, proper-edge flatness and regularity checks and polynomial size bounds. The final sources no longer claim rates are absent; complete synthesis, rational-prior uniformization and external-input validation remain separate. The stronger question correctly asks for polynomial alphabet and mean together with r^-66 gap, states that neither conditional route proves it, and gives a sufficient universal trade-off falsification criterion without claiming global novelty, openness or sharpness."
+    },
+    {
+      "id": "D3_actual_forest_and_core_ports",
+      "result": "PASS",
+      "finding": "Actual support/edge partition and incidence-forest hypotheses justify leaf integration while counting each joint weight once. Core-root even-cycle profiles are squared path kernels with row mass p^k, yielding the pointwise bound by weighted Cauchy-Schwarz. Parent-side ports may be private. One-joint bouquets of copies of one fixed cycle follow by the core bound and Jensen. These are regular-kernel sufficient conditions and do not imply unrestricted Sidorenko assembly closure."
+    },
+    {
+      "id": "D3_witness_factors_and_density_incomparability",
+      "result": "PASS",
+      "finding": "The cubic kernel values and centered moments, epsilon=1/2560000, negative covariance -epsilon^2 and Hcp=1/256+1/20480000 check exactly. The all-r lift is bounded and regular with the stated pair and triple marginals. The ternary opposite ordering has factor128 eta^8/6561. Together these prove both strict orderings at every r>=3. All two-copy counts are8edges,8r-9vertices and connected Levi rank2. Negative covariance remains distinct from a full density deficit."
+    },
+    {
+      "id": "synthesis_and_equal_question_visibility",
+      "result": "PASS",
+      "finding": "The final story reflects the proven source endpoints, gives the three working directions explicit quantified scope, retains the stronger-graph/weaker-marginal distinction and exact counterexample standard, and separates the source-backed extraction task from the stronger normalization question. It does not raise the proved low-rank cutoff, assume assembly closure or advertise a new global open problem."
+    },
+    {
+      "id": "quality_comparison_and_provenance",
+      "result": "PASS_SOURCE_GROUNDED_EDITORIAL_SCOPE",
+      "finding": "The comparison names three pinned primary-source benchmarks and exact documented formalization boundaries, attributes Li's earlier classification and Nie-Spiro's transform, and treats catalogue claims as source-described rather than independently accepted. No scalar weakest-paper ranking, model-capability comparison, whole-paper correctness verdict or journal promise is made. The seven companion citation keys support the cited fragments."
+    }
+  ],
+  "resolved_observations": [
+    {
+      "observation": "The marginal-feasibility synthesis could be read as an iff for unit-bounded kernels while only nonnegative clique feasibility was stated.",
+      "resolution": "The final story explicitly says no prescribed upper bound and includes the extra w_S capacity for U<=1. Companion mathematics was already correct."
+    },
+    {
+      "observation": "The bibliography prints logarithimic whereas narrative method descriptions use logarithmic.",
+      "resolution": "Root checked the primary abstract and PDF title and reported that logarithimic is the literal printed title. The frozen editorial record documents this distinction; the bibliography correctly preserves that reported source title. This reviewer did not independently fetch the title."
+    },
+    {
+      "observation": "The earlier D2 framing treated a polynomial rank-layer rate as absent.",
+      "resolution": "The frozen complete reread records already displayed power savings, narrows the unaccepted obligation to the complete uniform regular family and adds a distinct stronger polynomial-mean/gap question. No rate-absence assertion remains in the final reviewed sources."
+    }
+  ],
+  "blocking_findings": [],
+  "residual_obligations": [
+    "The cited generalized-theta, rank-layer, random-Turan and benchmark primary results remain externally attributed inputs. This reviewer checked the local provenance records and their use, not the complete external proofs.",
+    "The complete quantitative proper-edge-flat uniform regular family, rational-prior uniformization and external rank-layer validation remain unfinished source-synthesis obligations.",
+    "Unrestricted regular cycle-forest attachment and the stronger polynomial-mean/relative-gap question remain unproved here; rank-three residual universal density families are also unproved here.",
+    "Global literature reconciliation, novelty and global open-problem status are not established by this packet.",
+    "Original-carrier formal adapters, compilation, audited Lean exports, historical execution/artifact lineage and whole-manuscript verification remain separate gates."
+  ],
+  "superseded_creation_metadata": "For the exact final hashes listed here, this completed packet review supersedes pending packet-review wording in the story/editorial metadata. Existing sibling reviews supersede only their matching pending source-review metadata. All NOT_LEAN_ACCEPTED and external-audit limitations remain operative.",
+  "actions": {
+    "target_source_edits": false,
+    "new_review_json_only": true,
+    "compiler_or_version": false,
+    "jobs_or_proof_service": false,
+    "network_or_external_chat": false,
+    "git": false,
+    "accepted_root_or_manuscript": false,
+    "clock": false,
+    "numerical_search": false
+  },
+  "conclusion": "No mathematical or claim-scope blocker remains in the exact frozen packet and README within this bounded source-only review. Analytical PASS does not establish new Lean validation, an external independent audit, novelty, global openness, full manuscript acceptance or a journal outcome."
+}

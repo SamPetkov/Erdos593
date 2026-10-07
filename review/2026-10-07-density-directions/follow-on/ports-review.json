@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-07",
+  "reviewer_agent": "/root/density_ports_develop/rooted_assembly_review",
+  "parent_agent": "/root/density_ports_develop",
+  "status": "PASS_SEPARATE_AGENT_STATIC_ANALYTICAL_REVIEW_NO_MATHEMATICAL_BLOCKERS",
+  "review_identity": {
+    "separate_agent": true,
+    "external_audit": false,
+    "blind_review": false,
+    "description": "A distinct agent read both final frozen artifacts completely and independently checked the mathematics and exact arithmetic. The parent supplied formulas and earlier context; this is not a blind or external review.",
+    "secondary_check": "/root/density_ports_develop/rooted_assembly_review/frozen_numbers_audit checked supplied formulas and carrier counts, but did not read the frozen artifacts."
+  },
+  "frozen_inputs": [
+    {
+      "path": "research/e593-density-development-20261007/follow-on-ports.json",
+      "sha256": "779a3a562133e47cb6d6e72aaef86bb5623e8bc691ea4544811cfafa85e42d93",
+      "read_completely": true,
+      "hash_verified_from_file": true
+    },
+    {
+      "path": "research/e593-density-development-20261007/follow-on-ports.tex",
+      "sha256": "af20f273c1f749ac6bf99516c520bf9bb71fb140794afcaaf1a7fd6d02ca7751",
+      "read_completely": true,
+      "hash_verified_from_file": true
+    }
+  ],
+  "scope": {
+    "performed": [
+      "Complete static reading of both final inputs and read-only SHA256 verification",
+      "Bounded exact analytical checking of carrier assumptions, forest gluing, bouquet scope, both witnesses, the every-uniformity lift, constants and counts",
+      "Checking that the source distinguishes proven subcases, conjectural directions and novelty limitations"
+    ],
+    "not_performed": [
+      "No compiler, Lean kernel check, version request, numerical run or assignment-sum enumeration",
+      "No network, external service, Git operation or external chat",
+      "No mutation of frozen sources, accepted source or live manuscript",
+      "No independent rereading of the cited papers or existing public manuscript",
+      "No external audit, global priority search or reflection/coupling-class classification",
+      "No formal original-carrier adapter or accepted Lean density result"
+    ]
+  },
+  "checks": [
+    {
+      "id": "actual_carrier_and_measure_contract",
+      "result": "PASS",
+      "finding": "Actual distinct endpoints, the nonempty edge partition, supports, all shared vertices as joints and the genuine incidence forest are explicit. Joint weights occur once, isolates integrate to one, and actual edge counts determine the exponent."
+    },
+    {
+      "id": "P1_root_safe_forest_criterion",
+      "result": "PASS",
+      "finding": "Leaf elimination is valid with branching joints and children at different vertices. Descendants are replaced by lower-bound constants before parent integration. The unique upstream joint is the only surviving interface. Zero weights, p=0, edgeless graphs and singleton components are correctly handled without division."
+    },
+    {
+      "id": "P2_core_admissible_even_cycle_assembly",
+      "result": "PASS",
+      "finding": "Path-kernel row mass and symmetry, the squared-kernel core profile and weighted Cauchy-Schwarz are correct. Only the child-side upstream port must be core; the parent-side port and other child attachments are unrestricted. This establishes a regular-kernel sufficient condition, not full assembly Sidorenko closure."
+    },
+    {
+      "id": "P2b_one_joint_same_cycle_arbitrary_ports",
+      "result": "PASS",
+      "finding": "Core and private vertices each form one automorphism orbit in a fixed even-cycle private expansion. The exact contraction E c^a l^b and the pointwise core bound followed by Jensen prove the stated bouquet result, including b=0. It does not assert mixed-atom or multi-joint closure; n=1 is the trivial one-copy case."
+    },
+    {
+      "id": "P3_cubic_exact_witness",
+      "result": "PASS",
+      "finding": "Kernel values and moments, the rank-one path formula, both profiles and all three densities check exactly. epsilon=1/2560000, Cov(c,l)=-1/6553600000000, and Hcp=1/256+1/20480000 are correct. The negative covariance and private-root dip do not produce a full-density deficit."
+    },
+    {
+      "id": "P3_every_uniformity_lift",
+      "result": "PASS",
+      "finding": "The stated a_r gives U_r in [1/4,3/4]. Centering yields regularity and precisely the pair and three-coordinate marginals. Therefore c_r=q_r+epsilon_r z and l_r=q_r-2epsilon_r z with epsilon_r=a_r^4/16. The prototype denominator20480000 remains correctly scoped to r=3."
+    },
+    {
+      "id": "P4_opposite_ordering_and_incomparability",
+      "result": "PASS",
+      "finding": "The every-r ternary kernel bound and regularity hold. Its private profile is constant and its core variance gives128 eta^8/6561 exactly. Combining both witnesses proves strict density-ordering directions for every fixed r>=3. Prior-manuscript provenance is credited to the parent's source audit, not independently certified here."
+    },
+    {
+      "id": "actual_two_copy_counts",
+      "result": "PASS",
+      "finding": "Each C4^[r] has4r-4 vertices and4edges. Two copies glued at one actual vertex have8edges and8r-9vertices. Their connected Levi graph has8r-1nodes and8rlinks, so rank2. For r=3 the vertex count is15. The join gives two cycle pieces and one joint of atom multiplicity2."
+    },
+    {
+      "id": "Sidorenko_atom_premise",
+      "result": "PASS_ANALYTICALLY",
+      "finding": "The finite even-cycle expansion atom premise is valid by private integration and the symmetric weighted pair-kernel matrix trace/operator-norm inequality; no arbitrary assembly closure is imported."
+    },
+    {
+      "id": "scope_and_novelty_boundary",
+      "result": "PASS_WITH_DECLARED_LIMITS",
+      "finding": "Classical Cauchy-Schwarz, leaf integration and Jensen are credited; existing covariance/variance identities are not advertised as new. The unrestricted direction is labelled conjectural and unsettled by this checkpoint, with a correct full-density falsification standard. Global novelty/open status and reflection-class reconciliation are expressly unestablished. Citation metadata and exact cited theorem scopes were not independently externally checked."
+    }
+  ],
+  "blocking_findings": [],
+  "residual_obligations": [
+    "Formal acceptance still requires the original-carrier, coordinate, edge-partition and normalized-isolate adapters acknowledged in the frozen JSON.",
+    "The unrestricted regular cycle-assembly direction remains unsettled by these calculations.",
+    "Any global novelty or open-problem claim requires the separately acknowledged literature and reflection/coupling-class reconciliation."
+  ],
+  "conclusion": "No mathematical blocker was found in the final frozen JSON and TeX within their stated finite normalized symmetric-kernel and actual-carrier scope. This is a separate-agent static and exact analytical review, not compiler validation, external peer review or novelty certification."
+}

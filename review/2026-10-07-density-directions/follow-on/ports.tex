@@ -1,0 +1,256 @@
+% Isolated analytical follow-on fragment, 7 October 2026.
+% No accepted Lean claim, no live-manuscript replacement and no novelty claim.
+% Exact contracts, existing-draft comparison and primary provenance:
+% follow-on-ports.json. New theorem numbering/keys are local to this fragment.
+
+\subsection{A rooted sufficient condition and the limits of attachment data}
+
+The full port profiles retain information that the atom list loses.
+They also give a useful sufficient condition for an exact density lower
+bound.  We state it for actual finite assemblies, rather than assume
+that their unrooted densities multiply.  Throughout this subsection,
+$\mu$ is a probability law on a finite set $\Omega$, and $U:\Omega^r\to[0,1]$
+is symmetric, with $r\ge3$ and $p=\mathbb EU$.  We call $U$ regular if
+every one-coordinate marginal equals $p$ on the support of $\mu$.
+Zero-mass states can be removed without changing any density.
+
+For an actual vertex $a$ of a piece $A$, write $\phi_{A,a}(x)$ for
+its homomorphism density with $a$ fixed at $x$.  Partition the actual
+edge set of $H$ among pieces, and let a joint be a vertex in at least
+two piece supports.  Suppose the bipartite piece--joint incidence
+graph is a forest, with each component rooted at a piece.  Thus each
+nonroot piece has one actual parent joint.  These hypotheses include
+the original vertex and edge identifications; they are not consequences
+of a formal product of unrelated kernels.
+
+\begin{lemma}[A root-safe forest criterion]
+\label{followon-root-safe-forest}
+Let $m_i$ be the number of edges of piece $A_i$.  If every nonroot
+piece satisfies $\phi_{A_i,a_i}(x)\ge p^{m_i}$ at its parent joint
+$a_i$, for every $x$ in the support of $\mu$, and every root piece
+satisfies $t(A_i,U)\ge p^{m_i}$, then
+\[
+ t(H,U)\ge p^{|E(H)|}.
+\]
+\end{lemma}
+\begin{proof}
+Remove pieces in decreasing distance from the root.  After their
+descendants have been removed, a nonroot piece has only its parent
+coordinate shared with the remaining assembly.  Integrating its other
+vertices gives its rooted profile, multiplied by the constants already
+obtained from its descendants.  All remaining factors are nonnegative,
+so that profile can be replaced by $p^{m_i}$.  At a joint of higher
+multiplicity the child profiles use the same coordinate; its probability
+weight is kept once, not once per child.  The root bound finishes each
+component.  Components multiply, and isolated vertices contribute one.
+The edge partition gives $\sum_i m_i=|E(H)|$.
+\end{proof}
+
+The local hypothesis is stronger than the unrooted Sidorenko
+inequality.  For even-cycle expansions, it can be proved at their core
+vertices.  This identifies a geometric subclass in which assembly
+preserves the lower bound for regular kernels.
+
+\begin{proposition}[Core-admissible cycle assemblies]
+\label{followon-core-admissible-cycles}
+Suppose every piece is a single $r$-edge or a private expansion
+$C_{2k}^{[r]}$, with $k\ge2$.  If the piece--joint forest admits roots
+such that the parent joint of every nonroot cycle piece is a core
+vertex of that piece, then every regular $U$ satisfies
+\[
+ t(H,U)\ge p^{|E(H)|}.
+\]
+The corresponding vertex in its parent piece may be core or private.
+\end{proposition}
+\begin{proof}
+Let $M$ be the pair marginal of $U$, and let $K_j(x,y)$ be the
+weighted density of a $j$-edge path in $M$ with its endpoints fixed.
+Regularity gives $\mathbb E_yM(x,y)=p$ and, inductively,
+$\mathbb E_yK_j(x,y)=p^j$.  Symmetry gives $K_j(x,y)=K_j(y,x)$.
+After the private coordinates of a $2k$-cycle are integrated, its
+profile at a core vertex $x$ is
+\[
+ \phi_{\rm c}(x)
+ =\mathbb E_yK_k(x,y)^2
+ \ge\bigl(\mathbb E_yK_k(x,y)\bigr)^2
+ =p^{2k},
+\]
+by weighted Cauchy--Schwarz.  Averaging proves the root-piece bound.
+For a single edge the rooted profile is $p$ at every port.
+Apply Lemma~\ref{followon-root-safe-forest}.  The argument uses no
+division, so it also covers $p=0$.
+\end{proof}
+
+This is an exact regular-kernel bound, not the full Sidorenko property.
+The proof uses classical Cauchy--Schwarz and leaf integration.
+Conditional-independence gluing and stronger restricted-density
+conditions have a substantial earlier theory: see the smoothness
+calculus of Li--Szegedy~\citep{liszegedy2011} and the hypergraph
+coupling and reflection criteria of Szegedy~\citep{szegedy2014}.
+No universal covariance sign is used here.
+
+There is a second positive case without the core-port restriction.
+Take copies of one fixed even-cycle expansion and identify one chosen
+vertex from each copy at a single joint.  Let $a$ copies use a core
+vertex and $b$ use a private vertex.  The automorphisms of the expansion
+make their respective profiles $c$ and $\ell$ independent of which
+vertex in each class was chosen.  Regularity and the preceding proof
+give $c\ge p^{2k}$ pointwise and $\mathbb E\ell=t(C_{2k}^{[r]},U)
+\ge p^{2k}$.  Thus
+\[
+ \mathbb E c^a\ell^b
+ \ge p^{2ka}\mathbb E\ell^b
+ \ge p^{2ka}(\mathbb E\ell)^b
+ \ge p^{2k(a+b)},
+\]
+with the usual empty-product convention when $b=0$.
+The middle inequality is Jensen.  This proves the lower bound for
+all port choices at this one joint; it says nothing about correlations
+at two different joints of an atom.
+
+\subsubsection{The same atom can have negatively correlated ports}
+
+The preceding core-port condition cannot be replaced by a pointwise
+statement about every port, even for an even-cycle atom.  There is also
+no uniform density ordering between core--core and private--private
+attachment.  The following exact witness complements the ternary
+example already in the manuscript.
+
+\begin{proposition}[Negative correlation and attachment incomparability]
+\label{followon-negative-root-correlation}
+For every $r\ge3$, let $B_r=C_4^{[r]}$.  There is a bounded regular
+symmetric $r$-kernel for which its core and private rooted profiles
+have negative covariance.  If $H_{\rm cc}$ and $H_{\rm pp}$ identify
+two otherwise disjoint copies of $B_r$ at core--core and
+private--private roots, respectively, neither pattern dominates the
+other in homomorphism density over all regular symmetric $r$-kernels.
+\end{proposition}
+\begin{proof}
+First take $r=3$.  Give $\Omega=\{1,-1/2\}$ the masses $1/3,2/3$, and put
+\[
+ p=\frac12,\qquad a=\frac1{20},\qquad b=-\frac1{10},\qquad
+ U(x,y,z)=p+a(xy+xz+yz)+bxyz.
+\]
+The kernel has value $7/16$ when exactly one coordinate is positive
+and $11/20$ otherwise.  It is symmetric and bounded.
+Writing $s=\mathbb EZ^2=1/2$, we have $\mathbb EZ=0$ and
+$\mathbb EZ^3=1/4$.  Averaging any two coordinates of $U$ leaves
+$p$, so the kernel is regular.  Its pair marginal is $M(x,y)=p+axy$.
+The $j$-edge path kernel is
+\[
+ K_j(x,y)=p^j+a^js^{j-1}xy\qquad(j\ge1),
+\]
+as follows by induction and centring.
+
+Let $c(z)$ and $\ell(z)$ be the core and private profiles of $B_3$.
+The core profile is $K_4(z,z)$; at a private root the three other
+edges give the path kernel $K_3$.  Hence
+\[
+ c(z)=p^4+a^4s^3z^2,\qquad
+ q:=t(B_3,U)=p^4+a^4s^4,\qquad
+ \ell(z)=\mathbb E_{x,y}U(x,y,z)K_3(x,y)
+        =q+ba^3s^4z.
+\]
+Set $\varepsilon=1/2560000$.  Since $z^2=(1+z)/2$ on this space,
+these formulas become
+\[
+ q=\frac1{16}+\varepsilon,\qquad
+ c(z)=q+\varepsilon z,\qquad
+ \ell(z)=q-2\varepsilon z.
+\]
+In particular $\ell(1)=p^4-\varepsilon<p^4$, and
+\[
+ \operatorname{Cov}(c(Z),\ell(Z))=-\varepsilon^2<0.
+\]
+If $H_{\rm cp}$ identifies a core root with a private root, the
+three densities are exactly
+\[
+ \begin{split}
+ t(H_{\rm cc},U)&=q^2+\varepsilon^2/2,\\
+ t(H_{\rm pp},U)&=q^2+2\varepsilon^2,\\
+ t(H_{\rm cp},U)&=q^2-\varepsilon^2
+                 =\frac1{256}+\frac1{20480000}.
+ \end{split}
+\]
+Thus $H_{\rm pp}$ has larger density than $H_{\rm cc}$ here.
+All three still exceed the benchmark $p^8$.
+
+To extend the witness to every $r\ge3$, keep the same two-point law and set
+\[
+ a_r=\frac1{4\bigl(\binom r2+2\binom r3\bigr)},\qquad
+ U_r(z_1,\ldots,z_r)
+ =\frac12+a_r\sum_{i<j}z_i z_j
+             -2a_r\sum_{i<j<k}z_i z_j z_k.
+\]
+Since $|z_i|\le1$, the kernel lies in $[1/4,3/4]$.  Centring gives
+regularity.  Its two- and three-coordinate marginals are the preceding
+formulas with $a=a_r$ and $b=-2a_r$.  Thus, with
+$\varepsilon_r=a_r^4/16$ and $q_r=p^4+\varepsilon_r$, the two profiles
+are still $q_r+\varepsilon_rz$ and $q_r-2\varepsilon_rz$.
+All the strict correlation and ordering conclusions follow.  At $r=3$
+this is exactly the displayed rational witness.
+
+For the opposite ordering at every uniformity, use the manuscript's
+uniform space $\{-1,0,1\}$ and
+$V_r=1/2+\eta\sum_{i<j}z_i z_j$, where
+$0<\eta\le1/(2\binom r2)$.  Here $s=2/3$, the private profile is
+constant, and the core profile is $p^4+\eta^4s^3z^2$.  Consequently
+\[
+ t(H_{\rm cc},V_r)-t(H_{\rm pp},V_r)
+ =\eta^8s^6\operatorname{Var}(Z^2)
+ =\frac{128}{6561}\eta^8>0.
+\]
+This proves both strict directions.
+\end{proof}
+
+At uniformity $r$, each of these assemblies has the same two canonical
+cycle atoms, eight edges, $8r-9$ vertices, Levi cycle rank two and one joint of
+atom multiplicity two.  Thus that structural data does not even
+determine a host-independent density ordering.  In particular,
+copies of one Sidorenko atom need not have positively correlated
+profiles at different port orbits.  This witness refutes that sign
+shortcut, not Sidorenko assembly closure: its negative covariance
+is smaller than its positive atom-density excess.
+
+\subsubsection{The remaining attachment question}
+
+\begin{conjecture}[Regular cycle-assembly closure]
+\label{followon-regular-cycle-assembly-question}
+For every $r\ge3$, every finite assembly of single $r$-edges and
+private expansions of even cycles with a genuine piece--joint
+incidence forest satisfies
+\[
+ t(H,U)\ge p(U)^{|E(H)|}
+\]
+for every finite normalized probability law and every regular
+symmetric kernel $U:\Omega^r\to[0,1]$, without a restriction on
+the parent attachment ports.
+\end{conjecture}
+
+The core-admissible case and one-joint bouquets of copies of a fixed
+cycle expansion are proved above.  Copies meeting at one
+common root also give a classical positive case beyond cycles:
+identical rooted profiles satisfy $\mathbb E\phi^k\ge(\mathbb E\phi)^k$ by Jensen.
+Roots related by an automorphism have the same profile when the
+kernel is symmetric.  That identical-profile argument alone does
+not cover different port orbits; the mixed-port bouquet result also
+uses the core profile bound.  Neither positive case controls all
+the correlations at several joints.
+
+A proof of the conjectural direction must control private-parent
+messages or supply an appropriate coupling certificate.  A negative
+profile covariance is not a counterexample; falsification requires an
+actual finite assembly and bounded regular kernel with the full
+density strictly below $p^{|E(H)|}$.  The broader question, whether
+an obligatory assembly of Sidorenko atoms must itself be Sidorenko,
+also remains unresolved by this calculation.  Before describing either
+question as globally open or new, its complete geometric class must
+be compared with the existing hypergraph reflection criteria.
+
+% Suggested primary bibliography records, to be reconciled with existing keys:
+% liszegedy2011: J. L. Xiang Li and Balazs Szegedy,
+% On the logarithmic calculus and Sidorenko's conjecture, arXiv:1107.1153.
+% szegedy2014: Balazs Szegedy, An information theoretic approach to
+% Sidorenko's conjecture, arXiv:1406.6738v3; Section9, Theorems7and8.
+% Existing covariance/variance identities are not advertised as new.
+% All analytical statements remain separate from pending Lean kernel checks.

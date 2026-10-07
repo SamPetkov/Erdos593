@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-07",
+  "status": "SELF_REVIEW_PASS_FOR_SCOPED_PUBLIC_SOURCE_ONLY_DELIVERY",
+  "reviewer": "Codex root",
+  "independent": false,
+  "author_scope": "The author confirmed the bounded three-direction follow-on and requested conjectural directions receive equal visible space. Earlier public-only GitHub delivery authority is retained.",
+  "before_delivery": {
+    "public_pr": 54,
+    "url": "https://github.com/SamPetkov/Erdos593/pull/54",
+    "expected_head": "a90356411f27c83f3e7a8efc2164fe35d3f0270e",
+    "branch": "codex/e593-density-directions-20261007",
+    "base": "codex/e593-all-uniformities-20261006",
+    "open_draft": true
+  },
+  "source_review": {
+    "full_packet": "packet-review.json",
+    "actual_separate_agent": true,
+    "hash_bound": true,
+    "blocking_findings": 0,
+    "external_independent_audit": false,
+    "not_kernel_acceptance": true
+  },
+  "quantitative_review": {
+    "file": "quantitative-algebra-review.json",
+    "sha256": "4cdc905113ba81853f4e82d2e21760e89c48a1ec753c901ac8b5cf5505a915e2",
+    "scope": "Final successor audit only; older rate-absence/prime-power framing remains historical and is not used."
+  },
+  "delivery_allowlist": [
+    "README.md",
+    "follow-on/"
+  ],
+  "exact_copies": 21,
+  "source_copy_manifest": "source-copy-manifest.json",
+  "static_checks": {
+    "all_copied_sha256_equal": true,
+    "citation_keys": 7,
+    "undefined_citations": [],
+    "duplicate_keys": [],
+    "diff_check_exit": 0,
+    "active_branch_confirmed": true,
+    "PR_api_head_and_draft_confirmed": true
+  },
+  "mathematical_boundaries": [
+    "All-r density incomparability is an analytical source-reviewed result; the negative covariance witness remains above the Sidorenko baseline.",
+    "Core-admissible regular cycle forests and fixed-cycle one-joint bouquets are sufficient cases, not unrestricted closure.",
+    "Rank-three structural enumeration is complete; residual universal density families remain unproved here and the proved cutoff is not raised.",
+    "The generalized saturated exposure certificate is proved analytically; the private-expansion density transformation is attributed to Nie-Spiro.",
+    "Quantitative rates already exist in the pinned external source. Complete family synthesis and validation remain unfinished; the stronger polynomial-mean/r^-66-gap question is distinct and unproved.",
+    "Conjectural space is not counted as proved mathematical impact; no catalogue-wide least-valuable ranking, first-solution/first-Lean or journal outcome is claimed."
+  ],
+  "Lean_state": {
+    "accepted_source_unchanged": true,
+    "accepted_modules": 250,
+    "accepted_ordered_audits": 401,
+    "density_candidates_compiled": false,
+    "joint_attempts_consumed": 2,
+    "joint_attempt_budget": 2,
+    "route": "SPENT_STOPPED_AFTER_PRECOMPILER_FAILURES",
+    "scanner_fix": "separate undeployed source-only candidate; no third attempt authorized by this delivery"
+  },
+  "manuscript_state": {
+    "open_document_unchanged": true,
+    "extended_PR53_manuscript_unchanged": true,
+    "PDF_replacement": false
+  },
+  "delivery_state": "PRE_DELIVERY_REVIEW_ONLY: normal scoped commit/push and fresh API/raw Git-blob reconciliation still required. No push result is invented here."
+}
