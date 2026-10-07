@@ -1,5 +1,5 @@
 {
-  "pages": 65,
+  "pages": 70,
   "compiler": "pdfTeX / TeX Live 2023",
   "final_build_passes": 3,
   "shell_escape": false,
@@ -15,34 +15,71 @@
       "number": "3",
       "page": 53
     },
-    "density-matching": {
-      "number": "13.1",
+    "density-matching-inequalities": {
+      "number": "4",
       "page": 53
     },
-    "density-transfer": {
-      "number": "13.2",
+    "density-universal-profiles": {
+      "number": "13.1",
       "page": 54
     },
-    "density-source-limits": {
-      "number": "13.3",
+    "density-matching": {
+      "number": "13.2",
       "page": 55
     },
-    "density-obligatory-atom": {
-      "number": "13.4",
-      "page": 57
+    "density-projection-bound": {
+      "number": "13.3",
+      "page": 56
     },
-    "density-nie-spiro": {
+    "density-hoeffding": {
+      "number": "5",
+      "page": 56
+    },
+    "density-regular-projection": {
+      "number": "6",
+      "page": 56
+    },
+    "density-uniform-approximation": {
+      "number": "13.4",
+      "page": 56
+    },
+    "density-density-error": {
+      "number": "7",
+      "page": 56
+    },
+    "density-regular-girth": {
       "number": "13.5",
       "page": 57
     },
-    "density-forcing-separation": {
+    "density-girth-error": {
+      "number": "8",
+      "page": 57
+    },
+    "density-transfer": {
       "number": "13.6",
       "page": 58
+    },
+    "density-source-limits": {
+      "number": "13.7",
+      "page": 59
+    },
+    "density-obligatory-atom": {
+      "number": "13.8",
+      "page": 61
+    },
+    "density-nie-spiro": {
+      "number": "13.9",
+      "page": 62
+    },
+    "density-forcing-separation": {
+      "number": "13.10",
+      "page": 62
     }
   },
   "visually_reviewed_pages": [
     1,
     4,
+    5,
     52,
     53,
     54,
@@ -55,16 +92,29 @@
     61,
     62,
     63,
-    65
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70
   ],
-  "final_minor_grammar_change_affected_only_page": 53,
-  "pdf_sha256": "d7f26f05625721f0535527aaf6ddf512591a0ae2dfec995a0e78f398bf691914",
-  "tex_sha256": "98e0e6dfca9ba059f3514dd0f15183e42790ab5a9ed0e087c70c550ae8cc6c07",
-  "independent_internal_transfer_readings": 2,
+  "final_wording_changes_affected_only_pages": [
+    1,
+    55
+  ],
+  "final_changed_pages_rerendered_and_inspected": true,
+  "pdf_sha256": "f700c1e0032058e4cdae81d9892bce798aaf97ae53d177832bbdd09fed131571",
+  "tex_sha256": "e6875f045c87386b9ec554ff6da159563baf326ab10782089f7ef1d9f250c402",
+  "independent_internal_mathematical_readings": 2,
   "integrating_assistant_mathematical_review": true,
   "separate_primary_literature_audit": true,
+  "final_integrated_source_review_completed": true,
+  "required_nonnegativity_wording_repair_verified": true,
+  "optimal_rates_not_optimal_constants_claimed": true,
   "external_peer_review_claimed": false,
   "new_lean_validation_claimed": false,
   "external_rank_layer_proof_independently_certified": false,
-  "source_scope": "Conditional on the rank-layer limit in the pinned OpenAI preprint; the complete new transfer is proved in Section 13."
+  "source_scope": "The marginal and quantitative density theorems are unconditional manuscript results. The explicit OpenAI-based Sidorenko atom and expansion-conjecture counterexample retain the stated rank-layer hypothesis."
 }

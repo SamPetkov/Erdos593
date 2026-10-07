@@ -83,5 +83,37 @@
       "source_text_verified": true
     }
   ],
-  "scope": "Exact source identity verified, allowing one additional terminal newline in local review copies. This does not certify the mathematical arguments of the external finite-field proof."
+  "scope": "Exact source identity verified, allowing one additional terminal newline in local review copies. This does not certify the mathematical arguments of the external finite-field proof.",
+  "supporting_targets": [
+    {
+      "path": "lean/docs/161.md",
+      "git_blob_sha": "b395e0eaa2462cf72aeea576d6c614cd544da2ec",
+      "sha256": "a1da28a997a9a27cad57f0862cd18e7502aa3129730d3bc7fd7a45fde14d3b1d",
+      "size_bytes": 946,
+      "source_text_verified": true,
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/161.md"
+    },
+    {
+      "path": "lean/ComparatorChallenges/SidorenkoCounterexample.lean",
+      "git_blob_sha": "3f4fa1074f812e2e823350ea50ff1a786e4a1927",
+      "sha256": "489688f5c4eb60c6dd8cfe0ef69663aaf11e795d6252e9626972764a50187de9",
+      "size_bytes": 1764,
+      "source_text_verified": true,
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/SidorenkoCounterexample.lean"
+    },
+    {
+      "path": "lean/ComparatorChallenges/SidorenkoCounterexample.json",
+      "git_blob_sha": "3fdb7a849e7b1df1fc07013c901e1052b35170f8",
+      "sha256": "2d3ce04f40de12d67424f8597bf3ea9cbb6f262c9e6e58edbc5ab6f690de52ec",
+      "size_bytes": 338,
+      "source_text_verified": true,
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/SidorenkoCounterexample.json"
+    }
+  ],
+  "head_rechecked_on": "2026-10-07",
+  "family_161_original_prompt_found_in_complete_targeted_listings": false,
+  "released_reasoning_material_description": "Abridged summaries for ten families; family 161 absent.",
+  "prompt_excerpt_examined": "reasoning_traces/quasipolynomial-arithmetic-progressions.pdf",
+  "prompt_excerpt_scope": "Qualitative and quantitative arithmetic-progression questions; no hypergraph theorem imported from this unrelated prompt.",
+  "lean_replay_performed": false
 }

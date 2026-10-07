@@ -1,0 +1,213 @@
+RANK-LAYER SOURCE AUDIT — 7 OCTOBER 2026
+
+Scope and status
+----------------
+This is an independent mathematical reading of the exact analytic input used
+by Section 13, not a Lean replay, validation certificate, or literature claim
+that the source result has been independently replicated. No manuscript or PR
+was edited. The conditional declaration in the current manuscript should be
+retained under the team's present review standard.
+
+Pinned source: openai/math, commit
+adc7f1241b42e322a6451854ab7e4b4c146bf78a, preprints/
+A-counterexample-to-Sidorenkos-conjecture-September-23-2026/build/.
+The files reviewed locally are e593_openai_followup/family161/{kernel,
+transverse,orbits,planted,tail,complex}.tex. I read transverse.tex,
+planted.tex, and tail.tex in full. The finite-structure referee independently
+read orbits.tex in full and reported no defect in its individual-orbit lower
+bound, including zero residual dimension. I independently rechecked the
+finite complex used by the analytic proof using its displayed 22 triples and
+bit labels. I did not replay any Lean target or audit all formal source files.
+
+Conclusion: no concrete mathematical defect was identified in these files.
+In particular, the singular-tail proof does not merely discard a set of small
+unweighted probability: it supplies a weighted bound strong enough for the
+normalized rank indicators. The source's stated rank-layer conclusion is
+supported by a complete written argument whose delicate steps are identified
+below. This result is stronger than merely seeing a claimed Lean theorem, but
+is still a bounded source audit rather than independent reconstruction of
+the entire Sidorenko counterexample.
+
+Exact dependency and proof boundary
+----------------------------------
+kernel.tex, Lemma lem:rank-layer, is required for all subsets B of the 66
+source incidences and all incidence sign assignments, uniformly over this
+finite collection. The signed rank-r indicator is normalized by its exact
+mass among symmetric D by D matrices, D=2r. The limiting model has independent
+signs on the 33 point pairs. It is NOT enough to know the formula only for the
+full incidence set or only for injective target-type assignments.
+
+The proof separates into:
+1. transverse.tex, Proposition prop:transverse-limit: the formula on the
+   event that all 33 point differences are nonsingular; error O_D(q^-1/2).
+2. tail.tex, Proposition prop:singular-tail: the unsigned normalized product
+   on the complementary event is o(1).
+3. orbits.tex, Lemma lem:chart-comparison: symmetric matrices form a dense
+   Lagrangian chart, the unsigned normalizations are comparable, and graph
+   intersections give the kernels of matrix differences.
+
+The transverse computation alone is not a substitute for (2). Its local
+uniform bounds are explicitly restricted to pairwise nonsingular point
+differences. On singular configurations local factors can grow as powers of
+q; equal point Lagrangians already give a negative local slack.
+
+Transverse argument: independently checked steps
+-----------------------------------------------
+The rank-pair projection identity and maximal-isotropic parametrization are
+consistent: rank A=rank(B-A)=r for nonsingular B of size 2r is equivalent to
+A B^-1 A=A. The determinant sign relation contains the factor
+chi((-1)^r) with the correct convention for A-B.
+
+For a triple the substitution Q=B0^-1, L=B0^-1-B1^-1 makes Q uniform on
+{Q: Q and Q-L nonsingular} conditional on L. The sign-match indicator stays
+inside the expectation: the proof does not condition the restriction-sign
+concentration on that indicator. This avoids a potentially serious misuse of
+unconditional concentration. The local error is controlled in L1, while the
+other transverse face factors are bounded uniformly, permitting a global
+telescoping product without an independence assumption.
+
+The joint determinant-sign argument uses the maximum point-pair degree six,
+not independence of overlapping differences. With D>=12 its union bound for
+nonzero linear combinations of the inverse lower-right blocks has a strict
+negative exponent. The ensuing quadratic Gauss-sum bound gives total
+variation O_D(q^-1/2) for the at most six Schur-complement values, and hence
+for every nonempty moment of the 33 determinant signs. Finitely many moments
+suffice for the asserted joint sign convergence. No defect found here.
+
+Planted-law argument: independently checked steps
+------------------------------------------------
+The orbit ratio must use the mass of an actual ordered symplectic orbit,
+not merely its intersection-dimension profile. The source does so. The
+required lower bound is exactly Proposition prop:triple-orbits, audited by
+the finite-structure referee.
+
+Conditioning on deterministic C0 contained in the three point Lagrangians
+leaves their quotients independent and uniform BEFORE mutual intersections
+are imposed. The quotient identity
+  (Li/C0) intersect Y' = ((Li intersect Y)+C0)/C0
+is exact; no lifts are lost. The reduced center intersections Ri are therefore
+independent uniform r'-spaces before their mutual profile is imposed.
+
+The common-zero condition makes the three pair spaces Ri intersect Rj a
+direct sum. The source's count may drop equality of the prospective span and
+exactness of pair intersections because it needs an upper bound. Its exponent
+delta P + sum p_i^2 + v w agrees with the elementary subspace count.
+
+The lift forms are not asserted independent after taking their differences.
+Lemma lem:planted-difference-image correctly identifies their joint image as
+D1|V+D2|V+D3|V=0, of codimension b(dim V). A form prescribed on two subspaces
+extends if its restrictions agree on their intersection; there is no third
+compatibility condition for any one lift form. Conditioning independent
+uniform forms on this image costs at most q^{b(v)}, yielding the stated
+simultaneous-nullity upper bound.
+
+The exponent maximum is over a fixed finite union of ACTUAL tuples at the
+chosen D, across all odd fields. This is enough to make it independent of q.
+No simultaneous realizability of the maximizing tuples on different faces
+is needed in the subsequent upper bound.
+
+Singular-tail argument: independently checked steps
+---------------------------------------------------
+The six exposure classes contain eleven faces covering thirteen points and
+are connected through shared pairs. Therefore every parent-first spanning
+tree order really does introduce one fresh point at every later face. The
+conditional probability bound remains valid after all previous point
+Lagrangians are exposed, by pair transitivity and independence of the fresh
+point. The combination P(A)^6 <= product P(A_t) uses containment only, not
+independence between the six overlapping class events.
+
+I checked the exact slack decomposition, the quadratic/linear split, and the
+two signs of delta in Lemma lem:coercivity. The scalar minima occur at the
+displayed breakpoint or endpoint and give Q >= (P^2+T^2+delta^2)/342. The
+coefficient of c really is nonnegative under the stated necessary dimension
+constraints, so replacing c by |delta| is legitimate.
+
+The propagation argument bounds all pair dimensions before choosing D; this
+order is essential. Large pair dimension forces large common dimension on
+every neighboring fully active face, and connectivity then forces a large
+intersection at a pair with excess bit separation. This contradicts the
+linear budget. Once pair dimensions are bounded, the coefficient
+(c-u+v)/2 of d has the claimed nonnegative half-integral gap. The remaining
+integer equality cases are exactly those described in the source: c=0 and
+pair dimensions 0 or 2, after excluding the all-c=1 connected mode using
+the excess-separation pair.
+
+Lemma lem:tail-span is valid even for a partial linear dependence among pair
+spaces: an inclusion-minimal dependent subfamily and one missing endpoint
+give at least one additional local-span dimension. The nondirect residual
+count permits an arbitrary ambient span and requires isotropy only locally.
+The direct residual count imposes genuinely independent orthogonality
+equations because all previously chosen basis vectors in that family are
+linearly independent; mutual isotropy does not make the corresponding
+linear functionals dependent. The cancellations leave exactly
+-sum_e b(h_e). I checked the displayed finite constants 618, 1575, and 1641.
+
+A quantitative clarification obtainable without new geometry
+------------------------------------------------------------
+The written source proof in fact supplies O_D(q^-1/6), rather than only o(1),
+for the rank-layer error once D is fixed sufficiently large. The strict
+first-cost gap is at least 1/6; direct residual and nondirect residual gaps
+are at least 1; the transverse error is O_D(q^-1/2). The finite number of
+profiles, signs, and activity sets makes this uniform over B and signs.
+This is an extraction from the existing proof, not a new independent proof
+of the rank-layer construction. The implied constant is not made effective
+by this audit.
+
+One can also make its dimension threshold explicit, very inefficiently.
+The finite face-neighbor graph has diameter 5. Its separation frequencies
+are: 28 pairs differ in one bit, four in two bits, and one in three bits.
+Every bit class has eleven faces, covers all thirteen points, and is
+connected; these facts were independently checked by a short exact script.
+
+From the tail budget choose K=151, since
+  (P+T)^2 <= 2*342*33*M < 151^2*M,
+and the lower-activity bound is smaller. Set
+  M_* = 4*(5+1)^2*151^2 = 3,283,344.
+If M>M_*, propagation gives h_e>M/2 on every pair. Since at least one
+a_e-1/3 >= 1/3, the excess is at least M^2/48; the budget is at most 33M,
+contradicting M>1584. Thus this M_* is a valid universal bound.
+
+In the source remainder R, 0<=c,p_i,t_i,v<=M_* and |delta|<=M_*. Using
+|2p_i-t_i|<=2M_* gives |R|<=14 M_*^2 by termwise triangle inequalities.
+Consequently the even dimension
+  D_0 = M_* + 616 M_*^2 + 2
+      = 6,640,694,261,842,322
+satisfies every stated tail threshold, as well as D>1641 and D>=12.
+Every even D>=D_0 therefore suffices for the source proof, with error
+O_D(q^-1/6). This astronomical number is a consistency certificate for the
+quantifier order, not a recommended addition to the paper or a practical
+parameter choice. It should not be advertised as an optimized bound.
+
+Attempts at simplifying the needed special case
+-----------------------------------------------
+It is tempting to use the small support of each corner activation law to
+restrict the rank-layer theorem to at most seven active source incidences.
+That is invalid. Source point and face type maps may repeat: mapping all
+source points to a single target point type and all source faces to a
+single incident target face type can activate the same coordinate on all
+66 source incidences. Restricting to injective type maps also discards terms
+that occur in the actual untyped homomorphism density.
+
+Similarly, the proper-edge extraction in our Section 13 requires repeating
+the finite coordinate expansion with source-incidence-dependent activation
+laws. This is justified by its proof and the uniform all-B rank-layer input,
+but is not obtained by literally substituting into a lemma whose statement
+requires laws to depend only on target-type pairs.
+
+No materially shorter independent substitute for the singular-tail bound
+was obtained. A defensible narrower input is the unsigned weighted singular
+tail proposition together with the separately checked transverse formula;
+this makes the analytic bottleneck explicit but does not reduce the amount
+of mathematics needed. The optional quantitative rate above is established
+by the written estimates. Any claim of a substantially smaller admissible D,
+or of a simpler restricted activation theorem, remains unproved here.
+
+Recommended use
+---------------
+Keep the conditional Section 13 statement and its exact source pin. Record
+that the central written analytic argument has now undergone a targeted
+independent audit without a detected defect; distinguish that from a formal
+replay. Do not add the huge threshold to the main theorem. Prefer the new
+unconditional matching-realization and expansion-density estimates for
+actual manuscript strengthening: they do not depend on this rank-layer
+construction at all.

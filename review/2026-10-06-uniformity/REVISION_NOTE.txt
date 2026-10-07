@@ -1,235 +1,262 @@
-REVISION NOTE: OBLIGATORY ATOMS AND SIDORENKO EXPANSIONS
-7 October 2026
+REVISION ASSESSMENT: UNIVERSAL MARGINALS AND SHARP DENSITY RATES
+7 October 2026 — Complete 70-page author-review manuscript
 
-1. WHAT THIS CONTINUATION ADDS
+1. ASSESSMENT
 
-The new Section 13 gives a direct finite-density question arising from the
-paper's canonical atoms: must an obligatory hypergraph occur at least as
-often as the random-density benchmark predicts? The construction gives a
-negative answer inside a single cyclic atom in every uniformity.
+This continuation adds three substantive results with complete manuscript
+proofs, independent of the recent OpenAI finite-field estimate. It therefore
+improves the paper beyond the preceding conditional Sidorenko example.
 
-The mathematical addition goes beyond a new example. Nie and Spiro's
-published Conjecture 5.1 asserts that every bipartite graph has a Sidorenko
-private expansion in some uniformity r >= 2. The transfer gives one fixed
-bipartite graph J for which every private expansion fails the inequality.
-This is a counterexample to the named conjecture under the explicitly stated
-rank-layer input from the new OpenAI preprint.
+The additions give a reusable exact realization criterion and explicit
+quantitative bounds connected to the paper's private-expansion atoms.
+They are mathematical changes, not a general rewrite of the prose. The
+existing classification and spectra, and the conditional transfer argument,
+are preserved verbatim. The title is unchanged.
 
-The current source is an author-review draft. The new density conclusions
-are stated conditionally because the source's long finite-field estimate
-has not been independently certified in this work. The complete transfer
-from that input is proved and has received independent internal review.
-The earlier classification and exact chromatic spectra remain independent
-of that new input.
+The appropriate status remains an author-review research draft. The new
+proofs have passed internal independent readings, but this is neither
+external peer review nor a certification of first priority. In particular,
+the explicit counterexample to Nie-Spiro's expansion conjecture remains
+conditional on the stated source input; it must not be advertised as an
+independently certified unconditional disproof.
 
-2. THE EXACT THEOREM
+2. THE UNCONDITIONAL CHARACTERIZATION
 
-Theorem D (page 4), Theorem 13.4 and Corollary 13.5 (page 57) use a fixed
-2-connected bipartite graph J with 35 vertices and 66 edges. For every r >= 3,
-its private r-expansion A_r has
+Theorem 13.1 (pages 54-55) fixes real coefficients lambda_ij, 1<=i<j<=r.
+For every collection of finite probability spaces and nonnegative pair
+kernels V_ij with both one-coordinate integrals equal to one, ask whether
+there is a nonnegative joint density U whose pair marginals are
 
-  e(A_r) = 66,
-  v(A_r) = 35 + 66(r-2) = 66r-97,
-  beta(A_r) = (r-1)66-v(A_r)+1 = 32.
+  M_ij = 1 + lambda_ij (V_ij-1).
 
-It is a single canonical cyclic atom. In particular, for triples the example
-has 101 vertices and 66 edges. It is linear, every Berge cycle is even, and
-each hyperedge has exactly r-2 private leaves in its Levi graph.
+This universal property holds if and only if lambda is in the matching
+polytope of K_r. Equivalently:
 
-Nevertheless, conditional on the imported rank-layer estimate, some finite
-simple r-uniform host G satisfies
+  lambda_ij >= 0;
+  sum_(j != i) lambda_ij <= 1 for every i;
+  sum_({i,j} subset S) lambda_ij <= (|S|-1)/2 for every odd S.
 
-  t(A_r,G) < p_r(G)^66,
+It already suffices to test universality on a single common finite space
+with one symmetric regular kernel repeated at every pair. Thus the criterion
+handles different pair kernels and different spaces, while its obstructions
+can be detected with two simple families of common test kernels.
 
-where t(F,G) counts all edge-preserving maps divided by |V(G)|^|V(F)| and
-p_r(G)=r!e(G)/|V(G)|^r. Thus the inequality has its ordinary homomorphism
-meaning, without prescribed vertex types or an injectivity restriction.
+Sufficiency mixes products over matchings. For necessity, fixed-point-free
+involution kernels on large even alphabets force nonnegative coefficients
+and the vertex constraints. Balanced binary antialignment forces every
+odd-set inequality. Edmonds' classical theorem identifies the resulting
+inequalities with the convex hull of matchings.
 
-Obligatoriness is a different assertion: every uncountably chromatic host
-contains an injective non-induced copy. Reiher's positive theorem already
-establishes that assertion for private bipartite expansions. The manuscript's
-canonical structure identifies this specific expansion as one atom.
+The symmetric scalar case recovers the existing transfer coefficient:
 
-3. WHY THE TRANSFER IS NOT AUTOMATIC
+  lambda_r = 1/(r-1) when r is even, and 1/r when r is odd.
 
-For any symmetric r-variable kernel U, let M_U be its two-variable marginal.
-Private vertices integrate independently, giving the exact identity
+This is the largest coefficient that works for EVERY finite nonnegative
+symmetric regular kernel. A particular kernel may admit larger values.
+The joint kernel must be nonnegative: signed kernels would invalidate the
+necessity statement. That word was checked explicitly during final review.
 
-  t(J^[r],U) = t(J,M_U),       mean(U) = mean(M_U).
+Why useful: the theorem decides whether a proposed graph-density witness
+can be inserted into a genuine nonnegative joint construction. It also
+shows the universal limits of that procedure. It is a full compatibility
+criterion, rather than just another sufficient construction for one graph.
 
-It follows that a Sidorenko graph has Sidorenko expansions. That is the
-known forward implication in Nie-Spiro's published Corollary 1.14.
-An arbitrary nonnegative graph kernel need not be the pair marginal of a
-symmetric nonnegative r-kernel. A graph counterexample therefore cannot be
-inserted into this identity without constructing a realizable marginal.
+3. AN EXPLICIT TWO-SIDED DENSITY BOUND
 
-The new Lemma 13.1 performs that construction. For a symmetric nonnegative
-graph kernel V with every row integral equal to one, average products of V
-over all maximum matchings on r positions. The result U_r is symmetric,
-nonnegative and has mean one. Its pair marginal is exactly
+Theorem 13.4 (pages 56-57) applies to every finite simple graph F with m>=1
+edges, every r>=2, and every symmetric U:Omega^r->[0,1] of mean p:
 
-  M_(U_r) = 1 + lambda_r (V-1),
-  lambda_r = 1/(r-1) for even r, and 1/r for odd r.
+  |t(F^[r],U)-p^m| <= m(m-1)p(1-p)/r.
 
-The source witness has a second useful property. In its fixed family V_q,
-all proper spanning edge-subgraphs J_B have density tending to one, while
-the full J has limiting density a < 1. Consequently
+There is no bipartiteness assumption. The same inequality is exact for
+every finite simple r-uniform host G with p=p_r(G)=r!e(G)/|V(G)|^r.
+It uses all homomorphisms, including noninjective maps; no unrecorded
+sampling or injectivity error is hidden in this finite-host statement.
 
-  t(J, 1+lambda_r(V_q-1)) -> 1 + lambda_r^66(a-1) < 1.
+The proof is short and independent. Let M be the pair marginal and d the
+one-coordinate marginal. Orthogonal singleton and pair projections give
 
-This is enough for each fixed r. The graph J is common to all uniformities,
-but the prime q and witness may depend on r. One fixed finite kernel is not
-asserted to work for arbitrarily small lambda_r.
+  r||d-p||_2^2 + binom(r,2)||M-d(x)-d(y)+p||_2^2 <= p(1-p),
 
-Scaling U_r into [0,1] preserves the strict homogeneous comparison. Sampling
-independent vertex labels and then independent r-edges produces an ordinary
-finite simple hypergraph witness. The proof controls every noninjective map
-by the collision bound and keeps the falling-factorial density correction.
+hence ||M-p||_2^2 <= 2p(1-p)/r. The first derivative of the graph-density
+polynomial at the constant kernel vanishes. Its second derivative is bounded
+by m(m-1)||M-p||_2^2. Integration of that derivative supplies the factor 1/2.
 
-4. THE ADDITIONAL SOURCE PROPERTY IS PROVED HERE
+The exponent of r is optimal. For odd r, the majority kernel on balanced
+signs has mean 1/2, and the two-edge path satisfies
 
-The external manuscript does not state the proper-edge-subgraph limit as
-one of its conclusions. Proposition 13.3 extracts it from the actual
-coordinate-expansion proof.
+  t(P3^[r],U)-1/4 ~ 1/(2*pi*r).
 
-For a proper edge subset B of the source incidence graph, force the
-activation at an omitted source incidence to be empty. The local zero-moment
-identities make both adjacent point-pair labels empty; emptiness propagates
-through the connected face-neighbor graph. Only the all-empty label term
-survives, with limiting value one.
+This is an analytic binomial identity followed by Stirling's formula, not
+numerical evidence. Even an obligatory tree exhibits the full order 1/r.
+The displayed coefficient m(m-1) is not asserted to be the best constant.
 
-There is a scope detail in this step: when vertex types repeat, deleting one
-source incidence makes the activation law depend on the incidence, rather
-than only on its type pair. The proof repeats the coordinate expansion with
-these laws. It uses the source rank-layer lemma's quantification over every
-active incidence subset and sign choice, not a substitution into a narrower
-stated lemma. Isolated vertices integrate to one. Both rectangular
-orientations are treated, and the crossed symmetric product factors their
-densities. Exact constant row and column integrals follow from translation
-invariance of the normalized rank-layer kernels.
+4. REGULARITY MAKES THE GIRTH DETERMINE THE RATE
 
-These are mathematical deductions from the pinned source. They do not
-replace the source's substantial finite-field proof.
+Theorem 13.5 (pages 57-58) assumes each one-coordinate marginal of U is
+exactly p. Forest expansions then have density exactly p^m. If F has girth g,
 
-5. A SECOND DENSITY CONSEQUENCE
+  |t(F^[r],U)-p^m|
+    <= (2^m-1) [2p(1-p)/(r(r-1))]^(g/2).
 
-Corollary 13.6 (pages 58-59) keeps a positive density fixed. For every fixed
-r >= 3 there are p in (0,1) and finite simple r-hosts G_n such that
+Thus the error is O_F(r^(-g)), uniformly over the finite probability space,
+the bounded kernel, and p. The same bound holds for finite regular hosts.
 
-  p_r(G_n) -> p,
-  t(A_r,G_n) -> p^66,
-  t(C_4^[r],G_n) -> q > p^4.
+Regularity kills all terms with a degree-one vertex in the centered
+edge-subset expansion. Each surviving term contains a cycle of length at
+least g. A finite-dimensional self-adjoint operator estimate bounds that
+cycle integral by the L2 norm of the centered marginal to its length.
+The stronger regular projection bound then supplies the power r^(-g).
 
-The proof interpolates on independent coordinate spaces between the negative
-kernel and a positive sign perturbation. The pair marginal remains
-nonconstant throughout the interpolation; the finite-kernel C4 equality
-case forces a strict excess. Sampling realizes all three limits together.
+The order is optimal for EVERY fixed cyclic simple graph F, already at
+exact density 1/2. With independent signs x_i and theta_r=r^(-1/2), use
 
-Both A_r and C_4^[r] are obligatory patterns. Thus matching the first atom's
-random density does not determine the other's. The explicit three limits
-avoid ambiguities among hypergraph quasirandomness definitions. The result
-is at one positive density for each r, not at every density.
+  U_r(x) = 1/2 + [cos(theta_r sum_i x_i)-cos(theta_r)^r]/4.
 
-6. SOURCES, CREDIT AND NOVELTY BOUNDARIES
+It is symmetric, [0,1]-valued, and exactly regular. Its pair marginal is
 
-OpenAI, A counterexample to Sidorenko's conjecture, 23 September 2026,
-family 161 of the openai/math release. The version is pinned to commit
-adc7f1241b42e322a6451854ab7e4b4c146bf78a (release 6 October 2026).
-https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-counterexample-to-Sidorenkos-conjecture-September-23-2026
+  M_r(a,b)=1/2-b_r ab,
+  b_r=(sin(theta_r)^2 cos(theta_r)^(r-2))/4
+      ~ exp(-1/2)/(4r).
 
-The graph J, the rank-layer estimate, negative signed coefficient and
-dilution/crossed-product construction are credited to that preprint.
-Its public formalization description concerns the finite graph counterexample.
-It is not evidence that the stronger proper-subgraph extraction or the
-new all-uniformity transfer has been formalized. No external Lean replay
-was performed here.
+If N_g(F) counts the shortest cycles, sign averaging gives
 
-Jiaxi Nie and Sam Spiro, Sidorenko hypergraphs and random Turan numbers,
-Combinatorial Theory 5(4) (2025), Article 10, 19 pages.
-https://doi.org/10.5070/C65465676
-https://escholarship.org/uc/item/0c25t471
+  t(F^[r],U_r)-2^(-m)
+    = N_g(F)(-b_r)^g 2^(-(m-g)) + O_F(b_r^(g+1)).
 
-The final published PDF was checked. Use its Corollary 1.14 for forward
-preservation and Conjecture 5.1, p.15, for the target refuted here. The older
-arXiv version has different numbering for the preservation theorem.
-The new construction does not settle their general converse Question 5.2.
+The coefficient is nonzero. For a cycle the formula is exactly (-b_r)^g.
+This proves sharpness of the TWO-SIDED, absolute error rate. In a bipartite
+graph the example has positive deviation; it is not claimed to attain a
+negative Sidorenko deficit of that order.
 
-David Conlon, Joonkyung Lee and Alexander Sidorenko, Extremal numbers and
-Sidorenko's conjecture, IMRN 2024(13), 10285-10297.
-https://doi.org/10.1093/imrn/rnae071
-https://arxiv.org/abs/2307.04588
+For a canonical private-expansion atom, the core girth is its shortest
+Berge-cycle length. This connects the quantitative estimate directly to
+the cyclic structure studied in the classification.
 
-Their odd-girth linear examples do not cover A_r: this expansion has only
-even Berge cycles and lies inside the obligatory class. The present result
-should not be described simply as the first non-Sidorenko hypergraph or the
-first linear counterexample; those much broader statements are false.
+5. WHAT THE OPENAI PROMPT MATERIAL ACTUALLY CONTRIBUTED
 
-The matched-kernel transfer and the proper-subgraph extraction are the new
-deductions developed in this continuation. The source scan found no matching
-or all-expansion theorem in family 161. The bounded literature comparison
-did not identify an earlier statement giving this fixed bipartite all-r
-counterexample. These nonfindings are not a first-priority certificate.
+The repository was checked at its unchanged release commit
+adc7f1241b42e322a6451854ab7e4b4c146bf78a. Its published reasoning materials
+are abridged summaries. Complete targeted listings show no released original
+prompt or reasoning summary for family 161, the Sidorenko paper.
 
-The other promising release result examined was family 176, the second
-Kahn-Kalai conjecture. Its Lean development already contains the hierarchy
-for an arbitrary finite group acting on arbitrary coordinates. A rank-free
-hypergraph threshold specialization would be a direct abstract corollary
-of that source, not a new method for this manuscript, so it was not added.
+The family 159 arithmetic-progression summary does contain passages labeled
+as original-prompt excerpts. They separate a qualitative existence question
+from a later quantitative improvement. These are useful examples of how to
+set precise research targets and track losses, not mathematical inputs to
+the present hypergraph arguments. We have not claimed to recover hidden
+prompts, nor attributed a different paper's instructions to family 161.
 
-7. PUBLICATION ASSESSMENT
+More directly relevant are the released family 161 challenge and scope files.
+They specify ordinary graph homomorphism densities and a finite simple host
+for the fixed 35-vertex, 66-edge pattern. They do not certify our pair-kernel
+realization theorem, proper-subgraph profile, or higher-uniformity deductions.
+The scope note explicitly excludes the source's forcing consequence.
 
-This addition materially improves the significance argument if the external
-input and the transfer survive specialist review. The paper now has an
-explicit named-conjecture consequence tied to its actual canonical atoms.
-That is a stronger reason to include the density section than a broad
-discussion of new OpenAI results or a routine finite-host specialization.
+The resulting revision separates the exact question, the quantitative
+question, and the source's formal target. It establishes new finite-kernel
+theorems with their own proofs rather than treating the availability of
+prompts as evidence that a conjecture has been solved.
 
-Journal of Combinatorial Theory, Series B remains an ambitious and plausible
-first target after the source dependency and the new mathematics have been
-validated. Its stated scope covers graph and hypergraph theory and expects
-major advances, open-problem progress or new proof methods. Its higher bar
-for very long papers is directly relevant to this 65-page version.
+6. RETAINED CONDITIONAL APPLICATION
+
+Theorem D (page 4), Theorem 13.8 (pages 61-62), and Corollary 13.9 (page 62)
+retain one fixed bipartite 2-connected graph J with 35 vertices and 66 edges.
+For every r>=3 its private expansion A_r is one obligatory cyclic atom with
+
+  e(A_r)=66,   v(A_r)=66r-97,   beta(A_r)=32.
+
+Assuming the source rank-layer limit, this atom violates the Sidorenko
+inequality in some finite simple r-host. The same graph has no Sidorenko
+expansion for any r>=2, contradicting Nie-Spiro's published Conjecture 5.1
+under that hypothesis. Corollary 13.10 (pages 62-64) retains the equality
+example whose C4 expansion density differs from the random benchmark.
+
+The source graph and finite-field construction are credited to OpenAI.
+Our transfer uses the source family’s additional proper-edge-subgraph
+limits, which are proved by repeating its coordinate expansion with
+incidence-dependent activation laws. The rank-layer estimate remains the
+imported hypothesis. The fixed uniformity is chosen BEFORE the field-size
+limit; neither the witness nor its edge density is asserted independent of r.
+
+Further internal reading of the long source proof found no concrete defect.
+This is recorded in RANK_LAYER_AUDIT.txt and does not amount to a successful
+Lean replay or external certification. The source's proper-C4 profile is
+compatible with its full deficit because the normalized witnesses become
+unbounded; bounded-kernel approximation cannot be applied uniformly to them.
+
+7. NOVELTY BOUNDARIES AND CITATIONS
+
+The paper now expressly credits:
+
+  Edmonds (1965): the matching-polytope inequalities and convex hull theorem.
+  Hoernig (2018): the scalar exchangeable-sign correlation obstruction.
+  Allerstorfer et al. (CMP 2026), Lemma 4.4: matching-average constructions
+      with the same even/odd coefficients for quantum isotropic states.
+  Hoeffding (1948): the orthogonal projection method.
+  Nie-Spiro (2025), Theorem 1.13: prior one-sided approximate Sidorenko
+      behavior as expansion uniformity grows.
+
+The bounded search did not locate the full universal classical compatibility
+criterion for arbitrary pair kernels, the explicit two-sided density bound,
+or the regular sharp girth-sensitive estimate. This supports a carefully
+stated novelty case; it does not certify first priority. The matching average,
+parity obstruction, polytope description and qualitative approximation should
+not themselves be marketed as new discoveries.
+
+Primary references and comparisons are documented in PROMPT_SOURCE_REVIEW.txt.
+All preceding 41 bibliography entries retain their exact contents; four new
+primary references are added, and all 45 are ordered by first citation.
+
+8. PUBLICATION ASSESSMENT
+
+The strongest coherent contribution is now the chain from canonical
+private-expansion atoms to an exact marginal-realization criterion and
+quantitative density estimates. The unconditional characterization has use
+beyond the one external graph. The girth theorem explains how the same
+cyclic invariant controls a sharp rate in finite counting. Those are stronger
+reasons to consider the manuscript than an added reference to a high-profile
+recent source.
+
+Journal of Combinatorial Theory, Series B is the most natural ambitious
+target if specialist review confirms the significance and novelty of the
+combined classification, spectra and density framework. Its stated scope
+covers structural and extremal graph/hypergraph theory, but a 70-page paper
+needs a particularly clear case for why the complete package merits the
+length. The European Journal of Combinatorics is a sensible alternative
+for a more specialized structural/quantitative contribution. These are
+judgments of fit, not acceptance probabilities or predictions.
+
+Current primary scope pages:
 https://shop.elsevier.com/journals/journal-of-combinatorial-theory-series-b/0095-8956
-
-European Journal of Combinatorics remains a credible alternative, with its
-scope covering mathematical structures arising from combinatorial problems
-and full-length research papers on important topics.
 https://shop.elsevier.com/journals/european-journal-of-combinatorics/0195-6698
 
-The submission argument should lead with the all-uniformity classification
-and exact spectra, then the explicit expansion-conjecture consequence once
-its external input is secure. A referee may ask for a shorter main paper or
-a focused companion note. The density proof is sufficiently modular for
-that later editorial decision, while the present full draft preserves the
-existing prose as requested.
+Recommended author-review disposition: retain and review the new unconditional
+theorems; resolve the handling of the recent external rank-layer input before
+promoting the conjecture consequence as unconditional; obtain specialist
+priority/proof feedback on the principal new statements. A top-journal-ready
+or accepted-as-is claim is not established by this revision. The manuscript
+has been strengthened without pretending that internal checking is external
+peer review.
 
-The main unresolved scientific dependency is precise: the imported rank-layer
-limit must support the stronger proper-subgraph use, not merely the existence
-of one finite graph counterexample. Independent checking or a formal interface
-for that exact statement has higher value than adding further applications.
-This review does not predict acceptance or establish first priority.
+9. VERIFICATION AND PRESERVATION
 
-8. WHAT WAS CHECKED AND WHAT WAS PRESERVED
+Two internal mathematical readers checked the new arguments, followed by
+root integration review and a separate primary-literature review. The final
+read caught the missing word 'nonnegative' in the scalar-optimality paragraph;
+it is now present. The final abstract says 'optimal rates' rather than
+implying that the numerical constants are best possible. The displayed
+girth bound is a single valid inequality, not a chain between two distinct
+upper estimates.
 
-Two independent internal proof readings and an integrating review checked the
-source-to-hypergraph transfer, repeated types, the omitted-incidence argument,
-regularity, matching probabilities, normalization, the order of limits,
-2-connectivity, canonical parameters and all three finite-density limits.
-A separate audit checked the published literature and exact conjecture
-quantifiers. Necessary notation completions were integrated and rechecked.
-No remaining gap was identified in the transfer from its stated hypothesis.
-These internal AI reviews are not external peer review or Lean certification.
+The final three-pass PDF build has no warnings, unresolved references or
+citations, or overfull/underfull boxes. The new front matter, all of Section 13,
+the verification boundary and bibliography were visually inspected. The last
+wording changes affected pages 1 and 55 only, which were rerendered and checked.
 
-The eight external source sections were reconciled to their pinned Git blobs.
-This is source-identity verification, not certification of the long proof.
+Numbered Sections 1-12 and the retained conditional transfer/application
+source spans are unchanged. The new analytic results have not been formalized
+in Lean. No external Lean replay, external peer review, first-priority
+certification, PR merge or journal submission is claimed.
 
-The final 65-page manuscript was compiled in three passes without warnings,
-unresolved citations or references, or overfull/underfull boxes. The new
-front matter, every page of Section 13, its verification boundary and the
-new references were visually inspected. Sections 1-12 remain byte-identical
-to the immediately preceding draft. The original 38 bibliography entries
-are preserved; three primary sources are added.
-
-The existing draft PR is the review destination. The original main manuscript
-and Lean development were not changed by this continuation. No merge or
-journal submission has been performed.
+Draft PR: https://github.com/SamPetkov/Erdos593/pull/53

@@ -1,632 +1,453 @@
---- spectra-draft-0b7002f/erdos593_obligatory_uniform_hypergraphs.tex
-+++ density-continuation-2026-10-07/erdos593_obligatory_uniform_hypergraphs.tex
-@@ -64,6 +64,7 @@
- \newtheorem*{theoremA}{Theorem A}
- \newtheorem*{theoremB}{Theorem B}
- \newtheorem*{theoremC}{Theorem C}
-+\newtheorem*{theoremD}{Theorem D}
- \newtheorem{theorem}{Theorem}[section]
- \newtheorem{lemma}[theorem]{Lemma}
- \newtheorem{proposition}[theorem]{Proposition}
-@@ -123,11 +124,16 @@
- non-obligatory finite system can also be avoided at each prescribed
+--- c72b45e0d805a6b431e03fc92ea9de98ba8a9ea5/erdos593_obligatory_uniform_hypergraphs.tex
++++ universal-marginals-and-density-rates/erdos593_obligatory_uniform_hypergraphs.tex
+@@ -125,6 +125,9 @@
  uncountable chromatic cardinal.  We prove simultaneous avoidance for
  finite linear families and exact chromatic calibration with bounded
--edge intersections, together with explicit bounds on host order.  The
-+edge intersections, together with explicit bounds on host order.
-+Conditional on a recent rank-layer estimate of OpenAI, we also
-+construct a single obligatory atom in every uniformity that violates
-+the Sidorenko density bound.  The same graph has no Sidorenko
-+expansion, giving a counterexample to the expansion conjecture of
-+Nie--Spiro under that input.  The
- triple-system classification and specified structural extensions are
- verified in Lean~4; profile realization, full lattice spectra, the new
--counting endpoints, the higher-uniformity extension and the chromatic
--spectra are not yet fully formalized.
-+counting endpoints, the higher-uniformity extension, chromatic
-+spectra and density transfer are not yet fully formalized.
- All arguments are in ZFC.
- \end{abstract}
- 
-@@ -251,6 +257,39 @@
- The new results in Sections~\ref{uniform-extension}
- and~\ref{exact-spectra-extension} have manuscript proofs; they are
- not additional Lean-verified endpoints.
+ edge intersections, together with explicit bounds on host order.
++We characterize universal pair-marginal realization by the matching
++polytope and prove two-sided estimates with optimal rates for
++expansion densities as the uniformity increases.
+ Conditional on a recent rank-layer estimate of OpenAI, we also
+ construct a single obligatory atom in every uniformity that violates
+ the Sidorenko density bound.  The same graph has no Sidorenko
+@@ -290,6 +293,23 @@
+ a finite-density separation witnessed by $C_4^{[r]}$.
+ The long finite-field estimate remains a cited preprint input;
+ the transfer has not been formalized in Lean.
 +
-+\subsection*{Obligatory atoms and finite density inequalities}
-+The atom description leads to a further question: does obligatoriness
-+impose the lower bound on copies predicted by a random host of the
-+same density?  The next result separates these properties within a
-+single cyclic atom.
-+
-+\begin{theoremD}
-+Assume the rank-layer limit in OpenAI's
-+\emph{A counterexample to Sidorenko's conjecture} \citep{openai161}.
-+There is an explicit $2$-connected bipartite graph $J$ with $35$
-+vertices and $66$ edges such that its private expansion $J^{[r]}$
-+is not Sidorenko for any finite $r\ge2$, with $J^{[2]}=J$.
-+For every $r\ge3$, the expansion is one canonical obligatory atom
-+with $66$ edges, $66r-97$ vertices and cyclic rank $32$.
-+\end{theoremD}
-+
-+Here a finite $r$-uniform pattern $F$ is Sidorenko if every finite
-+host $G$ satisfies $t(F,G)\ge p_r(G)^{|E(F)|}$, where $t$ counts all
-+homomorphisms and $p_r(G)=r!|E(G)|/|V(G)|^r$.
-+Nie--Spiro conjectured that every bipartite graph admits a Sidorenko
-+expansion in some uniformity \citep[Conjecture~5.1]{niespiro2025}.
-+Theorem~D supplies a counterexample under the stated rank-layer input.
-+
-+The graph and its density deficit originate in \citet{openai161}.
-+The new transfer uses more than that deficit: in the source's
-+mean-one kernel family, every proper edge-subgraph of $J$ has density
-+tending to one.  We prove this additional limit and use an average
-+over matchings to realize the required graph marginals by symmetric
-+$r$-kernels.  Section~\ref{density-extension} gives these proofs and
-+a finite-density separation witnessed by $C_4^{[r]}$.
-+The long finite-field estimate remains a cited preprint input;
-+the transfer has not been formalized in Lean.
++Two unconditional results sharpen this framework.
++Theorem~\ref{density-universal-profiles} characterizes the universal
++realization of arbitrary collections of pair kernels by the matching
++polytope, and proves that the symmetric transfer coefficient is optimal.
++For any graph $F$ with $m$ edges, Theorem~\ref{density-uniform-approximation}
++gives the explicit two-sided estimate
++\[
++ \bigl|t(F^{[r]},U)-p^m\bigr|
++ \le m(m-1)p(1-p)/r
++\]
++for every symmetric $[0,1]$-valued $r$-kernel $U$ of mean $p$.
++For regular kernels, Theorem~\ref{density-regular-girth} improves the
++error to $O_F(r^{-g})$ when the core has girth $g$, and gives exact
++equality for forests.  Explicit kernels of density $1/2$ show that
++these powers of $r$ are optimal.  These results concern quantitative
++homomorphism densities and require no rank-layer hypothesis.
  
  \subsection*{Finite structure beyond the classification}
  Theorem~A answers an embedding question about infinite hosts.  The further
-@@ -3342,6 +3381,496 @@
- triples from a linear $r$-uniform host does not force the restored
- edges to have globally private added vertices.
+@@ -3404,8 +3424,12 @@
+ uniformity.  The same fixed graph below has no such expansion.
+ The transfer requires constructing an actual symmetric hypergraph
+ kernel; a graph density counterexample alone does not provide one.
+-
+-\subsection{Marginals and matching symmetrization}
++We begin with a universal marginal-realization theorem and
++quantitative density bounds that are independent of the external
++rank-layer input.  They describe both the available realizations
++and the size of possible density errors as the uniformity grows.
++
++\subsection{Universal pair marginals and matching symmetrization}
  
-+\section{Obligatory atoms and Sidorenko expansions}
-+\label{density-extension}
+ All probability spaces below are finite and all their atoms have
+ positive mass.  For a symmetric nonnegative $r$-variable kernel $U$
+@@ -3440,8 +3464,114 @@
+ \begin{equation}\label{density-expansion-identity}
+  t(J^{[r]},U)=t(J,M_U),\qquad p(U)=\mathbb E M_U.
+ \end{equation}
+-An arbitrary graph kernel need not be such a marginal.  The next
+-construction supplies the marginals needed here.
++An arbitrary graph kernel need not be such a marginal.  We first
++characterize which diluted pair marginals can always be realized;
++the symmetric construction needed for expansions follows as a
++special case.
 +
-+The canonical description also connects obligatoriness with a finite
-+counting question.  A bipartite private expansion can be forced by
-+uncountable chromatic number while having fewer copies than the random
-+density benchmark in a finite host.  We establish this for a single
-+canonical atom in every uniformity, using the specific graph and
-+rank-layer construction of OpenAI \citep{openai161}.
-+
-+The conclusions about that graph in this section are conditional on
-+the rank-layer limit in the pinned version of the preprint.  We give
-+the transfer proofs, including an additional proper-subgraph limit
-+extracted from its coordinate expansion.  The preprint's finite-field
-+estimate is an external input.  The classification and chromatic
-+spectra in the preceding sections do not use it.
-+
-+The distinction is also relevant to a published conjecture of
-+Nie--Spiro \citep[Conjecture~5.1]{niespiro2025}, which asks whether
-+every bipartite graph has a Sidorenko private expansion in some
-+uniformity.  The same fixed graph below has no such expansion.
-+The transfer requires constructing an actual symmetric hypergraph
-+kernel; a graph density counterexample alone does not provide one.
-+
-+\subsection{Marginals and matching symmetrization}
-+
-+All probability spaces below are finite and all their atoms have
-+positive mass.  For a symmetric nonnegative $r$-variable kernel $U$
-+and a finite simple $r$-uniform hypergraph $F$, put
-+\[
-+ t(F,U)=\mathbb E\prod_{e\in E(F)}U((X_v)_{v\in e}),
-+\]
-+where the $X_v$ are independent samples.  Symmetry makes the ordering
-+within an edge immaterial.  Write $p(U)=\mathbb E U$.
-+For a finite simple $r$-uniform host $G$ of order $n>0$, use
-+\[
-+ t(F,G)=\frac{\operatorname{Hom}(F,G)}{n^{|V(F)|}},
-+ \qquad p_r(G)=\frac{r!\,|E(G)|}{n^r}.
-+\]
-+Thus all edge-preserving maps are counted, including noninjective maps.
-+We call $F$ \emph{Sidorenko} if
-+$t(F,G)\ge p_r(G)^{|E(F)|}$ for every such host.  This is the
-+ordinary hypergraph homomorphism-density convention of
-+\citet{conlonleesidorenko2024} and \citet{niespiro2025}.
-+For $n\ge r$, the normalization $p_r(G)$ differs from
-+$|E(G)|/\binom nr$ by the
-+factor $(n)_r/n^r$, which tends to one as $n$ tends to infinity.
-+
-+For a simple graph $J$, let $J^{[r]}$ be its private $r$-uniform
-+expansion, with $r-2$ distinct new vertices on each graph edge.
-+The convention at rank two is $J^{[2]}=J$.
-+The two-variable marginal of $U$ is
-+\[
-+ M_U(x,y)=\mathbb E_{Z_3,\ldots,Z_r}U(x,y,Z_3,\ldots,Z_r).
-+\]
-+The private vertices occur in exactly one edge, so Fubini's theorem gives
-+\begin{equation}\label{density-expansion-identity}
-+ t(J^{[r]},U)=t(J,M_U),\qquad p(U)=\mathbb E M_U.
++For $r\ge2$, write $\mathfrak M_r$ for the convex hull in
++$\mathbb R^{\binom r2}$ of the incidence vectors of all matchings
++of $K_r$, including the empty matching.  Edmonds' matching-polytope
++theorem \citep[Section~2, Theorem~(P)]{edmonds1965matching} gives its description
++\begin{equation}\label{density-matching-inequalities}
++ \lambda_{ij}\ge0,\qquad
++ \sum_{j\ne i}\lambda_{ij}\le1,\qquad
++ \sum_{\{i,j\}\subseteq S}\lambda_{ij}\le\frac{|S|-1}{2}
++ \quad (|S|\text{ odd}).
 +\end{equation}
-+An arbitrary graph kernel need not be such a marginal.  The next
-+construction supplies the marginals needed here.
++The last family may be restricted to $|S|\ge3$.
++The following identifies this polytope as the exact region of
++coefficients that realize every collection of finite pair kernels.
++In this general statement the spaces may differ, and the joint
++density need not be symmetric.  We write $\lambda_{ji}=\lambda_{ij}$
++when an unordered pair is indexed in the opposite order.
 +
-+\begin{lemma}[Matching symmetrization]\label{density-matching}
-+Let $V$ be a finite symmetric nonnegative kernel with
-+$\mathbb E_y V(x,y)=1$ for every $x$.  For an integer $r\ge2$, let
-+$\mathcal M_r$ be the set of matchings of size $\lfloor r/2\rfloor$
-+in the complete graph on $[r]$, and define
++\begin{theorem}[Universal pair-marginal profiles]
++\label{density-universal-profiles}
++Let $r\ge2$ and $\lambda\in\mathbb R^{\binom r2}$.  The following
++are equivalent.
++\begin{enumerate}
++\item For every collection of finite probability spaces
++$(\Omega_i,\mu_i)$ and nonnegative kernels
++$V_{ij}:\Omega_i\times\Omega_j\to\mathbb R$ satisfying
 +\[
-+ U_r(x_1,\ldots,x_r)=
-+ \frac{1}{|\mathcal M_r|}
-+ \sum_{M\in\mathcal M_r}\prod_{\{a,b\}\in M}V(x_a,x_b).
++ \mathbb E_{x_j}V_{ij}(x_i,x_j)=1,
++ \qquad \mathbb E_{x_i}V_{ij}(x_i,x_j)=1,
 +\]
-+Then $U_r$ is symmetric and nonnegative, has mean one, and
++there is a nonnegative density $U$ of mean one on
++$\prod_{i=1}^r\Omega_i$ whose $(i,j)$-marginal is
 +\[
-+ M_{U_r}=1+\lambda_r(V-1),\qquad
-+ \lambda_r=\frac{2\lfloor r/2\rfloor}{r(r-1)}
-+ =\begin{cases}(r-1)^{-1},&r\text{ even},\\ r^{-1},&r\text{ odd}.
-+ \end{cases}
++ M_{ij}=1+\lambda_{ij}(V_{ij}-1)
++ \qquad(1\le i<j\le r).
 +\]
-+\end{lemma}
-+\begin{proof}
-+Each matching product has mean one, because its factors have disjoint
-+variable sets.  In its two-variable marginal, a matching containing
-+$\{1,2\}$ contributes $V(x_1,x_2)$.  Every other matching contributes
-+one: any partner of vertex $1$ or $2$ is integrated out using the
-+constant row integral, and the remaining disjoint pairs have mean one.
-+The proportion of matchings containing a given pair is their common
-+number of edges divided by $\binom r2$, namely $\lambda_r$.
-+Permutation invariance of the set of matchings proves symmetry.
-+\end{proof}
-+
-+\begin{lemma}[Transfer from proper-subgraph limits]
-+\label{density-transfer}
-+Let $J$ be a finite graph with $m\ge1$ edges.
-+Suppose there are finite symmetric nonnegative kernels $V_q$ with
-+constant row integral one such that
-+\[
-+ t(J_A,V_q)\longrightarrow1\quad(A\subsetneq E(J)),\qquad
-+ t(J,V_q)\longrightarrow a<1,
-+\]
-+where $J_A=(V(J),A)$.
-+Then, for every integer $r\ge2$, there is a symmetric
-+$[0,1]$-valued $r$-kernel $W$ with $0<p(W)<1$ and
-+\[
-+ t(J^{[r]},W)<p(W)^m.
-+\]
-+There is also a finite simple $r$-uniform host with the same strict
-+inequality.
-+\end{lemma}
-+\begin{proof}
-+For any fixed $0<\lambda\le1$, expansion over subsets of $E(J)$ gives
-+\begin{align*}
-+ t(J,1+\lambda(V_q-1))
-+ &=\sum_{A\subseteq E(J)}
-+       \lambda^{|A|}(1-\lambda)^{m-|A|}t(J_A,V_q)\\
-+ &\longrightarrow 1+\lambda^m(a-1)<1.
-+\end{align*}
-+Apply Lemma~\ref{density-matching} with $\lambda=\lambda_r$.
-+By \eqref{density-expansion-identity}, the resulting $U_r$ has mean
-+one and $t(J^{[r]},U_r)<1$ for all sufficiently large $q$.
-+Here $r$ is fixed before $q$ is chosen; the limiting deficit is
-+$(1-a)\lambda_r^m$, so the required index may depend on $r$.
-+Choose such a $q$, let $L=\max U_r$, and put $W=U_r/L$.
-+The strict inequality implies that $U_r$ is nonconstant; its mean is
-+one, so $L>1$.  Homogeneity gives the required inequality with
-+$p(W)=1/L\in(0,1)$.
-+
-+For the finite-host assertion, sample $n$ independent labels from the
-+finite probability space, and include each $r$-set independently,
-+conditional on those labels, with probability given by $W$.
-+Let $G_n$ be the resulting simple $r$-uniform hypergraph and write
-+$F=J^{[r]}$, $v=|V(F)|$, $p=p(W)$, and $\tau=t(F,W)<p^m$.
-+An injective vertex map from $F$ uses distinct target edges, whence
-+\[
-+ \mathbb E t(F,G_n)\le \tau+\binom v2/n,\qquad
-+ \mathbb E p_r(G_n)=\frac{(n)_r}{n^r}p.
-+ \]
-+Consequently, for sufficiently large $n$,
-+\[
-+ \mathbb E t(F,G_n)<\bigl(\mathbb E p_r(G_n)\bigr)^m
-+             \le \mathbb E\bigl[p_r(G_n)^m\bigr],
-+\]
-+the final inequality being Jensen's inequality.
-+Some realization therefore has $t(F,G_n)<p_r(G_n)^m$.
-+\end{proof}
-+
-+\subsection{The source pattern and its proper-subgraph limits}
-+
-+Let $\mathcal T$ be the following $22$ triples on
-+$P=\{0,\ldots,12\}$, in the order used by \citep{openai161}:
-+\[
-+\begin{array}{llll}
-+\{0,1,3\}&\{0,1,9\}&\{0,2,3\}&\{0,2,9\}\\
-+\{1,3,10\}&\{1,7,10\}&\{1,7,12\}&\{1,9,12\}\\
-+\{2,3,4\}&\{2,4,9\}&\{3,4,11\}&\{3,10,11\}\\
-+\{4,8,9\}&\{4,8,11\}&\{5,6,7\}&\{5,6,11\}\\
-+\{5,7,10\}&\{5,10,11\}&\{6,7,12\}&\{6,8,11\}\\
-+\{6,8,12\}&\{8,9,12\}.&&
-+\end{array}
-+\]
-+Let $J$ be the bipartite incidence graph between $P$ and $\mathcal T$.
-+It has $35$ vertices and $66$ edges.  Every point pair occurring in a
-+face occurs in exactly two faces, and the graph joining faces that
-+share a pair is connected.  These are the first assertions of the finite-complex proposition
-+in \citep[Section~2]{openai161}, and are also directly checkable
-+from the displayed list.
-+
-+For a rectangular kernel $W:\mathcal X\times\mathcal Y\to[0,\infty)$
-+and $B\subseteq E(J)$, the notation $t_{P,\mathcal T}(J_B,W)$
-+means that the vertices in $P$ are sampled from $\mathcal X$ and
-+those in $\mathcal T$ from $\mathcal Y$, independently.  Write
-+$W^\top(y,x)=W(x,y)$ for the transpose.
-+
-+\begin{proposition}[The source supplies the transfer hypotheses]
-+\label{density-source-limits}
-+Assume the rank-layer limit stated in \citep[Section~3]{openai161}.
-+Then the graph $J$ admits kernels $V_q$ satisfying all hypotheses
-+of Lemma~\ref{density-transfer}.
-+\end{proposition}
-+\begin{proof}
-+We keep the source's dimension, type distributions, activation laws,
-+thinning probabilities, and positive dilution parameter fixed before
-+letting the odd prime $q$ tend to infinity.
-+Let $\mathcal K$ be its fixed finite coordinate set.  The matrix
-+coordinates range over the additive group of symmetric $D$-by-$D$
-+matrices over $\mathbb F_q$, for a fixed sufficiently large even $D$.
-+The source uses nonnegative normalized indicators $K_\xi$ of the
-+rank-$D/2$ layers with determinant sign $\xi$.  Its rectangular
-+kernel has the form
-+\[
-+ W_q((a,x),(b,y))
-+ =\mathbb E_{S,\xi\mid a,b}
-+       \prod_{\gamma\in S}K_{\xi_\gamma}(x^\gamma-y^\gamma),
-+\]
-+where every matrix coordinate is uniform and independent, and
-+$\mathbb E K_\xi=1$.  The laws depend on the types but not on the matrices.
-+For each fixed $x^\gamma$, the difference $x^\gamma-Y^\gamma$ is
-+uniform; the same is true of $X^\gamma-y^\gamma$ for fixed
-+$y^\gamma$.  Integrating the product coordinate by coordinate gives
-+one for every pair of types.  Averaging over the opposite type shows
-+that $W_q$ has row and column integrals identically one, including
-+after thinning and dilution.
-+
-+We next prove the proper-subgraph assertion, which is not a stated
-+conclusion of the source's coordinate-expansion lemma.
-+Write $\mathscr C=E(J)$ for its source incidences and $\mathcal P$
-+for the $33$ point pairs occurring in the faces.
-+At a source corner $(i,j)$ there are two pairs $e,f\subset j$
-+containing $i$.
-+For an activation law on a coordinate set $S$ and signs $\xi$, set
-+\[
-+ \phi_\alpha=\mathbf1_{\{\alpha\subseteq S\}}
-+                   \prod_{\gamma\in\alpha}\xi_\gamma,\qquad
-+ A(\alpha,\beta)=\mathbb E(\phi_\alpha\phi_\beta).
-+\]
-+Here $\alpha,\beta\subseteq\mathcal K$, and $\phi_\alpha$ is defined
-+to be zero when $\alpha\not\subseteq S$.  The source's laws have
-+$\mathbb E\phi_\alpha=0$ for every nonempty
-+$\alpha$, so $A(\alpha,\varnothing)=A(\varnothing,\alpha)=0$ for
-+nonempty $\alpha$.
-+
-+Fix $B\subsetneq\mathscr C$ and a type assignment.
-+In the proof of the coordinate-expansion lemma, force the activation
-+at every omitted source incidence in $\mathscr C\setminus B$ to be
-+$S=\varnothing$, and retain the original laws at the other incidences.
-+These modified laws may depend on the individual source incidence,
-+even when two incidences have the same type pair; we therefore repeat
-+the proof, rather than invoke its type-pair statement verbatim.
-+After independently sampling the law at each incidence, each
-+coordinate has some active incidence set to which the source's
-+rank-layer lemma applies.  That lemma is uniform over every subset
-+of $\mathscr C$ and every sign choice.  There are finitely many
-+configurations, so its $o(1)$ error survives the finite products and
-+averages exactly as in the original proof.
-+The resulting limiting expression is
-+\[
-+ \sum_{\substack{\alpha_e\subseteq\mathcal K\\(e\in\mathcal P)}}
-+       \prod_{(i,j)\in\mathscr C}
-+       A_{i,j}(\alpha_{e(i,j)},\alpha_{f(i,j)}).
-+\]
-+At an omitted corner the factor is zero unless both adjacent pair
-+labels are empty.  At every other corner an empty label and a
-+nonempty label also give zero by the first-moment identity.
-+Hence, in any nonzero term, emptiness propagates to all three pair
-+labels of a face and then across every shared-pair adjacency.
-+There is an omitted corner, and the face-neighbor graph is
-+connected, so every pair label must be empty.
-+The all-empty term equals one.
-+After averaging over the finitely many type assignments, this proves
-+\[
-+ t_{P,\mathcal T}(J_B,W_q)\longrightarrow1.
-+ \]
-+The reversed-difference version of the rank-layer lemma gives the
-+same conclusion for the transposed rectangular kernel.
-+
-+For the full incidence set, the source's signed coefficient and
-+dilution construction instead gives
-+\[
-+ t_{P,\mathcal T}(J,W_q)\longrightarrow
-+    1+\varepsilon^{13}t_0,\qquad
-+ t_{P,\mathcal T}(J,W_q^\top)\longrightarrow
-+    1+\varepsilon^{22}t_1,
-+\]
-+where $t_0<0$, and $\varepsilon>0$ is fixed small enough that the
-+product of these two limits is some $a<1$.
-+These are the dilution limits and strict product inequality
-+proved in \citep[Section~3]{openai161}.
-+
-+On the product probability space of the two rectangular sides, put
-+\[
-+ V_q((x,y),(x',y'))=W_q(x,y')W_q(x',y).
-+\]
-+This is symmetric and nonnegative.  Its row integral is one by the
-+exact row and column identities for $W_q$.
-+For any $B\subseteq\mathscr C$, bipartiteness separates the variables
-+in the two factors, giving
-+\[
-+ t(J_B,V_q)=
-+ t_{P,\mathcal T}(J_B,W_q)\,
-+ t_{P,\mathcal T}(J_B,W_q^\top).
-+\]
-+Thus every proper $B$ has limit one, and the full pattern has limit
-+$a<1$, as required.
-+\end{proof}
-+
-+\subsection{Obligatory atoms without a Sidorenko expansion}
-+
-+\begin{theorem}[An obligatory atom below the random-density bound]
-+\label{density-obligatory-atom}
-+Assume the rank-layer limit in \citep[Section~3]{openai161}.
-+For every integer $r\ge3$, the hypergraph $A_r=J^{[r]}$ is an
-+obligatory canonical cyclic atom with
-+\[
-+ |E(A_r)|=66,\qquad |V(A_r)|=66r-97,\qquad
-+ \beta(A_r)=32.
-+\]
-+Here $\beta$ is the cycle rank of the connected Levi graph.
-+Nevertheless, there is a finite simple $r$-uniform host $G$ with
-+\[
-+ t(A_r,G)<p_r(G)^{66}.
-+\]
-+Here obligatoriness concerns injective non-induced containment in
-+every uncountably chromatic host, whereas $t$ counts all
-+homomorphisms in a finite host.
++\item The preceding assertion holds when all spaces are the same
++finite probability space and all $V_{ij}$ are the same symmetric
++nonnegative kernel $V$ with constant row integral one.
++\item $\lambda\in\mathfrak M_r$.
++\end{enumerate}
 +\end{theorem}
 +\begin{proof}
-+First $J$ is $2$-connected.
-+After deleting a point-node, each pair of neighboring faces still
-+shares at least the other point of its common pair.  Connectivity
-+of the face-neighbor graph therefore connects all remaining face
-+nodes, and every remaining point attaches to one of them.
-+After deleting a face-node $j=\{a,b,c\}$, the other face on each of
-+$\{a,b\}$, $\{a,c\}$ and $\{b,c\}$ provides a two-edge incidence
-+path connecting that pair of points while avoiding $j$.
-+Thus the three neighbors of $j$ remain in one component.
-+Replacing every passage through $j$ by these paths shows that
-+$J-j$ remains connected.
-+Consequently no vertex of $J$ is a cut vertex.
-+
-+The graph is bipartite, so its private expansion is obligatory by
-+Reiher's bipartite-expansion theorem \cite[Theorem 1.2]{reiher2024}.
-+Since the core $J$ is $2$-connected,
-+Corollary~\ref{uniform-canonical-atoms} identifies $A_r$ as one
-+cyclic atom.  Equivalently, its cyclic incidence block is the
-+subdivision of $J$, and all its other incidence edges go to the
-+private degree-one vertices.
-+The counts follow from the expansion:
++The first assertion implies the second.  For the third implying the
++first, write $\lambda=\sum_M w_M\mathbf1_M$, where $w_M\ge0$ and
++$\sum_Mw_M=1$, and set
 +\[
-+ |V(A_r)|=35+66(r-2),\qquad
-+ \beta(A_r)=(r-1)66-|V(A_r)|+1=32.
++ U(x_1,\ldots,x_r)
++   =\sum_Mw_M\prod_{\{i,j\}\in M}V_{ij}(x_i,x_j).
 +\]
-+Finally apply Proposition~\ref{density-source-limits} and
-+Lemma~\ref{density-transfer}.
++Each product has mean one because its factors use disjoint variables.
++Its $(i,j)$-marginal is $V_{ij}$ if $\{i,j\}\in M$ and is one
++otherwise: in the latter case every factor touching $i$ or $j$ has
++its other variable integrated out.  This proves the required formula.
++
++It remains to prove the inequalities
++\eqref{density-matching-inequalities} from the second assertion.
++For any even $N$, take the uniform probability space $[N]$, a
++fixed-point-free involution $f$ of $[N]$, and
++\[
++ V_N(x,y)=N\mathbf1_{\{y=f(x)\}}.
++\]
++This is a symmetric nonnegative kernel with row integral one.
++Nonnegativity of each prescribed pair marginal, both on and off
++the graph of $f$, gives
++$1+\lambda_{ij}(N-1)\ge0$ and $1-\lambda_{ij}\ge0$.
++Letting even $N$ tend to infinity yields $0\le\lambda_{ij}\le1$.
++
++Give $(Z_1,\ldots,Z_r)$ the joint probability law with density $U$
++relative to the uniform product measure.  Fix $i$ and put
++$A_j=\{Z_j=f(Z_i)\}$ for $j\ne i$.  The specified pair marginals
++give
++\[
++ \mathbb P(A_j)=\lambda_{ij}+\frac{1-\lambda_{ij}}N.
++\]
++For distinct $j,k\ne i$, the event $A_j\cap A_k$ implies
++$Z_j=Z_k$.  Since $f$ has no fixed point, the $(j,k)$-marginal
++therefore gives
++\[
++ \mathbb P(A_j\cap A_k)
++ \le\mathbb P(Z_j=Z_k)=\frac{1-\lambda_{jk}}N\le\frac1N.
++\]
++For any finite family of events,
++$\sum_j\mathbf1_{A_j}\le
++1+\sum_{j<k}\mathbf1_{A_j\cap A_k}$ pointwise.  Consequently
++\[
++ \sum_{j\ne i}\left(\lambda_{ij}
++           +\frac{1-\lambda_{ij}}N\right)
++ \le1+\frac{\binom{r-1}{2}}N.
++\]
++Letting $N$ tend to infinity proves the degree inequalities.
++
++For the odd-set inequalities use the uniform space $\{-1,1\}$
++and $V(a,b)=1-ab$.  The prescribed pair marginals imply
++$\mathbb E Z_iZ_j=-\lambda_{ij}$.  For every odd subset $S$,
++the integer $\sum_{i\in S}Z_i$ is odd, and thus
++\[
++ 1\le\mathbb E\left(\sum_{i\in S}Z_i\right)^2
++   =|S|-2\sum_{\{i,j\}\subseteq S}\lambda_{ij}.
++\]
++These are precisely the remaining inequalities.  Edmonds' theorem
++now gives $\lambda\in\mathfrak M_r$.
 +\end{proof}
 +
-+\begin{corollary}[Failure of the expansion conjecture]
-+\label{density-nie-spiro}
-+Under the rank-layer hypothesis of
-+Theorem~\ref{density-obligatory-atom}, there is a bipartite graph
-+$J$ such that $J^{[r]}$ is not Sidorenko for every integer $r\ge2$.
-+Consequently Conjecture~5.1 of Nie--Spiro \cite{niespiro2025} is false.
-+\end{corollary}
-+\begin{proof}
-+Use the same $35$-vertex graph $J$.
-+For $r\ge3$, apply Theorem~\ref{density-obligatory-atom}.
-+The case $r=2$ follows from Lemma~\ref{density-transfer}, or directly
-+from the source counterexample, since $J^{[2]}=J$.
-+The private expansion used by Nie--Spiro is exactly $J^{[r]}$ here.  Their Conjecture~5.1 asserts that every
-+bipartite graph has a Sidorenko expansion at some rank $r\ge2$;
-+this one graph has none.
-+\end{proof}
-+
-+This corollary does not settle the general converse question posed
-+in Nie--Spiro's Question~5.2.  The proof uses the additional
-+proper-subgraph limits of this particular graph's witness family,
-+not a transfer theorem for every non-Sidorenko graph.
-+
-+\subsection{Equality at the random benchmark does not force other densities}
-+
-+The density deficit has a further consequence.  Interpolation adapts
-+the graph argument in \citep[Section~8]{openai161} to the actual
-+hypergraph kernels constructed above.  We state the consequence as
-+three explicit limits.
-+
-+\begin{corollary}[Two densities do not determine the four-cycle density]
-+\label{density-forcing-separation}
-+Under the rank-layer hypothesis of Theorem~\ref{density-obligatory-atom},
-+for every $r\ge3$ there are $p\in(0,1)$ and finite simple
-+$r$-uniform hosts $G_n$ of orders tending to infinity such that
-+\[
-+ p_r(G_n)\longrightarrow p,\qquad
-+ t(A_r,G_n)\longrightarrow p^{66},
-+\]
-+but
-+\[
-+ t(C_4^{[r]},G_n)\longrightarrow q>p^4.
-+\]
-+Thus matching the edge and $A_r$ densities of a constant kernel
-+does not determine even the density of the obligatory expansion
-+$C_4^{[r]}$.
-+\end{corollary}
-+\begin{proof}
-+Write $Q_U=M_U$ for the pair marginal in
-+\eqref{density-expansion-identity}.
-+Take the negative kernel $U_-$ of mean $p\in(0,1)$ from
-+Lemma~\ref{density-transfer}, and let $Q_-=Q_{U_-}$.
-+It has mean $p$ and is nonconstant, since otherwise
-+$t(A_r,U_-)=t(J,Q_-)=p^{66}$.
-+
-+On the balanced sign space $\{-1,1\}$ choose
-+\[
-+ 0<\delta\le \frac{\min(p,1-p)}{\binom r2},
-+ \qquad
-+ U_+(z_1,\ldots,z_r)
-+   =p+\delta\sum_{1\le a<b\le r}z_a z_b.
-+\]
-+This kernel is symmetric, takes values in $[0,1]$, and has mean $p$.
-+Its pair marginal is
-+$Q_+(a,b)=p+\delta ab$: every other summand contains an independently
-+integrated sign to its first power.
-+Expansion and sign averaging therefore give
-+\[
-+ t(A_r,U_+)=t(J,Q_+)
-+ =\sum_{\substack{A\subseteq E(J)\\
-+                    d_A(v)\text{ even for every }v}}
-+             p^{66-|A|}\delta^{|A|}
-+ >p^{66}.
-+\]
-+The empty set contributes $p^{66}$; all terms are nonnegative, and
-+the edge set of a cycle contributes positively.  The graph $J$
-+has a cycle because it has $66$ edges and only $35$ vertices.
-+
-+Lift $U_-$ and $U_+$ to the independent coordinates of the product
-+of their finite probability spaces and put
-+\[
-+ U_s=(1-s)U_-+sU_+,\qquad 0\le s\le1.
-+\]
-+Every $U_s$ is symmetric, $[0,1]$-valued, and has mean $p$.
-+The function $s\mapsto t(A_r,U_s)$ is a polynomial with endpoint
-+values strictly below and above $p^{66}$.
-+Thus some $s_*\in(0,1)$ gives equality.
-+Its pair marginal is
-+\[
-+ Q_s((x,a),(y,b))=(1-s)Q_-(x,y)+s(p+\delta ab).
-+\]
-+The centered summands depend on independent coordinate pairs and
-+both have mean zero.  Orthogonality gives
-+\[
-+ \|Q_s-p\|_2^2
-+  =(1-s)^2\|Q_--p\|_2^2+s^2\delta^2>0
-+ \qquad(0\le s\le1).
-+\]
-+In particular $Q=Q_{s_*}$ is nonconstant.
-+
-+For completeness, every finite symmetric nonnegative kernel $Q$
-+of mean $p$ satisfies $t(C_4,Q)\ge p^4$, with equality only when
-+$Q$ is constant.  Indeed, put
-+$d(x)=\mathbb E_zQ(x,z)$ and $c(x,y)=\mathbb E_zQ(x,z)Q(y,z)$.
-+Two applications of Cauchy--Schwarz give
-+\[
-+ t(C_4,Q)=\mathbb E_{x,y}c(x,y)^2
-+   \ge\bigl(\mathbb E_z d(z)^2\bigr)^2\ge p^4.
-+\]
-+Equality forces $d(x)=p$ and $c(x,y)=p^2$ on every positive-mass
-+atom and atom pair.  Diagonal pairs then give
-+\[
-+ \mathbb E_z(Q(x,z)-p)^2=c(x,x)-2p\,d(x)+p^2=0.
-+\]
-+Thus equality forces constancy.  Applied to the present $Q$, this
-+shows
-+\[
-+ t(C_4^{[r]},U_{s_*})=t(C_4,Q)>p^4.
-+\]
-+
-+It remains to pass to finite simple hosts with all three limits.
-+Sample $n$ independent vertex labels and then, conditionally
-+independently, include each $r$-set with probability $U_{s_*}$ of
-+its labels.  For every fixed finite simple $r$-uniform $A$,
-+injective maps give the kernel density, and the fraction of vertex
-+maps having a collision is $O_A(n^{-1})$.  Consequently
-+\[
-+ \mathbb E t(A,G_n)=t(A,U_{s_*})+O_A(n^{-1}).
-+\]
-+The contributions from two vertex maps are independent whenever
-+their images are disjoint.  Overlapping pairs form an
-+$O_A(n^{-1})$ fraction, so
-+$\operatorname{Var}(t(A,G_n))=O_A(n^{-1})$.
-+Chebyshev's inequality with tolerance $n^{-1/4}$, followed by a
-+union bound for the single edge, $A_r$, and $C_4^{[r]}$, gives
-+positive probability that all three desired approximations hold
-+for each sufficiently large $n$.
-+Choose one such realization for each $n$.
-+These deterministic hosts have the three asserted limits.
-+\end{proof}
-+
-+
-+The density $p$ in this corollary can depend on $r$.  Both test
-+patterns are obligatory, yet the equality for one leaves a strict
-+excess for the other.  This compares their finite homomorphism
-+densities with the constant-kernel benchmark.
-+
-+The earlier linear non-Sidorenko examples of
-+\citet[Theorem~3.1]{conlonleesidorenko2024} include systems of odd
-+girth.  The present $A_r$ has only even Berge cycles, satisfies the
-+bridge criterion, and is one canonical atom.  Its obstruction lies
-+within the obligatory class.  The graph counterexample and its
-+finite-field construction are due to \citet{openai161}; the
-+additional conclusions here come from the proper-subgraph limits,
-+matching transfer, and canonical identification.
-+
- \section*{Scope of formal verification}
  
- The triple-system classification and specified finite structural extensions have verified
-@@ -3358,6 +3887,16 @@
- are proved in the manuscript and have not been formalized in Lean.
+ \begin{lemma}[Matching symmetrization]\label{density-matching}
+ Let $V$ be a finite symmetric nonnegative kernel with
+@@ -3471,6 +3601,211 @@
+ number of edges divided by $\binom r2$, namely $\lambda_r$.
+ Permutation invariance of the set of matchings proves symmetry.
+ \end{proof}
++
++The coefficient in Lemma~\ref{density-matching} is optimal in the
++following universal sense: the assertion that every finite symmetric
++nonnegative kernel $V$ with row integral one admits a symmetric
++nonnegative mean-one $r$-kernel with pair marginal $1+\lambda(V-1)$ holds
++precisely for $0\le\lambda\le\lambda_r$.
++Indeed, Theorem~\ref{density-universal-profiles} gives
++$(r-1)\lambda\le1$ when $r$ is even and
++$\binom r2\lambda\le(r-1)/2$ when $r$ is odd; its nonnegativity
++condition excludes negative coefficients.  The lemma attains the
++endpoint, and mixing its kernel with the constant one attains the
++remaining interval.
++The scalar parity obstruction is the familiar minimum-correlation
++bound for exchangeable signs \citep{hoernig2018}.
++Products averaged over perfect or near-perfect matchings also occur
++in the quantum marginal construction of
++\citet[Lemma~4.4]{allerstorfer2026}.
++Theorem~\ref{density-universal-profiles} addresses the full array of
++coefficients for arbitrary finite classical pair kernels.
++
++
++\subsection{Uniform density estimates as uniformity increases}
++
++For bounded symmetric kernels, increasing the uniformity constrains
++the pair marginal.  We use the first two terms of the classical
++Hoeffding orthogonal decomposition \citep{hoeffding1948} and give the
++short projection argument in full.
++Nie--Spiro's exponent estimate
++\citep[Theorem~1.13]{niespiro2025} already yields one-sided
++approximate Sidorenko bounds for expansions at fixed positive
++density.  The results below give explicit two-sided estimates,
++uniform over bounded kernels, together with optimal rates and a
++girth-sensitive refinement under regularity.
++All $L^2$ norms refer to the relevant product probability measure.
++
++\begin{lemma}[Two-coordinate projection bound]
++\label{density-projection-bound}
++Let $r\ge2$ and let $U:\Omega^r\to[0,1]$ be symmetric.  Set
++$p=\mathbb EU$, $d(x)=\mathbb E[U\mid X_1=x]$, and
++$M(x,y)=\mathbb E[U\mid X_1=x,X_2=y]$.  With
++\[
++ h=d-p,\qquad k(x,y)=M(x,y)-p-h(x)-h(y),
++\]
++one has
++\begin{equation}\label{density-hoeffding}
++ r\|h\|_2^2+\binom r2\|k\|_2^2\le p(1-p),
++ \qquad
++ \|M-p\|_2^2\le\frac{2p(1-p)}r.
++\end{equation}
++If $d\equiv p$, the second bound improves to
++\begin{equation}\label{density-regular-projection}
++ \|M-p\|_2^2\le\frac{2p(1-p)}{r(r-1)}.
++\end{equation}
++\end{lemma}
++\begin{proof}
++The mean of $h$ is zero and both one-variable integrals of $k$
++vanish.  Hence the random variables $h(X_i)$ and $k(X_i,X_j)$,
++over all singletons and pairs, are mutually orthogonal in $L^2$.
++Their inner products with $U-p$ are respectively $\|h\|_2^2$
++and $\|k\|_2^2$, by conditional expectation.  Subtracting their
++sum from $U-p$ leaves an orthogonal remainder.  Thus their squared
++norms sum to at most $\operatorname{Var}U\le p(1-p)$, proving
++the first bound.  Furthermore
++\[
++ \|M-p\|_2^2=2\|h\|_2^2+\|k\|_2^2
++ \le\frac2r\left(r\|h\|_2^2+\binom r2\|k\|_2^2\right),
++\]
++because $r\ge2$.  If $h=0$, use the first bound directly.
++\end{proof}
++
++\begin{theorem}[Two-sided density approximation]
++\label{density-uniform-approximation}
++Let $F$ be a finite simple graph with $m\ge1$ edges and $r\ge2$.
++Every symmetric $[0,1]$-valued $r$-kernel $U$ of mean $p$ satisfies
++\begin{equation}\label{density-density-error}
++ \left|t(F^{[r]},U)-p^m\right|
++    \le\frac{m(m-1)}r\,p(1-p).
++\end{equation}
++The same inequality holds for every finite simple $r$-uniform host
++$G$, with $p=p_r(G)$ and homomorphism-density normalization.
++The order $r^{-1}$ cannot be improved uniformly, even for $F=P_3$
++and $p=1/2$.
++\end{theorem}
++\begin{proof}
++Write $D=M_U-p$ and $f(s)=t(F,p+sD)$ for $0\le s\le1$.
++The private-expansion identity gives $f(1)=t(F^{[r]},U)$.
++We have $f(0)=p^m$ and $f'(0)=0$, since $\mathbb ED=0$.
++Each of the $m(m-1)$ terms in $f''(s)$ has two factors $D$
++and $m-2$ factors in $[0,1]$.  Cauchy--Schwarz on the entire
++product probability space bounds its absolute value by
++$\|D\|_2^2$, whether the two corresponding graph edges meet or
++are disjoint.  Taylor's formula with integral remainder yields
++\[
++ |f(1)-f(0)|\le\tfrac12m(m-1)\|D\|_2^2.
++\]
++Apply Lemma~\ref{density-projection-bound}.  The case $m=1$
++is exact and needs no differentiation.  The adjacency kernel of a
++finite simple host, assigned zero on repeated coordinates, proves
++the finite-host assertion without an asymptotic error.
++
++For sharpness let $r=2n+1$, take independent uniform signs, and set
++$U=\mathbf1_{\{X_1+\cdots+X_r>0\}}$.  Then $p=1/2$ and
++\[
++ d(\pm1)=\frac12\pm\frac12\frac{\binom{2n}{n}}{4^n}.
++\]
++As $P_3$ has two edges,
++\[
++ t(P_3^{[r]},U)-\frac14
++  =\operatorname{Var}(d)
++  =\frac14\left(\frac{\binom{2n}{n}}{4^n}\right)^2
++  \sim\frac{1}{2\pi r},
++\]
++where the last assertion follows from Stirling's formula.
++\end{proof}
++
++\begin{theorem}[Girth-sensitive approximation under regularity]
++\label{density-regular-girth}
++Let $F$ be a finite simple graph with $m\ge1$ edges, and let
++$U:\Omega^r\to[0,1]$ be symmetric, where $r\ge2$, with every
++one-coordinate marginal equal to its mean $p$.
++If $F$ is a forest, then $t(F^{[r]},U)=p^m$ exactly.
++Otherwise, if $g$ is the girth of $F$, then
++\begin{equation}\label{density-girth-error}
++ \left|t(F^{[r]},U)-p^m\right|
++ \le (2^m-1)
++       \left(\frac{2p(1-p)}{r(r-1)}\right)^{g/2}.
++\end{equation}
++The same assertion holds for finite regular $r$-uniform hosts,
++with $p=p_r(G)$.  For every fixed cyclic graph $F$, the order
++$r^{-g}$ is optimal among such kernels, already at density $p=1/2$.
++\end{theorem}
++\begin{proof}
++Put $D=M_U-p$ and
++$q=(2p(1-p)/(r(r-1)))^{1/2}$.  Both one-variable integrals of $D$
++are zero, $|D|\le1$, and Lemma~\ref{density-projection-bound}
++gives $\|D\|_2\le q\le1$.  Expand
++\[
++ t(F,M_U)-p^m
++  =\sum_{\varnothing\ne A\subseteq E(F)}
++       p^{m-|A|}t(F_A,D),\qquad F_A=(V(F),A).
++\]
++A vertex of degree one in $F_A$ makes its term vanish by integration.
++Every other nonempty $F_A$ contains a cycle $C$ of length
++$\ell\ge g$.  After taking absolute values, discard the factors
++outside $C$ to obtain
++\[
++ |t(F_A,D)|\le t(C,|D|)\le\|D\|_2^\ell\le q^g.
++\]
++For the middle inequality, the symmetric kernel $|D|$ defines a
++self-adjoint operator on the finite-dimensional space $L^2(\Omega)$.
++If its eigenvalues are $\eta_i$, its cycle integral is
++$\sum_i\eta_i^\ell\le\sum_i|\eta_i|^\ell
++\le(\sum_i\eta_i^2)^{\ell/2}=\|D\|_2^\ell$.
++There are at most $2^m-1$ nonempty edge subsets and
++$p^{m-|A|}\le1$, proving \eqref{density-girth-error}.
++For a forest every nonempty term vanishes.
++The adjacency kernel of a finite regular host has constant
++one-coordinate marginal, so the finite-host statement follows
++without an additional limiting argument.
++
++For sharpness take independent uniform signs, put
++$\theta_r=r^{-1/2}$ and $c_r=\cos\theta_r$, and define
++\[
++ U_r(x_1,\ldots,x_r)
++  =\frac12+\frac14\left[
++       \cos\!\left(\theta_r\sum_{i=1}^r x_i\right)-c_r^r
++     \right].
++\]
++This kernel is symmetric and takes values in $[0,1]$.
++Its cosine term has expectation $c_r^r$.
++Global sign reversal leaves $U_r$ unchanged, so each one-coordinate
++marginal is constant on $\{-1,1\}$.  The mean and these marginals
++are therefore exactly $1/2$.
++Its pair marginal is
++\[
++ M_r(a,b)=\frac12-b_rab,\qquad
++ b_r=\frac14\sin^2\theta_r\,c_r^{r-2}
++       \sim\frac{e^{-1/2}}{4r}.
++\]
++Expanding in the signs shows that only edge subsets with all
++degrees even survive.  If $N_g(F)$ is the number of cycles of
++length $g$ in $F$, the smallest nonempty such subsets are precisely
++these cycles.  Consequently
++\[
++ t(F^{[r]},U_r)-2^{-m}
++  =N_g(F)(-b_r)^g2^{-(m-g)}+O_F(b_r^{g+1}).
++\]
++Since $N_g(F)>0$, the absolute difference is of order $r^{-g}$.
++In particular, for $F=C_g$ the identity is exactly
++$t(C_g^{[r]},U_r)-2^{-g}=(-b_r)^g$.
++\end{proof}
++
++The estimates are uniform over the size of the underlying finite
++probability space.  For the canonical atom $J^{[r]}$, the girth in
++Theorem~\ref{density-regular-girth} is the length of its shortest
++Berge cycle.  Thus the same cyclic structure used in the
++classification controls a quantitative density estimate in regular
++finite hosts.
++
++\subsection{Transfer from proper-subgraph limits}
++
++The preceding estimates do not give the exact Sidorenko inequality.
++For a fixed uniformity the next lemma transfers a strict deficit,
++provided the witness family has sufficiently controlled proper
++edge-subgraph densities.
+ 
+ \begin{lemma}[Transfer from proper-subgraph limits]
+ \label{density-transfer}
+@@ -3888,14 +4223,16 @@
  They are outside the coverage of every existing
  export listed in Appendix~\ref{appendix-formalization}.
-+
-+The density transfer and its consequences in
-+Section~\ref{density-extension} have not been formalized here.
-+They use the rank-layer limit of \citet{openai161} as an explicit
-+external hypothesis.  The source repository describes a Lean
-+formalization of its finite graph counterexample; that description
-+does not verify the additional proper-subgraph extraction or the
-+hypergraph transfer in this manuscript.  No replay of that external
-+formalization is claimed.
-+
+ 
+-The density transfer and its consequences in
+-Section~\ref{density-extension} have not been formalized here.
+-They use the rank-layer limit of \citet{openai161} as an explicit
+-external hypothesis.  The source repository describes a Lean
+-formalization of its finite graph counterexample; that description
+-does not verify the additional proper-subgraph extraction or the
+-hypergraph transfer in this manuscript.  No replay of that external
+-formalization is claimed.
++The results in Section~\ref{density-extension} have not been
++formalized here.  Its universal marginal-realization theorem and
++quantitative density estimates have independent manuscript proofs;
++they do not use the rank-layer hypothesis.  The conclusions about
++the explicit Sidorenko counterexample, including Theorem~D, do use
++the rank-layer limit of \citet{openai161} as an explicit external
++hypothesis.  The source repository describes a Lean formalization
++of its finite graph counterexample; that description does not verify
++the additional proper-subgraph extraction or the hypergraph transfer
++in this manuscript.  No replay of that external formalization is claimed.
+ 
  
  Verification of the extended manuscript is not complete.  In particular,
- fixed-atom profile realization, the full lattice spectra, maximal-chain and
-@@ -3481,7 +4020,9 @@
- the verification section.  ChatGPT was also used to develop and check
- the higher-uniformity argument in Section~\ref{uniform-extension}
+@@ -4022,7 +4359,8 @@
  and the exact chromatic and finite-family arguments in
--Section~\ref{exact-spectra-extension}.
-+Section~\ref{exact-spectra-extension}.  ChatGPT was used to
-+identify the external density construction and to develop and check
-+the transfer arguments in Section~\ref{density-extension}.
+ Section~\ref{exact-spectra-extension}.  ChatGPT was used to
+ identify the external density construction and to develop and check
+-the transfer arguments in Section~\ref{density-extension}.
++the transfer arguments, universal marginal theorem, and quantitative
++density estimates in Section~\ref{density-extension}.
  The author takes full responsibility for the
  arguments, citations, and final manuscript; newly incorporated material in
  this review draft remains subject to the author's review.
-@@ -3528,6 +4069,22 @@
- \newblock In \emph{Infinite and Finite Sets (Keszthely, 1973)}, volume~10 of
-   \emph{Colloquia Mathematica Societatis J{\'a}nos Bolyai}, pages 425--513.
-   North-Holland, 1975.
+@@ -4281,6 +4619,37 @@
+ \newblock \emph{International Mathematics Research Notices},
+   2024\penalty0 (13):\penalty0 10285--10297, 2024.
+ \newblock \doi{10.1093/imrn/rnae071}.
 +
-+\bibitem[OpenAI(2026)]{openai161}
-+OpenAI.
-+\newblock A counterexample to {Sidorenko}'s conjecture.
-+\newblock OpenAI Math Release preprint, 23 September 2026.
-+\newblock Repository release of 6 October 2026, pinned to commit
-+  \texttt{adc7f1241b42e322a6451854ab7e4b4c146bf78a}.
-+\newblock \href{https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-counterexample-to-Sidorenkos-conjecture-September-23-2026/paper.pdf}{Versioned manuscript and source in \texttt{openai/math}}.
++\bibitem[Edmonds(1965)]{edmonds1965matching}
++Jack Edmonds.
++\newblock Maximum matching and a polyhedron with {$0,1$}-vertices.
++\newblock \emph{Journal of Research of the National Bureau of Standards,
++  Section B}, 69B:\penalty0 125--130, 1965.
++\newblock \doi{10.6028/jres.069B.013}.
 +
-+\bibitem[Nie and Spiro(2025)]{niespiro2025}
-+Jiaxi Nie and Sam Spiro.
-+\newblock Sidorenko hypergraphs and random {Tur\'an} numbers.
-+\newblock \emph{Combinatorial Theory}, 5\penalty0 (4):\penalty0
-+  Article 10, 19 pp., 2025.
-+\newblock \doi{10.5070/C65465676}.
-+\newblock URL \url{https://escholarship.org/uc/item/0c25t471}.
- 
- \bibitem[Whitney(1932)]{whitney1932}
- Hassler Whitney.
-@@ -3717,6 +4274,13 @@
- \newblock Probabilistic bounds on the coefficients of polynomials with only real zeros.
- \newblock \emph{J. Combin. Theory Ser. A}, 77\penalty0 (2):\penalty0 279--303, 1997.
- \newblock \doi{10.1006/jcta.1997.2747}.
++\bibitem[Hoernig(2018)]{hoernig2018}
++Steffen Hoernig.
++\newblock On the minimum correlation between symmetrically distributed
++  random variables.
++\newblock \emph{Operations Research Letters}, 46\penalty0 (4):\penalty0
++  469--471, 2018.
++\newblock \doi{10.1016/j.orl.2018.06.005}.
 +
-+\bibitem[Conlon et~al.(2024)Conlon, Lee, and Sidorenko]{conlonleesidorenko2024}
-+David Conlon, Joonkyung Lee, and Alexander Sidorenko.
-+\newblock Extremal numbers and {Sidorenko}'s conjecture.
-+\newblock \emph{International Mathematics Research Notices},
-+  2024\penalty0 (13):\penalty0 10285--10297, 2024.
-+\newblock \doi{10.1093/imrn/rnae071}.
++\bibitem[Allerstorfer et~al.(2026)Allerstorfer, Christandl, Grinko, Nechita,
++  Ozols, Rochette, and Verduyn Lunel]{allerstorfer2026}
++Rene Allerstorfer, Matthias Christandl, Dmitry Grinko, Ion Nechita,
++  Maris Ozols, Denis Rochette, and Philip Verduyn Lunel.
++\newblock Monogamy of highly symmetric states.
++\newblock \emph{Communications in Mathematical Physics},
++  407\penalty0 (1):\penalty0 Article 21, 2026.
++\newblock \doi{10.1007/s00220-025-05483-3}.
++
++\bibitem[Hoeffding(1948)]{hoeffding1948}
++Wassily Hoeffding.
++\newblock A class of statistics with asymptotically normal distribution.
++\newblock \emph{Annals of Mathematical Statistics},
++  19\penalty0 (3):\penalty0 293--325, 1948.
++\newblock \doi{10.1214/aoms/1177730196}.
  
  \bibitem[de~Moura and Ullrich(2021)]{demoura2021}
  Leonardo de~Moura and Sebastian Ullrich.

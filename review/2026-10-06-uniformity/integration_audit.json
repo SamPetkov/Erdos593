@@ -43,6 +43,10 @@
     "lieb1968",
     "pitman1997",
     "conlonleesidorenko2024",
+    "edmonds1965matching",
+    "hoernig2018",
+    "allerstorfer2026",
+    "hoeffding1948",
     "demoura2021",
     "mathlib2020",
     "avigadharrison2014",
@@ -114,5 +118,33 @@
   "external_source_finite_field_proof_independently_reproved": false,
   "density_transfer_lean_formalized": false,
   "external_lean_replay_performed": false,
-  "new_density_results_external_peer_reviewed": false
+  "new_density_results_external_peer_reviewed": false,
+  "previous_strengthening_baseline_commit": "c72b45e0d805a6b431e03fc92ea9de98ba8a9ea5",
+  "previous_strengthening_baseline_tex_sha256": "98e0e6dfca9ba059f3514dd0f15183e42790ab5a9ed0e087c70c550ae8cc6c07",
+  "conditional_transfer_and_application_preserved_exactly": true,
+  "conditional_transfer_and_application_sha256": "697f2cc5fc361c17f2967e18ff0e6eb1cba85ec49cc59a54d8c55f23de6c554e",
+  "previous_41_bibliography_entries_preserved_verbatim": true,
+  "unconditional_strengthening_changes": [
+    "Add the universal pair-kernel realization theorem with its exact matching-polytope criterion.",
+    "Prove optimality with the universal quantifiers explicit and credit the scalar and matching-mixture precedents.",
+    "Add fully proved two-sided expansion-density bounds, a regular girth bound, and analytic sharpness examples.",
+    "Name the stronger marginal framework.",
+    "Separate the unconditional new framework from the conditional application at the start of Section 13.",
+    "Add the independent new results to the abstract.",
+    "Describe the new unconditional conclusions in the introduction without changing Theorem D.",
+    "Correct the scope statement to distinguish independent theorems from the source-dependent application.",
+    "Extend the assistance disclosure to the new arguments.",
+    "Add four verified primary references for the classical and nearby methods."
+  ],
+  "unconditional_results": [
+    "density-universal-profiles",
+    "density-projection-bound",
+    "density-uniform-approximation",
+    "density-regular-girth"
+  ],
+  "source_prompt_found_for_family_161": false,
+  "source_161_formal_target_verified_from_released_files": true,
+  "independent_internal_mathematical_readings_of_new_results": 2,
+  "root_integration_review": true,
+  "first_priority_certified": false
 }
