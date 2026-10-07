@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-07",
+  "direction": "D2: strict balancedness and sparse random avoidance of the same canonical atom family",
+  "status": "Complete analytical finite-certificate derivation; four complete source-only Lean candidate modules. No compiler or kernel acceptance yet.",
+  "authorization_scope": "The author approved developing the three connected directions and formalizing as we go. This worker performed source-only preparation in its owned public-project research directory. No clock, manuscript, Git, private repository, service or compiler action.",
+  "exact_question": "For the displayed 13-point/22-triangle incidence graph J, prove every actual selected subgraph Q with v(Q)>=3 satisfies e(Q)+4<=2v(Q), and every proper eligible Q has (e(Q)-1)/(v(Q)-2)<65/33. Then separate the actual private-expansion carrier proof from the algebraic r-density transport.",
+  "conventions": {
+    "point_carrier": "Fin 13",
+    "original_face_carrier": "Fin 22",
+    "exposure_position_carrier": "Fin 11 in each of two disjoint classes",
+    "tagged_face_carrier": "Fin 11 + Fin 11; a closed certified bijection identifies it with the original Fin 22 labels",
+    "selected_vertices": "S:Finset(Fin13), T0,T1:Finset(Fin11), with actual selected order card(S)+card(T0)+card(T1)",
+    "selected_edges": "Two separate actual Sigma(position,point) incidence carriers E0,E1, each contained in the appropriate selected triangular incidence finset; card(E0)+card(E1) counts each oriented bipartite incidence once",
+    "non_induced": "E0 and E1 are arbitrary subsets of the induced incidence carriers, not necessarily all induced edges",
+    "properness": "At least one actual selected vertex or incidence carrier differs from its full finite carrier, including proper edge selections on all 35 vertex nodes",
+    "density": "Integer subtraction is used for e-1 and v-2, so zero-edge selections have numerator -1, not truncated zero. A positive v-2 is explicitly proved before ratio interpretation.",
+    "r_expansion": "For r>=2, each selected core edge receives r-2 distinct private vertices; the actual geometric vertex count is v_core+(r-2)*f before adding isolated selected vertices.",
+    "external_probability": "Random-host inclusion probability rho differs from the kernel mean p. r is fixed while n tends to infinity."
+  },
+  "analytical_proof": [
+    "Each exposure class is a finite ordered list of triangular faces with a distinguished point belonging to its face and absent from every earlier face. Restricting to any h>=1 retained faces leaves three points in the first retained face and a globally fresh point for each later face, hence at least h+2 union points.",
+    "For a selected point set S of size a, the fully contained faces in either class are at most a-2 (with the empty case treated separately). There are thus at most 2a-4 fully contained faces when a>=2.",
+    "For b selected face nodes, a face contributes at most two selected incidences unless all three points are selected. Hence e<=2b+f3<=2(a+b)-4 for a>=2. When a=0, e=0. When a=1 and total order>=3, b>=2 and e<=b<=2b-2. Removing selected incidence edges preserves the inequality.",
+    "The whole graph has 35 actual nodes and 66 actual incidence edges. For every selected v>=3, 33(e-1)<=65(v-2), because e<=2v-4 and v<=35. If the selection is proper, actual finite-carrier rigidity proves v<35 or e<66, giving a strict cross-product. The whole graph attains equality, so the analytical m2 value is 65/33 and strict 2-balancedness follows.",
+    "For a private r-expansion, the exact comparison slack is 65*((r-2)*f+v-r)-(65*r-97)*(f-1)=65*(v-2)-33*(f-1). This transfers strictness algebraically. An eligible subgraph with f>=2 has a positive expanded denominator. Zero- and one-edge eligible subgraphs have negative or zero numerator and cannot maximize the positive whole-graph density.",
+    "The analytical full expansion has 66 edges and 66r-97 vertices, hence mr=65/(65r-97). Equality requires the whole core and no added isolated vertices. This actual private-port cardinality and selection transport are not yet formalized by the four files; the arithmetic module makes the missing premise explicit."
+  ],
+  "proof_obligations": {
+    "source_complete_candidates": [
+      "Universal exposure-to-union cardinal inequality",
+      "Complete-face counting and actual selected incidence sparsity",
+      "Concrete 22-triangle membership/freshness/disjoint coverage, 66 actual incidence pairs and 35 actual vertex nodes",
+      "Actual properness-to-strict-count conversion",
+      "Strict 65/33 cross-products for every eligible actual selected subgraph",
+      "Exact integer expansion slack and denominator-positive arithmetic transport"
+    ],
+    "pending_formal_obligations": [
+      "Pinned warning-fatal compilation and actual full definitions/types/ordered transitive axioms for these exact sources",
+      "If using the project's SimpleGraph.Subgraph API rather than the exact finite carrier model, separately prove its original-carrier edge/cardinality equivalence",
+      "Actual private-port expansion edge injectivity, vertex support cardinality, arbitrary selected expanded subgraph and added-isolate transport",
+      "Literal maximum/supremum definition of mr, if desired, from the established positive-denominator cross-product characterization",
+      "The external random Turan theorem and rank-layer analytic transfer remain outside this finite Lean checkpoint"
+    ]
+  },
+  "random_host_application": {
+    "statement": "Writing alpha=r-97/65, Nie-Spiro Theorem1.4 gives a.a.s. ex(G^r_{n,rho},A_r)>=n^{97/65-o(1)}*(rho*n^{r-97/65})^{s(A_r)/(65+s(A_r))}, for rho>=n^{-(r-97/65)} and fixed r>=2.",
+    "unconditional_part": "The finite sparsity/balancedness derivation and its threshold arithmetic do not require the external analytic estimate.",
+    "conditional_part": "Positivity of s(A_r), making this a nontrivial improvement over the generic deletion exponent, depends on the draft's external rank-layer input and all-uniformity transfer. Balancedness itself is not Sidorenko failure.",
+    "not_claimed": ["Optimal exponent", "Matching upper bound", "A useful improvement in the dense p=1 regime", "Uniformity in r", "A fully formalized random Turan theorem", "New priority or publication readiness"]
+  },
+  "method_and_validation": {
+    "main_proof_method": "Finite ordered induction, finite-set cardinality monotonicity, actual incidence sigma carriers, linear integer cross-products and exact polynomial cancellation",
+    "concrete_certificate_method": "Closed finite kernel decide candidates, never native_decide",
+    "source_validation": "Pinned Mathlib declaration signatures and Lean unused-section-instance behavior read directly; source/math helper pass found no mathematical or API fault. Ordered instances were scoped explicitly to the four exposure-order theorems before freezing.",
+    "finite_diagnostics": "The concrete vectors were read and checked for disjoint coverage, fresh points and exact carrier sizes; small integer arithmetic cases were checked separately. These diagnostics are not kernel evidence or exhaustive subgraph enumeration.",
+    "review_identity": "Codex source preparation/self-review, independent=false; actual distinct helper reviews supplement it honestly. Full external audit and all compiler acceptance remain pending.",
+    "compute": "This preparation invoked no Lean, Lake, Elan, compiler version or external proof service. Parent must separately freeze reviewed resources/package/attempt authorization before any bounded compilation."
+  },
+  "acceptance_criteria": [
+    "Exact source hashes, immutable package and correct original dependency bytes",
+    "Warning-fatal pinned Lean4.32.0/compiler8c9756b and all nine clean pins",
+    "All 19 definitions/aliases printed in full and all 41 actual theorem types printed, including local instances and inline finite carrier definitions",
+    "All 41 actual ordered transitive axiom lists contain only propext, Classical.choice and Quot.sound or subsets; exact actual lists must be read, not inferred from tactics",
+    "Actual child/wrapper/original-log/resource/accounting exits reconciled",
+    "No weakening of selected-subgraph quantifiers, no desired sparsity or equivalent balancedness premise added, no new axioms or prohibited proof mechanisms"
+  ],
+  "story_value": "The same canonical atom controlling infinite chromatic unavoidability also has a rigid sparse-random threshold. The finite sparsity lemma supplies a concrete structural bridge; it is not an unrelated numerical fact. Classical random Turan machinery and the external density source must be credited."
+}

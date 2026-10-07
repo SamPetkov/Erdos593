@@ -1,0 +1,245 @@
+{
+  "date": "2026-10-07",
+  "reviewer": "/root/density_binder_audit",
+  "review_kind": "Actual separate-agent source-only binder and literal-definition audit",
+  "compiler_invoked": false,
+  "kernel_acceptance": false,
+  "external_full_audit": false,
+  "skill_adoption": {
+    "repository": "https://github.com/scottnarmstrong/LeanAutoformalizationSkills",
+    "commit": "05a07311f16bc581729e52f3e73647b95fa9bef1",
+    "fully_read": [
+      "skills/lean-workflow/SKILL.md",
+      "skills/lean-statement-audit/SKILL.md"
+    ],
+    "bounded_use": "Five-bin input review and literal body/carrier checks only. No installation, architecture migration, new draft-hole policy, toolchain change or claim of the complete Armstrong sealing workflow.",
+    "status_boundary": "These are hash-frozen uncompiled development candidates, not exact manifested/sealed source roots. A passing source check below is not PROVED, axiom closure, term-level consumer closure or compliance with every requirement of the external workflow."
+  },
+  "authoritative_sources": {
+    "brief": {
+      "path": "research/e593-density-development-20261007/development-brief.json",
+      "sha256": "fa00b83a191674977624c8876df446505b49d14884e51fdda3b4c7a1b428be06",
+      "fields": "exact_contract.D2, exact_contract.D3, conventions, conditional_boundary"
+    },
+    "mathematical_deductions": {
+      "path": "research/e593-pro-openai-audit-20261007/audit-and-directions.json",
+      "sha256": "8fab42996d4a8d961c5871f86cb0deeb5a14b247bed01d2eb39af15e1d99b2b3",
+      "fields": "directions D1.private-expansion proof, D2.exact_statement/finite_certificate/proof, D3.exact_statement/proof"
+    },
+    "d3_conditional_contract": {
+      "path": "research/e593-density-development-20261007/d3/source-checkpoint.json",
+      "sha256": "c1947bf94f3125dacf1d7d2ef14c06b6ae7ce46022085bae7186007e5d091177",
+      "fields": "inputs_and_conventions, actual_canonical_adapter, edge_cases"
+    }
+  },
+  "frozen_lean_sources": [
+    {
+      "path": "research/e593-density-development-20261007/d2/ComplexCertificate.lean",
+      "sha256": "467e063329942f5a0366051d9330613a6cfcc965cfed76c1e29de86f583da019",
+      "fully_read": true
+    },
+    {
+      "path": "research/e593-density-development-20261007/d2/ExposureSparsityCandidate.lean",
+      "sha256": "c1f4b7bfddaaa9e32d3b37d88819ba16bfca13126d59ee9f56b0c50d25593e0d",
+      "fully_read": true,
+      "superseded_unexecuted_source": "59885b880cf230ba300035ae0125269f332992bcd9a49cf02567f77722e88f47",
+      "reviewed_successor_change": "Moved LinearOrder ι from the section context to explicit instance binders of only the four ordered exposure lemmas. Fully reread successor; high-level concrete endpoint binders and every definition body remain unchanged."
+    },
+    {
+      "path": "research/e593-density-development-20261007/d2/RatioCandidate.lean",
+      "sha256": "3fee81cbde524ca98fc5b1b4e9ecbcc8248a4993d5e4954a2a71d4d6ab99a92b",
+      "fully_read": true
+    },
+    {
+      "path": "research/e593-density-development-20261007/d2/ComplexSparsityCandidate.lean",
+      "sha256": "12d80da2abb7974e5fdb44fb99c218993af5565f5a2bc30e77ee9316452d2185",
+      "fully_read": true
+    },
+    {
+      "path": "research/e593-density-development-20261007/d3/FinitePortContraction.lean",
+      "sha256": "de46591242e468fcad188660888d2b21215eac12cd7b61fcdaf298ed844b0845",
+      "fully_read": true,
+      "freeze_confirmed_by_writer": true
+    }
+  ],
+  "binder_convention": "Rows enumerate each explicit, implicit and instance input in the four audited export headers. Grouped Lean syntax is expanded into separate rows. Universes are recorded separately as pure type levels. No project-owned logical assumption bundle is present; IsFullSelection is expanded below. Function-valued inputs retain their displayed dependent scopes, rather than being treated as arbitrary scalar witnesses.",
+  "five_bin_tables": [
+    {
+      "export": "E593DensityDevelopment.ComplexSparsity.complex_subgraph_sparsity",
+      "source_range": "d2/ComplexSparsityCandidate.lean:51-63",
+      "source_contract": "D2 universal represented selected-incidence subgraph inequality, including non-induced edge selections.",
+      "implicit_binders": [],
+      "instance_binders": [],
+      "universe_parameters": [],
+      "rows": [
+        {"binder": "S", "information": "explicit", "type": "Finset Point", "bin": "SOURCE", "source": "D2 proof, arbitrary retained point set"},
+        {"binder": "T₀", "information": "explicit", "type": "Finset Position", "bin": "SOURCE", "source": "D2 proof, arbitrary faces retained from first certified class"},
+        {"binder": "T₁", "information": "explicit", "type": "Finset Position", "bin": "SOURCE", "source": "D2 proof, arbitrary faces retained from second certified class"},
+        {"binder": "E₀", "information": "explicit", "type": "Finset Incidence", "bin": "SOURCE", "source": "D2 proof, arbitrary retained oriented incidences in first tagged class"},
+        {"binder": "E₁", "information": "explicit", "type": "Finset Incidence", "bin": "SOURCE", "source": "D2 proof, arbitrary retained oriented incidences in second tagged class"},
+        {"binder": "hE₀", "information": "explicit proof", "type": "E₀ ⊆ selectedIncidences face₀ S T₀", "bin": "SOURCE", "source": "Actual subgraph eligibility: every selected edge uses retained point/face nodes and an actual incidence"},
+        {"binder": "hE₁", "information": "explicit proof", "type": "E₁ ⊆ selectedIncidences face₁ S T₁", "bin": "SOURCE", "source": "Same actual subgraph eligibility for the other tagged class"},
+        {"binder": "horder", "information": "explicit proof", "type": "3 ≤ S.card + T₀.card + T₁.card", "bin": "SOURCE", "source": "D2 exact_statement: v(Q) ≥ 3"}
+      ],
+      "bin_counts": {"SOURCE": 8, "STANDING": 0, "TYPING": 0, "RULED": 0, "EXCESS": 0},
+      "produced_not_assumed": ["exposure freshness", "face cardinality three", "complete-face bound", "edge sparsity"],
+      "source_check": "PASS for the represented finite incidence selections; kernel and actual SimpleGraph.Subgraph consumer pending."
+    },
+    {
+      "export": "E593DensityDevelopment.ComplexSparsity.complex_strict_two_balance",
+      "source_range": "d2/ComplexSparsityCandidate.lean:117-131",
+      "source_contract": "D2 strict 65/33 cross-product comparison for every proper eligible represented selection.",
+      "implicit_binders": [],
+      "instance_binders": [],
+      "universe_parameters": [],
+      "rows": [
+        {"binder": "S", "information": "explicit", "type": "Finset Point", "bin": "SOURCE", "source": "D2 proper subgraph point selection"},
+        {"binder": "T₀", "information": "explicit", "type": "Finset Position", "bin": "SOURCE", "source": "D2 proper subgraph first face-class selection"},
+        {"binder": "T₁", "information": "explicit", "type": "Finset Position", "bin": "SOURCE", "source": "D2 proper subgraph second face-class selection"},
+        {"binder": "E₀", "information": "explicit", "type": "Finset Incidence", "bin": "SOURCE", "source": "D2 arbitrary non-induced selected edge set in first tagged class"},
+        {"binder": "E₁", "information": "explicit", "type": "Finset Incidence", "bin": "SOURCE", "source": "D2 arbitrary non-induced selected edge set in second tagged class"},
+        {"binder": "hE₀", "information": "explicit proof", "type": "E₀ ⊆ selectedIncidences face₀ S T₀", "bin": "SOURCE", "source": "Actual subgraph endpoint/incidence eligibility"},
+        {"binder": "hE₁", "information": "explicit proof", "type": "E₁ ⊆ selectedIncidences face₁ S T₁", "bin": "SOURCE", "source": "Actual subgraph endpoint/incidence eligibility"},
+        {"binder": "horder", "information": "explicit proof", "type": "3 ≤ S.card + T₀.card + T₁.card", "bin": "SOURCE", "source": "Positive 2-density denominator convention v(Q) > 2"},
+        {"binder": "hproper", "information": "explicit proof", "type": "¬ IsFullSelection S T₀ T₁ E₀ E₁", "bin": "SOURCE", "source": "Strict balancedness quantifies over proper subgraphs; literal full-selection predicate is expanded below"}
+      ],
+      "bin_counts": {"SOURCE": 9, "STANDING": 0, "TYPING": 0, "RULED": 0, "EXCESS": 0},
+      "produced_not_assumed": ["v ≤ 35", "v < 35 or e < 66", "e ≤ 2v-4", "positive v-2", "strict cross-product"],
+      "source_check": "PASS for the represented selection comparison, not a closed m₂ supremum theorem or r-expansion endpoint."
+    },
+    {
+      "export": "E593.DensityPorts.edge_partition_port_contraction",
+      "source_range": "d3/FinitePortContraction.lean:213-269",
+      "source_contract": "Exact finite weighted contraction, conditional on an actual complete vertex/edge partition representation and endpoint agreement.",
+      "universe_parameters": [{"binder": "u", "bin": "TYPING"}, {"binder": "v", "bin": "TYPING"}, {"binder": "w", "bin": "TYPING"}, {"binder": "z", "bin": "TYPING"}],
+      "rows": [
+        {"binder": "V", "information": "implicit", "type": "Type u", "bin": "TYPING", "source": "D3 finite original vertex carrier"},
+        {"binder": "Edge", "information": "implicit", "type": "Type u", "bin": "TYPING", "source": "D3 finite original edge carrier; not a list cardinality"},
+        {"binder": "I", "information": "implicit", "type": "Type v", "bin": "TYPING", "source": "D3 finite block index carrier; canonical identity of this index is a separate adapter"},
+        {"binder": "Shared", "information": "implicit", "type": "Type w", "bin": "TYPING", "source": "D3 retained common-coordinate carrier, with unused isolates allowed in this conditional version"},
+        {"binder": "Port", "information": "implicit", "type": "I → Type w", "bin": "TYPING", "source": "D3 local port carrier for each block"},
+        {"binder": "Internal", "information": "implicit", "type": "I → Type w", "bin": "TYPING", "source": "D3 block-exclusive vertex carriers"},
+        {"binder": "AtomEdge", "information": "implicit", "type": "I → Type w", "bin": "TYPING", "source": "D3 each block's original edge subcarrier"},
+        {"binder": "Slot", "information": "implicit", "type": "Type z", "bin": "TYPING", "source": "Ordered edge input convention; algebra does not require finite uniform slots"},
+        {"binder": "Ω", "information": "implicit", "type": "Type z", "bin": "TYPING", "source": "D3 finite sampling carrier"},
+        {"binder": "instFintypeV", "information": "instance", "type": "Fintype V", "bin": "TYPING", "source": "Finite original vertex convention"},
+        {"binder": "instFintypeEdge", "information": "instance", "type": "Fintype Edge", "bin": "TYPING", "source": "Finite original edge convention"},
+        {"binder": "instFintypeI", "information": "instance", "type": "Fintype I", "bin": "TYPING", "source": "Finite atom-index convention"},
+        {"binder": "instFintypeShared", "information": "instance", "type": "Fintype Shared", "bin": "TYPING", "source": "Finite shared-coordinate convention"},
+        {"binder": "instFintypeInternal", "information": "instance", "type": "∀ i, Fintype (Internal i)", "bin": "TYPING", "source": "Finite exclusive-coordinate convention; dependent on the same I"},
+        {"binder": "instFintypeAtomEdge", "information": "instance", "type": "∀ i, Fintype (AtomEdge i)", "bin": "TYPING", "source": "Finite block edge-subcarrier convention; dependent on the same I"},
+        {"binder": "instFintypeΩ", "information": "instance", "type": "Fintype Ω", "bin": "TYPING", "source": "Finite sample-space convention"},
+        {"binder": "d", "information": "explicit", "type": "V ≃ Shared ⊕ Sigma Internal", "bin": "SOURCE", "source": "D3 conditional representation of all original vertex coordinates; source-checkpoint.inputs_and_conventions.port_decomposition"},
+        {"binder": "a", "information": "explicit", "type": "Edge ≃ Sigma AtomEdge", "bin": "SOURCE", "source": "D3 actual edge partition, expressed as a full carrier bijection; source-checkpoint.inputs_and_conventions.edge_decomposition"},
+        {"binder": "μ", "information": "explicit", "type": "Ω → ℝ", "bin": "SOURCE", "source": "D3 finite sampling weights; arbitrary real weights give a stronger algebraic equality"},
+        {"binder": "U", "information": "explicit", "type": "(Slot → Ω) → ℝ", "bin": "SOURCE", "source": "D3 edge factor kernel with ordered slot inputs"},
+        {"binder": "port", "information": "explicit", "type": "∀ i, Port i → Shared", "bin": "SOURCE", "source": "Actual location of every local port among retained shared coordinates"},
+        {"binder": "edge", "information": "explicit", "type": "Edge → Slot → V", "bin": "SOURCE", "source": "Original pattern endpoints, using the same full Edge and V carriers"},
+        {"binder": "endpoint", "information": "explicit", "type": "∀ i, AtomEdge i → Slot → Port i ⊕ Internal i", "bin": "SOURCE", "source": "Local description of each actual block edge endpoint, not a density witness"},
+        {"binder": "endpoint_fidelity", "information": "explicit proof", "type": "∀ i e k, d (edge (a.symm ⟨i,e⟩) k) = Sum.elim (fun p => Sum.inl (port i p)) (fun v => Sum.inr ⟨i,v⟩) (endpoint i e k)", "bin": "SOURCE", "source": "D3 conditional endpoint compatibility for every block i, its edge e and input slot k; the equation is not the target density equality"}
+      ],
+      "bin_counts_excluding_universe_levels": {"SOURCE": 8, "STANDING": 0, "TYPING": 16, "RULED": 0, "EXCESS": 0},
+      "expanded_scope": "endpoint_fidelity universally quantifies i:I, e:AtomEdge i and k:Slot in that order. Its only logical assertion is their endpoint equation. No premise is hidden in Port, Internal, AtomEdge, Fintype, finiteDensity, portMarginal or atomEdgeKernel.",
+      "source_check": "PASS for the honestly conditional carrier-representation identity. For an unconditional canonical-decomposition claim, d, a and endpoint_fidelity must be produced inside its proof; leaving them as hypotheses would be EXCESS against that stronger source claim."
+    },
+    {
+      "export": "E593.DensityPorts.private_expansion_marginal_identity",
+      "source_range": "d3/FinitePortContraction.lean:280-292",
+      "source_contract": "D1 exact finite density identity on the explicit private-expansion carrier, without claiming a Sidorenko inequality.",
+      "universe_parameters": [{"binder": "u", "bin": "TYPING"}, {"binder": "v", "bin": "TYPING"}, {"binder": "w", "bin": "TYPING"}, {"binder": "z", "bin": "TYPING"}],
+      "rows": [
+        {"binder": "Core", "information": "implicit", "type": "Type u", "bin": "TYPING", "source": "D1 original finite graph-core vertex carrier"},
+        {"binder": "Edge", "information": "implicit", "type": "Type v", "bin": "TYPING", "source": "D1 original finite graph-core edge carrier"},
+        {"binder": "Private", "information": "implicit", "type": "Type w", "bin": "TYPING", "source": "Private coordinate carrier, copied independently for every edge by Sigma"},
+        {"binder": "Ω", "information": "implicit", "type": "Type z", "bin": "TYPING", "source": "Finite sampling carrier"},
+        {"binder": "instFintypeCore", "information": "instance", "type": "Fintype Core", "bin": "TYPING", "source": "Finite core convention"},
+        {"binder": "instFintypeEdge", "information": "instance", "type": "Fintype Edge", "bin": "TYPING", "source": "Finite edge convention"},
+        {"binder": "instFintypePrivate", "information": "instance", "type": "Fintype Private", "bin": "TYPING", "source": "Finite private coordinate convention"},
+        {"binder": "instFintypeΩ", "information": "instance", "type": "Fintype Ω", "bin": "TYPING", "source": "Finite sample-space convention"},
+        {"binder": "μ", "information": "explicit", "type": "Ω → ℝ", "bin": "SOURCE", "source": "Finite weights used identically on core and edge-private coordinates"},
+        {"binder": "U", "information": "explicit", "type": "((Fin 2 ⊕ Private) → Ω) → ℝ", "bin": "SOURCE", "source": "Expansion kernel; two ordered core inputs and all private inputs are retained"},
+        {"binder": "edge", "information": "explicit", "type": "Edge → Fin 2 → Core", "bin": "SOURCE", "source": "Actual ordered core endpoints; no density or Sidorenko premise is assumed"}
+      ],
+      "bin_counts_excluding_universe_levels": {"SOURCE": 3, "STANDING": 0, "TYPING": 8, "RULED": 0, "EXCESS": 0},
+      "source_check": "PASS for the explicit carrier private expansion. A theorem identifying a different pre-existing hypergraph with this expansion still needs an actual endpoint/carrier isomorphism and density invariance consumer. Mean preservation and theta/cycle density inequalities are not supplied by this identity."
+    }
+  ],
+  "literal_definition_audit": {
+    "common_verdict": {"BODY_MATCH": "OK", "PUBLIC_CARRIER": "OK for the explicitly declared development carriers", "WELL_DEFINEDNESS": "N/A_LITERAL", "CHARACTERIZATION": "N/A_LITERAL", "CHOICE_INDEPENDENCE": "N/A", "DEFINITION_VERDICT": "SOURCE_ONLY_PASS"},
+    "no_default_or_choice_fallback": true,
+    "entries": [
+      {"name": "Point / Face / Position", "body": "Fin 13 / Fin 22 / Fin 11", "source_match": "Exact finite labels in the concrete D2 certificate, not abstract cardinal proxies"},
+      {"name": "ComplexCertificate.faces", "body": "The displayed vector of all 22 literal Finset Point triples", "source_match": "Every triple and its order match D2.finite_certificate.faces"},
+      {"name": "order0 / order1", "body": "Literal eleven-face exposure vectors", "source_match": "Both vectors match D2.finite_certificate.classes; no selected ordering witness"},
+      {"name": "fresh0 / fresh1", "body": "Literal eleven-point vectors, including point 0 at the first position", "source_match": "Later ten entries match the source's fresh lists; the first source face has no earlier face, so its chosen point 0 supplies only a vacuous base exposure coordinate"},
+      {"name": "class0 / class1", "body": "Finset.univ.image order0 / order1", "source_match": "Actual face subsets, with coverage/disjointness exported as closed finite facts"},
+      {"name": "ComplexCertificate.incidences", "body": "(univ ×ˢ univ).filter (fun pf => pf.1 ∈ faces pf.2)", "source_match": "One oriented point-face pair per undirected incidence edge; no doubled adjacency count"},
+      {"name": "ExposureSparsity.selectedIncidences", "body": "T.sigma (fun i => face i ∩ S)", "source_match": "Precisely actual retained face labels paired with retained incident point labels"},
+      {"name": "ComplexSparsity.Incidence", "body": "Sigma (fun _ : Position => Point)", "source_match": "A class-local oriented incidence carrier; the two copies must be tagged when combined"},
+      {"name": "taggedFaceLabel", "body": "Sum.elim order0 order1", "source_match": "The actual map from tagged exposure positions to the original Face carrier; bijectivity is proved, not assumed"},
+      {"name": "face₀ / face₁", "body": "fun i => faces (order0 i) / faces (order1 i)", "source_match": "Uses the actual original triangles through the actual exposure labels"},
+      {"name": "fullIncidences₀ / fullIncidences₁", "body": "selectedIncidences face₀ univ univ / selectedIncidences face₁ univ univ", "source_match": "All class-local actual incidence pairs, not an assumed 33-element set"},
+      {"name": "IsFullSelection", "body": "S=univ ∧ T₀=univ ∧ T₁=univ ∧ E₀=fullIncidences₀ ∧ E₁=fullIncidences₁", "source_match": "Literal properness complement: all original represented vertex and edge selections are full; it contains no hidden sparsity estimate or proof-result bundle"},
+      {"name": "finiteMean", "body": "Σ a, weight a * f a", "source_match": "Exact finite weighted sum on all assignments, not injective density"},
+      {"name": "vertexWeight", "body": "Π v, μ (x v)", "source_match": "Independent identically weighted vertex coordinates"},
+      {"name": "finiteDensity", "body": "finiteMean (vertexWeight μ) f", "source_match": "Σ_{x:V→Ω}(Π_v μ(x_v)) f(x); the full declared assignment carrier is used"},
+      {"name": "splitAssignments", "body": "x ↦ (x restricted to inl Shared, x restricted to each inr(i,Internal i)); inverse Sum.elim", "source_match": "Literal bijection of complete assignment spaces, with both inverse identities supplied; no arbitrary chosen reconstruction"},
+      {"name": "portMarginal", "body": "finiteMean (vertexWeight μ) (kernel i s)", "source_match": "Integrates exactly Internal i while retaining the entire Port i assignment s"},
+      {"name": "reindexAssignments", "body": "x ↦ x ∘ d.symm; inverse y ↦ y ∘ d", "source_match": "Reindexes all original coordinates through the actual supplied bijection"},
+      {"name": "atomEdgeKernel", "body": "Π e, U (fun k => Sum.elim s x (endpoint i e k))", "source_match": "Every actual atom edge factor uses the supplied full ordered local endpoints"},
+      {"name": "privatePairMarginal", "body": "finiteMean (vertexWeight μ) (fun x : Private→Ω => U (Sum.elim s x))", "source_match": "Exactly integrates all private expansion inputs while retaining both core inputs"}
+    ],
+    "remaining_definition_boundary": "The definitions do not yet identify these generic I/Port/Internal carriers with CanonicalAtom.Index and its actual joint/exclusive support subtypes. This is not repaired by a definition alias, cardinality equality or prose characterization."
+  },
+  "semantic_findings": [
+    {
+      "id": "D2-CORE-NO-HIDDEN-SPARSITY",
+      "severity": "PASS_SOURCE_CHECK",
+      "finding": "The high-level D2 exports do not retain h_sparse or a complete-face bound as premises. Concrete freshness/cardinality facts are consumed in complex_subgraph_sparsity; proper_selection_counts derives the genuine cardinal properness disjunction before the arithmetic bridge is applied."
+    },
+    {
+      "id": "D2-GRAPH-CONSUMER",
+      "severity": "PENDING_FORMAL_ENDPOINT",
+      "finding": "A bijection of tagged face labels is proved, but no actual Lean theorem presently converts an arbitrary SimpleGraph.Subgraph on Point⊕Face into S,T₀,T₁,E₀,E₁ while preserving edge cardinality, vertex cardinality and properness. The represented finite-selection theorem is sound mathematics; it must not alone be called the closed SimpleGraph strictly-2-balanced endpoint."
+    },
+    {
+      "id": "D2-EXPANSION-GEOMETRY",
+      "severity": "PENDING_FORMAL_ENDPOINT",
+      "finding": "RatioCandidate only transports supplied selected counts through (r-2)f+v. It does not establish disjoint private vertices, selected expanded cardinality, extra-isolate monotonicity, or the f=0/1 expanded-subgraph cases. Its h_sparse and h_proper inputs are honest internal helper premises, but would be EXCESS if exported as the full strictly-r-balanced A_r claim without being produced."
+    },
+    {
+      "id": "D3-CONDITIONAL-CARRIERS",
+      "severity": "PASS_SOURCE_CHECK_WITH_ADAPTER_PENDING",
+      "finding": "d and a cover the complete original V and Edge carriers. endpoint_fidelity is pointwise endpoint compatibility, not the desired density equality. The source proof reindexes these actual carriers and every edge factor before finite Fubini. The canonical d/a/fidelity producer is not present and must stay explicitly pending."
+    },
+    {
+      "id": "D3-NORMALIZATION-AND-ISOLATES",
+      "severity": "INTERPRETATION_BOUNDARY",
+      "finding": "The algebra works for signed, unnormalized weights and includes zero-weight states, empty internal/index carriers and empty sample types. Calling it a probability expectation requires μ≥0 and Σμ=1, discharged separately by the two weight lemmas. Unused Shared coordinates correctly retain isolates in the weighted sum; replacing Shared by only genuine joints requires a normalized isolated-vertex deletion adapter not provided here."
+    },
+    {
+      "id": "D3-MULTIPORT-AND-SIMPLICITY",
+      "severity": "PASS_SOURCE_CHECK",
+      "finding": "The full Port i assignment is retained; no factorization into one-root densities or nonnegative covariance is assumed. Slot need not be finite and endpoints may repeat, so this is a stronger ordered-incidence algebraic identity. A simple r-uniform hypergraph interpretation still checks slot cardinality, injective endpoints and distinct edge images."
+    },
+    {
+      "id": "D1-MARGINAL-NOT-INEQUALITY",
+      "severity": "PENDING_ANALYTIC_AND_CARRIER_CONSUMERS",
+      "finding": "The private expansion uses Core⊕Σ_e Private, making each edge's private coordinates genuinely distinct by construction. Its exact marginal equality is not a theorem that every original canonical atom is that expansion, does not prove mean preservation/isomorphism transport, and does not supply the cycle/theta Sidorenko inequalities."
+    }
+  ],
+  "next_checks": [
+    "Recompute every frozen source hash before any focused run; do not treat source tables as compiled full types.",
+    "Warning-fatal pinned replay and complete printed definition/type output must confirm inferred instance binders and universe generality.",
+    "Read actual ordered standard-only axiom records; Classical scope is an instance-elaboration choice, not an authorization for new axioms.",
+    "Keep generic finite identities, actual canonical/subgraph consumers and whole manuscript closure as separate statuses."
+  ],
+  "conclusion": "No excess mathematical premise or literal-definition fallback was found in the four honestly scoped candidate export headers. Source-only fidelity passes for those conditional/represented statements. Full D2 graph/expansion and D3 canonical-assembly source closure is PARTIAL, and all kernel/axiom/compiled consumer acceptance is PENDING.",
+  "actions": {
+    "new_file": "research/e593-density-development-20261007/armstrong-adoption/helper-semantic-review.json",
+    "candidate_source_mutation": false,
+    "lean_or_version_command": false,
+    "ssh_or_service_dispatch": false,
+    "git_private_editor_or_clock_mutation": false
+  }
+}

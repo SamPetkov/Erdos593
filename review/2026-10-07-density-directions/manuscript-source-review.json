@@ -1,0 +1,121 @@
+{
+  "date": "2026-10-07",
+  "reviewer": "/root/density_low_rank_develop",
+  "kind": "Actual supplemental source/mathematics audit, followed by a restricted publication-attribution pass; not external certification.",
+  "independent_full_audit": false,
+  "source": "research/e593-density-development-20261007/development-results.tex",
+  "reviewed_revisions": [
+    {
+      "sha256": "a50e447a63e5578a877eb98371d45bffc8b45b1e3bf67953088edeb0124cc3ea",
+      "read": "Complete original fragment."
+    },
+    {
+      "sha256": "c5a2ef8b410cf86fa9c6134f1f98bd9f906cba98cb2e32bfb56fde7b0bf72913",
+      "read": "Complete repaired fragment."
+    },
+    {
+      "sha256": "371a24fb7374676fdb25059056501cb657cb365b9503f93eea1b55ed0606ae0a",
+      "read": "Complete final repaired fragment; exact real-exponent supremum, polynomial-gain regime, full vertex partition, ordered input slots and unambiguous assignment restriction verified."
+    },
+    {
+      "sha256": "0cb6992730823eae92bf77ed31bd7445b0198f121ceb3c7d256ad2634a18f4b7",
+      "read": "Complete publication-attribution revision read back. Exact finite-complex citation added; preprint-only random Turan numeric pinpoint removed; all proposition statements, proof mathematics and displayed equations preserved."
+    }
+  ],
+  "verdict": "PASS for publication-attribution source0cb69927: the three mathematical routes retain the expressly stated analytical/literature dependencies already audited in371a24fb. The exact pinned finite-complex citation is now present. Published Im–Li–Liu metadata and parity scopes were verified directly from Cambridge. No new kernel acceptance or full external certification is inferred.",
+  "D1": {
+    "status": "Analytical deduction from retained canonical shape/recognition and known graph density theorems.",
+    "actual_checks": [
+      "Single-edge rank zero handled separately; its core does not satisfy the >=3-vertex two-connectivity convention.",
+      "Expansion Levi rank rm-[n+(r-1)m]+1=m-n+1 uses original counts correctly.",
+      "Rank-one minimum-degree/degree-sum recognition and bipartite evenness valid.",
+      "Rank-two degree-four deletion argument is valid: after deleting the degree-four vertex, four distinct neighbours have degree one and all others degree two. Each component is a path or cycle; a cycle component would already be disconnected in the original connected graph. Exactly two path components remain, contradicting two-connectivity.",
+      "The two actual degree-three vertices give three internally disjoint branches exhausting vertices and edges; returning branches would contradict two-connectivity. Accepted rank_two_three_paths explicitly supplies this dependency.",
+      "Fixed two-colouring forces all three same-endpoint path lengths to have identical parity.",
+      "Im–Li–Liu Theorem1.3 is the even generalized theta case, Proposition4.3 the odd case; both citations have the correct parity scope.",
+      "Finite weighted kernels are exact step graphons; zero-weight states cause no defect.",
+      "Edge-by-edge private-coordinate integration produces the pair marginal and unchanged mean."
+    ],
+    "recommended_optional_improvement": "Replace the degree-four component sentence by beta(J-x)+deg(x)=beta(J)+1, whose nonnegative deleted rank gives deg(x)<=3 at rank two. This is the shortest version and already matches accepted Lean source.",
+    "limits": "Only one canonical atom. No rank-three existence, arbitrary assembly closure, priority or full higher-uniformity Lean endpoint is established."
+  },
+  "D2": {
+    "status": "Unconditional finite sparsity/balancedness deduction; random-host formula invokes a cited external theorem; positive excess remains conditional.",
+    "primary_sources": [
+      "https://raw.githubusercontent.com/openai/math/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-counterexample-to-Sidorenkos-conjecture-September-23-2026/build/sections/complex.tex",
+      "https://arxiv.org/pdf/2309.12873"
+    ],
+    "actual_checks": [
+      "Both displayed exposure orders and fresh-point lists match the primary finite-complex source exactly.",
+      "Any retained h>=1 faces from one order use at least h+2 points, even when earlier omitted faces are skipped.",
+      "For a>=2 points each face class contributes <=a-2 complete faces; partial faces contribute at most two incidences.",
+      "Small cases a=0 and a=1 are separately valid under v>=3; non-induced subgraphs only remove incidences.",
+      "Whole J has35 vertices66 edges; (e-1)/(v-2)<=2-1/(v-2) yields strict2-balancedness for all proper eligible subgraphs.",
+      "An expansion edge selection f>=2 uses v+(r-2)f vertices; v>=3 because two distinct simple graph edges have at least three endpoints. Denominators are positive, also at r=2.",
+      "Extra isolated selected vertices only lower the positive density ratio; one edge gives ratio0 and no edges negative.",
+      "For A_r, (v(A_r)-r)/(e(A_r)-1)=(65r-97)/65=r-97/65. Theorem1.4 conditions e>=2 and this exponent<r hold for all fixed r>=2.",
+      "The n exponent is r-alpha=97/65 and the excess denominator e-1+s=65+s; the displayed formula is correct.",
+      "Balancedness alone does not prove s(A_r)>0 or non-Sidorenko."
+    ],
+    "required_repair": {
+      "location": "Definition of s(A_r) after strict-balancedness proof.",
+      "fault": "The fragment restricts the supremum to s>=0, but the cited source permits real exponents. For a Sidorenko graph there need not be any nonnegative finite-host equality witness; negative witness exponents can approach0 without attaining it.",
+      "recommended": "Write 'the supremum of real s for which some finite host G has 0<t(A_r,G)=p_r(G)^{66+s}, with 0<p_r(G)<1'. Alternatively adjoin0 explicitly to a set of positive witness exponents, but that departs from the source's wording.",
+      "severity": "Concrete definition/source-fidelity issue found in intermediatec5a2ef8b.",
+      "resolution": "RESOLVED in final371a24fb: the supremum now ranges over real s and explicitly need not be attained."
+    },
+    "recommended_precision": [
+      "RESOLVED in final371a24fb: actual polynomial improvement over n^{97/65-o(1)} requires rho*n^alpha>=n^epsilon for fixed epsilon>0. Merely rho*n^alpha>1 is an algebraic factor; at exact threshold it equals1.",
+      "RESOLVED in publication revision0cb69927: exact OpenAI finite-complex proposition part(ii) and exposure-order table are explicitly cited, with exact commit/source URL in the supplement bibliography."
+    ]
+  },
+  "D3": {
+    "status": "Exact finite algebra; the corresponding candidate currently has no kernel acceptance.",
+    "actual_checks": [
+      "Root has now made full original vertex decomposition an explicit hypothesis, rather than infer it from the edge partition.",
+      "Isolated vertices can be represented in a free factor or removed under normalized probability weights; not automatically removed for arbitrary unnormalized weights.",
+      "All ports of each atom are retained; shared assignments are integrated once, internal assignments separately.",
+      "The finite edge partition and disjoint internal carriers give exact product-of-integrals factorization conditional on shared coordinates.",
+      "No forest condition is needed for the contraction identity.",
+      "No symmetry or nonnegativity is required algebraically once edge input slots are fixed; root's repair states this ordering.",
+      "Formula makes no unjustified unrooted-density closure or covariance-sign claim."
+    ],
+    "recommended_notation": "RESOLVED in final371a24fb: the fragment now writes U((x disjoint-union y)|_e), avoiding a restriction of an already evaluated scalar."
+  },
+  "formalization_status": {
+    "D1": "Four complete structural bridge declarations are source-reviewed and UNCOMPILED. The core-to-original higher-uniformity and theta-density endpoint remains unformalized.",
+    "D2": "Finite certificate/sparsity/ratio candidate status must be taken from root's actual runner evidence, not this prose audit. Random Turan theory is an external analytical theorem, not kernel acceptance.",
+    "D3": "Original-carrier multiport and private-marginal algebra candidates are UNCOMPILED at this audit; no Sidorenko closure theorem is claimed.",
+    "externalFullAudit": "pending",
+    "literatureCredit": "Theta and random Turan inequalities are attributed results; this fragment does not establish novelty."
+  },
+  "publication_pass": {
+    "reviewer": "/root/density_low_rank_develop",
+    "self_review": true,
+    "independent": false,
+    "fragment_sha256": "0cb6992730823eae92bf77ed31bd7445b0198f121ceb3c7d256ad2634a18f4b7",
+    "bibliography_sha256": "3550dba19cffa0dc68488439d70169e666bdd0465fd9980bdf8984b364c96c34",
+    "comparison_sha256": "94cf1e14199bdd60a765ba7790c068a877f254d4d6cc0d2ff73909fe57934a7e",
+    "citation_keys": ["imliliu2024", "openai161", "niespiro2025"],
+    "bib_keys": ["imliliu2024", "openai161", "niespiro2025"],
+    "key_closure": "PASS: three distinct directly cited keys, exactly three bibliography entries, no missing or uncited keys.",
+    "actual_supplemental_helper_review": {
+      "reviewer": "/root/density_low_rank_develop/low_rank_candidate_source_audit",
+      "scope": "Read-only current fragment, bibliography and comparison record; citation closure and analytical scope. No compiler, Git or publisher recheck by this helper.",
+      "reviewed_fragment_sha256": "0cb6992730823eae92bf77ed31bd7445b0198f121ceb3c7d256ad2634a18f4b7",
+      "reviewed_bibliography_sha256": "3550dba19cffa0dc68488439d70169e666bdd0465fd9980bdf8984b364c96c34",
+      "verdict": "PASS, no concrete fault found. No mathematical weakening in the described citation edits; exact previous-fragment byte comparison was not available to the helper.",
+      "full_external_audit": false
+    },
+    "math_preservation": "Complete source re-read verifies unchanged proposition statements, proof arguments, equations, exposure data, real-exponent supremum and gain/port scope. Only finite-complex attribution, external theorem pinpoint and bibliography comments changed.",
+    "primary_metadata_sources": [
+      "https://www.cambridge.org/core/journals/combinatorics-probability-and-computing/article/sidorenkos-conjecture-for-subdivisions-and-theta-substitutions/7587A22E3A717B29DBAB2A6E99875345",
+      "https://raw.githubusercontent.com/openai/math/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-counterexample-to-Sidorenkos-conjecture-September-23-2026/build/sections/complex.tex",
+      "https://repositories.cdlib.org/uc/item/0c25t471",
+      "https://arxiv.org/pdf/2309.12873"
+    ],
+    "version_precision": "Im–Li–Liu published CPC35(2),2026,269--279,DOI10.1017/S0963548325100242; online date10December2025 not substituted for issue year. Nie–Spiro publisher issue is labelled2025, while authors' homepage gives2026; supplement follows publisher label and does not invent page metadata. Theorem1.4 was checked only in the arXiv source; no numeric publication pinpoint is retained.",
+    "formalization_status": "This publication pass makes no new formalization-status determination. Root's actual runner and original evidence control any status after the earlier source audit."
+  },
+  "actions": "The mathematical audit initially made no fragment edits. The authorized follow-on publication pass changed only development-results.tex citation/provenance prose and comments, added a three-source references.bib and clean/original comparison JSON, and updated this source review. No main manuscript/editor/public checkout, theorem/candidate/package/runner, compiler, Git, service, SSH, PDF or clock action."
+}
