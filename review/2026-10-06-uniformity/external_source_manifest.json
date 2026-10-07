@@ -115,5 +115,22 @@
   "released_reasoning_material_description": "Abridged summaries for ten families; family 161 absent.",
   "prompt_excerpt_examined": "reasoning_traces/quasipolynomial-arithmetic-progressions.pdf",
   "prompt_excerpt_scope": "Qualitative and quantitative arithmetic-progression questions; no hypergraph theorem imported from this unrelated prompt.",
-  "lean_replay_performed": false
+  "lean_replay_performed": false,
+  "fleshing_primary_comparisons": [
+    {
+      "title": "Weak hypergraph regularity and linear hypergraphs",
+      "authors": "Kohayakawa, Nagle, Rodl, Schacht",
+      "doi": "10.1016/j.jctb.2009.05.005",
+      "primary_text": "https://www.math.uni-hamburg.de/home/schacht/2010/weak_reg.pdf",
+      "publisher_record": "https://www.sciencedirect.com/science/article/pii/S0095895609000562",
+      "scope": "Theorem4: linear-pattern counting under quasirandomness at fixed uniformity."
+    },
+    {
+      "title": "On Sidorenko exponents of hypergraphs",
+      "author": "Hyunwoo Lee",
+      "primary_text": "https://arxiv.org/html/2509.08680v2",
+      "scope": "Dominating-link and Sidorenko-exponent bounds; checked as nearby work, not a proof input."
+    }
+  ],
+  "fleshing_additions_use_no_new_openai_input": true
 }

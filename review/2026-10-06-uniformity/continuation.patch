@@ -1,453 +1,809 @@
---- c72b45e0d805a6b431e03fc92ea9de98ba8a9ea5/erdos593_obligatory_uniform_hypergraphs.tex
-+++ universal-marginals-and-density-rates/erdos593_obligatory_uniform_hypergraphs.tex
-@@ -125,6 +125,9 @@
- uncountable chromatic cardinal.  We prove simultaneous avoidance for
+--- ba62fadcf3f7098a05fa6eabda25c46df227318a/erdos593_obligatory_uniform_hypergraphs.tex
++++ linear-pattern-density-and-assembly/erdos593_obligatory_uniform_hypergraphs.tex
+@@ -126,8 +126,10 @@
  finite linear families and exact chromatic calibration with bounded
  edge intersections, together with explicit bounds on host order.
-+We characterize universal pair-marginal realization by the matching
-+polytope and prove two-sided estimates with optimal rates for
-+expansion densities as the uniformity increases.
+ We characterize universal pair-marginal realization by the matching
+-polytope and prove two-sided estimates with optimal rates for
+-expansion densities as the uniformity increases.
++polytope and prove density estimates for all finite linear
++patterns as the uniformity increases.  Under regularity, the
++shortest Berge cycle determines the optimal decay rate, including
++for canonical forest assemblies.
  Conditional on a recent rank-layer estimate of OpenAI, we also
  construct a single obligatory atom in every uniformity that violates
  the Sidorenko density bound.  The same graph has no Sidorenko
-@@ -290,6 +293,23 @@
- a finite-density separation witnessed by $C_4^{[r]}$.
+@@ -294,7 +296,7 @@
  The long finite-field estimate remains a cited preprint input;
  the transfer has not been formalized in Lean.
+ 
+-Two unconditional results sharpen this framework.
++The unconditional results develop this framework further.
+ Theorem~\ref{density-universal-profiles} characterizes the universal
+ realization of arbitrary collections of pair kernels by the matching
+ polytope, and proves that the symmetric transfer coefficient is optimal.
+@@ -310,6 +312,23 @@
+ equality for forests.  Explicit kernels of density $1/2$ show that
+ these powers of $r$ are optimal.  These results concern quantitative
+ homomorphism densities and require no rank-layer hypothesis.
 +
-+Two unconditional results sharpen this framework.
-+Theorem~\ref{density-universal-profiles} characterizes the universal
-+realization of arbitrary collections of pair kernels by the matching
-+polytope, and proves that the symmetric transfer coefficient is optimal.
-+For any graph $F$ with $m$ edges, Theorem~\ref{density-uniform-approximation}
-+gives the explicit two-sided estimate
++Theorem~\ref{density-linear-approximation} extends these estimates
++to every finite linear $r$-uniform pattern $H$, including arbitrary
++one-point assemblies of the canonical atoms.  If $H$ has $m$ edges
++and at most $b$ shared vertices on each edge, then
 +\[
-+ \bigl|t(F^{[r]},U)-p^m\bigr|
-+ \le m(m-1)p(1-p)/r
++ |t(H,U)-p^m|\le\binom m2\frac br\,p(1-p).
 +\]
-+for every symmetric $[0,1]$-valued $r$-kernel $U$ of mean $p$.
-+For regular kernels, Theorem~\ref{density-regular-girth} improves the
-+error to $O_F(r^{-g})$ when the core has girth $g$, and gives exact
-+equality for forests.  Explicit kernels of density $1/2$ show that
-+these powers of $r$ are optimal.  These results concern quantitative
-+homomorphism densities and require no rank-layer hypothesis.
++Under regularity the error has order $r^{-g}$, where $g$ is the
++shortest Berge-cycle length; every fixed cyclic incidence pattern
++attains this rate.  Consequently every obligatory pattern with a
++fixed edge count has error $O_m(r^{-4})$ in regular hosts, with exact
++equality for Berge forests.  A further estimate separates the
++contribution of degree variance from the cyclic error.  Worked
++examples show both how to realize a marginal profile and how the
++choice of attachment vertices changes the density of assemblies
++with the same atoms and numerical parameters.
  
  \subsection*{Finite structure beyond the classification}
  Theorem~A answers an embedding question about infinite hosts.  The further
-@@ -3404,8 +3424,12 @@
- uniformity.  The same fixed graph below has no such expansion.
- The transfer requires constructing an actual symmetric hypergraph
- kernel; a graph density counterexample alone does not provide one.
--
--\subsection{Marginals and matching symmetrization}
-+We begin with a universal marginal-realization theorem and
-+quantitative density bounds that are independent of the external
-+rank-layer input.  They describe both the available realizations
-+and the size of possible density errors as the uniformity grows.
+@@ -3429,6 +3448,17 @@
+ rank-layer input.  They describe both the available realizations
+ and the size of possible density errors as the uniformity grows.
+ 
++The smallest examples explain the quantities involved.  A star
++expansion measures the moments of the one-vertex degree function;
++a cycle expansion measures correlations that remain when that
++function is constant.  When atoms are joined, their rooted densities
++must be paired at the attachment vertex.  We therefore pass from
++pair marginals for single atoms to higher marginals for general
++linear assemblies.  The finite-alphabet obstruction, the density
++estimates and the attachment examples all have independent proofs
++below.  Only the final explicit negative example uses the cited
++rank-layer limit.
 +
-+\subsection{Universal pair marginals and matching symmetrization}
+ \subsection{Universal pair marginals and matching symmetrization}
  
  All probability spaces below are finite and all their atoms have
- positive mass.  For a symmetric nonnegative $r$-variable kernel $U$
-@@ -3440,8 +3464,114 @@
- \begin{equation}\label{density-expansion-identity}
-  t(J^{[r]},U)=t(J,M_U),\qquad p(U)=\mathbb E M_U.
- \end{equation}
--An arbitrary graph kernel need not be such a marginal.  The next
--construction supplies the marginals needed here.
-+An arbitrary graph kernel need not be such a marginal.  We first
-+characterize which diluted pair marginals can always be realized;
-+the symmetric construction needed for expansions follows as a
-+special case.
+@@ -3622,6 +3652,154 @@
+ coefficients for arbitrary finite classical pair kernels.
+ 
+ 
++\subsection{Constructing and testing a marginal profile}
 +
-+For $r\ge2$, write $\mathfrak M_r$ for the convex hull in
-+$\mathbb R^{\binom r2}$ of the incidence vectors of all matchings
-+of $K_r$, including the empty matching.  Edmonds' matching-polytope
-+theorem \citep[Section~2, Theorem~(P)]{edmonds1965matching} gives its description
-+\begin{equation}\label{density-matching-inequalities}
-+ \lambda_{ij}\ge0,\qquad
-+ \sum_{j\ne i}\lambda_{ij}\le1,\qquad
-+ \sum_{\{i,j\}\subseteq S}\lambda_{ij}\le\frac{|S|-1}{2}
-+ \quad (|S|\text{ odd}).
++Theorem~\ref{density-universal-profiles} has a direct probabilistic
++interpretation.  First choose a matching $M$ with probabilities $w_M$.
++For each $\{i,j\}\in M$, draw $(X_i,X_j)$ with joint density $V_{ij}$
++relative to $\mu_i\otimes\mu_j$, independently for the different
++matched pairs; draw every unmatched coordinate from its original law.
++The two constant marginal integrals of $V_{ij}$ ensure that each
++coordinate retains its original distribution.  A specified pair is
++drawn from its prescribed joint law with probability $\lambda_{ij}$,
++and otherwise has the independent product law.  This gives exactly
++$1+\lambda_{ij}(V_{ij}-1)$ as its density.  Thus a matching
++decomposition is an explicit sampling rule, and the same decomposition
++works for every collection of the pair kernels.  These mean-one
++densities need not be bounded by one; bounded kernels are considered
++separately in the density estimates below.
++
++\proofpart{Three and four coordinates}
++For $r=3$, the matching polytope is simply
++\[
++ \lambda_{12},\lambda_{13},\lambda_{23}\ge0,
++ \qquad \lambda_{12}+\lambda_{13}+\lambda_{23}\le1.
++\]
++Writing $s=\lambda_{12}+\lambda_{13}+\lambda_{23}$, the construction
++is the explicit density
++\[
++ U=1-s+\lambda_{12}V_{12}+\lambda_{13}V_{13}
++           +\lambda_{23}V_{23}.
++\]
++In particular, three copies of the same symmetric kernel with equal
++coefficient $1/3$ are realized by
++$(V(x_1,x_2)+V(x_1,x_3)+V(x_2,x_3))/3$.
++
++For $r=4$, the only constraints besides nonnegativity are the four
++degree inequalities and the four triangle inequalities.  They also
++give a closed formula for the construction.  Partition the six edges
++into the three pairs of opposite edges
++\[
++ \mathcal P=\{\{12,34\},\{13,24\},\{14,23\}\}.
++\]
++For $\{e,f\}\in\mathcal P$, put
++$a_{ef}=\min\{\lambda_e,\lambda_f\}$, and put
++$w_0=1-\sum_{\{e,f\}\in\mathcal P}
++                \max\{\lambda_e,\lambda_f\}$.
++Then
++\begin{equation}\label{flesh-profile-four-formula}
++ U=w_0+\sum_{\{e,f\}\in\mathcal P}
++ \left[a_{ef}V_eV_f+
++       (\lambda_e-a_{ef})V_e+(
++       \lambda_f-a_{ef})V_f\right].
 +\end{equation}
-+The last family may be restricted to $|S|\ge3$.
-+The following identifies this polytope as the exact region of
-+coefficients that realize every collection of finite pair kernels.
-+In this general statement the spaces may differ, and the joint
-+density need not be symmetric.  We write $\lambda_{ji}=\lambda_{ij}$
-+when an unordered pair is indexed in the opposite order.
++Here $V_{ij}$ is evaluated at $(x_i,x_j)$.
++To see that $w_0\ge0$, choosing one edge from each opposite pair
++gives one of the four three-edge stars or four triangles of $K_4$.
++The sum of the three maxima is therefore the largest of their eight
++coefficient sums, each at most one.  The coefficients in
++\eqref{flesh-profile-four-formula} are nonnegative and sum to one;
++they give weights on the empty matching, the singleton matchings
++and the three perfect matchings.  Each edge has total inclusion
++probability $\lambda_e$, which verifies all six marginals.
++At the common coefficient $1/3$, this reduces to
++\[
++ U=\frac13\left(V_{12}V_{34}+V_{13}V_{24}+V_{14}V_{23}\right).
++\]
 +
-+\begin{theorem}[Universal pair-marginal profiles]
-+\label{density-universal-profiles}
-+Let $r\ge2$ and $\lambda\in\mathbb R^{\binom r2}$.  The following
-+are equivalent.
-+\begin{enumerate}
-+\item For every collection of finite probability spaces
-+$(\Omega_i,\mu_i)$ and nonnegative kernels
-+$V_{ij}:\Omega_i\times\Omega_j\to\mathbb R$ satisfying
++The triangle constraints cannot be omitted.  For instance, the
++profile $\lambda_{12}=\lambda_{13}=\lambda_{23}=1/2$, with all
++other coefficients zero, satisfies every degree inequality but
++has no universal realization.  Already the common two-point kernel
++$V(a,b)=1-ab$, for uniform $a,b\in\{-1,1\}$, would require
 +\[
-+ \mathbb E_{x_j}V_{ij}(x_i,x_j)=1,
-+ \qquad \mathbb E_{x_i}V_{ij}(x_i,x_j)=1,
++ \mathbb E(Z_1+Z_2+Z_3)^2
++  =3-2(\lambda_{12}+\lambda_{13}+\lambda_{23})=0,
 +\]
-+there is a nonnegative density $U$ of mean one on
-+$\prod_{i=1}^r\Omega_i$ whose $(i,j)$-marginal is
++although the sum of three signs is never zero.  More generally,
++on five coordinates the common coefficient $1/4$ satisfies all
++degree and triangle inequalities but violates the five-element
++odd-set inequality.  The admissible common endpoint there is
++$1/5$.  These examples show separately why the local degree
++conditions and the larger odd-set conditions occur.
++
++\proofpart{A quantitative test on one finite alphabet}
++The necessity proof can be made finite and stable under small
++errors in the proposed marginals.  Let
++$\operatorname{dist}_\infty(\lambda,\mathfrak M_r)$ denote the
++distance in the maximum-coordinate norm, and let total variation
++between probability laws mean the supremum of their differences
++on events.
++
++\begin{proposition}[Finite-alphabet obstruction]
++\label{flesh-profile-finite-obstruction}
++Let $r\ge2$, $L=\binom r2$, and
++$\lambda\in[0,1]^{\binom r2}$.  For an even integer $N\ge2$,
++fix a fixed-point-free involution $f$ of $[N]$, and define the
++pair probability laws
 +\[
-+ M_{ij}=1+\lambda_{ij}(V_{ij}-1)
-+ \qquad(1\le i<j\le r).
++ Q_{ij}(x,y)=\frac{1}{N^2}
++ \left[1+\lambda_{ij}
++       \left(N\mathbf1_{\{y=f(x)\}}-1\right)\right].
 +\]
-+\item The preceding assertion holds when all spaces are the same
-+finite probability space and all $V_{ij}$ are the same symmetric
-+nonnegative kernel $V$ with constant row integral one.
-+\item $\lambda\in\mathfrak M_r$.
-+\end{enumerate}
-+\end{theorem}
++Suppose a joint law on $[N]^r$ has each of its pair marginals
++within total variation $\varepsilon$ of $Q_{ij}$.  Then
++\begin{equation}\label{flesh-profile-distance-bound}
++ \operatorname{dist}_\infty(\lambda,\mathfrak M_r)
++       \le\frac{L}{N}+(L+1)\varepsilon.
++\end{equation}
++Consequently, if this distance is $\delta>0$, every even
++$N>L/\delta$ gives a single finite kernel
++$V_N(x,y)=N\mathbf1_{\{y=f(x)\}}$ for which the prescribed
++pair marginals cannot be realized exactly.
++\end{proposition}
 +\begin{proof}
-+The first assertion implies the second.  For the third implying the
-+first, write $\lambda=\sum_M w_M\mathbf1_M$, where $w_M\ge0$ and
-+$\sum_Mw_M=1$, and set
++Sample $(Z_1,\ldots,Z_r)$ from the joint law and let $B$ be the
++event that two of its coordinates coincide.  Put
++$R=\sum_{i<j}(1-\lambda_{ij})$, so $0\le R\le L$.
++The diagonal has $Q_{ij}$-probability $(1-\lambda_{ij})/N$,
++because $f$ has no fixed points.  A union bound gives
 +\[
-+ U(x_1,\ldots,x_r)
-+   =\sum_Mw_M\prod_{\{i,j\}\in M}V_{ij}(x_i,x_j).
++ \mathbb P(B)\le R/N+L\varepsilon.
 +\]
-+Each product has mean one because its factors use disjoint variables.
-+Its $(i,j)$-marginal is $V_{ij}$ if $\{i,j\}\in M$ and is one
-+otherwise: in the latter case every factor touching $i$ or $j$ has
-+its other variable integrated out.  This proves the required formula.
++When $B$ does not occur, the pairs satisfying $Z_j=f(Z_i)$
++form a matching: two such pairs sharing a coordinate would
++force their other coordinates to coincide.  On $B$, choose the
++empty matching instead.  The inclusion-probability vector
++$\theta$ of this random matching belongs to $\mathfrak M_r$.
 +
-+It remains to prove the inequalities
-+\eqref{density-matching-inequalities} from the second assertion.
-+For any even $N$, take the uniform probability space $[N]$, a
-+fixed-point-free involution $f$ of $[N]$, and
++For $e=\{i,j\}$, the event $A_e=\{Z_j=f(Z_i)\}$ has
++$Q_{ij}$-probability
++$\lambda_e+(1-\lambda_e)/N$.  Since
++$\theta_e=\mathbb P(A_e\setminus B)$, it follows that
 +\[
-+ V_N(x,y)=N\mathbf1_{\{y=f(x)\}}.
++ \frac{1-\lambda_e-R}{N}-(L+1)\varepsilon
++ \le\theta_e-\lambda_e
++ \le\frac{1-\lambda_e}{N}+\varepsilon.
 +\]
-+This is a symmetric nonnegative kernel with row integral one.
-+Nonnegativity of each prescribed pair marginal, both on and off
-+the graph of $f$, gives
-+$1+\lambda_{ij}(N-1)\ge0$ and $1-\lambda_{ij}\ge0$.
-+Letting even $N$ tend to infinity yields $0\le\lambda_{ij}\le1$.
-+
-+Give $(Z_1,\ldots,Z_r)$ the joint probability law with density $U$
-+relative to the uniform product measure.  Fix $i$ and put
-+$A_j=\{Z_j=f(Z_i)\}$ for $j\ne i$.  The specified pair marginals
-+give
-+\[
-+ \mathbb P(A_j)=\lambda_{ij}+\frac{1-\lambda_{ij}}N.
-+\]
-+For distinct $j,k\ne i$, the event $A_j\cap A_k$ implies
-+$Z_j=Z_k$.  Since $f$ has no fixed point, the $(j,k)$-marginal
-+therefore gives
-+\[
-+ \mathbb P(A_j\cap A_k)
-+ \le\mathbb P(Z_j=Z_k)=\frac{1-\lambda_{jk}}N\le\frac1N.
-+\]
-+For any finite family of events,
-+$\sum_j\mathbf1_{A_j}\le
-+1+\sum_{j<k}\mathbf1_{A_j\cap A_k}$ pointwise.  Consequently
-+\[
-+ \sum_{j\ne i}\left(\lambda_{ij}
-+           +\frac{1-\lambda_{ij}}N\right)
-+ \le1+\frac{\binom{r-1}{2}}N.
-+\]
-+Letting $N$ tend to infinity proves the degree inequalities.
-+
-+For the odd-set inequalities use the uniform space $\{-1,1\}$
-+and $V(a,b)=1-ab$.  The prescribed pair marginals imply
-+$\mathbb E Z_iZ_j=-\lambda_{ij}$.  For every odd subset $S$,
-+the integer $\sum_{i\in S}Z_i$ is odd, and thus
-+\[
-+ 1\le\mathbb E\left(\sum_{i\in S}Z_i\right)^2
-+   =|S|-2\sum_{\{i,j\}\subseteq S}\lambda_{ij}.
-+\]
-+These are precisely the remaining inequalities.  Edmonds' theorem
-+now gives $\lambda\in\mathfrak M_r$.
++Here $R\ge1-\lambda_e$.  Both absolute deviations are therefore
++at most $L/N+(L+1)\varepsilon$, proving
++\eqref{flesh-profile-distance-bound}.  The final assertion is
++the case $\varepsilon=0$.
 +\end{proof}
 +
++Thus a violation separated from the matching polytope by $\delta$
++has a finite witness with alphabet size of order $r^2/\delta$.
++For a fixed alphabet the same argument gives the explicit lower
++bound $(\delta-L/N)/(L+1)$ on the maximum pair-marginal error,
++whenever that expression is positive.  This tests realizability
++of the whole profile, rather than one chosen inequality.
++
+ \subsection{Uniform density estimates as uniformity increases}
  
- \begin{lemma}[Matching symmetrization]\label{density-matching}
- Let $V$ be a finite symmetric nonnegative kernel with
-@@ -3471,6 +3601,211 @@
- number of edges divided by $\binom r2$, namely $\lambda_r$.
- Permutation invariance of the set of matchings proves symmetry.
- \end{proof}
-+
-+The coefficient in Lemma~\ref{density-matching} is optimal in the
-+following universal sense: the assertion that every finite symmetric
-+nonnegative kernel $V$ with row integral one admits a symmetric
-+nonnegative mean-one $r$-kernel with pair marginal $1+\lambda(V-1)$ holds
-+precisely for $0\le\lambda\le\lambda_r$.
-+Indeed, Theorem~\ref{density-universal-profiles} gives
-+$(r-1)\lambda\le1$ when $r$ is even and
-+$\binom r2\lambda\le(r-1)/2$ when $r$ is odd; its nonnegativity
-+condition excludes negative coefficients.  The lemma attains the
-+endpoint, and mixing its kernel with the constant one attains the
-+remaining interval.
-+The scalar parity obstruction is the familiar minimum-correlation
-+bound for exchangeable signs \citep{hoernig2018}.
-+Products averaged over perfect or near-perfect matchings also occur
-+in the quantum marginal construction of
-+\citet[Lemma~4.4]{allerstorfer2026}.
-+Theorem~\ref{density-universal-profiles} addresses the full array of
-+coefficients for arbitrary finite classical pair kernels.
-+
-+
-+\subsection{Uniform density estimates as uniformity increases}
-+
-+For bounded symmetric kernels, increasing the uniformity constrains
-+the pair marginal.  We use the first two terms of the classical
-+Hoeffding orthogonal decomposition \citep{hoeffding1948} and give the
-+short projection argument in full.
-+Nie--Spiro's exponent estimate
-+\citep[Theorem~1.13]{niespiro2025} already yields one-sided
-+approximate Sidorenko bounds for expansions at fixed positive
-+density.  The results below give explicit two-sided estimates,
-+uniform over bounded kernels, together with optimal rates and a
-+girth-sensitive refinement under regularity.
-+All $L^2$ norms refer to the relevant product probability measure.
-+
-+\begin{lemma}[Two-coordinate projection bound]
-+\label{density-projection-bound}
-+Let $r\ge2$ and let $U:\Omega^r\to[0,1]$ be symmetric.  Set
-+$p=\mathbb EU$, $d(x)=\mathbb E[U\mid X_1=x]$, and
-+$M(x,y)=\mathbb E[U\mid X_1=x,X_2=y]$.  With
+ For bounded symmetric kernels, increasing the uniformity constrains
+@@ -3800,12 +3978,561 @@
+ classification controls a quantitative density estimate in regular
+ finite hosts.
+ 
++\begin{remark}[Stars, cycle atoms, and what regularity removes]
++\label{density-worked-examples}
++Let $U$ be a symmetric $[0,1]$-valued $r$-kernel of mean $p$, write
++$d(x)=\mathbb E[U\mid X_1=x]$, and let $M=M_U$ be its pair marginal.
++For the star $S_k=K_{1,k}$, where $k\ge1$, integrating each leaf gives the exact identity
 +\[
-+ h=d-p,\qquad k(x,y)=M(x,y)-p-h(x)-h(y),
++ t(S_k^{[r]},U)=\mathbb E d(X)^k\ge p^k.
 +\]
-+one has
-+\begin{equation}\label{density-hoeffding}
-+ r\|h\|_2^2+\binom r2\|k\|_2^2\le p(1-p),
-+ \qquad
-+ \|M-p\|_2^2\le\frac{2p(1-p)}r.
++In particular,
++\[
++ t(P_3^{[r]},U)-p^2=\operatorname{Var}(d).
++\]
++Thus the first nontrivial tree example measures the degree variance
++exactly.  For the adjacency kernel of a finite host $G$ on $n$ vertices,
++$d(v)=(r-1)!\deg_G(v)/n^{r-1}$, so this is the variance of its
++normalized vertex degrees.  For $r\ge3$, the star expansion is an obligatory assembly of $k$ single-edge
++atoms at one point; it has no cyclic atom.  For a regular kernel its
++density is exactly the random benchmark, regardless of $r$.
++
++The even-cycle lower bound is also classical without regularity:
++the even spectral moment of the self-adjoint operator $T_M$
++dominates $\|T_M\|_{\mathrm{op}}^{2\ell}$, which in turn
++dominates $|\langle1,T_M1\rangle|^{2\ell}=p^{2\ell}$.
++Now assume $d\equiv p$ and put $D=M-p$.  Let $T_D$ be the
++self-adjoint kernel operator on $L^2(\Omega)$ and let its eigenvalues be
++$\eta_1,\ldots,\eta_N$, including multiplicities.  Since $T_D1=0$,
++the constant and centered parts act on orthogonal subspaces.  For
++$\ell\ge2$ this gives
++\begin{equation}\label{density-even-cycle-example}
++ t(C_{2\ell}^{[r]},U)-p^{2\ell}
++  =\operatorname{tr}(T_D^{2\ell})
++  =\sum_j\eta_j^{2\ell}\ge0.
 +\end{equation}
-+If $d\equiv p$, the second bound improves to
-+\begin{equation}\label{density-regular-projection}
-+ \|M-p\|_2^2\le\frac{2p(1-p)}{r(r-1)}.
-+\end{equation}
++For $r\ge3$, the cycle expansion is one canonical atom, with $2\ell$ edges,
++$2\ell(r-1)$ vertices, cyclic rank one, and shortest Berge cycle
++of length $2\ell$.  Lemma~\ref{density-projection-bound} therefore gives
++\[
++ 0\le t(C_{2\ell}^{[r]},U)-p^{2\ell}
++ \le \left(\frac{2p(1-p)}{r(r-1)}\right)^\ell.
++\]
++For $C_4^{[r]}$, the first cyclic atom, the upper bound has no
++$2^4-1$ prefactor.  Equality with the random benchmark holds precisely
++when $M\equiv p$, because the even powers in
++\eqref{density-even-cycle-example} are nonnegative.  This condition
++concerns the pair marginal; it does not require the full $r$-kernel
++to be constant.
++\end{remark}
++
++\subsection{From atoms to arbitrary linear patterns}
++
++Private graph expansions have two shared vertices on each cyclic edge.
++For a general finite linear hypergraph, the corresponding parameter is
++the number of vertices of an edge that also lie in another edge.
++The projection argument extends to these larger shared sets.
++This includes assemblies in which a private vertex of one atom
++is identified with a vertex of another atom; the resulting pattern
++need not itself be a private graph expansion.
++
++The counting theorem of \citet[Theorem~4]{knrs2010} treats fixed
++uniformity under a quasirandomness assumption on the host.  The
++estimates here hold for every bounded symmetric host kernel and
++track the uniformity through the number of shared vertices.
++They use the higher terms of the same Hoeffding decomposition
++\citep{hoeffding1948}.
++
++\begin{lemma}[Higher-coordinate projection bound]
++\label{density-higher-projection}
++Let $r\ge2$, let $U:\Omega^r\to[0,1]$ be symmetric, let $p=\mathbb EU$, and
++let $U_b$ be its marginal on any $b$ coordinates, where $0\le b\le r$.
++Then
++\[
++ \|U_b-p\|_2^2\le\frac br\,p(1-p).
++\]
++If every one-coordinate marginal of $U$ equals $p$, then
++\[
++ \|U_b-p\|_2^2
++ \le\frac{b(b-1)}{r(r-1)}p(1-p).
++\]
++In particular the latter marginal is constant when $b\le1$.
 +\end{lemma}
 +\begin{proof}
-+The mean of $h$ is zero and both one-variable integrals of $k$
-+vanish.  Hence the random variables $h(X_i)$ and $k(X_i,X_j)$,
-+over all singletons and pairs, are mutually orthogonal in $L^2$.
-+Their inner products with $U-p$ are respectively $\|h\|_2^2$
-+and $\|k\|_2^2$, by conditional expectation.  Subtracting their
-+sum from $U-p$ leaves an orthogonal remainder.  Thus their squared
-+norms sum to at most $\operatorname{Var}U\le p(1-p)$, proving
-+the first bound.  Furthermore
++For each coordinate set $A\subseteq[r]$, recursively define
 +\[
-+ \|M-p\|_2^2=2\|h\|_2^2+\|k\|_2^2
-+ \le\frac2r\left(r\|h\|_2^2+\binom r2\|k\|_2^2\right),
++ u_A=\mathbb E[U\mid X_A]-\sum_{B\subsetneq A}u_B.
 +\]
-+because $r\ge2$.  If $h=0$, use the first bound directly.
++Here $u_\varnothing=p$.  Each nonconstant $u_A$ has zero integral
++in every coordinate of $A$, so these functions are mutually
++orthogonal.  Symmetry makes $\|u_A\|_2^2=v_j$ depend only on
++$j=|A|$.  Consequently
++\[
++ \operatorname{Var}U=\sum_{j=1}^r\binom rjv_j,
++ \qquad
++ \|U_b-p\|_2^2=\sum_{j=1}^b\binom bjv_j.
++\]
++For $1\le j\le b$ the binomial ratio is at most $b/r$; for
++$2\le j\le b$ it is at most $b(b-1)/(r(r-1))$.  Apply
++$\operatorname{Var}U\le p(1-p)$, and in the regular case use
++$v_1=0$.
 +\end{proof}
 +
-+\begin{theorem}[Two-sided density approximation]
-+\label{density-uniform-approximation}
-+Let $F$ be a finite simple graph with $m\ge1$ edges and $r\ge2$.
-+Every symmetric $[0,1]$-valued $r$-kernel $U$ of mean $p$ satisfies
-+\begin{equation}\label{density-density-error}
-+ \left|t(F^{[r]},U)-p^m\right|
-+    \le\frac{m(m-1)}r\,p(1-p).
++For a finite simple linear $r$-uniform hypergraph $H$, write
++\[
++ b_e(H)=|\{x\in e:\deg_H(x)\ge2\}|,
++ \qquad b(H)=\max_{e\in E(H)}b_e(H).
++\]
++If $H$ has $m\ge1$ edges, then
++$b(H)\le\min\{r,m-1\}$: each other edge can share at most one
++vertex with a given edge.  The Berge girth of $H$ is half the
++length of a shortest cycle in its incidence graph.  For linear
++$H$ it is at least three whenever it is finite.
++
++\begin{theorem}[Uniform approximation for linear hypergraphs]
++\label{density-linear-approximation}
++Let $H$ be a finite simple linear $r$-uniform hypergraph with
++$m\ge1$ edges, where $r\ge2$.  Put $b_e=b_e(H)$ and $b=b(H)$.
++For every symmetric $U:\Omega^r\to[0,1]$ of mean $p$,
++\begin{align}
++ |t(H,U)-p^m|
++ &\le\frac{p(1-p)}r
++       \sum_{\{e,f\}\subseteq E(H)}\sqrt{b_eb_f}
++       \label{density-linear-general}\\
++ &\le\binom m2\frac br\,p(1-p).
++\end{align}
++Suppose in addition that every one-coordinate marginal equals $p$.
++If $H$ has no Berge cycle, then $t(H,U)=p^m$.  Otherwise, writing
++$g$ for its Berge girth, one has
++\begin{equation}\label{density-linear-regular}
++ |t(H,U)-p^m|
++ \le(2^m-1)
++   \left(\frac{b(b-1)}{r(r-1)}p(1-p)\right)^{g/2}.
 +\end{equation}
-+The same inequality holds for every finite simple $r$-uniform host
-+$G$, with $p=p_r(G)$ and homomorphism-density normalization.
-+The order $r^{-1}$ cannot be improved uniformly, even for $F=P_3$
-+and $p=1/2$.
++Both conclusions hold for finite simple host hypergraphs with the
++manuscript's homomorphism-density normalization; regularity of the
++kernel corresponds to regularity of the host.
 +\end{theorem}
 +\begin{proof}
-+Write $D=M_U-p$ and $f(s)=t(F,p+sD)$ for $0\le s\le1$.
-+The private-expansion identity gives $f(1)=t(F^{[r]},U)$.
-+We have $f(0)=p^m$ and $f'(0)=0$, since $\mathbb ED=0$.
-+Each of the $m(m-1)$ terms in $f''(s)$ has two factors $D$
-+and $m-2$ factors in $[0,1]$.  Cauchy--Schwarz on the entire
-+product probability space bounds its absolute value by
-+$\|D\|_2^2$, whether the two corresponding graph edges meet or
-+are disjoint.  Taylor's formula with integral remainder yields
++Integrate every vertex that occurs in only one edge of $H$.
++The factor on an edge $e$ becomes the marginal $U_{b_e}$ on its
++shared vertices.  Put $D_e=U_{b_e}-p$ and interpolate by
 +\[
-+ |f(1)-f(0)|\le\tfrac12m(m-1)\|D\|_2^2.
++ f(s)=\mathbb E\prod_{e\in E(H)}(p+sD_e),\qquad 0\le s\le1.
 +\]
-+Apply Lemma~\ref{density-projection-bound}.  The case $m=1$
-+is exact and needs no differentiation.  The adjacency kernel of a
-+finite simple host, assigned zero on repeated coordinates, proves
-+the finite-host assertion without an asymptotic error.
++Every interpolated factor lies in $[0,1]$.  The first derivative
++at zero vanishes, and the term of $f''(s)$ indexed by ordered
++distinct edges $e,f$ has absolute value at most
++$\|D_e\|_2\|D_f\|_2$, by Cauchy--Schwarz on the full product
++space.  Taylor's integral remainder and
++Lemma~\ref{density-higher-projection} prove
++\eqref{density-linear-general}.  The case $m=1$ is exact.
 +
-+For sharpness let $r=2n+1$, take independent uniform signs, and set
-+$U=\mathbf1_{\{X_1+\cdots+X_r>0\}}$.  Then $p=1/2$ and
++Now assume regularity and expand the original product in $U-p$:
 +\[
-+ d(\pm1)=\frac12\pm\frac12\frac{\binom{2n}{n}}{4^n}.
++ t(H,U)-p^m
++  =\sum_{\varnothing\ne A\subseteq E(H)}p^{m-|A|}
++      \mathbb E\prod_{e\in A}(U(X_e)-p).
 +\]
-+As $P_3$ has two edges,
++For each $A$, integrate vertices lying in exactly one selected edge.
++The resulting factor on $e\in A$ is
++$D_{e,A}=U_{b_e(A)}-p$, where $b_e(A)$ counts its vertices shared
++with another selected edge.  If $b_e(A)\le1$, this factor is zero.
++Otherwise the incidence graph on the selected edges and their
++shared vertices has all degrees at least two, so it contains a
++cycle.  This also proves that every nonempty term vanishes when
++$H$ has no Berge cycle.
++
++Choose a shortest Berge cycle among the selected edges, of length
++$\ell\ge g$.  Linearity and minimality imply that its edges meet
++each other exactly as a loose cycle: consecutive edges meet in
++their specified cycle vertex, and nonconsecutive edges are
++disjoint.  An extra incidence with an existing cycle vertex is a
++chord of the shortest incidence cycle.  A shared vertex outside
++the cycle would give a two-incidence shortcut between two cycle
++edges; combining it with a shortest arc gives a shorter cycle
++when the edges are nonconsecutive.  An additional intersection of
++consecutive edges contradicts linearity.  For a triangle, linearity and the
++three distinct cycle vertices also exclude a vertex in all three
++edges.
++
++Since $|D_{e,A}|\le1$, discard all factors not on this cycle after
++taking absolute values.  Each remaining variable lies in at most
++two cycle factors.  Integrating those that occur in only one
++factor leaves a cyclic product of two-variable nonnegative
++kernels $K_1,\ldots,K_\ell$.  Jensen's inequality and the
++projection bound give
 +\[
-+ t(P_3^{[r]},U)-\frac14
-+  =\operatorname{Var}(d)
-+  =\frac14\left(\frac{\binom{2n}{n}}{4^n}\right)^2
-+  \sim\frac{1}{2\pi r},
++ \|K_i\|_2\le\|D_{e_i,A}\|_2
++ \le q:=\left(\frac{b(b-1)}{r(r-1)}p(1-p)\right)^{1/2}
++ \le\frac12.
 +\]
-+where the last assertion follows from Stirling's formula.
++The cyclic integral is at most $\prod_i\|K_i\|_2$.  One way to
++see this is to represent each kernel by its matrix on
++$L^2(\Omega)$: the integral is the trace of their product, bounded
++by the product of their Hilbert--Schmidt norms.  Indeed,
++$|\operatorname{tr}(AB)|\le\|A\|_{\mathrm{HS}}
++\|B\|_{\mathrm{HS}}$, while
++$\|AB\|_{\mathrm{HS}}\le\|A\|_{\mathrm{HS}}
++\|B\|_{\mathrm{op}}\le\|A\|_{\mathrm{HS}}
++\|B\|_{\mathrm{HS}}$; iteration gives the assertion.  Thus the term indexed by $A$ is
++at most $q^\ell\le q^g$ in absolute value.  Sum over the at most
++$2^m-1$ nonempty subsets to obtain
++\eqref{density-linear-regular}.
++
++The adjacency kernel of a finite simple host is symmetric and
++$[0,1]$-valued.  Its one-coordinate marginal is constant exactly
++when all host vertices have the same degree.  Applying the kernel
++statements gives the asserted finite-host versions directly.
 +\end{proof}
 +
-+\begin{theorem}[Girth-sensitive approximation under regularity]
-+\label{density-regular-girth}
-+Let $F$ be a finite simple graph with $m\ge1$ edges, and let
-+$U:\Omega^r\to[0,1]$ be symmetric, where $r\ge2$, with every
-+one-coordinate marginal equal to its mean $p$.
-+If $F$ is a forest, then $t(F^{[r]},U)=p^m$ exactly.
-+Otherwise, if $g$ is the girth of $F$, then
-+\begin{equation}\label{density-girth-error}
-+ \left|t(F^{[r]},U)-p^m\right|
-+ \le (2^m-1)
-+       \left(\frac{2p(1-p)}{r(r-1)}\right)^{g/2}.
-+\end{equation}
-+The same assertion holds for finite regular $r$-uniform hosts,
-+with $p=p_r(G)$.  For every fixed cyclic graph $F$, the order
-+$r^{-g}$ is optimal among such kernels, already at density $p=1/2$.
-+\end{theorem}
++\begin{proposition}[Sharpness for every cyclic incidence pattern]
++\label{density-linear-sharpness}
++Fix a finite linear incidence pattern with $m$ named edges and
++finitely many shared vertices, each belonging to at least two
++edges.  Complete its edges to size $r$ with distinct private
++vertices, obtaining $H_r$ for all sufficiently large $r$.
++If the fixed pattern has Berge girth $g<\infty$, then the order
++$r^{-g}$ in \eqref{density-linear-regular} is optimal for this
++pattern, already at density $p=1/2$.
++\end{proposition}
 +\begin{proof}
-+Put $D=M_U-p$ and
-+$q=(2p(1-p)/(r(r-1)))^{1/2}$.  Both one-variable integrals of $D$
-+are zero, $|D|\le1$, and Lemma~\ref{density-projection-bound}
-+gives $\|D\|_2\le q\le1$.  Expand
-+\[
-+ t(F,M_U)-p^m
-+  =\sum_{\varnothing\ne A\subseteq E(F)}
-+       p^{m-|A|}t(F_A,D),\qquad F_A=(V(F),A).
-+\]
-+A vertex of degree one in $F_A$ makes its term vanish by integration.
-+Every other nonempty $F_A$ contains a cycle $C$ of length
-+$\ell\ge g$.  After taking absolute values, discard the factors
-+outside $C$ to obtain
-+\[
-+ |t(F_A,D)|\le t(C,|D|)\le\|D\|_2^\ell\le q^g.
-+\]
-+For the middle inequality, the symmetric kernel $|D|$ defines a
-+self-adjoint operator on the finite-dimensional space $L^2(\Omega)$.
-+If its eigenvalues are $\eta_i$, its cycle integral is
-+$\sum_i\eta_i^\ell\le\sum_i|\eta_i|^\ell
-+\le(\sum_i\eta_i^2)^{\ell/2}=\|D\|_2^\ell$.
-+There are at most $2^m-1$ nonempty edge subsets and
-+$p^{m-|A|}\le1$, proving \eqref{density-girth-error}.
-+For a forest every nonempty term vanishes.
-+The adjacency kernel of a finite regular host has constant
-+one-coordinate marginal, so the finite-host statement follows
-+without an additional limiting argument.
-+
-+For sharpness take independent uniform signs, put
-+$\theta_r=r^{-1/2}$ and $c_r=\cos\theta_r$, and define
++Use the regular cosine kernels from the proof of
++Theorem~\ref{density-regular-girth}.  Write
++$\theta=r^{-1/2}$, $c=\cos\theta$, and
 +\[
 + U_r(x_1,\ldots,x_r)
-+  =\frac12+\frac14\left[
-+       \cos\!\left(\theta_r\sum_{i=1}^r x_i\right)-c_r^r
-+     \right].
++ =\frac12+\frac14\left[
++    \cos\!\left(\theta\sum_{i=1}^r x_i\right)-c^r\right]
 +\]
-+This kernel is symmetric and takes values in $[0,1]$.
-+Its cosine term has expectation $c_r^r$.
-+Global sign reversal leaves $U_r$ unchanged, so each one-coordinate
-+marginal is constant on $\{-1,1\}$.  The mean and these marginals
-+are therefore exactly $1/2$.
-+Its pair marginal is
++on independent uniform signs.  After integrating private
++coordinates, its marginal on any $b$ coordinates is
 +\[
-+ M_r(a,b)=\frac12-b_rab,\qquad
-+ b_r=\frac14\sin^2\theta_r\,c_r^{r-2}
-+       \sim\frac{e^{-1/2}}{4r}.
++ (U_r)_b=\frac12+
++  \sum_{\substack{\varnothing\ne S\subseteq[b]\\|S|\ \mathrm{even}}}
++      a_{r,|S|}\prod_{i\in S}x_i,
++ \qquad
++ a_{r,j}=\frac14(-1)^{j/2}\sin^j\theta\,c^{r-j}.
 +\]
-+Expanding in the signs shows that only edge subsets with all
-+degrees even survive.  If $N_g(F)$ is the number of cycles of
-+length $g$ in $F$, the smallest nonempty such subsets are precisely
-+these cycles.  Consequently
++For each fixed even $j\ge2$, $a_{r,j}=O(r^{-j/2})$, and
++$a_{r,2}=-b_r$ with $b_r\sim e^{-1/2}/(4r)$.
++
++Choose a term from this expansion at each hyperedge of $H_r$.
++Averaging the independent signs makes the term zero unless every
++shared vertex has even selected degree.  Each selected hyperedge
++also has even degree, by the displayed marginal formula.  The
++surviving terms therefore correspond precisely to even-degree
++edge subsets of the fixed incidence graph.  Every nonempty such
++subset contains a cycle and uses at least $2g$ incidences.
++Subsets using exactly $2g$ incidences are precisely the shortest
++incidence cycles.  If $N_g$ is their number, they contribute
 +\[
-+ t(F^{[r]},U_r)-2^{-m}
-+  =N_g(F)(-b_r)^g2^{-(m-g)}+O_F(b_r^{g+1}).
++ N_g(-b_r)^g2^{-(m-g)}.
 +\]
-+Since $N_g(F)>0$, the absolute difference is of order $r^{-g}$.
-+In particular, for $F=C_g$ the identity is exactly
-+$t(C_g^{[r]},U_r)-2^{-g}=(-b_r)^g$.
++Every other surviving subset uses at least $2g+2$ incidences and
++contributes $O(r^{-g-1})$.  The incidence pattern is fixed, so
++there are only finitely many terms, independently of $r$.
++Consequently
++\[
++ t(H_r,U_r)-2^{-m}
++  =N_g(-b_r)^g2^{-(m-g)}+O_H(r^{-g-1}).
++\]
++Since $N_g>0$, its absolute value is of order $r^{-g}$.
 +\end{proof}
 +
-+The estimates are uniform over the size of the underlying finite
-+probability space.  For the canonical atom $J^{[r]}$, the girth in
-+Theorem~\ref{density-regular-girth} is the length of its shortest
-+Berge cycle.  Thus the same cyclic structure used in the
-+classification controls a quantitative density estimate in regular
-+finite hosts.
++\begin{corollary}[Counting obligatory assemblies in regular hosts]
++\label{density-obligatory-regular}
++Fix $r\ge3$, and let $H\in\mathcal B_r$ have $m\ge1$ edges.
++For every symmetric regular $[0,1]$-valued $r$-kernel $U$ of mean
++$p$, a Berge-acyclic $H$ satisfies $t(H,U)=p^m$.  Otherwise, with
++$b=b(H)$,
++\[
++ |t(H,U)-p^m|
++ \le(2^m-1)
++       \left(\frac{b(b-1)p(1-p)}{r(r-1)}\right)^2.
++\]
++In particular, with $m$ fixed the error is $O_m(r^{-4})$, uniformly
++over all obligatory patterns with $m$ edges and all such kernels.
++The same assertions hold in finite simple regular hosts.
++\end{corollary}
++\begin{proof}
++The classification makes $H$ linear and every Berge cycle even.
++Thus a finite Berge girth is at least four.  Apply
++Theorem~\ref{density-linear-approximation}, using $q\le1/2$ from
++its proof and $b\le m-1$.
++\end{proof}
 +
-+\subsection{Transfer from proper-subgraph limits}
++This conclusion concerns the full assembled pattern.  Its exponent
++improves to the actual shortest Berge-cycle length, and
++Proposition~\ref{density-linear-sharpness} proves optimality for
++every fixed cyclic incidence pattern.  In particular, the exponent
++four cannot be increased for the obligatory class: the single atom
++$C_4^{[r]}$ already attains this absolute error scale.  These are
++two-sided error estimates; their sharpness examples do not assert a
++negative Sidorenko deficit for bipartite atoms.
 +
-+The preceding estimates do not give the exact Sidorenko inequality.
-+For a fixed uniformity the next lemma transfers a strict deficit,
-+provided the witness family has sufficiently controlled proper
-+edge-subgraph densities.
++\subsection{Degree fluctuations and one-point assembly}
++
++The regular estimate has a useful stable form.  Degree variation
++contributes its variance, while the remaining error retains the
++Berge-girth exponent.  The explicit constant in the next theorem
++is chosen to keep this separation uniform over all finite spaces.
++
++\begin{theorem}[Degree variance and cyclic error]
++\label{density-almost-regular}
++Let $r\ge2$ and let $H$ be a finite simple linear $r$-uniform
++hypergraph with $m\ge1$ edges.  Put $b=b(H)$.  Let
++$U:\Omega^r\to[0,1]$ be symmetric, with mean $p$, and write
++\[
++ d(x)=\mathbb E[U\mid X_1=x],\qquad
++ h=d-p,\qquad \delta^2=\|h\|_2^2.
++\]
++Define
++\[
++ q^2=\frac{b(b-1)}{r(r-1)}
++          \bigl[p(1-p)-r\delta^2\bigr],\qquad
++ C_{m,b}=\bigl[(b+1)(b+2)\bigr]^m.
++\]
++The bracket is nonnegative.  If $H$ has no Berge cycle, then
++\begin{equation}\label{density-almost-regular-forest}
++ |t(H,U)-p^m|\le C_{m,b}\delta^2.
++\end{equation}
++Otherwise, if $g$ is its Berge girth, then
++\begin{equation}\label{density-almost-regular-cycle}
++ |t(H,U)-p^m|\le C_{m,b}\bigl(\delta^2+q^g\bigr).
++\end{equation}
++No optimality is claimed for $C_{m,b}$.  Since $b\le m-1$, it is
++at most $[m(m+1)]^m$.
++\end{theorem}
++\begin{proof}
++For a coordinate set $S$ of size at most $b$, let $U_S$ be the
++corresponding marginal and put
++\[
++ K_S=U_S-p-\sum_{x\in S}h(X_x).
++\]
++The higher-coordinate orthogonal decomposition gives
++\begin{equation}\label{density-higher-remainder}
++ \|K_S\|_2^2
++ \le\frac{|S|(|S|-1)}{r(r-1)}
++        \bigl[p(1-p)-r\delta^2\bigr]\le q^2.
++\end{equation}
++Indeed the first-coordinate projections contribute exactly
++$r\delta^2$ to $\operatorname{Var}U$, and the binomial-ratio
++bound applies to all the remaining orders, which are at least two.
++This also proves nonnegativity of the bracket.  We have
++$|h|\le1$, $|K_S|\le b+1=:B$, and $0\le q\le1/2$.
++For every $T\subseteq S$, conditional expectation gives
++\begin{equation}\label{density-remainder-projection}
++ \mathbb E[K_S\mid X_T]=K_T.
++\end{equation}
++In particular $K_T=0$ when $|T|\le1$.  This statement concerns
++the marginal on $T$; it does not assert that integrating any one
++coordinate of $K_S$ while fixing all the others gives zero.
++
++Integrate the private vertices of $H$ and let $S_e$ be the shared
++vertices of an edge $e$.  Expand each remaining factor as
++\[
++ U_{S_e}=p+\sum_{x\in S_e}h(X_x)+K_{S_e}.
++\]
++There are at most $(b+2)^m$ expansion terms.  The term selecting
++$p$ on every edge is $p^m$.  In each other term let $a$ be the
++number of selected $h$ factors and $t$ the number of selected
++$K$ factors; ignore the constant coefficient $p^{m-a-t}\le1$.
++
++If $a\ge2$, keep two selected $h$ factors and bound all the others
++by one and every $K$ factor by $B$.  If the two kept factors use
++the same vertex, their absolute integral is $\delta^2$.  If they
++use distinct vertices, independence gives an integral
++$(\mathbb E|h|)^2\le\delta^2$.  This term is therefore at most
++$B^m\delta^2$ in absolute value.
++
++Suppose next that $a=0$ or $a=1$, marking the vertex $x$ of the
++unique $h$ factor in the latter case.  Among the selected $K$
++edges integrate every vertex that occurs in just one of these
++edges, except for the marked vertex.  Formula
++\eqref{density-remainder-projection} replaces each $K_{S_e}$ by
++the corresponding smaller $K$ kernel, still bounded by $B$ with
++$L^2$ norm at most $q$.  If its retained support has size at most
++one, the entire term vanishes.
++
++In a nonzero term the resulting incidence graph thus has every
++edge-node of degree at least two.  Every point-node also has
++degree at least two, except possibly the single marked point.
++If the marked point occurs in no selected $K$ edge, its factor
++integrates to zero.  Otherwise this incidence graph cannot be a
++forest: a finite tree with at least one edge has at least two
++leaves, whereas at most one node here can have degree one.
++This proves that all $a\le1$ terms vanish when $H$ is Berge-acyclic.
++It also shows that any remaining term contains a Berge cycle
++among the selected $K$ edges.
++
++Choose a shortest such cycle, of length $\ell\ge g$.
++As in the proof of Theorem~\ref{density-linear-approximation},
++its edge factors share variables only consecutively around the
++cycle.  If $a=0$, discard all other factors at cost $B^{t-\ell}$.
++The cyclic integral is at most the product of the $L^2$ norms,
++giving
++\[
++ |\text{term}|\le B^{t-\ell}q^\ell\le B^m q^g.
++\]
++If $a=1$, Cauchy--Schwarz first gives
++\[
++ |\text{term}|
++ \le B^{t-\ell}\delta
++      \left(\mathbb E\prod_{e\ \mathrm{on\ the\ cycle}}K_e^2\right)^{1/2}.
++\]
++The same cyclic integral bound applies to the squared kernels.
++For each factor,
++$\|K_e^2\|_2\le B\|K_e\|_2\le Bq$, so
++\[
++ |\text{term}|
++ \le B^{t-\ell/2}\delta q^{\ell/2}
++ \le\tfrac12B^m(\delta^2+q^g).
++\]
++Here we used $q\le1$ and the inequality $2uv\le u^2+v^2$.
++Summing the at most $(b+2)^m$ terms proves both assertions.
++\end{proof}
++
++For a fixed finite linear incidence pattern, $b$ and $m$ remain
++fixed as private vertices are added.  The last theorem therefore
++gives the uniform estimate
++\[
++ |t(H_r,U_r)-p_r^m|
++    =O_H\bigl(\operatorname{Var}(d_r)+r^{-g}\bigr)
++\]
++when the pattern is cyclic, and
++$O_H(\operatorname{Var}(d_r))$ when it is Berge-acyclic.
++Thus the regular $r^{-g}$ scale persists whenever the degree
++variance is $O(r^{-g})$, while the general $r^{-1}$ scale permits
++degree variance of order $r^{-1}$.  The theorem requires only
++control of the $L^2$ degree fluctuation, not pointwise regularity.
++
++For a finite host $G$ of order $n$, the same theorem applies with
++\[
++ d(v)=\frac{(r-1)!\deg_G(v)}{n^{r-1}},\qquad
++ \delta^2=\frac1n\sum_{v\in V(G)}(d(v)-p_r(G))^2.
++\]
++Thus its hypothesis and error can be read directly from the
++normalized degree sequence.
++
++The one-point operation also has an exact density formula.  For a
++rooted pattern $(A,a)$, let $a_U(x)$ be its homomorphism density
++with the image of $a$ fixed at $x$.  If $A\vee B$ identifies the
++roots of two otherwise disjoint patterns, conditional independence
++gives
++\begin{equation}\label{density-rooted-gluing}
++ t(A\vee B,U)=\mathbb E[a_U(X)b_U(X)]
++   =t(A,U)t(B,U)+\operatorname{Cov}(a_U(X),b_U(X)).
++\end{equation}
++For two copies of the same rooted pattern the covariance is a
++variance.  A single-edge atom has rooted density $d$, so regularity
++removes this extra term when edge atoms are attached.  The next
++example shows what can happen for cyclic atoms, even when the atom
++list and attachment excess profile are fixed.
++
++\begin{remark}[The attachment point can change the density]
++\label{flesh-assembly-root-example}
++Canonical atoms and their attachment multiplicities do not determine
++homomorphism density, even in a regular kernel.  Fix $r\ge3$ and
++let $B=C_4^{[r]}$.  Form $H_{\rm c}$ by identifying a core vertex
++of one copy of $B$ with a core vertex of another copy, and form
++$H_{\rm p}$ by instead identifying two private vertices.
++Both systems have the same two canonical atoms, one joint of atom
++multiplicity two, and hence the same attachment excess profile
++$(1)$.  Both have $8$ edges, $8r-9$ vertices and cyclic rank $2$.
++Nevertheless, a single bounded regular kernel distinguishes their
++densities.
++
++Take the uniform probability space $\Omega=\{-1,0,1\}$, write
++$s=\mathbb E Z^2=2/3$, and choose $0<p<1$ and
++\[
++ 0<\varepsilon\le
++       \frac{\min\{p,1-p\}}{\binom r2}.
++\]
++The symmetric kernel
++\[
++ U_r(z_1,\ldots,z_r)
++      =p+\varepsilon\sum_{i<j}z_i z_j
++\]
++takes values in $[0,1]$, has mean $p$, and has every
++one-coordinate marginal equal to $p$, since $\mathbb E Z=0$.
++Its two- and three-coordinate marginals are
++\[
++ M(x,y)=p+\varepsilon xy,
++ \qquad N(x,y,z)=p+\varepsilon(xy+xz+yz).
++\]
++
++Let $a_{\rm c}(z)$ and $a_{\rm p}(z)$ denote the density of $B$
++when a specified core or private vertex, respectively, is fixed
++at $z$, while all other vertices are sampled independently.
++Integrating the private vertices and expanding the four-cycle gives
++\[
++ a_{\rm c}(z)=p^4+\varepsilon^4s^3z^2,
++ \qquad t(B,U_r)=p^4+\varepsilon^4s^4.
++\]
++Indeed, every proper nonempty edge subset of the cycle has an
++unfixed degree-one vertex, whose coordinate has mean zero.
++
++For a fixed private vertex $z$ on the edge with core endpoints
++$x,y$, let $K_3(x,y)$ be the integral of the three $M$-factors
++on the complementary path.  Its row and column integrals are
++$p^3$, because $M$ has constant row integral $p$.
++As $N(x,y,z)=M(x,y)+\varepsilon z(x+y)$, it follows that
++\[
++ \begin{split}
++ a_{\rm p}(z)
++ &=\mathbb E_{x,y}N(x,y,z)K_3(x,y)\\
++ &=t(B,U_r)+\varepsilon z p^3
++                      (\mathbb E x+\mathbb E y)
++ =t(B,U_r).
++ \end{split}
++\]
++This calculation also applies when $r=3$, when the selected edge
++has no other private vertices to integrate.
++
++Conditioning on the common vertex in a one-point amalgamation
++makes the remaining variables in its two atoms independent.
++Consequently
++\[
++ \begin{split}
++ t(H_{\rm c},U_r)-t(H_{\rm p},U_r)
++ &=\mathbb E a_{\rm c}(Z)^2-
++                          \bigl(t(B,U_r)\bigr)^2\\
++ &=\operatorname{Var}(a_{\rm c}(Z))
++ =\varepsilon^8s^6\operatorname{Var}(Z^2)
++ =\frac{128}{6561}\varepsilon^8>0.
++ \end{split}
++\]
++Thus the location of a joint inside an atom carries density
++information that its multiplicity and the atom list do not record.
++\end{remark}
++
+ \subsection{Transfer from proper-subgraph limits}
+ 
+ The preceding estimates do not give the exact Sidorenko inequality.
+ For a fixed uniformity the next lemma transfers a strict deficit,
+ provided the witness family has sufficiently controlled proper
+ edge-subgraph densities.
++
++There is also a finite error budget behind the limit argument.
++Let $J$ be a finite simple graph with $m\ge1$ edges, write
++$J_A=(V(J),A)$, and let $V$ be a finite symmetric nonnegative
++kernel with constant row integral one.  Suppose $0<\lambda\le1$,
++$t(J,V)\le1-\delta$ with $\delta>0$,
++and $|t(J_A,V)-1|\le\varepsilon$ for every proper edge subset.
++The expansion used in the next proof gives
++\begin{equation}\label{density-transfer-error-budget}
++ t(J,1+\lambda(V-1))
++ \le1-\delta\lambda^m+\varepsilon(1-\lambda^m).
++\end{equation}
++Indeed, the coefficients of the proper-subgraph terms are
++nonnegative and sum to $1-\lambda^m$.  Thus
++$\varepsilon(1-\lambda^m)<\delta\lambda^m$ suffices for a strict
++deficit.  At the universal coefficient $\lambda_r$, the retained
++signal has order $r^{-m}$ for a fixed full-graph deficit.  This
++explains why the proper-subgraph approximation must be chosen after
++the uniformity, and why the limit statement is not a uniform bound
++on the density or size of a finite witnessing host.
  
  \begin{lemma}[Transfer from proper-subgraph limits]
  \label{density-transfer}
-@@ -3888,14 +4223,16 @@
- They are outside the coverage of every existing
- export listed in Appendix~\ref{appendix-formalization}.
- 
--The density transfer and its consequences in
--Section~\ref{density-extension} have not been formalized here.
--They use the rank-layer limit of \citet{openai161} as an explicit
--external hypothesis.  The source repository describes a Lean
--formalization of its finite graph counterexample; that description
--does not verify the additional proper-subgraph extraction or the
--hypergraph transfer in this manuscript.  No replay of that external
--formalization is claimed.
-+The results in Section~\ref{density-extension} have not been
-+formalized here.  Its universal marginal-realization theorem and
-+quantitative density estimates have independent manuscript proofs;
-+they do not use the rank-layer hypothesis.  The conclusions about
-+the explicit Sidorenko counterexample, including Theorem~D, do use
-+the rank-layer limit of \citet{openai161} as an explicit external
-+hypothesis.  The source repository describes a Lean formalization
-+of its finite graph counterexample; that description does not verify
-+the additional proper-subgraph extraction or the hypergraph transfer
-+in this manuscript.  No replay of that external formalization is claimed.
- 
- 
- Verification of the extended manuscript is not complete.  In particular,
-@@ -4022,7 +4359,8 @@
+@@ -4359,8 +5086,9 @@
  and the exact chromatic and finite-family arguments in
  Section~\ref{exact-spectra-extension}.  ChatGPT was used to
  identify the external density construction and to develop and check
--the transfer arguments in Section~\ref{density-extension}.
-+the transfer arguments, universal marginal theorem, and quantitative
-+density estimates in Section~\ref{density-extension}.
+-the transfer arguments, universal marginal theorem, and quantitative
+-density estimates in Section~\ref{density-extension}.
++the transfer arguments, universal marginal theorem, quantitative
++density estimates for linear patterns, and attachment examples in
++Section~\ref{density-extension}.
  The author takes full responsibility for the
  arguments, citations, and final manuscript; newly incorporated material in
  this review draft remains subject to the author's review.
-@@ -4281,6 +4619,37 @@
- \newblock \emph{International Mathematics Research Notices},
-   2024\penalty0 (13):\penalty0 10285--10297, 2024.
- \newblock \doi{10.1093/imrn/rnae071}.
+@@ -4650,6 +5378,13 @@
+ \newblock \emph{Annals of Mathematical Statistics},
+   19\penalty0 (3):\penalty0 293--325, 1948.
+ \newblock \doi{10.1214/aoms/1177730196}.
 +
-+\bibitem[Edmonds(1965)]{edmonds1965matching}
-+Jack Edmonds.
-+\newblock Maximum matching and a polyhedron with {$0,1$}-vertices.
-+\newblock \emph{Journal of Research of the National Bureau of Standards,
-+  Section B}, 69B:\penalty0 125--130, 1965.
-+\newblock \doi{10.6028/jres.069B.013}.
-+
-+\bibitem[Hoernig(2018)]{hoernig2018}
-+Steffen Hoernig.
-+\newblock On the minimum correlation between symmetrically distributed
-+  random variables.
-+\newblock \emph{Operations Research Letters}, 46\penalty0 (4):\penalty0
-+  469--471, 2018.
-+\newblock \doi{10.1016/j.orl.2018.06.005}.
-+
-+\bibitem[Allerstorfer et~al.(2026)Allerstorfer, Christandl, Grinko, Nechita,
-+  Ozols, Rochette, and Verduyn Lunel]{allerstorfer2026}
-+Rene Allerstorfer, Matthias Christandl, Dmitry Grinko, Ion Nechita,
-+  Maris Ozols, Denis Rochette, and Philip Verduyn Lunel.
-+\newblock Monogamy of highly symmetric states.
-+\newblock \emph{Communications in Mathematical Physics},
-+  407\penalty0 (1):\penalty0 Article 21, 2026.
-+\newblock \doi{10.1007/s00220-025-05483-3}.
-+
-+\bibitem[Hoeffding(1948)]{hoeffding1948}
-+Wassily Hoeffding.
-+\newblock A class of statistics with asymptotically normal distribution.
-+\newblock \emph{Annals of Mathematical Statistics},
-+  19\penalty0 (3):\penalty0 293--325, 1948.
-+\newblock \doi{10.1214/aoms/1177730196}.
++\bibitem[Kohayakawa et~al.(2010)Kohayakawa, Nagle, R{\"o}dl, and Schacht]{knrs2010}
++Yoshiharu Kohayakawa, Brendan Nagle, Vojt\v{e}ch R{\"o}dl, and Mathias Schacht.
++\newblock Weak hypergraph regularity and linear hypergraphs.
++\newblock \emph{Journal of Combinatorial Theory, Series B},
++  100\penalty0 (2):\penalty0 151--160, 2010.
++\newblock \doi{10.1016/j.jctb.2009.05.005}.
  
  \bibitem[de~Moura and Ullrich(2021)]{demoura2021}
  Leonardo de~Moura and Sebastian Ullrich.

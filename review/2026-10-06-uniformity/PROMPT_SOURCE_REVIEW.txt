@@ -1,3 +1,119 @@
+SUPPLEMENT FOR THE FULL LINEAR-PATTERN CONTINUATION
+7 October 2026
+
+The new all-linear bounds, degree-variance refinement, and attachment example
+were developed from the manuscript's projection argument. No additional
+OpenAI prompt or external finite-field claim is used by these proofs.
+The targeted primary-source comparison below supplements the retained audit
+of the released prompt and comparator material.
+
+EDITORIAL AND TARGETED PRIMARY-SOURCE AUDIT
+7 October 2026. Release manuscript read; no release edits made.
+Candidate exposition: e593_fleshing/editorial_candidate.tex.
+
+Editorial priorities
+1. Explain the role of the pair marginal before the compatibility theorem:
+   the atom has a graph core, but an arbitrary graph kernel need not be a marginal
+   of a symmetric nonnegative r-kernel.
+2. Give exact star/P3 and even-cycle formulas. These distinguish degree variance
+   from centered pair correlations and attach concrete numerical meanings to
+   acyclic assemblies versus cyclic atoms.
+3. Explain the rooted gluing identity. Unrooted densities do not multiply merely
+   because the pattern has a canonical one-point factorization. The included
+   three-state example proves this remains true for regular kernels.
+4. Give a short dependency roadmap distinguishing unconditional classification,
+   universal marginal geometry and projection bounds from the source-specific
+   conditional density deficit.
+5. Optional question: least cyclic rank of a 2-connected bipartite core with a
+   non-Sidorenko private expansion, at fixed r. The conservative bounds supplied
+   here are rank at least2 (rank1 is an even cycle) and at most32 conditional on
+   the source rank-layer input. No optimality, first-posed status, or exhaustive
+   literature certification is claimed. Further known positive graph classes
+   might improve the lower bound; the fragment deliberately does not claim that2
+   is best known.
+
+The star, cycle, rooted gluing, and rank-one observations are classical identities
+or direct consequences, included for explanation rather than novelty. The finite
+three-state example uses U=p+epsilon sum_{i<j} z_i z_j with z uniform on{-1,0,1}.
+It is bounded and one-coordinate regular; a core-rooted C4 expansion has rooted
+profile p^4+epsilon^4(Ez^2)^3 z(x)^2. This supplies an explicit witness that scalar
+factorization fails. No external theorem is needed for that calculation.
+
+Primary sources relevant to these standard tools
+A. Laszlo Lovasz, Subgraph densities in signed graphons and the local
+Simonovits--Sidorenko conjecture, Electronic Journal of Combinatorics18(1)(2011),
+P127. DOI10.37236/614.
+https://www.combinatorics.org/ojs/index.php/eljc/article/download/v18i1p127/pdf/
+Full published paper examined. Section2 defines partially labelled products and
+rooted density identities. Its discussion of even-cycle/Schatten norms supports
+the classical spectral viewpoint behind the examples.
+Important scope: published Theorem4.1, printedp18, assumes mean(W)=1, 0<=W<=2,
+and cut-norm distance from1 at most2^(-8m-2). Theorem5.1 is the L-infinity version
+with radius1/(4m). Theorem5.2 only gives an approximate conclusion under weakened
+boundedness conditions. Do not infer exact fixed-positive-density Sidorenko for
+all p from the manuscript's L2 marginal estimate alone.
+A safe extra consequence would require M_U<=2p (automatic for p>=1/2): then
+r>=2^(16m+5)(1-p)/p suffices, or r(r-1) instead ofr for regularU, by the projection
+bound. This optional corollary was NOT included in the exposition fragment because
+it is tangential to the parent agent's stronger all-linear-pattern development.
+
+B. Yoshiharu Kohayakawa, Brendan Nagle, Vojtech Rodl, Mathias Schacht,
+Weak hypergraph regularity and linear hypergraphs.
+Primary author manuscript:
+https://www.math.uni-hamburg.de/home/schacht/2010/weak_reg.pdf
+Theorem4, p2: for fixed uniformityk and a fixed linear patternF, sufficiently
+quasirandom hosts have approximately d^{e(F)}n^{v(F)} labelled copies. This is
+counting under an explicit quasirandomness hypothesis. It is not the proposed
+high-uniformity estimate for EVERY symmetric bounded hostkernel. Theorem7 concerns
+embedding linear patterns under uniformly positive density. Neither supplies the
+explicit b/r bound or the regular Berge-girth rate proposed in this work.
+
+C. Hyunwoo Lee, On Sidorenko exponents of hypergraphs, arXiv2509.08680v2,
+1October2025.
+https://arxiv.org/abs/2509.08680
+https://arxiv.org/html/2509.08680v2
+Full-text main statements and conclusion examined. Theorems1.4 and1.6 use
+Sidorenko/dominating link hypergraphs; Theorem2.3 bounds the Sidorenko exponent of
+sparse partite patterns. Its exponent convention includes e(F), unlike Nie--Spiro.
+No all-linear symmetric-kernel high-uniformity two-sided estimate or regular
+Berge-girth estimate found. Problem6.3 concerns an exponent bound depending on
+maximum degree; the new absolute-error estimates do not answer that question
+uniformly as hostdensity approacheszero.
+
+D. Jiaxi Nie and Sam Spiro, Sidorenko hypergraphs and random Turan numbers,
+Combinatorial Theory5(4)(2025),Article10. DOI10.5070/C65465676.
+https://escholarship.org/uc/item/0c25t471
+https://escholarship.org/content/qt0c25t471/qt0c25t471.pdf
+Existing local full text rechecked. Theorem1.13 gives one-sided exponent bounds
+for expansions under finite Sidorenko exponent. This is a genuine qualitative
+predecessor, already properly acknowledged. It does not contain the proposed
+all-linear shared-support b/r estimate or regular girth-sensitive absolute error.
+
+E. Hoeffding's1948 orthogonal decomposition remains the classical analytic input.
+Primary publisher record:
+https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-19/issue-3/A-Class-of-Statistics-with-Asymptotically-Normal-Distribution/10.1214/aoms/1177730196.full
+A related modern use in hyperkernels is Li--Liu, arXiv2608.08679v1 Section4:
+https://arxiv.org/html/2608.08679v1
+That work addresses rooted rigidity/stability, not the claimed all-linear
+high-uniformity approximation.
+
+Bounded search conclusion for the newly proposed all-linear theorem
+Targeted searches combined linear hypergraphs, homomorphism densities, symmetry,
+Hoeffding projections, high/large uniformity, regular kernels and Berge girth.
+No competing statement of
+ |t(H,U)-p^m| <= binom(m,2)b p(1-p)/r
+or the regular bound
+ (2^m-1)[b(b-1)p(1-p)/(r(r-1))]^(g/2)
+was located in the primary sources checked. This is a bounded nonfinding, not
+first-priority certification. The decomposition, expansion over edge subsets,
+leaf cancellation, and cycle Cauchy--Schwarz steps are standard tools; the proposed
+contribution is their quantitative uniformity-dependent synthesis and its link to
+all canonical obligatory assemblies. The independent agents are checking the
+mathematical statement and sharpness separately.
+
+
+RETAINED RELEASED-PROMPT AND SOURCE AUDIT
+
 OPENAI/MATH PROMPT AND SUPPORTING-MATERIAL AUDIT
 Checked 7 October 2026. Internal provenance and bounded literature report.
 No manuscript, PR, or remote files were edited; no Lean replay was performed.

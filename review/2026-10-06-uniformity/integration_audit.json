@@ -47,6 +47,7 @@
     "hoernig2018",
     "allerstorfer2026",
     "hoeffding1948",
+    "knrs2010",
     "demoura2021",
     "mathlib2020",
     "avigadharrison2014",
@@ -146,5 +147,32 @@
   "source_161_formal_target_verified_from_released_files": true,
   "independent_internal_mathematical_readings_of_new_results": 2,
   "root_integration_review": true,
-  "first_priority_certified": false
+  "first_priority_certified": false,
+  "fleshing_baseline_commit": "ba62fadcf3f7098a05fa6eabda25c46df227318a",
+  "fleshing_baseline_tex_sha256": "e6875f045c87386b9ec554ff6da159563baf326ab10782089f7ef1d9f250c402",
+  "previous_45_bibliography_entries_preserved_verbatim": true,
+  "fleshing_changes": [
+    "State the full linear-pattern density extension in the abstract.",
+    "Update the introduction without changing the existing theorem statements.",
+    "Explain the density consequences for the complete obligatory class.",
+    "Add a concrete reading guide to the density section.",
+    "Add operational marginal constructions and a stable finite obstruction.",
+    "Develop the full linear-pattern theorem, sharpness, robustness, and attachment example.",
+    "Expose the quantitative error budget while retaining the transfer proof verbatim.",
+    "Keep the assistance disclosure aligned with the expanded mathematical work.",
+    "Credit the closest fixed-uniformity counting theorem."
+  ],
+  "external_peer_review_claimed": false,
+  "fleshing_unconditional_result_labels": [
+    "flesh-profile-finite-obstruction",
+    "density-higher-projection",
+    "density-linear-approximation",
+    "density-linear-sharpness",
+    "density-obligatory-regular",
+    "density-almost-regular",
+    "flesh-assembly-root-example",
+    "density-transfer-error-budget"
+  ],
+  "final_integrated_review_tex_sha256": "fd871a747a40104cc92bc145f9e664e18fbd1b6e9bcda0faf72a662616679278",
+  "final_integrated_review_required_repairs_remaining": []
 }

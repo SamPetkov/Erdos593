@@ -1,5 +1,5 @@
 {
-  "pages": 70,
+  "pages": 81,
   "compiler": "pdfTeX / TeX Live 2023",
   "final_build_passes": 3,
   "shell_escape": false,
@@ -9,15 +9,15 @@
   "new_labels": {
     "density-extension": {
       "number": "13",
-      "page": 52
+      "page": 53
     },
     "density-expansion-identity": {
       "number": "3",
-      "page": 53
+      "page": 54
     },
     "density-matching-inequalities": {
       "number": "4",
-      "page": 53
+      "page": 54
     },
     "density-universal-profiles": {
       "number": "13.1",
@@ -25,61 +25,144 @@
     },
     "density-matching": {
       "number": "13.2",
-      "page": 55
-    },
-    "density-projection-bound": {
-      "number": "13.3",
       "page": 56
     },
-    "density-hoeffding": {
+    "flesh-profile-four-formula": {
       "number": "5",
-      "page": 56
-    },
-    "density-regular-projection": {
-      "number": "6",
-      "page": 56
-    },
-    "density-uniform-approximation": {
-      "number": "13.4",
-      "page": 56
-    },
-    "density-density-error": {
-      "number": "7",
-      "page": 56
-    },
-    "density-regular-girth": {
-      "number": "13.5",
       "page": 57
     },
-    "density-girth-error": {
-      "number": "8",
-      "page": 57
-    },
-    "density-transfer": {
-      "number": "13.6",
+    "flesh-profile-finite-obstruction": {
+      "number": "13.3",
       "page": 58
     },
-    "density-source-limits": {
-      "number": "13.7",
+    "flesh-profile-distance-bound": {
+      "number": "6",
+      "page": 58
+    },
+    "density-projection-bound": {
+      "number": "13.4",
       "page": 59
     },
-    "density-obligatory-atom": {
-      "number": "13.8",
+    "density-hoeffding": {
+      "number": "7",
+      "page": 59
+    },
+    "density-regular-projection": {
+      "number": "8",
+      "page": 59
+    },
+    "density-uniform-approximation": {
+      "number": "13.5",
+      "page": 59
+    },
+    "density-density-error": {
+      "number": "9",
+      "page": 59
+    },
+    "density-regular-girth": {
+      "number": "13.6",
+      "page": 60
+    },
+    "density-girth-error": {
+      "number": "10",
+      "page": 60
+    },
+    "density-worked-examples": {
+      "number": "13.7",
       "page": 61
     },
-    "density-nie-spiro": {
-      "number": "13.9",
+    "density-even-cycle-example": {
+      "number": "11",
+      "page": 61
+    },
+    "density-higher-projection": {
+      "number": "13.8",
       "page": 62
     },
-    "density-forcing-separation": {
+    "density-linear-approximation": {
+      "number": "13.9",
+      "page": 63
+    },
+    "density-linear-general": {
+      "number": "12",
+      "page": 63
+    },
+    "density-linear-regular": {
+      "number": "14",
+      "page": 63
+    },
+    "density-linear-sharpness": {
       "number": "13.10",
-      "page": 62
+      "page": 64
+    },
+    "density-obligatory-regular": {
+      "number": "13.11",
+      "page": 65
+    },
+    "density-almost-regular": {
+      "number": "13.12",
+      "page": 65
+    },
+    "density-almost-regular-forest": {
+      "number": "15",
+      "page": 66
+    },
+    "density-almost-regular-cycle": {
+      "number": "16",
+      "page": 66
+    },
+    "density-higher-remainder": {
+      "number": "17",
+      "page": 66
+    },
+    "density-remainder-projection": {
+      "number": "18",
+      "page": 66
+    },
+    "density-rooted-gluing": {
+      "number": "19",
+      "page": 68
+    },
+    "flesh-assembly-root-example": {
+      "number": "13.13",
+      "page": 68
+    },
+    "density-transfer-error-budget": {
+      "number": "20",
+      "page": 69
+    },
+    "density-transfer": {
+      "number": "13.14",
+      "page": 69
+    },
+    "density-source-limits": {
+      "number": "13.15",
+      "page": 70
+    },
+    "density-obligatory-atom": {
+      "number": "13.16",
+      "page": 72
+    },
+    "density-nie-spiro": {
+      "number": "13.17",
+      "page": 73
+    },
+    "density-forcing-separation": {
+      "number": "13.18",
+      "page": 73
     }
   },
   "visually_reviewed_pages": [
     1,
+    2,
+    3,
     4,
     5,
+    6,
+    7,
+    8,
+    9,
+    10,
     52,
     53,
     54,
@@ -98,23 +181,48 @@
     67,
     68,
     69,
-    70
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81
   ],
-  "final_wording_changes_affected_only_pages": [
+  "selected_full_size_visual_reviews": [
     1,
-    55
+    57,
+    58,
+    63,
+    65,
+    66,
+    67,
+    68,
+    69
   ],
-  "final_changed_pages_rerendered_and_inspected": true,
-  "pdf_sha256": "f700c1e0032058e4cdae81d9892bce798aaf97ae53d177832bbdd09fed131571",
-  "tex_sha256": "e6875f045c87386b9ec554ff6da159563baf326ab10782089f7ef1d9f250c402",
-  "independent_internal_mathematical_readings": 2,
-  "integrating_assistant_mathematical_review": true,
-  "separate_primary_literature_audit": true,
-  "final_integrated_source_review_completed": true,
-  "required_nonnegativity_wording_repair_verified": true,
-  "optimal_rates_not_optimal_constants_claimed": true,
-  "external_peer_review_claimed": false,
+  "final_scope_fix_and_editorial_update_affected_pages": [
+    61,
+    69,
+    70,
+    71,
+    72
+  ],
+  "final_affected_pages_rerendered_and_inspected": true,
+  "pdf_sha256": "38c459c1ff91563151f4bd5e963408e762baacd70ea297736654da02578a86d4",
+  "tex_sha256": "fd871a747a40104cc92bc145f9e664e18fbd1b6e9bcda0faf72a662616679278",
+  "internal_mathematical_review": "Independent AI-assisted readings of candidate proofs, integrating-assistant review, and a final integrated-source review.",
+  "required_transfer_budget_notation_completion_resolved": true,
+  "higher_projection_r_ge_2_explicit": true,
+  "almost_regular_remainder_not_treated_as_fully_degenerate": true,
+  "sharpness_for_absolute_rates_only": true,
+  "assembly_example_claimed_for_regular_kernels": true,
   "new_lean_validation_claimed": false,
-  "external_rank_layer_proof_independently_certified": false,
-  "source_scope": "The marginal and quantitative density theorems are unconditional manuscript results. The explicit OpenAI-based Sidorenko atom and expansion-conjecture counterexample retain the stated rank-layer hypothesis."
+  "external_peer_review_claimed": false,
+  "first_priority_certification_claimed": false,
+  "rank_layer_assumption_retained": true
 }

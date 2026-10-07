@@ -1,3 +1,408 @@
+CURRENT INTERNAL SOURCE AND PROOF REVIEW — 7 OCTOBER 2026
+Complete81-page manuscript
+Final TeX SHA256: fd871a747a40104cc92bc145f9e664e18fbd1b6e9bcda0faf72a662616679278
+Final PDF SHA256: 38c459c1ff91563151f4bd5e963408e762baacd70ea297736654da02578a86d4
+
+The following reviews concern this continuation. They are internal AI-assisted
+readings, not external peer review or a Lean certificate. The final integrated
+source review supersedes intermediate candidate hashes. Its one requested
+notation completion has been resolved in the final source.
+
+CURRENT NUMBERING
+  13.3 (page 58): flesh-profile-finite-obstruction
+  13.7 (page 61): density-worked-examples
+  13.8 (page 62): density-higher-projection
+  13.9 (page 63): density-linear-approximation
+  13.10 (page 64): density-linear-sharpness
+  13.11 (page 65): density-obligatory-regular
+  13.12 (page 65): density-almost-regular
+  13.13 (page 68): flesh-assembly-root-example
+  13.14 (page 69): density-transfer
+  13.15 (page 70): density-source-limits
+  13.16 (page 72): density-obligatory-atom
+  13.17 (page 73): density-nie-spiro
+  13.18 (page 73): density-forcing-separation
+
+
+final_integrated_review.txt
+
+FINAL INTEGRATED MATHEMATICAL REVIEW — 7 OCTOBER 2026
+
+Reviewed source:
+/workspace/scratch/b3dd5289f7fe/e593_openai_followup/release/
+erdos593_obligatory_uniform_hypergraphs.tex
+
+Exact SHA-256:
+fd871a747a40104cc92bc145f9e664e18fbd1b6e9bcda0faf72a662616679278
+
+Verdict: the integrated new mathematics is APPROVED. The one notation
+completion requested during review has been implemented and reread in
+the source with the exact hash above. No required repairs remain and no
+erroneous new estimate or missing substantive proof step was found.
+This review did not re-audit Sections 1–12.
+
+Resolved completion
+-------------------
+The finite transfer error-budget paragraph now explicitly introduces a
+finite simple graph J with m>=1 edges, J_A=(V(J),A), and a finite symmetric
+nonnegative kernel V with constant row integral one. This resolves the
+sole requested notation/scope completion. The mathematical inequality
+and its proof required no change.
+
+Checks supporting approval
+--------------------------
+1. Abstract, introduction and scope. The new claims have corresponding
+   precise statements and proofs. The optimality claims concern a fixed
+   cyclic incidence pattern as private vertices are added; the introduction
+   makes this explicit. The O_m(r^-4) assertion for the obligatory class is
+   uniform over all its patterns with fixed edge count. Exact equality for
+   Berge forests and the distinction between absolute-error sharpness and
+   a negative Sidorenko deficit are correctly stated. The rank-layer input
+   remains explicit for the separate counterexample transfer; no external
+   formalization replay or additional Lean coverage is claimed.
+
+2. Universal profile examples and finite-alphabet obstruction. The K3/K4
+   formulas, triangle/five-element obstructions, TV convention, and bound
+   dist_infinity(lambda,M_r)<=L/N+(L+1)*epsilon are retained correctly.
+   The finite obstruction restricts lambda to [0,1]^L, as required by its
+   proof. Its collision-free matching construction and both deviation
+   estimates remain valid, including r=2.
+
+3. General linear-pattern theorem. The higher Hoeffding projection ratios
+   b/r and b(b-1)/(r(r-1)) are correct. The Taylor argument has the correct
+   factor when passing from ordered edge pairs to unordered pairs. In the
+   regular case a shortest selected Berge cycle is loose by linearity and
+   minimality; the integrated wording explicitly treats both an existing
+   cycle-vertex chord and a new shared-vertex shortcut. This justifies the
+   cyclic kernel contraction. The replacement of Schatten Holder by the
+   elementary Hilbert–Schmidt/operator-norm proof is rigorous and loses no
+   constant. The finite-host statement uses exactly the specified
+   homomorphism-density normalization.
+
+4. Optimality and the obligatory corollary. In the cosine expansion,
+   nonzero terms correspond to even-degree incidence subsets. The smallest
+   nonempty ones have 2g incidences and are precisely the shortest cycles;
+   all have the same leading sign. All other terms have at least 2g+2
+   incidences, yielding O_H(r^(-g-1)). For H in B_r, linearity and even
+   Berge cycles give g>=4, and b<=m-1 gives the stated uniform O_m(r^-4)
+   estimate. The C4^[r] example verifies sharpness of the class exponent.
+
+5. Almost-regular theorem. The remainder K_S has the correct projection
+   identity E[K_S|X_T]=K_T and is zero for |T|<=1; it is not mistakenly
+   treated as individually degenerate in every coordinate. Terms with two
+   or more h factors are bounded by B^m*delta^2, even if the two retained
+   factors share a vertex. With at most one h factor, a nonzero retained
+   incidence graph has at most one possible leaf and therefore has a cycle.
+   In the one-h case Cauchy–Schwarz and the cyclic bound for K_e^2 give
+   B^(t-l/2)*delta*q^(l/2), then at most
+   (1/2)B^m*(delta^2+q^g). The number of expanded terms and B=b+1 yield
+   exactly the displayed conservative C_{m,b}. The b=0, b=1, r=2,
+   edgeless-host and single-pattern-edge endpoints introduce no exception.
+
+6. Rooted gluing and assembly example. The covariance identity follows
+   by conditioning on the shared root. The rank-one three-point kernel
+   lies in [0,1] under the stated epsilon restriction and is regular.
+   Both rooted densities and the gap 128*epsilon^8/6561 are correct.
+   The two assemblies really have the same canonical atom list,
+   attachment profile (1), 8 edges, 8r-9 vertices and cycle rank 2.
+   The example accurately claims a bounded regular kernel, not an
+   unproved exact finite-regular-host realization.
+
+7. Transfer budget. Expanding 1+lambda(V-1)=(1-lambda)+lambda V gives
+   full-subgraph weight lambda^m and total proper-subgraph weight
+   1-lambda^m. Hence the displayed error budget and sufficient strictness
+   condition are correct, including lambda=1. The text correctly fixes
+   r before choosing the approximating witness and does not claim a
+   uniform finite-host order or density bound from this limit argument.
+
+8. New-label check. There are 36 density-/flesh- labels. No duplicate
+   labels or undefined references with either prefix were found.
+
+No release or generator file was edited. This is a bounded mathematical
+review, not a formal verification certificate or an independent novelty
+search for every new consequence.
+
+
+independent_density_review.txt
+
+INDEPENDENT ADVERSARIAL DENSITY REVIEW
+7 October 2026. No release edits.
+
+Part1: e593_fleshing/density_candidate.tex
+SHA256: ec94e58ec30e89c0a197b37d05b2c11d1156c0eb3b828f1cce9fe5983f8283f5
+Verdict: PASS; no substantive mathematical defect found.
+
+Projection: recursively defined Hoeffding components have full coordinate
+degeneracy and are orthogonal. Symmetry equates their squared norms by cardinality.
+The binomial ratios are bounded by b/r, and by b(b-1)/(r(r-1)) for degrees at
+least2. Thus the variance and regularity estimates have the stated constants.
+Minor standalone scope suggestion: state r>=2 explicitly in this lemma because
+the regular formula contains r(r-1); the following theorem already states it.
+
+General approximation: integrating degree-one vertices leaves exactly the
+marginals on globally shared points. The interpolated factors remain in[0,1].
+The Taylor remainder counts each unordered edge pair once after its factor1/2,
+giving the displayed sum of sqrt(b_e b_f), with no missing factor2. Shared
+variables do not invalidate Cauchy--Schwarz on the full product space.
+
+Regular cancellation: after restricting to an edge subset A, a factor with at
+most one surviving shared variable is zero because the one-coordinate marginal
+is p. If every selected edge factor has at least2 shared variables, the remaining
+incidence graph has minimum degree at least2 on both sides and hence a cycle.
+This correctly gives exact equality for all Berge forests.
+
+Shortest-cycle geometry: a shortest Berge cycle in a linear pattern is loose
+on its selected hyperedges. A second meeting of consecutive edges violates
+linearity. An extra intersection between nonconsecutive edges gives a shorter
+incidence cycle (an incidence chord if the point already lies on the cycle;
+a two-edge shortcut through the point otherwise). A point in three cycle edges
+is excluded by the same argument, including the triangle case. Thus every
+variable appears in at most2 of the retained cycle factors, even if its degree
+in the full pattern is arbitrarily large.
+
+Cycle bound: factors outside the cycle are discarded only after absolute values,
+using their magnitude<=1. Integrating a variable retained in only one factor
+is conditional expectation, so it cannot increase the L2 norm. The final kernels
+may differ and need not be symmetric; the mixed trace is still bounded by
+Schatten Holder, then by the product of Hilbert--Schmidt norms. Finite atom masses
+are incorporated by the usual square-root-weight matrix representation. The
+bound q<=1/2 is valid, so q^ell<=q^g.
+
+Sharpness: the cosine marginal Fourier coefficient for a selected even set of
+j incidences is exactly (1/4)(-1)^(j/2)sin(theta)^j cos(theta)^(r-j). A surviving
+term is an even-degree edge subset of the fixed Levi graph on BOTH sides.
+Degrees4,6,... at shared points cause no issue. Every nonempty such subgraph
+contains a cycle. Exactly2g incidences force one shortest cycle; every other
+survivor has at least2g+2 incidences. All shortest cycles have the same leading
+coefficient (-b_r)^g2^(-(m-g)), so no leading cancellation is possible. Fixed
+incidence data ensure finitely many terms and uniform O(r^(-g-1)) remainder.
+The chosen kernels are in[0,1], symmetric, exactly regular, and of mean1/2.
+
+Boundary checks: m=1 and b=0 give exact equality; b=1 cannot occur in the cyclic
+regular branch and its projected factors are constant. p=0 or1 forces a constant
+kernel on a finite positive-mass space, so both bounds vanish correctly. r=2 is
+allowed and its denominators are nonzero. Isolated pattern vertices contribute1.
+Finite-host adjacency kernels, including zeros on repeated coordinates, retain
+all the required symmetry, normalization, and degree-regularity identities.
+
+Part2: e593_fleshing/almost_regular_candidate.tex
+SHA256: 1637e528bca0b9a7e6e7aa64ec74b0349593b79c16bc7cf1ce1ab8c72f88849b
+Verdict: PASS; no substantive mathematical defect found.
+
+Remainder scope: K_S contains all Hoeffding orders at least2. It satisfies
+E[K_S | X_T]=K_T and hence its marginal on zero or one retained coordinate is
+zero. The proof explicitly does NOT claim that integrating one coordinate at
+fixed values of all others gives zero. This distinction is essential and is
+handled correctly.
+
+Norms: the contribution from first-order projections is exactly r delta^2.
+Since r delta^2<=Var(U)<=p(1-p), the bracket definingq^2 is nonnegative.
+The residual projection ratio gives the displayed norm bound. The pointwise
+bound |K_S|<=b+1 and q<=1/2 hold, including arbitrary positive atom masses.
+
+At least2 h factors: after bounding the remaining factors, the two h factors
+use either the same point (integral delta^2) or independent distinct points
+(integral (E|h|)^2<=delta^2). High point degrees do not alter this reasoning.
+
+Zero or1 h factor: private variables among the selectedK factors can be
+integrated separately; the unique h-variable is deliberately retained. Any
+K factor left on at most1 coordinate vanishes. If no factor vanishes, the
+remaining incidence graph has all edge-node degrees>=2 and all point-node
+degrees>=2 except possibly the single marked point. Thus each nontrivial
+forest component would have at least2 leaves but the full graph has at most1
+possible leaf. There must be a cycle. If the marked point is absent from
+all selectedK edges, its h factor integrates tozero. This covers the case
+of exactly1 h with noK factors as well. For a=0,t=0 the term is precisely
+the excluded all-constant term.
+
+Cycle bound: the same shortest-cycle geometry as Part1 applies to the
+remainingK supports. After discarding other factors at costB^(t-ell),
+0 h factors give the product L2 bound q^ell. With1 h factor, Cauchy--Schwarz
+first separates h, leaving a product of squaredK factors. Each squared
+factor has L2 norm at mostB times the originalL2 norm, hence at mostBq.
+After integrating cycle-private variables, the mixed trace bound remains
+valid. Taking the square root produces delta q^(ell/2), rather than the
+incorrect delta q^ell. The text has the correct exponent and absorbs it
+using2uv<=u^2+v^2. Sinceq<=1 andell>=g, q^ell<=q^g.
+
+Constants: each edge contributes at mostb+2 choices (p, one of b h terms,
+orK). Every nonconstant term is bounded byB^m(delta^2+q^g), orB^m delta^2
+in the forest case. Therefore[(b+1)(b+2)]^m suffices. The further bound
+[m(m+1)]^m usesb<=m-1 correctly. Constants are not represented as optimal.
+
+Boundary checks: b=0 andb=1 giveq=0 with no cyclic patterns possible;
+forb<=1, K_S=0 directly. m=1 is included and yields a valid, if loose,
+zero-versus-degree-variance estimate. p=0 or1 forcesdelta=q=0 and equality.
+r=2 is explicit and valid. The fixed-incidence O_H statement follows because
+b,m stayfixed andq=O_H(1/r), with no requirement that the hostdensity stay
+away from0 or1. The claim that regular scaling persists at degree variance
+O(r^(-g)) follows directly.
+
+Overall decision: both candidate mathematical extensions pass this independent
+review. The only suggested explicitness is r>=2 in the standalone higher-
+coordinate projection lemma; no additional proof correction is required.
+This is a human-readable proof audit, not a Lean formalization or replay.
+
+
+density_internal_audit.md
+
+# Internal mathematical audit: quantitative completion
+
+Files audited:
+
+- `density_candidate.tex`: higher-coordinate projections; all finite linear patterns; regular Berge-girth estimate; sharpness for every fixed cyclic incidence skeleton.
+- `almost_regular_candidate.tex`: robust separation of degree variance and higher-coordinate cycle contributions.
+
+These are candidate source files only. The 70-page release was not edited.
+
+## 1. Main conclusions
+
+The full linear-pattern extension is correct. If H has m edges and b is the maximum number of shared vertices on one edge, then b <= min(r,m-1). Every symmetric [0,1] r-kernel U satisfies
+
+    |t(H,U)-p^m| <= p(1-p)/r * sum_{e<f} sqrt(b_e b_f)
+                   <= binom(m,2) b p(1-p)/r.
+
+If U is regular and H has Berge girth g, the corresponding bound is
+
+    (2^m-1) [b(b-1)p(1-p)/(r(r-1))]^(g/2).
+
+Berge forests have density exactly p^m under regularity. The regular order r^(-g) is optimal for every fixed cyclic linear incidence pattern, not just private graph expansions.
+
+The almost-regular extension is also correct. With delta^2=Var(d) and
+
+    q^2 = b(b-1)/(r(r-1)) * [p(1-p)-r delta^2],
+
+one may use C=[(b+1)(b+2)]^m to obtain C(delta^2+q^g) for cyclic H and C delta^2 for Berge forests. Constants are intentionally coarse. The result gives a crossover at degree variance of order r^(-g), without an L-infinity almost-regularity hypothesis.
+
+## 2. Decisive proof checks
+
+### Projection coefficients
+
+Symmetry makes the squared norm v_j of a Hoeffding component depend only on its order. Hence Var(U)=sum_j binom(r,j)v_j and a b-coordinate marginal has variance sum_j binom(b,j)v_j. The binomial ratios are at most b/r for j>=1 and b(b-1)/(r(r-1)) for j>=2. Removing the first-order components leaves variance budget at most p(1-p)-r Var(d), which is nonnegative.
+
+### Shortest cycles
+
+For a shortest Berge cycle in a linear hypergraph, consecutive edges intersect in exactly the prescribed cycle point. An extra incidence with an existing cycle point is a chord in the incidence cycle. An off-cycle shared point gives a two-incidence shortcut between cycle edge-nodes. Except for consecutive edges, this produces a shorter cycle; consecutive extra intersections violate linearity. For a three-edge cycle, a point common to all three edges is likewise incompatible with linearity and the three prescribed distinct intersections. Thus selected cycle factors share variables only consecutively. This is the needed hypothesis for the cyclic Hilbert--Schmidt product bound.
+
+### Regular cancellation uses selected supports
+
+In the regular proof the edge subset A is chosen before private vertices are integrated. The factor on e is U_{b_e(A)}-p. It vanishes whenever b_e(A)<=1. The supports must be relative to A, not permanently fixed to all of H.
+
+### Almost-regular cancellation is not full degeneracy
+
+The higher remainder K_S=U_S-p-sum_{x in S}h(x) has zero conditional expectation on any singleton, but need not vanish when one coordinate alone is integrated and all others fixed. The proof uses exactly the valid identity E[K_S | X_T]=K_T, and K_T=0 for |T|<=1.
+
+In an expansion term with zero or one h factor, integrate points belonging to just one selected K edge, retaining the h point if present. Every surviving K node then has degree >=2. Every retained point node has degree >=2 except possibly the one marked point. Such a finite incidence forest is impossible: every nontrivial tree has at least two leaves. If the marked point lies in no K edge, its h factor separately integrates to zero. This rigorously proves the required cancellation, including terms with no K factors.
+
+### Bounds on surviving terms
+
+With B=b+1, every K factor has absolute value <=B and L2 norm <=q. Two h factors cost at most delta^2, whether attached to the same point or distinct points. With zero h factors, a cycle of length ell costs q^ell after discarding other bounded K factors. With one h factor, Cauchy--Schwarz gives delta times the square root of a cyclic product of K_e^2. Each squared factor has L2 norm <=Bq, so this term is at most B^m delta q^(g/2), absorbed by B^m(delta^2+q^g)/2. This does not assume pointwise small degree fluctuations.
+
+### Exact sharpness
+
+For the fixed shared incidence pattern, all private vertices are integrated first. The cosine kernel's b-coordinate marginal has coefficient
+
+    a_(r,j)=1/4 (-1)^(j/2) sin(r^(-1/2))^j cos(r^(-1/2))^(r-j)
+
+on each even j-element subset, independently of b. Sign averaging retains precisely incidence-edge subsets with even degree on both sides of the Levi graph. The smallest nonempty subsets have 2g incidences and are exactly shortest incidence cycles. They all contribute the same sign and cannot cancel. All other surviving subsets have at least 2g+2 incidences, giving remainder O_H(r^(-g-1)). Fixing the incidence pattern is essential; the number of expansion terms then does not grow with r.
+
+For bipartite private graph cores, the cosine witness has a positive deviation. It proves sharpness of the absolute error, not sharpness of negative Sidorenko deficits.
+
+## 3. Endpoint and scope checks
+
+- r>=2 is explicitly included in the projection lemma and theorems.
+- m=1, b=0, and b=1 are covered; regular acyclic densities are exact.
+- p=0 or p=1 forces delta=q=0, and all identities are exact.
+- Isolated vertices contribute factors one and do not change the statements.
+- Disconnected patterns are allowed throughout.
+- q<=1/2 automatically, because b<=r and p(1-p)<=1/4; no artificial truncation is required.
+- The adjacency kernel of a finite simple host is zero on repeated coordinates. Its one-coordinate marginal is (r-1)! times the host degree divided by n^(r-1), so the finite-host regularity assertion is exact.
+- All probability spaces are finite, so the matrix/Schatten arguments require no measure-theoretic approximation.
+- Canonical forest assemblies may share private ports. Counting actual shared vertices and using the incidence graph handles this without representing every assembly as one global graph expansion.
+
+## 4. Why a universal leading coefficient in Var(d) is not claimed
+
+A second-order expansion alone does not yield a universal leading term proportional only to Var(d), because higher degree moments can be of the same order. For a concrete example, take a two-point space with rare-point probability t=1/r, and let U_r be the indicator that at least one of its r coordinates is rare. This is a symmetric [0,1] kernel. Write A=1-t. Then
+
+    p=1-A^r,
+    h(rare)=A^r,
+    h(common)=-t A^(r-1).
+
+Thus Var(d) is asymptotic to e^(-2)/r, but E h^3 is asymptotic to e^(-3)/r as well. For a three-edge star,
+
+    t(S_3^[r],U_r)-p^3 = 3p Var(d)+E h^3.
+
+The third moment is not lower order. Consequently, a graph-dependent universal asymptotic coefficient multiplying Var(d) would need extra hypotheses such as uniform smallness of h. The almost-regular theorem avoids this unsupported assertion and remains valid for rare, large degree fluctuations.
+
+## 5. Independent readings
+
+The classification referee independently read the complete full-linear candidate and approved the projection constants, shortest-cycle claim, finite-host scope, and Eulerian-incidence sharpness. The literature referee independently checked the full-linear result and is reviewing the complete almost-regular text. Parent independently reproduced the termwise almost-regular proof and its displayed constant.
+
+
+assembly_example_audit.txt
+
+ATTACHMENT-SENSITIVE DENSITY EXAMPLE — 7 OCTOBER 2026
+
+The requested fragment assembly_example.tex uses the shorter three-point
+rank-one example proposed by the editorial agent. Its calculations pass:
+  s=E Z^2=2/3, Var(Z^2)=2/9;
+  a_core(z)=p^4+epsilon^4*s^3*z^2;
+  a_private(z)=t(B,U)=p^4+epsilon^4*s^4;
+  difference=epsilon^8*s^6*Var(Z^2)=128*epsilon^8/6561.
+The parameter restriction ensures [0,1]-valuedness, all one-coordinate
+marginals equal p, and the formulas hold for every r>=3. Both assemblies
+have two C4^[r] atoms, one joint of atom multiplicity 2, profile (1),
+8 edges, 8r-9 vertices, and Levi cycle rank 2. Only the placement of the
+joint inside the atoms changes. The proof uses the elementary identity
+t(B joined at a root to B,U)=E[rooted_density(Z)^2].
+
+The original seven-point example was also independently checked and is
+correct, but is longer and should remain an audit alternative:
+  R=C3 disjoint-union C4; uniform 7-point space; A adjacency; p=2/7;
+  U_r=average_{i<j} A(x_i,x_j); lambda=1/binom(r,2);
+  V=A/p, M=p(1+lambda(V-1)).
+For the core root,
+  a_core(x)=p^4(1+lambda^4*c_x),
+where c_x=13/8 on C3 and 5/2 on C4. Indeed T_V=A/2, the diagonal
+closed-four-walk counts of A are 6 and 8, and
+  c_x=7*(T_V^4)_{xx}-1.
+The average c is 17/8 and its variance is 3/16. The conditional
+three-coordinate marginal is
+  p[1+lambda((Vxy-1)+(Vxz-1)+(Vyz-1))].
+The complementary three-edge path has constant row integral p^3,
+so private-root density is constant. Hence the assembly gap is exactly
+  (3/16)*p^8*lambda^8 >0.
+
+Scope: both constructions directly yield bounded regular kernels.
+Sampling alone yields finite simple hosts but not exact regularity.
+No exact finite-regular-host claim is included in the candidate fragment.
+
+A possible additional route for the seven-point alternative, not needed
+in the fragment: take an equal blowup of R to N=7L vertices. Let
+C=binom(r,2) and k_S be the number of graph edges in an r-subset S.
+Replace v by (v,z) for z in Z_C, and permit a lifted edge above S
+exactly when the sum of its z-coordinates lies in a set T_S of size k_S.
+Every lifted vertex has degree C^(r-2)*sum_{S containing v} k_S.
+This is constant because the base graph is regular:
+  sum_{S containing v} k_S
+  =deg(v)*binom(N-2,r-2)
+   +(|E(R_blowup)|-deg(v))*binom(N-3,r-3).
+Independent uniform choices of the T_S preserve this exact regularity.
+For every fixed pattern, first and second moment calculations on maps
+with distinct base vertices give convergence of its density to that in
+U_r; base collisions have probability O(1/N). Thus the seven-point
+example can be approximated by finite simple regular hosts. This is a
+separate construction, not a consequence of ordinary independent-edge
+sampling, and was omitted from the short example for clarity.
+
+
+HISTORICAL AUDIT — PRECEDING70-PAGE VERSION
+
+The following text is retained for provenance. Its page numbers and theorem
+numbers describe the preceding version. Current numbering is listed above.
+Its subsequent embedded65-page review is historical in the same sense.
+The underlying conditional transfer proof remains unchanged.
+
 CURRENT SOURCE AND PROOF AUDIT — 7 OCTOBER 2026
 Complete 70-page manuscript; final TeX SHA256: e6875f045c87386b9ec554ff6da159563baf326ab10782089f7ef1d9f250c402
 Final PDF SHA256: f700c1e0032058e4cdae81d9892bce798aaf97ae53d177832bbdd09fed131571
