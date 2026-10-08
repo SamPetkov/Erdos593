@@ -1,0 +1,372 @@
+% Source-reviewed research fragment, 8 October 2026.
+% Not included in the authoritative manuscript or accepted Lean root.
+% Requires amsmath, amssymb, amsthm and hyperref in a containing document.
+
+\section{A rank-three entropy problem and two restricted bounds}
+\label{sec:rank-three-entropy-research}
+
+This note concerns a possible density extension of the finite atom description,
+not a further proof of the obligatory classification.  Cycle and theta atoms
+suggest asking whether the next trivalent core, $K_4$, admits an exact
+edge-marginal entropy construction.  We obtain restricted statements and
+identify two constructions that cannot establish the unrestricted result.
+The arguments below have received analytical source review, not Lean
+validation.  Their novelty and significance have not been established.
+
+The initial equal-spoke, one-step compensation argument, the binary path
+criterion and the obstruction examples were developed with a returned ChatGPT
+Pro response.  The arbitrary-mismatch, unequal-spoke and two-diamond
+refinements below were derived and checked separately during its audit.
+The displayed model-version identity was unavailable.  These provenance
+statements do not supply mathematical validation.
+
+\subsection{The exact target and its boundary}
+
+Replace each edge $ij$ of $K_4$ by a path of length $L_{ij}\geq1$,
+with mutually disjoint interiors, and write $J=J(L)$.
+The paths count edges, so
+\[
+ m=\sum_{ij}L_{ij},\qquad n=|V(J)|=m-2,\qquad m-n+1=3.
+\]
+We require $L_{ij}\equiv\varepsilon_i+\varepsilon_j\pmod2$ for some
+branch colours $\varepsilon_i\in\{0,1\}$; thus $J$ is simple and bipartite.
+Let $\eta$ be a symmetric exchangeable probability law on $\Omega^3$, where
+$\Omega$ is finite.  Its pair and singleton marginals are $\lambda$ and
+$\kappa$.  Restrict $\Omega$ to the positive support of $\kappa$; zero
+entries of $\lambda$ remain allowed.  All logarithms are natural.
+The question is whether there exists a probability law $\tau$ on the
+\emph{actual} vertices of $J$ such that every oriented edge has marginal
+$\lambda$ and
+\begin{equation}
+ D(\tau\Vert\kappa^{V(J)})\leq mD(\lambda\Vert\kappa^2).
+ \label{eq:rank3-entropy-target}
+\end{equation}
+Every vertex is incident with an edge, so the prescribed edge laws fix all
+singleton laws.  Hence the same question asks for
+$H(\tau)\geq mH(\lambda)-(m+2)H(\kappa)$.
+Mere feasibility is easy: use one sample from $\lambda$ on the two
+bipartition classes.  It is the entropy budget that needs proof.
+
+Known scalar density coverage must be removed before interpreting examples.  Sidorenko's
+small-part theorem already covers $L=(2,3,1,1,1,2)$, which has parts of size
+$4$ and $4$.\footnote{A.~Sidorenko, \emph{A correlation inequality for
+bipartite graphs}, Graphs and Combinatorics 9 (1993), 201--204,
+\url{https://doi.org/10.1007/BF02988307}.}
+For $L_e=2a_e$, halving the paths gives a graph with $\sum_ea_e-2$
+vertices and common kernel $T^2$.  Sidorenko's doubly-nonnegative theorem
+therefore covers $\sum_ea_e\leq7$.\footnote{A.~Sidorenko,
+\emph{Inequalities for doubly nonnegative functions}, Theorem 7.1 and
+the subdivision discussion, \url{https://arxiv.org/abs/1905.08210}.}
+Neither fact proves the target for arbitrary lengths and pair laws.
+
+\subsection{A compensation bound with arbitrary arm mismatch}
+
+Let $(\Omega,\mu)$ be a finite \emph{probability} space with
+$\mu_x>0$ and $\sum_x\mu_x=1$.  Let $W$ be a symmetric kernel with
+$0\leq W\leq1$ and constant row mean $p>0$:
+\[
+ \sum_y\mu_yW(x,y)=p.
+\]
+Kernel composition and inner products use $\mu$.  Put
+$T=W/p$, $A=T^2$, $\Pi f=\int f\,d\mu$,
+$K_j=A^j$, and $B_j=A^j-\Pi$ for $j\geq1$.
+The self-adjoint Markov contraction $T$ fixes constants.  On the orthogonal
+complement of constants, $A$ has eigenvalues $\theta_i\in[0,1]$.
+For an orthonormal eigenbasis $\phi_0=1,\phi_1,\ldots$, write
+\[
+ B_j(x,y)=\sum_{i\geq1}\theta_i^j\phi_i(x)\phi_i(y),
+ \qquad M_{ist}=\int\phi_i\phi_s\phi_t\,d\mu.
+\]
+
+For six positive integers $a_e$, the normalized density of the even
+subdivision is
+\[
+ F(a)=\frac{t(J(2a),W)}{p^{2\sum_ea_e}}
+     =\int_{\Omega^4}\prod_{e=vw\in E(K_4)}K_{a_e}(x_v,x_w)\,d\mu^4.
+\]
+Expand each factor as $1+B_{a_e}$.  Any term with a degree-one vertex
+vanishes.  The remaining terms are the empty term, four triangles,
+three four-cycles, six diamonds, and the full tetrahedron:
+\begin{equation}
+ F=1+\mathcal T+\mathcal C+\sum_eD_e+Q.
+ \label{eq:rank3-complete-expansion}
+\end{equation}
+Here $D_e$ omits edge $e$.  Each triangle or cycle equals
+$\sum_i\theta_i^{\sum a_e}\geq0$.
+For example,
+\[
+ D_{cd}=\sum_{i,s,t\geq1}
+ \theta_i^{a_{ab}}\theta_s^{a_{ac}+a_{bc}}
+ \theta_t^{a_{ad}+a_{bd}}M_{ist}^2\geq0.
+\]
+Thus only $Q$ can be negative; its sign alone is not a density counterexample.
+
+\begin{proposition}[A two-diamond compensation bound]
+Suppose, in the order $ab,ac,ad,bc,bd,cd$,
+\[
+ a=(k,r+h,u,r,u,\ell),\qquad
+ k\geq u\geq1,\quad r\geq\ell\geq1,\quad h\geq1.
+\]
+Set $d=r-\ell$ and
+\[
+ \gamma_{d,h}=\frac14\max_{0\leq x\leq1}
+       \frac{x^d(1-x^h)^2}{1+x^h}.
+\]
+Here $x^0=1$, including at $x=0$.
+If $p\geq\gamma_{d,h}$, then $t(J(2a),W)\geq p^m$, where
+$m=2k+4r+4u+2h+2\ell$ and $|V(J(2a))|=m-2$.
+The scale-invariant condition for bounded regular $W\geq0$ is
+$p/\|W\|_\infty\geq\gamma_{d,h}$.
+\end{proposition}
+
+\begin{proof}
+For fixed $z,w$, set
+\[
+ f(x)=B_{r+h}(x,z)B_u(x,w),\qquad
+ g(x)=B_r(x,z)B_u(x,w),\qquad
+ H=(f+g)/2,\quad\delta=(f-g)/2.
+\]
+Self-adjointness gives
+\[
+ Q+D_{cd}=\int K_\ell(z,w)\langle f,B_kg\rangle\,d\mu(z)d\mu(w)
+ =\int K_\ell(z,w)
+   \bigl(\langle H,B_kH\rangle-\langle\delta,B_k\delta\rangle\bigr)
+   \,d\mu(z)d\mu(w).
+\]
+Since $K_\ell\geq0$ and $B_k\succeq0$, this is at least $-E$, where
+$E=\int K_\ell\langle\delta,B_k\delta\rangle\,d\mu^2\geq0$.
+Every positive power of $T$ is obtained by Markov averaging, so
+$K_\ell=T^{2\ell}\leq1/p$ pointwise.  It follows that
+$E\leq E_0/p$, with the exact expression
+\[
+ E_0=\frac14\sum_{i,s,t\geq1}
+ \theta_i^k\theta_s^{2r}(1-\theta_s^h)^2
+ \theta_t^{2u}M_{ist}^2.
+\]
+The two available diamonds are
+\[
+ D_{ac}+D_{bc}
+ =\sum_{i,s,t\geq1}\theta_i^u\theta_s^{r+\ell}
+       (1+\theta_s^h)\theta_t^{k+u}M_{ist}^2.
+\]
+For $x,y\in[0,1]$, $k\geq u$ implies
+\[
+ x^ky^{2u}+y^kx^{2u}
+ \leq x^uy^{k+u}+y^ux^{k+u},
+\]
+because their difference, right minus left, is
+$x^uy^u(x^u-y^u)(x^{k-u}-y^{k-u})\geq0$.
+This includes $k=u$ and zero eigenvalues without division.
+Symmetrize the sums in $i,t$, using $M_{ist}=M_{tsi}$.
+The definition of $\gamma_{d,h}$ then gives
+\[
+ E_0\leq\gamma_{d,h}(D_{ac}+D_{bc}).
+\]
+Under the displayed density assumption, $E\leq D_{ac}+D_{bc}$.
+Substitute in \eqref{eq:rank3-complete-expansion} and retain every other
+nonnegative term.  This proves $F\geq1$.
+For general bounded $W$, rescale by its positive supremum.
+\end{proof}
+
+The threshold is explicit.  For $d=0$, $\gamma_{0,h}=1/4$.
+For $d>0$, put $b=d/h$ and
+\[
+ y_* =\frac{2b}{3+\sqrt{9+4b(b+1)}}.
+\]
+Then
+\[
+ \gamma_{d,h}=\frac14\,
+       \frac{y_*^b(1-y_*)^2}{1+y_*}.
+\]
+Indeed, differentiating $y^b(1-y)^2/(1+y)$ gives the unique interior
+stationary point satisfying $b-3y-(b+1)y^2=0$; the endpoint values vanish.
+A simpler, weaker threshold is
+\[
+ c_{d,h}=\frac14\max_{0\leq x\leq1}x^d(1-x^h)^2
+ =\begin{cases}
+ 1/4,&d=0,\\
+ \displaystyle\frac{h^2}{(d+2h)^2}
+       \left(\frac{d}{d+2h}\right)^{d/h},&d>0.
+ \end{cases}
+\]
+It specializes, for $h=1$, to $c_{d,1}=d^d/(d+2)^{d+2}$.
+For example, lengths $(2,6,2,4,2,2)$ are covered at $p\geq1/27$;
+the two-diamond threshold is smaller.  These remain \emph{restricted}
+weighted-host inequalities.  At any fixed tuple, sufficiently sparse hosts
+remain untreated, so the proposition does not establish
+\eqref{eq:rank3-entropy-target} through a universal type-host argument.
+
+\subsection{An exact binary entropy construction}
+
+Let $\kappa$ be uniform on $\{-1,1\}$ and
+$\lambda_\rho(s,t)=(1+\rho st)/4$.  Write
+\[
+ I(\rho)=\frac{1+\rho}{2}\log(1+\rho)
+          +\frac{1-\rho}{2}\log(1-\rho).
+\]
+The following criterion concerns prescribed marginals, not merely a
+homomorphism count with one common edge potential.
+
+\begin{proposition}[A binary path criterion]
+Let $G$ be a finite simple graph and $0\leq r<1$.
+For each edge $e=vw$, let $\mathcal P_e$ be the simple $v$--$w$ paths in $G-e$.
+If $\sum_{\pi\in\mathcal P_e}r^{|\pi|}\leq r$ for every $e$, there exists
+a law $\tau$ on $\{-1,1\}^{V(G)}$ with every edge marginal $\lambda_r$ and
+$D(\tau\Vert\kappa^{V(G)})\leq |E(G)|I(r)$.
+For bipartite $G$, the same holds with $\lambda_{-r}$.
+\end{proposition}
+
+\begin{proof}
+For $r=0$, use independent spins.  Otherwise put $b=\operatorname{atanh}r$
+and minimize the continuous function
+\[
+ \Phi(\beta)=\log Z(\beta)-r\sum_e\beta_e,\qquad
+ Z(\beta)=2^{-|V(G)|}\sum_\sigma
+      \exp\left(\sum_{e=vw}\beta_e\sigma_v\sigma_w\right)
+\]
+on the compact box $[0,b]^{E(G)}$.
+With $t_e=\tanh\beta_e$, the finite high-temperature expansion is
+\[
+ Z(\beta)=\prod_e\cosh\beta_e
+       \sum_{A\subseteq E(G):\,\partial A=\varnothing}\prod_{e\in A}t_e
+       \geq\prod_e\cosh\beta_e.
+\]
+In $G-e$, its endpoint correlation $c_e$ lies between zero and
+$\sum_{\pi\in\mathcal P_e}\prod_{f\in\pi}t_f\leq r$.
+To justify the path bound, every set with odd boundary $\{v,w\}$ contains
+a simple $v$--$w$ path.  Remove one such path; the remaining set is even.
+Summing over all paths and even remainders overcounts the nonnegative
+odd-boundary numerator and gives the asserted bound after division by
+the even-subgraph denominator.
+Reinserting $e$ gives correlation $(t_e+c_e)/(1+t_ec_e)$ and
+$\partial_e\Phi=\mathbb E(\sigma_v\sigma_w)-r$.
+At a lower box face this derivative is nonpositive, whereas a constrained
+minimum requires it to be nonnegative.  At an upper face it is
+nonnegative, whereas a minimum requires it to be nonpositive.
+All derivatives thus vanish at a minimizer $\beta^*$.
+The resulting Gibbs law has correlation $r$ on each edge.
+Global spin-flip symmetry fixes uniform singletons, hence the exact law
+$\lambda_r$ on every edge.  Finally,
+\[
+ D(\tau\Vert\kappa^{V(G)})
+ =r\sum_e\beta_e^*-\log Z(\beta^*)
+ \leq\sum_e\bigl(r\beta_e^*-\log\cosh\beta_e^*\bigr)
+ \leq |E(G)|I(r).
+\]
+The last bound is the elementary Legendre transform of $\log\cosh$.
+Flip the spins on one bipartition class to obtain $-r$.
+\end{proof}
+
+In a $K_4$ subdivision, deletion of an actual edge leaves exactly four
+alternate simple paths between its endpoints: after the forced path tails,
+they are the core routes $acb,adb,acdb,adcb$ for the relevant branch edge $ab$.
+For a simple bipartite graph each has length at least three.
+Thus $4r^3\leq r$ proves the criterion for $r\leq1/2$.
+The uniform binary pair law has an exchangeable triple extension exactly
+when $-1/3\leq\rho\leq1$: necessity follows from
+$(\sigma_1+\sigma_2+\sigma_3)^2\geq1$, and sufficiency from
+\[
+ \eta_\rho(x,y,z)=\frac18\bigl(1+\rho(xy+xz+yz)\bigr).
+\]
+Consequently \eqref{eq:rank3-entropy-target} holds for this specified
+binary family when $-1/3\leq\rho\leq1/2$.
+This source-reviewed result is not being claimed as novel; exact
+literature reconciliation is a separate obligation.
+The argument belongs to established Ising and Bethe methodology.
+Ruozzi proves a partition-function lower bound for binary
+log-supermodular models,\footnote{N.~Ruozzi,
+\emph{The Bethe Partition Function of Log-supermodular Graphical Models},
+Advances in Neural Information Processing Systems 25 (2012),
+\url{https://proceedings.neurips.cc/paper_files/paper/2012/file/03afdbd66e7929b125f8597834fa83a4-Paper.pdf}.}
+whereas attractive Ising fitting permits excess fitted correlation on
+zero-coupling edges.\footnote{S.~Lauritzen, C.~Uhler and P.~Zwiernik,
+\emph{Total positivity in exponential families with application to binary variables},
+Corollary 3.7 and Remark 3.9,
+\url{https://web.math.ku.dk/~lauritzen/papers/AOS2007.pdf}.}
+Neither statement alone supplies all the exact prescribed marginals here;
+the path criterion discharges that additional obligation.
+
+\subsection{Two limits on proposed constructions}
+
+\paragraph{Direct mixture inheritance fails.}
+Mix, with weights $1/2,1/2$, the iid uniform binary triple and the triple
+that is $000$ or $111$ with equal probabilities.  The result is strictly
+positive, with masses $5/16$ at $000,111$ and $1/16$ elsewhere, and pair
+law $\lambda_{1/2}$.
+For the iid component a budget-satisfying extension is forced to be iid,
+since its allowed divergence is zero.  For the diagonal component,
+connectedness forces the unique law supported on $0^n,1^n$.
+Their direct mixture is therefore
+\[
+ \tau_{\rm mix}=\tfrac12\kappa^n
+       +\tfrac14\delta_{0^n}+\tfrac14\delta_{1^n},\qquad
+ D(\tau_{\rm mix}\Vert\kappa^n)
+       =(\tfrac12+2^{-n})\log(2^{n-1}+1)-\log2.
+\]
+For $J_0=J(2,4,3,2,3,1)$, $n=13,m=15$, and
+\[
+ D(\tau_{\rm mix}\Vert\kappa^{13})>5\log2
+       >15I(1/2)=15(\tfrac34\log3-\log2).
+\]
+The first comparison uses $4097>2^{12}$ and $4097/8192>1/2$;
+the second is equivalent to $2^{80}>3^{45}$, which follows already
+from $2^{16}>3^9$.
+The binary construction above supplies a \emph{different} successful
+extension for this same law.  Thus this is a counterexample to direct
+mixture inheritance, not to the target.
+
+For components sharing $\kappa$, let
+$\delta_z=mD(\lambda_z\Vert\kappa^2)-D(\tau_z\Vert\kappa^n)$.
+The exact chain rule is
+\[
+ D(\tau_{\rm mix}\Vert\kappa^n)-mD(\lambda_{\rm mix}\Vert\kappa^2)
+ =mI(Z;X_v,X_w)-I(Z;X_V)-\sum_z\alpha_z\delta_z.
+\]
+The example violates the desired sign even after component slack is included.
+It does not decide convexity of the class of pair laws admitting some
+successful extension.
+
+\paragraph{Commuting positive kernels are not common powers.}
+Index six signs $r_e\in\{-1,1\}$ by the edges of $K_4$, and put
+$S_v(r)=\prod_{e\ni v}r_e$.
+On these sign vectors define
+\[
+ \mu(r)=2^{-6}\left(1+\frac{S_a(r)+S_b(r)+S_c(r)-S_d(r)}2\right).
+\]
+Since $S_aS_bS_cS_d=1$, the signed sum is $2$ or $-2$.
+After removing null states this is uniform on $32$ states.
+The six coordinates are centered and orthonormal: averaging their
+degree-one and degree-two characters against this density gives zero.
+Each $K_e(x,y)=1+r_e(x)r_e(y)$ is a symmetric nonnegative Markov
+projection; the six projections commute.
+In the coloured $K_4$ density every proper nonempty centered term
+vanishes at a vertex of degree one or two.  The full term is
+\[
+ (\mathbb E S_a)(\mathbb E S_b)(\mathbb E S_c)(\mathbb E S_d)
+ =(\tfrac12)^3(-\tfrac12)=-\tfrac1{16}.
+\]
+The density is $15/16<1$.
+Positive powers of one self-adjoint operator have a common nullspace,
+whereas these projections have distinct nullspaces.
+Each individual pair law even has an exchangeable triple extension:
+sample its common coordinate sign and then three iid states conditional
+on that sign.  What is absent is the \emph{same} pair law and common-power
+relationship.  This exact example forbids that relaxation, not the target.
+
+\subsection{The unresolved common-power comparison}
+
+For $a=(k,r+h,u,r,u,\ell)$, the sufficient inequality
+\[
+ \int K_\ell(z,w)\langle
+ B_{r+h}(\cdot,z)B_u(\cdot,w),
+ B_k[B_r(\cdot,z)B_u(\cdot,w)]\rangle\,d\mu^2\geq0
+\]
+would settle this particular all-even family on every normalized weighted
+host: its left side is $Q+D_{cd}$.
+It is unproved here and stronger than what the compensation proposition
+needs.  The factor $K_\ell(z,w)$ changes the inner-product measure;
+positivity and self-adjointness in the original measure do not justify
+a change of measure.  Six independent exponents and odd-parity paths
+require still further control.  The unrestricted entropy theorem,
+formalization of these analytical results, global novelty and B-level
+significance remain open obligations rather than conclusions of this note.

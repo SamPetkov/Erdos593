@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-08",
+  "purpose": "Paragraph-level comparison for the clean research-note revision; preserve mathematics, citations and provenance while making claim boundaries readable",
+  "intensity": "Moderate exposition and structural edit; mathematical refinements separately identified, not attributed to stylistic editing",
+  "comparisons": [
+    {
+      "source": "The returned research advice separates a restricted normalized density theorem, binary exact-marginal construction and obstruction examples, while leaving the general target open.",
+      "revision": "The opening and final subsection explicitly distinguish the finite obligatory classification from a possible rank-three density extension; analytical review, Lean validation, novelty and significance are separate gates.",
+      "note": "Lead with the exact question and limitations; no promotional or breakthrough language."
+    },
+    {
+      "source": "The initial compensation route uses equal spokes and one unit of arm mismatch under a lower host-density bound.",
+      "revision": "The compensation subsection states the separately derived unequal-spoke, arbitrary-mismatch two-diamond theorem, probability normalization, all integer inequalities, its sharper maximum and the sparse-host gap.",
+      "note": "This is substantive analytical development, not paraphrase of Pro's theorem. The complete proof and actual edge/vertex counts remain in the note."
+    },
+    {
+      "source": "The binary construction minimizes a finite Gibbs dual on a box; endpoint correlation alone would be insufficient without uniform singleton marginals.",
+      "revision": "The proof gives the odd-boundary path overcount, both boundary derivative signs, global spin-flip reconstruction and relative-entropy budget in one sequence.",
+      "note": "Expose the exact-marginal bridge rather than hiding it behind a scalar counting inequality. Cite the adjacent Ising/Bethe literature without treating it as an automatic proof of this bridge."
+    },
+    {
+      "source": "A direct mixture violates its budget, and a coloured common-PSD relaxation has density below one.",
+      "revision": "Separate paragraphs give exact finite formulas and explicitly say which proposed routes fail, while preserving the fact that another extension succeeds in the binary mixture example.",
+      "note": "Avoid presenting a construction failure as a counterexample to the target."
+    },
+    {
+      "source": "Common-power positivity suggests a sufficient bilinear comparison, but positivity need not survive a weighted change of measure.",
+      "revision": "The closing subsection prints that precise missing comparison, labels it unproved, and separates this sufficient family from six arbitrary exponents and odd-parity paths.",
+      "note": "Keep conjectural directions visible without inserting them as proved results into the live manuscript."
+    }
+  ],
+  "preserved": ["Exact formulas and proof obligations", "Definitions and natural-log convention", "Actual graph carriers and counts", "Pro attribution and independent direct-refinement provenance", "Primary-source citations", "No novelty or full-formalization claim"]
+}
