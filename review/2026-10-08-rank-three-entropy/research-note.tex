@@ -1,4 +1,4 @@
-% Source-reviewed research fragment, 8 October 2026.
+% Source-reviewed research fragment, updated 9 October 2026.
 % Not included in the authoritative manuscript or accepted Lean root.
 % Requires amsmath, amssymb, amsthm and hyperref in a containing document.
 
@@ -9,10 +9,14 @@ This note concerns a possible density extension of the finite atom description,
 not a further proof of the obligatory classification.  Cycle and theta atoms
 suggest asking whether the next trivalent core, $K_4$, admits an exact
 edge-marginal entropy construction.  We obtain restricted density and entropy
-statements, including a density-free bound for flat-spectrum hosts, and identify
-constructions that cannot establish the unrestricted result.
-The arguments below have received analytical source review, not Lean
-validation.  Their novelty and significance have not been established.
+statements, including bounds for flat-spectrum and hierarchical hosts and a
+host-dependent mixing criterion, and identify constructions that cannot
+establish the unrestricted result.
+The kernel and entropy arguments below have analytical source review,
+not Lean validation.  The finite coefficient comparison has separately
+passed a pinned warning-fatal Lean check; its formal kernel transport
+and canonical integration remain pending.  Novelty and significance
+have not been established.
 
 The initial equal-spoke, one-step compensation argument, the binary path
 criterion and the obstruction examples were developed with a returned ChatGPT
@@ -204,8 +208,55 @@ It specializes, for $h=1$, to $c_{d,1}=d^d/(d+2)^{d+2}$.
 For example, lengths $(2,6,2,4,2,2)$ are covered at $p\geq1/27$;
 the two-diamond threshold is smaller.  These remain \emph{restricted}
 weighted-host inequalities.  At any fixed tuple, sufficiently sparse hosts
-remain untreated, so the proposition does not establish
+remain untreated by this density threshold, so the proposition does not establish
 \eqref{eq:rank3-entropy-target} through a universal type-host argument.
+
+\subsection{A host-dependent mixing criterion}
+
+The compensation proof uses $1/p$ only as an upper bound for $K_\ell$.
+Keeping its actual smoothing norm gives a larger sufficient region.
+
+\begin{proposition}[Mixing compensation]
+For the same ordered tuple, write $C_\ell=\max_{x,y}K_\ell(x,y)$.
+Then $F\geq1$ whenever $\gamma_{r-\ell,h}C_\ell\leq1$.
+Let $\alpha=\min_x\mu_x$ and let $\beta$ be the largest centered eigenvalue
+of $A$, with $\beta=0$ on a one-state space.  In particular, it suffices that
+\begin{equation}
+ \gamma_{r-\ell,h}\bigl[1+(\alpha^{-1}-1)\beta^\ell\bigr]\leq1.
+ \label{eq:mixing-compensation}
+\end{equation}
+If $A$ is irreducible, this holds for all sufficiently large $\ell$,
+uniformly over $k\geq u\geq1$, $r\geq\ell$ and $h\geq1$.
+The required length depends on the host.
+\end{proposition}
+
+\begin{proof}
+The nonnegative integrand defining $E$ gives $E\leq C_\ell E_0$.
+The coefficient comparison $E_0\leq\gamma_{r-\ell,h}(D_{ac}+D_{bc})$
+then proves the first assertion by the same complete centered expansion.
+For a complete centered orthonormal eigenbasis, weighted completeness gives
+\[
+ \sum_{i\geq1}\phi_i(x)^2=\mu_x^{-1}-1.
+\]
+Cauchy--Schwarz and $0\leq\theta_i\leq\beta$ imply
+\[
+ |B_\ell(x,y)|\leq\beta^\ell
+ \sqrt{(\mu_x^{-1}-1)(\mu_y^{-1}-1)}
+ \leq(\alpha^{-1}-1)\beta^\ell.
+\]
+This proves \eqref{eq:mixing-compensation}, without changing the
+inner-product measure.  For finite irreducible $A$, the eigenvalue one
+is simple and $\beta<1$.  Since $\gamma_{d,h}\leq1/4$, it is enough that
+$(\alpha^{-1}-1)\beta^\ell\leq3$, which holds eventually.
+\end{proof}
+
+For reducible $A$, apply the criterion on each communicating component
+with its conditional probability measure and normalized kernel.  Combining
+the component bounds with the mass factor $\mu(C)^{-2}$, as below, gives
+the same eventual conclusion for every fixed finite host.  Irreducibility
+of $T$ alone is not sufficient: a periodic $T$ can have reducible $T^2$.
+This is a host-dependent long-path statement, not the uniform all-host
+inequality at fixed lengths needed for the unrestricted entropy target.
 
 \subsection{A density-free bound for flat-spectrum hosts}
 
@@ -316,6 +367,77 @@ common-power hosts need not have vanishing mixed cubic moments.
 These restricted-host proofs have analytical review only; neither Lean
 validation nor novelty is claimed.
 
+\subsection{Nested conditional-expectation hosts}
+
+The preceding coordinate argument eliminates mixed cubic moments.
+A partition hierarchy gives a different sufficient structure that allows
+those moments to be nonzero.  Its proof works for every finite simple graph,
+not only the $K_4$ core.
+
+\begin{proposition}[Hierarchical common powers]
+Let $\mathcal P_0=\{\Omega\},\ldots,\mathcal P_L$ be nested partitions
+of the finite positive probability space, ordered by refinement.  Set
+\[
+ E_j(x,y)=\frac{\mathbf1\{x,y\text{ lie in the same }\mathcal P_j
+                         \text{ cell}\}}{\mu(\mathcal P_j(x))},
+ \qquad T=\sum_{j=0}^Lw_jE_j,
+ \quad w_j\geq0,\quad\sum_jw_j=1.
+\]
+For every finite simple graph $H$ and positive integer exponents $a_e$,
+\begin{equation}
+ \int_{\Omega^{V(H)}}\prod_{e=vw\in E(H)}
+              T^{2a_e}(x_v,x_w)\,d\mu^{V(H)}\geq1.
+ \label{eq:hierarchical-common-powers}
+\end{equation}
+Unequal cell masses, zero weights and disconnected hosts are allowed.
+\end{proposition}
+
+\begin{proof}
+First assign to each edge a level $c_e\in\{0,\ldots,L\}$ and prove the
+bound for the kernels $E_{c_e}$ by induction on the hierarchy depth.
+At depth zero every kernel equals one.  At positive depth, remove the
+level-zero edges and factor the integral over the connected components
+of the remaining graph.  Isolated vertices contribute one.
+For a component $Q$ with $n$ vertices and $m$ edges, nonzero products
+place all its vertices in one cell $C$ of $\mathcal P_1$.  Write
+$\alpha_C=\mu(C)$ and $\mu_C=\mu|_C/\alpha_C$.
+Each of its $m$ kernels equals $\alpha_C^{-1}$ times the corresponding
+local kernel at level $c_e-1$, while its $n$ measure factors contribute
+$\alpha_C^n$.  Its exact density is therefore
+\[
+ \sum_{C\in\mathcal P_1}\alpha_C^{n-m}
+       t\bigl(Q;(E_{c_e-1}^{C})\bigr).
+\]
+The induction hypothesis bounds every local density below by one.
+Connectedness gives $m\geq n-1$, so
+$\alpha_C^{n-m}\geq\alpha_C$ and the displayed sum is at least one.
+Multiplication over components proves the colored-kernel assertion.
+
+The conditional-expectation tower identity is
+$E_iE_j=E_{\min(i,j)}$.  Thus every positive power of $T$ is a convex
+combination of the same kernels.  More explicitly, if
+$q_j=\sum_{i\geq j}w_i$ and $q_{L+1}=0$, its coefficient at $E_j$ in
+$T^s$ is $q_j^s-q_{j+1}^s$.  These coefficients are nonnegative and sum
+to one.  Expanding the edge powers makes the left side of
+\eqref{eq:hierarchical-common-powers} a convex combination of the
+colored densities just bounded below by one.
+\end{proof}
+
+For example, take masses $(1/2,2/5,1/10)$, the partitions
+$\{\Omega\}$, $\{\{1\},\{2,3\}\}$ and the discrete partition, and
+$T=E_0/10+E_1/10+4E_2/5$.  The kernel has maximum $83/10$, so
+$W=(10/83)T$ is an admissible regular host.  The two centered eigenvalues
+of $A$ are $81/100$ and $16/25$.  For normalized coarse and fine
+eigenfunctions $\phi=(-1,1,1)$ and
+$\psi=(0,1/\sqrt2,-2\sqrt2)$, the mixed moment
+$\int\phi\psi^2d\mu=1$ is nonzero.
+At $(3,2,1,1,1,1)$, both the original density threshold and the
+mixing-norm criterion fail, but the hierarchical theorem applies.
+An arbitrary common-power host need not admit this hierarchy;
+commuting projections alone do not provide it.  This is an analytically
+reviewed control class, not a claim of novelty or an unrestricted entropy
+construction.
+
 \paragraph{Reproducible finite checks.}
 The accompanying \texttt{exact\_checks.py} enumerates all $64$ edge subsets
 and evaluates small hosts with rational arithmetic.  A four-state rank-two
@@ -328,6 +450,14 @@ bound also check.  The script reproduces the weighted-positivity obstruction
 below and the four-state negative individual coefficient in
 \texttt{route-diagnostics.json}.  These are finite checks, not Monte Carlo
 evidence or a proof for arbitrary interacting spectra.
+The additional \texttt{continuation\_checks.py} supplies two fixed exact
+examples.  A five-state lazy cycle has $p=4/19<1/4$, but at
+$(2,6,1,5,1,5)$ its actual $C_5=5338684567323/1677721600000<4$
+satisfies mixing compensation.  The unequal-mass hierarchy above has
+$p=10/83$ and $C_1=693/100>4$, yet its density at $(3,2,1,1,1,1)$ is
+$481731187899493193/62500000000000000>1$.  These examples check the
+distinct sufficient conditions; the proofs, not the finite evaluations,
+establish the stated classes.
 
 \subsection{An exact binary entropy construction}
 

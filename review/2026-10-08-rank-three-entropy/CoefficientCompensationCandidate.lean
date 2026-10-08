@@ -4,9 +4,10 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 /-!
 # Candidate finite two-diamond coefficient compensation
 
-Returned by Aristotle on 8 October 2026 and source-reviewed. NOT ACCEPTED:
-independent pinned proof elaboration, actual full types and ordered axiom audit
-remain pending. Do not import this candidate into the accepted Lean root.
+Returned by Aristotle on 8 October 2026; original proof checked on 9 October
+by pinned Lean4.32.0, warning-fatal job66955, with full types and ordered axioms.
+Canonical acceptance and full dependency-artifact lineage remain pending.
+Do not import this research candidate into the accepted Lean root.
 
 Mathematical source: review/2026-10-08-rank-three-entropy/research-note.tex,
 "A compensation bound with arbitrary arm mismatch". This is the coefficient
@@ -14,7 +15,7 @@ comparison only, not the graph-density or unrestricted entropy theorem.
 
 Target pins: Lean leanprover/lean4:v4.32.0; Mathlib
 81a5d257c8e410db227a6665ed08f64fea08e997. The earlier statement-only API
-passed; it did not validate this returned proof.
+passed; separate job66955 subsequently checked the complete returned proof.
 
 All sums use the same arbitrary finite type, including an empty type.
 Powers are natural powers, including 0^0=1; r-l is natural subtraction,

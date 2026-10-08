@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-08",
+  "date": "2026-10-09",
   "scope": "Public-safe candidate checkpoint; no accepted Lean root or live manuscript change",
   "node": "E593-research-finite-coefficient-compensation",
   "target": "For any finite carrier, spectral values in [0,1], signed moments symmetric in first/third indices, k>=u>=1, r>=l>=1, h>=1 and c>=0: the exact one-variable scalar majorant implies energy0<=c*diamondTotal",
@@ -21,7 +21,11 @@
     "warning_fatal": true,
     "full_definitions_reviewed": 3,
     "ordered_axiom_lists_reviewed": 3,
-    "axioms_in_exact_order": ["propext", "Classical.choice", "Quot.sound"],
+    "axioms_in_exact_order": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
     "child_exit": 0,
     "wrapper_exit": 0,
     "scheduler_exit": "0:0",
@@ -35,7 +39,7 @@
     "cumulative_attempts": "2/2 consumed; no unchanged replay"
   },
   "service": {
-    "status": "COMPLETE; returned proof retrieved once and source-reviewed; not independently Lean-validated",
+    "status": "COMPLETE, downloaded once; unchanged original proof now passed pinned warning-fatal focused check66955, not canonical integration",
     "project_id": "850851cb-e0c2-4a9d-ab30-ab644d97ab78",
     "task_id": "8cc7c314-3422-4062-bc06-961f6faa6d1d",
     "read_utc": "2026-10-08T18:16:31.532488+00:00",
@@ -44,9 +48,9 @@
     "returned_archive_sha256": "71a8ab9d38b7172b3b4920469928afdc7f155db058c699f60c7842d73a03bbbf",
     "returned_source_sha256": "ef4956c4dec1a166d4aad3eed51ae4a35c9a27beafab5014d2c79797de119575",
     "public_candidate": "review/2026-10-08-rank-three-entropy/CoefficientCompensationCandidate.lean",
-    "public_candidate_sha256": "d4517cce7e653f6cb1b21d8c5b8a3cae82f63e66c701ae27f0c89d208fca6c59",
+    "public_candidate_sha256": "057fa2c755c3544db11a9efd9a4ca08bc8a54cd62906356b027624295a40e2c4",
     "public_transformation": "Documentary comments only: remove local paths and replace historical placeholder status; executable source, imports, definitions and target unchanged",
-    "source_review": "PASS; original three definitions and target fixed, eight helpers and complete main body reviewed; actual pinned proof replay remains pending",
+    "source_review": "PASS; protected definitions/imports/target unchanged, eighthelpers and fullbody reviewed. Actual returned-source child66955 passed; helper reviewed all486printedlines and31records. Canonical/fullhistorical dependency lineage pending.",
     "proof_accepted": false,
     "proof_running_claimed": false,
     "attempts": "1/1 consumed; no retry or duplicate",
@@ -61,15 +65,21 @@
     "SDK_enforced_proof_time_cap": false
   },
   "proof_replay_preparation": {
-    "status": "Prepared and reviewed, NOT uploaded or dispatched before restart; no compiler proof attempt consumed",
-    "proof_attempts_consumed": 0,
+    "status": "One unchanged returned-proof focused attempt actually executed and passed66955. Earlier frozen preparation and initial busy-queue eligibility stop preserved.",
+    "proof_attempts_consumed": 1,
     "proposed_limit": 2,
     "preserved_API_attempts": "2/2 consumed, unchanged",
     "preserved_density_attempts": "2/2 consumed, unchanged",
     "freeze_sha256": "0f90cf2c92831595f77a6d57b8071518f2d8a56c5abfa3f8cc331e9eb1f17bce",
-    "boundary": "Resource eligibility must be refreshed before any future launch; saved preflight does not establish current availability; no local Lean or accepted-root rebuild"
+    "boundary": "No rerun of green focused gate. Kernel/graph transport, historical2254dependency artifact lineage and canonical integration remain pending.",
+    "historical_pre_restart_proof_attempts": 0
   },
-  "review": {"root_self_review": true, "root_independent": false, "actual_helper_checks": true, "external_full_audit": "PENDING"},
+  "review": {
+    "root_self_review": true,
+    "root_independent": false,
+    "actual_helper_checks": true,
+    "external_full_audit": "PENDING"
+  },
   "boundaries": [
     "The statement API is not an existence/proof result",
     "The finite coefficient lemma is not a density-free weighted-host or exact-marginal entropy theorem",
@@ -78,5 +88,31 @@
     "Old density2of2 attempt history retained unchanged",
     "No local Lean or video/user-process interference",
     "Clocks remain paused; this submission does not restart monitoring"
-  ]
+  ],
+  "focused_proof_check": {
+    "status": "PINNED_WARNING_FATAL_FOCUSED_PROOF_AND_ACTUAL_OUTPUT_REVIEW_PASS",
+    "job": 66955,
+    "compiler": "4.32.0",
+    "compiler_githash": "8c9756b28d64dab099da31a4c09229a9e6a2ef35",
+    "compiled_source_sha256": "ca0c3ee6e5c2ed1337c0f1cb5127539d797b1ae5459f6f5ea5ec5f4bb93dff85",
+    "output": "review/2026-10-08-rank-three-entropy/coefficient-proof-output.log",
+    "output_sha256": "a4532116750312622f985761ff7c5381847a4a961effae8a5167982531fcb640",
+    "reconciliation": "review/2026-10-08-rank-three-entropy/coefficient-proof-check.json",
+    "reconciliation_sha256": "c722f1cb23f1d533c7eb3fa32d3b5099874de9c401f6dbf410343554e5552597",
+    "actual_full_types": 12,
+    "actual_full_definitions": 3,
+    "ordered_standard_only_axiom_records": 12,
+    "expanded_target_reviewed": true,
+    "child_exit": 0,
+    "wrapper_exit": 0,
+    "accounting": "COMPLETED0:0/batch0:0/43s",
+    "originals_reconciled": 11,
+    "download_count": 1,
+    "nine_clean_pins": true,
+    "historical_dependency_artifact_lineage": "PENDING",
+    "root_independent": false,
+    "real_helper_review_sha256": "5c0f104047cd768b78695f65f598fcf0055c64ae8bd52c0b9c1ca2ddcc2af644",
+    "canonical_acceptance": false,
+    "graph_density_theorem": false
+  }
 }

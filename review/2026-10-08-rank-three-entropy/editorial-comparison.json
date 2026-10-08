@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-08",
+  "date": "2026-10-09",
   "purpose": "Paragraph-level comparison for the clean research-note revision; preserve mathematics, citations and provenance while making claim boundaries readable",
   "intensity": "Moderate exposition and structural edit; mathematical refinements separately identified, not attributed to stylistic editing",
   "comparisons": [
@@ -47,6 +47,21 @@
       "source": "Finite diagnostics and the service proof return were saved separately from the public research fragment.",
       "revision": "Link reproducible exact-arithmetic code/data/results and a returned Lean candidate with current checkpoint metadata.",
       "note": "Do not call arithmetic checks simulations proving a universal theorem. Service completion is not independent kernel acceptance; no accepted root or main manuscript change."
+    },
+    {
+      "source": "The compensation proof used the coarse kernel bound1/p, leaving sparse hosts untreated.",
+      "revision": "Keep the actual smoothing norm and derive a finite weighted spectral-gap bound, including A-components and a host-dependent eventual threshold.",
+      "note": "Substantive analytical proof, not a stylistic invention. Explicitly distinguish eventual fixed-host coverage from the unrestricted fixed-length all-host target."
+    },
+    {
+      "source": "Flat-spectrum and coordinate-mixture proofs eliminated or collapsed spectral interactions.",
+      "revision": "Add a nested conditional-expectation theorem with a complete cell-mass induction for arbitrary finite simple graphs, plus an unequal-mass example with a nonzero mixed cubic moment.",
+      "note": "State the additional hierarchy hypothesis. Do not treat arbitrary commuting PSD projections as a hierarchy or infer novelty."
+    },
+    {
+      "source": "The recovered coefficient return awaited a pinned check.",
+      "revision": "Report the actual66955 warning-fatal proof check, actual output review and standard axioms, with canonical integration and historical dependency lineage separately pending.",
+      "note": "Precision about scope is part of the academic edit; the kernel/entropy propositions are not described as Lean-validated."
     }
   ],
   "preserved": [
