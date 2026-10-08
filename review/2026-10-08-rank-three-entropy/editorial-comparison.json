@@ -32,7 +32,29 @@
       "source": "Common-power positivity suggests a sufficient bilinear comparison, but positivity need not survive a weighted change of measure.",
       "revision": "The closing subsection prints that precise missing comparison, labels it unproved, and separates this sufficient family from six arbitrary exponents and odd-parity paths.",
       "note": "Keep conjectural directions visible without inserting them as proved results into the live manuscript."
+    },
+    {
+      "source": "The previous density-free route retained proper-term slack but gave no closed theorem beyond a sufficient positivity condition.",
+      "revision": "A flat-spectrum proposition gives the quantitative bound and complete proof, with component and independent-coordinate extensions stated under explicit extra hypotheses.",
+      "note": "Substantive analytical development, not a style invention. Signed tetrahedron term retained; no general spectrum or novelty claim."
+    },
+    {
+      "source": "The earlier Abel reduction proposed positivity of all unshifted spectral prefixes.",
+      "revision": "Rewrite as a convex combination of R0, proper shifted prefixes R0+S_j, and matched-spoke F0; identify the remaining general obligation.",
+      "note": "Weaker sufficient condition keeps available slack; negative individual coefficients do not refute it."
+    },
+    {
+      "source": "Finite diagnostics and the service proof return were saved separately from the public research fragment.",
+      "revision": "Link reproducible exact-arithmetic code/data/results and a returned Lean candidate with current checkpoint metadata.",
+      "note": "Do not call arithmetic checks simulations proving a universal theorem. Service completion is not independent kernel acceptance; no accepted root or main manuscript change."
     }
   ],
-  "preserved": ["Exact formulas and proof obligations", "Definitions and natural-log convention", "Actual graph carriers and counts", "Pro attribution and independent direct-refinement provenance", "Primary-source citations", "No novelty or full-formalization claim"]
+  "preserved": [
+    "Exact formulas and proof obligations",
+    "Definitions and natural-log convention",
+    "Actual graph carriers and counts",
+    "Pro attribution and independent direct-refinement provenance",
+    "Primary-source citations",
+    "No novelty or full-formalization claim"
+  ]
 }

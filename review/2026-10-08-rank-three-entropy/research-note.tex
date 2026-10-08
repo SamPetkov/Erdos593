@@ -2,14 +2,15 @@
 % Not included in the authoritative manuscript or accepted Lean root.
 % Requires amsmath, amssymb, amsthm and hyperref in a containing document.
 
-\section{A rank-three entropy problem and two restricted bounds}
+\section{A rank-three entropy problem and restricted density bounds}
 \label{sec:rank-three-entropy-research}
 
 This note concerns a possible density extension of the finite atom description,
 not a further proof of the obligatory classification.  Cycle and theta atoms
 suggest asking whether the next trivalent core, $K_4$, admits an exact
-edge-marginal entropy construction.  We obtain restricted statements and
-identify two constructions that cannot establish the unrestricted result.
+edge-marginal entropy construction.  We obtain restricted density and entropy
+statements, including a density-free bound for flat-spectrum hosts, and identify
+constructions that cannot establish the unrestricted result.
 The arguments below have received analytical source review, not Lean
 validation.  Their novelty and significance have not been established.
 
@@ -100,6 +101,16 @@ For example,
  \theta_t^{a_{ad}+a_{bd}}M_{ist}^2\geq0.
 \]
 Thus only $Q$ can be negative; its sign alone is not a density counterexample.
+
+For the ordered tuple $(k,r+h,u,r,u,\ell)$ considered below, the slices
+$k=r,\ u=\ell$; $k=r+h,\ u=\ell$; and $k=u,\ r=\ell$
+have equal spokes at a pair of branch vertices.  Splitting their connecting
+even path at its midpoint gives two reflected bags with a common even-cycle
+core and forest separator.  These are covered by the reflective-decomposition
+method, not new universal cases of this note.\footnote{L.~N.~Coregliano
+and A.~A.~Razborov, \emph{Biregularity in Sidorenko's Conjecture},
+Theorem 3.5 and its symmetric adaptation in Section 8,
+\url{https://arxiv.org/abs/2108.06599}.}
 
 \begin{proposition}[A two-diamond compensation bound]
 Suppose, in the order $ab,ac,ad,bc,bd,cd$,
@@ -195,6 +206,128 @@ the two-diamond threshold is smaller.  These remain \emph{restricted}
 weighted-host inequalities.  At any fixed tuple, sufficiently sparse hosts
 remain untreated, so the proposition does not establish
 \eqref{eq:rank3-entropy-target} through a universal type-host argument.
+
+\subsection{A density-free bound for flat-spectrum hosts}
+
+The density assumption in the compensation bound can be removed for a
+restricted spectral class.  The following argument permits six arbitrary
+positive exponents and does not require a nonnegative spectral projection.
+
+\begin{proposition}[Flat-spectrum comparison]
+Suppose $A=\Pi+\eta P$, where $0\leq\eta\leq1$, $P$ is an orthogonal
+projection annihilating constants, and $A$ is a nonnegative self-adjoint
+Markov kernel on the finite probability space.  Write $d=\operatorname{rank}P$.
+For six positive integers $a_e$, put $S=\sum_ea_e$ and $m_0=\min_ea_e$.
+Then
+\begin{equation}
+ F(a)\geq1+2d\eta^{S-3m_0}+d^2\eta^S\geq1.
+ \label{eq:flat-spectrum-rank3-bound}
+\end{equation}
+Zero eigenspaces and repeated positive eigenvalues are allowed.
+\end{proposition}
+
+\begin{proof}
+For $\eta>0$, $B_j=\eta^jP$.  Choose an orthonormal basis
+$\phi_1,\ldots,\phi_d$ of the range of $P$ and set
+\[
+ \Delta=\sum_{i,s,t=1}^d\left(\int\phi_i\phi_s\phi_t\,d\mu\right)^2\geq0,
+ \qquad q=\int_{\Omega^4}\prod_{vw\in E(K_4)}P(x_v,x_w)\,d\mu^4.
+\]
+The complete centered expansion is
+\[
+ F(a)-1=d\sum_{H\text{ triangle}}\eta^{\sum_{e\in H}a_e}
+       +d\sum_{H\text{ four-cycle}}\eta^{\sum_{e\in H}a_e}
+       +\Delta\sum_e\eta^{S-a_e}+q\eta^S.
+\]
+For every proper surviving core $H$, its omitted exponents are at least
+$m_0$, so
+$\sum_{e\in H}a_e\leq S-(6-|E(H)|)m_0$.
+Its coefficient is nonnegative and $\eta\leq1$.  The full tetrahedron
+term, whose sign is not assumed, has exactly the same factor on both sides
+of the resulting comparison:
+\[
+ F(a)-1\geq\eta^{S-6m_0}
+       \bigl(F(m_0,m_0,m_0,m_0,m_0,m_0)-1\bigr).
+\]
+For $L=A^{m_0}$ and $f_{b,d}(x)=L(x,b)L(x,d)$, the homogeneous density is
+\[
+ \int L(b,d)\langle f_{b,d},Lf_{b,d}\rangle\,d\mu(b)d\mu(d)
+ \geq\int L(b,d)[L^2(b,d)]^2\,d\mu^2
+ \geq[\operatorname{Tr}(L^3)]^2.
+\]
+The first inequality uses $L-\Pi\succeq0$ and $L(b,d)\geq0$ in the
+original inner product.  The second is Cauchy--Schwarz under the probability
+measure $L(b,d)d\mu^2$.  Since
+$\operatorname{Tr}(L^3)=1+d\eta^{3m_0}$, substitution proves
+\eqref{eq:flat-spectrum-rank3-bound}.  If $\eta=0$, every positive power
+is $\Pi$ and $F=1$.  The final exponents $S-3m_0$ and $S$ are strictly
+positive, so this case involves no $0^0$ ambiguity.  The same proof applies
+at $\eta=1$.
+\end{proof}
+
+There is also a direct qualitative proof.  For $\eta>0$,
+$K_j=(1-\eta^{j-1})\Pi+\eta^{j-1}A$.  Expanding the six factors makes
+$F$ a convex combination of densities $t(H,A)$ for $H\subseteq K_4$.
+Of the $64$ edge subsets, $38$ are forests, $16$ have triangle core,
+$3$ are four-cycles, $6$ are diamonds, and one is $K_4$.
+Leaf removal gives density one for forests; cycles have density
+$\operatorname{Tr}(A^j)\geq1$.  A diamond has density
+$\int A(b,d)[A^2(b,d)]^2d\mu^2\geq[\operatorname{Tr}(A^3)]^2$.
+The preceding Gram argument bounds the $K_4$ density below by the same
+quantity.  Thus every member of the convex combination is at least one.
+This proof uses nonnegativity of the actual kernel $A$, not of $P$.
+
+The bound extends componentwise.  Let $C$ run over the communicating
+components of $A$, with $\alpha_C=\mu(C)>0$.  The conditional kernel is
+$A_C=\alpha_CA|_{C^2}$ relative to $\mu_C=\mu|_C/\alpha_C$.
+If each $A_C$ has one distinct positive nonprincipal eigenvalue
+$\eta_C$ of multiplicity $d_C$ (or no such eigenvalue), connectedness of
+$K_4$ gives
+\[
+ F(a)=\sum_C\alpha_C^{-2}F_C(a)
+ \geq\sum_C\alpha_C^{-2}
+       \bigl(1+2d_C\eta_C^{S-3m_0}+d_C^2\eta_C^S\bigr)\geq1.
+\]
+The exponent $-2$ comes from four probability factors and six kernel
+factors.  No nonnegative square root of a component restriction is assumed.
+
+\paragraph{Independent-coordinate mixtures.}
+A related class permits distinct positive eigenvalues in a single
+irreducible host.  On a product of finite probability spaces, take
+nonnegative Markov kernels $S_j=\Pi_j+s_jP_j$, with centered orthogonal
+projections $P_j$ and $0\leq s_j\leq1$.  Lift $S_j$ by averaging all
+other coordinates, and choose $t_j\geq0$, $\sum_jt_j\leq1$.
+Then
+\[
+ T=(1-\sum_jt_j)\Pi+\sum_jt_jS_j^{\rm lift},\qquad
+ A=T^2=\Pi+\sum_j\theta_jP_j^{\rm lift},\quad\theta_j=(t_js_j)^2.
+\]
+Mixed-coordinate cubic moments vanish by independence.  Every nonempty
+surviving centered core is connected, so its modes lie in one coordinate
+band.  Consequently $F(a)=1+\sum_j(F_j(a)-1)$, and
+\[
+ F(a)\geq1+\sum_j
+       \bigl(2d_j\theta_j^{S-3m_0}+d_j^2\theta_j^S\bigr),
+ \qquad d_j=\operatorname{rank}P_j.
+\]
+The local kernel has the nonnegative root $(1-t_j)\Pi_j+t_jS_j$.
+The independence hypothesis is essential to this argument: general
+common-power hosts need not have vanishing mixed cubic moments.
+These restricted-host proofs have analytical review only; neither Lean
+validation nor novelty is claimed.
+
+\paragraph{Reproducible finite checks.}
+The accompanying \texttt{exact\_checks.py} enumerates all $64$ edge subsets
+and evaluates small hosts with rational arithmetic.  A four-state rank-two
+flat host with $\eta=1/16$ and exponents $(3,4,1,2,1,1)$ gives
+$F=17180428425/17179869184>1$.  A six-state independent-coordinate host
+with centered eigenvalues $1/16,1/9$ gives
+$F=23670417502742322643/23665185138564661248>1$ at
+$(3,3,1,2,1,1)$; its exact coordinate identity and the quantitative lower
+bound also check.  The script reproduces the weighted-positivity obstruction
+below and the four-state negative individual coefficient in
+\texttt{route-diagnostics.json}.  These are finite checks, not Monte Carlo
+evidence or a proof for arbitrary interacting spectra.
 
 \subsection{An exact binary entropy construction}
 
@@ -434,14 +567,27 @@ of basis inside a repeated eigenspace.  For $q\geq1$, Abel summation gives
              +\eta_q^hS_q.
 \]
 If $q=0$, every positive kernel power is $\Pi$ and $F=R_0=1$.
-Thus positivity of every spectral prefix $S_j$ would suffice.  That
-positivity is not proved here; even its failure would invalidate only
-this sufficient route, since $R_0-1$ can compensate negative coefficients.
+The auxiliary value $F_0$ obtained by setting $h=0$ has matched spokes
+at $a,b$.  The same Gram argument gives
+$F_0\geq[\operatorname{Tr}(A^{\ell+r+u})]^2\geq1$.
+Since $F_0=R_0+S_q$, Abel summation can instead be written as
+\[
+ F_h=(1-\eta_1^h)R_0
+     +\sum_{j<q}(\eta_j^h-\eta_{j+1}^h)(R_0+S_j)
+     +\eta_q^hF_0.
+\]
+The weights are nonnegative and sum to one.  It would therefore suffice
+to prove $R_0+S_j\geq1$ for every proper positive spectral prefix $j<q$.
+This is weaker than $S_j\geq0$ and retains the proper-term slack.
+Neither condition is proved for general hosts.  An exact four-state
+host found during the diagnostic pass has an individual $R_s<0$, but
+all its old and shifted prefixes are positive; it refutes individual
+coefficient positivity only, not this remaining route or the target.
 The necessary comparison is
 $\sum_{s\geq1}\theta_s^{r+h}R_s\geq-(R_0-1)$, with the actual common
 host and moment constraints retained.
 
-Six independent exponents and odd-parity paths
-require still further control.  The unrestricted entropy theorem,
+For arbitrary interacting spectra, six independent exponents and odd-parity
+paths require still further control.  The unrestricted entropy theorem,
 formalization of these analytical results, global novelty and B-level
 significance remain open obligations rather than conclusions of this note.

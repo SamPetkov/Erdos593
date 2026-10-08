@@ -35,10 +35,18 @@
     "cumulative_attempts": "2/2 consumed; no unchanged replay"
   },
   "service": {
-    "status": "DELIVERY_CONFIRMED; actual initial task QUEUED",
+    "status": "COMPLETE; returned proof retrieved once and source-reviewed; not independently Lean-validated",
     "project_id": "850851cb-e0c2-4a9d-ab30-ab644d97ab78",
     "task_id": "8cc7c314-3422-4062-bc06-961f6faa6d1d",
-    "read_utc": "2026-10-08T11:46:04.372139+00:00",
+    "read_utc": "2026-10-08T18:16:31.532488+00:00",
+    "actual_task_status": "COMPLETE",
+    "download_count": 1,
+    "returned_archive_sha256": "71a8ab9d38b7172b3b4920469928afdc7f155db058c699f60c7842d73a03bbbf",
+    "returned_source_sha256": "ef4956c4dec1a166d4aad3eed51ae4a35c9a27beafab5014d2c79797de119575",
+    "public_candidate": "review/2026-10-08-rank-three-entropy/CoefficientCompensationCandidate.lean",
+    "public_candidate_sha256": "d4517cce7e653f6cb1b21d8c5b8a3cae82f63e66c701ae27f0c89d208fca6c59",
+    "public_transformation": "Documentary comments only: remove local paths and replace historical placeholder status; executable source, imports, definitions and target unchanged",
+    "source_review": "PASS; original three definitions and target fixed, eight helpers and complete main body reviewed; actual pinned proof replay remains pending",
     "proof_accepted": false,
     "proof_running_claimed": false,
     "attempts": "1/1 consumed; no retry or duplicate",
@@ -51,6 +59,15 @@
     "inventory_sha256": "2a60fda6adbdc20cdbe4e230a75e61c68af7187be6b469b8f74ff18ee1d579bd",
     "requested_proof_hours": 3,
     "SDK_enforced_proof_time_cap": false
+  },
+  "proof_replay_preparation": {
+    "status": "Prepared and reviewed, NOT uploaded or dispatched before restart; no compiler proof attempt consumed",
+    "proof_attempts_consumed": 0,
+    "proposed_limit": 2,
+    "preserved_API_attempts": "2/2 consumed, unchanged",
+    "preserved_density_attempts": "2/2 consumed, unchanged",
+    "freeze_sha256": "0f90cf2c92831595f77a6d57b8071518f2d8a56c5abfa3f8cc331e9eb1f17bce",
+    "boundary": "Resource eligibility must be refreshed before any future launch; saved preflight does not establish current availability; no local Lean or accepted-root rebuild"
   },
   "review": {"root_self_review": true, "root_independent": false, "actual_helper_checks": true, "external_full_audit": "PENDING"},
   "boundaries": [

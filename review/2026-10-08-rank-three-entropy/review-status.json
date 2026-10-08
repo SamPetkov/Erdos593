@@ -3,7 +3,7 @@
   "scope": "Draft analytical research fragment; not authoritative manuscript or accepted Lean source",
   "source": {
     "path": "review/2026-10-08-rank-three-entropy/research-note.tex",
-    "sha256": "4626fcdf923470cb1fc9d8130cf6c810ded971427cd576868392b6f2811364d5",
+    "sha256": "11a87d56fdebf6bf48a0d304d73fd887f42333bd792f988aac064610eae6a81a",
     "format": "LaTeX fragment, requiring amsmath, amssymb, amsthm and hyperref in a containing document",
     "rendered_or_compiled_this_pass": false
   },
@@ -42,6 +42,25 @@
       "conclusion": "Directly mixing the iid and diagonal successful extensions fails the entropy budget on J(2,4,3,2,3,1); six distinct commuting PSD Markov projections give a coloured K4 density15/16",
       "boundary": "These refute those construction/relaxation routes only, not the original common-pair-law target",
       "lean_validated": false
+    },
+    {
+      "name": "Flat-spectrum and componentwise density-free comparison",
+      "host": "Actual nonnegative PSD Markov A=Pi+eta P, centered orthogonal P, eta in[0,1], any rank; componentwise normalization explicit",
+      "conclusion": "For all six positive exponents, F>=1+2d eta^(S-3m0)+d^2 eta^S; component masses contribute alpha^-2",
+      "boundary": "Restricted spectral host class, not arbitrary interacting spectra; analytical obligation graph closes",
+      "lean_validated": false
+    },
+    {
+      "name": "Independent-coordinate mixture extension",
+      "conclusion": "Exact F=1+sum(F_j-1), with sum of the flat quantitative gains",
+      "boundary": "Explicit product probability and reset-mixture construction; mixed cubic moments vanish under extra independence hypotheses only",
+      "lean_validated": false
+    },
+    {
+      "name": "Shifted spectral-prefix reduction",
+      "conclusion": "F_h is a convex combination of R0, the proper R0+S_j, and matched-spoke F0>=1",
+      "boundary": "Proper shifted-prefix inequality is unproved generally; exact negative individual R_s example has all old and shifted prefixes positive",
+      "lean_validated": false
     }
   ],
   "review": {
@@ -58,25 +77,28 @@
     },
     "model_advice": "Completed ChatGPT Pro response read; visible model-version identity unavailable; advice is not validation",
     "novelty_established": false,
-    "B_level_significance_established": false
+    "B_level_significance_established": false,
+    "continuation_analytical_audit": "review/2026-10-08-rank-three-entropy/analytical-review.json"
   },
   "accepted_checkpoint": {
     "modules": 250,
     "ordered_standard_only_audits": 401,
     "new_Lean_compiler_attempts": "Two distinct cumulative statement-API attempts:66902 failed on unsupported generated pp.maxDepth; corrected probe66905 passed pinned4.32.0 warning-fatal, three full definitions and three ordered standard-only axiom lists, child/wrapper/accounting0. Request source bytes unchanged. API2of2 consumed; no theorem proof or accepted-root build.",
     "source_and_evidence_read_only_checker": "PASS;258 accepted source files,250-module coverage,401 ordered audits and existing evidence hashes",
-    "prior_spent_attempt_counters": "Old density2of2 remains unchanged. New coefficient API cumulative1->2 extension was explicitly reviewed, both original attempts retained; API2of2 now spent. Distinct coefficient proof-service1of1 consumed, delivery confirmed and actual task initially QUEUED; no source promotion."
+    "prior_spent_attempt_counters": "Density2/2 and coefficient API2/2 unchanged; service1/1 consumed, task completed and retrieved once. New returned-proof venue0 attempts executed; no source promotion or root rebuild."
   },
   "coefficient_formalization": {
     "checkpoint": "review/2026-10-08-rank-three-entropy/coefficient-checkpoint.json",
-    "statement_API": "PASS only; proof remains pending",
+    "statement_API": "PASS only; returned coefficient proof awaits independent pinned proof replay",
     "Aristotle_project": "850851cb-e0c2-4a9d-ab30-ab644d97ab78",
     "actual_task": "8cc7c314-3422-4062-bc06-961f6faa6d1d",
     "task_status_at_submission": "QUEUED",
     "proof_accepted": false,
     "density_free_graph_theorem": "OPEN; finite coefficient lemma is not the weighted-host transport or full theorem",
     "external_full_audit": "PENDING",
-    "clocks": "PAUSED; no automation restarted"
+    "clocks": "PAUSED; no automation restarted",
+    "current_task_status": "COMPLETE; downloaded once, source-reviewed, candidate published",
+    "proof_replay_dispatch": "NONE; prepared source/package/resource authorization saved, but no upload, dispatch or compiler child before restart"
   },
   "remaining": [
     "Unrestricted exact entropy budget on bipartite K4 subdivisions and arbitrary exchangeable triple pair marginals",
@@ -84,5 +106,16 @@
     "Exact literature and novelty reconciliation",
     "Faithful Lean formalization under its own exact statement, resource and attempt checkpoint"
   ],
-  "delivery_policy": "Stacked public draft PR only; no merge, accepted-source change, live manuscript/PDF/bibliography revision, private coordination export or automation restart"
+  "delivery_policy": "Stacked public draft PR only; no merge, accepted-source change, live manuscript/PDF/bibliography revision, private coordination export or automation restart",
+  "computational_evidence": {
+    "script": "review/2026-10-08-rank-three-entropy/exact_checks.py",
+    "data": "review/2026-10-08-rank-three-entropy/route-diagnostics.json",
+    "results": "review/2026-10-08-rank-three-entropy/exact-check-results.json",
+    "method": "Exhaustive small finite sums with rational/integer arithmetic, 64 edge subsets, four exact diagnostic cases",
+    "actual_exit": 0,
+    "random_search": false,
+    "universal_proof": false,
+    "Lean_validation": false
+  },
+  "restart_recovery": "Saved proof return, analytical passes and resource preparation survived. Recovery delivery publishes public-safe research candidates only; accepted250modules401audits/live manuscript/PDF unchanged. Clocks remain paused."
 }
