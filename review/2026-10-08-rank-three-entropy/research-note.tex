@@ -9,13 +9,14 @@ This note concerns a possible density extension of the finite atom description,
 not a further proof of the obligatory classification.  Cycle and theta atoms
 suggest asking whether the next trivalent core, $K_4$, admits an exact
 edge-marginal entropy construction.  We obtain restricted density and entropy
-statements, including bounds for flat-spectrum and hierarchical hosts and a
-host-dependent mixing criterion, and identify constructions that cannot
+statements, including bounds for flat-spectrum and hierarchical hosts, every
+weighted three-state host, and a host-dependent mixing criterion.  We also identify constructions that cannot
 establish the unrestricted result.
 The kernel and entropy arguments below have analytical source review,
 not Lean validation.  The finite coefficient comparison has separately
-passed a pinned warning-fatal Lean check; its formal kernel transport
-and canonical integration remain pending.  Novelty and significance
+passed a pinned warning-fatal Lean check.  A complete finite kernel-energy
+transport candidate is now written, but has not been compiled;
+canonical integration remains pending.  Novelty and significance
 have not been established.
 
 The initial equal-spoke, one-step compensation argument, the binary path
@@ -211,6 +212,21 @@ weighted-host inequalities.  At any fixed tuple, sufficiently sparse hosts
 remain untreated by this density threshold, so the proposition does not establish
 \eqref{eq:rank3-entropy-target} through a universal type-host argument.
 
+\paragraph{The finite formal transport.}
+The accompanying \texttt{KernelEnergyTransportCandidate.lean} supplies eight
+complete theorem bodies for the finite algebraic identity used in this proof.
+For arbitrary finite host and mode sets, real weights $\mu$, a weighted
+orthonormal family $\phi_i$, and the displayed spectral kernels $B_j$, it
+identifies the actual fourfold weighted energy of
+$\delta=(B_{r+h}-B_r)B_u/2$ with the coefficient sum $E_0$.
+The proof expands the quadratic form and applies weighted Parseval in both
+host coordinates; completeness and probability normalization are not needed
+for this identity.  It also proves cubic-moment symmetry and applies the
+checked coefficient comparison under its unchanged scalar assumptions.
+This is a direct, source-reviewed \emph{uncompiled candidate}, not kernel
+evidence.  Extracting the eigenfamily from an original host, the remaining
+graph transports and canonical validation are separate obligations.
+
 \subsection{A host-dependent mixing criterion}
 
 The compensation proof uses $1/p$ only as an upper bound for $K_\ell$.
@@ -366,6 +382,119 @@ The independence hypothesis is essential to this argument: general
 common-power hosts need not have vanishing mixed cubic moments.
 These restricted-host proofs have analytical review only; neither Lean
 validation nor novelty is claimed.
+
+\subsection{Weighted three-state hosts and a one-spike spectrum}
+
+The next argument permits unequal probability masses and all six positive
+exponents.  Unlike the preceding coordinate construction, it need not
+annihilate mixed cubic moments.  Write $I(x,y)=\mathbf1\{x=y\}/\mu_x$
+for the identity kernel, and $\Pi(x,y)=1$.
+
+\begin{proposition}[One-spike common powers]
+Let $f$ be a real function with $\int f\,d\mu=0$ and
+$\int f^2d\mu=1$.  Suppose
+\[
+ A=yI+(1-y)\Pi+(x-y)f\otimes f,\qquad 0\leq y\leq x\leq1,
+\]
+is entrywise nonnegative.  For arbitrary positive integers $a_e$, put
+$S=\sum_ea_e$ and $M_\mu=\sum_z\mu_z^{-2}$.  Then
+\begin{equation}
+ F(a)\geq1+y^S(M_\mu-1)
+ +\sum_{\Delta\text{ triangle}}
+    \prod_{e\in\Delta}(x^{a_e}-y^{a_e})
+    \prod_{e\notin\Delta}(1-y^{a_e})\geq1.
+ \label{eq:one-spike-common-powers}
+\end{equation}
+Every nonnegative self-adjoint PSD Markov kernel on a positive weighted
+three-state space has this form.  On a space with at least two states,
+equality $F(a)=1$ holds exactly when $A=\Pi$.
+\end{proposition}
+
+\begin{proof}
+If $y=1$, then $x=1$ and $A=I$.  The density is $M_\mu$ and the
+displayed bound is exact.  Suppose $y<1$.  For each $m\geq1$,
+\[
+ A^m=y^mI+(1-y^m)S_m,\qquad
+ S_m=\Pi+\tau_m f\otimes f,\qquad
+ \tau_m=\frac{x^m-y^m}{1-y^m}.
+\]
+Here $0\leq\tau_m\leq\tau_1$: after factoring $x-y$ and $1-y$,
+the geometric sums compare termwise because
+$x^{m-1-j}y^j\leq y^j$.  This also includes $x=y$, when every
+$\tau_m$ is zero.  Off the diagonal, $S_1=A/(1-y)\geq0$;
+on the diagonal $S_1(z,z)=1+\tau_1f(z)^2\geq1$.
+Each $S_m$ is therefore a nonnegative convex combination of $\Pi$ and
+$S_1$, with diagonal at least one.
+
+Expand the six edge kernels into their $I/S_{a_e}$ choices.  Their
+coefficients are nonnegative and sum to one.  We show that every such
+colored density is at least one.  In the graph of identity edges, retain
+a spanning forest of each component.  On the support of that forest,
+each deleted identity-cycle factor is $1/\mu_z\geq1$; outside its
+support the retained product is zero.  All other factors are nonnegative,
+so deletion gives a lower bound.  Contract the forest.  A component of
+$v$ vertices has $v-1$ retained identity edges, leaving exactly one
+factor $\mu_z^v\mu_z^{-(v-1)}=\mu_z$ in its sum.  Thus contraction
+preserves the original probability measure at each quotient vertex.
+Discard any resulting $S_m$ loop, whose diagonal factor is at least one.
+
+The remaining loopless multigraph comes from a partition of the four
+vertices of $K_4$.  A quotient vertex containing $s$ original vertices
+has degree at most $s(4-s)\leq4$.  Expand each remaining edge factor as
+$1+\tau_m f(z)f(w)$.  A chosen edge set contributes a nonnegative
+coefficient times a product of moments
+$m_j=\int f^j d\mu$, with $0\leq j\leq4$.
+Terms with degree one vanish because $m_1=0$.
+The moments $m_0,m_2,m_4$ are nonnegative, and the only remaining odd
+degree is three.  The handshake identity forces an even number of
+degree-three vertices, so the common moment $m_3$ occurs to an even
+power.  Every surviving term is nonnegative.  The empty edge set gives
+one, proving the qualitative bound for each choice.
+
+The all-identity choice has coefficient $y^S$ and density $M_\mu$.
+In the all-$S$ choice, each triangle contributes
+$\prod_{e\in\Delta}\tau_{a_e}$, since $m_2=1$.
+Retaining these disjoint surplus contributions gives
+\eqref{eq:one-spike-common-powers}.
+On three states the centered subspace has dimension two; choose its
+orthonormal eigenfunctions with eigenvalues $x\geq y$.
+Its spectral decomposition is precisely the stated form.
+For at least two states, $M_\mu>1$.  If $y>0$ the all-identity surplus
+is positive; if $y=0<x$, every triangle surplus is positive.
+Only $x=y=0$, equivalently $A=\Pi$, permits equality.
+The converse is immediate.
+\end{proof}
+
+For the original host $A=T^2$, self-adjointness shows that $A=\Pi$
+is equivalent to $T=\Pi$, hence to the constant kernel $W=p$.
+Negative centered eigenvalues of $T$ are allowed: only their squares
+enter the argument.  A one-state host gives $F=1$ directly, without a
+centered normalized function.  In higher dimension the proposition
+allows at most one distinguished one-dimensional direction above a common
+eigenvalue on the remaining centered subspace, including the flat case $x=y$.
+It does not cover arbitrary
+interacting spectra or assert positivity of individual spectral prefixes.
+
+For an exact sparse example, take
+\[
+ \mu=(1/2,16/33,1/66),\qquad f=(3/5,-2/5,-7),\qquad
+ T=\tfrac34I+\tfrac14\Pi+\tfrac1{20}f\otimes f.
+\]
+This is a strictly positive Markov kernel with centered eigenvalues
+$4/5,3/4$ and maximum $261/5$.  Thus $W=(5/261)T$ is an admissible
+regular host.  At $a=(4,3,1,2,1,1)$, the previous density condition fails:
+$\gamma_{1,1}\geq9/320>5/261$.  Nevertheless
+\[
+ F(a)=\frac{31870316227507292660361657490451130365121}
+             {1677721600000000000000000000000000000000}>1.
+\]
+The tuple avoids the three equal-spoke slices listed earlier.  This
+evaluation is a reproducible diagnostic, not the proof; the proposition
+establishes the whole three-state class.  Common exponents are already
+covered without a state-count restriction by Sidorenko's complete-graph
+inequality for doubly nonnegative kernels, Corollary~5.2 of the paper cited
+above.  The additional statement here concerns six unequal positive integer
+powers.  A bounded literature check does not establish its novelty.
 
 \subsection{Nested conditional-expectation hosts}
 
@@ -716,6 +845,45 @@ coefficient positivity only, not this remaining route or the target.
 The necessary comparison is
 $\sum_{s\geq1}\theta_s^{r+h}R_s\geq-(R_0-1)$, with the actual common
 host and moment constraints retained.
+
+\paragraph{An exact dissipation identity, not a completed comparison.}
+Include the constant mode $\phi_0=1$, $\theta_0=1$, and define
+\[
+ g_i(c,d)=\int\phi_i(x)K_r(x,c)K_u(x,d)d\mu(x),\qquad
+ H(s)=\sum_i\theta_i^k\int K_s(c,d)g_i(c,d)^2d\mu^2.
+\]
+Let $P_h$ act in the $c$ coordinate by the actual kernel $K_h$ and put
+\[
+ D_h=\sum_i\theta_i^k\int K_\ell(c,d)K_h(c,c')
+          [g_i(c,d)-g_i(c',d)]^2d\mu(c)d\mu(c')d\mu(d).
+\]
+Complete spectral expansion of $K_k$ and polarization give
+\begin{equation}
+ F_h=\tfrac12[H(\ell)+H(\ell+h)-D_h],\qquad D_h\geq0.
+ \label{eq:actual-source-dissipation}
+\end{equation}
+Indeed, the two square terms integrate to $H(\ell)$ and $H(\ell+h)$
+by the Markov and composition identities, and the cross term is $2F_h$.
+The matched-spoke Gram argument gives
+$H(s)\geq[\operatorname{Tr}(A^{s+r+u})]^2\geq1$.
+Nevertheless the needed upper bound
+$D_h\leq H(\ell)+H(\ell+h)-2$ is exactly equivalent to $F_h\geq1$;
+the identity does not prove that budget.  Markov covariance positivity
+instead supplies a lower bound on part of $D_h$, in the wrong direction.
+
+Even positive functions with both weighted marginals equal to one do not
+suffice for a generic replacement of the source functions.  The fixed
+four-state example in \texttt{pass4\_checks.py}, with masses
+$(1/6,1/6,1/3,1/3)$, uses an admissible common-power host and
+$g(c,d)=1+f(c)q(d)/8$, where
+$f=(-1,-1,-3,4)$ and $q=(1,-1,0,0)$.
+Although $1/2\leq g\leq3/2$, both marginals equal one, and both
+reflection square integrals exceed one, its cross integral at
+$\ell=1,h=3$ is $1-35/944784<1$.
+This is not a counterexample to the density target: it is not the actual
+source family $g_i=A^r\operatorname{diag}(\phi_i)A^u$.
+A valid proof must retain that shared source structure and its actual
+moment constraints.
 
 For arbitrary interacting spectra, six independent exponents and odd-parity
 paths require still further control.  The unrestricted entropy theorem,

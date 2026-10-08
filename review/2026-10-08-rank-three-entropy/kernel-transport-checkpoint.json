@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-09",
+  "status": "COMPLETE_DIRECT_SOURCE_CANDIDATE_UNCOMPILED",
+  "source": "KernelEnergyTransportCandidate.lean",
+  "source_sha256": "e5aecb13aad04a5da598808737d5191e403102ecb25eecf941e50a202269e250",
+  "immutable_original_sha256": "e5aecb13aad04a5da598808737d5191e403102ecb25eecf941e50a202269e250",
+  "public_copy": "Final public source is byte-identical to all12679 immutable original bytes. Root removed only two excess trailing LF bytes flagged by Git whitespace check; original source unchanged.",
+  "exact_identity": "For arbitrary finite X,I, real mu and weighted orthonormal phi, every k,r,u,h:Nat: kernelEnergy mu theta phi k r u h = CoefficientCompensationRequest.energy0 theta (cubicMoment mu phi) k r u h. No probability normalization, completeness, positivity, Nonempty or caller DecidableEq premise.",
+  "definitions": [
+    "spectralKronecker",
+    "spectralKernel",
+    "cubicMoment",
+    "kernelDelta",
+    "kernelEnergy"
+  ],
+  "complete_theorem_bodies": [
+    "weighted_parseval",
+    "kernel_quadratic_form",
+    "delta_expansion",
+    "delta_projection",
+    "tensor_parseval",
+    "kernel_energy_eq_coefficient_energy",
+    "cubic_moment_first_third_symmetry",
+    "kernel_energy_compensation"
+  ],
+  "proof_route": "Finite quadratic expansion, actual delta spectral projection, weighted Parseval in two independent host coordinates, power/square normalization, direct moment symmetry and existing coefficient theorem.",
+  "imports": [
+    "CoefficientCompensationCandidate",
+    "Mathlib.Algebra.BigOperators.Ring.Finset",
+    "Mathlib.Tactic.Ring"
+  ],
+  "coefficient_dependency": {
+    "focused_job": 66955,
+    "pinned_proof_pass": true,
+    "focused_gate_rerun": false,
+    "canonical_accepted": false,
+    "historical_dependency_artifact_lineage": "PENDING"
+  },
+  "review": {
+    "root_self_review": true,
+    "independent": false,
+    "actual_separate_agent_full_source_API_and_copy_review": true,
+    "helper_source_review_sha256": "08ed66684793009b4ae94bd4cdaa0e8eda854ab81b3444a577a42c930191f178",
+    "copy_review_sha256": "2b84a39c0a1181b8d45fa268b1963e1bb722bd657ec76d8699d53adcd384fb8f",
+    "final_copy_delta": "Actual helper checked exact original prefix plus2LF; root then removed those2LF and verified whole-file SHA equals immutable original. No proof/import/definition/comment change.",
+    "kernel_validation": false,
+    "external_full_audit": "PENDING"
+  },
+  "edge_cases": [
+    "Empty X or I remain literal; no Nonempty strengthening",
+    "Signed weights and moments allowed in identity",
+    "Zero eigenvalues/zero natural exponents handled without division",
+    "Application retains exact coefficient scalar/exponent assumptions"
+  ],
+  "execution": {
+    "new_compiler_attempts": 0,
+    "new_service_requests": 0,
+    "package_Probe_runner_prepared": false,
+    "accepted_source_changes": false
+  },
+  "pending": [
+    "Pinned warning-fatal elaboration, actual full printed types/definitions and ordered standard-only axioms",
+    "Exact source/package/dependency-artifact/original child-wrapper-accounting reconciliation",
+    "Original regular-host spectral extraction and actual semigroup/graph transports",
+    "Canonical all-root/standalone/final integration",
+    "Unrestricted density and exact-marginal entropy theorem"
+  ],
+  "attempts": "This new transport checkpoint0 compiler attempts; existing coefficient proof1of2,API2of2,density2of2,service1of1 unchanged; no counter reset or green rerun."
+}
