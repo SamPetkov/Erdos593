@@ -366,7 +366,82 @@ host: its left side is $Q+D_{cd}$.
 It is unproved here and stronger than what the compensation proposition
 needs.  The factor $K_\ell(z,w)$ changes the inner-product measure;
 positivity and self-adjointness in the original measure do not justify
-a change of measure.  Six independent exponents and odd-parity paths
+a change of measure.  The following example shows that this is an actual
+obstruction to the arbitrary-vector argument, even for common powers.
+
+\paragraph{Weighted positivity fails on an admissible common-power host.}
+Take three states with uniform measure, $p=6/13$, and
+\[
+ W=\begin{pmatrix}
+ 1&1/13&4/13\\
+ 1/13&1&4/13\\
+ 4/13&4/13&10/13
+ \end{pmatrix},\qquad
+ P=\begin{pmatrix}
+ 13/18&1/18&2/9\\
+ 1/18&13/18&2/9\\
+ 2/9&2/9&5/9
+ \end{pmatrix}.
+\]
+Here $W$ is symmetric, strictly positive, bounded by one, and has row
+mean $p$.  The matrix $P$ represents the operator $T=W/p$;
+the kernel is $3P$, because composition uses the uniform probability
+measure.  Thus $A$ is represented by $P^2$, with eigenvalues
+$1,4/9,1/9$.  Set $v=(-1,-3,4)$ and choose the first state as $w$.
+Since $v$ is mean zero and both nonconstant eigenvalues are positive,
+$v$ belongs to the range of $B_1$.
+Direct rational arithmetic gives
+\[
+ A^3v=\frac1{729}(62,-66,4),\qquad
+ K_1(\cdot,w)=\left(\frac{31}{18},\frac7{18},\frac89\right),
+\]
+and hence
+\[
+ \int K_1(z,w)v(z)(A^3v)(z)\,d\mu(z)
+       =-\frac{140}{19683}<0.
+\]
+Common powers and smoothing therefore do not imply weighted positivity
+for arbitrary mean-zero inputs.  This does not refute $Q+D_{cd}\geq0$:
+the inputs in that expression are products of eigenfunctions and kernel
+sections, summed with prescribed spectral weights.  Nor does it refute
+$F\geq1$, which retains the other nonnegative terms in
+\eqref{eq:rank3-complete-expansion}.
+
+\paragraph{A comparison retaining all proper terms.}
+For each nonconstant eigenfunction define
+\[
+ R_s=\int\phi_s(a)\phi_s(c)
+ K_k(a,b)K_u(a,d)K_r(b,c)K_u(b,d)K_\ell(c,d)\,d\mu^4.
+\]
+Expanding only the $ac$ kernel gives the exact identity
+\[
+ F=R_0+\sum_{s\geq1}\theta_s^{r+h}R_s,
+\]
+where $R_0$ denotes the same integral with $\phi_0=1$.
+The remaining five-edge graph is an uncentered diamond, so
+\[
+ R_0=1+\sum_{i\geq1}\theta_i^{k+2u}
+       +\sum_{i\geq1}\theta_i^{r+u+\ell}
+       +\sum_{i\geq1}\theta_i^{k+r+u+\ell}+D_{ac}\geq1.
+\]
+Group the distinct positive nonconstant eigenvalues as
+$\eta_1>\cdots>\eta_q>0$, and put
+$c_j=\eta_j^r\sum_{\theta_s=\eta_j}R_s$ and
+$S_j=\sum_{v=1}^jc_v$.  These grouped sums do not depend on the choice
+of basis inside a repeated eigenspace.  For $q\geq1$, Abel summation gives
+\[
+ F-R_0=\sum_{j=1}^{q-1}(\eta_j^h-\eta_{j+1}^h)S_j
+             +\eta_q^hS_q.
+\]
+If $q=0$, every positive kernel power is $\Pi$ and $F=R_0=1$.
+Thus positivity of every spectral prefix $S_j$ would suffice.  That
+positivity is not proved here; even its failure would invalidate only
+this sufficient route, since $R_0-1$ can compensate negative coefficients.
+The necessary comparison is
+$\sum_{s\geq1}\theta_s^{r+h}R_s\geq-(R_0-1)$, with the actual common
+host and moment constraints retained.
+
+Six independent exponents and odd-parity paths
 require still further control.  The unrestricted entropy theorem,
 formalization of these analytical results, global novelty and B-level
 significance remain open obligations rather than conclusions of this note.

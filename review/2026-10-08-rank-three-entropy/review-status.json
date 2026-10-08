@@ -3,7 +3,7 @@
   "scope": "Draft analytical research fragment; not authoritative manuscript or accepted Lean source",
   "source": {
     "path": "review/2026-10-08-rank-three-entropy/research-note.tex",
-    "sha256": "320902cab7769a2273ce7816670cd1020b6658505273fc2f1f4fa79ed72d1241",
+    "sha256": "4626fcdf923470cb1fc9d8130cf6c810ded971427cd576868392b6f2811364d5",
     "format": "LaTeX fragment, requiring amsmath, amssymb, amsthm and hyperref in a containing document",
     "rendered_or_compiled_this_pass": false
   },
@@ -14,6 +14,19 @@
       "host": "Finite probability weights mu_x>0 summing to1; symmetric regular 0<=W<=1 with row mean p>0",
       "conclusion": "t(J(2a),W)>=p^m if p>=gamma_dh, with gamma_dh=(1/4) max_[0,1] x^d(1-x^h)^2/(1+x^h) and m=2k+4r+4u+2h+2l",
       "boundary": "Restricted host-density condition, not a universal exact-marginal entropy theorem; unequal-spoke, arbitrary-mismatch and two-diamond refinements derived separately during the Pro audit",
+      "lean_validated": false
+    },
+    {
+      "name": "An admissible common-power obstruction to arbitrary-input weighted positivity",
+      "host": "Uniform three-state measure, p=6/13 and the explicitly displayed strictly positive regular W",
+      "conclusion": "For v=(-1,-3,4) in range(B1), the K1-weighted form with A^3 equals -140/19683",
+      "boundary": "Refutes only an arbitrary-vector weighted positivity shortcut, not Q+D_cd or F>=1; exact rational arithmetic and separate analytical review agree",
+      "lean_validated": false
+    },
+    {
+      "name": "A full proper-term spectral reduction",
+      "conclusion": "F=R0+sum theta_s^(r+h) R_s, with R0>=1; nonnegative grouped spectral prefixes would suffice by Abel summation",
+      "boundary": "The spectral-prefix positivity lemma and the weaker exact residual inequality remain unproved; empty, zero and repeated eigenspaces are explicitly handled",
       "lean_validated": false
     },
     {
@@ -40,7 +53,8 @@
       "binary_exact_marginals_and_primary_literature": "03f6073eefcef0bea303689b29e1c36c8d8c189ff86cc5171c1207061d5b69f5",
       "mixture_and_projection_obstructions": "104e89e8ba2be4113c5f79ebb2f8981fa98123d6c7d87db855d7ba0a0f7ae6b8",
       "complete_initial_public_fragment": "5821f135f175afb3b289f05b47821ea0942339199ab81a747e889ffdf45171a8",
-      "exact_final_delta_and_attribution": "21f7ee17ad0a61b92c93e4980a364e1b5310af35b998a998b23fe68b866da33a"
+      "exact_final_delta_and_attribution": "21f7ee17ad0a61b92c93e4980a364e1b5310af35b998a998b23fe68b866da33a",
+      "weighted_obstruction_and_full_terms_delta": "21ab9b95c1c89dc6369e71dcd35257373595b6aeb14d307fbe93c12bac86d99b"
     },
     "model_advice": "Completed ChatGPT Pro response read; visible model-version identity unavailable; advice is not validation",
     "novelty_established": false,
@@ -49,9 +63,20 @@
   "accepted_checkpoint": {
     "modules": 250,
     "ordered_standard_only_audits": 401,
-    "new_Lean_compiler_attempts": 0,
+    "new_Lean_compiler_attempts": "Two distinct cumulative statement-API attempts:66902 failed on unsupported generated pp.maxDepth; corrected probe66905 passed pinned4.32.0 warning-fatal, three full definitions and three ordered standard-only axiom lists, child/wrapper/accounting0. Request source bytes unchanged. API2of2 consumed; no theorem proof or accepted-root build.",
     "source_and_evidence_read_only_checker": "PASS;258 accepted source files,250-module coverage,401 ordered audits and existing evidence hashes",
-    "prior_spent_attempt_counters": "Unchanged; no venue switch, compiler retry or source promotion"
+    "prior_spent_attempt_counters": "Old density2of2 remains unchanged. New coefficient API cumulative1->2 extension was explicitly reviewed, both original attempts retained; API2of2 now spent. Distinct coefficient proof-service1of1 consumed, delivery confirmed and actual task initially QUEUED; no source promotion."
+  },
+  "coefficient_formalization": {
+    "checkpoint": "review/2026-10-08-rank-three-entropy/coefficient-checkpoint.json",
+    "statement_API": "PASS only; proof remains pending",
+    "Aristotle_project": "850851cb-e0c2-4a9d-ab30-ab644d97ab78",
+    "actual_task": "8cc7c314-3422-4062-bc06-961f6faa6d1d",
+    "task_status_at_submission": "QUEUED",
+    "proof_accepted": false,
+    "density_free_graph_theorem": "OPEN; finite coefficient lemma is not the weighted-host transport or full theorem",
+    "external_full_audit": "PENDING",
+    "clocks": "PAUSED; no automation restarted"
   },
   "remaining": [
     "Unrestricted exact entropy budget on bipartite K4 subdivisions and arbitrary exchangeable triple pair marginals",
