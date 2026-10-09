@@ -69,6 +69,7 @@
 \newtheorem*{claim}{Claim}
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
+\newtheorem{problem}[theorem]{Problem}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 
@@ -87,9 +88,9 @@
 \author{Samuil Petkov}
 \address{École normale supérieure--PSL, 45 rue d'Ulm, 75005 Paris, France}
 \email{samuil.petkov@ens.psl.eu}
-\subjclass[2020]{Primary 05C65; Secondary 05C15, 05C40, 05C63, 06A07, 03E05}
-\keywords{Erdős Problem 593, obligatory triple systems, uncountable chromatic number, canonical decomposition, partition lattices, Lean~4}
-\date{4 October 2026}
+\subjclass[2020]{Primary 05C65; Secondary 05C15, 05C35, 05C40, 05C63, 06A07, 03E05}
+\keywords{Erdős Problem 593, obligatory triple systems, uncountable chromatic number, canonical decomposition, partition lattices, entropy, homomorphism densities, Lean~4}
+\date{9 October 2026}
 
 \begin{document}
 
@@ -113,9 +114,15 @@ count we obtain sharp binomial and Stirling-number bounds, with binary
 joints and a common joint as the interior equality cases.  The two
 extremal assemblies can have the same atoms and global parameters.
 These results separate the constraints imposed by cyclic content from
-the freedom of assembly.  The classification and specified structural
+the freedom of assembly.  For the associated graph cores, we also prove
+exact edge-marginal entropy bounds for uniform Potts laws and nearby general
+pair laws, and a common-power density bound for regular hosts with two
+centered spectral levels.  These quantitative comparisons are separate
+from the obligatory classification; their unrestricted versions remain open.
+The classification and specified structural
 extensions are verified in Lean~4; profile realization, full lattice
-spectra and the new counting endpoints are not yet fully formalized.
+spectra, the new counting endpoints and the entropy--density arguments
+are not yet fully formalized.
 All arguments are in ZFC.
 \end{abstract}
 
@@ -238,6 +245,32 @@ four or five decomposition choices.  These counting consequences quantify
 the freedom left by the canonical structure; they are not assertions of
 new general Stirling-number identities.
 
+\subsection*{Quantitative questions suggested by the atoms}
+The description of the cyclic atoms also identifies graph cores for finite
+quantitative questions.  Every simple bipartite subdivision of $K_4$ is
+$2$-connected and has cycle rank three, so its private-vertex expansion is
+an allowable atom.  This observation motivates, but does not prove, a density
+comparison for the original graph.  Section~\ref{sec:quantitative-cores}
+studies exact pair-marginal entropy witnesses and regular-host homomorphism
+densities for these cores.  The first results cover uniform $q$-state Potts
+tables, arbitrary tables in specified open families, and hosts with two
+centered spectral levels.  They are not a universal Sidorenko theorem.
+
+The entropy formulation has established predecessors
+\citep{csikvarilin2017,szegedy2015}; local density comparisons near independence
+are also classical \citep{lovasz2010}.  The positive-spectrum comparison has
+its own prior literature \citep{sidorenko2021}.  We give the finite arguments
+needed for our restricted statements and separate them from the two
+unrestricted questions.  Neither the graph comparisons nor their novelty
+is inferred from the classification of obligatory triple systems.
+Some of these core graphs already belong to known scalar-density classes:
+graphs with a vertex complete to the opposite part are covered in
+\citet{conlonfoxsudakov2012}.  Such coverage is not a new graph family here.
+More recently, \citet{imliliu2026} proved subdivision and even-theta
+substitution results.  Their uniform substitution theorem and their
+nonuniform theorem with path-count divisibility hypotheses do not settle
+arbitrary choices of the six subdivision lengths considered below.
+
 The classification and substantial structural extensions have accepted
 Lean implementations.  The distinction is between the mathematical results
 proved in the manuscript and the exact interfaces already exported by Lean,
@@ -245,6 +278,7 @@ not between a numerical test and a proof.  Full profile realization, lattice
 spectra, maximal-chain and height endpoints, and the new counting statements
 still have unfinished formal interfaces.  The finite results above have
 manuscript proofs; they are not all claimed as accepted Lean exports.
+The entropy and density arguments have no accepted Lean implementation.
 Appendix~\ref{appendix-formalization} records the implementation routes,
 validation records and remaining obligations without interrupting the
 mathematical arguments.
@@ -2268,6 +2302,261 @@ context for these classical Stirling rows \citep{pitman1997}.  Our question
 is which products of the rows are realized by attachment profiles, not a
 new general identity for Stirling numbers.
 
+\section{Quantitative comparisons for graph cores}
+\label{sec:quantitative-cores}
+
+The results in this section concern the graph $J$ underlying an expansion
+$J^+$, not uncountably chromatic hypergraph hosts.  If $J$ is a simple
+bipartite subdivision of $K_4$, its six path lengths $L_{ij}\ge1$ satisfy
+$L_{ij}\equiv\varepsilon_i+\varepsilon_j\pmod2$ for some branch colours
+$\varepsilon_i\in\{0,1\}$.  Its path interiors are mutually disjoint and
+$|V(J)|=|E(J)|-2$.  The canonical-atom theorem admits every such $J^+$;
+it does not supply the comparisons below.
+
+\subsection{Exact edge laws and their entropy cost}
+Let $\Omega$ be a finite nonempty alphabet, let $\kappa$ be a positive
+probability law on it, and let $\lambda$ be a symmetric pair law with both
+marginals $\kappa$.  Write $R_G=\kappa^{V(G)}$ and
+\[
+ D(\nu\Vert R)=\sum_x\nu(x)\log\frac{\nu(x)}{R(x)},
+ \qquad I(\lambda)=D(\lambda\Vert\kappa^{\otimes2}),
+\]
+with natural logarithms and $0\log0=0$.  An exact edge witness on $G$
+has singleton law $\kappa$ at every actual vertex and pair law $\lambda$
+on every oriented actual edge.  Prescribing an averaged edge law is a
+different problem.  The relation between entropy maximization and graph
+density inequalities is developed in \citet{szegedy2015}; a bound for one
+scalar density is not substituted here for exact marginal constraints.
+
+\begin{theorem}[Potts edge witnesses]\label{theorem-potts-edge-entropy}
+Let $G$ be a finite simple graph with $m$ edges, each of which has an
+endpoint of degree at most three.  Let $q\ge2$, let $\kappa$ be uniform
+on $\{1,\ldots,q\}$, and put
+\[
+ \lambda_s(x,y)=
+ \begin{cases}s/q,&x=y,\\(1-s)/(q(q-1)),&x\ne y,\end{cases}
+ \qquad 0\le s\le1.
+\]
+If $s<1/q$, assume additionally that $G$ is bipartite.  There is an
+exact edge witness $\tau$ with
+\[
+ D(\tau\Vert R_G)\le m I_q(s),\qquad
+ I_q(s)=s\log(qs)+(1-s)\log\frac{q(1-s)}{q-1}.
+\]
+Disconnected graphs and isolated vertices are included.
+\end{theorem}
+
+The theorem includes every bipartite $K_4$ subdivision and every uniform
+Potts pair law.  Its antiferromagnetic part retains bipartiteness; it does
+not extend to arbitrary pair tables by permutation symmetry.  The proof
+uses a constrained finite Gibbs fit.  Two-colour conditioning supplies the
+correlation sign, following the mechanism in \citet{csikvarilin2017}; a
+conditional comparison at a low-degree endpoint makes every zero-coupling
+edge fit.  A reverse-KL interpolation gives the sharp cost.  These steps,
+including zero-support endpoints, are detailed in
+Appendix~\ref{appendix-entropy-density}.
+
+\begin{corollary}[Strict slack and full-table perturbations]
+\label{corollary-potts-table-openness}
+Under the preceding graph hypotheses, suppose $G$ has a cycle and
+$0<s<1$, $s\ne1/q$.  The fitted Potts witness has
+$D(\tau\Vert R_G)<mI_q(s)$.  There is a neighbourhood of
+$(\kappa,\lambda_s)$, relative to compatible positive singleton and
+symmetric pair laws, in which every input admits an exact witness with
+$D(\tau\Vert\kappa^{V(G)})<mI(\lambda)$.
+For $q\ge3$ the neighbourhood may be chosen inside the class of pairs
+having a positive exchangeable triple extension.
+\end{corollary}
+
+This is a full-table neighbourhood: it includes nonuniform singleton laws
+and non-Potts tables.  Its radius is not asserted to be uniform, and no
+openness is inferred at $s=0,1$ or at independence.  At independence a
+separate argument is available.
+
+\begin{theorem}[Exact tables near independence]
+\label{theorem-local-table-entropy}
+Fix a finite simple bipartite graph $G$ containing a cycle, with girth
+$g$, and a positive law $\kappa$ on an alphabet of size $q\ge2$.
+For a symmetric pair law $\lambda$ with marginal $\kappa$, set
+\[
+ f(x,y)=\frac{\lambda(x,y)}{\kappa(x)\kappa(y)}-1,
+ \qquad C_{xy}=\sqrt{\kappa(x)\kappa(y)}\,f(x,y),
+ \qquad \rho=\|C\|_{\mathrm{op}}.
+\]
+There is a positive, explicitly specified radius $\delta(G,\kappa)$
+such that $0<\rho\le\delta$ implies the existence of a full-support
+exact witness with
+\[
+ D(\tau\Vert\kappa^{V(G)})\le |E(G)|I(\lambda)-\rho^g/8.
+\]
+At $\rho=0$ the independent law works.  For a forest, an exact witness
+satisfies $D(\tau\Vert\kappa^{V(G)})=|E(G)|I(\lambda)$ by a tree
+construction, without a smallness condition.
+\end{theorem}
+
+The local signed-density framework is already established
+\citep{lovasz2010}.  Here a nearly fitted pairwise Gibbs seed is corrected
+in all unary and edge-table coordinates.  The positive shortest even-cycle
+term pays for that correction; the proof and its conservative constants
+are in Appendix~\ref{appendix-entropy-density}.  Small scalar density
+error alone would not supply the prescribed marginals.
+
+\begin{proposition}[Cycle surplus for disjoint alphabet blocks]
+\label{proposition-alphabet-block-surplus}
+Let $G$ have $n$ vertices, $m$ edges and $c$ components, and write
+$\beta=m-n+c$.  Partition the alphabet into nonempty blocks with masses
+$\pi_i>0$.  In block $i$, let $\kappa_i$ and $\lambda_i$ be compatible
+singleton and symmetric pair laws.  Suppose each connected component $C$
+has an exact within-block witness of cost at most
+$|E(C)|D(\lambda_i\Vert\kappa_i^{\otimes2})$.
+Set $\kappa=\sum_i\pi_i\kappa_i$ and
+$\lambda=\sum_i\pi_i\lambda_i$, with the pair law supported on
+same-block pairs.  There is an exact witness $\tau_0$ with
+\[
+ D(\tau_0\Vert\kappa^{V(G)})\le mI(\lambda)-\beta H(\pi).
+\]
+If a known exact witness has slack $\Delta$, mixing its pair and joint
+laws with $\varepsilon$ times their independent reference laws gives
+a new exact witness with slack at least
+$(1-\varepsilon)\Delta-mh(\varepsilon)$, where $h$ is binary entropy.
+\end{proposition}
+
+\begin{proof}
+Choose one block independently in each connected component, then use its
+within-block witness.  Disjoint supports give the exact component cost
+$(|V(C)|-1)H(\pi)+\sum_i\pi_iD(\tau_{i,C}\Vert\kappa_i^{V(C)})$.
+The pair cost is $I(\lambda)=H(\pi)+\sum_i\pi_iI(\lambda_i)$.
+Summing proves the first bound, including isolated vertices.
+For the mixture statement, joint KL convexity bounds the new joint cost
+by $(1-\varepsilon)$ times the old cost.  The pair-level chain rule gives
+\[
+ (1-\varepsilon)I(\lambda_0)
+   =I((1-\varepsilon)\lambda_0+\varepsilon\kappa^{\otimes2})
+     +I(B;X,Y),
+\]
+where $B$ is the Bernoulli mixture label and $I(B;X,Y)\le h(\varepsilon)$.
+Subtracting gives the claimed slack.
+\end{proof}
+
+The term $\beta H(\pi)$ permits a global block choice to cost entropy
+while retaining a sharp edge budget.  It cannot be recovered by imposing
+a separate sharp bound on every projected pair law.  For example, on the
+six-vertex bipartite $K_4$ subdivision with path lengths
+$(2,1,1,1,1,2)$ in the order $ab,ac,ad,bc,bd,cd$, take uniform
+$\kappa$ on three symbols and
+\begin{equation}\label{eq-three-colour-budget-transfer}
+ \lambda=\frac1{5400}
+ \begin{pmatrix}1787&7&6\\7&599&1194\\6&1194&600\end{pmatrix}.
+\end{equation}
+This positive table has a positive exchangeable triple extension.  An
+explicit exact witness satisfies $8I(\lambda)-D(\tau\Vert\kappa^6)
+>229/540$.  Its projected $\{1,2\}$-indicator pair is independent,
+but its global indicators need not be; the full budget pays for them.
+The construction and all positivity checks are given in
+Appendix~\ref{appendix-entropy-density}.  This covers the displayed
+table on the displayed graph, not arbitrary path lengths or all tables.
+The graph $K_{3,3}-e$ already lies in the scalar-density class of
+\citet{conlonfoxsudakov2012}.  Combined with the universal entropy
+formulation in \citet[Corollary~9.1]{szegedy2015}, this already supplies
+the sharp exact-pair entropy bound on this graph for every pair law.
+The example records an explicit budget-transfer construction, not a new
+graph or table family.
+
+\begin{problem}[The unrestricted finite-alphabet question]
+\label{problem-unrestricted-alphabet}
+Suppose $\lambda$ is the pair marginal of an exchangeable law on
+$\Omega^3$.  Does every actual simple bipartite $K_4$ subdivision $J$
+admit an exact witness satisfying
+$D(\tau\Vert\kappa^{V(J)})\le |E(J)|I(\lambda)$?
+Zero entries in the pair and triple laws are allowed.
+\end{problem}
+
+The results above settle specified families, not this problem.  Exact
+feasibility itself is easy: broadcast one pair sampled from $\lambda$
+to the two bipartition classes.  This may cost too much entropy.  Even
+for binary data, gluing stationary Markov bridges can impose incompatible
+branch correlations.  Thus the remaining issue is a global sharp budget,
+not merely an inverse fit or translation into Lean.
+
+\subsection{Powers of one weighted regular host}
+Let $X$ be finite, let $\mu_x>0$ with $\sum_x\mu_x=1$, and let
+$W:X^2\to[0,1]$ be symmetric with
+$\sum_y\mu_yW(x,y)=p>0$.  Composition and inner products use this
+original measure.  Set $T=W/p$, $A=T^2$, $K_j=A^j$,
+$\Pi(x,y)=1$ and $I(x,y)=\mathbf1_{x=y}/\mu_y$.
+For six positive integers $a_e$, indexed by the edges of $K_4$, put
+\[
+ F(a)=\int_{X^4}\prod_{e=vw}K_{a_e}(x_v,x_w)\,d\mu^4.
+\]
+If $J(2a)$ replaces edge $e$ by a path of length $2a_e$, then
+\[
+ F(a)=\frac{t(J(2a),W)}{p^{2\sum_ea_e}},
+\]
+where $t$ denotes weighted homomorphism density.
+This reduction concerns all-even subdivisions;
+it does not cover every bipartite parity pattern.
+
+\begin{theorem}[Two centered spectral levels]
+\label{theorem-two-level-density}
+Suppose, on the complete space orthogonal to constants,
+$A$ has at most two eigenvalues.  Equivalently,
+\[
+ A=yI+(1-y)\Pi+(x-y)P,
+ \qquad 0\le y\le x\le1,
+\]
+where $P$ is an orthogonal projection with $P1=0$.  Then
+$F(a)\ge1$ for every choice of the six positive integers $a_e$.
+Both spectral multiplicities are unrestricted.
+\end{theorem}
+
+The whole centered spectrum is meant: two nonzero eigenvalues together
+with an additional zero complement give three levels and are not covered.
+The proof places every power in the cone generated by $I$, $\Pi$ and
+one common nonnegative positive-semidefinite Markov kernel.  Weighted
+identity contractions reduce the cone expansion to a finite list of
+quotients of $K_4$; their comparisons are proved in the appendix.
+Single-kernel positive-spectrum inequalities are studied by
+\citet{sidorenko2021}.  Neither that literature nor the cone argument
+permits replacing one common host by six unrelated PSD kernels.
+
+The appendix also shows strictness unless $A=\Pi$ when $|X|\ge2$.
+For fixed powers this gives a neighbourhood of actual roots that may have
+more than two spectral levels.  More precisely, for symmetric nonnegative
+Markov roots $T,T_0$ on the same $(X,\mu)$, write
+$N=\sum_ea_e$, $M_0=\|T_0\|_\infty$ and
+$\varepsilon=\|T-T_0\|_\infty$, using maximum absolute kernel entries.
+Markov averaging and telescoping give
+\[
+ |F(a;T)-F(a;T_0)|\le2N\varepsilon(M_0+\varepsilon)^5.
+\]
+Indeed, $\|T^j-T_0^j\|_\infty\le j\varepsilon$ and every positive
+power is bounded by $M_0+\varepsilon$; telescope the six factors.
+This elementary stability observation is host- and tuple-dependent,
+not uniform compensation for arbitrary interacting spectra.
+
+\begin{problem}[The unrestricted common-power question]
+\label{problem-unrestricted-common-powers}
+For the same actual weighted regular host, is
+\[
+ \int_{X^4}K_k(ab)K_{r+h}(ac)K_u(ad)
+ K_r(bc)K_u(bd)K_\ell(cd)\,d\mu^4\ge1
+\]
+whenever $k\ge u\ge1$, $r\ge\ell\ge1$ and $h\ge1$,
+without further spectral or mixing hypotheses?
+\end{problem}
+
+This question remains open here.  Individual centered terms and individual
+spectral contributions can be negative even for actual Markov-square hosts; the full
+density retains cycle, diamond and constant-mode surplus.  An arbitrary
+PSD operator without a nonnegative Markov square root is not an admissible
+counterexample.  These restrictions also explain why the two open problems
+cannot be closed by a scalar calculation for a single test host.
+The subdivision results of \citet[Theorems~1.3, 1.4 and 1.6]{imliliu2026}
+provide important known cases: uniform even-theta substitution, nonuniform
+substitution under divisibility conditions, and a clique subdivision with
+one exceptional vertex.  We do not treat these cases as new results or
+infer arbitrary nonuniform path lengths from them.
+
 \section*{Scope of formal verification}
 
 The classification and specified finite structural extensions have verified
@@ -2278,6 +2567,9 @@ accounting and supported-cover increments.  They use the original carriers
 and retain their exact finiteness and structural hypotheses.
 
 Verification of the extended manuscript is not complete.  In particular,
+none of the entropy--density statements in
+Section~\ref{sec:quantitative-cores} has an accepted Lean implementation.
+Moreover,
 fixed-atom profile realization, the full lattice spectra, maximal-chain and
 height endpoints, the complete phase/equality interfaces and the new
 coefficient bounds remain distinct obligations.  The arithmetic deficit
@@ -2381,6 +2673,618 @@ These are distinct proof routes to the classification.  Kernel validation
 supplements rather than replaces mathematical review; a full external audit
 of the extended development remains pending.
 
+% Technical proof fragment; main statements carry the theorem labels.
+% Source: universal-round1-20261009, independently reviewed analytical proofs.
+% This fragment makes no claim of Lean validation or unrestricted coverage.
+\section{Exact marginal entropy and common-power densities}
+\label{appendix-entropy-density}
+
+All logarithms in this appendix are natural.  If $R$ is a strictly positive
+probability law on a finite set, we use
+$D(\nu\Vert R)=\sum_x\nu(x)\log(\nu(x)/R(x))$, with $0\log0=0$.
+Every marginal below is attached to an actual vertex or edge; it is not an
+average over edges.  The arguments establish the restricted statements in
+Theorems~\ref{theorem-potts-edge-entropy}, \ref{theorem-local-table-entropy}
+and~\ref{theorem-two-level-density}.  They do not resolve the arbitrary-table
+entropy question or the unrestricted common-power inequality.
+
+\subsection{Uniform Potts marginals}
+
+\begin{proof}[Proof of Theorem~\ref{theorem-potts-edge-entropy}]
+Write $G=(V,E)$, $m=|E|$, and let $R$ be the uniform product law on
+$\{1,\ldots,q\}^{V}$.  The one-symbol case is immediate, so assume $q\ge2$.
+For $0<s<1$, put
+\[
+ s_0=\frac1q,\qquad
+ \theta(s)=\log\frac{(q-1)s}{1-s},\qquad
+ I_q(s)=s\log(qs)+(1-s)\log\frac{q(1-s)}{q-1}.
+\]
+For an interaction vector $J=(J_e)_{e\in E}$, define
+\begin{align*}
+ Z(J)=\mathbb E_R\exp\!\left(\sum_{uv\in E}J_{uv}
+                    \mathbf1_{\{X_u=X_v\}}\right),&\\
+ \frac{d\nu_J}{dR}=Z(J)^{-1}
+       \exp\!\left(\sum_{uv\in E}J_{uv}\mathbf1_{\{X_u=X_v\}}\right).&
+\end{align*}
+Minimize $\log Z(J)-s\sum_eJ_e$ on $[0,\theta(s)]^E$ if $s>s_0$,
+and on $[\theta(s),0]^E$ if $s<s_0$.  A minimizer exists and has full
+support.  Simultaneous permutations of the $q$ colours preserve its law.
+Thus each singleton is uniform and every ordered pair is determined by its
+agreement probability: all diagonal entries are equal, as are all
+off-diagonal entries.  It remains to fit every edge agreement to $s$.
+
+\smallskip\noindent\emph{The removed-edge sign.}
+For nonnegative interactions, any two distinct vertices have agreement
+probability at least $1/q$.  For nonpositive interactions on a bipartite
+graph, vertices in opposite parts have agreement probability at most $1/q$.
+Here is a finite proof of both assertions.  Condition on the set of vertices
+whose colours lie in $\{1,2\}$ and on every colour outside this set.  An edge
+from the set to its complement always has unequal colours and introduces no
+field.  The remaining law is a zero-field Ising model with couplings $J_e/2$.
+For nonnegative couplings, the high-temperature expansion expresses its
+correlation numerator as a sum over edge sets with boundary $\{u,v\}$,
+with nonnegative products of $\tanh(J_e/2)$; its denominator is a positive
+sum over even edge sets.  The correlation is therefore nonnegative.
+For nonpositive interactions on a bipartite graph, reversing the spins on
+one part gives the preceding nonnegative-coupling model, and reverses the
+correlation between opposite parts.  Averaging the conditioning compares
+the probabilities of colours $(1,1)$ and $(1,2)$.  By colour symmetry these
+are respectively $a/q$ and $(1-a)/(q(q-1))$, where $a$ is the agreement
+probability.  Their comparison gives the asserted sign.  This is the
+weighted two-colour conditioning mechanism used in the proper-colouring
+setting by \citet{csikvarilin2017}.
+
+\smallskip\noindent\emph{Nonzero interactions fit.}
+The derivative in coordinate $e=uv$ is $a_e-s$, where
+$a_e=\nu_J(X_u=X_v)$.  An interior coordinate therefore fits.
+At the far face $J_e=\theta(s)$, remove this interaction and call the
+resulting agreement probability $a_0$.  Restoring it multiplies agreement
+odds by $\exp\theta(s)$, so the new agreement is
+\[
+ \frac{e^{\theta(s)}a_0}{1+(e^{\theta(s)}-1)a_0}.
+\]
+The removed-edge sign shows that this is at least $s$ in the positive
+regime and at most $s$ in the negative regime.  At the upper face the
+derivative is nonpositive; at the lower face it is nonnegative.  These
+Karush--Kuhn--Tucker inequalities give the reverse comparison in each
+regime.  Hence every nonzero interaction fits, including a far-face one.
+
+\smallskip\noindent\emph{Zero interactions fit.}
+Suppose $J_{vw}=0$, and choose the endpoint $v$ with degree at most three.
+There are at most two other neighbours with nonzero interactions.  If these
+are $a,b$, write their interactions as $J_1,J_2$.  Conditioning on all
+colours except $X_v$ gives
+\[
+ \nu_J(X_v=X_a)-\nu_J(X_v=X_b)
+ =\nu_J(X_a\ne X_b)
+       \frac{e^{J_1}-e^{J_2}}{q-2+e^{J_1}+e^{J_2}}.
+\]
+The left side is zero because both nonzero incident interactions fit.
+Full support makes $\nu_J(X_a\ne X_b)>0$, so $J_1=J_2$.
+For a positive common interaction, the colour of either active neighbour
+maximizes the conditional probability of $X_v$, whether the two neighbour
+colours agree or differ.  Consequently the agreement on $vw$ is at most
+that on $va$, namely $s$.  The lower-face derivative inequality gives
+agreement at least $s$.  For a negative common interaction, neighbour
+colours minimize the conditional probability and both comparisons reverse.
+With one active neighbour the same maximum or minimum comparison applies.
+With none, agreement on $vw$ is $1/q$, contrary to the relevant zero-face
+inequality when $s\ne s_0$.  Thus every original edge fits exactly.  Colour
+symmetry now gives the whole prescribed Potts table, not just agreement.
+Isolated vertices remain independent uniform variables.
+
+\smallskip\noindent\emph{The entropy bound.}
+For each interior $u$ on the segment from $s_0$ to $s$, choose a fitted law
+$\nu_u$ as above, and take $\nu_{s_0}=R$.  Set
+$C_u=D(\nu_u\Vert R)$ and $S_u=\sum_eJ_e(u)$.  Direct substitution gives
+\begin{equation}\label{eq-potts-reverse-kl}
+ D(\nu_v\Vert\nu_u)=C_v-C_u+(u-v)S_u\ge0.
+\end{equation}
+If $s_0\le v<u\le s$, then
+$C_u-C_v\le m(u-v)\theta(u)$.
+If $s\le u<v\le s_0$, then $S_u\ge m\theta(u)$ and the negative factor
+$u-v$ again gives $C_u-C_v\le m(u-v)\theta(u)$.
+Fix the target law $\nu_s$, telescope these inequalities along a finite
+mesh from $s_0$ to $s$, and let its mesh tend to zero.  The oriented
+Riemann sums yield
+\[
+ C_s\le m\int_{s_0}^{s}\theta(u)\,du=mI_q(s).
+\]
+This step requires neither continuity nor uniqueness of the chosen fitted
+family.  In particular, the order of the two laws in
+\eqref{eq-potts-reverse-kl} is essential in the negative regime.
+
+At $s=s_0$, use $R$.  At $s=0$ or $s=1$, apply the interior result to
+$s_\varepsilon=(1-\varepsilon)s+\varepsilon/q$ and take a convergent
+subsequence in the finite joint simplex.  Marginalization and divergence
+relative to the positive reference $R$ are continuous, including at zero
+joint masses.  The limit gives all endpoint marginals and the bound.
+The assertion is vacuous on edges when $E$ is empty, and the product law
+then has zero cost.
+\end{proof}
+
+\subsection{Cyclic slack and perturbation of the full pair table}
+
+\begin{proof}[Proof of Corollary~\ref{corollary-potts-table-openness}]
+Keep the notation of the preceding proof, with $0<s<1$, $s\ne s_0$, and
+with at least one cycle.  First, every minimizing interaction is nonzero.
+Indeed, at a hypothetical zero edge the preceding neighbour-colour
+comparison is strict on the positive-probability event
+$X_a=X_b\ne X_w$ when there are two active neighbours, or $X_a\ne X_w$
+when there is one.  Simplicity ensures that these are distinct actual
+vertices.  Averaging contradicts the relevant zero-face inequality.
+The case of no active neighbour was already excluded.
+
+If $e=uv$ lies on a cycle, removing its interaction leaves an alternative
+$u$--$v$ path with nonzero interactions.  In the two-colour conditioning,
+every conditional correlation has the weak sign established above.
+The event that all vertices have colours in $\{1,2\}$ has positive
+probability.  On this event the Ising high-temperature numerator contains
+the strictly positive contribution of the alternative path, after a
+bipartition spin reversal in the negative regime.  The removed-edge
+agreement is therefore strictly above $1/q$ in the positive regime and
+strictly below $1/q$ in the negative regime.  Reinsertion at the interaction
+cap would strictly overshoot $s$, contradicting the cap inequality.  Hence
+\[
+ 0<J_e(s)<\theta(s)\quad(s>s_0),\qquad
+ \theta(s)<J_e(s)<0\quad(s<s_0)
+\]
+on every cycle edge.  Bridges need not be strictly inside their cap.
+
+The covariance matrix of the statistics
+$h_e=\mathbf1_{\{X_u=X_v\}}$ is positive definite under every full-support
+law.  To see this, restrict a putatively constant linear combination to
+two colours and write $h_e=(1+\sigma_u\sigma_v)/2$.  The distinct
+simple-edge Walsh monomials are linearly independent modulo constants,
+so every coefficient must vanish.  Thus $\log Z$ has positive-definite
+Hessian and an injective gradient.  The analytic implicit function theorem
+supplies a unique locally analytic fitted vector $J(s)$; uniqueness patches
+these local inverses along the applicable interval.  That interval is
+$0<s<1$ for a bipartite graph, and $s_0\le s<1$ in the general positive
+regime.  No negative-regime fit is asserted for a nonbipartite graph.
+The zero vector is the unique fit at $s_0$.
+
+For the exact fit,
+\[
+ C(s)=s\sum_eJ_e(s)-\log Z(J(s)),\qquad C'(s)=\sum_eJ_e(s).
+\]
+The terms involving $J'(s)$ cancel because every edge agreement is $s$.
+The cap bounds imply $J(s)\to0$ at $s_0$, and hence
+\begin{equation}\label{eq-potts-strict-gap}
+ \Delta_s:=mI_q(s)-C(s)
+ =\int_{s_0}^{s}\left(m\theta(u)-\sum_eJ_e(u)\right)du>0.
+\end{equation}
+Above $s_0$ the integrand is positive because a cycle edge is strictly
+inside its cap.  Below $s_0$ the integrand is negative and the orientation
+of the integral reverses.  This proves strictness in both regimes.
+
+To perturb the whole table, fix a mean-zero orthonormal basis
+$f_1,\ldots,f_{q-1}$ for the uniform singleton law $\kappa_0$.
+Use every unary statistic $f_i(X_v)$ and, for a fixed orientation of each
+edge, every statistic $f_i(X_u)f_j(X_v)$.
+These statistics are orthonormal under $\kappa_0^V$, since distinct
+supports leave an unmatched centred factor.  They are therefore affinely
+independent modulo constants on the joint configuration space, and their
+covariance under the full-support law $\nu_s$ is positive definite.
+The expectation map for exponential tilts of $\nu_s$ is locally invertible.
+It fits every sufficiently nearby compatible singleton and symmetric pair
+table: the unary and pair-product basis reconstructs every full actual-edge
+table.  The basis is fixed while the target singleton law varies.
+The tilted joint law depends continuously on these moments.  Both
+$D(\tau\Vert\kappa^V)$ and $mD(\lambda\Vert\kappa^{\otimes2})$ are
+continuous for positive nearby inputs.  By \eqref{eq-potts-strict-gap},
+their difference remains negative after shrinking the neighbourhood.
+This gives an open family of non-Potts tables and nonuniform singleton laws,
+but not coverage of the entire compatible-table domain.
+
+For $q\ge3$, this neighbourhood can also remain within the positive
+exchangeable-triple cone.  Let $\eta_{\mathrm{iid}}$ be the uniform product
+triple, $\eta_{\mathrm{dist}}$ the uniform ordered all-distinct triple,
+and $\eta_{\mathrm{eq}}$ the uniform all-equal triple.  A positive extension
+of the base table is
+\[
+ \eta_s=qs\eta_{\mathrm{iid}}+(1-qs)\eta_{\mathrm{dist}}
+ \quad(0<s<s_0),
+\]
+and
+\[
+ \eta_s=\frac{1-s}{1-s_0}\eta_{\mathrm{iid}}
+       +\left(1-\frac{1-s}{1-s_0}\right)\eta_{\mathrm{eq}}
+ \quad(s_0<s<1).
+\]
+For a nearby symmetric probability-table perturbation
+$\lambda'=\lambda_s+\delta$, set $d_x=\sum_y\delta(x,y)$ and define
+\begin{align*}
+ H(x,y,z)={}&\delta(x,y)\kappa_0(z)+\delta(x,z)\kappa_0(y)
+             +\delta(y,z)\kappa_0(x)\\
+ &-d_x\kappa_0(y)\kappa_0(z)-d_y\kappa_0(x)\kappa_0(z)
+             -d_z\kappa_0(x)\kappa_0(y).
+\end{align*}
+This is symmetric, has total mass zero, and its $(x,y)$ marginal is
+$\delta(x,y)$: the two row-drift terms cancel and $\sum_zd_z=0$.
+Thus $\eta_s+H$ extends $\lambda'$ and has singleton
+$\kappa_0+d$.  It stays strictly positive for sufficiently small
+perturbations.  This last assertion is deliberately restricted to $q\ge3$;
+the binary triple-extension cone has additional boundary restrictions.
+\end{proof}
+
+\subsection{An explicit neighbourhood of independence}
+
+\begin{proof}[Proof of Theorem~\ref{theorem-local-table-entropy}]
+Let $G$ be finite, simple and bipartite, let $n=|V|$, $m=|E|$, and let
+$\kappa$ be a positive law on a $q$-symbol alphabet, $q\ge2$.
+For a symmetric table $\lambda$ with marginals $\kappa$, put
+\begin{gather*}
+ a=\min_x\kappa(x),\qquad
+ f(x,y)=\frac{\lambda(x,y)}{\kappa(x)\kappa(y)}-1,\\
+ C_{xy}=\sqrt{\kappa(x)}f(x,y)\sqrt{\kappa(y)},\qquad
+ \rho=\|C\|_{\mathrm{op}}.
+\end{gather*}
+If $G$ is a forest, root each component, draw its root from $\kappa$, and
+draw each child using transition $\lambda(x,y)/\kappa(x)$, independently
+conditional on its parent.  This has the required marginals and divergence
+$mD(\lambda\Vert\kappa^{\otimes2})$ by the chain rule, including zero
+pair entries.  Isolated vertices contribute zero.
+
+Suppose now that $G$ has even girth $g\ge4$.  The following constants specify
+the radius used in the theorem:
+\begin{gather*}
+ d=n(q-1)+m(q-1)^2,\quad A=2^ma^{-m},\quad M=a^{-1},
+\\ B=\sqrt d\,(M+1)A,\quad L=\sqrt d\,M,\quad r=\frac{\log2}{4L},\\
+ \begin{aligned}
+ \delta_0=\min\Bigl\{&1,\frac a3,\frac1{2A},\frac{a\log2}{8m},\\
+       &\left(\frac r{8B}\right)^{1/(g-1)},
+       \left(\frac1{8B^2}\right)^{1/(g-2)}\Bigr\}.
+ \end{aligned}
+\end{gather*}
+Assume $0<\rho\le\delta_0$.  Every matrix entry of $C$ has magnitude at
+most $\rho$, so $|f(x,y)|\le\rho/a\le1/3$.
+With $R=\kappa^V$, take the full-support seed
+\[
+ w(X)=\prod_{uv\in E}(1+f(X_u,X_v)),\qquad
+ Z=\mathbb E_Rw,\qquad \nu_0=Rw/Z.
+\]
+This seed is not assumed to have the target marginals.
+
+Expand $Z$ over actual edge subsets.  A subset with a leaf contributes
+zero, because each $\kappa$-weighted row sum of $f$ is zero.  A surviving
+nonempty subset has at least $g$ edges, and a surviving $g$-edge subset is
+exactly a shortest cycle.  Its contribution is $\operatorname{Tr}(C^g)$,
+which is at least $\rho^g$ because $g$ is even and $C$ is real symmetric.
+The absolute total of all terms with at least $g+1$ edges is at most
+$A\rho^{g+1}$: a $k$-edge term is bounded by $(\rho/a)^k$, and there are
+at most $2^m$ terms.  Similarly $|Z-1|\le A\rho^g$.  Therefore
+\begin{equation}\label{eq-local-partition-gain}
+ Z\ge1+\rho^g-A\rho^{g+1}\ge1+\frac{\rho^g}{2},\qquad
+ \log Z\ge\frac{\rho^g}{4}.
+\end{equation}
+The last inequality uses $\rho\le1$.  The even-cycle mechanism is the
+finite weighted version of the local signed-density argument in
+\citet{lovasz2010}.  We still need to correct the seed to exact marginals;
+a scalar partition bound alone does not do so.
+
+Choose a $\kappa$-orthonormal mean-zero basis
+$\xi_1,\ldots,\xi_{q-1}$.  Let $T=(T_1,\ldots,T_d)$ contain all unary
+statistics $\xi_i(X_v)$ and all oriented actual-edge products
+$\xi_i(X_u)\xi_j(X_v)$.  Under $R$ they are mean zero and orthonormal,
+including on distinct edges sharing a vertex.  Each has magnitude at most
+$M$, since $|\xi_i(x)|\le1/\sqrt{\kappa(x)}$.
+The seed potential has the complete gauge decomposition
+\[
+ h_0=\sum_{uv\in E}\log(1+f(X_u,X_v))=\theta_0\cdot T+c.
+\]
+Let $b$ be the desired moment vector: its unary coordinates vanish and its
+edge coordinates are $\sum_{xy}\lambda(x,y)\xi_i(x)\xi_j(y)$.
+Each of the latter has magnitude at most $\rho$, by the definition of $C$.
+Matching $b$ fixes every singleton and every full edge table, because
+$\{1,\xi_1,\ldots,\xi_{q-1}\}$ is a basis of all functions on the alphabet.
+
+We bound the seed residual explicitly.  In a unary-inserted edge-subset
+expansion, every unmarked leaf kills the term.  A nonempty forest has at
+least two leaves, so every surviving term contains a cycle and at least
+$g$ edges.  For an edge statistic marked at adjacent $u,v$, a surviving
+forest can only be a single $u$--$v$ path.  The one-edge path contributes
+exactly the desired coordinate of $b$; every other path has at least
+$g-1$ edges, as it closes with $uv$ to a cycle.  Cyclic terms have at least
+$g$ edges.  Thus each unnormalized edge moment is $b_i+E_i$ with
+$|E_i|\le MA\rho^{g-1}$.  Division by $Z\ge1$ adds at most
+$|b_i||Z-1|\le A\rho^{g+1}$.  The unary bound is no larger.  Consequently
+\begin{equation}\label{eq-local-marginal-residual}
+ \|\mathbb E_{\nu_0}T-b\|_2\le B\rho^{g-1}.
+\end{equation}
+
+Consider the convex function
+\[
+ F(\theta)=\log\mathbb E_R e^{\theta\cdot T}-\theta\cdot b.
+\]
+Its gradient at $\theta_0$ is the residual in
+\eqref{eq-local-marginal-residual}, and its Hessian is the covariance of
+$T$ under its Gibbs law.  The range of $h_0$ is at most
+$4m\rho/a\le(\log2)/2$, using $|\log(1+f)|\le2|f|$.
+A displacement of Euclidean norm at most $r$ adds potential range at most
+$2Lr=(\log2)/2$.  Throughout the closed radius-$r$ ball about $\theta_0$,
+the Gibbs density relative to $R$ is therefore at least $1/2$.
+For every $z\in\mathbb R^d$,
+\[
+ \operatorname{Var}_{\nu_\theta}(z\cdot T)
+ =\inf_c\mathbb E_{\nu_\theta}(z\cdot T-c)^2
+ \ge\frac12\inf_c\mathbb E_R(z\cdot T-c)^2
+ =\frac12\|z\|_2^2.
+\]
+Hence $\nabla^2F\ge\tfrac12I$ on that ball.
+Write $G_0=\|\nabla F(\theta_0)\|_2\le B\rho^{g-1}\le r/8$.
+Integration along a segment gives
+\[
+ F(\theta_0+z)\ge F(\theta_0)+\nabla F(\theta_0)\cdot z
+                              +\frac14\|z\|_2^2.
+\]
+On the radius-$r$ boundary this exceeds $F(\theta_0)$ by at least $r^2/8$.
+A minimum on the closed ball is therefore interior, has zero gradient,
+and is a global minimum by convexity.  Its Gibbs law $\tau$ has full
+support and fits $b$ exactly.  The same inequality gives
+$F(\theta_0)-F(\theta_*)\le G_0^2$.
+
+Put $I=D(\lambda\Vert\kappa^{\otimes2})$.
+The target expectation of $h_0$ is $mI$, so the gauge constant cancels to
+give $F(\theta_0)=\log Z-mI$.  Since the fitted law has moment vector $b$,
+$D(\tau\Vert R)=-F(\theta_*)$.  Combining these facts yields
+\[
+ \begin{split}
+ D(\tau\Vert R)
+ &\le mI-\frac{\rho^g}{4}+B^2\rho^{2g-2}\\
+ &\le mI-\frac{\rho^g}{8},
+ \end{split}
+\]
+where the final step uses $\rho^{g-2}\le1/(8B^2)$.
+At $\rho=0$, the table is $\kappa^{\otimes2}$ and the product joint works.
+If a triple extension is required, it is supplied in this smallness regime
+by the exchangeable probability law
+\[
+ \eta(x,y,z)=\kappa(x)\kappa(y)\kappa(z)
+          [1+f(x,y)+f(x,z)+f(y,z)].
+\]
+Its bracket is nonnegative, its total mass is one, and its pair table is
+$\lambda$.  No triple-extension hypothesis was used to construct $\tau$.
+The radius depends on $G,q$ and the smallest singleton mass; the argument
+does not cover arbitrary tables far from independence.
+\end{proof}
+
+\subsection*{The three-colour budget-transfer example}
+Here we verify the assertion following
+Proposition~\ref{proposition-alphabet-block-surplus} without a numerical
+entropy estimate.  Let $G=K_{3,3}-e$, with the actual subdivision and table
+in \eqref{eq-three-colour-budget-transfer}, and let $R$ be uniform on its
+$3^6=729$ colourings.  Put
+\[
+ \lambda_0=\begin{pmatrix}1/3&0&0\\0&1/9&2/9\\0&2/9&1/9\end{pmatrix}.
+\]
+Its blocks have masses $1/3,2/3$.  The second block has uniform binary
+singletons and agreement $1/3$.  The Potts proof supplies a Gibbs witness
+$\tau_B$ with interactions in $[-\log2,0]$, hence every one of its
+$2^6$ configurations has probability at least $2^{-14}$.
+Choose all colours equal to $1$ with probability $1/3$, and choose
+$\tau_B$ on $\{2,3\}$ with probability $2/3$; call the resulting law
+$\tau_0$.  The block identity gives slack at least
+$3H(1/3,2/3)$.  Set $\nu=(99/100)\tau_0+(1/100)R$ and
+$\lambda_b=(99/100)\lambda_0+(1/100)\kappa^{\otimes2}$.
+Then $8I(\lambda_b)-D(\nu\Vert R)\ge
+(99/100)3H(1/3,2/3)-8h(1/100)$.
+
+Let $D_{12}=D_{21}=1/5400$, $D_{11}=D_{22}=-1/5400$, with other
+entries zero.  Its row sums vanish and $\lambda=\lambda_b+D$.
+For $\psi=(1,-1,0)$, define
+\[
+ g(x,y)=\frac{D_{xy}}{\kappa_x\kappa_y}
+       =-\frac{\psi(x)\psi(y)}{600},\qquad
+ \tau(X)=\nu(X)+R(X)\sum_{uv\in E(G)}g(X_u,X_v).
+\]
+Every singleton correction vanishes.  At any actual edge, the direct
+correction is $D$ and every other edge correction vanishes after integrating
+a centred endpoint.  Thus total mass, singletons and every full edge table
+are exact.  If a colouring contains colour $1$ and another colour, its
+nontrivial vertex cut has at least two edges because $G$ is bridgeless.
+Consequently $\sum_{uv}\psi(X_u)\psi(X_v)\le6$, so the negative
+correction is paid by $R/100$.  With no colour $1$, the extra lower bound
+$(99/100)(2/3)2^{-14}=33/819200>1/218700$ pays the possible deficit
+$R(8/600-1/100)$.  The all-$1$ colouring has mass at least $33/100$
+before correction and is also nonnegative afterwards.  These cases exhaust
+all configurations, so $\tau$ is an actual probability law.
+
+The pair correction has total variation $d_P=1/2700$, and joint variation
+is at most $d_V=2/675$.  Maximal coupling gives
+$|H(P)-H(Q)|\le h(d)+d\log(N-1)$ on $N$ states; the same bound
+controls KL changes relative to a uniform law.  Its right side is increasing
+for $0\le d\le1-1/N$.  Both $d_P$ and the upper bound $d_V$ lie in
+their respective intervals, so substitution of the joint upper bound is valid.
+Applying it to $N=9,729$
+therefore gives slack at least
+\[
+ \frac{99}{100}3H(1/3,2/3)-8h(1/100)
+ -8[h(d_P)+d_P\log8]-[h(d_V)+d_V\log728].
+\]
+Use $H(1/3,2/3)>\log(3/2)>1/3$ and
+$h(t)\le t\log(1/t)+t$.  The elementary bound $e>8/3$ implies
+$\log100<5$, $\log8<3$, $\log2700<9$, $\log728<8$ and
+$\log(675/2)<7$.  The slack is strictly greater than
+\[
+ \frac{99}{100}-\frac{48}{100}-\frac{104}{2700}-\frac{32}{675}
+ =\frac{229}{540}.
+\]
+For triple feasibility, let $\eta_0$ put mass $1/3$ on $111$ and mass
+$1/3$ uniformly on each permutation orbit $223$ and $233$.
+Its pair is $\lambda_0$.  The exchangeable law
+\[
+ \eta(x,y,z)=\frac{99}{100}\eta_0(x,y,z)
+       +\frac1{100}\kappa_x\kappa_y\kappa_z
+       +\frac{D_{xy}+D_{xz}+D_{yz}}3
+\]
+has pair $\lambda$ and is positive: its IID contribution is $1/2700$
+and its correction is no smaller than $-1/5400$.
+Finally, the projected $\{1,2\}$ indicator has pair probability $4/9$
+for two ones and singleton probability $2/3$, hence an independent pair.
+The construction makes no demand that its joint indicators be independent.
+
+\subsection{A common-kernel cone on four vertices}
+
+Let $(X,\mu)$ be a nonempty finite probability space with $\mu_x>0$.
+Kernels act by $(Sf)(x)=\sum_y\mu_yS(x,y)f(y)$; all compositions, traces
+and inner products below refer to this original measure.  Define
+$I(x,y)=\mathbf1_{\{x=y\}}/\mu_y$ and $\Pi(x,y)=1$.
+An operator power $S^j$ is not an entrywise power.
+
+\begin{lemma}[Common-kernel cone]\label{lemma-common-kernel-cone}
+Let $S$ be one symmetric, entrywise nonnegative, positive-semidefinite
+Markov kernel on $(X,\mu)$.  For each of the six edges of $K_4$, choose
+$L_e$ independently in $\operatorname{conv}\{I,\Pi,S\}$.
+Then
+\[
+ \mathbb E_{\mu^4}\prod_{uv\in E(K_4)}L_{uv}(X_u,X_v)\ge1.
+\]
+The same actual kernel $S$ is used at all six edges.
+\end{lemma}
+
+\begin{proof}
+Since $S1=1$ and $S$ is positive semidefinite, $S-\Pi$ is positive
+semidefinite.  Thus $S(x,x)\ge1$.  Every eigenvalue of $S$ is
+nonnegative and the constant eigenvalue is one, so
+$\operatorname{Tr}(S^j)\ge1$ for every positive integer $j$.
+The entrywise square $R(x,y)=S(x,y)^2$ is positive semidefinite as well.
+Indeed, with $D=\operatorname{diag}(\mu)$ and $B=D^{1/2}SD^{1/2}$,
+its weighted matrix is $D^{-1/2}(B\circ B)D^{-1/2}$; apply the Schur
+product theorem.  We use that the trace of a product of two positive
+semidefinite operators is nonnegative, but never assume a corresponding
+sign for a product of three.
+
+Expand the six convex combinations.  Their $3^6$ elementary assignments
+of $I,S,\Pi$ have nonnegative coefficients summing to one.
+Fix one such assignment.  In its $I$-edge graph choose a spanning forest
+with the same components.  On the equality support of that forest, each
+deleted cyclic $I$ edge is $1/\mu_x\ge1$; off its support the forest
+product is zero.  All other factors are nonnegative, so deleting these
+cyclic edges lowers the density.  Contract the remaining $I$ trees.
+A tree with $t$ vertices contributes $\mu_x^t\mu_x^{-(t-1)}=\mu_x$.
+Every quotient vertex therefore retains the original measure $\mu$.
+Delete $\Pi$ factors and the resulting $S$ loops, which are at least one.
+Parallel $S$ edges must be retained.  We now check all quotient types.
+
+\smallskip\noindent\emph{Four quotient vertices.}
+There was no contraction.  The retained simple graph is a subgraph of
+$K_4$.  Ordinary leaves integrate to one using $S1=1$.
+Its leaf-stripped core is empty, a triangle, a four-cycle, a diamond, or
+$K_4$.  The first three have densities $1$, $\operatorname{Tr}(S^3)$,
+and $\operatorname{Tr}(S^4)$ respectively.
+Writing $S^2$ for operator composition, the diamond density is
+\[
+ \mathbb E_{c,d}S(c,d)[S^2(c,d)]^2
+ \ge[\mathbb E_{c,d}S(c,d)S^2(c,d)]^2
+ =[\operatorname{Tr}(S^3)]^2\ge1,
+\]
+by Jensen under the probability measure
+$\mu_c\mu_dS(c,d)$.  For $K_4$, set $f_{cd}(x)=S(x,c)S(x,d)$.
+Its density is
+\[
+ \mathbb E_{c,d}S(c,d)\langle f_{cd},Sf_{cd}\rangle
+ \ge\mathbb E_{c,d}S(c,d)(\mathbb E_xf_{cd}(x))^2,
+\]
+because $S-\Pi$ is positive semidefinite and $S(c,d)\ge0$.
+The last expression is the diamond density.
+This finite argument also makes explicit the complete-graph
+positive-kernel bound discussed in \citet{sidorenko2021}.
+
+\smallskip\noindent\emph{Three quotient vertices.}
+The original partition sizes are $(2,1,1)$; write its edge multiplicities
+as $(s,t,v)\in\{0,1,2\}^2\times\{0,1\}$, where the two first edges
+meet the merged vertex.  This gives all eighteen possibilities, including
+the empty graph.  If $v=0$, the density is
+\[
+ \mathbb E_a\left(\mathbb E_bS(a,b)^s\right)
+              \left(\mathbb E_cS(a,c)^t\right)\ge1,
+\]
+because each bracket is one for exponent zero or one and at least one
+for exponent two by rowwise Jensen.  If $v=1$ and an arm is absent,
+integrating an ordinary leaf leaves at most a double edge, bounded by
+Jensen.  The remaining possibilities are $(1,1,1)$, $(2,1,1)$,
+$(1,2,1)$ and $(2,2,1)$.  The first is a triangle.  Using the entrywise
+square $R$, either middle case has density
+\[
+ \operatorname{Tr}(RS^2)\ge\operatorname{Tr}(R\Pi)
+       =\mathbb E_{x,y}S(x,y)^2\ge1,
+\]
+since $R$ and $S^2-\Pi$ are positive semidefinite.  The last case has
+density
+\[
+ \operatorname{Tr}(SR^2)\ge\operatorname{Tr}(\Pi R^2)
+       =\|R1\|_{L^2(\mu)}^2
+       \ge[\mathbb E_{x,y}S(x,y)^2]^2\ge1.
+\]
+Here $R^2$ is operator composition, not a fourth entrywise power.
+
+\smallskip\noindent\emph{Two or one quotient vertices.}
+Two vertices have partition sizes $(3,1)$ or $(2,2)$, hence at most four
+parallel edges.  Their density is $\mathbb E S(x,y)^j\ge1$ by Jensen
+for $j\ge1$; for $j=0$ it is one.  One quotient vertex has only the
+already deleted loops and also has density one.
+Every elementary assignment is therefore bounded below by one, proving
+the convex-mixture assertion.  Zeros in $S$, unequal weights, reducibility,
+and repeated eigenvalues cause no divisions or changes of measure.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{theorem-two-level-density}]
+Let $P$ be an orthogonal projection on $L^2(\mu)$ with $P1=0$, and assume
+that the actual nonnegative kernel is
+\[
+ A=yI+(1-y)\Pi+(x-y)P,\qquad 0\le y\le x\le1.
+\]
+The mutually orthogonal projections $\Pi,P,I-\Pi-P$ give
+\[
+ A^j=y^jI+(1-y^j)\Pi+(x^j-y^j)P\qquad(j\ge1).
+\]
+If $x>y$ and $y<1$, put
+$\alpha=(x-y)/(1-y)$ and $S=\Pi+\alpha P$.
+This is symmetric, positive semidefinite and Markov.  For distinct
+$u,v$, $S(u,v)=A(u,v)/(1-y)\ge0$, while
+$S(u,u)=1+\alpha P(u,u)\ge1$ because $P$ is positive semidefinite.
+Thus $S$ is an actual nonnegative kernel, not merely a formal spectral
+projection.  Write
+\[
+ a_j=y^j,\qquad b_j=\frac{(1-y)(x^j-y^j)}{x-y},\qquad
+ c_j=1-a_j-b_j.
+\]
+Then $A^j=a_jI+b_jS+c_j\Pi$, and the coefficients are nonnegative:
+\[
+ \frac{x^j-y^j}{x-y}
+   =\sum_{i=0}^{j-1}x^{j-1-i}y^i
+   \le\sum_{i=0}^{j-1}y^i=\frac{1-y^j}{1-y}.
+\]
+Apply Lemma~\ref{lemma-common-kernel-cone} to the six positive exponents,
+independently.  No ordering of them and no rank-one restriction on $P$
+is needed.
+
+If $x=y<1$, use $A^j=y^jI+(1-y^j)\Pi$ directly.  If $y=1$, then
+$x=1$ and $A=I$; its six-edge density is
+$\sum_z\mu_z^{-2}\ge1$.  If $y=0$, the preceding argument includes
+the zero complementary band, and when $x=0$ the kernel is simply $\Pi$.
+These cases avoid every potentially zero denominator.
+For $|X|\ge2$, equality holds precisely when $A=\Pi$.
+When $y>0$, the all-$I$ assignment has positive weight and density
+$\sum_z\mu_z^{-2}>1$.  When $y=0$ and $A\ne\Pi$, the all-$S$
+assignment with $S=A$ has positive weight, and
+\[
+ t(K_4,A)\ge[\operatorname{Tr}(A^3)]^2
+           =[1+\operatorname{rank}(P)x^3]^2>1.
+\]
+All remaining elementary terms are at least one.
+
+The representation is a condition on the \emph{complete} centred spectrum:
+when $x,y>0$, an additional centred zero eigenspace is not included.
+The same-base-kernel condition of the lemma is also essential; the proof
+does not assert a bound for unrelated, even commuting, nonnegative
+positive-semidefinite kernels.  Nor does this restricted density result
+give a universal exact-edge entropy witness; the universal entropy
+formulation and its graph-density relation require their full quantifiers
+\citep{szegedy2015}.
+\end{proof}
+
 \section*{Acknowledgments}
 
 The author thanks Tom de Groot for his advice on revising the manuscript for
@@ -2454,6 +3358,45 @@ Louis Comtet.
 \newblock \emph{Advanced Combinatorics: The Art of Finite and Infinite Expansions}.
 \newblock D. Reidel, Dordrecht, 1974.
 \newblock \doi{10.1007/978-94-010-2196-8}.
+
+\bibitem[Csikv{\'a}ri and Lin(2017)]{csikvarilin2017}
+P{\'e}ter Csikv{\'a}ri and Zhicong Lin.
+\newblock Sidorenko's conjecture, colorings and independent sets.
+\newblock \emph{Electron. J. Combin.}, 24(1):P1.2, 2017.
+\newblock \doi{10.37236/6019}.
+\newblock URL \url{https://arxiv.org/abs/1603.05888}.
+
+\bibitem[Szegedy(2015)]{szegedy2015}
+Bal{\'a}zs Szegedy.
+\newblock Sparse graph limits, entropy maximization and transitive graphs.
+\newblock arXiv:1504.00858, 2015.
+\newblock \doi{10.48550/arXiv.1504.00858}.
+\newblock URL \url{https://arxiv.org/abs/1504.00858}.
+
+\bibitem[Lov{\'a}sz(2010)]{lovasz2010}
+L{\'a}szl{\'o} Lov{\'a}sz.
+\newblock Subgraph densities in signed graphons and the local Sidorenko conjecture.
+\newblock arXiv:1004.3026, 2010.
+\newblock URL \url{https://arxiv.org/abs/1004.3026}.
+
+\bibitem[Sidorenko(2021)]{sidorenko2021}
+Alexander Sidorenko.
+\newblock Inequalities for doubly nonnegative functions.
+\newblock \emph{Electron. J. Combin.}, 28(1):P1.32, 2021.
+\newblock \doi{10.37236/8947}.
+\newblock URL \url{https://arxiv.org/abs/1905.08210}.
+
+\bibitem[Conlon et~al.(2012)Conlon, Fox, and Sudakov]{conlonfoxsudakov2012}
+David Conlon, Jacob Fox, and Benny Sudakov.
+\newblock Sidorenko's conjecture for a class of graphs: an exposition.
+\newblock arXiv:1209.0184, 2012.
+\newblock URL \url{https://arxiv.org/abs/1209.0184}.
+
+\bibitem[Im et~al.(2026)Im, Li, and Liu]{imliliu2026}
+Seonghyuk Im, Ruonan Li, and Hong Liu.
+\newblock Sidorenko's conjecture for subdivisions and theta substitutions.
+\newblock \emph{Combin. Probab. Comput.}, 35(2):269--279, 2026.
+\newblock \doi{10.1017/S0963548325100242}.
 
 \bibitem[Kostochka et~al.(2015)Kostochka, Mubayi, and Verstra{\"e}te]{kostochkamubayiverstraete2015}
 Alexandr Kostochka, Dhruv Mubayi, and Jacques Verstra{\"e}te.

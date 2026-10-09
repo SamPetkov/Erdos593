@@ -1,4 +1,41 @@
-# Erdős 593 manuscript review — front matter, story and references, 4 October 2026
+# Erdős 593 manuscript review 9 October 2026
+
+## Current entropy and density review 9 October 2026
+
+The [current PDF](erdos593_obligatory_triple_systems.pdf) is a fresh 57-page build
+of the in-place [manuscript](erdos593_obligatory_triple_systems.tex), with
+44 cited references numbered by first appearance. Six directly relevant sources
+were added, including the recent Im–Li–Liu subdivision comparison.
+
+The new quantitative section states exact restricted entropy and common-power
+density results. Full Gibbs-fitting, marginal-correction and weighted-cone proofs
+are in Appendix B. The original classification and finite-result mathematical
+body, its 74 existing labels, Appendix A and attribution are preserved.
+The three-colour example illustrates explicit entropy-budget transfer on a graph
+with already known entropy existence. Both unrestricted questions remain open.
+
+Read the two detailed adversarial source reviews in
+[the research packet](../2026-10-09-entropy-density/README.md), along with the
+[paragraph comparison](../2026-10-09-entropy-density/public-review-round2-20261009/editorial-comparison.json)
+and [static QA](../2026-10-09-entropy-density/public-review-round2-20261009/static-qa.json).
+Their conclusion is a scoped analytical review draft, not a full external audit,
+novelty clearance, B-level result or complete Lean formalization.
+The new entropy/density arguments have no accepted Lean implementation.
+
+Three installed MiKTeX pdfLaTeX runs returned zero, with automatic installation
+and shell execution disabled. The final build has no unresolved references or
+citations, rerun requests, overfull or underfull boxes; the expected disabled-shell
+warning is retained. All 57 pages were rendered and checked, with selected pages
+inspected at full page scale. The built-in editor compiler's Windows-path
+initialization failure remains a separate platform limitation, not a successful build.
+
+Source SHA256: `21bfa389a60599829b1a674d5d0b413ea18275146570427c873ef2c5cc4a6326`.
+PDF SHA256: `c549243bd742bbdb7398c57f2780f24a61a8bd28d3ce5237bf42999b3b6f5359`.
+BibTeX SHA256: `b2079ec8a672115f532d33ad5baec73e12a597276601a17b735be647e825e0ae`.
+
+Public-only development continues in scoped draft PRs. Accepted Lean source,
+pins and workflows remain unchanged; both stopped monitors remain paused.
+The dated sections below are historical where their counts or PDF differ.
 
 ## Current review version — 4 October 2026
 
