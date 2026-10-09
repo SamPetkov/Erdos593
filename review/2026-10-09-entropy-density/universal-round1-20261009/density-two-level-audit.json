@@ -1,0 +1,102 @@
+{
+  "date_utc": "2026-10-09",
+  "reviewer": "/root/two_level_density_audit_round1",
+  "commission": "Independent adversarial analytical audit of /root/density_prefix_round1's common-kernel cone theorem and arbitrary-rank two-level common-power corollary, under the already confirmed bounded research round.",
+  "source_read_completely": "research/e593-substantial-target-20261008/universal-round1-20261009/density-prefix-next.json",
+  "final_source_sha256": "0cd9fabf6d4c2eb0d3195efa29e938f2e3e1e8981bb501566347b70432253946",
+  "final_source_hash_readback": "PASS: actual local file hash agrees with the author's corrected final-file hash; the correction changes only the count/provenance text, not the theorem or proof equations.",
+  "verdict": "MATHEMATICAL PASS; the identified nonmathematical case-count typo has been corrected",
+  "review_status": {
+    "actual_separate_agent_review": true,
+    "formal_kernel_validation": false,
+    "full_external_audit": false,
+    "novelty_verified": false,
+    "B_level_claim": false,
+    "unrestricted_target_solved": false
+  },
+  "exact_common_kernel_cone": {
+    "space": "Finite nonempty X, with original probability weights mu_x>0 and sum mu_x=1. All operator composition, traces and densities use these weights throughout.",
+    "kernel": "One common real symmetric, entrywise nonnegative, positive-semidefinite Markov kernel S relative to mu. I(x,y)=1_(x=y)/mu_y and Pi(x,y)=1.",
+    "claim": "For independently chosen a_e,b_e,c_e>=0 summing to 1 at each of the six K4 edges, put L_e=a_e I+b_e S+c_e Pi. The actual four-vertex density E_(mu^4) product_e L_e is at least 1.",
+    "assumption_fidelity": "The SAME actual S at all edges is essential. This does not prove the inequality for independently chosen or merely commuting PSD Markov kernels. S need not have a nonnegative Markov square root, and its entries need not be bounded by 1. The cone theorem is therefore broader in one direction than the original-host premise, without enlarging the general colored-kernel conclusion."
+  },
+  "identity_contraction_audit": {
+    "expansion": "The six convex mixtures expand into 729 elementary I/S/Pi assignments with nonnegative coefficients summing to 1. Therefore it suffices to lower-bound every elementary assignment by 1.",
+    "original_measure": "In an I-connected block containing n original vertices and f identity edges, all coordinates equal x. The original vertex measures and identity denominators contribute mu_x^(n-f)=mu_x times mu_x^(-(f-n+1)). A spanning tree leaves exactly the original quotient weight mu_x. Every additional identity cycle contributes mu_x^(-1)>=1; dropping it lowers the nonnegative integrand. No reweighted or normalized quotient measure is introduced.",
+    "forest_support": "Off the equality support of an I-spanning forest, its product is zero; on that support, every deleted cyclic I edge has value 1/mu_x>=1. Thus the pointwise comparison is valid, including zero S entries.",
+    "loops": "S-Pi is PSD since constants are an eigenvector with eigenvalue 1 and S is PSD on their orthogonal complement. Consequently S(x,x)>=1, so every contracted S loop may be dropped for a lower bound. Pi factors are identically 1 and may be deleted.",
+    "audit_result": "PASS: all contractions retain the original positive mu, and the deleted factors are at least 1 rather than merely nonnegative."
+  },
+  "complete_quotient_classification": {
+    "four_quotient_vertices": "No I contraction occurs. The S graph is a simple subgraph of K4. After exact Markov leaf deletion, its nonempty core is C3, C4, the diamond, or K4; the empty core has density 1. A disconnected simple graph on four vertices has no additional nonempty core type.",
+    "three_quotient_vertices": "The original partition sizes are (2,1,1). The multiplicities are (s,t,v) in {0,1,2} x {0,1,2} x {0,1}: 18 possibilities, including 17 nonempty graphs. The author's draft initially counted 15 nonempty possibilities plus the empty graph; this is only a count typo, since its case split handles all 18 choices.",
+    "two_quotient_vertices": "Partition sizes are (3,1) or (2,2); at most three or four parallel S edges remain. No other cross-edge shape is possible. Internal loops have already been dropped.",
+    "one_quotient_vertex": "All surviving edges are removable loops, leaving density 1.",
+    "audit_result": "PASS: these are exhaustive partitions of the four actual K4 vertices, with no hidden simple-graph assumption after contraction."
+  },
+  "primitive_density_bounds_audit": {
+    "operator_conventions": "S^j means weighted operator composition. R=S Hadamard S means the pointwise square kernel. In weighted orthonormal coordinates R is a positive diagonal congruence of the Schur square, and hence PSD. Trace products of two PSD operators are nonnegative; no triple-PSD trace sign is assumed.",
+    "forests": "An ordinary S leaf integrates exactly to 1 using S1=1. Isolated vertices also contribute 1.",
+    "cycles": "t(C3,S)=Tr(S^3)>=1 and t(C4,S)=Tr(S^4)>=1, because the constant eigenvalue is 1 and all remaining eigenvalues are nonnegative.",
+    "diamond": "Let B=S composed with S. Its density is E_(mu^2) S(c,d) B(c,d)^2. The weights mu_c mu_d S(c,d) form a probability measure. Jensen gives t(diamond,S)>=[E S(c,d)B(c,d)]^2=[Tr(S^3)]^2>=1. This stronger bound is valid with zero entries and arbitrary mu. An independent alternative is Tr(S(B Hadamard B))>=Tr(Pi(B Hadamard B))=E B^2>=1.",
+    "K4": "For fixed c,d, let f(x)=S(x,c)S(x,d). Since S-Pi is PSD, <f,Sf>>=(E f)^2=B(c,d)^2. Multiply by S(c,d)>=0 and integrate c,d to obtain t(K4,S)>=t(diamond,S)>=[Tr(S^3)]^2>=1. This pays the full tetrahedron without asserting its centered coefficient is nonnegative.",
+    "three_vertices_v_zero": "The density is E_a h_s(a) h_t(a), where h_j(a)=E_b S(a,b)^j and j is 0,1,2. These are respectively 1,1,at least 1 by rowwise Jensen, so every such graph has density at least 1.",
+    "three_vertices_v_one_zero_arm": "A singleton S arm integrates away exactly, leaving zero, one or two parallel edges. Jensen bounds the latter by 1. This also covers both arms absent.",
+    "three_vertices_one_one_one": "Ordinary triangle; Tr(S^3)>=1.",
+    "three_vertices_two_one_one": "With R=S Hadamard S, its density is Tr(R S^2). Both R and S^2-Pi are PSD, so this is at least Tr(R Pi)=E S(x,y)^2>=1. The (1,2,1) case is identical by relabeling.",
+    "three_vertices_two_two_one": "Its density is Tr(S R^2), with R^2 the operator square. Since S-Pi and R^2 are PSD, this is at least Tr(Pi R^2)=||R1||_2^2. Each row of R has mass E_y S(x,y)^2>=1 by Markov rowwise Jensen, so ||R1||_2^2>=1.",
+    "two_vertices_parallel_edges": "For n>=1, E_(mu^2) S(x,y)^n >= (E S)^n=1 by Jensen; for n=0 the density is 1.",
+    "audit_result": "PASS: every lower bound is explicit, uses the original weighted space, and covers zeros, disconnected kernels, repeated eigenvalues and nonconstant unit modes."
+  },
+  "two_level_corollary_audit": {
+    "exact_statement": "Let P be any orthogonal projection in L2(mu) satisfying P1=0; let 0<=y<=x<=1; let A=yI+(1-y)Pi+(x-y)P be actually entrywise nonnegative. For every six positive integer exponents n_e, E product_e A^(n_e)>=1. There is no ordering restriction on the six exponents and no rank-one restriction on P.",
+    "equivalent_complete_spectrum": "P and Q=I-Pi-P partition the entire centered space, and A=Pi+xP+yQ. If both x and y are positive, an additional centered zero complement is NOT allowed by this representation. If y=0, that zero complement is included as Q.",
+    "common_actual_S": "When x>y and y<1, define alpha=(x-y)/(1-y) and S=(A-yI)/(1-y)=Pi+alpha P. This is Markov, symmetric and PSD. Its off-diagonal entries are A(x,z)/(1-y)>=0, and its diagonal entries are 1+alpha P(x,x)>=1. Thus the common S is actual nonnegative, not a freely chosen spectral projection.",
+    "positive_power_mixture": "For j>=1 put a_j=y^j, b_j=(1-y)(x^j-y^j)/(x-y), c_j=1-a_j-b_j. Then A^j=a_j I+b_j S+c_j Pi. The coefficients a_j,b_j are nonnegative. Since (x^j-y^j)/(x-y)=sum_(i=0)^(j-1) x^(j-1-i)y^i <= sum_(i=0)^(j-1)y^i=(1-y^j)/(1-y), also c_j>=0. Their sum is 1. This verifies the author's equivalent tau_j/tau proof without any hidden sign or eigenvalue division issue.",
+    "x_equals_y": "A=xI+(1-x)Pi and A^j=x^jI+(1-x^j)Pi. No division by x-y is needed.",
+    "y_equals_one": "Then x=1 and A=I. The six-edge density is sum_x mu_x^(-2)>=1. On a singleton it is exactly 1; on two or more states it is strictly greater than 1.",
+    "y_equals_zero": "A=Pi+xP. For x>0, every power is x^(j-1)A+(1-x^(j-1))Pi, which is a nonnegative mixture. For x=0, A=Pi directly. The zero complement and arbitrary multiplicity of P are covered.",
+    "arbitrary_multiplicity_and_unit_modes": "All arguments use projections, not selected eigenvectors. P may have any rank, including zero or the full centered rank. x=1 permits centered unit modes and reducible hosts. No irreducibility or simple spectrum is required.",
+    "original_host_target": "Whenever the actual A=T^2 in the user's target has this complete two-level form, the corollary proves its density inequality, and even proves it for all six positive exponents independently. It does NOT resolve the unrestricted target for arbitrary spectra."
+  },
+  "strictness_audit": {
+    "claim": "For |X|>=2, equality in the two-level corollary occurs exactly when A=Pi.",
+    "positive_y": "The all-I elementary assignment has positive coefficient y^(sum_e n_e), and density sum_x mu_x^(-2)>1. Every other elementary assignment has density at least 1. Therefore the total is strictly greater than 1.",
+    "zero_y_nonconstant_A": "Here x>0 and P is nonzero. The all-S assignment, with S=A, has positive coefficient product_e x^(n_e-1). The full K4 bound is at least [Tr(A^3)]^2=[1+rank(P)x^3]^2>1. The total is strictly greater than 1.",
+    "A_equals_Pi": "Every positive power is Pi, and the density is 1. Singleton equality is automatic.",
+    "audit_result": "PASS; this is only the two-level power-family equality claim, not a full equality classification of all cone mixtures."
+  },
+  "explicit_actual_host_audit": {
+    "source_example": "Uniform four-state mu; the displayed W has diagonal 1, ordinary off-diagonal entries 1/3, and opposite-pair entries 1/9. All entries lie in (0,1].",
+    "regularity": "Every row sums to 16/9, hence the original weighted row sum is p=4/9. T=W/p has displayed entries 9/4,3/4,1/4 and weighted row sum 1.",
+    "eigenvalues": "On the three displayed centered Walsh functions, weighted T has eigenvalues 1/2,1/2,1/4. Thus A=T^2 has complete centered values x=1/4 of multiplicity 2 and y=1/16 of multiplicity 1.",
+    "common_S": "alpha=(x-y)/(1-y)=1/5, so S=Pi+(1/5)P is actual nonnegative. Pi+P itself has some entries -1, so the proof is not silently assuming the full spectral range projection is a nonnegative Markov kernel.",
+    "coverage": "This demonstrates arbitrary top-band multiplicity on an actual host. It does not establish that the example is outside every previously known restricted density regime, and it is not a novelty or impact certificate.",
+    "audit_result": "PASS by exact arithmetic, without a simulation or scan."
+  },
+  "issues_found": [
+    {
+      "severity": "bookkeeping only",
+      "location": "common_kernel_cone_theorem.mixture_and_contraction_proof, three-quotient-vertices sentence",
+      "issue": "The draft says 15 nonempty possibilities plus the empty graph, but the actual multiplicity family has 18 possibilities, including 17 nonempty graphs.",
+      "mathematical_effect": "None: all displayed case proofs are exhaustive and correct.",
+      "action": "Sent to /root/density_prefix_round1 and /root; the author corrected the count to 18 triples (17 nonempty and the empty graph). Final corrected source hash is bound above."
+    }
+  ],
+  "limitations": [
+    "The theorem uses the same S at all edges. It does not prove a generally colored PSD Markov-kernel inequality.",
+    "The two-level corollary assumes the complete centered spectral representation, not merely that two positive eigenvalues were selected from a larger spectrum.",
+    "The arbitrary finite-alphabet exact-edge entropy target remains open; the density corollary does not supply its missing entropy witness.",
+    "This is an independent agent analytical audit, not Lean evidence, a full external mathematical audit, a novelty finding or a B-level classification."
+  ],
+  "actions": {
+    "new_files_written": ["research/e593-substantial-target-20261008/universal-round1-20261009/density-two-level-audit.json"],
+    "other_source_changes": 0,
+    "simulations_or_scans": 0,
+    "compiler_or_slurm_jobs": 0,
+    "service_requests": 0,
+    "network_or_browser_calls": 0,
+    "git_mutations": 0,
+    "manuscript_changes": 0
+  }
+}

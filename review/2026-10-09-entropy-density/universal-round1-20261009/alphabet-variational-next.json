@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-09",
+  "lane": "alphabet_variational_round1",
+  "status": "COMPLETE_EXPLICIT_LOCAL_ARBITRARY_TABLE_ENTROPY_PROOF_CANDIDATE_NOT_FULL_TARGET_NOT_LEAN_VALIDATED",
+  "question": "Can the same variational route go beyond uniform Potts pairs to positive nonuniform three-state marginals or uniform non-Potts three-state pair tables?",
+  "answer": "Yes in an explicit neighbourhood of independence, for every fixed finite bipartite graph and every fixed positive finite singleton law. A strong-convexity correction of a nearly fitted Gibbs seed costs only the square of its marginal error; a positive even-cycle partition correction dominates that cost. The unrestricted arbitrary-table theorem remains unresolved.",
+  "theorem": {
+    "graph": "Let G=(V,E) be a finite simple bipartite graph, with n vertices and m edges. Isolates and disconnected components are allowed.",
+    "alphabet": "Let Omega have q>=2 elements and let kappa be any strictly positive probability law. Write a=min_x kappa(x).",
+    "pair": "Let lambda be any symmetric pair probability law with both marginals kappa. Define f(x,y)=lambda(x,y)/(kappa(x)kappa(y))-1 and C(x,y)=sqrt(kappa(x)) f(x,y) sqrt(kappa(y)). Then f is symmetric and each kappa-weighted row sum is zero. Let rho be the operator norm of the real symmetric matrix C.",
+    "forest_case": "If G is a forest, a standard tree Markov construction gives an exact every-edge and every-singleton witness tau with D(tau||kappa^V)=m D(lambda||kappa^2), including zero pair entries. No smallness restriction is needed.",
+    "cyclic_case": "If G has a cycle, let g>=4 be its girth. Define the explicit positive radius below. Whenever rho<=delta, there is a full-support law tau on the actual Omega^V with every singleton kappa and every oriented actual edge lambda. If rho>0, D(tau||kappa^V)<=m D(lambda||kappa^2)-rho^g/8. At rho=0 the independent product law works.",
+    "smallness_constants": {
+      "d": "n(q-1)+m(q-1)^2",
+      "A": "2^m a^(-m)",
+      "M": "a^(-1)",
+      "B": "sqrt(d)(M+1)A",
+      "L": "sqrt(d)M",
+      "r": "log(2)/(4L)",
+      "delta": "min{1, a/3, 1/(2A), a log(2)/(8m), [r/(8B)]^(1/(g-1)), [1/(8B^2)]^(1/(g-2))}"
+    },
+    "scope": "This is an exact every-entry, every-edge statement, not an averaged statistic. It applies in particular to q=3 nonuniform kappa and non-Potts symmetric lambda. It does not cover arbitrary distances from independence or zero entries in the cyclic case. The radius depends strongly on the fixed graph, alphabet and smallest singleton mass. No degree bound is needed for this local theorem."
+  },
+  "proof": [
+    {
+      "step": 1,
+      "title": "Elementary operator and positivity bounds",
+      "argument": "Because C(x,y)=sqrt(kappa(x)kappa(y)) f(x,y), every matrix entry has absolute value at most rho and therefore |f(x,y)|<=rho/a. The condition rho<=a/3 makes all factors 1+f positive. Put R=kappa^V, w(x)=product_{uv in E}[1+f(x_u,x_v)], Z=E_R w, and mu_0=Rw/Z. This is a genuine full-support pairwise Gibbs law, used as a seed rather than assumed to fit the target."
+    },
+    {
+      "step": 2,
+      "title": "Exact subset expansion and leaf cancellation",
+      "argument": "Expand Z as a sum over actual edge subsets F: Z=sum_{F subset E} E_R product_{e in F} f_e. If F has a degree-one vertex, integrate that variable first; its kappa-weighted f row sum is zero, so the term vanishes. Every surviving nonempty subset has at least g edges. A surviving subset with exactly g edges is one simple g-cycle, because any nonempty forest has leaves and every cycle has length at least g."
+    },
+    {
+      "step": 3,
+      "title": "An even-cycle partition gain with a uniform remainder bound",
+      "argument": "For a g-cycle its expectation is exactly Tr(C^g). Since g is even and C is real symmetric, Tr(C^g)>=rho^g. There is at least one g-cycle. For any k-edge subset the absolute expectation is at most (rho/a)^k. As rho<=1 and a<=1, all terms with k>=g+1 together have absolute value at most A rho^(g+1), where A=2^m a^(-m). Consequently Z>=1+rho^g-A rho^(g+1)>=1+rho^g/2, using rho<=1/(2A). Also |Z-1|<=A rho^g. Since rho<=1, log Z>=log(1+rho^g/2)>=rho^g/4. These are finite subset bounds, not a formal power-series argument."
+    },
+    {
+      "step": 4,
+      "title": "An explicit complete exponential-family gauge",
+      "argument": "Choose a kappa-orthonormal basis xi_1,...,xi_(q-1) of the zero-mean functions on Omega. Use all vertex statistics xi_i(X_v) and all actual-edge statistics xi_i(X_u)xi_j(X_v), with an arbitrary fixed orientation of each edge. Their total number is d. Under R these statistics have mean zero and form an orthonormal family: cross moments vanish unless the vertex or actual edge and both basis indices agree. Every statistic has absolute value at most M=1/a, since |xi_i(x)|<=1/sqrt(kappa(x)). The seed potential h_0=sum_e log(1+f_e) is a linear combination theta_0 dot s plus a constant c, because {1,xi_i(x),xi_j(y),xi_i(x)xi_j(y)} is a complete basis for each edge table. This handles all unary gauge terms explicitly."
+    },
+    {
+      "step": 5,
+      "title": "Exact target moments and their reconstruction",
+      "argument": "Let b be the desired statistic vector: zero for each vertex statistic and b_(e,i,j)=sum_{x,y}lambda(x,y)xi_i(x)xi_j(y) for every actual edge. The latter number has absolute value at most rho: the vectors sqrt(kappa)xi_i have Euclidean norm one, so this moment is a matrix entry of C in an orthonormal basis. Matching all these moments forces each singleton law to be kappa, and then the complete orthonormal basis on each ordered pair forces every actual edge law to be exactly lambda. No feasibility of this entire target vector is assumed. It is produced by the interior minimizer below."
+    },
+    {
+      "step": 6,
+      "title": "The seed marginal residual is at most B rho^(g-1)",
+      "argument": "For a unary statistic, insert it into the edge-subset expansion. Any leaf other than its supported vertex still kills the term. A nonempty forest has at least two leaves, so every surviving unary-inserted subset has a cycle and at least g edges. For an actual-edge statistic supported on u,v, a surviving forest can only be a single u-v path: its leaves must be contained in {u,v}, and a tree with exactly two leaves is a path. The single edge uv contributes exactly b_(e,i,j). Any other such path has at least g-1 edges by the girth; any cyclic subset has at least g edges. Thus the pair-inserted unnormalized expectation is b_(e,i,j)+E, with |E|<=M A rho^(g-1). Divide by Z>=1 and subtract the target. The extra normalization error is bounded by |b||Z-1|<=A rho^(g+1). Hence each residual coordinate has absolute value at most (M+1)A rho^(g-1), and the full Euclidean residual norm is at most B rho^(g-1). This uses actual carriers and actual edges throughout."
+    },
+    {
+      "step": 7,
+      "title": "A positive Hessian bound on a specified ball",
+      "argument": "For theta in R^d define F(theta)=log E_R exp(theta dot s)-theta dot b. Its gradient at theta_0 is precisely the residual of step 6, and its Hessian is Cov_mu_theta(s). Since |log(1+f)|<=2|f| for |f|<=1/2, the seed potential range is at most 4m rho/a<=log(2)/2. A displacement of Euclidean size at most r has potential range at most 2Lr=log(2)/2, because |delta theta dot s|<=L||delta theta||. Thus for every theta in the radius-r ball about theta_0, the Gibbs density relative to R is at least 1/2. For any vector z, Var_mu_theta(z dot s)=inf_c E_mu_theta(z dot s-c)^2>=1/2 inf_c E_R(z dot s-c)^2=||z||^2/2. Therefore the Hessian is at least I/2 throughout the ball."
+    },
+    {
+      "step": 8,
+      "title": "The minimizer exists inside the ball and fits all moments",
+      "argument": "Write G_0=||gradient F(theta_0)||<=B rho^(g-1)<=r/8. Integrating the Hessian bound along a segment gives F(theta_0+z)>=F(theta_0)+gradient F(theta_0) dot z+||z||^2/4. On the radius-r boundary this is at least F(theta_0)+r^2/8, so a minimum over the closed ball lies in its interior. Its gradient is zero. Since F is convex on all of R^d, this interior stationary point theta_* is a global minimum. The corresponding full-support law tau=R exp(theta_* dot s)/E_R exp(theta_* dot s) therefore has precisely the singleton and complete edge marginals established in step 5. Moreover the gain F(theta_0)-F(theta_*) is at most G_0^2, by maximizing G_0||z||-||z||^2/4."
+    },
+    {
+      "step": 9,
+      "title": "Exact entropy identity and the strict budget",
+      "argument": "The constant c in h_0=theta_0 dot s+c cancels: E_target h_0=m I, where I=D(lambda||kappa^2), because every desired actual edge law is lambda. Hence theta_0 dot b=mI-c and log E_R exp(theta_0 dot s)=log Z-c, giving F(theta_0)=log Z-mI. Since tau fits b, D(tau||R)=-F(theta_*). Therefore D(tau||R)=mI-log Z+[F(theta_0)-F(theta_*)]<=mI-rho^g/4+B^2 rho^(2g-2)<=mI-rho^g/8. The last step uses rho^(g-2)<=1/(8B^2). The target inequality is thus proved by an explicit seed and a bounded exact fitting correction; it is not assumed through duality."
+    },
+    {
+      "step": 10,
+      "title": "Independence, forest and exchangeable-triple checks",
+      "argument": "At rho=0, C=0 implies lambda=kappa^2 and tau=R. On a forest, root each component, draw its root from kappa and each child from lambda(parent,child)/kappa(parent), independently conditional on its parent. The chain rule gives exact marginals and KL=mI; isolates are independent kappa. In the smallness regime the pair is automatically three-extendible if needed: eta(x,y,z)=kappa(x)kappa(y)kappa(z)[1+f(x,y)+f(x,z)+f(y,z)]. Its density is nonnegative because |f|<=1/3, integrates to one, is exchangeable, and has each pair exactly lambda. No pre-existing triple-extension hypothesis is used to establish the witness."
+    }
+  ],
+  "specific_genuine_three_symbol_example": {
+    "singleton": "kappa=(1/3,1/3,1/3)",
+    "pair_density_perturbation": "f=epsilon times the symmetric matrix [[5/4,-7/4,1/2],[-7/4,5/4,1/2],[1/2,1/2,-1]]. Take lambda=(1+f)/9 entrywise and 0<epsilon<=delta.",
+    "checks": "All row sums of f are zero. On the kappa-centred two-dimensional space, C=f/3 has eigenvalues epsilon and -epsilon/2; its constant eigenvalue is zero, so rho=epsilon. The pair is symmetric, positive in the specified regime, has uniform singleton marginals, is not the colour-symmetric Potts family, and has both positive and negative nonconstant spectral modes. The exchangeable eta in proof step 10 supplies its triple extension. The explicit local theorem therefore covers an actual three-state pair beyond the previous scalar fitting family."
+  },
+  "remaining_gap": "For arbitrary pair tables away from independence, the seed partition correction need not dominate the exact fitting cost. The present radius and residual estimate do not provide a global fitting cone, a zero-face saturation argument, or a universal entropy bound. These remain mathematical gaps rather than a matter of only Lean translation.",
+  "literature_comparison": {
+    "known_related_primary": "Lovasz, Subgraph Densities in Signed Graphons and the Local Simonovits-Sidorenko Conjecture, EJC 18 P127 (2011), arXiv:1004.3026, DOI 10.37236/614. The arXiv PDF was read directly at Section 3 and Theorems 3.1 and 3.3.",
+    "primary_url": "https://arxiv.org/pdf/1004.3026",
+    "verified_scope": "Theorem 3.3 proves t(F,W)>=1 for a simple bigraph with m edges, integral W=1 and sup norm ||W-1||<=1/(4m). Theorem 3.1 uses 0<=W<=2 and a sufficiently small cut norm. Positive even-cycle terms compensating the other signed subgraphs are established literature, not a new mechanism claimed here. Our Gibbs seed partition Z is such a scalar density on the weighted finite singleton space.",
+    "additional_step_and_limitation": "The recorded finite proof additionally corrects the seed to every exact actual singleton and edge table, using explicit finite-dimensional covariance and residual bounds. Lovasz's nearby scalar statement alone is not cited as supplying those prescribed marginals. Whether this local fixed-table entropy deduction is already known or directly obtainable from broader work remains unassessed.",
+    "no_novelty_claim": "Credit the established signed-graphon/local-Sidorenko framework. No claim that this finite local exact-marginal deduction is new is made; its complete derivation does not establish priority or a B-level advance."
+  },
+  "review_status": {
+    "own_derivation": "Complete finite derivation and constants recorded.",
+    "separate_agent": "/root/alphabet_variational_round1/near_product_entropy_audit",
+    "separate_agent_result": "Complete core audit PASS: cycle remainder, weighted-subset residual, all constants and signs, gauge, covariance lower bound, ball interior/global minimizer and complete marginal reconstruction checked with no flaw. That agent's narrower child separately checked constants and entropy signs conditional on the already checked partition/residual estimates, also PASS.",
+    "root_review": "PASS: root reports having fully read and reconstructed all ten proof steps and constants, including weighted leaf-subset residuals, orthonormal gauge, covariance domination, interior fitting and entropy signs. This is an analytical source review, not kernel validation or a full external audit.",
+    "freeze_metadata_changes": "After the initial SHA 1defbfcb aaa9079af3235d49be9834ff8c78a52da120013587ee8ab703d9b68d (space removed), only this literature-comparison and root-review metadata were changed. The target theorem, all constants, all ten proof steps, examples and execution policy are unchanged.",
+    "external_full_audit": "PENDING",
+    "lean_validation": false
+  },
+  "execution": {
+    "analytical_proof": true,
+    "compiler": false,
+    "simulation": false,
+    "numerical_scan": false,
+    "paid_service": false,
+    "github_mutation": false,
+    "manuscript_edit": false,
+    "clock_change": false,
+    "only_new_artifact": "alphabet-variational-next.json"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "status": "PASS_STATIC_PUBLICATION_QA",
+  "checked_at_utc": "2026-10-09T15:59:49Z",
+  "reviewer": {
+    "task": "/root/public_packet_static_qa",
+    "role": "Separate Codex agent performing read-only static source QA",
+    "external_human_audit": false,
+    "kernel_validation": false
+  },
+  "scope": "Citation and reference integrity, environment nesting, and preservation of the existing classification and finite mathematical body. This is not a proof audit or a LaTeX compilation receipt.",
+  "source": {
+    "path": "research/e593-audit-2026-10-02/journal-pass/erdos593_obligatory_triple_systems.tex",
+    "sha256": "21bfa389a60599829b1a674d5d0b413ea18275146570427c873ef2c5cc4a6326",
+    "references_bib_path": "research/e593-audit-2026-10-02/journal-pass/references.bib",
+    "references_bib_sha256": "b2079ec8a672115f532d33ad5baec73e12a597276601a17b735be647e825e0ae"
+  },
+  "baseline": {
+    "path": "C:/Users/petko/e593-frontmatter-story-public-20261004/review/2026-10-02/erdos593_obligatory_triple_systems.tex",
+    "sha256": "7a6416962c4b17791114209714b37377878e700c4988fbfc78fefd4e0f96cf08",
+    "inline_bibliography_entries": 38
+  },
+  "citation_checks": {
+    "citation_occurrences": 88,
+    "distinct_cited_keys": 44,
+    "inline_bibliography_entries": 44,
+    "bibtex_entries": 44,
+    "first_citation_order_exactly_matches_inline_bibliography": true,
+    "missing_inline_citations": [],
+    "uncited_inline_entries": [],
+    "missing_bibtex_keys": [],
+    "unused_bibtex_keys": [],
+    "duplicate_inline_keys": [],
+    "duplicate_bibtex_keys": [],
+    "first_citation_order": [
+      "erdos1995", "bloom593", "li2026", "whitney1932", "diestel2017",
+      "stanley2012", "comtet1974", "csikvarilin2017", "szegedy2015",
+      "lovasz2010", "sidorenko2021", "conlonfoxsudakov2012", "imliliu2026",
+      "kostochkamubayiverstraete2015", "erdoshajnal1966", "ehr1973", "egh1975",
+      "komjath2001", "hajnalkomjath2008", "komjath2008", "reiher2024",
+      "erdos1959", "erdoslovasz1975", "kostochkarodl2010", "alonetal2016",
+      "wang2026", "debruijn1951", "erdosrado1956", "ehmr1984", "bahmanian2015",
+      "tarjan1974", "tarjan1972", "simon2011", "stanley2007", "gratzer2011",
+      "rota1964", "schmitt1994", "lieb1968", "pitman1997", "demoura2021",
+      "mathlib2020", "avigadharrison2014", "carneiro2025", "achim-et-al-2025"
+    ]
+  },
+  "cross_reference_checks": {
+    "labels": 89,
+    "reference_occurrences": 56,
+    "duplicate_labels": [],
+    "unresolved_label_references": [],
+    "baseline_labels": 74,
+    "removed_baseline_labels": []
+  },
+  "environment_checks": {
+    "begin_environment_count": 141,
+    "mismatched_end_environments": [],
+    "unclosed_environments": []
+  },
+  "protected_source_checks": {
+    "theorem_A_exactly_unchanged": true,
+    "theorem_A_characters": 363,
+    "entire_original_main_mathematical_body_exactly_unchanged": true,
+    "region_start": "\\section{Preliminaries}",
+    "baseline_region_end": "\\section*{Scope of formal verification}",
+    "current_region_end": "\\section{Quantitative comparisons for graph cores}",
+    "region_characters": 88638,
+    "region_utf8_sha256": "20ca4cdeff9cf267136a070ca15c8a12ea5fc1062ff080d0bf5261acee1868ab",
+    "old_formalization_appendix_unchanged_ignoring_trailing_whitespace": true,
+    "acknowledgments_and_ai_assistance_exactly_unchanged": true
+  },
+  "claim_separation_observed": {
+    "abstract_explicitly_keeps_unrestricted_versions_open": true,
+    "introduction_explicitly_denies_a_universal_sidorenko_theorem": true,
+    "new_entropy_density_arguments_explicitly_have_no_accepted_lean_implementation": true,
+    "known_K3_3_minus_edge_example_explicitly_not_presented_as_a_new_graph_or_table_family": true,
+    "unrestricted_common_power_problem_explicitly_remains_open": true
+  },
+  "actions": {
+    "live_source_edits": false,
+    "public_checkout_edits": false,
+    "compiler_runs": false,
+    "network_writes": false,
+    "only_output": "This new static-qa.json receipt, created with apply_patch after the root supplied its final source hash."
+  },
+  "issues_requiring_source_repair": [],
+  "limitations": [
+    "Regex scans use comment-stripped LaTeX and support multiline natbib bibitem labels; they are not a complete TeX parser.",
+    "The protected region was compared as exact decoded source and its UTF-8 region hash recorded. No mathematical validity is inferred solely from preservation.",
+    "Bibliographic key and ordering checks do not replace the root's separate primary-source attribution and metadata verification.",
+    "No numerical simulation, Lean compiler, PDF renderer, paid service, or remote job was invoked by this agent.",
+    "This receipt is bound to the recorded source and bibliography hashes; a subsequent edit requires rechecking."
+  ]
+}

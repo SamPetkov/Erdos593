@@ -1,0 +1,236 @@
+{
+  "date": "2026-10-09",
+  "reviewer": "/root/angry_review_two",
+  "review_kind": "SECOND_ACTUAL_SEPARATE_AGENT_ADVERSARIAL_PUBLICATION_AND_QUANTIFIER_AUDIT",
+  "independent_of_derivation": true,
+  "full_external_referee_report": false,
+  "final_source_state": "EDITED_MAIN_MANUSCRIPT_HASH_BOUND_SOURCE_REVIEW_COMPLETE_AT_21bfa389; FINAL_PUBLIC_PACKET_GIT_READBACK_REMAINS_ROOT_DELIVERY_WORK",
+  "tone_and_standard": "Skeptical referee, not abusive. The author has asked for consequential mathematics, but desired significance is not evidence of significance. A paper is judged by its exact proved theorems, comparison with prior work and coherent narrative, not the number of research passes or green service records.",
+  "skill": {
+    "name": "reverse-lamport",
+    "use": "Conclusion-first bounded obligation graphs for the submitted routes and exact universal targets. No different proof, missing hypothesis or equivalent unproved theorem is invented to rescue a route.",
+    "instructions_read": "Complete SKILL.md and references/worked-audit.md read before substantive audit."
+  },
+  "audit_boundary": {
+    "mathematical_sources": [
+      {"file": "../universal-round1-20261009/alphabet-global.json", "sha256": "7047201ed62c14a00f54026e8c7e3b35070b12bd02a07b7a7b09e2630131beff", "read": "Complete mathematical source, including both-sign KKT, finite-mesh entropy, endpoints and failed gluing routes"},
+      {"file": "../universal-round1-20261009/alphabet-variational-next.json", "sha256": "62f2d7762f6378f20a6d530e13eef098354f405643ea827517a7067823f3502a", "read": "Complete ten-step local theorem, constants, example and literature limitations"},
+      {"file": "../universal-round1-20261009/alphabet-potts-robustness.json", "sha256": "f2c8194f395dcb7dc726b2c0c8f828ee90e4d05bdb10e95c4ff8159406c1e793", "read": "Complete repaired seven-step strict-gap/full-table openness proof and edge cases"},
+      {"file": "../universal-round1-20261009/density-prefix-next.json", "sha256": "0cd9fabf6d4c2eb0d3195efa29e938f2e3e1e8981bb501566347b70432253946", "read": "Complete common-kernel cone and arbitrary-rank complete-two-level proof, including strictness and actual-host example"},
+      {"file": "../universal-round1-20261009/round-results.json", "read": "Complete synthesis; its verdicts were not used as mathematical primitives"},
+      {"file": "entropy-gap-attempt.json", "sha256": "e91b30073b788ba2fc797e1ee901f2b2e31e7ff6049ddded954a8baefb4c768b", "read": "Complete new block-mixture/noise/buffered-correction source and exact three-colour example; personally reconstructed its marginals, nonnegativity and entropy constants"},
+      {"file": "density-gap-attempt.json", "sha256": "be9a62a2db57ebdddf4651813ddcf7f0a0ebbcb61078192cfdd4a2539fa9b6e9", "read": "Complete fixed-tuple original-measure Lipschitz source, strict two-level buffers, explicit three-band example and precise remaining compensation obligations"}
+    ],
+    "manuscript_initial": {
+      "file": "research/e593-audit-2026-10-02/journal-pass/erdos593_obligatory_triple_systems.tex",
+      "sha256": "7a6416962c4b17791114209714b37377878e700c4988fbfc78fefd4e0f96cf08",
+      "scope_read": "Abstract, introduction, mathematical context, canonical-atom spectra, local product, fixed-atom profile proof, cyclic budget, sharp counts, verification scope, formalization appendix, AI attribution and bibliography. The existing classification proof is not independently re-certified by this review."
+    },
+    "manuscript_final_reviewed": {
+      "file": "research/e593-audit-2026-10-02/journal-pass/erdos593_obligatory_triple_systems.tex",
+      "sha256": "21bfa389a60599829b1a674d5d0b413ea18275146570427c873ef2c5cc4a6326",
+      "previous_complete_new_material_review_sha256": "0a7c3c925de6a3706e59e714e0da383d208fb14bc610470918edc9682a80cebc",
+      "scope_read": "Final abstract/introduction quantitative bridge, complete new quantitative-cores section, complete entropy-density technical appendix, verification scope and corresponding bibliography. The newly added round2 block/noise/example and density stability arguments were personally reconstructed against their complete sources. Existing classification and unrelated old proofs remain accepted context, not freshly independently certified here.",
+      "comparison_to_intermediate_review": "Both actual wording issues caught in this review are repaired: forests have the explicit equality mI without smallness, and negative individual spectral contributions are distinguished from an unproved collective prefix. The known CFS-plus-Szegedy universal entropy-existence consequence on K3,3-minus-edge is now explicit.",
+      "citation_static_check": {"unique_cited_keys":44,"bibliography_entries":44,"unique_bibliography_entries":44,"missing_keys":[],"unused_entries":[],"first_citation_order_matches_bibliography":true},
+      "compile_claim": "Root reported final native compilation successful57pages without boxes, undefined citations or rerun flags. This reviewer did not run a compiler or independently inspect that PDF; no layout/compile acceptance is claimed by this artifact.",
+      "final_narrow_delta_review": "Personally read/hash-bound final21bfa389 edits: intro and theorem-specific Im-Li-Liu comparison, exact published inline bibliography and matching references.bib entry; entropy-continuity increasing range and actual pair/joint bounds; split density normalization display and full split six-term local-radius constants. The theorem contracts and proved implications remain unchanged. The primary comparison has the required uniform/divisibility/exceptional-vertex distinctions, and the known K3,3-minus-edge entropy-existence consequence remains explicit.",
+      "matching_BibTeX_delta": {"file":"research/e593-audit-2026-10-02/journal-pass/references.bib","sha256":"b2079ec8a672115f532d33ad5baec73e12a597276601a17b735be647e825e0ae","scope":"Added imliliu2026 entry only; title/authors2026CPC35(2)269-279/DOI match the primary published PDF and inline bibliography. No fresh whole historical BibTeX audit is asserted."},
+      "remaining_delivery_boundary": "The stacked public review packet and actual GitHub PR/fetched blob readback are still root's delivery work, not performed by this reviewer. An additional substantive source edit after21bfa389 needs a new scoped audit rather than inheriting this hash."
+    },
+    "public_note_initial": {
+      "file": "C:/Users/petko/e593-frontmatter-story-public-20261004/review/2026-10-08-rank-three-entropy/research-note.tex",
+      "sha256": "60883a25abe8a00d53ea9f9bf6131f58453befbbeb58f8024133a0c84a39f8ee",
+      "scope_read": "Existing target, regular-host normalization, compensation/mixing/flat/one-spike/hierarchical classes, binary fitting and route limitations. Exact claims checked against the new source theorem contracts; the note is a fragment requiring a containing document."
+    },
+    "formal_status_sources": [
+      {"file": "C:/Users/petko/e593-frontmatter-story-public-20261004/CURRENT_FORMALIZATION_STATUS.md", "sha256": "f4b4fa9f3a297e8dc1f9089f9955c30610dcc368de5d039f1add8da5635c3aa6", "read": "Complete"},
+      {"file": "C:/Users/petko/e593-frontmatter-story-public-20261004/MANUSCRIPT_LEAN_CROSSWALK.md", "sha256": "e677998695fa46ed55520f10ff24c85b6e6c5f64d8b54aacaf0c81d5d53b6d7b", "read": "Complete"}
+    ],
+    "accepted_primitives": [
+      "Finite probability, exact marginalization and natural-log KL, with positive product references and continuous xlogx at zero",
+      "Finite-dimensional convexity/KKT, finite real analytic implicit-function theorem with explicitly checked invertible covariance",
+      "Weighted self-adjoint spectral theorem, Schur product theorem and trace positivity for a product of two PSD operators, not three",
+      "Elementary graph leaves, girth, connected spanning trees, simple K4 quotient classification and Jensen/Cauchy-Schwarz in their actual probability measures",
+      "Previously accepted Lean status is taken only from the explicit status/crosswalk packet; it is not a primitive proof of any new research theorem"
+    ],
+    "not_accepted_as_primitives": [
+      "The universal exact-pair entropy target or an equivalent universal Sidorenko statement",
+      "A single-host scalar density comparison as if it implied a universal exact-marginal theorem",
+      "A general weighted-inner-product positivity rule after changing the measure",
+      "Positivity of centered tetrahedron terms, individual actual source modes or arbitrary spectral prefixes",
+      "Novelty, journal readiness or B/C significance inferred from successful analytical checks"
+    ]
+  },
+  "bounded_obligation_graph": [
+    "CA: unrestricted exact-edge entropy for every triple-extendible finite pair input and every actual bipartite K4 subdivision <- RA (AND: OA1 exact full-table joint, OA2 global KL budget, OA3 boundary input handling). The supplied restricted routes close only on their stated domains; none is a route over the whole target domain.",
+    "CA-P: uniform-q Potts sharp entropy <- RAP (AND: P1 compact finite Gibbs fit, P2 removed-edge two-color sign, P3 both cap KKT directions, P4 zero-face saturation using at most two active neighbors, P5 full pair reconstruction by global color symmetry, P6 correctly oriented reverse-KL telescoping, P7 compact-simplex limits).",
+    "CA-L: arbitrary-table local sharp entropy <- RAL (AND: L1 centered leaf cancellation, L2 positive shortest even-cycle trace and controlled remainder, L3 complete unary/pair gauge, L4 actual marginal residual, L5 positive Hessian on the specified ball, L6 interior exact fit, L7 dual correction dominated by partition gain, L8 stated radius/domain).",
+    "CA-O: compatible open neighborhood around a cyclic interior Potts input <- RAO (AND: P1-P5, O1 strict cycle cap, O2 unique analytic fits only on the applicable interval, O3 strict oriented entropy gap, O4 complete full-table covariance inverse, O5 continuity with varying singleton reference). Positive triple-extendible neighborhood additionally requires O6 q>=3 and the explicit positive triple/right-inverse construction.",
+    "CB: unrestricted ordered common-power inequality for every actual original weighted regular host <- RB (AND: B1 actual common host and original measure, B2 all prescribed exponents, B3 collective compensation for general interacting centered spectral levels). No supplied route discharges B3 globally.",
+    "CB-C: one-common-kernel cone inequality <- RBC (AND: C1 all729 nonnegative mixture assignments, C2 original-mu identity-tree contraction, C3 justified dropping of identity cycles and S loops, C4 exhaustive simple/multigraph quotients, C5 explicit lower bounds for every quotient).",
+    "CB-T: complete two-centered-level common powers <- RBT (AND: T1 actual nonnegative complete spectral form, T2 one actual nonnegative common S, T3 all powers belong to conv{I,Pi,S}, T4 x=y/y=1/y=0 degeneracies, CB-C).",
+    "CStory: these new comparisons strengthen the593 paper's proved story <- RStory (AND: S1 actual bipartite rank3 K4 subdivision is an allowable2-connected core, S2 explicit distinction between quantitative graph density and uncountable hypergraph obligatoriness, S3 full restricted theorem statements, S4 separate accepted-Lean/prose/candidate labels, S5 no unsupported novelty/significance claim). This is a disciplined editorial route, not a theorem that restricted density follows from the classification."
+  ],
+  "mathematical_reconstruction_checks": [
+    {"result": "PASS_FOR_RESTRICTED_POTTS_CONTRACT", "detail": "Both sign regimes work on the submitted degree-at-one-endpoint class. Conditioning on colors1/2 leaves no external field. Nonzero interactions fit by interior/cap KKT; two active incident fits force equal interactions since distinct neighbors can differ under full support. Their common conditional max/min controls the remaining zero edge. Global color symmetry recovers the entire table. The reverse-KL inequality uses D(mu_previous||mu_next), not its reversal. Endpoints use finite compactness with a positive reference."},
+    {"result": "PASS_FOR_EXPLICIT_LOCAL_CONTRACT", "detail": "The residual bound genuinely uses marked-vertex leaf cancellation: a surviving marked-edge forest is one path, and the alternative path has at least g-1 edges. The seed is not assumed to fit. A full unary/pair gauge realizes the exact target only after the interior minimum is constructed. The logarithmic partition gain is order rho^g and the fitting correction order rho^(2g-2); every stated smallness constant pays a named side condition. No global conclusion survives after dropping the radius."},
+    {"result": "PASS_FOR_REPAIRED_OPENNESS_CONTRACT", "detail": "Strictness is supplied by positive-probability alternate-path two-color events, not merely by weak correlations. The positive-definite covariance is checked by distinct simple-edge Walsh monomials, and the full-table inverse uses a fixed feature basis while kappa varies. The repaired analytic-family interval avoids antiferromagnetic fits on nonbipartite graphs. At independence the gap is zero; at s=0 or1 the base has zero support; neither admits this openness argument. The q>=3 triple extension is explicitly separate from q=2 feasibility."},
+    {"result": "PASS_FOR_COMMON_KERNEL_CONE_AND_COMPLETE_TWO_LEVEL_CONTRACTS", "detail": "Identity-tree contraction leaves originalmu, not a tilted measure. Extra identity-cycle factors and S loops are at least1, so deletion is a valid lower bound. Four quotient vertices have the standard five core types; three have18 multiplicity triples; two have at most4 parallel edges. Dense quotient bounds use R=S Hadamard S with ordinary operator R² and traces of only two PSD factors. Each power's common-cone coefficients are nonnegative by a finite geometric-sum inequality. An additional zero complement when x,y>0 is a THIRD centered level and is not covered."},
+    {"result": "PASS_FOR_ROUND2_BLOCK_SURPLUS_AND_EXPLICIT_BUDGET_TRANSFER", "detail": "Disjoint-support component likelihood ratios give exactly (n_C-1)H(pi)+sum pi_i KL_i,C, including isolated vertices; the pair cost is H(pi)+sum pi_i I_i. Thus the beta H(pi) surplus is conditional on the stated within-block witnesses. The IID mixture chain rule has the correct lower-bound orientation. In the actual K3,3-minus-edge example, every oriented-edge correction is exactly D and all other terms vanish by centered endpoint integration. The mixed/no-color1/all-color1 trichotomy supplies nonnegativity on all729 configurations: bridgeless cuts pay the mixed case and the bounded Potts mass floor pays the other cases. Both finite TV bounds lie in the entropy-continuity monotone ranges, and rational/log estimates give slack strictly greater than229/540. This is an explicit mechanism on a previously known Sidorenko graph, not a new universally covered graph or a proof of the unrestricted input target."},
+    {"result": "PASS_FOR_ROUND2_FIXED_TUPLE_DENSITY_STABILITY", "detail": "Left and right composition by symmetric Markov kernels average relative to the SAME originalmu; identity endpoints introduce no kernel-norm penalty in composition. Telescoping gives ||T^s-T0^s||infinity<=s epsilon and then the exact six-factor estimate2N epsilon(M0+epsilon)^5. Positive all-I/all-A buffers are valid in the two cases y>0 andy0, with N>=6 and non-IID exclusions. The explicit20-state three-band perturbation is an actual positive Markov root; its density/mixing checks and conditional-expectation hierarchy exclusion are consistent. Coverage is local in the fixed host and six-exponent tuple, not uniform spectral compensation."},
+    {"result": "EXACT_NEARBY_SUBDIVISION_LITERATURE_HYPOTHESES_CHECKED", "detail": "For the actual ordered tuple(k,r+h,u,r,u,l) withh>0, Im-Li-Liu Thm1.4 on baseK4 requires every length multiplicity divisible by6; with six single paths that forces all lengths equal, incompatible withr+h versusr. Their Thm1.6 exceptional-vertex family requires three equal incident lengths and three equal opposite lengths. At vertexc, r+h differs fromr; at verticesa,b,d the two triples' equality constraints again forceh0. Thus those exact nearby conclusions are not a supplied proof of this universal ordered tuple. This is a hypothesis comparison only, not an exhaustive novelty or literature certification."},
+    {"result": "GLOBAL_TARGETS_NOT_ESTABLISHED_BY_SUPPLIED_RESTRICTED_ROUTES", "detail": "No exact target counterexample was found. Arbitrary tables outside the local/open/block-surplus families and general actual common-host spectra remain explicit missing obligations. The failed branch-gluing, quotient-budget, per-mode and differently colored-kernel constructions refute those constructions only. Relabeling any of them as a counterexample to either universal target would be false."}
+  ],
+  "critical_findings": [
+    {
+      "id": "PUB1",
+      "severity": "HIGH_PUBLICATION_SCOPE",
+      "issue": "The present full targets are mathematically open, not merely uncompiled. A classification paper must not trade quantifiers for a more impressive abstract.",
+      "evidence": "round-results.exact_remaining_obligations; alphabet-variational-next.remaining_gap; density-prefix-next.what_remains_open",
+      "required_fix": "State the precise restricted results and the two unrestricted targets separately. Explicitly include the graph-dependent local radius, Potts symmetry/positivity/sign restrictions and complete centered two-level spectral form. Do not write arbitrary alphabets globally or unrestricted density as proved.",
+      "status": "RESOLVED_IN_REVIEWED_MANUSCRIPT_0a7c3c92: TWO_UNRESTRICTED_PROBLEMS_EXPLICITLY_OPEN"
+    },
+    {
+      "id": "PUB2",
+      "severity": "HIGH_BRIDGE_AND_STORY",
+      "issue": "The new density and entropy arguments do not follow from the593 classification. Without a precise bridge this becomes two unrelated papers stapled together, exactly the random-addition failure the user asked to avoid.",
+      "evidence": "The main paper's current story is canonical cyclic content versus assembly freedom; the research fragment asks a separate finite graph-density question on rank3 K4 cores.",
+      "required_fix": "Explain that a bipartite K4 subdivision is a2-connected rank3 allowable core, so its expansion is a canonical atom. The quantitative question then concerns the original core graph and finite weighted hosts, not a stronger obligatory classification. Keep the main account compact; place technical proofs in an appendix or a self-contained separate note without burying essential hypotheses. If the appendix overwhelms the classification, use an outlook and the separate note instead.",
+      "status": "RESOLVED_IN_REVIEWED_MANUSCRIPT_0a7c3c92: PRECISE_ALLOWABLE_RANK3_CORE_BRIDGE_AND_NONIMPLICATION_EXPLICIT"
+    },
+    {
+      "id": "PUB3",
+      "severity": "HIGH_QUANTIFIER_ROUTE",
+      "issue": "A one-host scalar density inequality, feasibility of marginals, or a positive seed partition correction is not the exact-edge entropy theorem.",
+      "evidence": "Szegedy Cor9.1 is universally quantified over finite joint distributions. The submitted local proof has additional exact fitting and dual-gain steps; the density theorem is restricted to original regular common-power hosts.",
+      "required_fix": "Keep exact singleton and every actual oriented-edge constraints in every entropy statement. Retain the global KL budget as the missing lemma. Do not invoke a universal type-host equivalence without its full all-host/all-pair quantifiers and side assumptions.",
+      "status": "RESOLVED_IN_REVIEWED_MANUSCRIPT_0a7c3c92: EVERY_ACTUAL_ORIENTED_EDGE_AND_SHARP_GLOBAL_BUDGET_RETAINED"
+    },
+    {
+      "id": "PUB4",
+      "severity": "HIGH_FORMAL_COVERAGE",
+      "issue": "Analytical checks and the existing250-module401-audit baseline do not kernel-validate new entropy/density proofs. A small formal coefficient theorem is not the full host transport or universal result.",
+      "evidence": "CURRENT_FORMALIZATION_STATUS.md and MANUSCRIPT_LEAN_CROSSWALK.md explicitly leave profile assembly, full height/chains, running order, sorted theta and exhaustive crosswalk pending. The kernel transport candidate remains uncompiled.",
+      "required_fix": "Retain a visible per-result distinction: accepted Lean baseline; proved manuscript mathematics without formal endpoints; focused coefficient evidence with its lineage caveat; uncompiled transport; new analytical research results. Update neither the accepted counts nor whole-paper verification wording because of prose integration.",
+      "status": "RESOLVED_IN_REVIEWED_MANUSCRIPT_0a7c3c92: ABSTRACT_AND_VERIFICATION_SECTION_EXPLICITLY_EXCLUDE_NEW_ARGUMENTS_FROM_ACCEPTED_LEAN"
+    },
+    {
+      "id": "PUB5",
+      "severity": "HIGH_NOVELTY_AND_SIGNIFICANCE",
+      "issue": "Complete proofs can still be known or routine deductions. The current evidence does not establish B-level significance, priority or top-journal readiness.",
+      "evidence": "Csikvari-Lin already supply the two-color/proper-color mechanism and sharp endpoint; Lovasz supplies local signed-density machinery; Sidorenko supplies the homogeneous complete-graph doubly-nonnegative anchor. The new prescribed-table correction and colored common-cone extensions require a broader comparison before an originality claim.",
+      "required_fix": "Credit these predecessors close to the mechanism, separate reused ideas from the precise extension actually proved, and withhold novelty/B/priority language. Strong writing cannot substitute for novelty clearance or closing the universal targets.",
+      "status": "CLAIM_INFLATION_AVOIDED_IN_REVIEWED_MANUSCRIPT; NOVELTY_AND_JOURNAL_SIGNIFICANCE_REMAIN_UNCERTIFIED"
+    },
+    {
+      "id": "PUB6",
+      "severity": "MEDIUM_STALE_RESEARCH_SUMMARY",
+      "issue": "The initial public fragment's opening and binary scope paragraph reflect the earlier binary-only pass and do not describe the new uniform-q/local/open coverage.",
+      "evidence": "research-note.tex initial opening and subsection An exact binary entropy construction",
+      "required_fix": "Update its overview and final remaining-scope paragraph so the new results are visible without changing the universal target to solved. Avoid inconsistent statements that arbitrary alphabets are entirely untouched when genuine local arbitrary-table families are now proved.",
+      "status": "PRIOR_PUBLIC_FRAGMENT_AND_FINAL_NEW_PACKET_REQUIRE_ROOT_DELIVERY_READBACK; NOT_A_DEFECT_IN_REVIEWED_MAIN_THEOREMS"
+    },
+    {
+      "id": "PUB7",
+      "severity": "MEDIUM_SCHOLARLY_PRESENTATION",
+      "issue": "The research fragment currently relies on URL-only footnote references; that should not silently replace the main paper's first-citation numbered bibliography convention. Increasing reference count without targeted relevance would weaken rather than improve it.",
+      "evidence": "Existing main bibliography has substantially more than16 entries; fragment footnotes include Szegedy, Sidorenko, Ruozzi and Lauritzen-Uhler-Zwiernik",
+      "required_fix": "Use proper numbered bibliography entries for added main-paper sources, in first-citation order, and check each cited proposition supplies the associated claim. Lauritzen-Uhler-Zwiernik is Ann.Stat.49(3)(2021),1436-1459,DOI10.1214/20-AOS2007; AOS2007 is not a year.",
+      "status": "RESOLVED_FOR_FINAL_REVIEWED_MAIN_MANUSCRIPT:44ENTRIES44CITEDKEYS_NO_MISSING_UNUSED_DUPLICATES_FIRSTCITATIONORDER_PASS; SEPARATE_NOTE_PRESENTATION_REMAINS_DISTINCT"
+    },
+    {
+      "id": "PUB8",
+      "severity": "LOW_DATE_AND_PROVENANCE",
+      "issue": "The existing manuscript date is4October2026. A substantive new mathematical integration warrants a new revision date, but a polling event does not. Agent analytical review is not an external anonymous referee report.",
+      "evidence": "Initial manuscript line92; round1 audit metadata",
+      "required_fix": "Date only the actual substantive revised source and accurately acknowledge assistance. Describe these two reviews as separate-agent adversarial source reviews, not full external validation, and preserve previous failures/scope repairs.",
+      "status": "RESOLVED_IN_REVIEWED_MANUSCRIPT_0a7c3c92:9OCTOBER_SUBSTANTIVE_REVISION_DATE_ASSISTANCE_DISCLOSURE_AND_NO_EXTERNAL_CERTIFICATE"
+    },
+    {
+      "id": "PUB9",
+      "severity": "MEDIUM_ACTUAL_STATEMENT_AMBIGUITY",
+      "issue": "The intermediate edited local theorem said that for forests the displayed bound holds with equality, although the preceding display had a strict rho^g/8 deduction and g is undefined for a forest.",
+      "evidence": "Live manuscript theorem-local-table-entropy intermediate draft, read on9October; actual wording sent to root",
+      "required_fix": "State the forest identity explicitly as D(tau||kappa^V)=mI without a smallness condition, rather than referring to the cyclic display.",
+      "status": "RESOLVED_BY_PERSONAL_FINAL_REREAD_AT_0a7c3c92"
+    },
+    {
+      "id": "PUB10",
+      "severity": "MEDIUM_UNSUPPORTED_ROUTE_CLAIM",
+      "issue": "The intermediate closing paragraph claimed spectral prefixes can be negative. The supplied examples show individual actual source/mode contributions negative, but do not prove a whole shifted collective prefix is negative; the retained collective compensation inequality remains unproved.",
+      "evidence": "Live closing density paragraph versus density-prefix source route and density-gap-attempt.remaining_compensation_obligation",
+      "required_fix": "Say individual spectral contributions can be negative and identify the complete collective compensation as missing. Do not promote a negative summand into a failed complete-prefix theorem.",
+      "status": "RESOLVED_BY_PERSONAL_FINAL_REREAD_AT_0a7c3c92"
+    },
+    {
+      "id": "PUB11",
+      "severity": "MEDIUM_RECENT_PRIMARY_LITERATURE_COMPARISON",
+      "issue": "The publication comparison must account for Im-Li-Liu's2026 subdivision/theta-substitution paper. Its broad abstract must not be mistaken for arbitrary nonuniform subdivision coverage, but omitting this exact nearby work would weaken the scope/novelty discussion.",
+      "evidence": "Published CPC35(2)(2026)269-279, DOI10.1017/S0963548325100242; personally read Introduction/Theorems1.3,1.4,1.6 and their explicit differing-path limitation",
+      "required_fix": "Cite and compare uniform theta substitution, nonuniform path-count divisibility and the exceptional-vertex clique subdivision result. Explain why the present arbitrary ordered tuple is not supplied by those hypotheses; make no broader novelty claim.",
+      "status": "RESOLVED_BY_PERSONAL_NARROW_FINAL_REREAD_AT_21bfa389:PRIMARY_PAPER_COMPARED_WITH_EXACT_RESTRICTED_HYPOTHESES_AND_CORRECT_INLINE_AND_BIBTEX_METADATA"
+    },
+    {
+      "id": "PUB12",
+      "severity": "MEDIUM_EXAMPLE_ATTRIBUTION",
+      "issue": "The explicit three-colour K3,3-minus-edge witness should not read as a newly solved entropy-existence instance. Global Sidorenko on this graph is already known from Conlon-Fox-Sudakov, and Szegedy Cor9.1 then supplies sharp exact entropy existence for every finite input.",
+      "evidence": "CFS Theorem1: a vertex complete to the opposite side. Actual K3,3-minus-edge has such a vertex; Szegedy Cor9.1 requires a global graph statement, which CFS provides here.",
+      "required_fix": "Retain the explicit budget-transfer mechanism as an illustration and explicitly credit known entropy existence on this graph. Do not label the example a new Sidorenko graph, new globally solved target case or evidence of B-level significance.",
+      "status": "RESOLVED_BY_PERSONAL_FINAL_REREAD_AT_0a7c3c92:KNOWN_FULL_TABLE_ENTROPY_EXISTENCE_CREDITED_EXPLICITLY"
+    }
+  ],
+  "primary_literature_checked_directly": [
+    {"url": "https://arxiv.org/html/1504.00858", "exact_part": "Corollary9.1", "finding": "Universal entropy-maximizer formulation quantifies over EVERY finite joint distribution. A fixed-host scalar statement does not supply that quantified conclusion."},
+    {"url": "https://arxiv.org/pdf/1603.05888", "exact_part": "Theorem1.1, Corollary1.2 and the two-color proof", "finding": "Known proper-coloring cross-part sign and sharp color-count endpoint. This predecessor must be credited rather than repackaged as a new endpoint."},
+    {"url": "https://arxiv.org/pdf/1004.3026", "exact_part": "Section3, Theorem3.3", "finding": "Known local scalar Sidorenko result under sup-norm smallness. It does not by its statement alone fit every prescribed marginal; the new proof explicitly pays an exact-fitting correction."},
+    {"url": "https://emis.de/ft/30662", "exact_part": "Corollary5.2 and definitions", "finding": "Known complete-graph doubly-nonnegative anchor; not a general inequality with independent colored kernels or arbitrary common powers."},
+    {"url": "https://web.math.ku.dk/~lauritzen/papers/AOS2007.pdf", "exact_part": "Front matter, Corollary3.7, Remark3.9", "finding": "Verified2021 bibliographic details and the possibility of excess fitted covariance at zero coupling. The new zero-face argument must explicitly remove that possibility."},
+    {"url": "https://proceedings.neurips.cc/paper_files/paper/2012/file/03afdbd66e7929b125f8597834fa83a4-Paper.pdf", "exact_part": "Paper identity and abstract", "finding": "Binary log-supermodular Bethe lower bound is a known predecessor, not a certificate for arbitrary Potts/table exact fits."},
+    {"url": "https://math.mit.edu/~fox/paper-sidorenko-short.pdf", "exact_part": "Theorem1", "finding": "A bipartite graph with a vertex complete to the opposite side is globally Sidorenko. K3,3-minus-edge meets this condition, so combined with Szegedy the new explicit example illustrates a mechanism on known entropy-existence coverage."},
+    {"url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/7587A22E3A717B29DBAB2A6E99875345/S0963548325100242a.pdf/sidorenkos-conjecture-for-subdivisions-and-theta-substitutions.pdf", "exact_part": "Published front matter and Theorems1.3,1.4,1.6, pp269-272", "finding": "Verified2026 CPC35(2)269-279. Uniform even-theta substitution and nonuniform path-count-divisibility results are nearby prior work; differing arbitrary path lengths are explicitly excluded from the stated nonuniform route. The result must be compared, not silently applied beyond its scope."}
+  ],
+  "dependency_table": [
+    {"id": "CA", "claim": "Exact-edge sharp entropy for every requested finite alphabet input", "needed_by": "root", "route": "RA", "classification": "root", "support": "Restricted routes below", "status": "failing"},
+    {"id": "OA1", "claim": "A full-table exact joint exists for each requested bipartite input", "needed_by": "CA", "route": "RA/AND", "classification": "algebraic/logical step", "support": "Broadcast one pair to the two bipartition classes; this proves feasibility, not its budget", "status": "discharged"},
+    {"id": "OA2", "claim": "The minimum exact-joint KL has the sharp global budget outside all restricted families", "needed_by": "CA", "route": "RA/AND", "classification": "missing", "support": "No supplied general fitting or entropy-transfer proof", "status": "failing"},
+    {"id": "OA3", "claim": "The global route handles arbitrary zero pair masses", "needed_by": "CA", "route": "RA/AND", "classification": "missing", "support": "Potts endpoints/forest cases do not cover arbitrary table boundaries", "status": "failing"},
+    {"id": "CA-P", "claim": "Sharp uniform-Potts exact-edge theorem on the stated graph/sign class", "needed_by": "CA-O,restricted integration", "route": "RAP", "classification": "major claim", "support": "alphabet-global complete seven-step proof", "status": "discharged"},
+    {"id": "P1", "claim": "Finite capped Gibbs minimum exists with full support", "needed_by": "CA-P,CA-O", "route": "RAP/AND", "classification": "algebraic/logical step", "support": "Compact box and finite exponential family", "status": "discharged"},
+    {"id": "P2", "claim": "Removed-edge agreement has the correct side of1/q", "needed_by": "CA-P", "route": "RAP/AND", "classification": "proved earlier", "support": "Explicit weighted two-color conditioning and Ising expansion", "status": "discharged"},
+    {"id": "P3", "claim": "Interior and cap-face nonzero edges fit", "needed_by": "CA-P", "route": "RAP/AND", "classification": "algebraic/logical step", "support": "KKT and exact agreement-odds reinsertion with P2", "status": "discharged"},
+    {"id": "P4", "claim": "Every zero interaction also fits its actual edge", "needed_by": "CA-P", "route": "RAP/AND", "classification": "proved earlier", "support": "Degree-at-one-endpoint implies at most two active neighbors; equal-fit max/min argument", "status": "discharged"},
+    {"id": "P5", "claim": "Agreement constraints imply every full Potts table", "needed_by": "CA-P,CA-O", "route": "RAP/AND", "classification": "side condition", "support": "Actual global color-permutation symmetry and uniform singleton laws", "status": "discharged"},
+    {"id": "P6", "claim": "Finite reverse-KL mesh gives mI_q(s)", "needed_by": "CA-P", "route": "RAP/AND", "classification": "algebraic/logical step", "support": "Correct slot/order, oriented mesh and theta=I_q'", "status": "discharged"},
+    {"id": "P7", "claim": "s=0,1 endpoint witnesses satisfy the same bound", "needed_by": "CA-P", "route": "RAP/AND", "classification": "side condition", "support": "Finite joint-simplex compactness and positive-reference KL continuity", "status": "discharged"},
+    {"id": "CA-L", "claim": "Arbitrary-table local exact entropy theorem with its explicit radius", "needed_by": "restricted integration", "route": "RAL", "classification": "major claim", "support": "Complete local finite proof", "status": "discharged"},
+    {"id": "L1-L4", "claim": "Centered leaf cancellation supplies a rho^g partition gain and rho^(g-1) full-gauge residual", "needed_by": "CA-L", "route": "RAL/AND", "classification": "proved earlier", "support": "Exact subset expansion, even girth, marked-vertex forest classification and complete orthonormal gauge", "status": "discharged"},
+    {"id": "L5-L8", "claim": "Exact fit exists and its dual correction is at most the allowed partition surplus", "needed_by": "CA-L", "route": "RAL/AND", "classification": "side condition", "support": "Every stated delta bound checked; positive Hessian and interior minimization", "status": "discharged"},
+    {"id": "CA-O", "claim": "Strict budget on a compatible open full-table neighborhood", "needed_by": "restricted integration", "route": "RAO", "classification": "major claim", "support": "Repaired robustness proof", "status": "discharged"},
+    {"id": "O1", "claim": "A cyclic interior Potts fit has a strictly interior cycle cap", "needed_by": "CA-O", "route": "RAO/AND", "classification": "proved earlier", "support": "Positive-probability alternate-path two-color event and both cap KKT signs", "status": "discharged"},
+    {"id": "O2-O3", "claim": "Applicable-interval analytic fit gives positive oriented budget gap", "needed_by": "CA-O", "route": "RAO/AND", "classification": "side condition", "support": "Full-support feature covariance, corrected family interval, exact derivative cancellation", "status": "discharged"},
+    {"id": "O4-O5", "claim": "Full unary/pair inverse fits nearby tables and continuous KL preserves strictness", "needed_by": "CA-O", "route": "RAO/AND", "classification": "named theorem", "support": "Finite implicit-function theorem with checked invertible covariance and fixed feature basis", "status": "discharged"},
+    {"id": "O6", "claim": "The open input family may stay strictly triple-extendible", "needed_by": "CA-O additional q>=3 clause", "route": "RAO/AND", "classification": "side condition", "support": "Positive IID mixture and explicit pair-marginal linear right inverse; q>=3 retained", "status": "discharged"},
+    {"id": "CB", "claim": "Ordered common-power density bound on every requested actual host", "needed_by": "root", "route": "RB", "classification": "root", "support": "Restricted common-cone route", "status": "failing"},
+    {"id": "B1-B2", "claim": "Original weighted measure and all ordered exponents are well-defined", "needed_by": "CB", "route": "RB/AND", "classification": "hypothesis", "support": "Exact target normalization W,p,T,A and positive integers", "status": "discharged"},
+    {"id": "B3", "claim": "General collective mixed-band compensation dominates every negative contribution", "needed_by": "CB", "route": "RB/AND", "classification": "missing", "support": "No supplied proof for the general interacting spectrum", "status": "failing"},
+    {"id": "CB-C", "claim": "One-common-S cone colored-K4 density bound", "needed_by": "CB-T", "route": "RBC", "classification": "major claim", "support": "Complete729-assignment contraction proof", "status": "discharged"},
+    {"id": "C1-C3", "claim": "Convex expansion and identity/loop reductions retain valid lower bounds and originalmu", "needed_by": "CB-C", "route": "RBC/AND", "classification": "algebraic/logical step", "support": "Nonnegative mixture, exact mu powers, S-Pi PSD and diagonal bounds", "status": "discharged"},
+    {"id": "C4-C5", "claim": "Every quotient graph has density at least1", "needed_by": "CB-C", "route": "RBC/AND", "classification": "proved earlier", "support": "Exhaustive4/3/2/1-vertex cases,18 three-vertex cases, Jensen and two-PSD trace comparisons", "status": "discharged"},
+    {"id": "CB-T", "claim": "All six powers of a complete two-centered-level A have density at least1", "needed_by": "restricted integration", "route": "RBT", "classification": "major claim", "support": "Complete spectral form and common-cone corollary", "status": "discharged"},
+    {"id": "T1", "claim": "The complete centered space is P plus its complement with exactly the stated two eigenvalues", "needed_by": "CB-T", "route": "RBT/AND", "classification": "hypothesis", "support": "A=Pi+xP+y(I-Pi-P),0<=y<=x<=1, actual entrywise nonnegativity", "status": "discharged"},
+    {"id": "T2-T4", "claim": "One actual common S exists and every power is a convex mixture, with all degeneracies covered", "needed_by": "CB-T", "route": "RBT/AND", "classification": "algebraic/logical step", "support": "Off-diagonal/diagonal S checks and finite geometric sums; no additional zero level or independent S_e", "status": "discharged"},
+    {"id": "CA-B", "claim": "Disjoint-block surplus/noise closure and the displayed three-colour witness", "needed_by": "restricted integration", "route": "RAB/AND", "classification": "major claim", "support": "Read complete entropy-gap-attempt; actual component KL, exact edge correction, allconfigurationpositivity, finiteentropy losses and exact rational constants", "status": "discharged"},
+    {"id": "CB-S", "claim": "Fixed-original-space, fixed-tuple density stability and local positivity near a strict two-level base", "needed_by": "restricted integration", "route": "RBS/AND", "classification": "major claim", "support": "Read complete density-gap-attempt; actual Markov averaging, six-factor telescope and positive cone buffers", "status": "discharged"},
+    {"id": "S1", "claim": "An actual bipartite K4 subdivision is an allowable rank3 cyclic core", "needed_by": "CStory", "route": "RStory/AND", "classification": "algebraic/logical step", "support": "Subdivision preserves2-connectivity, parity ensures bipartiteness, m-n+1=3; canonical-atom theorem is accepted context", "status": "discharged"},
+    {"id": "S2-S5", "claim": "Reviewed main manuscript integration preserves the distinct problem, restricted scopes, formal status and stated predecessor attribution", "needed_by": "CStory", "route": "RStory/AND", "classification": "side condition", "support": "Personally read complete edited new section/appendix, abstract/intro/verification scope and bibliography at0a7c3c92, then exact final21bfa389 primary-comparison/continuity/layout deltas. Separate public packet Git readback remains root delivery work, not a mathematical premise.", "status": "discharged"}
+  ],
+  "verdict": {
+    "restricted_mathematical_arguments": "FOLLOWS for the exact four round1 restricted source contracts and the stated round2 disjoint-block/noise/example/fixed-tuple-stability contracts after the already recorded scope/count repairs. This review did not find a fatal mathematical flaw in those contracts or their reviewed new main-manuscript transcriptions.",
+    "universal_target_A": "NOT ESTABLISHED BY THESE PROOF ROUTES: OA2 and OA3 are exact missing obligations. This is not a proof of falsity or an assertion that no different proof exists.",
+    "universal_target_B": "NOT ESTABLISHED BY THESE PROOF ROUTES: B3 is the exact missing general compensation obligation. Independently colored commuting-kernel counterexamples are not target counterexamples.",
+    "publication_integration": "SOURCE_SCOPE_CHECK_FOLLOWS for the main manuscript's exact restricted integration at21bfa389 after the final primary-paper/continuity/display delta reread: the rank3 core bridge is mathematical motivation, not a claimed consequence of obligatoriness; two universal targets remain open; main theorem statements and appendix proofs agree; new claims are explicitly not accepted Lean results; known graph/entropy existence and nearby subdivision cases are credited. The separate public packet/Git delivery is not silently certified. This is a bounded source audit, not a journal acceptance recommendation.",
+    "journal_or_novelty": "NOT CERTIFIED. No top-journal acceptance recommendation, breakthrough label, full external referee audit or novelty clearance is made."
+  },
+  "actions": {"read_only_shell": true, "primary_web_reads": true, "new_file_only": "review-two.json", "source_or_manuscript_edits": false, "compiler_or_Slurm": false, "paid_requests": false, "GitHub_mutation": false, "clock_changes": false}
+}

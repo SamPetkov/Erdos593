@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-09",
+  "lane": "alphabet_variational_round1",
+  "status": "COMPLETE_ANALYTICAL_POTTS_SUBCASE_AND_EXACT_LOCAL_MATRIX_OBSTRUCTION_NOT_FULL_TARGET_NOT_LEAN_VALIDATED",
+  "scope": {
+    "full_target": "Arbitrary finite positive singleton kappa and symmetric three-extendible pair lambda on every actual simple bipartite K4 subdivision, with every actual edge law lambda and KL cost at most m times pair KL.",
+    "full_target_resolved": false,
+    "distinction": "A self-contained proof below covers the uniform-colour ferromagnetic Potts family, including alphabets of every size. The local Gibbs counterexample below refutes only a proposed response-identifiability shortcut; it is not a counterexample to the full target.",
+    "parallel_lane": "The alphabet_global_round1 lane separately examines the antiferromagnetic Potts extension. No theorem from that lane is assumed in this attractive proof."
+  },
+  "proved_subcase": {
+    "graph": "G=(V,E) is any finite simple graph such that every actual edge uv has min(deg(u),deg(v)) at most 3. Isolated vertices are allowed. Bipartiteness is unnecessary for this attractive subcase.",
+    "alphabet": "[q], q an integer at least 2; kappa(i)=1/q.",
+    "pair": "For t in [1/q,1], lambda_t(i,i)=t/q and lambda_t(i,j)=(1-t)/(q(q-1)) for i different from j.",
+    "conclusion": "There is tau on [q]^V whose every singleton is kappa and whose every oriented actual edge marginal is exactly lambda_t, with D(tau||kappa^V) at most |E| I_q(t).",
+    "pair_KL": "I_q(t)=t log(qt)+(1-t) log(q(1-t)/(q-1)), with 0 log 0=0.",
+    "relation_to_target": "Every K4 subdivision is subcubic, including length-one paths, so this gives its exact target witness for this pair family. These pairs are three-extendible: eta is alpha times the uniform all-three-equal law plus (1-alpha) times kappa^3, with alpha=(qt-1)/(q-1). This triple is not used in the proof."
+  },
+  "self_contained_proof": [
+    {
+      "step": 1,
+      "title": "Compact fitting and complete marginal symmetry",
+      "argument": "First let 1/q<t<1 and B(t)=log[t(q-1)/(1-t)]>0. For beta in [0,B(t)]^E set Z(beta)=sum_{x in [q]^V} exp(sum_{uv in E} beta_uv 1{x_u=x_v}) and mu_beta(x)=exp(sum beta_uv 1{x_u=x_v})/Z(beta). The continuous convex function F_t(beta)=log Z(beta)-t sum_e beta_e has a minimizer on this compact box. All configurations have positive mass. Simultaneous permutation of all q colours leaves the model invariant. Therefore every singleton is uniform, every diagonal pair entry equals one another, and every ordered off-diagonal pair entry equals one another. The entire edge pair law is lambda_t exactly when its agreement probability is t."
+    },
+    {
+      "step": 2,
+      "title": "Removed-edge ferromagnetic agreement",
+      "argument": "For any nonnegative couplings, expand exp(beta_e 1{x_u=x_v})=1+(exp beta_e-1)1{x_u=x_v}. The joint law is a positive mixture indexed by edge subsets A, in which each connected component of (V,A) gets an independent uniform colour. Conditional on A, two vertices agree with probability 1 if connected in (V,A), and 1/q otherwise. Thus the agreement probability of any two distinct vertices is at least 1/q. This includes the model with one actual edge coupling removed. No ordered log-supermodularity or Bethe theorem is assumed."
+    },
+    {
+      "step": 3,
+      "title": "Every positive coupling edge fits",
+      "argument": "At an interior coupling, the derivative of F_t is P_mu(X_u=X_v)-t=0. If beta_uv=B(t), remove that coupling and write its agreement probability as a>=1/q. Reinsertion gives exp(B)a/[1+(exp(B)-1)a]>=t, because this expression is increasing in a and equals t at a=1/q. Upper-face KKT says P_mu(X_u=X_v)-t<=0. Hence upper-face edges also fit exactly. At a zero coupling, lower-face KKT says P_mu(X_u=X_v)>=t."
+    },
+    {
+      "step": 4,
+      "title": "A zero edge has at most two active neighbours at a low-degree endpoint",
+      "argument": "Let vw be an actual zero-coupling edge and choose v with deg(v)<=3. At most two other incident edges have positive couplings. Given all variables except X_v, the conditional colour probabilities depend only on those active neighbours. With none, X_v is uniform and P(X_v=X_w)=1/q<=t. With one active neighbour a, its colour maximizes the conditional probability, so P(X_v=X_w)<=P(X_v=X_a)=t. This comparison uses conditional probabilities given the full outside configuration and does not assume independence between w and a."
+    },
+    {
+      "step": 5,
+      "title": "Exact two-neighbour saturation for every number of colours",
+      "argument": "Suppose the active neighbours are a,b with positive couplings beta_a,beta_b. Both incident agreement probabilities equal t by step 3. On X_a=X_b their conditional agreement difference is zero. On X_a!=X_b it is (exp beta_a-exp beta_b)/(exp beta_a+exp beta_b+q-2). Full support implies P(X_a!=X_b)>0, so equality of the incident agreement probabilities forces beta_a=beta_b. If the neighbour colours differ, both of those colours maximize the conditional probability of X_v; if they agree, their common colour maximizes it. Pointwise over every outside configuration, P(X_v=X_w|outside)<=P(X_v=X_a|outside). Consequently P(X_v=X_w)<=t. Combine with lower-face KKT to get equality. By step 1 this fits the entire actual edge law, not just an average over edges."
+    },
+    {
+      "step": 6,
+      "title": "Sharp KL budget without an assumed Bethe estimate",
+      "argument": "For each u in (1/q,t], choose a box minimizer mu_u that fits every actual edge; put mu_(1/q)=kappa^V. Let C_u=D(mu_u||kappa^V) and S_u=sum_e beta_e(u). For 1/q<=s<u<=t, direct substitution in the Gibbs densities gives D(mu_s||mu_u)=C_s-C_u+(u-s)S_u>=0. Thus C_u-C_s<=(u-s)S_u<=|E|(u-s)B(u). Fix mu_t, choose fitted laws at the finitely many nodes of a partition of [1/q,t], and telescope. Right Riemann sums converge because B is continuous on that interval. Since I_q'(u)=B(u) and I_q(1/q)=0, this proves C_t<=|E|I_q(t). No continuity of a selected minimizer family, differentiability of the optimum, or uniqueness is required."
+    },
+    {
+      "step": 7,
+      "title": "Endpoints, empty graphs and zero pair masses",
+      "argument": "At t=1/q take the independent uniform law. At t=1 choose an independent uniform colour for each connected component and assign it to every vertex in that component. Its cost is (|V|-c(G))log q<=|E|log q=|E|I_q(1), because each connected component needs at least its vertex count minus one edges. Isolated vertices are independent uniform and cost zero. With no edges the product law works. The one-symbol alphabet is separately trivial. No full-support assumption is used at the endpoints."
+    }
+  ],
+  "exact_bipartite_local_matrix_obstruction": {
+    "claim_refuted": "Equal complete incident pair laws at a degree-two vertex, with equal singleton laws and full support, automatically imply that its two general matrix interactions or conditional responses agree after exchanging its neighbours.",
+    "not_refuted": "This does not refute the full entropy theorem, a global fitted minimizer, an all-edge-common-law model, or a proof using additional symmetry, positivity or attraction restrictions.",
+    "carrier": "Actual four-vertex simple bipartite cycle v-a-z-b-v; each variable is in Z/3Z. Partition classes are {v,z} and {a,b}.",
+    "potentials": "Let A=(11,1,2), B=(11,2,1), C=(1,3,1), indexed by colour differences modulo 3. The 3x3 matrix Cmat has Cmat(a,b)=C_(a-b), with row and column sums 5. Put P=I+(1/10)J and Q=Cmat-(5/13)J, where J is the all-ones matrix. Every P entry is positive and each Q entry is 8/13 or 34/13. Define the positive pairwise Gibbs law proportional to A_(a-v) P(a,z) Q(z,b) B_(b-v).",
+    "factorization": "The row and column sums of Q are 50/13, so P Q=Q+(1/10)(50/13)J=Cmat exactly. Integrating the actual latent vertex z therefore gives P(v,a,b) proportional to A_(a-v) B_(b-v) C_(a-b).",
+    "singleton_check": "All four edge potentials are invariant under simultaneous addition modulo 3. Hence all four singleton marginals are uniform, and every full four-colour configuration has strictly positive mass.",
+    "incident_pair_check": "For fixed v, the 3x3 weight matrix in (a-v,b-v) has row sums (176,36,36) and the same column sums; total 248. The total joint normalizer after summing v is 744. Thus the v-a and v-b pair laws coincide and are symmetric: each diagonal entry is 176/744=22/93, each off-diagonal entry is 36/744=3/62. Equivalently these incident pairs are lambda_t with t=22/31.",
+    "conditional_response_check": "Given (a,b)=(0,1), the unnormalized conditional weights for v=(0,1,2) are (22,22,1), hence probabilities (22,22,1)/45. Given the exchanged (a,b)=(1,0), they are (11,11,4), hence probabilities (11,11,4)/26. These response vectors differ although the complete incident pair laws are equal. The factor P(a,z)Q(z,b) is independent of v and does not alter these responses.",
+    "three_extendible_incident_law": "The common pair lambda_(22/31) is three-extendible, for example with eta=(35/62) times the uniform all-three-equal law plus (27/62) times the independent uniform triple.",
+    "limitations": "The other two actual cycle edges are not asserted to have this same pair law. Some matrix interactions are oriented and are not asserted symmetric. The law is not asserted to minimize the global entropy fitting functional. The example only invalidates the local general-matrix identifiability inference absent further hypotheses. It does not contradict the colour-permutation-symmetric Potts proof above."
+  },
+  "strictly_positive_three_extendible_non_MTP2_input": {
+    "construction": "On three uniform colours take eta_epsilon=(1-epsilon) times the uniform law on the six permutations of (1,2,3), plus epsilon times the independent uniform triple, with 0<epsilon<1.",
+    "pair_entries": "Its symmetric pair lambda_epsilon has diagonal epsilon/9 and off-diagonal (3-epsilon)/18, and all singleton marginals are uniform.",
+    "exact_failure": "For any two distinct ordered colours i<j, lambda(i,i)lambda(j,j)-lambda(i,j)lambda(j,i)=(epsilon/9)^2-((3-epsilon)/18)^2<0. Thus no total order of the colours makes this pair TP2. Since marginals of an MTP2 model must be TP2, a blanket attractive ordered-MTP2 fitting construction cannot fit this admissible positive target.",
+    "scope": "This is an obstruction to that fitting cone, not a target counterexample. The separate antiferromagnetic Potts approach may cover this particular pair by a different argument."
+  },
+  "exact_remaining_obligations": [
+    "For a general symmetric q-by-q pair table and nonuniform singleton law, find a structured finite-dimensional potential domain whose box/face optimality certifies every entry of every actual edge marginal, not merely agreement probability.",
+    "Replace the scalar upper-edge likelihood-ratio comparison with a valid matrix comparison for the actual target; three-extendibility alone does not supply ordered MTP2.",
+    "Find a valid local face-saturation mechanism stronger than equal incident pair laws alone; the positive bipartite C4 example above defeats naive conditional-response identifiability.",
+    "Obtain a sharp KL budget along a specified target-table path, with bounded pairing between target increments and fitted edge-potential matrices. Merely invoking the universally quantified entropy dual inequality would rename the target."
+  ],
+  "primary_literature_read": [
+    {
+      "author": "Nicholas Ruozzi",
+      "title": "Beyond Log-Supermodularity: Lower Bounds and the Bethe Partition Function",
+      "url": "https://arxiv.org/pdf/1309.6859",
+      "locations": ["Section 5.1", "Theorem 5.2", "Section 5.2"],
+      "scope_summary": "Theorem 5.2 gives a Bethe partition lower bound for ferromagnetic q-state Potts models with inhomogeneous nonnegative edge couplings. Section 5.2 warns that arbitrary external fields can break the lower bound. This is nearby established machinery, not a theorem asserting exact fitted every-edge marginals. The proof recorded here uses elementary random-cluster expansion and KL comparison instead of this theorem."
+    },
+    {
+      "author": "Balazs Szegedy",
+      "title": "Sparse graph limits, entropy maximization and transitive graphs",
+      "url": "https://arxiv.org/html/1504.00858",
+      "locations": ["Theorem 4", "Corollary 9.1"],
+      "scope_summary": "The universally quantified exact-edge pair-entropy bound is equivalent to Sidorenko for bipartite graphs. A restricted colour-symmetric pair family does not establish that universal graph property."
+    }
+  ],
+  "reviews": {
+    "root_lane_review": "Source derivations and boundary cases checked in this research lane.",
+    "actual_separate_agent": "/root/alphabet_variational_round1/potts_saturation_check",
+    "actual_separate_agent_result": "Complete attractive Potts analytical candidate passes the helper's independent local argument review; KKT, FK, complete marginal symmetry, KL interpolation, graph degree condition and endpoints checked. No flaw reported.",
+    "external_full_audit": "PENDING",
+    "novelty": "NOT_ASSESSED; no priority or publication-level claim.",
+    "lean_validation": false
+  },
+  "execution": {
+    "bounded_analytical_research": true,
+    "paid_service_request": false,
+    "browser_chat_request": false,
+    "compiler": false,
+    "simulation": false,
+    "numerical_search": false,
+    "git_or_github_change": false,
+    "manuscript_edit": false,
+    "clock_change": false,
+    "artifact_edit": "Only this new JSON artifact was written."
+  }
+}

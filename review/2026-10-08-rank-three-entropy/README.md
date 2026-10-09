@@ -1,5 +1,19 @@
 # Rank-three research checkpoint — 9 October 2026
 
+## Later analytical pass — 9 October
+
+The [entropy–density review packet](../2026-10-09-entropy-density/README.md)
+adds uniform-q Potts and prescribed-table local/open results, explicit
+conditional block-mixture budget transfer, complete two-centered-level host
+spectra and fixed-tuple stability. Their full proofs are included in the
+updated [author-review manuscript](../2026-10-02/erdos593_obligatory_triple_systems.tex).
+Two detailed separate-agent adversarial reviews record the exact domains and
+remaining obligations. These results are **not accepted Lean exports**.
+The three-colour example's existence is already known on its particular graph;
+it illustrates an explicit budget-transfer construction, not a new graph family.
+Both unrestricted targets remain open. Earlier coverage summaries below
+describe the preceding binary pass where inconsistent.
+
 This packet preserves progress recovered after the Windows restart. It is a
 research draft, not the authoritative manuscript or an accepted Lean integration.
 The accepted 250-module, 401-audit checkpoint remains unchanged.
@@ -83,9 +97,11 @@ counterexample to the density target.
 
 ## What remains open
 
-The universal density-free inequality for arbitrary interacting spectra, the
-exact-marginal entropy statement for nonuniform binary singletons and arbitrary
-finite alphabets, formal validation of the binary theorem, pinned validation of the new
+The universal density-free inequality for arbitrary interacting spectra and the
+global exact-marginal entropy statement for general finite-alphabet tables
+outside the proved families remain open. Nonuniform binary and general tables
+are now covered locally, not throughout their domains. Formal validation of the
+new entropy/density arguments, pinned validation of the new
 finite transport candidate and original-host kernel/graph extraction, literature
 novelty, and significance
 remain separate obligations. The coefficient proof now has a real pinned focused
@@ -93,6 +109,7 @@ check, not a whole graph theorem or canonical integration. Job66955 completed
 with actual child/wrapper/accounting zero; no proof job remains active and the
 green focused gate must not be repeated. No novelty or B-level result is claimed.
 
-This is an update to public draft PR55, not a new duplicate PR or a merge. No
-live manuscript, PDF, bibliography, accepted source root, private coordination
-material or recurring clock is changed by this packet.
+The original packet was delivered in public draft PR55. Its dated source and
+failed-route records remain preserved. The later scoped public review PRs add
+research evidence and an updated manuscript/PDF/bibliography without changing
+the accepted source root, private coordination material or paused clocks.
