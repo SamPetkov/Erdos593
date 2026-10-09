@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-09",
+  "review_time_utc": "2026-10-09T15:18:56Z",
+  "reviewer": "/root/local_entropy_audit_round1",
+  "review_kind": "ACTUAL_SEPARATE_AGENT_ANALYTICAL_SOURCE_REVIEW",
+  "independent_of_derivation": true,
+  "full_external_audit": false,
+  "source": "alphabet-variational-next.json",
+  "source_sha256": "62f2d7762f6378f20a6d530e13eef098354f405643ea827517a7067823f3502a",
+  "previous_source_sha256": "1defbfcbaaa9079af3235d49be9834ff8c78a52da120013587ee8ab703d9b68d",
+  "final_source_reconciliation": {
+    "time_utc": "2026-10-09T15:21:48Z",
+    "result": "PASS_METADATA_ONLY_UPDATE",
+    "method": "Read the complete final JSON independently and compare the theorem, every displayed constant, all ten proof steps and the non-Potts example with the complete original source printed during the initial review. The mathematical sections are unchanged. This is a complete source comparison against the preserved tool transcript, not a claim of an unavailable automated old-file byte diff.",
+    "changed_scope": "Literature-comparison and review-status metadata only; no theorem, constant, proof step, example or execution-policy change was found.",
+    "math_sections_sha256": "50da9137168b45e92ed705b8c533dae9413fb1d3249d7e6898e1b4725bd93fba",
+    "math_fingerprint_serialization": "PowerShell ConvertTo-Json -Depth 30 -Compress of the ordered object {theorem, proof, specific_genuine_three_symbol_example}, hashed as UTF-8 without BOM.",
+    "mathematical_verdict": "All eleven original analytical checks remain PASS. No proof replay, compiler or external service was performed."
+  },
+  "result": "PASS_FOR_THE_EXACT_RESTRICTED_LOCAL_THEOREM",
+  "exact_scope": {
+    "inputs": "A fixed finite simple bipartite graph, a fixed finite alphabet of size q>=2, any fixed strictly positive singleton law kappa, and a symmetric pair law lambda with both marginals kappa.",
+    "cyclic_graph": "For even girth g>=4 and operator norm rho of C=sqrt(kappa) f sqrt(kappa), where f=lambda/(kappa*kappa)-1, the explicit source radius delta suffices for a full-support joint law fitting every singleton and every complete actual-edge pair table.",
+    "entropy": "Natural-log KL obeys D(tau||kappa^V)<=m D(lambda||kappa^2)-rho^g/8 when 0<rho<=delta; rho=0 uses the independent product law.",
+    "forest": "For forests the standard rooted Markov construction gives exact marginals and equality in the entropy budget without a smallness condition, including zero pair entries.",
+    "not_established": "No global arbitrary-pair-table theorem, graph-uniform positive radius, Lean/kernel validation, novelty claim, journal-level impact classification or full external audit is established by this review."
+  },
+  "checks": [
+    {
+      "item": "Norm and positivity",
+      "result": "PASS",
+      "detail": "Every entry of the symmetric C has magnitude at most its operator norm rho. Since sqrt(kappa(x)kappa(y))>=a, |f|<=rho/a. The source condition rho<=a/3 ensures the seed factors are strictly positive. In the cyclic case m>=g>=4 and d>0, so all displayed constants and exponents are well-defined."
+    },
+    {
+      "item": "Leaf cancellation and leading-cycle classification",
+      "result": "PASS",
+      "detail": "Any degree-one vertex of an edge subset kills its expectation by the weighted row-centering of f. A surviving g-edge subset must be exactly one simple shortest cycle: it contains a cycle of length at least g and has only g edges. There is at least one such subset. For even g, its expectation Tr(C^g) is nonnegative and at least rho^g."
+    },
+    {
+      "item": "Partition remainder and logarithm",
+      "result": "PASS",
+      "detail": "For a k-edge term, its magnitude is at most (rho/a)^k. For k>=g+1, rho<=1 and a<=1 bound the total remainder by 2^m a^(-m) rho^(g+1)=A rho^(g+1). The radius condition rho<=1/(2A) yields Z>=1+rho^g/2>=1, and log Z>=rho^g/4 follows from 0<=rho^g/2<=1/2. No infinite series or asymptotic argument is used."
+    },
+    {
+      "item": "Complete gauge and pair reconstruction",
+      "result": "PASS",
+      "detail": "Under the product reference law, all centered orthonormal unary features and doubly centered actual-edge features form an orthonormal family, even when two distinct edges meet at a vertex. Their count is exactly n(q-1)+m(q-1)^2. Each edge log-potential has a constant, unary and doubly centered pair decomposition. Matching all unary and pair moments consequently fixes every complete oriented pair table, not just its agreement probability or an average over edges."
+    },
+    {
+      "item": "Target coefficients",
+      "result": "PASS",
+      "detail": "The weighted vectors sqrt(kappa) xi_i are Euclidean unit vectors. Therefore each target pair coefficient is a matrix entry of C between unit vectors and has magnitude at most rho. Unary target coefficients vanish. The proof does not assume that the complete collection of these targets is feasible before constructing the fitted joint."
+    },
+    {
+      "item": "Marginal residual and all forest cases",
+      "result": "PASS",
+      "detail": "For a unary insertion a surviving nonempty forest would have all leaves at one marked vertex, which is impossible. For a pair insertion at actual adjacent u,v, a surviving nonempty forest can only be a single u-v path. The one-edge path gives exactly the desired coefficient; any other path has length at least g-1, since it closes with the actual edge to a cycle. Every cyclic subset has at least g edges. The bound |E|<=MA rho^(g-1), normalization error <=A rho^(g+1), Z>=1 and Euclidean dimension factor give exactly the source residual bound B rho^(g-1). Disconnected cyclic components are included in the same bound."
+    },
+    {
+      "item": "Uniform Hessian on the specified ball",
+      "result": "PASS",
+      "detail": "The seed potential range is at most 4m rho/a<=log(2)/2. A displacement of norm at most r=log(2)/(4L) has range at most 2Lr=log(2)/2. Thus each Gibbs density on the ball is at least one half of the product density. The infimum-over-constants identity for variance and orthonormality then give Hessian>=I/2. Constant gauge terms do not affect these range or covariance bounds."
+    },
+    {
+      "item": "Existence of an exact fit",
+      "result": "PASS",
+      "detail": "The radius condition gives gradient norm G0<=r/8. Strong convexity on the radius-r ball makes every boundary value exceed F(theta0) by at least r^2/8. Compactness supplies an interior minimizer with zero gradient. Global convexity makes that point a global minimizer. It fits all moments exactly and has full support because its finite parameter vector exponentiates the positive product reference measure. This is a genuine existence argument, not a formal implicit-function invocation."
+    },
+    {
+      "item": "Entropy signs and correction cost",
+      "result": "PASS",
+      "detail": "At the seed, F(theta0)=log Z-mI after cancellation of the constant gauge term. At the fitted law D=-F(theta*). Strong convexity bounds F(theta0)-F(theta*)<=G0^2. Therefore D<=mI-rho^g/4+B^2 rho^(2g-2). The condition rho^(g-2)<=1/(8B^2) gives the stated strict saving rho^g/8. In particular the correction is the positive dual gain and has the correct sign."
+    },
+    {
+      "item": "Boundary and triple-extension cases",
+      "result": "PASS",
+      "detail": "The forest construction handles isolates, disconnected components and zero pair entries with exact KL equality. At rho=0 the product joint works. The cyclic smallness bound gives |f|<=1/3, so the explicit exchangeable triple density 1+f(x,y)+f(x,z)+f(y,z) is nonnegative, normalized and has the required pair marginal. No triple-extension hypothesis was used for the local witness proof."
+    },
+    {
+      "item": "Non-Potts three-state example",
+      "result": "PASS",
+      "detail": "The displayed matrix has zero row sums. Its eigenvectors (1,-1,0) and (1,1,-2) have eigenvalues 3 and -3/2, so C=f/3 has eigenvalues epsilon and -epsilon/2. Hence rho=epsilon. Its unequal off-diagonal entries make the pair genuinely non-Potts, with mixed-sign nonconstant modes and a valid triple extension in the stated radius."
+    }
+  ],
+  "supplemental_observation": "The derivation actually only requires an even shortest cycle: longer odd cycles would occur in the controlled remainder. This review does not edit or broaden the candidate theorem; the source's bipartite statement is the frozen audited one.",
+  "literature_review": "NOT_INDEPENDENTLY_PERFORMED_BY_THIS_REVIEWER. The final source now records the root/deriver's direct primary-source Lovasz comparison and explicitly withholds novelty and B-level claims. This reviewer checked that only this comparison and review metadata changed; those literature claims are not certified by the present mathematical audit.",
+  "execution": {
+    "read_complete_candidate": true,
+    "analytical_review": true,
+    "compiler": false,
+    "numerical_scan": false,
+    "paid_service": false,
+    "network": false,
+    "github_mutation": false,
+    "manuscript_edit": false,
+    "clock_change": false,
+    "only_new_artifact": "entropy-local-audit.json"
+  }
+}

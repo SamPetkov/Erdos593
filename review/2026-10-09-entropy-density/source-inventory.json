@@ -1,0 +1,135 @@
+{
+  "original_hash_comparison": "PASS",
+  "new_math_is_not_Lean_accepted": true,
+  "date": "2026-10-09",
+  "json_copies": 24,
+  "universal_targets_open": true,
+  "files": [
+    {
+      "sha256": "1d1ca41da6fb006b4e582b0c8842e6193b6554014de5c479fd13fc1ef7ec42bd",
+      "path": "review/2026-10-09-entropy-density/public-review-round2-20261009/brief.json",
+      "bytes": 2853
+    },
+    {
+      "sha256": "be9a62a2db57ebdddf4651813ddcf7f0a0ebbcb61078192cfdd4a2539fa9b6e9",
+      "path": "review/2026-10-09-entropy-density/public-review-round2-20261009/density-gap-attempt.json",
+      "bytes": 13330
+    },
+    {
+      "sha256": "4522b43ef33bfdc767c1b91a88bf460601ea3fe3037e861dc390951592848574",
+      "path": "review/2026-10-09-entropy-density/public-review-round2-20261009/editorial-comparison.json",
+      "bytes": 9111
+    },
+    {
+      "sha256": "e91b30073b788ba2fc797e1ee901f2b2e31e7ff6049ddded954a8baefb4c768b",
+      "path": "review/2026-10-09-entropy-density/public-review-round2-20261009/entropy-gap-attempt.json",
+      "bytes": 17147
+    },
+    {
+      "sha256": "bcee3848acd556936cc4eead6936ee15bf2a608d804447a71ca05ae1446dbe06",
+      "path": "review/2026-10-09-entropy-density/public-review-round2-20261009/entropy-gap-audit.json",
+      "bytes": 26702
+    },
+    {
+      "sha256": "07e420f09ce76c581577a4e9f27fb7d23383f10b258231750621fd51233069f2",
+      "path": "review/2026-10-09-entropy-density/public-review-round2-20261009/entropy-gap-literature.json",
+      "bytes": 3735
+    },
+    {
+      "sha256": "22f935dedb02cca94d4be715b6e56d5f90d3d7d40e89cee1ad1f64348a14921d",
+      "path": "review/2026-10-09-entropy-density/public-review-round2-20261009/publication-pass.json",
+      "bytes": 4467
+    },
+    {
+      "sha256": "3313bd2bc315d8dcdb6801be069ae5314209310acd404d3ff2f453321505b458",
+      "path": "review/2026-10-09-entropy-density/public-review-round2-20261009/review-one.json",
+      "bytes": 40577
+    },
+    {
+      "sha256": "056fbcb4cdcf8fc1819b61696127e328257616ba94797aef804aec8f430d2d9e",
+      "path": "review/2026-10-09-entropy-density/public-review-round2-20261009/review-two.json",
+      "bytes": 41985
+    },
+    {
+      "sha256": "cc63539c8decf98f9a574e1998ef01f9b2fb19fe146c8f94a532cb5f2aa0986f",
+      "path": "review/2026-10-09-entropy-density/public-review-round2-20261009/static-qa.json",
+      "bytes": 4791
+    },
+    {
+      "sha256": "ec4f25684aa0b0b4431f82bc4797d8ebfdd800f9b9378580e1c43c7b4e2266ee",
+      "path": "review/2026-10-09-entropy-density/README.md",
+      "bytes": 3576
+    },
+    {
+      "sha256": "64c402b549fe83d10dfc19fa439c865fea2ccb737592e24e766ca2ae964891cc",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/alphabet-global-next.json",
+      "bytes": 6968
+    },
+    {
+      "sha256": "7047201ed62c14a00f54026e8c7e3b35070b12bd02a07b7a7b09e2630131beff",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/alphabet-global.json",
+      "bytes": 17500
+    },
+    {
+      "sha256": "f2c8194f395dcb7dc726b2c0c8f828ee90e4d05bdb10e95c4ff8159406c1e793",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/alphabet-potts-robustness.json",
+      "bytes": 13801
+    },
+    {
+      "sha256": "62f2d7762f6378f20a6d530e13eef098354f405643ea827517a7067823f3502a",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/alphabet-variational-next.json",
+      "bytes": 14034
+    },
+    {
+      "sha256": "bcd25d2a4195c457142bb0245399f5ec6b086e9e883db1524eef260efb1d22b7",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/alphabet-variational.json",
+      "bytes": 13633
+    },
+    {
+      "sha256": "84563a77d3b998e790ba2b8ad65c7d2e8c66d8a956f022dc1217775b77b44135",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/brief.json",
+      "bytes": 3609
+    },
+    {
+      "sha256": "43c8bb05e0b238f0e8439cab95e20962170ef159ee47b0c07913869957b5599c",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/density-centered-next.json",
+      "bytes": 9737
+    },
+    {
+      "sha256": "892c5e79cbc8b9fa1f197e96a84ce116d61d3771fa9bfafc91f07ba5f918dbf7",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/density-centered.json",
+      "bytes": 13491
+    },
+    {
+      "sha256": "0cd9fabf6d4c2eb0d3195efa29e938f2e3e1e8981bb501566347b70432253946",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/density-prefix-next.json",
+      "bytes": 12832
+    },
+    {
+      "sha256": "781f627279f35632f1c087b900224436c695b374a5b813b567b9c2b69dcda1f1",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/density-prefix.json",
+      "bytes": 13059
+    },
+    {
+      "sha256": "2e52527dabe19e9f36ad0d8b05ba483c6a428823226e2285fab5cba584fd82ee",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/density-two-level-audit.json",
+      "bytes": 12829
+    },
+    {
+      "sha256": "39ae5d1c75bb9cd2909fb85de26fdfee23be01c90a4ef770b68643464634c44f",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/entropy-local-audit.json",
+      "bytes": 9155
+    },
+    {
+      "sha256": "feaec3a6949b2439f105a21e6e3fe9ec61c4bbe1e9198f24427a976be867ea81",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/entropy-potts-robustness-audit.json",
+      "bytes": 7855
+    },
+    {
+      "sha256": "ea4b61cb0616decd92a084d6d0a9018dba73a3b9990532da51e0daff7d5b04da",
+      "path": "review/2026-10-09-entropy-density/universal-round1-20261009/round-results.json",
+      "bytes": 13770
+    }
+  ],
+  "scope": "Explicit public research allowlist; no private coordination, accepted Lean, pins, workflows or secrets exported."
+}

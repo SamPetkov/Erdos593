@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-09",
+  "request": "Attempt the two remaining entropy/density targets, update the manuscript and public GitHub PRs, and perform two detailed adversarial reviews.",
+  "bounded_work": "Direct analytical attempts in two distinct lanes, four previously source-reviewed restricted theorem transcriptions, two actual separate-agent adversarial reviews, primary-source comparison, manuscript and PDF QA. No broad unbounded campaign.",
+  "authoritative_review_source_sha256": "21bfa389a60599829b1a674d5d0b413ea18275146570427c873ef2c5cc4a6326",
+  "math_progress": [
+    "Uniform-q Potts exact-edge entropy, explicit local arbitrary-table entropy and compatible full-table openness retain their exact restricted hypotheses.",
+    "Direct conditional disjoint-block construction earns beta H(pi) slack, global IID buffering and centered full-table corrections transfer this slack. An explicit positive triple-extendible three-colour example has exact witness slack greater than229/540 nats.",
+    "The three-colour graph K3,3-minus-edge has already known universal entropy existence through Conlon-Fox-Sudakov plus Szegedy. The explicit mechanism is an illustration, not a newly covered graph family or novelty claim.",
+    "The complete two-centered-level common-power comparison and fixed-tuple actual-root continuity give specified host families and local multi-band coverage, not arbitrary-spectrum compensation."
+  ],
+  "remaining_mathematical_gaps": {
+    "arbitrary_finite_alphabets": "Global sharp KL budget for tables outside the stated local/Potts/block-surplus families, including arbitrary zero-support boundaries, on all actual bipartite K4 subdivisions.",
+    "unrestricted_common_powers": "Collective compensation for general interacting spectra of an actual common nonnegative Markov square root, with the original measure and the prescribed ordered tuple. Negative individual terms are route obstructions, not target counterexamples."
+  },
+  "manuscript_changes": {
+    "date": "9 October2026, for substantive mathematical integration",
+    "new_main_section": "Quantitative comparisons for graph cores: exact restricted contracts and two explicit open problems",
+    "new_technical_appendix": "Full finite Gibbs-fitting, marginal-correction, cycle-surplus and weighted common-cone proofs; no hard bridge replaced by an unproved black box",
+    "bibliography": "44 distinct cited entries, numbered by first appearance, synchronized with references.bib",
+    "primary_comparison": "Csikvari-Lin, Szegedy, Lovasz, Sidorenko, Conlon-Fox-Sudakov and Im-Li-Liu; restricted hypotheses and known coverage credited",
+    "protected_prior_math": "Entire original main mathematics retained exactly;74original labels and the formalization appendix/attribution remain preserved, per actual static QA."
+  },
+  "validation": {
+    "builtin_editor": "Requested compiler returned platform preparation failure: windows sandbox path contains invalid UTF-8 characters. Not a TeX proof failure and not counted as successful compilation.",
+    "native": "Three actual serial installed MiKTeX pdflatex invocations exited0, installation and shell execution disabled. Final57-page PDF has no unresolved references/citations, rerun request or overfull/underfull boxes. Expected disabled-shell warning retained.",
+    "visual": "All57pages rendered and checked in three contact sheets; title, quantitative passage, explicit local radius and bibliography inspected at page scale.",
+    "analytical_reviews": "Two actual separate-agent detailed adversarial source reviews. Root review independent=false. No full external audit, novelty clearance, journal acceptance or B-level certification.",
+    "formal": "No new Lean compiler, service or scheduler run; no accepted Lean source or counts promoted by this pass."
+  },
+  "safety": {
+    "paid_requests": 0,
+    "simulations": 0,
+    "Lean_or_Slurm_jobs": 0,
+    "installs_cache_pin_changes": 0,
+    "video_user_process_changes": 0,
+    "clocks": "Both stopped monitors remain paused; no recurring task created or resumed.",
+    "delivery": "Scoped public-only research and manuscript review PRs, not blanket merging or direct main publication; private development remains stopped."
+  },
+  "completion": "The bounded publication pass is complete when both final source reviews and actual public Git readback pass. The universal targets, full manuscript formalization and novelty/significance evaluation remain open."
+}

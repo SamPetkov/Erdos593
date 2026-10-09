@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-09",
+  "author": "alphabet_global_round1",
+  "full_arbitrary_alphabet_target": "STILL UNRESOLVED",
+  "scope": "Direct analytical continuation of the global/sequential gluing route; no compiler, service, simulation, Git or manuscript changes.",
+  "exact_non_Potts_three_state_construction": {
+    "status": "ANALYTICAL EXACT CONSTRUCTION USING THE PREVIOUS BINARY THEOREM; REAL SEPARATE-AGENT CHAIN-RULE AUDIT PASS; NOT LEAN VALIDATION",
+    "parameters": "Let 0<p,q<1, max(0,2p-1)<=t<=p. Let sigma be any binary pair law with both marginals (q,1-q). Set kappa=(p q,p(1-q),1-p). Define lambda restricted to colors{1,2}^2 as t sigma; lambda(i,3)=lambda(3,i)=(p-t)q_i for q_1=q,q_2=1-q; and lambda(3,3)=1-2p+t. G is a finite simple bipartite subcubic graph, including every actual bipartite K4 subdivision.",
+    "construction": [
+      "Use the already analytically proved biased-binary theorem to obtain an actual-vertex indicator law B in {0,1}^V with singleton Bernoulli(p), every edge indicator pair (P11=t,P10=P01=p-t,P00=1-2p+t), and KL at most m I_B.",
+      "For each full actual indicator configuration b, let A(b)={v:b_v=1}. On the induced actual subgraph G[A(b)], use the binary theorem with singleton(q,1-q) and every edge sigma, appending independent singles at its isolated vertices. Conditional on b sample this law, and set every inactive vertex to color3.",
+      "Every singleton is exactly kappa. On an actual edge, the event both indicators are active has probability t and, conditionally on any whole configuration with this event, its payload pair is exactly sigma. On a crossed active/inactive edge, the active payload has singleton(q,1-q) conditional on the entire indicator configuration. This recovers the complete table lambda on every actual edge, not an averaged-edge law.",
+      "The encoding by indicators and active payloads is a bijection. Relative to kappa^V, conditional reference payloads are independent(q,1-q) on A(b). The KL chain rule gives D(tau||kappa^V)=D(tau_B||Bern(p)^V)+E_b D(payload_b||(q,1-q)^{A(b)})<=m I_B+E_b |E(G[A(b)])| I_sigma=m I_B+m t I_sigma. Pair-level chain rule gives D(lambda||kappa^2)=I_B+t I_sigma, so the sharp target bound follows exactly. Zero edge masses are allowed by the binary theorem; t=0 makes active-edge cost zero and its arbitrary sigma irrelevant."
+    ],
+    "positive_uniform_singleton_example": {
+      "kappa": ["1/3", "1/3", "1/3"],
+      "lambda": [["3/16", "1/16", "1/12"], ["1/16", "3/16", "1/12"], ["1/12", "1/12", "1/6"]],
+      "parameters": "p=2/3,q=1/2,t=1/2,sigma11=sigma22=3/8,sigma12=sigma21=1/8. This is strictly positive and not a Potts table.",
+      "positive_exchangeable_extension": "Independently sample exchangeable indicator triple eta_B=(1/4) times an all-equal Bernoulli(2/3) triple plus(3/4) times IID Bernoulli(2/3), and payload triple eta_C=(1/2) times an all-equal uniform binary triple plus(1/2) times IID uniform binary. Set X_i=C_i if B_i=1 and X_i=3 otherwise. Its pair is the displayed lambda, and its full triple table is strictly positive because both triples contain positive IID components."
+    },
+    "exact_scope_limit": "For a generic three-state table this fixed-bias split requires lambda(1,3) kappa(2)=lambda(2,3) kappa(1). This is cross-row proportionality/lumpability, not a consequence of exchangeable triple extension. The analogous condition must hold for any relabeled singleton split. The construction is genuinely non-Potts but does not recover arbitrary three-state tables."
+  },
+  "positive_sequential_projection_obstruction": {
+    "status": "EXACT COUNTEREXAMPLE TO SEPARATELY SHARP QUOTIENT-FIRST GLUING; NOT A COUNTEREXAMPLE TO THE FULL TARGET",
+    "input": {
+      "kappa": ["1/3", "1/3", "1/3"],
+      "lambda": [["1787/5400", "7/5400", "6/5400"], ["7/5400", "599/5400", "1194/5400"], ["6/5400", "1194/5400", "600/5400"]],
+      "positivity_and_rows": "Every entry is positive and every row sums to1800/5400=1/3. The three offdiagonal entries differ, so none of the three singleton splits has fixed-bias cross-row proportionality.",
+      "strictly_positive_exchangeable_eta": "Let eta0 put mass1/3 on111, mass1/3 uniformly on the three permutations of223, and mass1/3 uniformly on the three permutations of233. Its singleton is uniform and pair lambda0=[[1/3,0,0],[0,1/9,2/9],[0,2/9,1/9]]. Let eta_base=(99/100)eta0+(1/100)kappa^3. Let D12=D21=1/5400,D11=D22=-1/5400,all other D entries0. Define eta(x,y,z)=eta_base(x,y,z)+(Dxy+Dxz+Dyz)/3. D is symmetric with every row sum zero, so eta is exchangeable, normalized, preserves the singleton, and changes the pair by exactly D. Its minimum is at least1/2700-1/5400=1/5400>0. The resulting pair is exactly the displayed lambda."
+    },
+    "actual_graph": "Take the minimal parity2+2 K4 subdivision: branches a,b in the first part and c,d in the second; L_ab=L_cd=2, and L_ac=L_ad=L_bc=L_bd=1. It is K3,3 minus one edge, with six actual vertices and eight actual edges.",
+    "zero_budget_quotient": "For B_v=1[X_v in{1,2}], the prescribed quotient pair is product Bernoulli(2/3): P11=4/9,P10=P01=2/9,P00=1/9. Its pair KL is zero. A construction that first insists on the separate sharp binary quotient entropy budget must therefore choose IID indicators.",
+    "impossibility_of_any_IID_indicator_lift": "Fix any root vertex. If its color is1 but not every vertex has color1, connectivity gives an actual edge with exactly one endpoint color1. Every actual edge has mixed-color1 probability2(lambda12+lambda13)=26/5400=13/2700. A union bound over eight edges gives P(all six colors1)>=1/3-8(13/2700)=199/675. This event is contained in all six indicators being1. But IID Bernoulli(2/3) indicators give probability(2/3)^6=64/729, which is smaller than199/675. Hence no actual-vertex law with the required complete edge tables can have that IID indicator law, whatever algorithm is used for the payloads.",
+    "consequence": "Even at a strictly positive exchangeable triple input, a useful binary quotient may need positive joint KL despite its zero pair KL. Entropy must be allocated jointly across projection layers; independently applying the sharp edge budget at each projection is invalid. This does not refute an arbitrary spatially coupled projection method or the target. It gives a concrete small test that any such method must pass."
+  },
+  "next_exact_obligation": "A general sequential-color construction must jointly refit the indicator law and context-dependent payload laws, possibly spending some conditional pair-information budget on the indicator's global correlations. Constant payload singletons and separately sharp quotient budgets cannot be assumed. No equivalently hard universal Sidorenko inequality has been inserted as a helper.",
+  "claims_not_made": ["No full arbitrary-alphabet proof", "No numerical evidence presented as proof", "No novelty/priority/B-level claim", "No Lean validation", "No service or publication action"]
+}

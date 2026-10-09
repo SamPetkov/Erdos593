@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-09",
+  "start_utc": "2026-10-09 14:55:55 UTC",
+  "author_confirmation": "confirm, in reply to the exact two-track first-round brief",
+  "objective": "Attempt the arbitrary finite-alphabet exact-edge entropy theorem and the unrestricted ordered common-power density inequality. No desired result is assumed true.",
+  "target_A": "For every finite nonempty Omega, positive kappa, exchangeable eta on Omega^3 with pair lambda, and every actual simple bipartite K4 subdivision J(L), construct tau on Omega^V with singleton kappa and EVERY oriented actual-edge marginal lambda and D(tau||kappa^V)<=mD(lambda||kappa^2). All six lengths positive including1, internally disjoint paths and common bipartite parity; lambda and eta may have zero masses. Natural logarithms and0log0=0.",
+  "target_B": "Finite X, original mu_x>0,sum1, symmetric W in[0,1] with weighted row mean p>0. T=W/p,A=T^2,K_j=A^j, all weighted compositions relative to original mu. Prove E K_k(ab)K_(r+h)(ac)K_u(ad)K_r(bc)K_u(bd)K_l(cd)>=1 for k>=u>=1,r>=l>=1,h>=1, without density, mixing, dimension or spectral restrictions.",
+  "methods": {
+    "A_global": "Triple-informed global entropy gluing/path compression, with full separator compatibility checked",
+    "A_variational": "Multistate edge/vertex potential fitting and direct audit of genuinely new saturation requirements",
+    "B_centered": "Collective centered-term compensation retaining cycle/diamond and constant-mode surplus",
+    "B_prefix": "Grouped full-eigenspace comparison or semigroup mechanism permitting negative individual modes"
+  },
+  "evidence_and_acceptance": "Complete analytical proof, exact admissible counterexample, or honest remaining obligations with precise counterexample tests. Every carrier, law, normalization, limit, sign and dependency must be explicit. A restricted subcase remains partial. A diagnostic is not a universal proof. Supplied Pro advice and actual helper checks are not kernel acceptance or a full external audit.",
+  "failure_modes": ["Circular use of Sidorenko or an equivalent entropy dual", "Assuming local triple laws glue consistently around cycles", "Assuming binary attraction/saturation holds for general alphabets", "Averaging edge marginals instead of exact individual laws", "Replacing actual common powers by independent PSD kernels", "Counterexample A lacking an actual nonnegative Markov square root", "Dropping constant/proper-term surplus or assuming refuted per-mode positivity", "Presenting an equivalent missing inequality as an easier solved lemma"],
+  "cost_and_bounds": "One roughly hour-long direct mathematical round ending about15:55UTC, with four parallel initial lanes and adversarial cross-checks. No heavy or broad/random simulations. Any small exact diagnostic needs a predetermined case and bounded cost; no numerical match proves the target.",
+  "excluded_actions": "No new paid Pro/Aristotle request, compiler/Slurm job, installation, process or cache/pin change, source promotion, Git push/merge, publication, manuscript/PDF editing or automation restart. New research artifacts only, using apply_patch.",
+  "preserved": "Dirty unrelated E625 workspace/user changes, old proofs/packages/failures/counters, accepted250modules401audits, user/video processes, public/private state and PAUSED clocks",
+  "new_authority_needed": "A materially broader research campaign, long computation, paid request, compiler checkpoint or manuscript/source delivery requires its own reviewed authorization boundary. A completed mathematical result does not establish novelty or B-level significance."
+}

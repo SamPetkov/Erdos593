@@ -1,5 +1,6 @@
 % Source-reviewed research fragment, updated 9 October 2026.
-% Not included in the authoritative manuscript or accepted Lean root.
+% Historical research fragment, supplemented by the 9 October review packet.
+% Not included in the accepted Lean root.
 % Requires amsmath, amssymb, amsthm and hyperref in a containing document.
 
 \section{A rank-three entropy problem and restricted density bounds}
@@ -15,6 +16,15 @@ The density results cover restricted host classes, including flat-spectrum
 and hierarchical hosts, every weighted three-state host, and a host-dependent
 mixing criterion.  We also identify constructions that cannot establish the
 unrestricted finite-alphabet result.
+The later packet \texttt{review/2026-10-09-entropy-density} and the revised
+author-review manuscript extend the analytical coverage to uniform $q$-state
+Potts inputs, arbitrary pair tables near independence and near interior
+cyclic Potts inputs, conditional block-mixture budget transfer, and complete
+two-centered-level host spectra.  Both unrestricted questions remain open.
+The explicit three-colour $K_{3,3}-e$ construction illustrates a mechanism
+on a graph with already known universal entropy existence; it is not a
+newly covered graph family.  The full proofs of these later statements are
+in the manuscript's quantitative section and technical appendix.
 The kernel and entropy arguments below have analytical source review,
 not Lean validation.  The finite coefficient comparison has separately
 passed a pinned warning-fatal Lean check.  A complete finite kernel-energy
@@ -1057,6 +1067,8 @@ constant-mode surplus and every other weighted mode contribution.
 
 For arbitrary interacting spectra, six independent exponents and odd-parity
 paths require still further control.  The uniform binary target is covered
-above, while the unrestricted finite-alphabet entropy theorem,
+above; the later packet adds specified uniform-$q$, local arbitrary-table
+and complete-two-level families, but not global arbitrary-table or
+arbitrary-spectrum coverage.  The unrestricted finite-alphabet entropy theorem,
 formalization of these analytical results, global novelty and B-level
 significance remain open obligations rather than conclusions of this note.

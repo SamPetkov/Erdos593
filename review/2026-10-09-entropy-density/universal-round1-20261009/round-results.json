@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-09",
+  "start_utc": "2026-10-09 14:55:55 UTC",
+  "synthesis_utc": "2026-10-09 15:34 UTC",
+  "authorization": "The user confirmed the bounded two-target brief. No broader research campaign or external dispatch is inferred.",
+  "brief": {"file": "brief.json", "sha256": "84563a77d3b998e790ba2b8ad65c7d2e8c66d8a956f022dc1217775b77b44135"},
+  "outcome": "Both unrestricted targets remain mathematically OPEN. The round produced complete analytical arguments for restricted families, with actual separate-agent checks and precise route obstructions. No admissible counterexample to either target was found. There is no new Lean acceptance, novelty clearance, B-level significance assessment or publication-readiness claim.",
+  "targets": {
+    "A": "For every finite nonempty alphabet Omega, positive singleton law kappa, exchangeable triple law eta with symmetric pair marginal lambda, and actual simple bipartite K4 subdivision J with all six positive integer path lengths and consistent bipartite parity, find tau on Omega^V with every actual singleton exactly kappa, every actual oriented edge exactly lambda, and D(tau||kappa^V)<=|E(J)|D(lambda||kappa^2). Zero masses in lambda/eta are allowed, natural logarithms are used and0log0=0.",
+    "B": "On finite nonempty X with original positive probability mu, symmetric W in[0,1] with weighted row mean p>0, put T=W/p,A=T^2 and K_j=A^j using weighted composition relative to mu. Prove E_mu^4 K_k(ab)K_(r+h)(ac)K_u(ad)K_r(bc)K_u(bd)K_l(cd)>=1 for all k>=u>=1,r>=l>=1,h>=1, without further spectral, mixing, dimension or density assumptions. A counterexample must admit the actual nonnegative Markov square root T, not merely independent colored PSD kernels."
+  },
+  "analytical_results": [
+    {
+      "name": "Uniform-q Potts exact-edge entropy bound, both signs",
+      "scope": "Every finite simple G whose every edge has an endpoint of degree at most3. Uniform q-color singleton law; common Potts table lambda_s with diagonal s/q and off-diagonal(1-s)/(q(q-1)), s in[0,1]. For s<1/q additionally require G bipartite; for s>=1/q no bipartiteness is needed. All actual bipartite K4 subdivisions are covered. The q=1 case is trivial.",
+      "conclusion": "There is an actual joint law with every singleton and every edge table exact and KL at most m I_q(s), where I_q(s)=s log(qs)+(1-s)log(q(1-s)/(q-1)). No exchangeable triple extension is needed as a proof premise; the input triple-feasibility restrictions remain separate.",
+      "source": "alphabet-global.json",
+      "sha256": "7047201ed62c14a00f54026e8c7e3b35070b12bd02a07b7a7b09e2630131beff",
+      "checks": "Root complete argument review; independent variational reconstruction in alphabet-variational.json; actual separate antiferromagnetic/zero-face audits. Positive and negative KKT directions, exact table recovery by global color symmetry, finite reverse-KL interpolation and endpoint limits were checked.",
+      "not_claimed": "Arbitrary pair tables, nonuniform singleton laws globally, Lean acceptance or novelty. The two-color switching mechanism has known predecessors."
+    },
+    {
+      "name": "Explicit arbitrary-table near-independence entropy theorem",
+      "scope": "Fixed finite simple bipartite G, positive kappa, arbitrary symmetric pair table with singleton kappa. The source specifies a positive graph/alphabet/kappa-dependent operator-norm radius delta. Forests have the exact tree construction for all such pair laws, including zeros.",
+      "conclusion": "For cyclic G of girth g and centered normalized pair operator C of norm0<rho<=delta, an exact-edge witness satisfies D(tau||kappa^V)<=mD(lambda||kappa^2)-rho^g/8. This includes genuinely non-Potts tables and nonuniform kappa, but not arbitrary distance from independence.",
+      "source": "alphabet-variational-next.json",
+      "sha256": "62f2d7762f6378f20a6d530e13eef098354f405643ea827517a7067823f3502a",
+      "audit": {"file": "entropy-local-audit.json", "sha256": "39ae5d1c75bb9cd2909fb85de26fdfee23be01c90a4ef770b68643464634c44f", "result": "PASS; actual separate complete analytical review, not external audit or kernel validation"},
+      "checks": "Leaf cancellation, positive shortest even-cycle trace, explicit remainder bound, complete unary/pair gauge, moment residual, positive covariance lower bound, interior exact fit, dual correction and final constants were reviewed. Root also checked the primary local-Sidorenko literature.",
+      "not_claimed": "A uniform radius, a global arbitrary-alphabet theorem or novelty of the local framework."
+    },
+    {
+      "name": "Strict cyclic Potts entropy gap and open full-table neighborhoods",
+      "scope": "Cyclic graphs in the preceding degree-at-one-endpoint class, q>=2,0<s<1,s!=1/q; bipartite if s<1/q. For q>=3 the neighborhoods may lie inside the strictly positive exchangeable-triple-extendible cone.",
+      "conclusion": "The exact fitted Potts law has strictly positive entropy-budget slack. A complete unary/pair implicit-function argument and continuity preserve the sharp bound for a compatible open neighborhood of arbitrary non-Potts tables and nonuniform singleton laws around every such base point.",
+      "source": "alphabet-potts-robustness.json",
+      "sha256": "f2c8194f395dcb7dc726b2c0c8f828ee90e4d05bdb10e95c4ff8159406c1e793",
+      "audit": {"file": "entropy-potts-robustness-audit.json", "sha256": "feaec3a6949b2439f105a21e6e3fe9ec61c4bbe1e9198f24427a976be867ea81", "result": "PASS_AFTER_ONE_EXPLICIT_SCOPE_REPAIR; actual separate final-source reread"},
+      "actual_repair": "The initial proof's analytic-family sentence incorrectly asserted all0<s<1 even for permitted nonbipartite ferromagnetic graphs. It now states the applicable interval only. The theorem itself was correctly restricted and unchanged. This was a real scope correction, not relabeled metadata.",
+      "not_claimed": "An explicit robustness radius, openness at zero-support endpoints, coverage of the entire triple-extendible domain, Lean acceptance or novelty."
+    },
+    {
+      "name": "Common-kernel cone and arbitrary-rank two-level density theorem",
+      "scope": "Original positive weighted probability mu and one common entrywise nonnegative, self-adjoint PSD Markov kernel S. Each of the six colored K4 edge kernels may independently lie in conv{I,Pi,S}. As a corollary, actual nonnegative A=yI+(1-y)Pi+(x-y)P with P an orthogonal projection in the complete centered space and0<=y<=x<=1 is covered, with arbitrary multiplicities.",
+      "conclusion": "The colored K4 density is at least1. All six arbitrary positive powers of this A belong to the same cone, so the common-power target holds for the full two-centered-spectral-level family without needing the target's ordering constraints.",
+      "source": "density-prefix-next.json",
+      "sha256": "0cd9fabf6d4c2eb0d3195efa29e938f2e3e1e8981bb501566347b70432253946",
+      "audit": {"file": "density-two-level-audit.json", "sha256": "2e52527dabe19e9f36ad0d8b05ba483c6a428823226e2285fab5cba584fd82ee", "result": "PASS; actual separate complete analytical review"},
+      "checks": "All729 cone assignments, weighted identity contractions, loops, quotient multiplicities, Schur-product PSD comparisons, Jensen inequalities, power-cone coefficients and degeneracies were checked. One bookkeeping count was corrected from16 to18 three-vertex quotient cases; the proof already covered all cases.",
+      "important_limitation": "The COMPLETE centered space must have at most two distinct eigenvalues. Two nonzero levels plus an additional zero level constitute three levels and are not covered. Arbitrary nonnegative Markov-square hosts can have three or more interacting centered levels.",
+      "not_claimed": "The unrestricted common-power inequality, a colored-kernel inequality with different base S on different edges, Lean acceptance or novelty."
+    }
+  ],
+  "checked_route_obstructions": [
+    "Naively specifying branch correlations by six stationary path powers can demand a negative variance even for a legitimate binary triple input. This defeats that branch-gluing rule, not the exact-edge entropy target.",
+    "One shared exchangeable triple-orbit latent variable does not preserve IID edge constraints globally. A full-support multistate C4 example also defeats naive incident-matrix identifiability.",
+    "A strictly positive three-state triple-extendible pair table defeats separately sharp quotient-first binary-indicator budgeting: its quotient pair is independent, but every full-table joint needs correlated global indicators. Cross-layer entropy transfer is essential. The full entropy target is not refuted.",
+    "Actual Markov-square examples have negative individual centered full terms or spectral prefix summands. Proper-subgraph/constant-mode surplus cannot be discarded; failed modewise positivity is not a counterexample to the full density.",
+    "Six different nonnegative PSD Markov kernels can commute and still give colored density1-t^6/16<1. They are not powers of one host. This refutes a multiple-base cone shortcut but not target B.",
+    "For three distinct centered spectral levels, A and A^2 cannot generally share a one-base affine cone of the preceding form. Truncated spectral projection kernels need not be entrywise nonnegative."
+  ],
+  "feasibility_clarification": {
+    "statement": "For every strictly positive compatible symmetric pair table on a finite bipartite G, exact full-support joint feasibility is easy; the unresolved issue is its sharp entropy budget, not the existence of some exact marginal fit.",
+    "argument": "Choose0<epsilon<min(1,min_xy lambda_xy/(kappa_x kappa_y)) and lambda'=(lambda-epsilon kappa^2)/(1-epsilon). Broadcast the two coordinates of one lambda' pair to the two bipartition classes, then mix this law with epsilon times the IID kappa^V law. Each actual edge and singleton is exactly the target, and every configuration has positive mass. This alone supplies no sharp KL estimate."
+  },
+  "exact_remaining_obligations": {
+    "A": "Control the minimum full-table joint KL for arbitrary triple-extendible inputs outside the proved local/open/symmetric families, including boundary tables. A binary quotient decomposition must pay for globally correlated indicators and fiber constraints from one shared budget. Feasibility or full-gauge fitting alone is not the missing theorem.",
+    "B": "Dominate the collective mixed-band commutator/negative-prefix contribution using the available cycle, diamond and constant-mode surplus on general actual common-power hosts. The still-uncovered regime includes three or more interacting centered spectral levels outside previously proved mixing/reflection criteria. Per-mode positivity and independently colored PSD kernels cannot replace this obligation."
+  },
+  "primary_literature_checked": [
+    {"work": "Csikvari-Lin, Sidorenko's conjecture, colorings and independent sets, EJC24(1)P1.2(2017)", "url": "https://arxiv.org/pdf/1603.05888", "role": "Known two-color switching/proper-color endpoint mechanism; no novelty claim for that mechanism"},
+    {"work": "Lovasz, Subgraph densities in signed graphons and the local Sidorenko conjecture, EJC18P127(2011)", "url": "https://arxiv.org/pdf/1004.3026", "role": "Known local near-independence density framework; exact-table fitting deduction still needs a novelty comparison"},
+    {"work": "Sidorenko, Inequalities for doubly nonnegative matrices", "url": "https://emis.de/ft/30662", "role": "Complete-graph single-kernel anchor comparison, not an unrestricted independently colored theorem"},
+    {"work": "Im-Li-Liu subdivision results", "url": "https://arxiv.org/html/2408.03491v2", "role": "Existing restricted length/divisibility and subdivision hypotheses do not establish the exact unrestricted targets as stated"},
+    {"work": "Szegedy entropy formulation", "url": "https://arxiv.org/html/1504.00858", "role": "Universal entropy/density quantifiers checked; a one-host scalar inequality is not a universal exact-edge entropy proof"}
+  ],
+  "validation_and_provenance": {
+    "root_review": "Complete source and actual audit records read. Root review is self-review; distinct helper reviews are recorded as actual separate-agent checks, not a full external audit.",
+    "artifact_validation": "All13 pre-synthesis JSON artifacts parsed and their actual SHA256/byte lengths were read back. Final report parsing and cited-source hashes are checked separately after save.",
+    "analytic_vs_numerical": "The listed restricted conclusions have analytical derivations. Exact finite examples only diagnose stated route failures. No numerical match is presented as a theorem.",
+    "formal_status": "No new compiler invocation. Existing accepted250-module401-audit Lean state was not modified or revalidated by this round.",
+    "novelty_and_significance": "Not established. These analytical candidates may strengthen the story only after comparison, formal validation and editorial judgment. They do not by themselves justify a B/C label."
+  },
+  "execution": {
+    "new_paid_Pro_or_Aristotle_request": false,
+    "compiler_or_Slurm_job": false,
+    "heavy_or_random_numerical_search": false,
+    "Git_push_or_merge": false,
+    "manuscript_or_PDF_edit": false,
+    "automation_restart": false,
+    "user_or_video_process_change": false,
+    "new_files_only": "This round's new research JSON notes and actual analytical review records. Existing dirty E625/user changes and old immutable proof evidence are preserved.",
+    "next_authority_boundary": "A broader investigation, formal compiler checkpoint, paid request, manuscript integration or GitHub delivery needs the applicable new reviewed checkpoint; none is silently launched here."
+  }
+}
