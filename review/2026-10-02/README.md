@@ -1,4 +1,4 @@
-# Erdős 593 manuscript review — front matter, story and references, 4 October 2026
+# Erdős 593 manuscript review 9 October 2026
 
 ## Current entropy and density review 9 October 2026
 
