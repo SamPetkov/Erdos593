@@ -1,0 +1,1062 @@
+% Source-reviewed research fragment, updated 9 October 2026.
+% Not included in the authoritative manuscript or accepted Lean root.
+% Requires amsmath, amssymb, amsthm and hyperref in a containing document.
+
+\section{A rank-three entropy problem and restricted density bounds}
+\label{sec:rank-three-entropy-research}
+
+This note concerns a possible density extension of the finite atom description,
+not a further proof of the obligatory classification.  Cycle and theta atoms
+suggest asking whether the next trivalent core, $K_4$, admits an exact
+edge-marginal entropy construction.  We establish that target for the entire
+uniform binary family admitting an exchangeable triple, by an exact fitting
+argument for every finite simple graph of maximum degree at most three.
+The density results cover restricted host classes, including flat-spectrum
+and hierarchical hosts, every weighted three-state host, and a host-dependent
+mixing criterion.  We also identify constructions that cannot establish the
+unrestricted finite-alphabet result.
+The kernel and entropy arguments below have analytical source review,
+not Lean validation.  The finite coefficient comparison has separately
+passed a pinned warning-fatal Lean check.  A complete finite kernel-energy
+transport candidate is now written, but has not been compiled;
+canonical integration remains pending.  Novelty and significance
+have not been established.
+
+The initial equal-spoke, one-step compensation argument, the binary path
+criterion and the obstruction examples were developed with a returned ChatGPT
+Pro response.  The arbitrary-mismatch, unequal-spoke and two-diamond
+refinements below were derived and checked separately during its audit.
+The subcubic binary proof replaces the earlier path criterion with a finite
+constrained fitting argument that also controls every zero-coupling edge.
+The displayed model-version identity was unavailable.  These provenance
+statements do not supply mathematical validation.
+
+\subsection{The exact target and its boundary}
+
+Replace each edge $ij$ of $K_4$ by a path of length $L_{ij}\geq1$,
+with mutually disjoint interiors, and write $J=J(L)$.
+The paths count edges, so
+\[
+ m=\sum_{ij}L_{ij},\qquad n=|V(J)|=m-2,\qquad m-n+1=3.
+\]
+We require $L_{ij}\equiv\varepsilon_i+\varepsilon_j\pmod2$ for some
+branch colours $\varepsilon_i\in\{0,1\}$; thus $J$ is simple and bipartite.
+Let $\eta$ be a symmetric exchangeable probability law on $\Omega^3$, where
+$\Omega$ is finite.  Its pair and singleton marginals are $\lambda$ and
+$\kappa$.  Restrict $\Omega$ to the positive support of $\kappa$; zero
+entries of $\lambda$ remain allowed.  All logarithms are natural.
+The question is whether there exists a probability law $\tau$ on the
+\emph{actual} vertices of $J$ such that every oriented edge has marginal
+$\lambda$ and
+\begin{equation}
+ D(\tau\Vert\kappa^{V(J)})\leq mD(\lambda\Vert\kappa^2).
+ \label{eq:rank3-entropy-target}
+\end{equation}
+Every vertex is incident with an edge, so the prescribed edge laws fix all
+singleton laws.  Hence the same question asks for
+$H(\tau)\geq mH(\lambda)-(m+2)H(\kappa)$.
+Mere feasibility is easy: use one sample from $\lambda$ on the two
+bipartition classes.  It is the entropy budget that needs proof.
+
+Known scalar density coverage must be removed before interpreting examples.  Sidorenko's
+small-part theorem already covers $L=(2,3,1,1,1,2)$, which has parts of size
+$4$ and $4$.\footnote{A.~Sidorenko, \emph{A correlation inequality for
+bipartite graphs}, Graphs and Combinatorics 9 (1993), 201--204,
+\url{https://doi.org/10.1007/BF02988307}.}
+For $L_e=2a_e$, halving the paths gives a graph with $\sum_ea_e-2$
+vertices and common kernel $T^2$.  Sidorenko's doubly-nonnegative theorem
+therefore covers $\sum_ea_e\leq7$.\footnote{A.~Sidorenko,
+\emph{Inequalities for doubly nonnegative functions}, Theorem 7.1 and
+the subdivision discussion, \url{https://arxiv.org/abs/1905.08210}.}
+Neither fact proves the target for arbitrary lengths and pair laws.
+
+\subsection{A compensation bound with arbitrary arm mismatch}
+
+Let $(\Omega,\mu)$ be a finite \emph{probability} space with
+$\mu_x>0$ and $\sum_x\mu_x=1$.  Let $W$ be a symmetric kernel with
+$0\leq W\leq1$ and constant row mean $p>0$:
+\[
+ \sum_y\mu_yW(x,y)=p.
+\]
+Kernel composition and inner products use $\mu$.  Put
+$T=W/p$, $A=T^2$, $\Pi f=\int f\,d\mu$,
+$K_j=A^j$, and $B_j=A^j-\Pi$ for $j\geq1$.
+The self-adjoint Markov contraction $T$ fixes constants.  On the orthogonal
+complement of constants, $A$ has eigenvalues $\theta_i\in[0,1]$.
+For an orthonormal eigenbasis $\phi_0=1,\phi_1,\ldots$, write
+\[
+ B_j(x,y)=\sum_{i\geq1}\theta_i^j\phi_i(x)\phi_i(y),
+ \qquad M_{ist}=\int\phi_i\phi_s\phi_t\,d\mu.
+\]
+
+For six positive integers $a_e$, the normalized density of the even
+subdivision is
+\[
+ F(a)=\frac{t(J(2a),W)}{p^{2\sum_ea_e}}
+     =\int_{\Omega^4}\prod_{e=vw\in E(K_4)}K_{a_e}(x_v,x_w)\,d\mu^4.
+\]
+Expand each factor as $1+B_{a_e}$.  Any term with a degree-one vertex
+vanishes.  The remaining terms are the empty term, four triangles,
+three four-cycles, six diamonds, and the full tetrahedron:
+\begin{equation}
+ F=1+\mathcal T+\mathcal C+\sum_eD_e+Q.
+ \label{eq:rank3-complete-expansion}
+\end{equation}
+Here $D_e$ omits edge $e$.  Each triangle or cycle equals
+$\sum_i\theta_i^{\sum a_e}\geq0$.
+For example,
+\[
+ D_{cd}=\sum_{i,s,t\geq1}
+ \theta_i^{a_{ab}}\theta_s^{a_{ac}+a_{bc}}
+ \theta_t^{a_{ad}+a_{bd}}M_{ist}^2\geq0.
+\]
+Thus only $Q$ can be negative; its sign alone is not a density counterexample.
+
+For the ordered tuple $(k,r+h,u,r,u,\ell)$ considered below, the slices
+$k=r,\ u=\ell$; $k=r+h,\ u=\ell$; and $k=u,\ r=\ell$
+have equal spokes at a pair of branch vertices.  Splitting their connecting
+even path at its midpoint gives two reflected bags with a common even-cycle
+core and forest separator.  These are covered by the reflective-decomposition
+method, not new universal cases of this note.\footnote{L.~N.~Coregliano
+and A.~A.~Razborov, \emph{Biregularity in Sidorenko's Conjecture},
+Theorem 3.5 and its symmetric adaptation in Section 8,
+\url{https://arxiv.org/abs/2108.06599}.}
+
+\begin{proposition}[A two-diamond compensation bound]
+Suppose, in the order $ab,ac,ad,bc,bd,cd$,
+\[
+ a=(k,r+h,u,r,u,\ell),\qquad
+ k\geq u\geq1,\quad r\geq\ell\geq1,\quad h\geq1.
+\]
+Set $d=r-\ell$ and
+\[
+ \gamma_{d,h}=\frac14\max_{0\leq x\leq1}
+       \frac{x^d(1-x^h)^2}{1+x^h}.
+\]
+Here $x^0=1$, including at $x=0$.
+If $p\geq\gamma_{d,h}$, then $t(J(2a),W)\geq p^m$, where
+$m=2k+4r+4u+2h+2\ell$ and $|V(J(2a))|=m-2$.
+The scale-invariant condition for bounded regular $W\geq0$ is
+$p/\|W\|_\infty\geq\gamma_{d,h}$.
+\end{proposition}
+
+\begin{proof}
+For fixed $z,w$, set
+\[
+ f(x)=B_{r+h}(x,z)B_u(x,w),\qquad
+ g(x)=B_r(x,z)B_u(x,w),\qquad
+ H=(f+g)/2,\quad\delta=(f-g)/2.
+\]
+Self-adjointness gives
+\[
+ Q+D_{cd}=\int K_\ell(z,w)\langle f,B_kg\rangle\,d\mu(z)d\mu(w)
+ =\int K_\ell(z,w)
+   \bigl(\langle H,B_kH\rangle-\langle\delta,B_k\delta\rangle\bigr)
+   \,d\mu(z)d\mu(w).
+\]
+Since $K_\ell\geq0$ and $B_k\succeq0$, this is at least $-E$, where
+$E=\int K_\ell\langle\delta,B_k\delta\rangle\,d\mu^2\geq0$.
+Every positive power of $T$ is obtained by Markov averaging, so
+$K_\ell=T^{2\ell}\leq1/p$ pointwise.  It follows that
+$E\leq E_0/p$, with the exact expression
+\[
+ E_0=\frac14\sum_{i,s,t\geq1}
+ \theta_i^k\theta_s^{2r}(1-\theta_s^h)^2
+ \theta_t^{2u}M_{ist}^2.
+\]
+The two available diamonds are
+\[
+ D_{ac}+D_{bc}
+ =\sum_{i,s,t\geq1}\theta_i^u\theta_s^{r+\ell}
+       (1+\theta_s^h)\theta_t^{k+u}M_{ist}^2.
+\]
+For $x,y\in[0,1]$, $k\geq u$ implies
+\[
+ x^ky^{2u}+y^kx^{2u}
+ \leq x^uy^{k+u}+y^ux^{k+u},
+\]
+because their difference, right minus left, is
+$x^uy^u(x^u-y^u)(x^{k-u}-y^{k-u})\geq0$.
+This includes $k=u$ and zero eigenvalues without division.
+Symmetrize the sums in $i,t$, using $M_{ist}=M_{tsi}$.
+The definition of $\gamma_{d,h}$ then gives
+\[
+ E_0\leq\gamma_{d,h}(D_{ac}+D_{bc}).
+\]
+Under the displayed density assumption, $E\leq D_{ac}+D_{bc}$.
+Substitute in \eqref{eq:rank3-complete-expansion} and retain every other
+nonnegative term.  This proves $F\geq1$.
+For general bounded $W$, rescale by its positive supremum.
+\end{proof}
+
+The threshold is explicit.  For $d=0$, $\gamma_{0,h}=1/4$.
+For $d>0$, put $b=d/h$ and
+\[
+ y_* =\frac{2b}{3+\sqrt{9+4b(b+1)}}.
+\]
+Then
+\[
+ \gamma_{d,h}=\frac14\,
+       \frac{y_*^b(1-y_*)^2}{1+y_*}.
+\]
+Indeed, differentiating $y^b(1-y)^2/(1+y)$ gives the unique interior
+stationary point satisfying $b-3y-(b+1)y^2=0$; the endpoint values vanish.
+A simpler, weaker threshold is
+\[
+ c_{d,h}=\frac14\max_{0\leq x\leq1}x^d(1-x^h)^2
+ =\begin{cases}
+ 1/4,&d=0,\\
+ \displaystyle\frac{h^2}{(d+2h)^2}
+       \left(\frac{d}{d+2h}\right)^{d/h},&d>0.
+ \end{cases}
+\]
+It specializes, for $h=1$, to $c_{d,1}=d^d/(d+2)^{d+2}$.
+For example, lengths $(2,6,2,4,2,2)$ are covered at $p\geq1/27$;
+the two-diamond threshold is smaller.  These remain \emph{restricted}
+weighted-host inequalities.  At any fixed tuple, sufficiently sparse hosts
+remain untreated by this density threshold, so the proposition does not establish
+\eqref{eq:rank3-entropy-target} through a universal type-host argument.
+
+\paragraph{The finite formal transport.}
+The accompanying \texttt{KernelEnergyTransportCandidate.lean} supplies eight
+complete theorem bodies for the finite algebraic identity used in this proof.
+For arbitrary finite host and mode sets, real weights $\mu$, a weighted
+orthonormal family $\phi_i$, and the displayed spectral kernels $B_j$, it
+identifies the actual fourfold weighted energy of
+$\delta=(B_{r+h}-B_r)B_u/2$ with the coefficient sum $E_0$.
+The proof expands the quadratic form and applies weighted Parseval in both
+host coordinates; completeness and probability normalization are not needed
+for this identity.  It also proves cubic-moment symmetry and applies the
+checked coefficient comparison under its unchanged scalar assumptions.
+This is a direct, source-reviewed \emph{uncompiled candidate}, not kernel
+evidence.  Extracting the eigenfamily from an original host, the remaining
+graph transports and canonical validation are separate obligations.
+
+\subsection{A host-dependent mixing criterion}
+
+The compensation proof uses $1/p$ only as an upper bound for $K_\ell$.
+Keeping its actual smoothing norm gives a larger sufficient region.
+
+\begin{proposition}[Mixing compensation]
+For the same ordered tuple, write $C_\ell=\max_{x,y}K_\ell(x,y)$.
+Then $F\geq1$ whenever $\gamma_{r-\ell,h}C_\ell\leq1$.
+Let $\alpha=\min_x\mu_x$ and let $\beta$ be the largest centered eigenvalue
+of $A$, with $\beta=0$ on a one-state space.  In particular, it suffices that
+\begin{equation}
+ \gamma_{r-\ell,h}\bigl[1+(\alpha^{-1}-1)\beta^\ell\bigr]\leq1.
+ \label{eq:mixing-compensation}
+\end{equation}
+If $A$ is irreducible, this holds for all sufficiently large $\ell$,
+uniformly over $k\geq u\geq1$, $r\geq\ell$ and $h\geq1$.
+The required length depends on the host.
+\end{proposition}
+
+\begin{proof}
+The nonnegative integrand defining $E$ gives $E\leq C_\ell E_0$.
+The coefficient comparison $E_0\leq\gamma_{r-\ell,h}(D_{ac}+D_{bc})$
+then proves the first assertion by the same complete centered expansion.
+For a complete centered orthonormal eigenbasis, weighted completeness gives
+\[
+ \sum_{i\geq1}\phi_i(x)^2=\mu_x^{-1}-1.
+\]
+Cauchy--Schwarz and $0\leq\theta_i\leq\beta$ imply
+\[
+ |B_\ell(x,y)|\leq\beta^\ell
+ \sqrt{(\mu_x^{-1}-1)(\mu_y^{-1}-1)}
+ \leq(\alpha^{-1}-1)\beta^\ell.
+\]
+This proves \eqref{eq:mixing-compensation}, without changing the
+inner-product measure.  For finite irreducible $A$, the eigenvalue one
+is simple and $\beta<1$.  Since $\gamma_{d,h}\leq1/4$, it is enough that
+$(\alpha^{-1}-1)\beta^\ell\leq3$, which holds eventually.
+\end{proof}
+
+For reducible $A$, apply the criterion on each communicating component
+with its conditional probability measure and normalized kernel.  Combining
+the component bounds with the mass factor $\mu(C)^{-2}$, as below, gives
+the same eventual conclusion for every fixed finite host.  Irreducibility
+of $T$ alone is not sufficient: a periodic $T$ can have reducible $T^2$.
+This is a host-dependent long-path statement, not the uniform all-host
+inequality at fixed lengths needed for the unrestricted entropy target.
+
+\subsection{A density-free bound for flat-spectrum hosts}
+
+The density assumption in the compensation bound can be removed for a
+restricted spectral class.  The following argument permits six arbitrary
+positive exponents and does not require a nonnegative spectral projection.
+
+\begin{proposition}[Flat-spectrum comparison]
+Suppose $A=\Pi+\eta P$, where $0\leq\eta\leq1$, $P$ is an orthogonal
+projection annihilating constants, and $A$ is a nonnegative self-adjoint
+Markov kernel on the finite probability space.  Write $d=\operatorname{rank}P$.
+For six positive integers $a_e$, put $S=\sum_ea_e$ and $m_0=\min_ea_e$.
+Then
+\begin{equation}
+ F(a)\geq1+2d\eta^{S-3m_0}+d^2\eta^S\geq1.
+ \label{eq:flat-spectrum-rank3-bound}
+\end{equation}
+Zero eigenspaces and repeated positive eigenvalues are allowed.
+\end{proposition}
+
+\begin{proof}
+For $\eta>0$, $B_j=\eta^jP$.  Choose an orthonormal basis
+$\phi_1,\ldots,\phi_d$ of the range of $P$ and set
+\[
+ \Delta=\sum_{i,s,t=1}^d\left(\int\phi_i\phi_s\phi_t\,d\mu\right)^2\geq0,
+ \qquad q=\int_{\Omega^4}\prod_{vw\in E(K_4)}P(x_v,x_w)\,d\mu^4.
+\]
+The complete centered expansion is
+\[
+ F(a)-1=d\sum_{H\text{ triangle}}\eta^{\sum_{e\in H}a_e}
+       +d\sum_{H\text{ four-cycle}}\eta^{\sum_{e\in H}a_e}
+       +\Delta\sum_e\eta^{S-a_e}+q\eta^S.
+\]
+For every proper surviving core $H$, its omitted exponents are at least
+$m_0$, so
+$\sum_{e\in H}a_e\leq S-(6-|E(H)|)m_0$.
+Its coefficient is nonnegative and $\eta\leq1$.  The full tetrahedron
+term, whose sign is not assumed, has exactly the same factor on both sides
+of the resulting comparison:
+\[
+ F(a)-1\geq\eta^{S-6m_0}
+       \bigl(F(m_0,m_0,m_0,m_0,m_0,m_0)-1\bigr).
+\]
+For $L=A^{m_0}$ and $f_{b,d}(x)=L(x,b)L(x,d)$, the homogeneous density is
+\[
+ \int L(b,d)\langle f_{b,d},Lf_{b,d}\rangle\,d\mu(b)d\mu(d)
+ \geq\int L(b,d)[L^2(b,d)]^2\,d\mu^2
+ \geq[\operatorname{Tr}(L^3)]^2.
+\]
+The first inequality uses $L-\Pi\succeq0$ and $L(b,d)\geq0$ in the
+original inner product.  The second is Cauchy--Schwarz under the probability
+measure $L(b,d)d\mu^2$.  Since
+$\operatorname{Tr}(L^3)=1+d\eta^{3m_0}$, substitution proves
+\eqref{eq:flat-spectrum-rank3-bound}.  If $\eta=0$, every positive power
+is $\Pi$ and $F=1$.  The final exponents $S-3m_0$ and $S$ are strictly
+positive, so this case involves no $0^0$ ambiguity.  The same proof applies
+at $\eta=1$.
+\end{proof}
+
+There is also a direct qualitative proof.  For $\eta>0$,
+$K_j=(1-\eta^{j-1})\Pi+\eta^{j-1}A$.  Expanding the six factors makes
+$F$ a convex combination of densities $t(H,A)$ for $H\subseteq K_4$.
+Of the $64$ edge subsets, $38$ are forests, $16$ have triangle core,
+$3$ are four-cycles, $6$ are diamonds, and one is $K_4$.
+Leaf removal gives density one for forests; cycles have density
+$\operatorname{Tr}(A^j)\geq1$.  A diamond has density
+$\int A(b,d)[A^2(b,d)]^2d\mu^2\geq[\operatorname{Tr}(A^3)]^2$.
+The preceding Gram argument bounds the $K_4$ density below by the same
+quantity.  Thus every member of the convex combination is at least one.
+This proof uses nonnegativity of the actual kernel $A$, not of $P$.
+
+The bound extends componentwise.  Let $C$ run over the communicating
+components of $A$, with $\alpha_C=\mu(C)>0$.  The conditional kernel is
+$A_C=\alpha_CA|_{C^2}$ relative to $\mu_C=\mu|_C/\alpha_C$.
+If each $A_C$ has one distinct positive nonprincipal eigenvalue
+$\eta_C$ of multiplicity $d_C$ (or no such eigenvalue), connectedness of
+$K_4$ gives
+\[
+ F(a)=\sum_C\alpha_C^{-2}F_C(a)
+ \geq\sum_C\alpha_C^{-2}
+       \bigl(1+2d_C\eta_C^{S-3m_0}+d_C^2\eta_C^S\bigr)\geq1.
+\]
+The exponent $-2$ comes from four probability factors and six kernel
+factors.  No nonnegative square root of a component restriction is assumed.
+
+\paragraph{Independent-coordinate mixtures.}
+A related class permits distinct positive eigenvalues in a single
+irreducible host.  On a product of finite probability spaces, take
+nonnegative Markov kernels $S_j=\Pi_j+s_jP_j$, with centered orthogonal
+projections $P_j$ and $0\leq s_j\leq1$.  Lift $S_j$ by averaging all
+other coordinates, and choose $t_j\geq0$, $\sum_jt_j\leq1$.
+Then
+\[
+ T=(1-\sum_jt_j)\Pi+\sum_jt_jS_j^{\rm lift},\qquad
+ A=T^2=\Pi+\sum_j\theta_jP_j^{\rm lift},\quad\theta_j=(t_js_j)^2.
+\]
+Mixed-coordinate cubic moments vanish by independence.  Every nonempty
+surviving centered core is connected, so its modes lie in one coordinate
+band.  Consequently $F(a)=1+\sum_j(F_j(a)-1)$, and
+\[
+ F(a)\geq1+\sum_j
+       \bigl(2d_j\theta_j^{S-3m_0}+d_j^2\theta_j^S\bigr),
+ \qquad d_j=\operatorname{rank}P_j.
+\]
+The local kernel has the nonnegative root $(1-t_j)\Pi_j+t_jS_j$.
+The independence hypothesis is essential to this argument: general
+common-power hosts need not have vanishing mixed cubic moments.
+These restricted-host proofs have analytical review only; neither Lean
+validation nor novelty is claimed.
+
+\subsection{Weighted three-state hosts and a one-spike spectrum}
+
+The next argument permits unequal probability masses and all six positive
+exponents.  Unlike the preceding coordinate construction, it need not
+annihilate mixed cubic moments.  Write $I(x,y)=\mathbf1\{x=y\}/\mu_x$
+for the identity kernel, and $\Pi(x,y)=1$.
+
+\begin{proposition}[One-spike common powers]
+Let $f$ be a real function with $\int f\,d\mu=0$ and
+$\int f^2d\mu=1$.  Suppose
+\[
+ A=yI+(1-y)\Pi+(x-y)f\otimes f,\qquad 0\leq y\leq x\leq1,
+\]
+is entrywise nonnegative.  For arbitrary positive integers $a_e$, put
+$S=\sum_ea_e$ and $M_\mu=\sum_z\mu_z^{-2}$.  Then
+\begin{equation}
+ F(a)\geq1+y^S(M_\mu-1)
+ +\sum_{\Delta\text{ triangle}}
+    \prod_{e\in\Delta}(x^{a_e}-y^{a_e})
+    \prod_{e\notin\Delta}(1-y^{a_e})\geq1.
+ \label{eq:one-spike-common-powers}
+\end{equation}
+Every nonnegative self-adjoint PSD Markov kernel on a positive weighted
+three-state space has this form.  On a space with at least two states,
+equality $F(a)=1$ holds exactly when $A=\Pi$.
+\end{proposition}
+
+\begin{proof}
+If $y=1$, then $x=1$ and $A=I$.  The density is $M_\mu$ and the
+displayed bound is exact.  Suppose $y<1$.  For each $m\geq1$,
+\[
+ A^m=y^mI+(1-y^m)S_m,\qquad
+ S_m=\Pi+\tau_m f\otimes f,\qquad
+ \tau_m=\frac{x^m-y^m}{1-y^m}.
+\]
+Here $0\leq\tau_m\leq\tau_1$: after factoring $x-y$ and $1-y$,
+the geometric sums compare termwise because
+$x^{m-1-j}y^j\leq y^j$.  This also includes $x=y$, when every
+$\tau_m$ is zero.  Off the diagonal, $S_1=A/(1-y)\geq0$;
+on the diagonal $S_1(z,z)=1+\tau_1f(z)^2\geq1$.
+Each $S_m$ is therefore a nonnegative convex combination of $\Pi$ and
+$S_1$, with diagonal at least one.
+
+Expand the six edge kernels into their $I/S_{a_e}$ choices.  Their
+coefficients are nonnegative and sum to one.  We show that every such
+colored density is at least one.  In the graph of identity edges, retain
+a spanning forest of each component.  On the support of that forest,
+each deleted identity-cycle factor is $1/\mu_z\geq1$; outside its
+support the retained product is zero.  All other factors are nonnegative,
+so deletion gives a lower bound.  Contract the forest.  A component of
+$v$ vertices has $v-1$ retained identity edges, leaving exactly one
+factor $\mu_z^v\mu_z^{-(v-1)}=\mu_z$ in its sum.  Thus contraction
+preserves the original probability measure at each quotient vertex.
+Discard any resulting $S_m$ loop, whose diagonal factor is at least one.
+
+The remaining loopless multigraph comes from a partition of the four
+vertices of $K_4$.  A quotient vertex containing $s$ original vertices
+has degree at most $s(4-s)\leq4$.  Expand each remaining edge factor as
+$1+\tau_m f(z)f(w)$.  A chosen edge set contributes a nonnegative
+coefficient times a product of moments
+$m_j=\int f^j d\mu$, with $0\leq j\leq4$.
+Terms with degree one vanish because $m_1=0$.
+The moments $m_0,m_2,m_4$ are nonnegative, and the only remaining odd
+degree is three.  The handshake identity forces an even number of
+degree-three vertices, so the common moment $m_3$ occurs to an even
+power.  Every surviving term is nonnegative.  The empty edge set gives
+one, proving the qualitative bound for each choice.
+
+The all-identity choice has coefficient $y^S$ and density $M_\mu$.
+In the all-$S$ choice, each triangle contributes
+$\prod_{e\in\Delta}\tau_{a_e}$, since $m_2=1$.
+Retaining these disjoint surplus contributions gives
+\eqref{eq:one-spike-common-powers}.
+On three states the centered subspace has dimension two; choose its
+orthonormal eigenfunctions with eigenvalues $x\geq y$.
+Its spectral decomposition is precisely the stated form.
+For at least two states, $M_\mu>1$.  If $y>0$ the all-identity surplus
+is positive; if $y=0<x$, every triangle surplus is positive.
+Only $x=y=0$, equivalently $A=\Pi$, permits equality.
+The converse is immediate.
+\end{proof}
+
+For the original host $A=T^2$, self-adjointness shows that $A=\Pi$
+is equivalent to $T=\Pi$, hence to the constant kernel $W=p$.
+Negative centered eigenvalues of $T$ are allowed: only their squares
+enter the argument.  A one-state host gives $F=1$ directly, without a
+centered normalized function.  In higher dimension the proposition
+allows at most one distinguished one-dimensional direction above a common
+eigenvalue on the remaining centered subspace, including the flat case $x=y$.
+It does not cover arbitrary
+interacting spectra or assert positivity of individual spectral prefixes.
+
+For an exact sparse example, take
+\[
+ \mu=(1/2,16/33,1/66),\qquad f=(3/5,-2/5,-7),\qquad
+ T=\tfrac34I+\tfrac14\Pi+\tfrac1{20}f\otimes f.
+\]
+This is a strictly positive Markov kernel with centered eigenvalues
+$4/5,3/4$ and maximum $261/5$.  Thus $W=(5/261)T$ is an admissible
+regular host.  At $a=(4,3,1,2,1,1)$, the previous density condition fails:
+$\gamma_{1,1}\geq9/320>5/261$.  Nevertheless
+\[
+ F(a)=\frac{31870316227507292660361657490451130365121}
+             {1677721600000000000000000000000000000000}>1.
+\]
+The tuple avoids the three equal-spoke slices listed earlier.  This
+evaluation is a reproducible diagnostic, not the proof; the proposition
+establishes the whole three-state class.  Common exponents are already
+covered without a state-count restriction by Sidorenko's complete-graph
+inequality for doubly nonnegative kernels, Corollary~5.2 of the paper cited
+above.  The additional statement here concerns six unequal positive integer
+powers.  A bounded literature check does not establish its novelty.
+
+\subsection{Nested conditional-expectation hosts}
+
+The preceding coordinate argument eliminates mixed cubic moments.
+A partition hierarchy gives a different sufficient structure that allows
+those moments to be nonzero.  Its proof works for every finite simple graph,
+not only the $K_4$ core.
+
+\begin{proposition}[Hierarchical common powers]
+Let $\mathcal P_0=\{\Omega\},\ldots,\mathcal P_L$ be nested partitions
+of the finite positive probability space, ordered by refinement.  Set
+\[
+ E_j(x,y)=\frac{\mathbf1\{x,y\text{ lie in the same }\mathcal P_j
+                         \text{ cell}\}}{\mu(\mathcal P_j(x))},
+ \qquad T=\sum_{j=0}^Lw_jE_j,
+ \quad w_j\geq0,\quad\sum_jw_j=1.
+\]
+For every finite simple graph $H$ and positive integer exponents $a_e$,
+\begin{equation}
+ \int_{\Omega^{V(H)}}\prod_{e=vw\in E(H)}
+              T^{2a_e}(x_v,x_w)\,d\mu^{V(H)}\geq1.
+ \label{eq:hierarchical-common-powers}
+\end{equation}
+Unequal cell masses, zero weights and disconnected hosts are allowed.
+\end{proposition}
+
+\begin{proof}
+First assign to each edge a level $c_e\in\{0,\ldots,L\}$ and prove the
+bound for the kernels $E_{c_e}$ by induction on the hierarchy depth.
+At depth zero every kernel equals one.  At positive depth, remove the
+level-zero edges and factor the integral over the connected components
+of the remaining graph.  Isolated vertices contribute one.
+For a component $Q$ with $n$ vertices and $m$ edges, nonzero products
+place all its vertices in one cell $C$ of $\mathcal P_1$.  Write
+$\alpha_C=\mu(C)$ and $\mu_C=\mu|_C/\alpha_C$.
+Each of its $m$ kernels equals $\alpha_C^{-1}$ times the corresponding
+local kernel at level $c_e-1$, while its $n$ measure factors contribute
+$\alpha_C^n$.  Its exact density is therefore
+\[
+ \sum_{C\in\mathcal P_1}\alpha_C^{n-m}
+       t\bigl(Q;(E_{c_e-1}^{C})\bigr).
+\]
+The induction hypothesis bounds every local density below by one.
+Connectedness gives $m\geq n-1$, so
+$\alpha_C^{n-m}\geq\alpha_C$ and the displayed sum is at least one.
+Multiplication over components proves the colored-kernel assertion.
+
+The conditional-expectation tower identity is
+$E_iE_j=E_{\min(i,j)}$.  Thus every positive power of $T$ is a convex
+combination of the same kernels.  More explicitly, if
+$q_j=\sum_{i\geq j}w_i$ and $q_{L+1}=0$, its coefficient at $E_j$ in
+$T^s$ is $q_j^s-q_{j+1}^s$.  These coefficients are nonnegative and sum
+to one.  Expanding the edge powers makes the left side of
+\eqref{eq:hierarchical-common-powers} a convex combination of the
+colored densities just bounded below by one.
+\end{proof}
+
+For example, take masses $(1/2,2/5,1/10)$, the partitions
+$\{\Omega\}$, $\{\{1\},\{2,3\}\}$ and the discrete partition, and
+$T=E_0/10+E_1/10+4E_2/5$.  The kernel has maximum $83/10$, so
+$W=(10/83)T$ is an admissible regular host.  The two centered eigenvalues
+of $A$ are $81/100$ and $16/25$.  For normalized coarse and fine
+eigenfunctions $\phi=(-1,1,1)$ and
+$\psi=(0,1/\sqrt2,-2\sqrt2)$, the mixed moment
+$\int\phi\psi^2d\mu=1$ is nonzero.
+At $(3,2,1,1,1,1)$, both the original density threshold and the
+mixing-norm criterion fail, but the hierarchical theorem applies.
+An arbitrary common-power host need not admit this hierarchy;
+commuting projections alone do not provide it.  This is an analytically
+reviewed control class, not a claim of novelty or an unrestricted entropy
+construction.
+
+\paragraph{Reproducible finite checks.}
+The accompanying \texttt{exact\_checks.py} enumerates all $64$ edge subsets
+and evaluates small hosts with rational arithmetic.  A four-state rank-two
+flat host with $\eta=1/16$ and exponents $(3,4,1,2,1,1)$ gives
+$F=17180428425/17179869184>1$.  A six-state independent-coordinate host
+with centered eigenvalues $1/16,1/9$ gives
+$F=23670417502742322643/23665185138564661248>1$ at
+$(3,3,1,2,1,1)$; its exact coordinate identity and the quantitative lower
+bound also check.  The script reproduces the weighted-positivity obstruction
+below and the four-state negative individual coefficient in
+\texttt{route-diagnostics.json}.  These are finite checks, not Monte Carlo
+evidence or a proof for arbitrary interacting spectra.
+The additional \texttt{continuation\_checks.py} supplies two fixed exact
+examples.  A five-state lazy cycle has $p=4/19<1/4$, but at
+$(2,6,1,5,1,5)$ its actual $C_5=5338684567323/1677721600000<4$
+satisfies mixing compensation.  The unequal-mass hierarchy above has
+$p=10/83$ and $C_1=693/100>4$, yet its density at $(3,2,1,1,1,1)$ is
+$481731187899493193/62500000000000000>1$.  These examples check the
+distinct sufficient conditions; the proofs, not the finite evaluations,
+establish the stated classes.
+
+\subsection{An exact binary entropy construction}
+
+Let $\kappa$ be the uniform law on $\{-1,1\}$ and define
+\[
+ \lambda_r(s,t)=\frac{1+rst}{4},\qquad
+ I(r)=\frac{1+r}{2}\log(1+r)+\frac{1-r}{2}\log(1-r),
+ \qquad -1\leq r\leq1,
+\]
+with $0\log0=0$ and natural logarithms.  The following argument concerns
+the prescribed law on every actual edge, including zero-coupling edges of
+the fitted model.  It does not use a scalar density comparison or a
+restriction to one common edge potential.
+
+The constrained ferromagnetic inverse-Ising fit and its KKT conditions are
+established methods.\footnote{S.~Lauritzen, C.~Uhler and P.~Zwiernik,
+\emph{Total positivity in exponential families with application to binary
+variables}, Corollary 3.7, \url{https://arxiv.org/abs/1905.00516}.}
+The entropy formulation is also standard.\footnote{B.~Szegedy,
+\emph{Sparse graph limits, entropy maximization and transitive graphs},
+Corollary 9.1, \url{https://arxiv.org/abs/1504.00858}.}
+The subcubic zero-face argument is given self-containedly below; its
+originality has not been established.
+
+\begin{proposition}[Uniform binary exact fitting for subcubic graphs]
+\label{prop:binary-subcubic-exact-fitting}
+Let $G=(V,E)$ be a finite simple graph, with $n=|V|$, $m=|E|$ and
+maximum degree at most three.  For every $0\leq r\leq1$ there is a
+probability law $\tau$ on $\{-1,1\}^{V}$ whose singleton laws are
+$\kappa$, whose marginal on each oriented edge is $\lambda_r$, and
+such that
+\[
+ D(\tau\Vert\kappa^{V})\leq mI(r).
+\]
+If $G$ is bipartite, the assertion holds for every $-1\leq r\leq1$.
+Isolated vertices are permitted.
+\end{proposition}
+
+\begin{proof}
+First suppose $0<r<1$ and set $b=\operatorname{atanh}r<\infty$.
+For $\beta=(\beta_e)_{e\in E}\in[0,b]^E$, write
+\[
+ Z(\beta)=2^{-n}\sum_{\sigma\in\{-1,1\}^{V}}
+       \exp\left(\sum_{e=vw\in E}\beta_e\sigma_v\sigma_w\right),
+ \qquad
+ \tau_\beta(\sigma)=\frac{2^{-n}}{Z(\beta)}
+       \exp\left(\sum_{e=vw\in E}\beta_e\sigma_v\sigma_w\right).
+\]
+Every $\tau_\beta$ has full support and is invariant under the global
+spin flip.  Minimize the differentiable function
+\[
+ \Phi(\beta)=\log Z(\beta)-r\sum_{e\in E}\beta_e
+\]
+on the compact box $[0,b]^E$.  Let $\beta^*$ be a minimizer and put
+$q_e=\mathbb E_{\tau_{\beta^*}}[\sigma_v\sigma_w]$ for $e=vw$.
+Differentiation of the finite sum gives
+\[
+ \partial_e\Phi(\beta^*)=q_e-r.
+\]
+
+We first show that every edge with $\beta_e^*>0$ has $q_e=r$.
+For a nonnegative coupling vector, put $t_f=\tanh\beta_f$.
+Expanding each edge factor and averaging independent uniform spins gives
+\[
+ Z(\beta)=\prod_f\cosh\beta_f
+   \sum_{A\subseteq E:\,\partial A=\varnothing}\prod_{f\in A}t_f.
+\]
+Here $\partial A$ is the set of odd-degree vertices of $(V,A)$.
+In the model with $e=vw$ removed, the correlation $c_e$ equals the
+nonnegative odd-boundary sum with $\partial A=\{v,w\}$ divided by
+the strictly positive even-boundary sum.  In particular $c_e\geq0$.
+Reinserting edge $e$ gives
+\[
+ q_e=\frac{t_e+c_e}{1+t_ec_e}.
+\]
+If $0<\beta_e^*<b$, the interior first-order condition gives $q_e=r$.
+If $\beta_e^*=b$, then $t_e=r$ and
+\[
+ q_e-r=\frac{c_e(1-r^2)}{1+rc_e}\geq0.
+\]
+The one-sided first-order condition at an upper box face gives
+$q_e-r\leq0$, so equality follows there as well.
+For every edge with $\beta_e^*=0$, the lower-face first-order condition
+instead gives $q_e\geq r$.  We now discharge this possible excess.
+
+Fix such a zero-coupling edge $e=vw$.
+Because $G$ is simple and $\deg(v)\leq3$, there are at most two
+neighbors of $v$ having positive coupling.  These neighbors are
+distinct from $w$.  Conditional on all spins other than $\sigma_v$,
+the conditional mean depends only on those positive-coupling neighbors.
+
+If there are no such neighbors, $\sigma_v$ is independent and uniform,
+so $q_e=0\leq r$.
+If there is exactly one, say $a$, then
+\[
+ \mathbb E[\sigma_v\mid\sigma_{V\setminus\{v\}}]
+      =t\sigma_a,\qquad t=\tanh\beta_{va}^*.
+\]
+The already proved positive-edge equality gives
+$r=\mathbb E[\sigma_v\sigma_a]=t$.  Consequently
+\[
+ q_e=t\mathbb E[\sigma_a\sigma_w]\leq t=r.
+\]
+
+If there are exactly two, say $a,b$, let
+$\alpha=\beta_{va}^*>0$ and $\gamma=\beta_{vb}^*>0$.  There are
+numbers
+\[
+ A=\frac{\tanh(\alpha+\gamma)+\tanh(\alpha-\gamma)}2,
+ \qquad
+ B=\frac{\tanh(\alpha+\gamma)-\tanh(\alpha-\gamma)}2
+\]
+such that
+\[
+ \mathbb E[\sigma_v\mid\sigma_{V\setminus\{v\}}]
+       =A\sigma_a+B\sigma_b.
+\]
+Both $A$ and $B$ are nonnegative: monotonicity of $\tanh$ and
+$\alpha+\gamma\geq|\alpha-\gamma|$ imply
+$\tanh(\alpha+\gamma)\geq|\tanh(\alpha-\gamma)|$.
+Write $q=\mathbb E[\sigma_a\sigma_b]$.  The two incident positive
+edges have correlation $r$, whence
+\[
+ A+Bq=r=B+Aq,\qquad (A-B)(1-q)=0.
+\]
+Simplicity makes $a$ and $b$ distinct vertices, and full support gives
+$\mathbb P(\sigma_a\ne\sigma_b)>0$, so $q<1$.
+Therefore $A=B\geq0$.  For every three signs, the pointwise identity
+\[
+ 1+\sigma_a\sigma_b-\sigma_a\sigma_w-\sigma_b\sigma_w
+       =(\sigma_a-\sigma_w)(\sigma_b-\sigma_w)\geq0
+\]
+holds: either difference is zero, or the two differences have the same sign.
+Taking expectations and using $A=B$ gives
+\[
+ q_e=A\bigl(\mathbb E[\sigma_a\sigma_w]
+              +\mathbb E[\sigma_b\sigma_w]\bigr)
+      \leq A(1+q)=r.
+\]
+These three cases exhaust the possible active neighbors of $v$.
+Combined with lower-face $q_e\geq r$, they show $q_e=r$ on every
+zero-coupling edge.  Thus every actual edge has correlation exactly $r$.
+
+Global spin-flip symmetry gives uniform singleton laws, including at
+isolated vertices.  For a pair of signs with uniform singleton laws,
+its correlation $r$ determines its four masses as
+$(1+rst)/4$.  Hence all edge marginals are exactly $\lambda_r$.
+
+Finally, the high-temperature even-subgraph expansion has nonnegative
+terms and contains the empty term $1$, so
+\[
+ \log Z(\beta^*)\geq\sum_e\log\cosh\beta_e^*.
+\]
+The definition of $\tau_{\beta^*}$ and the exact edge correlations give
+\[
+ D(\tau_{\beta^*}\Vert\kappa^{V})
+   =r\sum_e\beta_e^*-\log Z(\beta^*)
+   \leq\sum_e\left(r\beta_e^*-\log\cosh\beta_e^*\right)
+   \leq mI(r).
+\]
+The final inequality is the elementary one-variable convex-conjugate
+identity
+$\sup_{x\in\mathbb R}\{rx-\log\cosh x\}=I(r)$,
+whose maximizer for $0<r<1$ is $x=\operatorname{atanh}r$.
+This proves the nondegenerate range without a numerical fit.
+
+For $r=0$, choose independent uniform spins; both sides of the
+divergence inequality are zero.  For $r=1$, use one independent
+uniform spin per connected component, assigning that spin to every
+vertex of the component.  If $c$ is the number of components, this law
+has entropy $c\log2$ and divergence $(n-c)\log2\leq m\log2=mI(1)$,
+because $m\geq n-c$.  The empty graph and isolated components are
+included in these formulas.
+
+For a bipartite graph, flip the spin on one bipartition class.
+This bijection preserves $\kappa^{V}$ and the divergence, and changes
+the sign of every edge product.  Since $I(-r)=I(r)$, it gives the
+assertion for negative correlations, including $r=-1$.
+\end{proof}
+
+\paragraph{Application to the exact target.}
+For a simple bipartite $K_4$ subdivision $J(L)$, each branch vertex
+has degree three and each interior vertex has degree two.  Thus the
+proposition applies to every tuple of positive path lengths satisfying
+the parity-cut condition, including lengths equal to one.
+For the uniform binary singleton and pair family $\lambda_\rho$,
+an exchangeable triple exists exactly for $-1/3\leq\rho\leq1$.
+Necessity follows from
+$\mathbb E[(\sigma_1+\sigma_2+\sigma_3)^2]=3+6\rho\geq1$;
+sufficiency follows from the nonnegative symmetric law
+\[
+ \eta_\rho(x,y,z)=\frac{1+\rho(xy+xz+yz)}8.
+\]
+Consequently \eqref{eq:rank3-entropy-target} is established analytically
+for this entire uniform binary family, since
+$D(\lambda_\rho\Vert\kappa^2)=I(\rho)$.
+The triple extension identifies the requested range; the
+positive-correlation construction works on every simple subcubic graph.
+
+The argument uses established Ising and Bethe methodology.
+Ruozzi proves a partition-function lower bound for binary
+log-supermodular models.\footnote{N.~Ruozzi,
+\emph{The Bethe Partition Function of Log-supermodular Graphical Models},
+Advances in Neural Information Processing Systems 25 (2012),
+\url{https://proceedings.neurips.cc/paper_files/paper/2012/file/03afdbd66e7929b125f8597834fa83a4-Paper.pdf}.}
+Attractive Ising fitting can permit excess fitted correlation on
+zero-coupling edges.\footnote{S.~Lauritzen, C.~Uhler and P.~Zwiernik,
+\emph{Total positivity in exponential families with application to binary variables},
+Corollary 3.7 and Remark 3.9,
+\url{https://web.math.ku.dk/~lauritzen/papers/AOS2007.pdf}.}
+Neither statement alone supplies all the exact prescribed marginals here;
+the zero-face argument above discharges that obligation in the subcubic
+uniform binary setting.  Analytical source review does not establish
+novelty or supply Lean validation.
+
+\paragraph{Scope and remaining obligation.}
+The proof uses zero-field uniform binary spins and the special
+two-neighbor linear conditional mean.  It does not establish the
+target for nonuniform binary singletons or arbitrary finite alphabets,
+and it does not supply a degree-four zero-face argument.
+The exact unrestricted remaining statement is: for every finite
+$\Omega$, every positive singleton law $\kappa$, every symmetric
+exchangeable triple law $\eta$ with singleton $\kappa$ and pair marginal
+$\lambda$, and every simple bipartite $K_4$ subdivision $J(L)$, there
+exists a law on the actual vertex set with every edge marginal exactly
+$\lambda$ and divergence at most $mD(\lambda\Vert\kappa^2)$.
+That statement remains open in this research packet.  No claim of
+novelty, global literature reconciliation, formal validation, or
+B-level significance accompanies the binary proposition.
+
+\subsection{Two limits on proposed constructions}
+
+\paragraph{Direct mixture inheritance fails.}
+Mix, with weights $1/2,1/2$, the iid uniform binary triple and the triple
+that is $000$ or $111$ with equal probabilities.  The result is strictly
+positive, with masses $5/16$ at $000,111$ and $1/16$ elsewhere, and pair
+law $\lambda_{1/2}$.
+For the iid component a budget-satisfying extension is forced to be iid,
+since its allowed divergence is zero.  For the diagonal component,
+connectedness forces the unique law supported on $0^n,1^n$.
+Their direct mixture is therefore
+\[
+ \tau_{\rm mix}=\tfrac12\kappa^n
+       +\tfrac14\delta_{0^n}+\tfrac14\delta_{1^n},\qquad
+ D(\tau_{\rm mix}\Vert\kappa^n)
+       =(\tfrac12+2^{-n})\log(2^{n-1}+1)-\log2.
+\]
+For $J_0=J(2,4,3,2,3,1)$, $n=13,m=15$, and
+\[
+ D(\tau_{\rm mix}\Vert\kappa^{13})>5\log2
+       >15I(1/2)=15(\tfrac34\log3-\log2).
+\]
+The first comparison uses $4097>2^{12}$ and $4097/8192>1/2$;
+the second is equivalent to $2^{80}>3^{45}$, which follows already
+from $2^{16}>3^9$.
+The binary construction above supplies a \emph{different} successful
+extension for this same law.  Thus this is a counterexample to direct
+mixture inheritance, not to the target.
+
+For components sharing $\kappa$, let
+$\delta_z=mD(\lambda_z\Vert\kappa^2)-D(\tau_z\Vert\kappa^n)$.
+The exact chain rule is
+\[
+ D(\tau_{\rm mix}\Vert\kappa^n)-mD(\lambda_{\rm mix}\Vert\kappa^2)
+ =mI(Z;X_v,X_w)-I(Z;X_V)-\sum_z\alpha_z\delta_z.
+\]
+The example violates the desired sign even after component slack is included.
+It does not decide convexity of the class of pair laws admitting some
+successful extension.
+
+\paragraph{Commuting positive kernels are not common powers.}
+Index six signs $r_e\in\{-1,1\}$ by the edges of $K_4$, and put
+$S_v(r)=\prod_{e\ni v}r_e$.
+On these sign vectors define
+\[
+ \mu(r)=2^{-6}\left(1+\frac{S_a(r)+S_b(r)+S_c(r)-S_d(r)}2\right).
+\]
+Since $S_aS_bS_cS_d=1$, the signed sum is $2$ or $-2$.
+After removing null states this is uniform on $32$ states.
+The six coordinates are centered and orthonormal: averaging their
+degree-one and degree-two characters against this density gives zero.
+Each $K_e(x,y)=1+r_e(x)r_e(y)$ is a symmetric nonnegative Markov
+projection; the six projections commute.
+In the coloured $K_4$ density every proper nonempty centered term
+vanishes at a vertex of degree one or two.  The full term is
+\[
+ (\mathbb E S_a)(\mathbb E S_b)(\mathbb E S_c)(\mathbb E S_d)
+ =(\tfrac12)^3(-\tfrac12)=-\tfrac1{16}.
+\]
+The density is $15/16<1$.
+Positive powers of one self-adjoint operator have a common nullspace,
+whereas these projections have distinct nullspaces.
+Each individual pair law even has an exchangeable triple extension:
+sample its common coordinate sign and then three iid states conditional
+on that sign.  What is absent is the \emph{same} pair law and common-power
+relationship.  This exact example forbids that relaxation, not the target.
+
+\subsection{The unresolved common-power comparison}
+
+For $a=(k,r+h,u,r,u,\ell)$, the sufficient inequality
+\[
+ \int K_\ell(z,w)\langle
+ B_{r+h}(\cdot,z)B_u(\cdot,w),
+ B_k[B_r(\cdot,z)B_u(\cdot,w)]\rangle\,d\mu^2\geq0
+\]
+would settle this particular all-even family on every normalized weighted
+host: its left side is $Q+D_{cd}$.
+It is unproved here and stronger than what the compensation proposition
+needs.  The factor $K_\ell(z,w)$ changes the inner-product measure;
+positivity and self-adjointness in the original measure do not justify
+a change of measure.  The following example shows that this is an actual
+obstruction to the arbitrary-vector argument, even for common powers.
+
+\paragraph{Weighted positivity fails on an admissible common-power host.}
+Take three states with uniform measure, $p=6/13$, and
+\[
+ W=\begin{pmatrix}
+ 1&1/13&4/13\\
+ 1/13&1&4/13\\
+ 4/13&4/13&10/13
+ \end{pmatrix},\qquad
+ P=\begin{pmatrix}
+ 13/18&1/18&2/9\\
+ 1/18&13/18&2/9\\
+ 2/9&2/9&5/9
+ \end{pmatrix}.
+\]
+Here $W$ is symmetric, strictly positive, bounded by one, and has row
+mean $p$.  The matrix $P$ represents the operator $T=W/p$;
+the kernel is $3P$, because composition uses the uniform probability
+measure.  Thus $A$ is represented by $P^2$, with eigenvalues
+$1,4/9,1/9$.  Set $v=(-1,-3,4)$ and choose the first state as $w$.
+Since $v$ is mean zero and both nonconstant eigenvalues are positive,
+$v$ belongs to the range of $B_1$.
+Direct rational arithmetic gives
+\[
+ A^3v=\frac1{729}(62,-66,4),\qquad
+ K_1(\cdot,w)=\left(\frac{31}{18},\frac7{18},\frac89\right),
+\]
+and hence
+\[
+ \int K_1(z,w)v(z)(A^3v)(z)\,d\mu(z)
+       =-\frac{140}{19683}<0.
+\]
+Common powers and smoothing therefore do not imply weighted positivity
+for arbitrary mean-zero inputs.  This does not refute $Q+D_{cd}\geq0$:
+the inputs in that expression are products of eigenfunctions and kernel
+sections, summed with prescribed spectral weights.  Nor does it refute
+$F\geq1$, which retains the other nonnegative terms in
+\eqref{eq:rank3-complete-expansion}.
+
+\paragraph{A comparison retaining all proper terms.}
+For each nonconstant eigenfunction define
+\[
+ R_s=\int\phi_s(a)\phi_s(c)
+ K_k(a,b)K_u(a,d)K_r(b,c)K_u(b,d)K_\ell(c,d)\,d\mu^4.
+\]
+Expanding only the $ac$ kernel gives the exact identity
+\[
+ F=R_0+\sum_{s\geq1}\theta_s^{r+h}R_s,
+\]
+where $R_0$ denotes the same integral with $\phi_0=1$.
+The remaining five-edge graph is an uncentered diamond, so
+\[
+ R_0=1+\sum_{i\geq1}\theta_i^{k+2u}
+       +\sum_{i\geq1}\theta_i^{r+u+\ell}
+       +\sum_{i\geq1}\theta_i^{k+r+u+\ell}+D_{ac}\geq1.
+\]
+Group the distinct positive nonconstant eigenvalues as
+$\eta_1>\cdots>\eta_q>0$, and put
+$c_j=\eta_j^r\sum_{\theta_s=\eta_j}R_s$ and
+$S_j=\sum_{v=1}^jc_v$.  These grouped sums do not depend on the choice
+of basis inside a repeated eigenspace.  For $q\geq1$, Abel summation gives
+\[
+ F-R_0=\sum_{j=1}^{q-1}(\eta_j^h-\eta_{j+1}^h)S_j
+             +\eta_q^hS_q.
+\]
+If $q=0$, every positive kernel power is $\Pi$ and $F=R_0=1$.
+The auxiliary value $F_0$ obtained by setting $h=0$ has matched spokes
+at $a,b$.  The same Gram argument gives
+$F_0\geq[\operatorname{Tr}(A^{\ell+r+u})]^2\geq1$.
+Since $F_0=R_0+S_q$, Abel summation can instead be written as
+\[
+ F_h=(1-\eta_1^h)R_0
+     +\sum_{j<q}(\eta_j^h-\eta_{j+1}^h)(R_0+S_j)
+     +\eta_q^hF_0.
+\]
+The weights are nonnegative and sum to one.  It would therefore suffice
+to prove $R_0+S_j\geq1$ for every proper positive spectral prefix $j<q$.
+This is weaker than $S_j\geq0$ and retains the proper-term slack.
+Neither condition is proved for general hosts.  An exact four-state
+host found during the diagnostic pass has an individual $R_s<0$, but
+all its old and shifted prefixes are positive; it refutes individual
+coefficient positivity only, not this remaining route or the target.
+The necessary comparison is
+$\sum_{s\geq1}\theta_s^{r+h}R_s\geq-(R_0-1)$, with the actual common
+host and moment constraints retained.
+
+\paragraph{An exact dissipation identity, not a completed comparison.}
+Include the constant mode $\phi_0=1$, $\theta_0=1$, and define
+\[
+ g_i(c,d)=\int\phi_i(x)K_r(x,c)K_u(x,d)d\mu(x),\qquad
+ H(s)=\sum_i\theta_i^k\int K_s(c,d)g_i(c,d)^2d\mu^2.
+\]
+Let $P_h$ act in the $c$ coordinate by the actual kernel $K_h$ and put
+\[
+ D_h=\sum_i\theta_i^k\int K_\ell(c,d)K_h(c,c')
+          [g_i(c,d)-g_i(c',d)]^2d\mu(c)d\mu(c')d\mu(d).
+\]
+Complete spectral expansion of $K_k$ and polarization give
+\begin{equation}
+ F_h=\tfrac12[H(\ell)+H(\ell+h)-D_h],\qquad D_h\geq0.
+ \label{eq:actual-source-dissipation}
+\end{equation}
+Indeed, the two square terms integrate to $H(\ell)$ and $H(\ell+h)$
+by the Markov and composition identities, and the cross term is $2F_h$.
+The matched-spoke Gram argument gives
+$H(s)\geq[\operatorname{Tr}(A^{s+r+u})]^2\geq1$.
+Nevertheless the needed upper bound
+$D_h\leq H(\ell)+H(\ell+h)-2$ is exactly equivalent to $F_h\geq1$;
+the identity does not prove that budget.  Markov covariance positivity
+instead supplies a lower bound on part of $D_h$, in the wrong direction.
+
+Even positive functions with both weighted marginals equal to one do not
+suffice for a generic replacement of the source functions.  The fixed
+four-state example in \texttt{pass4\_checks.py}, with masses
+$(1/6,1/6,1/3,1/3)$, uses an admissible common-power host and
+$g(c,d)=1+f(c)q(d)/8$, where
+$f=(-1,-1,-3,4)$ and $q=(1,-1,0,0)$.
+Although $1/2\leq g\leq3/2$, both marginals equal one, and both
+reflection square integrals exceed one, its cross integral at
+$\ell=1,h=3$ is $1-35/944784<1$.
+This is not a counterexample to the density target: it is not the actual
+source family $g_i=A^r\operatorname{diag}(\phi_i)A^u$.
+A valid proof must retain that shared source structure and its actual
+moment constraints.
+
+\paragraph{An obstruction within the actual source family.}
+On the $32$-state star measure used above, write $R_e$ for the
+edge-coordinate signs and take the single common host
+\[
+ T=\Pi+\sum_es_eR_e\otimes R_e,\qquad
+ (s_{ab},s_{ac},s_{ad},s_{bc},s_{bd},s_{cd})
+   =(2^{-64},1/32,1/4,1/8,1/16,1/8).
+\]
+This is a strictly positive symmetric Markov kernel; $A=T^2$ has the
+actual centered normalized eigenfunction $f=R_{ab}$ with simple positive
+eigenvalue $2^{-128}$.  Put
+\[
+ g_f(c,d)=\int f(x)K_r(x,c)K_u(x,d)d\mu(x),\qquad
+ q_f(h)=\int K_\ell(c,d)g_f(c,d)(A_c^hg_f)(c,d)d\mu^2,
+\]
+where $A_c$ acts in the $c$ coordinate.  At $r=\ell=1$, $u=4$, the
+exact analytical certificate gives
+\[
+ q_f(8)\leq-\frac{66554167313}{2^{154}}<0.
+\]
+The construction and rational bound are recorded in
+\texttt{actual-source-obstruction-pass5.json}.  Thus positivity of each
+actual positive-mode source term is false even under the common-host
+constraints.  This does not imply $F<1$: the full density retains the
+constant-mode surplus and every other weighted mode contribution.
+
+For arbitrary interacting spectra, six independent exponents and odd-parity
+paths require still further control.  The uniform binary target is covered
+above, while the unrestricted finite-alphabet entropy theorem,
+formalization of these analytical results, global novelty and B-level
+significance remain open obligations rather than conclusions of this note.

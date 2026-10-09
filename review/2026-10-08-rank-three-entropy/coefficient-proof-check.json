@@ -1,0 +1,268 @@
+{
+  "accounting": [
+    [
+      "66955",
+      "COMPLETED",
+      "0:0",
+      "00:00:43",
+      "node01",
+      "2",
+      "12Gn",
+      "00:08:00"
+    ],
+    [
+      "66955.batch",
+      "COMPLETED",
+      "0:0",
+      "00:00:43",
+      "node01",
+      "2",
+      "12Gn",
+      ""
+    ]
+  ],
+  "actual_child_exit": 0,
+  "actual_full_definitions": 3,
+  "actual_full_types": 12,
+  "actual_wrapper_exit": 0,
+  "canonical_acceptance": false,
+  "compiler": "4.32.0",
+  "compiler_githash": "8c9756b28d64dab099da31a4c09229a9e6a2ef35",
+  "dependency_artifact_lineage": "PENDING_HISTORICAL_FULL_CLOSURE_LINEAGE",
+  "expanded_target": true,
+  "external_full_audit": "PENDING",
+  "graph_theorem_accepted": false,
+  "job_id": 66955,
+  "ordered_axiom_records": [
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.energy0' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.energy0",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    },
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    },
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    },
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.msum_map_le' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.msum_map_le",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    },
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.msum_map_mul_left' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.msum_map_mul_left",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    },
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.fsum_le' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.fsum_le",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    },
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.fsum_mul_left' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.fsum_mul_left",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    },
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.fsum_add' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.fsum_add",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    },
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.fsum_comm' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.fsum_comm",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    },
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.triple_sum_swap' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.triple_sum_swap",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    },
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.scalar_rearrangement' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.scalar_rearrangement",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    },
+    {
+      "actual": "'E593DensityDevelopment.CoefficientCompensationRequest.finite_coefficient_compensation' depends on axioms: [propext,\n Classical.choice.{u},\n Quot.sound.{u}]",
+      "kind": "AXIOM",
+      "name": "E593DensityDevelopment.CoefficientCompensationRequest.finite_coefficient_compensation",
+      "ordered_canonical_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "original_axiom_tokens": [
+        "propext",
+        "Classical.choice.{u}",
+        "Quot.sound.{u}"
+      ]
+    }
+  ],
+  "originals": {
+    "actual-proof-records.json": {
+      "bytes": 39932,
+      "sha256": "2929377d2ead18e58385dfe4e055b5392e1fca5f6dbe244a00542c7e4592a532"
+    },
+    "after-child.checks.json": {
+      "bytes": 11698,
+      "sha256": "5d3abc695a81275402a560fe70ce230ab009792884b5006817b8870acb36a575"
+    },
+    "before-child.checks.json": {
+      "bytes": 11699,
+      "sha256": "8a54dca0702c2f5b0978cca8161f9d571d0a94a04c39c8d07a9dc8531b560b0a"
+    },
+    "child.stage.json": {
+      "bytes": 1785,
+      "sha256": "192ccfd57ef038b2e4cd7fdb9730c458644701129aa203f026f6abb2ce506f43"
+    },
+    "child.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "child.stdout": {
+      "bytes": 37713,
+      "sha256": "a4532116750312622f985761ff7c5381847a4a961effae8a5167982531fcb640"
+    },
+    "dependency-manifest.json": {
+      "bytes": 3105462,
+      "sha256": "0b406063ab727d36a34300190d0c91b7aaca75213d70f7af78c2b7fd277d08d5"
+    },
+    "proof-report.json": {
+      "bytes": 571,
+      "sha256": "600e01ee1c0469e4fbf92fb4f143b15e656c435fa13426d0bff3c48550cf7d33"
+    },
+    "proof-report.log": {
+      "bytes": 2022,
+      "sha256": "9d804afa5e3d2633c868f2c5da27eb3cec509d2b6e1790669a948c59822ba8fd"
+    },
+    "wrapper-66955.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "wrapper-66955.stdout": {
+      "bytes": 2022,
+      "sha256": "9d804afa5e3d2633c868f2c5da27eb3cec509d2b6e1790669a948c59822ba8fd"
+    }
+  },
+  "proof_attempts_consumed": 1,
+  "proof_limit": 2,
+  "semantic_review": "ROOT_READ_COMPLETE_OUTPUT; REAL_HELPER_REVIEW_SEPARATE",
+  "status": "ACTUAL_FOCUSED_PROOF_ORIGINAL_RECONCILIATION_PASS"
+}
