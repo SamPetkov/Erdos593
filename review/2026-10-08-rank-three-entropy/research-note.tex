@@ -8,10 +8,13 @@
 This note concerns a possible density extension of the finite atom description,
 not a further proof of the obligatory classification.  Cycle and theta atoms
 suggest asking whether the next trivalent core, $K_4$, admits an exact
-edge-marginal entropy construction.  We obtain restricted density and entropy
-statements, including bounds for flat-spectrum and hierarchical hosts, every
-weighted three-state host, and a host-dependent mixing criterion.  We also identify constructions that cannot
-establish the unrestricted result.
+edge-marginal entropy construction.  We establish that target for the entire
+uniform binary family admitting an exchangeable triple, by an exact fitting
+argument for every finite simple graph of maximum degree at most three.
+The density results cover restricted host classes, including flat-spectrum
+and hierarchical hosts, every weighted three-state host, and a host-dependent
+mixing criterion.  We also identify constructions that cannot establish the
+unrestricted finite-alphabet result.
 The kernel and entropy arguments below have analytical source review,
 not Lean validation.  The finite coefficient comparison has separately
 passed a pinned warning-fatal Lean check.  A complete finite kernel-energy
@@ -23,6 +26,8 @@ The initial equal-spoke, one-step compensation argument, the binary path
 criterion and the obstruction examples were developed with a returned ChatGPT
 Pro response.  The arbitrary-mismatch, unequal-spoke and two-diamond
 refinements below were derived and checked separately during its audit.
+The subcubic binary proof replaces the earlier path criterion with a finite
+constrained fitting argument that also controls every zero-coupling edge.
 The displayed model-version identity was unavailable.  These provenance
 statements do not supply mathematical validation.
 
@@ -590,93 +595,232 @@ establish the stated classes.
 
 \subsection{An exact binary entropy construction}
 
-Let $\kappa$ be uniform on $\{-1,1\}$ and
-$\lambda_\rho(s,t)=(1+\rho st)/4$.  Write
+Let $\kappa$ be the uniform law on $\{-1,1\}$ and define
 \[
- I(\rho)=\frac{1+\rho}{2}\log(1+\rho)
-          +\frac{1-\rho}{2}\log(1-\rho).
+ \lambda_r(s,t)=\frac{1+rst}{4},\qquad
+ I(r)=\frac{1+r}{2}\log(1+r)+\frac{1-r}{2}\log(1-r),
+ \qquad -1\leq r\leq1,
 \]
-The following criterion concerns prescribed marginals, not merely a
-homomorphism count with one common edge potential.
+with $0\log0=0$ and natural logarithms.  The following argument concerns
+the prescribed law on every actual edge, including zero-coupling edges of
+the fitted model.  It does not use a scalar density comparison or a
+restriction to one common edge potential.
 
-\begin{proposition}[A binary path criterion]
-Let $G$ be a finite simple graph and $0\leq r<1$.
-For each edge $e=vw$, let $\mathcal P_e$ be the simple $v$--$w$ paths in $G-e$.
-If $\sum_{\pi\in\mathcal P_e}r^{|\pi|}\leq r$ for every $e$, there exists
-a law $\tau$ on $\{-1,1\}^{V(G)}$ with every edge marginal $\lambda_r$ and
-$D(\tau\Vert\kappa^{V(G)})\leq |E(G)|I(r)$.
-For bipartite $G$, the same holds with $\lambda_{-r}$.
+The constrained ferromagnetic inverse-Ising fit and its KKT conditions are
+established methods.\footnote{S.~Lauritzen, C.~Uhler and P.~Zwiernik,
+\emph{Total positivity in exponential families with application to binary
+variables}, Corollary 3.7, \url{https://arxiv.org/abs/1905.00516}.}
+The entropy formulation is also standard.\footnote{B.~Szegedy,
+\emph{Sparse graph limits, entropy maximization and transitive graphs},
+Corollary 9.1, \url{https://arxiv.org/abs/1504.00858}.}
+The subcubic zero-face argument is given self-containedly below; its
+originality has not been established.
+
+\begin{proposition}[Uniform binary exact fitting for subcubic graphs]
+\label{prop:binary-subcubic-exact-fitting}
+Let $G=(V,E)$ be a finite simple graph, with $n=|V|$, $m=|E|$ and
+maximum degree at most three.  For every $0\leq r\leq1$ there is a
+probability law $\tau$ on $\{-1,1\}^{V}$ whose singleton laws are
+$\kappa$, whose marginal on each oriented edge is $\lambda_r$, and
+such that
+\[
+ D(\tau\Vert\kappa^{V})\leq mI(r).
+\]
+If $G$ is bipartite, the assertion holds for every $-1\leq r\leq1$.
+Isolated vertices are permitted.
 \end{proposition}
 
 \begin{proof}
-For $r=0$, use independent spins.  Otherwise put $b=\operatorname{atanh}r$
-and minimize the continuous function
+First suppose $0<r<1$ and set $b=\operatorname{atanh}r<\infty$.
+For $\beta=(\beta_e)_{e\in E}\in[0,b]^E$, write
 \[
- \Phi(\beta)=\log Z(\beta)-r\sum_e\beta_e,\qquad
- Z(\beta)=2^{-|V(G)|}\sum_\sigma
-      \exp\left(\sum_{e=vw}\beta_e\sigma_v\sigma_w\right)
+ Z(\beta)=2^{-n}\sum_{\sigma\in\{-1,1\}^{V}}
+       \exp\left(\sum_{e=vw\in E}\beta_e\sigma_v\sigma_w\right),
+ \qquad
+ \tau_\beta(\sigma)=\frac{2^{-n}}{Z(\beta)}
+       \exp\left(\sum_{e=vw\in E}\beta_e\sigma_v\sigma_w\right).
 \]
-on the compact box $[0,b]^{E(G)}$.
-With $t_e=\tanh\beta_e$, the finite high-temperature expansion is
+Every $\tau_\beta$ has full support and is invariant under the global
+spin flip.  Minimize the differentiable function
 \[
- Z(\beta)=\prod_e\cosh\beta_e
-       \sum_{A\subseteq E(G):\,\partial A=\varnothing}\prod_{e\in A}t_e
-       \geq\prod_e\cosh\beta_e.
+ \Phi(\beta)=\log Z(\beta)-r\sum_{e\in E}\beta_e
 \]
-In $G-e$, its endpoint correlation $c_e$ lies between zero and
-$\sum_{\pi\in\mathcal P_e}\prod_{f\in\pi}t_f\leq r$.
-To justify the path bound, every set with odd boundary $\{v,w\}$ contains
-a simple $v$--$w$ path.  Remove one such path; the remaining set is even.
-Summing over all paths and even remainders overcounts the nonnegative
-odd-boundary numerator and gives the asserted bound after division by
-the even-subgraph denominator.
-Reinserting $e$ gives correlation $(t_e+c_e)/(1+t_ec_e)$ and
-$\partial_e\Phi=\mathbb E(\sigma_v\sigma_w)-r$.
-At a lower box face this derivative is nonpositive, whereas a constrained
-minimum requires it to be nonnegative.  At an upper face it is
-nonnegative, whereas a minimum requires it to be nonpositive.
-All derivatives thus vanish at a minimizer $\beta^*$.
-The resulting Gibbs law has correlation $r$ on each edge.
-Global spin-flip symmetry fixes uniform singletons, hence the exact law
-$\lambda_r$ on every edge.  Finally,
+on the compact box $[0,b]^E$.  Let $\beta^*$ be a minimizer and put
+$q_e=\mathbb E_{\tau_{\beta^*}}[\sigma_v\sigma_w]$ for $e=vw$.
+Differentiation of the finite sum gives
 \[
- D(\tau\Vert\kappa^{V(G)})
- =r\sum_e\beta_e^*-\log Z(\beta^*)
- \leq\sum_e\bigl(r\beta_e^*-\log\cosh\beta_e^*\bigr)
- \leq |E(G)|I(r).
+ \partial_e\Phi(\beta^*)=q_e-r.
 \]
-The last bound is the elementary Legendre transform of $\log\cosh$.
-Flip the spins on one bipartition class to obtain $-r$.
+
+We first show that every edge with $\beta_e^*>0$ has $q_e=r$.
+For a nonnegative coupling vector, put $t_f=\tanh\beta_f$.
+Expanding each edge factor and averaging independent uniform spins gives
+\[
+ Z(\beta)=\prod_f\cosh\beta_f
+   \sum_{A\subseteq E:\,\partial A=\varnothing}\prod_{f\in A}t_f.
+\]
+Here $\partial A$ is the set of odd-degree vertices of $(V,A)$.
+In the model with $e=vw$ removed, the correlation $c_e$ equals the
+nonnegative odd-boundary sum with $\partial A=\{v,w\}$ divided by
+the strictly positive even-boundary sum.  In particular $c_e\geq0$.
+Reinserting edge $e$ gives
+\[
+ q_e=\frac{t_e+c_e}{1+t_ec_e}.
+\]
+If $0<\beta_e^*<b$, the interior first-order condition gives $q_e=r$.
+If $\beta_e^*=b$, then $t_e=r$ and
+\[
+ q_e-r=\frac{c_e(1-r^2)}{1+rc_e}\geq0.
+\]
+The one-sided first-order condition at an upper box face gives
+$q_e-r\leq0$, so equality follows there as well.
+For every edge with $\beta_e^*=0$, the lower-face first-order condition
+instead gives $q_e\geq r$.  We now discharge this possible excess.
+
+Fix such a zero-coupling edge $e=vw$.
+Because $G$ is simple and $\deg(v)\leq3$, there are at most two
+neighbors of $v$ having positive coupling.  These neighbors are
+distinct from $w$.  Conditional on all spins other than $\sigma_v$,
+the conditional mean depends only on those positive-coupling neighbors.
+
+If there are no such neighbors, $\sigma_v$ is independent and uniform,
+so $q_e=0\leq r$.
+If there is exactly one, say $a$, then
+\[
+ \mathbb E[\sigma_v\mid\sigma_{V\setminus\{v\}}]
+      =t\sigma_a,\qquad t=\tanh\beta_{va}^*.
+\]
+The already proved positive-edge equality gives
+$r=\mathbb E[\sigma_v\sigma_a]=t$.  Consequently
+\[
+ q_e=t\mathbb E[\sigma_a\sigma_w]\leq t=r.
+\]
+
+If there are exactly two, say $a,b$, let
+$\alpha=\beta_{va}^*>0$ and $\gamma=\beta_{vb}^*>0$.  There are
+numbers
+\[
+ A=\frac{\tanh(\alpha+\gamma)+\tanh(\alpha-\gamma)}2,
+ \qquad
+ B=\frac{\tanh(\alpha+\gamma)-\tanh(\alpha-\gamma)}2
+\]
+such that
+\[
+ \mathbb E[\sigma_v\mid\sigma_{V\setminus\{v\}}]
+       =A\sigma_a+B\sigma_b.
+\]
+Both $A$ and $B$ are nonnegative: monotonicity of $\tanh$ and
+$\alpha+\gamma\geq|\alpha-\gamma|$ imply
+$\tanh(\alpha+\gamma)\geq|\tanh(\alpha-\gamma)|$.
+Write $q=\mathbb E[\sigma_a\sigma_b]$.  The two incident positive
+edges have correlation $r$, whence
+\[
+ A+Bq=r=B+Aq,\qquad (A-B)(1-q)=0.
+\]
+Simplicity makes $a$ and $b$ distinct vertices, and full support gives
+$\mathbb P(\sigma_a\ne\sigma_b)>0$, so $q<1$.
+Therefore $A=B\geq0$.  For every three signs, the pointwise identity
+\[
+ 1+\sigma_a\sigma_b-\sigma_a\sigma_w-\sigma_b\sigma_w
+       =(\sigma_a-\sigma_w)(\sigma_b-\sigma_w)\geq0
+\]
+holds: either difference is zero, or the two differences have the same sign.
+Taking expectations and using $A=B$ gives
+\[
+ q_e=A\bigl(\mathbb E[\sigma_a\sigma_w]
+              +\mathbb E[\sigma_b\sigma_w]\bigr)
+      \leq A(1+q)=r.
+\]
+These three cases exhaust the possible active neighbors of $v$.
+Combined with lower-face $q_e\geq r$, they show $q_e=r$ on every
+zero-coupling edge.  Thus every actual edge has correlation exactly $r$.
+
+Global spin-flip symmetry gives uniform singleton laws, including at
+isolated vertices.  For a pair of signs with uniform singleton laws,
+its correlation $r$ determines its four masses as
+$(1+rst)/4$.  Hence all edge marginals are exactly $\lambda_r$.
+
+Finally, the high-temperature even-subgraph expansion has nonnegative
+terms and contains the empty term $1$, so
+\[
+ \log Z(\beta^*)\geq\sum_e\log\cosh\beta_e^*.
+\]
+The definition of $\tau_{\beta^*}$ and the exact edge correlations give
+\[
+ D(\tau_{\beta^*}\Vert\kappa^{V})
+   =r\sum_e\beta_e^*-\log Z(\beta^*)
+   \leq\sum_e\left(r\beta_e^*-\log\cosh\beta_e^*\right)
+   \leq mI(r).
+\]
+The final inequality is the elementary one-variable convex-conjugate
+identity
+$\sup_{x\in\mathbb R}\{rx-\log\cosh x\}=I(r)$,
+whose maximizer for $0<r<1$ is $x=\operatorname{atanh}r$.
+This proves the nondegenerate range without a numerical fit.
+
+For $r=0$, choose independent uniform spins; both sides of the
+divergence inequality are zero.  For $r=1$, use one independent
+uniform spin per connected component, assigning that spin to every
+vertex of the component.  If $c$ is the number of components, this law
+has entropy $c\log2$ and divergence $(n-c)\log2\leq m\log2=mI(1)$,
+because $m\geq n-c$.  The empty graph and isolated components are
+included in these formulas.
+
+For a bipartite graph, flip the spin on one bipartition class.
+This bijection preserves $\kappa^{V}$ and the divergence, and changes
+the sign of every edge product.  Since $I(-r)=I(r)$, it gives the
+assertion for negative correlations, including $r=-1$.
 \end{proof}
 
-In a $K_4$ subdivision, deletion of an actual edge leaves exactly four
-alternate simple paths between its endpoints: after the forced path tails,
-they are the core routes $acb,adb,acdb,adcb$ for the relevant branch edge $ab$.
-For a simple bipartite graph each has length at least three.
-Thus $4r^3\leq r$ proves the criterion for $r\leq1/2$.
-The uniform binary pair law has an exchangeable triple extension exactly
-when $-1/3\leq\rho\leq1$: necessity follows from
-$(\sigma_1+\sigma_2+\sigma_3)^2\geq1$, and sufficiency from
+\paragraph{Application to the exact target.}
+For a simple bipartite $K_4$ subdivision $J(L)$, each branch vertex
+has degree three and each interior vertex has degree two.  Thus the
+proposition applies to every tuple of positive path lengths satisfying
+the parity-cut condition, including lengths equal to one.
+For the uniform binary singleton and pair family $\lambda_\rho$,
+an exchangeable triple exists exactly for $-1/3\leq\rho\leq1$.
+Necessity follows from
+$\mathbb E[(\sigma_1+\sigma_2+\sigma_3)^2]=3+6\rho\geq1$;
+sufficiency follows from the nonnegative symmetric law
 \[
- \eta_\rho(x,y,z)=\frac18\bigl(1+\rho(xy+xz+yz)\bigr).
+ \eta_\rho(x,y,z)=\frac{1+\rho(xy+xz+yz)}8.
 \]
-Consequently \eqref{eq:rank3-entropy-target} holds for this specified
-binary family when $-1/3\leq\rho\leq1/2$.
-This source-reviewed result is not being claimed as novel; exact
-literature reconciliation is a separate obligation.
-The argument belongs to established Ising and Bethe methodology.
+Consequently \eqref{eq:rank3-entropy-target} is established analytically
+for this entire uniform binary family, since
+$D(\lambda_\rho\Vert\kappa^2)=I(\rho)$.
+The triple extension identifies the requested range; the
+positive-correlation construction works on every simple subcubic graph.
+
+The argument uses established Ising and Bethe methodology.
 Ruozzi proves a partition-function lower bound for binary
-log-supermodular models,\footnote{N.~Ruozzi,
+log-supermodular models.\footnote{N.~Ruozzi,
 \emph{The Bethe Partition Function of Log-supermodular Graphical Models},
 Advances in Neural Information Processing Systems 25 (2012),
 \url{https://proceedings.neurips.cc/paper_files/paper/2012/file/03afdbd66e7929b125f8597834fa83a4-Paper.pdf}.}
-whereas attractive Ising fitting permits excess fitted correlation on
+Attractive Ising fitting can permit excess fitted correlation on
 zero-coupling edges.\footnote{S.~Lauritzen, C.~Uhler and P.~Zwiernik,
 \emph{Total positivity in exponential families with application to binary variables},
 Corollary 3.7 and Remark 3.9,
 \url{https://web.math.ku.dk/~lauritzen/papers/AOS2007.pdf}.}
 Neither statement alone supplies all the exact prescribed marginals here;
-the path criterion discharges that additional obligation.
+the zero-face argument above discharges that obligation in the subcubic
+uniform binary setting.  Analytical source review does not establish
+novelty or supply Lean validation.
+
+\paragraph{Scope and remaining obligation.}
+The proof uses zero-field uniform binary spins and the special
+two-neighbor linear conditional mean.  It does not establish the
+target for nonuniform binary singletons or arbitrary finite alphabets,
+and it does not supply a degree-four zero-face argument.
+The exact unrestricted remaining statement is: for every finite
+$\Omega$, every positive singleton law $\kappa$, every symmetric
+exchangeable triple law $\eta$ with singleton $\kappa$ and pair marginal
+$\lambda$, and every simple bipartite $K_4$ subdivision $J(L)$, there
+exists a law on the actual vertex set with every edge marginal exactly
+$\lambda$ and divergence at most $mD(\lambda\Vert\kappa^2)$.
+That statement remains open in this research packet.  No claim of
+novelty, global literature reconciliation, formal validation, or
+B-level significance accompanies the binary proposition.
 
 \subsection{Two limits on proposed constructions}
 
@@ -885,7 +1029,34 @@ source family $g_i=A^r\operatorname{diag}(\phi_i)A^u$.
 A valid proof must retain that shared source structure and its actual
 moment constraints.
 
+\paragraph{An obstruction within the actual source family.}
+On the $32$-state star measure used above, write $R_e$ for the
+edge-coordinate signs and take the single common host
+\[
+ T=\Pi+\sum_es_eR_e\otimes R_e,\qquad
+ (s_{ab},s_{ac},s_{ad},s_{bc},s_{bd},s_{cd})
+   =(2^{-64},1/32,1/4,1/8,1/16,1/8).
+\]
+This is a strictly positive symmetric Markov kernel; $A=T^2$ has the
+actual centered normalized eigenfunction $f=R_{ab}$ with simple positive
+eigenvalue $2^{-128}$.  Put
+\[
+ g_f(c,d)=\int f(x)K_r(x,c)K_u(x,d)d\mu(x),\qquad
+ q_f(h)=\int K_\ell(c,d)g_f(c,d)(A_c^hg_f)(c,d)d\mu^2,
+\]
+where $A_c$ acts in the $c$ coordinate.  At $r=\ell=1$, $u=4$, the
+exact analytical certificate gives
+\[
+ q_f(8)\leq-\frac{66554167313}{2^{154}}<0.
+\]
+The construction and rational bound are recorded in
+\texttt{actual-source-obstruction-pass5.json}.  Thus positivity of each
+actual positive-mode source term is false even under the common-host
+constraints.  This does not imply $F<1$: the full density retains the
+constant-mode surplus and every other weighted mode contribution.
+
 For arbitrary interacting spectra, six independent exponents and odd-parity
-paths require still further control.  The unrestricted entropy theorem,
+paths require still further control.  The uniform binary target is covered
+above, while the unrestricted finite-alphabet entropy theorem,
 formalization of these analytical results, global novelty and B-level
 significance remain open obligations rather than conclusions of this note.

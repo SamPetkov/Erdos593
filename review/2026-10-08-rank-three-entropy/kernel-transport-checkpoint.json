@@ -55,7 +55,15 @@
   "execution": {
     "new_compiler_attempts": 0,
     "new_service_requests": 0,
-    "package_Probe_runner_prepared": false,
+    "package_Probe_runner_prepared": true,
+    "source_package_sha256": "aadcaa69bf185a5df96d5053ccb692e86a24e450c9daaa4b46e3a6e89497eac5",
+    "freeze_sha256": "b1991955b19adc8329fe786d6ae756e1dec71bf1008d2ef280d6bd4da0ba7a73",
+    "Probe_sha256": "992c9071968b1a9412314eb99f796ffe09099cb837ec5e48a1bd58ab1f02fc33",
+    "new_focused_counter": "0of2 consumed; proposed1of2 launch stopped before upload by fresh user-queue guard",
+    "planned_capture": "13actualfulltypes/7actualfulldefinitions/13actualorderedstandard-onlyaxioms plus compiler metadata; NONE captured yet",
+    "fresh_guard_stop": "Static compiler/nine-clean-pins PASS, resource FAIL user_queue_nonempty. Existing other job untouched; no remotecontrol reservation, source upload, job or compiler invocation.",
+    "compiler_failure": false,
+    "runner_source_and_package_review": "Root self-review independent=false and actual separate-agent exact review PASS; historical dependency artifact lineage/external full audit pending.",
     "accepted_source_changes": false
   },
   "pending": [

@@ -5,13 +5,26 @@ research draft, not the authoritative manuscript or an accepted Lean integration
 The accepted 250-module, 401-audit checkpoint remains unchanged.
 
 The mathematical connection is the transition from cycle/theta atoms to the
-next trivalent core, K4: which parts of a common-power density inequality follow
-from the same Markov structure, and where an exact entropy construction needs
-additional work?
+next trivalent core, K4. The exact edge-marginal entropy target now holds
+analytically for every uniform binary pair law with correlation in [-1/3, 1],
+on every simple bipartite K4 subdivision satisfying the parity-cut condition.
+All positive path lengths are allowed, including length one.
+
+The binary proof establishes a stronger graph statement: for every finite
+simple graph of maximum degree at most three and every correlation r in [0, 1],
+there is a law with uniform binary singleton marginals, exactly the prescribed
+pair marginal on every actual edge, and divergence at most |E| I(r).
+For bipartite graphs the range is [-1, 1]. A finite constrained Gibbs fit and
+a two-neighbor conditional-mean argument control the fitted model's
+zero-coupling edges. Isolated vertices and the endpoint correlations are
+included. This is an analytical proof, not a numerical fit or Lean validation;
+no novelty or B-level significance is claimed.
 
 ## Contents and status
 
-- `research-note.tex`: restricted compensation and binary entropy proofs;
+- `research-note.tex`: the full uniform binary exact-marginal theorem for
+  simple subcubic graphs and its whole-triple-interval K4 application;
+  restricted compensation proofs;
   density-free flat-spectrum comparison with a quantitative bound; component
   and independent-coordinate extensions; a host-dependent mixing bound and a
   nested conditional-expectation theorem allowing interacting spectra;
@@ -40,8 +53,14 @@ additional work?
 - `pass4_checks.py`, `pass4-exact-results.json`: one predetermined sparse
   three-state host, all its 64 identity/rank-one branches, and a second exact
   generic-function obstruction. These are diagnostics, not universal proofs.
-- `pass4-review.json`: current source-specific analytical obligation audit,
-  limited primary-literature comparison and the formal-validation boundary.
+- `actual-source-obstruction-pass5.json`: an exact analytical negative
+  source term for an actual positive eigenmode of one strictly positive
+  common-power host. It refutes modewise positivity, not the full density
+  inequality; the historical generic-function obstruction is retained.
+- `pass4-review.json`: historical source-bound analytical audit, retained unchanged.
+- `pass5-review.json`: current binary proof, actual-source obstruction and
+  exact transport-package/resource-stop audit; primary-method overlap and
+  analytical/formal-validation boundaries are explicit.
 - `exact_checks.py`, `route-diagnostics.json`, `exact-check-results.json`:
   deterministic rational examples and exhaustive 64-subset classification.
   No random campaign or universal conclusion is inferred from the examples.
@@ -65,7 +84,8 @@ counterexample to the density target.
 ## What remains open
 
 The universal density-free inequality for arbitrary interacting spectra, the
-unrestricted exact-marginal entropy statement, pinned validation of the new
+exact-marginal entropy statement for nonuniform binary singletons and arbitrary
+finite alphabets, formal validation of the binary theorem, pinned validation of the new
 finite transport candidate and original-host kernel/graph extraction, literature
 novelty, and significance
 remain separate obligations. The coefficient proof now has a real pinned focused
