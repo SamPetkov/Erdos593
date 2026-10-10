@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "method": "isolated replay of final frozen original-measure exact checker; parsed result identical to archived result",
+  "sources": {
+    "continuation4_cover_verify.py": "660994b0b80beb76de4118debd6449b3d1554e1653335d4b30d1d7b97484d3aa",
+    "continuation4_cover_structure.md": "235bb4ffcdbab4c23f421356521bbecd1af6dbbd2978ea8f6a841af86a1ca689",
+    "continuation_cover_engine.py": "1187d00bdafdec7f1ffd3b7ad7ee1b2f2eb8d27f2593fd6ee12808628a14495a"
+  },
+  "result_sha256": "8f0f38663995b49e437025f281aaff4376def0fafd9d4750fc322a1ab434c3de",
+  "exact_host_count": 8,
+  "full_two_cover_comparisons": 49,
+  "mathematical_review": [
+    "Weighted symmetric/antisymmetric transport proves every displayed power identity.",
+    "Ranks include diagonal pair zero modes; pure duplication preserves nonzero spectra.",
+    "Invertible-root commutation argument uses actual entrywise nonnegativity and handles the singular exception explicitly.",
+    "No arbitrary signed-channel deficit is promoted to a canonical cover deficit."
+  ],
+  "scope": "Does not prove unrestricted density or universal cover domination."
+}

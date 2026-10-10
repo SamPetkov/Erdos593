@@ -62,3 +62,12 @@ contractions, including unequal original weights, and supplies actual rational
 hosts refuting broader coarse domination even with commuting channels. The
 unrestricted target remains open, and every stronger-premise obstruction has
 a separate positive lower bound for its full target density.
+
+## Projection surplus and canonical-cover source constraints
+
+The [next draft packet](continuation4/README.md) proves quantitative
+arbitrary-projection channel comparisons, canonical two-cover rank and
+commutation constraints, and exact certificates from a bounded search of
+three interacting character channels. It explicitly distinguishes its
+coarse-surplus improvement from the already elementary reflection-boundary
+density proof. The unrestricted inequality remains unresolved.

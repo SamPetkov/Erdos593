@@ -1,0 +1,54 @@
+{
+  "reviewer": "/root/tensor4",
+  "scope": "Source-bound mathematical audit of the paired-star theorem, the primary heavy-atom example, and the direct-reflection scope correction. This is not an unrestricted proof and the reviewer contributed the quadrilateral lemma; independent review of that lemma is the root or another agent responsibility.",
+  "files": {
+    "continuation4_tensor_projection_lemmas.md": "9d4a862b2d62a5d064ed8a9ae84f5df7de599ec02d31a52896b75b665805491c",
+    "continuation4_projection_example.md": "da6312e19e2cdeb6009bd481ecde99368c99c1c379e29509eacf3d2631c0b11a",
+    "continuation4_projection_verify.py": "4ab0f3f2b28107b46c917536ea7de1acc9c15626b1cf9f93d225264c1cd5b33e",
+    "continuation4_projection_checks.json": "ed65e1162206cfec230f886717594f963decd35c45acf6e98f7fec51d5f2614d",
+    "continuation4_boundary_scope.md": "a52ad9f4361599889623669f6becd78f053043e9dd30832480c26f4dcaf9b4ce"
+  },
+  "mathematical_checks": {
+    "original_pi_composition_used_in_field_transport": true,
+    "rank_zero_case_separated": true,
+    "Q_need_not_be_centered_or_entrywise_nonnegative": true,
+    "PSD_B_C_uses_nonnegative_coarse_power_entries": true,
+    "g_lower_bound_uses_common_PSD_A_and_constant_field": true,
+    "Cauchy_trace_order_matches_B_C_square_root": true,
+    "seven_complement_stars_at_k_equal_u_r_equal_l_correct": true,
+    "no_claim_general_unequal_star_trace_nonnegative": true,
+    "no_trace_of_three_arbitrary_PSD_positive_assumption": true,
+    "H_square_beta_Q_original_weighted_and_actual_root_explicit": true,
+    "five_centered_bands_in_primary_example_including_zero_counted": true,
+    "primary_simple_positive_coarse_spectrum_reasoning_valid": true,
+    "primary_coarse_TP2_certificate_invokes_prior_restricted_note": true,
+    "disconnected_and_bipartite_actual_roots_handled_by_same_original_measure": true,
+    "entire_boundary_density_is_explicitly_already_covered_by_reflection": true,
+    "actual_boundary_source_f_ac_and_original_measure_identity_verified": true,
+    "boundary_trace_lower_bound_and_exact_two_term_PSD_surplus_verified": true,
+    "boundary_equality_F_one_iff_T_Pi_verified_including_disconnected_cases": true,
+    "paired_star_target_classification_exactly_two_regions_verified": true,
+    "second_reflection_ray_trace_exponent_2_times_2u_plus_h_verified": true,
+    "projection_comparison_adds_six_cycle_terms_to_direct_fine_trace_bound": true,
+    "no_claim_arbitrary_channel_coarse_domination_from_scalar_reflection": true,
+    "all_three_possible_target_vertex_pair_reflections_and_trace_exponents_verified": true,
+    "other_three_vertex_pairs_excluded_by_target_h_positive_or_r_at_least_l": true,
+    "final_trace_parentheses_edit_verified_as_only_lemma_change": true
+  },
+  "exact_replay": {
+    "full_deterministic_output_equals_committed_record": true,
+    "lemma_check_count": 60,
+    "actual_host_count": 7,
+    "actual_host_tuple_count": 11,
+    "stdout": [
+      "{\"lemma_check_count\": 60, \"actual_host_count\": 7, \"actual_host_tuple_count\": 11, \"coarse_square_charpoly\": [\"1\", \"-11500291/3686400\", \"5398181248721/1509949440000\", \"-171682251908633/96636764160000\", \"31035116220889/96636764160000\"], \"fine_square_charpoly\": [\"1\", \"-11500741/3686400\", \"168711133403/47185920000\", \"-8792290627722953/4947802324992000\", \"130258618816898085073/405323966463344640000\", \"-203426074115599877/5188146770730811392000\", \"31035116220889/25940733853654056960000\", \"0\", \"0\"]}",
+      "{\"p\": \"512/4499\", \"min_T\": \"3/128\", \"max_T\": \"4499/512\", \"max_A\": \"2541919/327680\", \"rank_Q\": \"2\"}",
+      "ALL_EXACT_CHECKS_PASSED"
+    ]
+  },
+  "material_issues": [],
+  "not_reviewed_as_new_literature_claim": "The earlier TP2 theorem is used as a repository baseline. Primary-literature verification remains the root audit task.",
+  "verdict": "Reviewed finite lemmas and examples are valid within their stated restricted scope; unrestricted target unresolved.",
+  "supersedes_review_sha256": "da231a1756aa6a6943f9e6e2853191bba028921eff1b1301b8b189c16dd00336",
+  "scope_correction_note": "The verifier and deterministic record did not change. Their earlier complete replay remains valid at the same pinned source hash. The reviewed documentation recognizes existing boundary reflection, the exact three possible target vertex-pair reflections, and the strict six-additional-cycle quantitative improvement. The final notation-only change explicitly places the operator power inside tr; reversing that one textual substitution recovers the previously reviewed complete lemma hash. No unchanged exact tests were repeated."
+}
