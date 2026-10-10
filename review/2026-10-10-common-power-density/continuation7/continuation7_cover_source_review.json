@@ -1,0 +1,230 @@
+{
+  "reviewer": "cover7",
+  "status": "PASS",
+  "independent_cases": [
+    {
+      "n": 4,
+      "pi": [
+        "1/5",
+        "4/15",
+        "4/15",
+        "4/15"
+      ],
+      "times": [
+        1,
+        2,
+        5
+      ],
+      "delta": "1",
+      "J": "22010311430969388040487073890511121555159023973699623207/1744349715977154962391040000000000000000000000000000000",
+      "centered_cubic": "3326757980856811652159046544994051210777896089380739207/1744349715977154962391040000000000000000000000000000000",
+      "Schur_error": "5058866478922550502710249197147717595129645428372110069/6977398863908619849564160000000000000000000000000000000",
+      "quantitative_lower": "3055655987834546628028204366024366899320534703867/1290199494065943019520000000000000000000000000000",
+      "visible_trace": [
+        "5193663/1352000",
+        "1511493/540800",
+        "15072081/5408000",
+        "471/169"
+      ],
+      "negative_Schur_entries": 12
+    },
+    {
+      "n": 4,
+      "pi": [
+        "1/5",
+        "4/15",
+        "4/15",
+        "4/15"
+      ],
+      "times": [
+        1,
+        1,
+        1
+      ],
+      "delta": "1",
+      "J": "20521239814797464984037/988530483200000000000",
+      "centered_cubic": "4504387979014514936037/988530483200000000000",
+      "Schur_error": "6802546212264261420999/3954121932800000000000",
+      "quantitative_lower": "96429386582181/22848800000000",
+      "visible_trace": [
+        "5193663/1352000",
+        "1511493/540800",
+        "15072081/5408000",
+        "471/169"
+      ],
+      "negative_Schur_entries": 12
+    },
+    {
+      "n": 4,
+      "pi": [
+        "1/5",
+        "4/15",
+        "4/15",
+        "4/15"
+      ],
+      "times": [
+        1,
+        1,
+        2
+      ],
+      "delta": "1",
+      "J": "31099378949563630774495479729/1670616516608000000000000000",
+      "centered_cubic": "6394940686052474785702551729/1670616516608000000000000000",
+      "Schur_error": "9670925777100686518090855203/6682466066432000000000000000",
+      "quantitative_lower": "1146085167374800538859/308915776000000000000",
+      "visible_trace": [
+        "5193663/1352000",
+        "1511493/540800",
+        "15072081/5408000",
+        "471/169"
+      ],
+      "negative_Schur_entries": 12
+    },
+    {
+      "n": 5,
+      "pi": [
+        "1/4",
+        "1/4",
+        "1/6",
+        "1/6",
+        "1/6"
+      ],
+      "times": [
+        1,
+        2,
+        5
+      ],
+      "delta": "1",
+      "J": "13",
+      "centered_cubic": "0",
+      "Schur_error": "1",
+      "quantitative_lower": "43/8",
+      "visible_trace": [
+        "3",
+        "3",
+        "5",
+        "5",
+        "5"
+      ],
+      "negative_Schur_entries": 12
+    },
+    {
+      "n": 4,
+      "pi": [
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4"
+      ],
+      "times": [
+        1,
+        2,
+        5
+      ],
+      "delta": "0",
+      "J": "27",
+      "centered_cubic": "6",
+      "Schur_error": "0",
+      "quantitative_lower": "18",
+      "visible_trace": [
+        "3",
+        "3",
+        "3",
+        "3"
+      ],
+      "negative_Schur_entries": 12
+    },
+    {
+      "n": 4,
+      "pi": [
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4"
+      ],
+      "times": [
+        1,
+        2,
+        5
+      ],
+      "delta": "0",
+      "J": "3",
+      "centered_cubic": "0",
+      "Schur_error": "0",
+      "quantitative_lower": "0",
+      "visible_trace": [
+        "3",
+        "3",
+        "3",
+        "3"
+      ],
+      "negative_Schur_entries": 0
+    },
+    {
+      "n": 4,
+      "pi": [
+        "1/5",
+        "1/4",
+        "1/4",
+        "3/10"
+      ],
+      "times": [
+        1,
+        2,
+        3
+      ],
+      "delta": "1",
+      "J": "9536608881775031132925348849771455317486091/3178828148885691643853424575651009708163072",
+      "centered_cubic": "-105085960774359295413554658203125/3178828148885691643853424575651009708163072",
+      "Schur_error": "697924707609722852009189029296875/2384121111664268732890068431738257281122304",
+      "quantitative_lower": "1756315485410812182132994515625/149707000585753435857957655148494848",
+      "visible_trace": [
+        "1776167/589824",
+        "1776167/589824",
+        "7084583/2359296",
+        "42192833/14155776"
+      ],
+      "negative_Schur_entries": 6
+    }
+  ],
+  "independent_large_example_parameters": {
+    "pi": [
+      "17/208",
+      "15/208",
+      "1/13",
+      "1/13",
+      "1/13",
+      "1/13",
+      "1/13",
+      "1/13",
+      "1/13",
+      "1/13",
+      "1/13",
+      "1/13",
+      "1/13"
+    ],
+    "p": "819200/11272763",
+    "source_cap_lower": "13794812542909273/1088774209536000",
+    "min_T": "31/32768",
+    "max_T": "11272763/819200",
+    "weighted_TP2_minors": 6084,
+    "actual_fine_square_checked": true
+  },
+  "author_implementation_imported": false,
+  "reviewed_note_sha256": "c6708eda5fb08b6dac955ea52795e359ca45413b0c52ebd0f021200a5c282204",
+  "proof_checks": [
+    "Weighted diagonal trace is unweighted sum, equivalently E_pi[(n+a)g].",
+    "All two-P and three-P cubic terms contain an individual centered mean and vanish.",
+    "H is a Schur product PSD operator under diagonal congruence; no entrywise positivity used.",
+    "The same H controls both cubic uniform term and reciprocal-mass perturbation.",
+    "The complete-square coefficient is exactly1/[4(n-3)].",
+    "Original Hilbert-Schmidt norms give sigma_2y and sigma_2z.",
+    "Spectral ordering and arithmetic-geometric mean give the factor1/[8(n-3)].",
+    "The m sigma_(x+z) term retains strictness even at the other coefficient endpoint.",
+    "S^2=Pi implies S=Pi for the stipulated actual self-adjoint Markov root.",
+    "The delta<=sqrt(n)/2 sufficient range is valid at n=4 and all larger n.",
+    "The stated n=13 path holding bound1907/1920 and eigenvalue bound947/960 check exactly.",
+    "The source-cap obstruction uses a positive actual source summand; invertibility preserves nonconstant trace.",
+    "The binary sign-channel composition needs no commutation between coarse S and Q."
+  ]
+}

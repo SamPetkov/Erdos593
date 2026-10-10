@@ -1,0 +1,41 @@
+{
+  "verdict": "PASS within the fixed sign-host and component-degree-at-most-three scope",
+  "reviewer": "optimize7; independent adversarial reading and saved-coefficient/classification replay",
+  "note_sha256": "5abb8e14d216b076b2ae318261884aff55eba2a14f306fc27c318bf420a886ee",
+  "source_sha256": "5e99e72aaf07a04490078c07b526e951649223b565e66119f3f59fce0c49c98a",
+  "certificate_sha256": "ff98e7388fd7cacf4f69da2b6e2c8ac7ac697bfdb1b7092179e378fe450e3227",
+  "scope": "actual 32-state sign host; tuple (k,4,1,1,8), every integer k>=4; all cover components have covering degree at most 3",
+  "checks": [
+    "The tree gauge is an actual permutation of original product-law variables; sigma transforms as g_w^{-1} sigma g_v.",
+    "Identity tree edges identify sheet labels, and the chord subgroup orbits are exactly the lifted connected components.",
+    "Component factors use the unchanged original host law mu^(4m); no conditional sheet distribution is normalized.",
+    "Recomputed all 343 original cubic moments and the 43 nonzero entries of the stated character rule.",
+    "Read the full leaf-elimination enumeration: each allowed free-edge character assignment has one determined tree completion, omitted character seven is rejected, and the root boundary vanishes by double incidence.",
+    "The denominator exponent 2436m accounts for fixed edge powers 19m times 128 plus at most 4m cubic half factors.",
+    "Independently classified all triples by simultaneous conjugacy and direct lifted-graph connectivity: 7 connected degree-two and 41 connected degree-three classes.",
+    "Verified 28 noncommuting degree-three classes and the six single-edge classes in each degree; 36 types remain genuinely simultaneous.",
+    "Decoded every saved dyadic defect coefficient exactly and independently recomputed all 48 interval lower bounds.",
+    "For a negative higher coefficient a_q, z<=1/16 gives a_q z^(q-q0)>=a_q 16^(-(q-q0)); the direction in the note is correct.",
+    "Every least degree is 0 or 4 and every recomputed lower bound is strictly greater than 2^-60.",
+    "Therefore Delta(z)>2^-60 z^4 on the whole positive interval, giving the claimed strict margin 2^(-4k-60).",
+    "Actual positive component partition functions force F^m-delta>0; multiplying component bounds preserves the inequality and makes it strict with a nonsingleton component.",
+    "The classification includes disconnected large-sheet covers through factorization, but gives no connected-cover result in degree four or higher."
+  ],
+  "classification_counts": {
+    "2": {
+      "classes": 8,
+      "connected": 7,
+      "single_edge_overlap": 6
+    },
+    "3": {
+      "classes": 49,
+      "connected": 41,
+      "single_edge_overlap": 6
+    }
+  },
+  "recomputed_interval_bounds": 48,
+  "noncommuting_degree_three_types": 28,
+  "genuinely_simultaneous_types": 36,
+  "findings": [],
+  "limit": "Did not rerun the full character-flow coefficient enumeration. This review verifies its finite logic, all stored bound arithmetic and orbit completeness; root is independently reconstructing selected cover polynomials by a different method."
+}

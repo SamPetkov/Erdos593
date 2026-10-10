@@ -95,3 +95,19 @@ negative-mode host while retaining its negative contribution. The packet
 includes independent mathematical reviews, exact rational certificates,
 and the completed bounded diagnostic record. The unrestricted density
 target and arbitrary simultaneous cover comparison remain unresolved.
+
+## Weighted compensation and simultaneous covers through degree three
+
+The [next bounded continuation](continuation7/README.md) proves an
+actual-source contraction for nonuniform flat-complement projections,
+uniformly over all roots and positive exponent triples under an explicit
+reciprocal-mass condition. It includes an unbalanced rank-twelve actual
+example whose source norm exceeds twelve. On the supplied sign host,
+exact full-defect polynomial certificates cover every connected
+two- and three-sheet type, including noncommuting permutations, and extend
+to arbitrary total sheet count when each component has degree at most
+three. An independent positive rational ten-state host refutes the newly
+tested active ac-mode positivity shortcut while satisfying the exact
+bound `F>4`. Full original-law proofs, finite certificates, independent
+reviews and bounded diagnostic records are included. The unrestricted
+target and general obligations (U) and (C) remain unresolved.

@@ -1,0 +1,85 @@
+{
+  "verdict": "PASS: actual active centered ac-mode positivity is refuted; unrestricted density and h-monotonicity are not refuted",
+  "reviewer": "source7; independent mathematical reading of proof and full exact checker",
+  "timestamp_utc": "2026-10-10T20:24:56.629664+00:00",
+  "bindings_sha256": {
+    "continuation7_opt_ac_obstruction.md": "21bed062f050f6380e265da9287b96e8648538c78393bf78048c4afc845db614",
+    "continuation7_opt_ac_exact.py": "040a8c37eab60254c418751f83b466d64e3fc3ecece5c1a1e812be88ca691769",
+    "continuation7_opt_ac_exact_checks.json": "9e8d1d2a729bf01491b64314318142c128d45ba1fea3800320650ed0e03308c0"
+  },
+  "scope_of_review": "The entire proof and checker were read. This reviewer independently reconstructed the conductance host, original probability, ordinary transition, weighted detailed balance, normalization p, displayed certified rational interval, and stay-path lower bound F>4. The costly D and adjugate arithmetic was not redundantly rerun: the root reviewer separately reconstructed all100 literal D entries and the inverse-square aggregate. Determinant conclusions here rely on the checked exact source algorithm, whose logic was audited.",
+  "mathematical_checks": [
+    {
+      "claim": "All target kernels come from one actual strictly positive self-adjoint Markov root under original mu=s/M.",
+      "result": "PASS: P=4095G/(4096s_i)+mu_j/4096; symmetry of G gives detailed balance and relative T symmetry."
+    },
+    {
+      "claim": "W=pT is admissible.",
+      "result": "PASS: p=min(mu)/2>0; nonnegative Markovness gives T_ij<=1/mu_j<=1/min(mu), hence 0<W<=1/2 and every original row has sum p."
+    },
+    {
+      "claim": "The omitted ac-edge coefficient is the coefficient of the requested density.",
+      "result": "PASS: D(a,c)=E_bd K8(ab)K1(ad)K2(bc)K1(bd)K1(cd); F(h)=sum theta_i^(2+h)<phi_i,Dphi_i> at tuple(8,1,2,1,h)."
+    },
+    {
+      "claim": "The adjugate-square filter is positive in the correct weighted Hilbert space.",
+      "result": "PASS: det(1024P-I)!=0 makes J a nonzero real scalar multiple of its inverse; P is self-adjoint under mu, so J is self-adjoint there and J\u00b2 is PSD with positive ordinary trace. No entrywise sign of J or H is asserted."
+    },
+    {
+      "claim": "The filter is a valid convex spectral average despite D not being self-adjoint.",
+      "result": "PASS: H commutes with P and is diagonal in an original-mu orthonormal P eigenbasis; tr(H D^op)=sum w_i<phi_i,Dphi_i>, w_i>=0, sum w_i=1. Trace is basis invariant and no positivity of D as an operator is used."
+    },
+    {
+      "claim": "A negative filtered average produces an active centered negative coefficient.",
+      "result": "PASS: detP!=0 excludes zero square modes; a P eigenfunction is an A=P\u00b2 eigenfunction. Since the average is strictly below -1/20000, some coefficient is below that value. D is entrywise positive, so the constant coefficient is positive and cannot be the selected negative one."
+    },
+    {
+      "claim": "The cyclic determinant certifies nine distinct positive centered square values.",
+      "result": "PASS: ten independent Krylov columns for N\u00b2 give minimal-polynomial degree10; weighted self-adjointness gives diagonalizability, hence ten distinct eigenvalues. Strict positivity of P gives a unique1 and |sigma_i|<1 elsewhere; detP!=0 gives centered theta_i=sigma_i\u00b2 in(0,1)."
+    },
+    {
+      "claim": "Integer powers use original mu throughout.",
+      "result": "PASS: E_j=M(L/s_b)N^(2j) and K_j=E_j/(L R^(2j)); the weighted compositions reduce exactly to sum_b s_b E_a(i,b)E_b(b,j)=M L E_(a+b)(i,j). Reducing N and R by their common gcd does not alter this identity."
+    },
+    {
+      "claim": "The five-edge denominator and orientation are correct.",
+      "result": "PASS: Dden=M\u00b2 L^5 R^26, because two integrated original masses occur and8+1+2+1+1=13. The matrix construction uses symmetry only for K1(d,c)=K1(c,d)."
+    },
+    {
+      "claim": "The final trace uses the correct original weight.",
+      "result": "PASS: tr(H_* D^op)=sum_ij (H_*)_ij D(j,i) mu_i, so the displayed numerator must contain s_i, as it does."
+    },
+    {
+      "claim": "Adjugate scaling cannot change the sign or spectral weights.",
+      "result": "PASS: C=R(1024P-I), and dividing adj(C) by a common nonzero integer only rescales J; J\u00b2/tr(J\u00b2) is invariant under that rescaling."
+    },
+    {
+      "claim": "The complete target remains safely positive at h=1.",
+      "result": "PASS: sum six exponents=16; restricting all branch and intermediate states to0 gives F>=mu0^(-2) P00^32>4, with no omitted original weights."
+    },
+    {
+      "claim": "The witness does not establish failure of h-monotonicity or F>=1.",
+      "result": "PASS: a negative individual diagonal can be compensated by other modal contributions; the manuscript explicitly retains this distinction."
+    }
+  ],
+  "independent_finite_checks": {
+    "original_states": 10,
+    "row_sum_total": 2987752677911,
+    "p": "159/127138411826",
+    "filtered_interval": [
+      "-1/10000",
+      "-1/20000"
+    ],
+    "F_lower_matches_saved": true,
+    "F_lower_above_four": true
+  },
+  "nonblocking_wording_recommendation": "The last paragraph may say ac-mode nonnegativity as a proof of edge-specific monotonicity is ruled out, to distinguish the failed proof mechanism from monotonicity itself.",
+  "full_target_counterexample": false,
+  "extra_obligation_created": false,
+  "final_binding_amendment": {
+    "reviewer": "root",
+    "previous_note_sha256": "68abd15ade16b3e95ff5cd9680cee658660e0eddf2c37b9cfa507225a049661d",
+    "final_note_sha256": "21bed062f050f6380e265da9287b96e8648538c78393bf78048c4afc845db614",
+    "reason": "Applied the exact optional wording correction requested by source7: ac-mode nonnegativity is ruled out as a proof of monotonicity; monotonicity itself is not refuted. Root read the corrected paragraph. Mathematical content, checker and certificate unchanged."
+  }
+}
