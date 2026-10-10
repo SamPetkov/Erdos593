@@ -1,0 +1,20 @@
+{
+  "count_equal": true,
+  "rows_exact_equal": true,
+  "best_exact_equal": true,
+  "old_count": 18000,
+  "new_count": 18000,
+  "old_elapsed": 85.99516940116882,
+  "new_elapsed": 88.61678218841553,
+  "seed": 26101010,
+  "original_result": "optimize_general_covers_results.json",
+  "canonical_hash_definition": "SHA256 of UTF-8 JSON on only count,rows,best fields, sort_keys=True, separators=(comma,colon), ensure_ascii=False.",
+  "result_canonical_sha256": "4cafc4f0c38df2c51abc0b5098d1f1efdb774b0544fd6d3feede168aa5cc2107",
+  "reproduced_canonical_sha256": "4cafc4f0c38df2c51abc0b5098d1f1efdb774b0544fd6d3feede168aa5cc2107",
+  "source_sha256": {
+    "optimize_general_covers.py": "687f15bf53c4bcafc995219f4a025dc059cc13cca2e9c2d56fa19ed2bc1a03f6",
+    "optimize_lifts.py": "3f16131c50bd2e2ad9505f4ccbd7ac098b389638ced76ec43da07c4dec2ceddb",
+    "optimize_density.py": "3b900b80c8c2b457bb08c65cb47cc9565954b4e6011966c45ac35b022ba0e58c"
+  },
+  "adds_search_coverage": false
+}

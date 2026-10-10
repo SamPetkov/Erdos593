@@ -1,0 +1,20 @@
+{
+  "date_utc": "2026-10-10",
+  "reviewer": "/root/markov",
+  "review_kind": "Separate analytical agent audit; not external peer review or formal verification",
+  "file": "research-note.md",
+  "sha256": "09324b2c61714dd7daff3042fdbe38ef30fc48ac543694536fe83c05e4f590f5",
+  "verdict": "PASS within stated unresolved scope",
+  "checked": [
+    "Thirteen proper centered cores and diamond cubic-moment squares",
+    "Actual-root radial reduction with original measure",
+    "Refinement coefficient and arbitrary-inner surplus",
+    "Weighted examples, zero and disconnected boundaries",
+    "All-order scope obstruction and unproved cover comparison"
+  ],
+  "source_check": "Independently reopened Sah–Sawhney–Stoner–Zhao Theorems 1.14 and 5.1: vertex weights allowed, one shared PSD edge interaction; unequal common powers not supplied",
+  "unrestricted_target_solved": false,
+  "certified_target_counterexample": false,
+  "novelty_certified": false,
+  "record_prepared_by": "/root from the separate agent final audit message"
+}

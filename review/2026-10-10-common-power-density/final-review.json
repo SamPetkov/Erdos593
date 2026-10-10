@@ -1,0 +1,48 @@
+{
+  "analytical_checks": [
+    "Read the final research note and checked the centered proper-core expansion, strict radial monotonicity, exact nonnegative-root endpoint, and actual bounded-host normalization.",
+    "Checked the unconditional edge-resampling and block-refinement inequalities, including the original-measure coefficient pi_i^(-2) gamma_i^(2N).",
+    "Checked the coarse all-I surplus and arbitrary-inner budget without assuming the open target for internal roots; the entire-centered-space coarse two-band hypothesis is explicit.",
+    "Checked the entrywise recognition certificate and the boundaries gamma=0, singleton fibers, zero coarse one-step diagonal, disconnected roots, centered unit modes, internal centered zeros, and negative actual-root eigenvalues.",
+    "Checked the weighted five-state host, the three-band obstruction to one common conv{I,Pi,C}, the all-order stochastic-monotonicity obstruction, positive refresh, and nine-state zero-band construction.",
+    "Read the final TP2 proof and checked the Boolean chain embedding, zero-support handling, factorial type count, rational approximation with fixed original potentials, and separation of base-density convexity from cover domination.",
+    "Checked that the unproved common-power cover comparison is explicitly a stronger sufficient obligation and that the type-counting lower bound alone gives its stated implication to the target."
+  ],
+  "correction_verified_before_finalization": {
+    "file": "tp2-class.md",
+    "issue": "The refreshed path R was a transition matrix and must not itself be identified with the relative-mu kernel class.",
+    "resolution": "Final text explicitly uses kernel 7R, square kernel 7R^2, and bounded host W=7pR; correction reread and verified."
+  },
+  "exact_verification": {
+    "arithmetic": "Python standard-library Fraction arithmetic; no floating-point acceptance tolerance.",
+    "coverage": "Actual admissibility, original-measure powers, weighted boundary densities, characteristic polynomials, all five-state orders, centered/proper subgraphs, radial identity, refinement powers and examples, nine-state centered zero, and exact disconnected weighted transport.",
+    "method": "Executed the final verify_exact.py run() and compared both returned data and deterministic JSON rendering with exact-results.json; byte-for-byte agreement.",
+    "result": "pass"
+  },
+  "limitations": [
+    "This is an analytical agent review and finite exact-arithmetic audit, not Lean or another formal-kernel verification.",
+    "This is not external peer review or a certification of literature novelty.",
+    "The prior common-cone theorem and the stated Ruozzi results are explicit inputs; this review does not claim a fresh independent literature survey.",
+    "Finite examples and numerical searches do not prove the unrestricted common-power inequality or the remaining cover comparison.",
+    "Only the four hash-bound files listed above are covered; later route-registry, numerical appendix, publication metadata, or other packet additions are outside this review."
+  ],
+  "review_date_utc": "2026-10-10",
+  "reviewed_files_sha256": {
+    "exact-results.json": "a86746ae39574012470d75d31ec30a6dfb2894dc6a212fa0b415275cfb6a274a",
+    "research-note.md": "09324b2c61714dd7daff3042fdbe38ef30fc48ac543694536fe83c05e4f590f5",
+    "tp2-class.md": "8419e28a80f75806fa70967a87cfdd78b8b0981fee41a9c15f95938297978991",
+    "verify_exact.py": "4e62d9f8cbeefcbd7bb126899f8650f4d3acf02d4ae049cedc14b971ab76aabd"
+  },
+  "reviewer": {
+    "identifier": "/root/tensor",
+    "independence": "Separate agent audit within the same consultation; not external peer review.",
+    "kind": "analytical_agent"
+  },
+  "schema_version": 1,
+  "verdict": {
+    "certified_target_counterexample_supplied": false,
+    "publication_scope_review": "pass",
+    "required_corrections_remaining": [],
+    "unrestricted_target": "unresolved"
+  }
+}
