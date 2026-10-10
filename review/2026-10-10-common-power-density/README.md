@@ -71,3 +71,13 @@ commutation constraints, and exact certificates from a bounded search of
 three interacting character channels. It explicitly distinguishes its
 coarse-surplus improvement from the already elementary reflection-boundary
 density proof. The unrestricted inequality remains unresolved.
+
+## Unequal-star bounds and all-exponent projection transfer
+
+The [next bounded continuation](continuation5/README.md) extends the
+common-cone projection-channel comparison to every six positive exponents,
+proves a quadratic unequal-star estimate with an exact three-coarse-band
+instance outside reflection, and records actual-source obstructions to
+pointwise, fractional-surplus and coefficientwise cover arguments. Every
+obstruction is separated from a complete density counterexample; the
+unrestricted target remains unresolved. Earlier packets are preserved.

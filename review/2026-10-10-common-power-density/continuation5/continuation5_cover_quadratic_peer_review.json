@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "reviewer": "cover5 independent review",
+  "isolated_replay_directory": "/tmp/e593_cover5_review_quadratic_8uw6oo2t",
+  "identical_exact_archival_results_excluding_elapsed_seconds": true,
+  "source_hashes": {
+    "continuation5_unequal_quadratic_bound.md": "740eb75ffef6bc7a72b84f211681c57e094a4db96855bc9dcdd0c25bab6da5a4",
+    "continuation5_unequal_quadratic_verify.py": "03b11b109ccfb125425c28897c6ddcfec5dce991b24146ed5dafe052e30e71cc",
+    "continuation5_unequal_quadratic_checks.json": "8664d8d58895c4440850cadba0f7e153f2fbd7abaa19fde3bb8fa6165ee20780"
+  },
+  "proof_checks": [
+    "Three real symmetric factors satisfy the stated polarization trace identity; cyclicity plus transposition supplies the needed exchange.",
+    "Paired-star Cauchy-Schwarz gives each g^2/d term with E M_z=I on the range.",
+    "Actual diagonal multiplication yields 0<=M_z<=max(B^z) I, and (M_x-M_y)^2 is PSD, so the error estimate is valid pairwise PSD order.",
+    "Quadratic original-source spectral formulas retain all eigenvalues and actual squared multiplication norms.",
+    "Exact lower bound >24/5 and independent direct star integration verified.",
+    "All seven cycle exponents and the exceptional weight-three triangle are correct at tuple (1,1,2,1,6).",
+    "Fine actual W, original law, all power transports, and five distinct whole-centered bands including zero are verified.",
+    "All three orientation bounds fail on the independent cancellation member although J>2, so the sufficient certificate is correctly not asserted necessary."
+  ],
+  "scope": "A universal quantitative lower estimate plus one exact three-coarse-band certificate; unrestricted J>=d and unrestricted F>=1 remain unresolved.",
+  "elapsed_seconds": 0.18007397651672363
+}
