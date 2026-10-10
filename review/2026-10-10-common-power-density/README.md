@@ -12,7 +12,9 @@ The packet is based on [PR 57](https://github.com/SamPetkov/Erdos593/pull/57), c
 | [tp2-class.md](tp2-class.md) | Fully spelled-out application of Ruozzi's cover inequality, preserving the original measure and zeros; finite convex mixtures and composition closure. |
 | [route-registry.md](route-registry.md) | Distinct collective, probabilistic, cover, and optimization routes; checked primary-literature hypotheses; one exact outstanding sufficient obligation. |
 | [final-review.json](final-review.json) | Independent analytical review and hashes of the mathematical files actually reviewed. |
+| [markov-review.json](markov-review.json) | A second independent analytical review of the main proof, bound to its exact file hash. |
 | [numerical-report.md](numerical-report.md) | Completed search counts, parametrization, fixed bounds, reproduction instructions, and limitations. |
+| [numerical-review.json](numerical-review.json) | Independent audit of the exact cover-certificate path and the apparent roundoff violation. |
 
 The main new inequality is the following. For original refined measure $\mu(i,a)=\pi_i\nu_i(a)$ and actual root
 

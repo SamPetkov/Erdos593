@@ -1,0 +1,39 @@
+{
+  "date_utc": "2026-10-10",
+  "reviewer": "/root/tensor",
+  "review_kind": "Separate analytical code and exact-integer audit within this consultation",
+  "files_sha256": {
+    "continuation_cover_engine.py": "1187d00bdafdec7f1ffd3b7ad7ee1b2f2eb8d27f2593fd6ee12808628a14495a",
+    "continuation_roundoff_certificate.json": "752271bb013cce51bdf80e438e69e16615ae58afc0f6d40cae7efe53b6510e7a"
+  },
+  "verdict": "PASS for the exact-certificate and object-integer contraction paths",
+  "checks": [
+    "Read exact_integer_certificate and contract_cover(objects=True), including factor-axis alignment and vertex weights",
+    "Reran the identical recorded host, tuple and cover; all integer fields matched",
+    "Verified 16 vertices, 24 edge-labelled kernel factors, degree three at every cover vertex",
+    "Independently reconstructed the original probability, bounded W and every weighted row sum using Fraction arithmetic"
+  ],
+  "denominator_derivation": {
+    "row_sums": [
+      69,
+      9,
+      39
+    ],
+    "Z": 117,
+    "L": 2691,
+    "N": 23,
+    "base_denominator": "117^4 * 2691^52",
+    "four_sheet_cover_denominator": "base_denominator^4"
+  },
+  "exact_signs": {
+    "target_defect": "positive",
+    "cover_minus_base_to_fourth": "negative"
+  },
+  "additional_root_check": "The primary agent independently evaluated the original-measure base density by the separate standard-library verifier and matched the full base numerator.",
+  "limitations": [
+    "This audit does not cover exploratory gradients or optimizer global behavior",
+    "No universal target or cover comparison is proved",
+    "No external peer review, Lean acceptance, or novelty certification"
+  ],
+  "record_prepared_by": "/root from the separate agent final audit message"
+}

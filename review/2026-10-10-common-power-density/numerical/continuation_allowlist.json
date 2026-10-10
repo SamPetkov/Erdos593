@@ -1,0 +1,102 @@
+{
+  "purpose": "Self-contained finite continuation experiment, exact roundoff check, and concise prior provenance; no universal proof claim.",
+  "tuple_order": [
+    "k",
+    "u",
+    "r",
+    "l",
+    "h"
+  ],
+  "requirements": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0"
+  },
+  "files": [
+    {
+      "name": "continuation_cover_engine.py",
+      "bytes": 10794,
+      "sha256": "1187d00bdafdec7f1ffd3b7ad7ee1b2f2eb8d27f2593fd6ee12808628a14495a"
+    },
+    {
+      "name": "continuation_host_helpers.py",
+      "bytes": 2258,
+      "sha256": "66f95b913f6f462cec60eb396f3dbec8eb70976b4900377415575e14586771c2"
+    },
+    {
+      "name": "continuation_search_covers.py",
+      "bytes": 10697,
+      "sha256": "7f8ba741fc837601260626f76e2ff67257100b06ad9fc20751e28d59e5e7da6e"
+    },
+    {
+      "name": "continuation_engine_checks.py",
+      "bytes": 6090,
+      "sha256": "99c5826f5b1ae844fabfacf7f86db710b358b1cf2274f8fcb06fa6c484b13a6d"
+    },
+    {
+      "name": "continuation_cover_samples.json",
+      "bytes": 133412,
+      "sha256": "7c5134a6477f0d3540335b4a325e75719474b609629541d1d6ffd39268fbee16"
+    },
+    {
+      "name": "continuation_cover_optimizations.json",
+      "bytes": 101571,
+      "sha256": "5b293c232b0f699c71a46bbea06e7c708ccceceb1b4d80e43e249542ff5e18e7"
+    },
+    {
+      "name": "continuation_target_optimizations.json",
+      "bytes": 36403,
+      "sha256": "ebf90b51afa8dace7f3ff235eb6b3866915033cb5c9df828defed99e79eb8680"
+    },
+    {
+      "name": "continuation_cover_optimizer_fixed_starts.json",
+      "bytes": 72878,
+      "sha256": "2d4569459da507d0c405a93ba8fccad4dc1ef424d5b44cd236ffbccad38d213e"
+    },
+    {
+      "name": "continuation_target_optimizer_fixed_starts.json",
+      "bytes": 29370,
+      "sha256": "6f81674bdcf973bec2f75b37067243efedac0350860cfccb02913c3b24d009b0"
+    },
+    {
+      "name": "continuation_engine_checks.json",
+      "bytes": 1636,
+      "sha256": "ed72b4219f5dca1ebc4cb90f818ebc3ee8f5fd890794803dc7240b9b514ed84e"
+    },
+    {
+      "name": "continuation_final_statistics.json",
+      "bytes": 12264,
+      "sha256": "67150b2a559c8491f25dab9ff6029fa01730182057d2436efbfdb38d897d04b8"
+    },
+    {
+      "name": "continuation_optimizer_start_audit.json",
+      "bytes": 217,
+      "sha256": "9880a28a1b79ea8b4565a9d44d905eea62bd9cb264daf362adb6ebcf9d768bc3"
+    },
+    {
+      "name": "continuation_legacy_comparison.json",
+      "bytes": 974,
+      "sha256": "c7f4a483e08dfdb20ed9daa8096e79e39e962a23f5afb6cacfc6def00274accf"
+    },
+    {
+      "name": "continuation_legacy_reproduced.json",
+      "bytes": 1526,
+      "sha256": "57ea48bb9a5e93eb670236c14a7389f8780e47ce8238fab49166154da6d5fb78"
+    },
+    {
+      "name": "continuation_provenance_audit.json",
+      "bytes": 4003,
+      "sha256": "9bc15166921765c4934a1de4f4fb376b3dac9638a37a0b8d8022fbba95cc6b30"
+    },
+    {
+      "name": "continuation_roundoff_certificate.json",
+      "bytes": 4420,
+      "sha256": "752271bb013cce51bdf80e438e69e16615ae58afc0f6d40cae7efe53b6510e7a"
+    }
+  ],
+  "report": {
+    "name": "../numerical-report.md",
+    "sha256": "619f5aadc0625faea47b1090bc50f6be5643a057f632310450c380449f9dfe03"
+  },
+  "excluded": "No duplicated old replay result payloads, old replay code, logs, or generated cover registries are included."
+}
