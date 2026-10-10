@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "checker_reran_from_separate_temporary_directory": true,
+  "full_json_equal": true,
+  "byte_identical_json": true,
+  "frozen_result_preserved": true,
+  "elapsed_seconds": 1.3277201652526855,
+  "checker_stdout": "{\"verdict\": \"PASS\", \"contraction_formula_checks\": 144, \"fixed_actual_hosts\": 6, \"output\": \"continuation3_channel_spectrum_checks.json\"}",
+  "hashes": {
+    "continuation3_channel_spectrum_verify.py": "c7730b67f25c83eaef8f353521ff759ecf2e78c5c095e77071510d0b5798434b",
+    "continuation3_channel_spectrum_checks.json": "69d399803e7abe785591023005a23797644815a87fbe663fd23f398129983fc9",
+    "continuation3_weighted_spectrum.md": "ba9589214fc11530af4aad8c49d4d8a673b3c4a914191d6f251b06c320734591",
+    "continuation3_channel_spectrum.md": "281854b8ab03a40173e87230ddf743d0343c11ad54166781b5a0dcf07eca6d17"
+  }
+}

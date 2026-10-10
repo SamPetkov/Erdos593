@@ -1,0 +1,915 @@
+{
+  "schema": "actual-sign-two-cover/v1",
+  "config_sha256": "1a0351d89cf03e50e1d4cb29c69ba3c251973462d8de7df94adff562d1b8f1a7",
+  "starts_sha256": "99f08182fb78999a7d705be6d1d68389a950a3ce9cecfad30e25000285988e34",
+  "source_sha256": {
+    "continuation2_sign_engine.py": "07e655e6a2fd1eae054f879f2b12f116e96d38acb5f94829445939d011938d15",
+    "continuation2_search.py": "87e1579ed8cc9bfba73c15d9d424f83b2eb19bb702b9573da6df47941e34ab19",
+    "continuation2_engine_checks.py": "bb557bd2b275e1bf2979e4137e8bc01229a91e43c23147753f8f856cf34c172f"
+  },
+  "settings": {
+    "starts": 12,
+    "iterations_per_start": 80,
+    "log_bounds": [
+      -50,
+      2
+    ],
+    "ftol": 1e-13,
+    "gtol": 1e-10,
+    "maxls": 30
+  },
+  "runs": [
+    {
+      "run": 0,
+      "seed_record_id": [
+        0,
+        1,
+        "boundary",
+        0
+      ],
+      "law": "supplied_half",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 5,
+      "raw_endpoint": [
+        0.7745655135857121,
+        0.7745525277349087,
+        0.7752698493943352,
+        0.7745866656990412,
+        0.7747572290671962,
+        0.7745525277621111
+      ],
+      "boundary_lambda_endpoint": [
+        0.24992601239276996,
+        0.2499218222992893,
+        0.25015327766206874,
+        0.24993283746210923,
+        0.24998787247427484,
+        0.24992182230806662
+      ],
+      "iterations": 17,
+      "objective_calls": 91,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "starting_normalized_defect": 0.999986029267169,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.00039356200279473745,
+        "log_abs_sum": -7.8402150452663495,
+        "normalized": 0.999943111823316,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.003221224912957128,
+        "log_abs_sum": -5.737990119631815,
+        "normalized": 0.9999965356259722,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.003221224912957,
+      "cover_ratio_approx": 0.9996089613019284,
+      "best_objective_point": {
+        "normalized_defect": 0.999943111823316,
+        "raw": [
+          0.7745655135857121,
+          0.7745525277349087,
+          0.7752698493943352,
+          0.7745866656990412,
+          0.7747572290671962,
+          0.7745525277621111
+        ],
+        "call": 91
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    {
+      "run": 1,
+      "seed_record_id": [
+        1,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "one_star_face",
+      "t": [
+        "3/4",
+        "1/4",
+        "1/4",
+        "-1/4"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 7,
+      "raw_endpoint": [
+        7.38905609893065,
+        1.8323811785472187e-05,
+        1.9287498479639178e-22,
+        7.38905609893065,
+        7.38905609893065,
+        4.125759763145604e-15
+      ],
+      "boundary_lambda_endpoint": [
+        0.3333330577937546,
+        8.266187360213204e-07,
+        8.70092303987373e-24,
+        0.3333330577937546,
+        0.3333330577937546,
+        1.8612013485332562e-16
+      ],
+      "iterations": 25,
+      "objective_calls": 44,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "starting_normalized_defect": 0.9999981867398355,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.018375664861184297,
+        "log_abs_sum": -3.9967182503173424,
+        "normalized": 0.9999901987491465,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.00971363819634382,
+        "log_abs_sum": -4.634224381341696,
+        "normalized": 1.0,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.0097136381963439,
+      "cover_ratio_approx": 0.9819761893229454,
+      "best_objective_point": {
+        "normalized_defect": 0.9999901987491465,
+        "raw": [
+          7.38905609893065,
+          1.8323811785472187e-05,
+          1.9287498479639178e-22,
+          7.38905609893065,
+          7.38905609893065,
+          4.125759763145604e-15
+        ],
+        "call": 44
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    {
+      "run": 2,
+      "seed_record_id": [
+        2,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "two_star_face",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/4",
+        "-1/4"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 7,
+      "raw_endpoint": [
+        7.38905609893065,
+        4.492378805288367e-06,
+        1.9287498479639178e-22,
+        7.38905609893065,
+        7.38905609893065,
+        4.7805033936751685e-18
+      ],
+      "boundary_lambda_endpoint": [
+        0.33333326578030725,
+        2.0265907826924195e-07,
+        8.700928468903182e-24,
+        0.33333326578030725,
+        0.33333326578030725,
+        2.1565688322737168e-19
+      ],
+      "iterations": 27,
+      "objective_calls": 48,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "starting_normalized_defect": 0.9999927488789768,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.018435328616206018,
+        "log_abs_sum": -3.9934473435856175,
+        "normalized": 0.9999609225631473,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.009743386398537827,
+        "log_abs_sum": -4.631166542232875,
+        "normalized": 1.0,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.009743386398538,
+      "cover_ratio_approx": 0.9819187334365385,
+      "best_objective_point": {
+        "normalized_defect": 0.9999609225631473,
+        "raw": [
+          7.38905609893065,
+          4.492378805288367e-06,
+          1.9287498479639178e-22,
+          7.38905609893065,
+          7.38905609893065,
+          4.7805033936751685e-18
+        ],
+        "call": 48
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    {
+      "run": 3,
+      "seed_record_id": [
+        3,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "opposite_star_face",
+      "t": [
+        "1/2",
+        "1/4",
+        "1/4",
+        "-1/2"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 7,
+      "raw_endpoint": [
+        7.38905609893065,
+        1.7752588203284503e-05,
+        1.9287498479639178e-22,
+        7.38905609893065,
+        7.38905609893065,
+        1.7000331571011588e-11
+      ],
+      "boundary_lambda_endpoint": [
+        0.33333306638311894,
+        8.008498761965004e-07,
+        8.70092326408011e-24,
+        0.33333306638311894,
+        0.33333306638311894,
+        7.669142819087729e-13
+      ],
+      "iterations": 24,
+      "objective_calls": 43,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "starting_normalized_defect": 0.9999981867398616,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.018375667810372046,
+        "log_abs_sum": -3.996718089820658,
+        "normalized": 0.9999901987466557,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.009713639780524927,
+        "log_abs_sum": -4.634224218253371,
+        "normalized": 1.0,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.0097136397805249,
+      "cover_ratio_approx": 0.9819761864867848,
+      "best_objective_point": {
+        "normalized_defect": 0.9999901987466557,
+        "raw": [
+          7.38905609893065,
+          1.7752588203284503e-05,
+          1.9287498479639178e-22,
+          7.38905609893065,
+          7.38905609893065,
+          1.7000331571011588e-11
+        ],
+        "call": 43
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    {
+      "run": 4,
+      "seed_record_id": [
+        4,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "asymmetric_interior",
+      "t": [
+        "9/20",
+        "2/5",
+        "7/20",
+        "-3/10"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 7,
+      "raw_endpoint": [
+        7.38905609893065,
+        6.260979572174774e-06,
+        5.36869923889745e-09,
+        7.38905609893065,
+        7.38905609893065,
+        6.544693817550456e-06
+      ],
+      "boundary_lambda_endpoint": [
+        0.3333331406905547,
+        2.8244365134735597e-07,
+        2.421913374001403e-10,
+        0.3333331406905547,
+        0.3333331406905547,
+        2.952424932025983e-07
+      ],
+      "iterations": 20,
+      "objective_calls": 37,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "starting_normalized_defect": 0.9999953586929131,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.01840665889929917,
+        "log_abs_sum": -3.9950177341345414,
+        "normalized": 0.9999749513132933,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.009729091533445994,
+        "log_abs_sum": -4.632634754723309,
+        "normalized": 1.0,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.009729091533446,
+      "cover_ratio_approx": 0.9819463413684476,
+      "best_objective_point": {
+        "normalized_defect": 0.9999749513132933,
+        "raw": [
+          7.38905609893065,
+          6.260979572174774e-06,
+          5.36869923889745e-09,
+          7.38905609893065,
+          7.38905609893065,
+          6.544693817550456e-06
+        ],
+        "call": 37
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    {
+      "run": 5,
+      "seed_record_id": [
+        5,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "attenuated_half",
+      "t": [
+        "17/40",
+        "17/40",
+        "17/40",
+        "-17/40"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 7,
+      "raw_endpoint": [
+        7.38905609893065,
+        5.920980451827705e-06,
+        2.5787416550376116e-06,
+        7.38905609893065,
+        7.38905609893065,
+        3.7478877818049013e-06
+      ],
+      "boundary_lambda_endpoint": [
+        0.3333331491630181,
+        2.6710570791660766e-07,
+        1.1633151315171899e-07,
+        0.3333331491630181,
+        0.3333331491630181,
+        1.6907372474806697e-07
+      ],
+      "iterations": 20,
+      "objective_calls": 37,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "starting_normalized_defect": 0.9999947605519663,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.01841321842505716,
+        "log_abs_sum": -3.994658211750223,
+        "normalized": 0.9999717325282154,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.009732361898319586,
+        "log_abs_sum": -4.632298668324024,
+        "normalized": 1.0,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.0097323618983196,
+      "cover_ratio_approx": 0.9819400246277631,
+      "best_objective_point": {
+        "normalized_defect": 0.9999717325282154,
+        "raw": [
+          7.38905609893065,
+          5.920980451827705e-06,
+          2.5787416550376116e-06,
+          7.38905609893065,
+          7.38905609893065,
+          3.7478877818049013e-06
+        ],
+        "call": 37
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    {
+      "run": 6,
+      "seed_record_id": [
+        6,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "skew_star_face",
+      "t": [
+        "4/5",
+        "1/5",
+        "1/10",
+        "-1/10"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 7,
+      "raw_endpoint": [
+        7.38905609893065,
+        1.969107081178384e-05,
+        4.749733667266545e-09,
+        7.38905609893065,
+        7.38905609893065,
+        1.8736901680196814e-05
+      ],
+      "boundary_lambda_endpoint": [
+        0.33333275541174107,
+        8.882973417470084e-07,
+        2.1426847889421209e-10,
+        0.33333275541174107,
+        0.33333275541174107,
+        8.452531664826251e-07
+      ],
+      "iterations": 18,
+      "objective_calls": 36,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "starting_normalized_defect": 0.9999988394766149,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.0183684220909877,
+        "log_abs_sum": -3.997116004192998,
+        "normalized": 0.9999937247959514,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.009710023231214181,
+        "log_abs_sum": -4.63459660417773,
+        "normalized": 1.0,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.0097100232312142,
+      "cover_ratio_approx": 0.9819831644026757,
+      "best_objective_point": {
+        "normalized_defect": 0.9999937247959514,
+        "raw": [
+          7.38905609893065,
+          1.969107081178384e-05,
+          4.749733667266545e-09,
+          7.38905609893065,
+          7.38905609893065,
+          1.8736901680196814e-05
+        ],
+        "call": 36
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    {
+      "run": 7,
+      "seed_record_id": [
+        0,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "supplied_half",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 7,
+      "raw_endpoint": [
+        7.38905609893065,
+        3.7192794028963613e-06,
+        1.9287512252572881e-22,
+        7.38905609893065,
+        7.38905609893065,
+        1.9287498479654664e-22
+      ],
+      "boundary_lambda_endpoint": [
+        0.33333327740559476,
+        1.6778321565781407e-07,
+        8.700934985567532e-24,
+        0.33333327740559476,
+        0.33333327740559476,
+        8.700928772362615e-24
+      ],
+      "iterations": 27,
+      "objective_calls": 46,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "starting_normalized_defect": 0.9999923602322983,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.01843533263013608,
+        "log_abs_sum": -3.9934471258418966,
+        "normalized": 0.9999609225497268,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.009743388553767444,
+        "log_abs_sum": -4.631166321033664,
+        "normalized": 1.0,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.0097433885537674,
+      "cover_ratio_approx": 0.9819187295768849,
+      "best_objective_point": {
+        "normalized_defect": 0.9999609225497268,
+        "raw": [
+          7.38905609893065,
+          3.7192794028963613e-06,
+          1.9287512252572881e-22,
+          7.38905609893065,
+          7.38905609893065,
+          1.9287498479654664e-22
+        ],
+        "call": 46
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    {
+      "run": 8,
+      "seed_record_id": [
+        0,
+        1,
+        "boundary",
+        10
+      ],
+      "law": "supplied_half",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ],
+      "bits": 5,
+      "raw_endpoint": [
+        0.7745412404939236,
+        0.7749248059776863,
+        0.774650008395794,
+        0.7748460306365407,
+        0.7745412404873464,
+        0.7747808123558454
+      ],
+      "boundary_lambda_endpoint": [
+        0.24991637399632555,
+        0.25004013667012587,
+        0.24995146945441285,
+        0.25001471872387565,
+        0.24991637399420333,
+        0.24999367514946347
+      ],
+      "iterations": 20,
+      "objective_calls": 90,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "starting_normalized_defect": 0.9999936099720378,
+      "cover_defect_F2_minus_Z": {
+        "value": 3.4018027597312654e-22,
+        "log_abs_sum": -49.43250964880294,
+        "normalized": 0.9999431191054206,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.003024916512819127,
+        "log_abs_sum": -5.8008717869482505,
+        "normalized": 1.0,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.003024916512819,
+      "cover_ratio_approx": 1.0,
+      "best_objective_point": {
+        "normalized_defect": 0.9999431191054206,
+        "raw": [
+          0.7745412404939236,
+          0.7749248059776863,
+          0.774650008395794,
+          0.7748460306365407,
+          0.7745412404873464,
+          0.7747808123558454
+        ],
+        "call": 87
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    {
+      "run": 9,
+      "seed_record_id": [
+        0,
+        1,
+        "boundary",
+        0
+      ],
+      "law": "supplied_half",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 7,
+      "raw_endpoint": [
+        0.7638168702723539,
+        0.7624002438460569,
+        0.7659846508498469,
+        0.7608221449719401,
+        0.8373168403407136,
+        0.7608221452246516
+      ],
+      "boundary_lambda_endpoint": [
+        0.2440684867362419,
+        0.24361582081382832,
+        0.2447611749259336,
+        0.24311155831437803,
+        0.26755451744324515,
+        0.24311155839512896
+      ],
+      "iterations": 11,
+      "objective_calls": 67,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "starting_normalized_defect": 0.9999963268782557,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.006036768985229629,
+        "log_abs_sum": -5.109878902663339,
+        "normalized": 0.9999925563059444,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.003114056372206853,
+        "log_abs_sum": -5.771825968279128,
+        "normalized": 0.9999968653780043,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.003114056372207,
+      "cover_ratio_approx": 0.9940006537970575,
+      "best_objective_point": {
+        "normalized_defect": 0.9999925563059444,
+        "raw": [
+          0.7638168702723539,
+          0.7624002438460569,
+          0.7659846508498469,
+          0.7608221449719401,
+          0.8373168403407136,
+          0.7608221452246516
+        ],
+        "call": 67
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    {
+      "run": 10,
+      "seed_record_id": [
+        0,
+        5,
+        "boundary",
+        0
+      ],
+      "law": "supplied_half",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 5,
+      "raw_endpoint": [
+        0.7747155379236047,
+        -0.7747139935799374,
+        0.7747121179672334,
+        -0.7747119177734606,
+        0.7747140771246832,
+        -0.7747164100087731
+      ],
+      "boundary_lambda_endpoint": [
+        0.16666699557527856,
+        -0.16666666333575766,
+        0.1666662598292847,
+        -0.16666621676096735,
+        0.16666668130900214,
+        -0.16666718318970966
+      ],
+      "iterations": 9,
+      "objective_calls": 18,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "starting_normalized_defect": 0.9999977401619285,
+      "cover_defect_F2_minus_Z": {
+        "value": 1.4717343527687643e-05,
+        "log_abs_sum": -11.126478724036263,
+        "normalized": 0.9999947962311073,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.00026822985026300875,
+        "log_abs_sum": -8.223666152066253,
+        "normalized": 0.9999998572761407,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.000268229850263,
+      "cover_ratio_approx": 0.9999852905485586,
+      "best_objective_point": {
+        "normalized_defect": 0.9999947962311073,
+        "raw": [
+          0.7747155379236047,
+          -0.7747139935799374,
+          0.7747121179672334,
+          -0.7747119177734606,
+          0.7747140771246832,
+          -0.7747164100087731
+        ],
+        "call": 18
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    {
+      "run": 11,
+      "seed_record_id": [
+        0,
+        1,
+        "boundary",
+        0
+      ],
+      "law": "supplied_half",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 1,
+      "raw_endpoint": [
+        0.7740078140272421,
+        0.7740633044103383,
+        0.7808982905949494,
+        0.7727258288966791,
+        0.7738936816903202,
+        0.7727258288942298
+      ],
+      "boundary_lambda_endpoint": [
+        0.24944955397510513,
+        0.24946743758178508,
+        0.2516702373782187,
+        0.2490363919717944,
+        0.24941277106410173,
+        0.24903639197100502
+      ],
+      "iterations": 15,
+      "objective_calls": 99,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "starting_normalized_defect": 0.9999981711546162,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.003303152642061578,
+        "log_abs_sum": -5.712871255428213,
+        "normalized": 0.9999933349673578,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.003198423495155559,
+        "log_abs_sum": -5.745093816716141,
+        "normalized": 0.9999965683859758,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.0031984234951556,
+      "cover_ratio_approx": 0.9967178761776738,
+      "best_objective_point": {
+        "normalized_defect": 0.9999933349673578,
+        "raw": [
+          0.7740078140272421,
+          0.7740633044103383,
+          0.7808982905949494,
+          0.7727258288966791,
+          0.7738936816903202,
+          0.7727258288942298
+        ],
+        "call": 96
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    }
+  ],
+  "elapsed": 0.2619807720184326,
+  "candidate_certificates": 0,
+  "target_exact_violations": 0,
+  "cover_exact_violations": 0
+}

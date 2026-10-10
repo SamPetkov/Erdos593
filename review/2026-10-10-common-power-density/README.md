@@ -54,3 +54,11 @@ These finite checks audit the displayed examples and identities; the general the
 The consultation used actual separate tensor, Markov, and optimization agents. The final proof files were read adversarially, and the original-measure correction found in the TP2 path example was fixed before the hash-bound review. The final finite verifier was run and its output checked against the committed result. This is transparent analytical and computational provenance; it is not an external referee report, a novelty finding, or new Lean evidence.
 
 The earlier common-cone theorem and centered-core expansion are credited at their point of use. Primary sources and the limits of their hypotheses are linked in the route registry. The user-provided negative actual mode remains only a counterexample to modewise positivity. The supplied Dirichlet reformulation is not counted as progress.
+
+## Further signed-channel results and exact contraction obstructions
+
+The [follow-up packet](continuation2/README.md) proves quantitative signed-channel
+contractions, including unequal original weights, and supplies actual rational
+hosts refuting broader coarse domination even with commuting channels. The
+unrestricted target remains open, and every stronger-premise obstruction has
+a separate positive lower bound for its full target density.

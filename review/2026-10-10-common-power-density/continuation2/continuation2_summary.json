@@ -1,0 +1,355 @@
+{
+  "verdict": "No admissible two-cover counterexample found. All target evaluations are calibration on the previously proved density compensation class; no unrestricted-target progress is claimed from this sample.",
+  "config_sha256": "1a0351d89cf03e50e1d4cb29c69ba3c251973462d8de7df94adff562d1b8f1a7",
+  "source_sha256": {
+    "continuation2_sign_engine.py": "07e655e6a2fd1eae054f879f2b12f116e96d38acb5f94829445939d011938d15",
+    "continuation2_search.py": "87e1579ed8cc9bfba73c15d9d424f83b2eb19bb702b9573da6df47941e34ab19",
+    "continuation2_engine_checks.py": "bb557bd2b275e1bf2979e4137e8bc01229a91e43c23147753f8f856cf34c172f"
+  },
+  "reference_engine_sha256": "1187d00bdafdec7f1ffd3b7ad7ee1b2f2eb8d27f2593fd6ee12808628a14495a",
+  "sample": {
+    "generated_root_instances": 224,
+    "boundary_root_instances": 112,
+    "host_tuple_evaluations": 2688,
+    "nontrivial_two_cover_comparisons": 18816,
+    "cells": [
+      {
+        "law": "supplied_half",
+        "state_count": 32,
+        "host_tuple_evaluations": 384,
+        "cover_comparisons": 2688,
+        "minimum_normalized_cover_defect": 0.999986029267169,
+        "minimum_F_approx": 1.0000000000002163
+      },
+      {
+        "law": "one_star_face",
+        "state_count": 40,
+        "host_tuple_evaluations": 384,
+        "cover_comparisons": 2688,
+        "minimum_normalized_cover_defect": 0.9999981867398355,
+        "minimum_F_approx": 1.0000000000002163
+      },
+      {
+        "law": "two_star_face",
+        "state_count": 48,
+        "host_tuple_evaluations": 384,
+        "cover_comparisons": 2688,
+        "minimum_normalized_cover_defect": 0.9999927488789768,
+        "minimum_F_approx": 1.0000000000002163
+      },
+      {
+        "law": "opposite_star_face",
+        "state_count": 48,
+        "host_tuple_evaluations": 384,
+        "cover_comparisons": 2688,
+        "minimum_normalized_cover_defect": 0.9999981867398616,
+        "minimum_F_approx": 1.0000000000002163
+      },
+      {
+        "law": "asymmetric_interior",
+        "state_count": 64,
+        "host_tuple_evaluations": 384,
+        "cover_comparisons": 2688,
+        "minimum_normalized_cover_defect": 0.9999953586929131,
+        "minimum_F_approx": 1.0000000000002163
+      },
+      {
+        "law": "attenuated_half",
+        "state_count": 64,
+        "host_tuple_evaluations": 384,
+        "cover_comparisons": 2688,
+        "minimum_normalized_cover_defect": 0.9999947605519663,
+        "minimum_F_approx": 1.0000000000002163
+      },
+      {
+        "law": "skew_star_face",
+        "state_count": 48,
+        "host_tuple_evaluations": 384,
+        "cover_comparisons": 2688,
+        "minimum_normalized_cover_defect": 0.9999988394766149,
+        "minimum_F_approx": 1.0000000000002163
+      }
+    ],
+    "minimum_normalized_cover_defect": 0.999986029267169,
+    "minimum_F_approx": 1.0000000000002163,
+    "maximum_cover_ratio_approx": 1.0,
+    "minimum_cover_ratio_approx": 0.5002514871354128,
+    "nonpositive_cover_defects": 0,
+    "numerical_target_candidates": 0,
+    "numerical_cover_candidates": 0,
+    "best_cover": {
+      "bits": 5,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.00036546683679675575,
+        "log_abs_sum": -7.9143210458587845,
+        "normalized": 0.999986029267169,
+        "zero_polynomial_at_point": false
+      },
+      "cover_ratio_approx": 0.9996364976458315,
+      "cover_candidate_numeric": false,
+      "record_id": [
+        0,
+        1,
+        "boundary",
+        0
+      ]
+    },
+    "centered_band_counts_in_16_patterns_including_zero": {
+      "6": 6,
+      "7": 8,
+      "5": 2
+    }
+  },
+  "optimization": {
+    "starts": 12,
+    "successes": 12,
+    "iterations": 233,
+    "objective_calls": 656,
+    "maximum_iterations_used": 27,
+    "termination_messages": {
+      "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH": 5,
+      "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL": 7
+    },
+    "minimum_normalized_cover_defect": 0.999943111823316,
+    "best_run": {
+      "run": 0,
+      "seed_record_id": [
+        0,
+        1,
+        "boundary",
+        0
+      ],
+      "law": "supplied_half",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "bits": 5,
+      "raw_endpoint": [
+        0.7745655135857121,
+        0.7745525277349087,
+        0.7752698493943352,
+        0.7745866656990412,
+        0.7747572290671962,
+        0.7745525277621111
+      ],
+      "boundary_lambda_endpoint": [
+        0.24992601239276996,
+        0.2499218222992893,
+        0.25015327766206874,
+        0.24993283746210923,
+        0.24998787247427484,
+        0.24992182230806662
+      ],
+      "iterations": 17,
+      "objective_calls": 91,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "starting_normalized_defect": 0.999986029267169,
+      "cover_defect_F2_minus_Z": {
+        "value": 0.00039356200279473745,
+        "log_abs_sum": -7.8402150452663495,
+        "normalized": 0.999943111823316,
+        "zero_polynomial_at_point": false
+      },
+      "target_defect": {
+        "value": 0.003221224912957128,
+        "log_abs_sum": -5.737990119631815,
+        "normalized": 0.9999965356259722,
+        "zero_polynomial_at_point": false
+      },
+      "F_approx": 1.003221224912957,
+      "cover_ratio_approx": 0.9996089613019284,
+      "best_objective_point": {
+        "normalized_defect": 0.999943111823316,
+        "raw": [
+          0.7745655135857121,
+          0.7745525277349087,
+          0.7752698493943352,
+          0.7745866656990412,
+          0.7747572290671962,
+          0.7745525277621111
+        ],
+        "call": 91
+      },
+      "cover_candidate_numeric": false,
+      "target_candidate_numeric": false
+    },
+    "numerical_target_candidates": 0,
+    "numerical_cover_candidates": 0
+  },
+  "sample_payload": {
+    "compressed_file": "continuation2_samples.json.gz",
+    "compressed_sha256": "bb4edc2b0945c33da4737cf757ba2c45da35f18f38dba1f971b14960e03d0bdd",
+    "uncompressed_file": "continuation2_samples.json",
+    "uncompressed_bytes": 9077178,
+    "uncompressed_sha256": "1faabaa4f66434e5c0ec43f938cdf57bb959febe2d9733431b4f79a425ddd2b8"
+  },
+  "checks": {
+    "checks": [
+      {
+        "check": "original_measure_orthonormality_and_cubic_tensor",
+        "states": 32,
+        "nonzero_tensor_entries": 43,
+        "exact_binary_arithmetic_equal": true
+      },
+      {
+        "check": "state_contraction",
+        "bits": 1,
+        "states": 8,
+        "absolute_cover_error": 0.0,
+        "base_error": 2.220446049250313e-16
+      },
+      {
+        "check": "state_contraction",
+        "bits": 2,
+        "states": 8,
+        "absolute_cover_error": 2.220446049250313e-16,
+        "base_error": 2.220446049250313e-16
+      },
+      {
+        "check": "state_contraction",
+        "bits": 3,
+        "states": 8,
+        "absolute_cover_error": 2.220446049250313e-16,
+        "base_error": 2.220446049250313e-16
+      },
+      {
+        "check": "state_contraction",
+        "bits": 4,
+        "states": 8,
+        "absolute_cover_error": 2.220446049250313e-16,
+        "base_error": 2.220446049250313e-16
+      },
+      {
+        "check": "state_contraction",
+        "bits": 5,
+        "states": 8,
+        "absolute_cover_error": 2.220446049250313e-16,
+        "base_error": 2.220446049250313e-16
+      },
+      {
+        "check": "state_contraction",
+        "bits": 6,
+        "states": 8,
+        "absolute_cover_error": 0.0,
+        "base_error": 2.220446049250313e-16
+      },
+      {
+        "check": "state_contraction",
+        "bits": 7,
+        "states": 8,
+        "absolute_cover_error": 0.0,
+        "base_error": 2.220446049250313e-16
+      },
+      {
+        "check": "exact_integer_reference",
+        "base_equal": true,
+        "two_cover_equal": true,
+        "target_violation": false,
+        "cover_violation": false
+      },
+      {
+        "check": "boundary_gradient",
+        "relative_error": 3.4900288693831875e-11
+      },
+      {
+        "check": "color_registry",
+        "bits": null,
+        "free_chords": 3,
+        "assignments": 343,
+        "valid_assignments": 235
+      },
+      {
+        "check": "color_registry",
+        "bits": 1,
+        "free_chords": 5,
+        "assignments": 16807,
+        "valid_assignments": 7993
+      },
+      {
+        "check": "color_registry",
+        "bits": 2,
+        "free_chords": 5,
+        "assignments": 16807,
+        "valid_assignments": 7993
+      },
+      {
+        "check": "color_registry",
+        "bits": 3,
+        "free_chords": 5,
+        "assignments": 16807,
+        "valid_assignments": 7993
+      },
+      {
+        "check": "color_registry",
+        "bits": 4,
+        "free_chords": 5,
+        "assignments": 16807,
+        "valid_assignments": 7993
+      },
+      {
+        "check": "color_registry",
+        "bits": 5,
+        "free_chords": 5,
+        "assignments": 16807,
+        "valid_assignments": 7993
+      },
+      {
+        "check": "color_registry",
+        "bits": 6,
+        "free_chords": 5,
+        "assignments": 16807,
+        "valid_assignments": 7993
+      },
+      {
+        "check": "color_registry",
+        "bits": 7,
+        "free_chords": 5,
+        "assignments": 16807,
+        "valid_assignments": 7093
+      }
+    ],
+    "seconds": 0.48538994789123535,
+    "all_passed": true,
+    "adds_search_coverage": false
+  },
+  "relaxed_tuples_tested": false,
+  "exact_violation_certificates_generated": 0,
+  "no_additional_search_after_caps": true,
+  "scope_correction": {
+    "target_evaluations_are_prior_compensation_calibration": true,
+    "sample_minimum_p": "102/241",
+    "sample_maximum_root": "241/102",
+    "optimizer_endpoint_minimum_p": "27914925100926095/69782948102995432",
+    "all_prior_thresholds_at_most": "1/4",
+    "entire_seven_support_ray_family_p_lower_bound": "2/5",
+    "remaining_unresolved_diagnostic": "Complete two-cover comparison, not density compensation."
+  },
+  "boundary_interpretation": "Sample admissibility belongs to stored rational lambda numerators/denominator. Optimizer admissibility belongs to the exact ray determined by stored dyadic raw_endpoint followed by exact min projection. Literal rounded boundary_lambda_endpoint vectors may have tiny negative entries and are not themselves claimed exact admissible hosts.",
+  "rounding_audit": {
+    "sample_literal_float_root_minimum": "-65/1152921504606846976",
+    "sample_literal_float_root_minimum_decimal": -5.637851296924623e-17,
+    "optimizer_literal_float_minimum_T": "-7496573/75557863725914323419136",
+    "optimizer_literal_float_minimum_T_decimal": -9.921631753901581e-17,
+    "optimizer_max_coordinate_rounding_error_decimal": 3.771767942809041e-17
+  },
+  "provenance_audit_file": "continuation2_optimize_provenance_audit.json",
+  "runtime": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  }
+}

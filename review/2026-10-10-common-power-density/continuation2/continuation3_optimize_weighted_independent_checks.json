@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "independent_original_measure_W_and_maxA_match": true,
+  "ordinary_fine_characteristic_polynomial_exactly_matches_all_12_claimed_eigenvalues": true,
+  "independent_integer_flow_density_exactly_matches_checker": true,
+  "original_fine_mu": [
+    "1/10",
+    "1/10",
+    "1/10",
+    "1/10",
+    "1/10",
+    "1/10",
+    "1/10",
+    "1/10",
+    "1/20",
+    "1/20",
+    "1/20",
+    "1/20"
+  ],
+  "p": "1024/9853",
+  "minimum_W": "8/9853",
+  "maximum_W": "1",
+  "maximum_A": "38294287/4194304",
+  "full_centered_distinct_bands": 4,
+  "includes_exact_centered_zero": true,
+  "d_minus_1": "4",
+  "centered_coarse_dimension": 5,
+  "F": "12676499468487813473720615659852461076673404854361068395084817/100433627766186892221372630771322662657637687111424552206336",
+  "coarse_Id_surplus_coefficient": "299",
+  "input_sha256": {
+    "continuation3_weighted_spectrum.md": "ba9589214fc11530af4aad8c49d4d8a673b3c4a914191d6f251b06c320734591",
+    "continuation3_channel_spectrum_checks.json": "69d399803e7abe785591023005a23797644815a87fbe663fd23f398129983fc9",
+    "continuation3_audit.py": "bc347ecfe62d063263a9ea5ac340aca033420f0d34a583d14d38bb9b5fb94d0b",
+    "continuation_cover_engine.py": "1187d00bdafdec7f1ffd3b7ad7ee1b2f2eb8d27f2593fd6ee12808628a14495a",
+    "continuation3_optimize_weighted_independent_verify.py": "e1ecb2d4da403565b5cbb7b3883386c9fcd5bbd079adb426f34b4304e8a65ea4"
+  }
+}
