@@ -81,3 +81,17 @@ instance outside reflection, and records actual-source obstructions to
 pointwise, fractional-surplus and coefficientwise cover arguments. Every
 obstruction is separated from a complete density counterexample; the
 unrestricted target remains unresolved. Earlier packets are preserved.
+
+## Jordan bounds, uniform complements, and collective cover moments
+
+The [next bounded continuation](continuation6/README.md) proves an actual
+source-cap theorem with threshold `4+4sqrt(2)`, the averaged star bound
+for balanced visible projections through rank ten, an exact zero-cubic
+source identity, and a uniform flat-complement theorem in arbitrary rank.
+Complete actual examples have up to fourteen values on the entire
+centered square spectrum, including zero. A separate second-moment
+certificate controls all sheet counts for one-edge covers on the supplied
+negative-mode host while retaining its negative contribution. The packet
+includes independent mathematical reviews, exact rational certificates,
+and the completed bounded diagnostic record. The unrestricted density
+target and arbitrary simultaneous cover comparison remain unresolved.

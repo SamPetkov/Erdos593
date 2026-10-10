@@ -1,0 +1,125 @@
+{
+  "status": "PASS",
+  "reviewer": "/root",
+  "scope": "Exact uniform-complement and zero-cubic-line checks; no unrestricted U, C, or F proof.",
+  "independent_arithmetic": "Ordinary stochastic matrices, ambient compressed-field traces, no author imports.",
+  "source_sha256": "c2c2f0f1e27eb183afd1c3b80cda00ef4fdb0c58ca577355ca5341e030a74c67",
+  "reviewed_files": {
+    "continuation6_search_codimension_one.md": "1e11933618078469f067c91a2a14a54f2adde6f2d3e8d22735a4f8f92bdb6d0b",
+    "continuation6_search_codimension_one_verify.py": "b5c6feab4e762d87166bc3a883ec9726fec84de03525330837b36c7b96f4cc7d",
+    "continuation6_search_codimension_one_checks.json": "a2e81d047fcc9cf55d385956d94e5b23dcfefa436e56bba28ce09dc577c08b23",
+    "continuation6_cubic_subspace.md": "c6e81856a9dcffa37b2031581855ef7de41d64619e1ea6da8be3b1cb2736e556"
+  },
+  "uniform_rank_twelve": {
+    "J": "479551683209947369015128219664782720246500466991987498826055/392318858461667547739736838950479151006397215279002157056",
+    "L": "93546394882608100036294712682258517035412234941057938256347/784637716923335095479473677900958302012794430558004314112",
+    "pair_traces": [
+      "216515637401090739249060625723/19807040628566084398385987584",
+      "1762575681305092768024501674487986020039/170141183460469231731687303715884105728",
+      "3594226032214088118589861566487246772430506982409/365375409332725729550921208179070754913983135744"
+    ],
+    "actual_centered_cubic": "23473888793220084175303076080395/19807040628566084398385987584",
+    "actual_cap_lower": "81029619303/6979321856",
+    "fine_states": 26,
+    "p": "65536/837933",
+    "actual_square_identity": true,
+    "full_F_enumerated": false
+  },
+  "boundary_controls": [
+    {
+      "case": "rank_zero",
+      "states": 1,
+      "J": "0"
+    },
+    {
+      "case": "two_state_rank_one",
+      "states": 2,
+      "J": "1"
+    },
+    {
+      "case": "disconnected_identity",
+      "states": 4,
+      "J": "27"
+    },
+    {
+      "case": "nonnegative_root_with_disconnected_square",
+      "states": 4,
+      "J": "27"
+    },
+    {
+      "case": "refresh_equality",
+      "states": 5,
+      "J": "4"
+    }
+  ],
+  "unbounded_cap_zero_cubic_line": [
+    {
+      "m": 2,
+      "rank": 9,
+      "xyz": [
+        1,
+        1,
+        1
+      ],
+      "J": "14804808855561/549755813888"
+    },
+    {
+      "m": 2,
+      "rank": 9,
+      "xyz": [
+        1,
+        2,
+        3
+      ],
+      "J": "17024469883500330542479511095299/633825300114114700748351602688"
+    },
+    {
+      "m": 2,
+      "rank": 9,
+      "xyz": [
+        1,
+        2,
+        8
+      ],
+      "J": "21488156303349453520804323374309201101948948402557017266262019/803469022129495137770981046170581301261101496891396417650688"
+    },
+    {
+      "m": 9,
+      "rank": 730,
+      "xyz": [
+        1,
+        1,
+        1
+      ],
+      "J": "549176842096775/549755813888"
+    },
+    {
+      "m": 9,
+      "rank": 730,
+      "xyz": [
+        1,
+        2,
+        3
+      ],
+      "J": "632493101820403205082461870028845/633825300114114700748351602688"
+    },
+    {
+      "m": 9,
+      "rank": 730,
+      "xyz": [
+        1,
+        2,
+        8
+      ],
+      "J": "800386412717291409785798573086133890779589616688736127496089645/803469022129495137770981046170581301261101496891396417650688"
+    }
+  ],
+  "proof_checks": [
+    "Original uniform n factors retained in three-, two-, one-, and zero-identity terms.",
+    "The Schur-product step pairs two PSD operators only; it does not assert positivity of a triple operator trace.",
+    "Nonnegative square, all common powers, rank n-1, and separate n=1,2 cases retained.",
+    "Fine actual root, original fine measure, positive p, and square transport reconstructed independently.",
+    "The two-state diagonal line has variable trace, zero cubic trace, and exact pair surplus; its original-law projection realization is proved in the note.",
+    "Coarse density for the 26-state example uses the explicitly named prior convex-TP2 theorem; the full F was not independently enumerated here."
+  ]
+}

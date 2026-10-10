@@ -1,0 +1,92 @@
+{
+  "status": "passed",
+  "scope": "Numerical replay and realization checks only; no averaged-star or F sign certificate.",
+  "source_sha256": "7e3912650e562db15cd9d0b97e86b6eb568512f95909f03076b190add8cb157f",
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0"
+  },
+  "stages": [
+    {
+      "kind": "rank_extremes",
+      "source_sha256": "29632197dd58676cd1014fc4b7d27dc3ea3b0204d596fdf818dc3ca9c190c9d6",
+      "records_sha256": "e688cd7b8d47c78136e8200ead7798a07dadf2b842b1e34899b4ebe30df239a7",
+      "cases": 18,
+      "replays": 36,
+      "sum_iterations": 1900,
+      "sum_real_calls": 2465,
+      "sum_all_calls": 100910,
+      "termination_counts": {
+        "1": 9,
+        "0": 9
+      },
+      "minimum_J_over_rank": 1.0000002817904654,
+      "minimum_cubic_over_pair": -0.9963580615293816,
+      "max_stored_replay_error": 0.0,
+      "max_centered_identity_scaled_error": 3.72813915007019e-15,
+      "max_independent_J_error": 4.956903641775107e-15,
+      "max_triangle_condition_scaled_error": 5.140492665544556e-15,
+      "max_row_sum_error": 2.220446049250313e-16,
+      "max_reversibility_error": 5.551115123125783e-17,
+      "max_projection_error": 2.7755575615628914e-16,
+      "max_refinement_transport_error": 0.0,
+      "minimum_original_mass": 9.039969380011839e-18,
+      "candidate_count": 0
+    },
+    {
+      "kind": "psd_field",
+      "source_sha256": "9165ca62b03e6862bcd21c2c5e81352c615282995f0599758c2d44e9e95f5549",
+      "records_sha256": "08d0175d581b5f4b44142043e70891a82eea072c72cbe277ab69421003730e95",
+      "cases": 24,
+      "replays": 48,
+      "sum_iterations": 3569,
+      "sum_real_calls": 4373,
+      "sum_all_calls": 157792,
+      "termination_counts": {
+        "1": 16,
+        "0": 8
+      },
+      "minimum_J_over_rank": 1.0000000000017175,
+      "minimum_cubic_over_pair": -0.9998249472043826,
+      "max_stored_replay_error": 0.0,
+      "max_centered_identity_scaled_error": 6.439293540370532e-13,
+      "max_independent_J_error": 2.1005853981923795e-12,
+      "max_triangle_condition_scaled_error": 1.915921093500537e-12,
+      "max_row_sum_error": 2.220446049250313e-16,
+      "max_reversibility_error": 2.7755575615628914e-17,
+      "max_projection_error": 6.517009154549669e-14,
+      "max_refinement_transport_error": 2.1005853981923795e-12,
+      "minimum_original_mass": 4.797098181198791e-19,
+      "candidate_count": 0
+    },
+    {
+      "kind": "path_completion",
+      "source_sha256": "a5a56e7729005378b3e3f7ec68e9db9f097fd99f304edf99ccbff3f451f42261",
+      "records_sha256": "aaaa2c09cc17be94c9e4c0545e8fa77be36b1e1ca0a30ef84c79acc445da1085",
+      "cases": 12,
+      "replays": 24,
+      "sum_iterations": 1807,
+      "sum_real_calls": 2429,
+      "sum_all_calls": 60725,
+      "termination_counts": {
+        "0": 10,
+        "1": 2
+      },
+      "minimum_J_over_rank": 1.000000000135019,
+      "minimum_cubic_over_pair": -0.3333333031698846,
+      "max_stored_replay_error": 0.0,
+      "max_centered_identity_scaled_error": 3.6724844742518406e-10,
+      "max_independent_J_error": 1.6415402079985477e-10,
+      "max_triangle_condition_scaled_error": 1.0154676920998931e-10,
+      "max_row_sum_error": 2.220446049250313e-16,
+      "max_reversibility_error": 1.734723475976807e-18,
+      "max_projection_error": 1.5972556610677202e-10,
+      "max_refinement_transport_error": 0.0,
+      "minimum_original_mass": 5.827380083803838e-29,
+      "candidate_count": 0
+    }
+  ],
+  "total_configured_completed_starts": 54,
+  "total_start_retained_replays": 108
+}
