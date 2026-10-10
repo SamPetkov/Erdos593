@@ -1,0 +1,142 @@
+{
+  "status": "PASS",
+  "reviewer": "/root/cover6",
+  "scope": "independent theorem and finite-example audit; no unrestricted conclusion",
+  "reviewed_sha256": {
+    "continuation6_unequal_balanced_rank2.md": "33007e5692df140258431be3e52a111a222ee013477284b29fd36f6b079b86c0",
+    "continuation6_unequal_balanced_verify.py": "fe66de12ba2be3d2bf83286ab58ecee10ec066feb2b4f3bbfe975ea7a357df88",
+    "continuation6_unequal_balanced_checks.json": "1e3e75dcefe32b8377c23175d44550c4e99b6cb2c0a9e99759a2f036302f6a75",
+    "continuation6_jordan_contraction.md": "f033bbaa190e60125de5e43af03aefeb4dcbb58965637db6ca3a54fd9479c1e1",
+    "continuation6_jordan_examples.md": "d6bc0118d3565f286d49c5b8cde5b58e492530a76066f4fdfc1ff9fae7c18817",
+    "continuation6_jordan_verify.py": "2ba5299f8c144711cf1cf3e0a7abe8ea2915bd8829c8a8119fb274f5ec9d14aa",
+    "continuation6_jordan_checks.json": "edb51117fe35a0da97ad4a3f8fad5f63662b42b2eb68a8f475d4b1cca11e260d",
+    "continuation6_graded_verify.py": "7bbb61f96220d41db40de218c4473c25c73fbc6bb70a98f8406268f347260cd7",
+    "continuation4_projection_verify.py": "4ab0f3f2b28107b46c917536ea7de1acc9c15626b1cf9f93d225264c1cd5b33e",
+    "tp2-class.md": "8419e28a80f75806fa70967a87cfdd78b8b0981fee41a9c15f95938297978991"
+  },
+  "isolated_exact_replays": [
+    {
+      "verifier": "continuation6_unequal_balanced_verify.py",
+      "result": "continuation6_unequal_balanced_checks.json",
+      "exit_code": 0,
+      "normalized_json_identical": true,
+      "ignored_metadata_only": [],
+      "stdout": "{\"star_boundary_checks\": 11, \"actual_full_density_host_count\": 1, \"actual_full_density_tuple_count\": 2, \"p\": \"16/159\", \"min_T\": \"3/64\", \"max_T\": \"159/16\", \"max_A\": \"16899/2048\", \"interacting_coarse_bands\": 5, \"fine_centered_distinct_bands\": 7, \"coarse_TP2_minor_count\": 225, \"observability_minor\": \"-9/4096\"}\nALL_EXACT_CHECKS_PASSED",
+      "stderr": ""
+    },
+    {
+      "verifier": "continuation6_jordan_verify.py",
+      "result": "continuation6_jordan_checks.json",
+      "exit_code": 0,
+      "normalized_json_identical": true,
+      "ignored_metadata_only": [
+        "elapsed_seconds"
+      ],
+      "stdout": "{\"status\": \"PASS\", \"rank10_p\": \"262144/3139971\", \"rank10_min_T\": \"9/10240\", \"rank10_max_A\": \"8215521496079/687194767360\", \"rank10_Rayleigh\": \"1711756696579/171798691840\", \"old_host_cap\": \"9929/1280\", \"elapsed_seconds\": 2.7060678005218506}",
+      "stderr": ""
+    }
+  ],
+  "independent_transition_matrix_examples": {
+    "balanced_rank2": {
+      "p": "16/159",
+      "min_T": "3/64",
+      "min_W": "1/212",
+      "observability_minor": "-9/4096",
+      "F_coarse": "46329812255963655249200413799414334894773/2722258935367507707706996859454145691648",
+      "F_fine": "46329812256141893105883196323902408159925/2722258935367507707706996859454145691648",
+      "full_density_tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "full_fine_assignments": 20736,
+      "all_TP2_minors_checked": 225,
+      "minimum_minor": "0",
+      "adjacent_principal_minors": [
+        "137/4",
+        "265/8",
+        "277/8",
+        "273/8",
+        "153/4"
+      ],
+      "crossed_support_reduction_checked": true
+    },
+    "balanced_rank10": {
+      "p": "262144/3139971",
+      "min_T": "9/10240",
+      "max_A": "8215521496079/687194767360",
+      "first_source_Rayleigh": "1711756696579/171798691840",
+      "all_TP2_minors_checked": 4356,
+      "compression_map_rank": 12,
+      "F_coarse": "15105179998356061589328617330234938664286669980696281814980378554083418831326891582648882496877364971728358039/9173994463960286046443283581208347763186259956673124494950355357547691504353939232280074212440502746218496",
+      "F_fine": "92194702138403696223929549870242051267058964314623547710458462199427414598805552545903940328249000228872846005442001519/55993618554445105263936057014211106953041137430866238372499727524094796779504023634521937331790177894400000000000000",
+      "full_density_tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "full_fine_assignments": 331776
+    },
+    "old_unbalanced_cap": {
+      "p": "512/4499",
+      "first_step_scalar_cap": "9929/1280",
+      "visible_trace": [
+        "12765751/8847360",
+        "834649/589824",
+        "974903/245760",
+        "372377/81920"
+      ],
+      "balanced_visible_condition_fails": true,
+      "source_cap_below_9": true,
+      "coarse_TP2_minors_checked": 36
+    }
+  },
+  "mathematical_review": {
+    "rank2_traceless_identity": "UV+VU=tr(UV)I on real symmetric traceless 2x2 matrices; tr(UVZ)=0 by transpose and cyclic trace symmetry.",
+    "rank2_one_step_and_equality": "B diag(Q)=2 makes every positive-time centered field traceless. Original-law spectral expansion includes stationary and zero modes; equality iff BR=I.",
+    "projection_channel_transport": "Uniform sign integration gives S^(2n)+sigma*tau*beta^n Q with original pi/2, even for noncentral and noncommuting Q.",
+    "quadrilateral_lemma": "Verified two PSD pairings, with pointwise-positive mixture first and Schur square second. No trace product of 3 PSD factors assumed nonnegative.",
+    "PSD_field_refinement": "Feature Gram identity proves rational relative Q, actual pulled-back root, and positive-time field transport. No nonzero |H|<=S channel is claimed automatically.",
+    "Jordan_interval": "Hilbert--Schmidt Jordan operator is self-adjoint. Bounds [-1,L-1] are quadratic form bounds from PSD Y^2; centering gives radius L/2.",
+    "Jordan_cap_threshold": "Using x<=y<=z and nonnegative spectral coefficient squares yields the quadratic coefficient 1+L/2-L^2/16. Its positive endpoint is 4+4sqrt(2).",
+    "balanced_rank_interval": "For traceless Y, ||Y||op^2 <= (d-1)||Y||HS^2/d. Compression, not assumed invariance, gives Jordan interval [-1,d-2].",
+    "balanced_rank_threshold": "Completion of the square gives (-d^2+10d+7)/16>0 for integers 2 through 10. Rank 1 is constant after smoothing; rank 0 trivial.",
+    "Jordan_equality": "Strict cap threshold and ranks <=10 have positive v_z coefficient; spectral positivity implies equality iff BR=I, including extra stationary modes.",
+    "spectral_band_counts": "Positive irreducible Jacobi roots have simple spectra; refresh preserves centered eigenvectors and positivity; channel eigenvalue separated by rational lower bounds; characteristic factors retain all zeros.",
+    "visibility": "Rank2 explicit source squares and nonzero Krylov minor prove all five coarse bands interact. Independent rank12 diagonal-compression check proves every rank10 example coarse mode interacts.",
+    "coarse_density_input": "All-exponent coarse bounds use the explicitly identified prior common-order TP2 convex-hull theorem. The refreshed kernels are not asserted TP2.",
+    "scope_boundary": "Source cap and balanced visible rank are hypotheses, not automatic reductions. A coarse density bound and a projection-channel realization remain explicit requirements.",
+    "rank2_all_exponent_coarse_input": "All 225 ordered 2x2 minors of the actual six-state S0 are nonnegative. A nonzero crossed term forces a principal adjacent pair, whose five determinants are positive. S0 and Pi use the same original pi. The exact Markov identity S^(2n)=(15/16)^(2n) S0^(2n)+(1-(15/16)^(2n)) Pi and weighted Cauchy--Binet put every coarse power in the previously proved common-order convex-TP2 class. Corollaries 2 and 3 of the hash-bound prior theorem give the all-exponent coarse density bound. Combining with the actual projection-channel identity proves F_fine>=1+2 sum_D beta^q_D for this host at every six positive exponents; no convex-mixture TP2 or fine-root TP2 claim is made."
+  },
+  "issues": [],
+  "frozen_inputs_unchanged": true,
+  "review_source_sha256": "1a74b15c603aa70357c9ae13d799d78be5227bb434809f9457c1839f9fa6470a",
+  "elapsed_seconds": 6.888078212738037,
+  "amendment": {
+    "reason": "Final rank2 packet adds the named all-exponent convex-TP2 coarse input.",
+    "previous_review_sha256": "b80d0f6f680f997e93dd75efdcddaf3d321abbedf45f22eb5aca7b0b2af96f0b",
+    "previous_review_source_sha256": "e6606a93cf297e61b7c1930f1dc4c7ecbc87610d52de8e01691e2e33d0a5c471",
+    "superseded_rank2_input_sha256": {
+      "continuation6_unequal_balanced_rank2.md": "8bff8011b304ecd9a38ac3a0090b53d34834d760427b4901200127ed6c581dbd",
+      "continuation6_unequal_balanced_verify.py": "92e5c6a23b0c8b6b8df39ee4797ecc2a9b69c73d9cf3181878fe703b822f6255",
+      "continuation6_unequal_balanced_checks.json": "7d5590fc0a1302ca7d91599e66d832859a12f005dfc40f77cd72fd1e9d854a3a"
+    },
+    "retained_hash_identical_input_sha256": {
+      "continuation6_jordan_contraction.md": "f033bbaa190e60125de5e43af03aefeb4dcbb58965637db6ca3a54fd9479c1e1",
+      "continuation6_jordan_examples.md": "d6bc0118d3565f286d49c5b8cde5b58e492530a76066f4fdfc1ff9fae7c18817",
+      "continuation6_jordan_verify.py": "2ba5299f8c144711cf1cf3e0a7abe8ea2915bd8829c8a8119fb274f5ec9d14aa",
+      "continuation6_jordan_checks.json": "edb51117fe35a0da97ad4a3f8fad5f63662b42b2eb68a8f475d4b1cca11e260d",
+      "continuation6_graded_verify.py": "7bbb61f96220d41db40de218c4473c25c73fbc6bb70a98f8406268f347260cd7",
+      "continuation4_projection_verify.py": "4ab0f3f2b28107b46c917536ea7de1acc9c15626b1cf9f93d225264c1cd5b33e",
+      "tp2-class.md": "8419e28a80f75806fa70967a87cfdd78b8b0981fee41a9c15f95938297978991"
+    },
+    "new_replay_count": 1,
+    "new_independent_TP2_minor_checks": 225,
+    "unrelated_Jordan_replay_and_independent_examples_retained": true,
+    "elapsed_seconds": 2.368680715560913
+  }
+}

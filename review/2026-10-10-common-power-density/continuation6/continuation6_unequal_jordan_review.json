@@ -1,0 +1,41 @@
+{
+  "reviewer": "/root/unequal6",
+  "status": "PASS_FOR_STATED_EXAMPLES",
+  "reviewed_files": {
+    "continuation6_jordan_contraction.md": "f033bbaa190e60125de5e43af03aefeb4dcbb58965637db6ca3a54fd9479c1e1",
+    "continuation6_jordan_examples.md": "d6bc0118d3565f286d49c5b8cde5b58e492530a76066f4fdfc1ff9fae7c18817",
+    "continuation6_jordan_verify.py": "2ba5299f8c144711cf1cf3e0a7abe8ea2915bd8829c8a8119fb274f5ec9d14aa",
+    "continuation6_graded_verify.py": "7bbb61f96220d41db40de218c4473c25c73fbc6bb70a98f8406268f347260cd7",
+    "continuation6_jordan_checks.json": "edb51117fe35a0da97ad4a3f8fad5f63662b42b2eb68a8f475d4b1cca11e260d"
+  },
+  "independent_arithmetic": "No author module imported. Uniform roots reconstructed as ordinary stochastic matrices; weighted rank-two star reconstructed in rational Gram coordinates; full fine density independently contracted over its final two vertices.",
+  "rank_ten_review": {
+    "J": "428121604750592724771269335430168858705530801787902201824014058357295635367/441711766194596082395824375185729628956870974218904739530401550323154944",
+    "centered_cubic_nonzero": true,
+    "exact_Rayleigh": "1711756696579/171798691840",
+    "interval_margin": "622175421878450708135117114166603417909267633954011672909546372942246585503262186122974318585520396127354159425840853521470867495480580268130425103/195109284394749514461349826862072894109287383916560696928697309976585733676235351257519131441468248197489183195087913930965498479955517831643136",
+    "independent_F_coarse": "15105179998356061589328617330234938664286669980696281814980378554083418831326891582648882496877364971728358039/9173994463960286046443283581208347763186259956673124494950355357547691504353939232280074212440502746218496",
+    "independent_F_fine": "92194702138403696223929549870242051267058964314623547710458462199427414598805552545903940328249000228872846005442001519/55993618554445105263936057014211106953041137430866238372499727524094796779504023634521937331790177894400000000000000",
+    "original_uniform_fine_measure": "1/24",
+    "diagonal_compression_rank": 12,
+    "TP2_minor_count": 4356,
+    "source_cap_fails_but_balanced_trace_applies": true
+  },
+  "unbalanced_host_review": {
+    "max_coarse_B": "9929/1280",
+    "actual_first_step_traces": [
+      "12765751/8847360",
+      "834649/589824",
+      "974903/245760",
+      "372377/81920"
+    ],
+    "J_in_independent_Gram_coordinates": "1634326811411205157888339407904636370350841573375326103220415018160928041231/196824660300059069254625780320296210013692875010736128000000000000000000000",
+    "p": "512/4499",
+    "visible_balance_fails_but_uniform_cap_applies": true,
+    "old_TP2_minor_count": 36
+  },
+  "isolated_author_checker_replay_matches_except_elapsed_seconds": true,
+  "original_files_unchanged": true,
+  "scope": "Exact restricted-host and proof-hypothesis checks only. Unrestricted U and the original density target remain unresolved.",
+  "review_source_sha256": "cfdc861f9a7ea9ad04e0ec69927352d8b986444e409d661c97b1f046de87f695"
+}

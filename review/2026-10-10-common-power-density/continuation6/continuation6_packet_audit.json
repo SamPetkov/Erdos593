@@ -1,0 +1,128 @@
+{
+  "status": "PASS",
+  "scope": "Reproduction and hash audit only; unrestricted F, U, and C remain unresolved.",
+  "source_sha256": "69f8ff701932bd18bb564c57a007776c4a03f335ff1abfc5802e3d289a62050a",
+  "manifest_sha256": "daf37440284ceeb936bda45c3287cd0af043d695911efa639e39b4b352a5e5fd",
+  "frozen_file_count": 42,
+  "all_frozen_inputs_unchanged": true,
+  "review_binding_counts": {
+    "continuation6_cover_codimension_one_review.json": 4,
+    "continuation6_cover_rank2_jordan_review.json": 10,
+    "continuation6_root_review.json": 4,
+    "continuation6_unequal_cover_review.json": 3,
+    "continuation6_unequal_jordan_review.json": 5,
+    "continuation6_unequal_root_proof_review.json": 2
+  },
+  "runs": [
+    {
+      "source": "continuation6_graded_verify.py",
+      "result": "continuation6_graded_checks.json",
+      "exit_code": 0,
+      "fresh_assertions_passed": true,
+      "compared_frozen_json": true,
+      "ignored_json_keys_when_compared": [
+        "elapsed_seconds"
+      ],
+      "scope": "Exact rational checks and stated-scope review assertions"
+    },
+    {
+      "source": "continuation6_jordan_verify.py",
+      "result": "continuation6_jordan_checks.json",
+      "exit_code": 0,
+      "fresh_assertions_passed": true,
+      "compared_frozen_json": true,
+      "ignored_json_keys_when_compared": [
+        "elapsed_seconds"
+      ],
+      "scope": "Exact rational checks and stated-scope review assertions"
+    },
+    {
+      "source": "continuation6_unequal_balanced_verify.py",
+      "result": "continuation6_unequal_balanced_checks.json",
+      "exit_code": 0,
+      "fresh_assertions_passed": true,
+      "compared_frozen_json": true,
+      "ignored_json_keys_when_compared": [
+        "elapsed_seconds"
+      ],
+      "scope": "Exact rational checks and stated-scope review assertions"
+    },
+    {
+      "source": "continuation6_cover_moments_verify.py",
+      "result": "continuation6_cover_moments_checks.json",
+      "exit_code": 0,
+      "fresh_assertions_passed": true,
+      "compared_frozen_json": true,
+      "ignored_json_keys_when_compared": [
+        "elapsed_seconds"
+      ],
+      "scope": "Exact rational checks and stated-scope review assertions"
+    },
+    {
+      "source": "continuation6_search_codimension_one_verify.py",
+      "result": "continuation6_search_codimension_one_checks.json",
+      "exit_code": 0,
+      "fresh_assertions_passed": true,
+      "compared_frozen_json": true,
+      "ignored_json_keys_when_compared": [
+        "elapsed_seconds"
+      ],
+      "scope": "Exact rational checks and stated-scope review assertions"
+    },
+    {
+      "source": "continuation6_root_review.py",
+      "result": "continuation6_root_review.json",
+      "exit_code": 0,
+      "fresh_assertions_passed": true,
+      "compared_frozen_json": true,
+      "ignored_json_keys_when_compared": [
+        "elapsed_seconds"
+      ],
+      "scope": "Exact rational checks and stated-scope review assertions"
+    },
+    {
+      "source": "continuation6_unequal_jordan_review.py",
+      "result": "continuation6_unequal_jordan_review.json",
+      "exit_code": 0,
+      "fresh_assertions_passed": true,
+      "compared_frozen_json": true,
+      "ignored_json_keys_when_compared": [
+        "elapsed_seconds"
+      ],
+      "scope": "Exact rational checks and stated-scope review assertions"
+    },
+    {
+      "source": "continuation6_unequal_cover_review.py",
+      "result": "continuation6_unequal_cover_review.json",
+      "exit_code": 0,
+      "fresh_assertions_passed": true,
+      "compared_frozen_json": true,
+      "ignored_json_keys_when_compared": [
+        "elapsed_seconds"
+      ],
+      "scope": "Exact rational checks and stated-scope review assertions"
+    },
+    {
+      "source": "continuation6_cover_rank2_jordan_review.py",
+      "result": "continuation6_cover_rank2_jordan_review.json",
+      "exit_code": 0,
+      "fresh_assertions_passed": true,
+      "compared_frozen_json": false,
+      "ignored_json_keys_when_compared": [],
+      "scope": "Exact rational checks and stated-scope review assertions"
+    },
+    {
+      "source": "continuation6_search_audit.py",
+      "result": "continuation6_search_audit.json",
+      "exit_code": 0,
+      "fresh_assertions_passed": true,
+      "compared_frozen_json": true,
+      "ignored_json_keys_when_compared": [
+        "elapsed_seconds"
+      ],
+      "scope": "Numerical diagnostic replay only"
+    }
+  ],
+  "numerical_replay_requested": true,
+  "optimizer_started": false
+}
