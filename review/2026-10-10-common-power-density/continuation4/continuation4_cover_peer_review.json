@@ -1,0 +1,80 @@
+{
+  "status": "pass",
+  "reviewed_note_sha256": "9d4a862b2d62a5d064ed8a9ae84f5df7de599ec02d31a52896b75b665805491c",
+  "reviewer_source_sha256": "93339846ff540121da7ed51dff059a7b061127707e78afd95dad9d7965cf031e",
+  "original_pi": [
+    "1/2",
+    "1/4",
+    "1/8",
+    "1/8"
+  ],
+  "projection": [
+    [
+      "7/6",
+      "1",
+      "-4/3",
+      "1/3"
+    ],
+    [
+      "1",
+      "2",
+      "0",
+      "-2"
+    ],
+    [
+      "-4/3",
+      "0",
+      "8/3",
+      "-8/3"
+    ],
+    [
+      "1/3",
+      "-2",
+      "-8/3",
+      "14/3"
+    ]
+  ],
+  "projection_rank": 2,
+  "projection_has_negative_entries": true,
+  "projection_does_not_annihilate_constants": true,
+  "quadrilateral": {
+    "J": "401605/196608",
+    "first_surplus": "34393/983040",
+    "second_surplus": "59/7680",
+    "L_M_noncommuting": true
+  },
+  "paired_star_checks": [
+    {
+      "x": 1,
+      "z": 1,
+      "g": "424702817/212336640",
+      "J": "16310863052767/8153726976000",
+      "cauchy_schwarz_defect": "63069527126587/225434243432448000"
+    },
+    {
+      "x": 2,
+      "z": 5,
+      "g": "354577405862172692516024191/177288702931066945536000000",
+      "J": "52284567020494737942359576087352607/26142282979403407520956416000000000",
+      "cauchy_schwarz_defect": "2552941162813848606918335169075280943016779519/31431284186980105365249925613736790327296000000000000"
+    },
+    {
+      "x": 4,
+      "z": 1,
+      "g": "120231596540073571259/60115798248652800000",
+      "J": "52284565996003541101841108875270687/26142282979403407520956416000000000",
+      "cauchy_schwarz_defect": "27892378968681384688696679/3613909199072727055697014947840000000000"
+    }
+  ],
+  "mathematical_review": {
+    "quadrilateral": "Both reductions are pairwise PSD pairings; the first auxiliary kernel is a nonnegative rank-one mixture. Q^2=Q is used only under the original pi law.",
+    "paired_star": "The R-field has mean I on ran Q; A^(x+z) is PSD on each matrix coefficient. The Hilbert-Schmidt Cauchy-Schwarz pairing is B C^(1/2) with C^(1/2), giving J=E tr(B^2 C), not an unjustified trace-of-three positivity.",
+    "spectral_surplus": "Each Fourier coefficient of R is exactly Q D_phi Q. Additional eigenvalue-one modes of disconnected A and zero modes are retained.",
+    "weighted_norm_formula": "Multiplication by phi has HS square sum_i phi(i)^2 without pi because the operator basis is 1_i/sqrt(pi_i); removing the constant row and column subtracts two and adds zero.",
+    "boundary": "At k=u,r=l the four complementary stars are exactly (u,u,r),(r+h,r,r),(u,r,u),(u,r+h,u); all have a repeated pair.",
+    "second_paired_star_region": "The star at c forces r=l. If k differs from u, repetition at a and b forces k=r+h and r=u. Thus the only other ordered target region is r=l=u,k=u+h, which has a direct b,c reflection.",
+    "trace_comparison": "In formula (15), the fine square splits as S^2 on the constant binary fiber and beta Q on the signed binary fiber. Its trace at power 2(u+r) is tr((S^2)^(2(u+r)))+d beta^(2(u+r)). The quadrilateral ab,bc,cd,da has exponent sum 2(u+r), so the coarse trace plus seven cycle terms exceeds the direct fine trace by the remaining six terms; the excess is strictly positive when d>0 and beta>0.",
+    "reflection_scope": "For every actual root at k=u,r=l, reflection first uses K_u-Pi against the actual source and then K_(r+h)-Pi against the Schur square of K_(u+r), giving F>=tr A^(2(u+r))>=1. The projection assumption adds a comparison with the original coarse density, not new density coverage.",
+    "scope": "Restricted quantitative comparison for actual H^2=beta Q, with coarse density and cycle surplus retained on the stated paired-star regions. Both ordered target regions already have direct reflection density proofs. The unrestricted target and arbitrary-channel coarse comparison remain unresolved."
+  }
+}

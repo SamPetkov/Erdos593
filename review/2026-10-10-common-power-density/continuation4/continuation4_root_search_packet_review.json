@@ -1,0 +1,153 @@
+{
+  "status": "PASS",
+  "source_manifest_sha256": "a7fcf6cbdfea44b5f7fe3d479a9cbef30bd9e66df4ae9f8d29df3dd4cee0bc39",
+  "manifest_files": 15,
+  "manifest_bytes": 2654260,
+  "exact_sign_certificates": [
+    {
+      "source": "continuation4_search_roundoff.json",
+      "id": 79,
+      "cover_bits": 3,
+      "base_above_one": true,
+      "cover_below_base_squared": true,
+      "cleared_integer_identities_match": true
+    },
+    {
+      "source": "continuation4_search_roundoff.json",
+      "id": 79,
+      "cover_bits": 5,
+      "base_above_one": true,
+      "cover_below_base_squared": true,
+      "cleared_integer_identities_match": true
+    },
+    {
+      "source": "continuation4_search_roundoff.json",
+      "id": 79,
+      "cover_bits": 6,
+      "base_above_one": true,
+      "cover_below_base_squared": true,
+      "cleared_integer_identities_match": true
+    },
+    {
+      "source": "continuation4_search_uniform_certificates.json",
+      "id": 14,
+      "cover_bits": 1,
+      "base_above_one": true,
+      "cover_below_base_squared": true,
+      "cleared_integer_identities_match": true
+    },
+    {
+      "source": "continuation4_search_uniform_certificates.json",
+      "id": 15,
+      "cover_bits": 2,
+      "base_above_one": true,
+      "cover_below_base_squared": true,
+      "cleared_integer_identities_match": true
+    },
+    {
+      "source": "continuation4_search_uniform_certificates.json",
+      "id": 16,
+      "cover_bits": 3,
+      "base_above_one": true,
+      "cover_below_base_squared": true,
+      "cleared_integer_identities_match": true
+    },
+    {
+      "source": "continuation4_search_uniform_certificates.json",
+      "id": 17,
+      "cover_bits": 4,
+      "base_above_one": true,
+      "cover_below_base_squared": true,
+      "cleared_integer_identities_match": true
+    },
+    {
+      "source": "continuation4_search_uniform_certificates.json",
+      "id": 18,
+      "cover_bits": 5,
+      "base_above_one": true,
+      "cover_below_base_squared": true,
+      "cleared_integer_identities_match": true
+    },
+    {
+      "source": "continuation4_search_uniform_certificates.json",
+      "id": 19,
+      "cover_bits": 6,
+      "base_above_one": true,
+      "cover_below_base_squared": true,
+      "cleared_integer_identities_match": true
+    },
+    {
+      "source": "continuation4_search_uniform_certificates.json",
+      "id": 20,
+      "cover_bits": 7,
+      "base_above_one": true,
+      "cover_below_base_squared": true,
+      "cleared_integer_identities_match": true
+    }
+  ],
+  "reviewed_summary": {
+    "samples": 144,
+    "sample_covers": 1008,
+    "sample_fine_states": {
+      "12": 48,
+      "16": 48,
+      "20": 48
+    },
+    "sample_families": {
+      "shift_dominated": 24,
+      "positive_tetrahedral": 24,
+      "bipartite_transport": 24,
+      "zero_character": 24,
+      "interacting_blocks": 24,
+      "uniform_matchings": 24
+    },
+    "sample_nonuniform_original_measures": 120,
+    "sample_p_below_quarter": 108,
+    "sample_p_below_quarter_and_maxA_above4": 86,
+    "sample_with_negative_channel_square": 142,
+    "sample_with_noncommuting_channels": 144,
+    "sample_with_zero_centered_band": 32,
+    "sample_with_three_or_more_entire_centered_bands": 144,
+    "sample_entire_centered_band_counts": {
+      "11": 36,
+      "4": 1,
+      "5": 3,
+      "9": 12,
+      "15": 43,
+      "8": 4,
+      "12": 8,
+      "14": 1,
+      "19": 36
+    },
+    "sample_disconnected_roots": 0,
+    "sample_disconnected_squares": 12,
+    "sample_roots_with_zero_entries": 96,
+    "optimization_starts": 21,
+    "optimization_iterations": 788,
+    "optimization_objective_calls": 879,
+    "optimization_termination_counts": {
+      "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL": 17,
+      "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH": 2,
+      "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT": 2
+    },
+    "optimized_retained_points_all_cover_evaluations": 147,
+    "exact_uniform_endpoint_certificates": 7,
+    "sample_min_F": 1.0000000603749082,
+    "sample_max_cover_ratio_float": 1.0000000000000004,
+    "optimization_min_retained_F": 1.0002954045524417,
+    "optimization_max_retained_cover_ratio": 0.9999999995752197,
+    "optimization_max_objective_trace_cover_ratio": 0.9999999973263151,
+    "optimization_min_objective_trace_F": 1.0002465913395884,
+    "optimization_distinct_starting_host_ids": [
+      39,
+      82,
+      93,
+      140,
+      142
+    ],
+    "optimization_literal_flows_p_below_quarter": 21,
+    "optimization_literal_flows_p_below_quarter_and_maxA_above4": 17
+  },
+  "independent_engine_gate": "See continuation4_root_search_engine_review.json for original-weight direct-contraction and integer-engine replay.",
+  "scope": "Manifest and integer-sign arithmetic audit of retained finite certificates; no new search and no universal sign claim."
+}

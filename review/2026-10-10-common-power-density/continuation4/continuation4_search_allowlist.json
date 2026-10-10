@@ -1,0 +1,84 @@
+{
+  "schema": "bounded-four-state-fiber-search-allowlist/v1",
+  "payload_file_count": 15,
+  "payload_bytes": 2654260,
+  "files": [
+    {
+      "path": "continuation4_search_engine.py",
+      "bytes": 16949,
+      "sha256": "95c77602388ff2b4242d9417fa651a8bf0cdba2639d04566966ea7cd99a81874"
+    },
+    {
+      "path": "continuation4_search_checks.py",
+      "bytes": 8822,
+      "sha256": "0d14274e5957c70bd4db1f4d5518ea8cc903dc362503be67a3b8588f556cc2bc"
+    },
+    {
+      "path": "continuation4_search_checks.json",
+      "bytes": 7330,
+      "sha256": "5e78b63cf0072d63e1474bfc4f21411f574a76e6439887af299f144947af488c"
+    },
+    {
+      "path": "continuation4_search_config.json",
+      "bytes": 753057,
+      "sha256": "86c15642d071b70db6a578ccb83d2a43706a72b88ff799d0f83dfd849af708db"
+    },
+    {
+      "path": "continuation4_search_samples.json",
+      "bytes": 515352,
+      "sha256": "5dbec202fd7d7d733352ccb5b5e50ed642a519730bfcef5b6907a0d8fc27b8ca"
+    },
+    {
+      "path": "continuation4_search_optimizer_starts.json",
+      "bytes": 319080,
+      "sha256": "69e7ef17fbd0e6b3bcc9680903866309d89e45c6ba23230035ff3ec9e3ef32fc"
+    },
+    {
+      "path": "continuation4_search_optimizations.json",
+      "bytes": 322807,
+      "sha256": "817ceb4127d03f689d26cdf080c4062a98fb2f7a967f113b21057ab32a67c622"
+    },
+    {
+      "path": "continuation4_search_roundoff.py",
+      "bytes": 2699,
+      "sha256": "83b9eb6e81a5fa8eebab5ea2b6fef0f43857105126b612b71f2cfc11b2561890"
+    },
+    {
+      "path": "continuation4_search_roundoff.json",
+      "bytes": 45828,
+      "sha256": "5fd8f0fbcc1deffffcdbf28db17caaba1f2b0431a3c90613c5d0593b7cfd393d"
+    },
+    {
+      "path": "continuation4_search_uniform_certify.py",
+      "bytes": 3799,
+      "sha256": "90c18f6ad0bc8bf348caf9ece77177a81836b8d4a1575a97397631d3bb3564e9"
+    },
+    {
+      "path": "continuation4_search_uniform_certificates.json",
+      "bytes": 321205,
+      "sha256": "dc1eb61298e9209393c6d6a822ecbe3979984a03730ac67be07fcdf9e2d269fc"
+    },
+    {
+      "path": "continuation4_search_audit.py",
+      "bytes": 14801,
+      "sha256": "ed1c3d62e7404780bb9d07bb53a048c94d2df5704874fdab3a65b76dce121a32"
+    },
+    {
+      "path": "continuation4_search_audit.json",
+      "bytes": 293858,
+      "sha256": "dbbb57922381c5f75d67adbeb7d79545b615a9f44eee2ee776e71a922c0f349d"
+    },
+    {
+      "path": "continuation4_search_report.md",
+      "bytes": 17879,
+      "sha256": "3c0792a3a0214d7303c4e6907eb190a927d04363ed19a7df36a9ca63508e6267"
+    },
+    {
+      "path": "continuation_cover_engine.py",
+      "bytes": 10794,
+      "sha256": "1187d00bdafdec7f1ffd3b7ad7ee1b2f2eb8d27f2593fd6ee12808628a14495a"
+    }
+  ],
+  "search_status": "bounded caps completed; no additional search started",
+  "mathematical_status": "Unrestricted target and complete-cover comparison remain unresolved by this experiment."
+}
