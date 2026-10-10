@@ -1,0 +1,50 @@
+{
+  "reviewer": "/root/markov",
+  "verdict": "pass",
+  "issues": [],
+  "input": {
+    "pi": [
+      "1/2",
+      "1/3",
+      "1/6"
+    ],
+    "a": [
+      "1/64",
+      "1/32",
+      "0"
+    ],
+    "S": "(7/8)Id+(1/8)Pi",
+    "H": "(Id-Pi)/8+diag(a_i/pi_i)"
+  },
+  "verified": {
+    "mu": [
+      "1/4",
+      "1/4",
+      "1/6",
+      "1/6",
+      "1/12",
+      "1/12"
+    ],
+    "max_T": "6",
+    "min_T": "0",
+    "p": "1/6",
+    "max_A": "157/32",
+    "H_square_off_diagonal": [
+      "-11/512",
+      "-9/512",
+      "-5/256"
+    ],
+    "channel_operator_characteristic_polynomial_descending": [
+      "1",
+      "-19/64",
+      "149/6144",
+      "-11/32768"
+    ],
+    "coarse_square": "(49/64)Id+(15/64)Pi"
+  },
+  "spectral_reason": "H is positive definite because (I-Pi)/8 is PSD and its constant kernel intersects the kernel of diag(a) only at zero. After weighted conjugation it is diag(1/8+a_i)-(1/8)sqrt(pi)sqrt(pi)^T. Strict rank-one interlacing gives simple eigenvalues in (0,1/8), (1/8,9/64), and (9/64,5/32), all different from 7/8. Thus the fine square has four distinct positive centered values: 49/64 and these three eigenvalue squares.",
+  "zero_parameter_case": "At a=0 the centered square values are 49/64 (multiplicity 2), 1/64 (multiplicity 2), and 0 (multiplicity 1). This is three centered values, not an entire-centered-space two-value case.",
+  "sign_obstruction": "All three off-diagonal H^2 entries are strictly negative, so their triangle product is negative and no diagonal sign gauge can make H^2 entrywise nonnegative.",
+  "compensation_scope": "At the recorded gamma=1/4 tuple, p=1/6<1/4 and gamma*max_A=157/128>1. These fail the stated older density and maximum-kernel tests only; no claim about every prior local neighborhood.",
+  "normalization": "Every composition used the original pi or the original fine masses pi_i/2; no measure substitution."
+}

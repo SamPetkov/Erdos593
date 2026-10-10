@@ -1,0 +1,21 @@
+{
+  "reviewer": "/root/markov",
+  "reviewed_file": "/workspace/scratch/b6733a691565/continuation2_signed_channel.md",
+  "sha256": "99e0ac8170087bff086ac89d73821c6b514378a7fb3ed28accaedc5801268196",
+  "verdict": "pass",
+  "issues": [],
+  "checks": [
+    "Actual nonnegative reversible root and original pi_i/2 normalization.",
+    "Orthogonal binary-channel power formula with original pi composition.",
+    "Exactly four triangles and three four-cycles survive sign averaging.",
+    "Complementary identity edges form forests; contraction leaves one original pi per component.",
+    "All six contraction-table cases are correct.",
+    "Even-power diagonal positivity and weighted Schur-product quadratic-form positivity are used correctly.",
+    "Coarse Id/Pi expansion terms have density at least one.",
+    "Strict contraction for every nonzero H, including rho=0 and rho=1.",
+    "Zero eigenvalues, negative root eigenvalues, nonuniform measures and disconnected hosts cause no gap.",
+    "Six-state pointwise deficit and full positive surplus agree with the exact cycle expansion.",
+    "Restricted scope is explicit; neither unrestricted target nor global counterexample is claimed."
+  ],
+  "notes": "No search or theorem expansion was performed during this audit. No changes to the reviewed file were made."
+}

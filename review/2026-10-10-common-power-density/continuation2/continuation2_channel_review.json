@@ -1,0 +1,62 @@
+{
+  "reviewer": "/root/tensor",
+  "completed_utc": "2026-10-10T12:01:36.679242+00:00",
+  "verdict": "Passed independent analytical review and exact example rerun, within the stated restricted scope.",
+  "reviewed_files": [
+    {
+      "path": "/workspace/scratch/b6733a691565/continuation2_markov.md",
+      "sha256": "fe29877e2df9cf8d9f42790c9541916ea9e7fb2f01f79c3d388808ead8bb71b5"
+    },
+    {
+      "path": "/workspace/scratch/b6733a691565/continuation2_signed_channel.md",
+      "sha256": "99e0ac8170087bff086ac89d73821c6b514378a7fb3ed28accaedc5801268196"
+    },
+    {
+      "path": "/workspace/scratch/b6733a691565/continuation2_markov_verify.py",
+      "sha256": "93fb504c7c8b75ccf07f2cc81c6a71da1cecc47523e696f562490cd50f5e4a3f"
+    },
+    {
+      "path": "/workspace/scratch/b6733a691565/continuation2_markov_checks.json",
+      "sha256": "190777ab4dbaf9a30717127d96f5d1f91c5deb77f55047281b55bbbf1ac699e9"
+    }
+  ],
+  "analytical_checks": [
+    {
+      "claim": "Nonnegative channel contraction",
+      "result": "The original-measure decomposition T^m=sum_alpha B_alpha^m psi_i,alpha psi_j,alpha follows from fiber orthonormality with the original coarse pi retained. Entrywise nonnegativity of each B_alpha^2 and actual nonnegative cubic moments prove coarse domination for finite simple graphs of maximum degree three and independent positive even path lengths. Complete orthonormal bases with nonnegative multiplication coefficients extend the conclusion to all finite simple graphs."
+    },
+    {
+      "claim": "Gauge scope",
+      "result": "Uniform binary fiber flips preserve the measure and permit one coherent sign gauge. The note correctly excludes arbitrary independent multicharacter gauges and unrestricted unequal-fiber flips."
+    },
+    {
+      "claim": "Signed binary channel over a flat coarse square",
+      "result": "For S^2=rho I+(1-rho)Pi, all seven K4 cycle terms are nonnegative after expansion of complementary I/Pi factors. Every selected I-edge set is a forest and contracts to the original pi once per component. The final four-entry expression uses the Schur product theorem and a weighted quadratic form, not a trace of arbitrary PSD products."
+    },
+    {
+      "claim": "Signed-channel strictness and boundaries",
+      "result": "The proof of strict coarse domination for H nonzero holds at rho=1 using positive diagonal entries of common positive even powers. The proof also covers rho=0, nonuniform pi, zero kernel entries, zero spectral values and disconnected coarse roots."
+    },
+    {
+      "claim": "Eight-state example",
+      "result": "The actual root and W normalization, six distinct positive centered spectral values, exact squares, same-order cone exclusion for every ordering, absence of proper matrix modules and exclusion of nontrivial actual Markov tensor products were checked. The positive refresh formulas are consistent."
+    },
+    {
+      "claim": "Six-state obstruction",
+      "result": "The fixed-coarse-color conditional density is strictly below one, while the original-measure full density is strictly above one. The example obstructs pointwise conditional monotonicity only and lies inside the separately proved global signed-channel theorem."
+    }
+  ],
+  "exact_verification": {
+    "method": "Executed both verify_eight() and verify_six() from the corrected standard-library verifier; serialized and parsed the returned object to normalize Python tuples to JSON arrays; compared the complete result to the recorded exact-check JSON.",
+    "result": "Exact equality of the complete normalized result and the recorded JSON.",
+    "corrected_issue": "The first audit run caught an incorrect provisional expected characteristic polynomial for C. Independent trace computation gave [1,-148,7890,-175952,1326048]; the author corrected the verifier expectation and reran it. Both mathematical notes were unchanged by that correction.",
+    "arithmetic": "Python integer arithmetic and fractions.Fraction; no floating point values used to establish the stated finite example signs."
+  },
+  "limits": [
+    "This is an analytical review by an independent collaborating AI agent, not a Lean proof, external referee report, or computer formalization of the general channel theorems.",
+    "The exact verifier certifies the displayed finite examples and selected values; the general restricted theorems rest on the written proofs reviewed analytically.",
+    "The unrestricted E593 common-power density target and the remaining general unequal-power cover comparison are unresolved by these files.",
+    "No novelty or priority claim has been reviewed or inferred.",
+    "The review binds only the four listed file contents. Later publication edits, added examples, route registries and other packet additions are outside this hash-bound review."
+  ]
+}

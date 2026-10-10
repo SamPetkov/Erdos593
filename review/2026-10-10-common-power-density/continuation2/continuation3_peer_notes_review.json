@@ -1,0 +1,34 @@
+{
+  "reviewer": "/root/tensor",
+  "completed_utc": "2026-10-10T12:55:35.831045+00:00",
+  "verdict": "Both mathematical notes pass focused independent analytical review; no correction required.",
+  "reviewed_files": [
+    {
+      "path": "/workspace/scratch/b6733a691565/continuation3_markov.md",
+      "sha256": "50e1da11ff69bf2094252e469b897c339ce2da5f5fc6f89c4bbd32d4b425b28e"
+    },
+    {
+      "path": "/workspace/scratch/b6733a691565/continuation3_weighted_spectrum.md",
+      "sha256": "ba9589214fc11530af4aad8c49d4d8a673b3c4a914191d6f251b06c320734591"
+    }
+  ],
+  "ten_state_coarse_domination_obstruction": [
+    "Checked the rational seed normalization against the independently executed seed construction; only symmetry, PSD contraction, and the exact negative compressed trace are used.",
+    "Checked the original-pi cancellation in every H0 power, the m_B^(-2) block transport, and Gamma0=D^2 tau/4+D^2/L^4 times the three singleton products.",
+    "Verified all rational margins in the 31 epsilon D^6 perturbation estimate and the six higher-cycle suppression, including the target-compatible tuple and its unique lowest cycle weight six.",
+    "Checked actual strict positivity, bounded W and original row normalization, the full coarse-square spectrum, and the separate proof F(T)>D^2/8-1>1. The failure is of coarse domination only."
+  ],
+  "weighted_channel_spectrum_theorem": [
+    "Independently derived every weighted triangle and quadrilateral Id/P contraction. The extra identity-cycle factor is exactly 1/pi_i at the merged vertex; tree contractions preserve the original pi.",
+    "Checked that the proof uses only V_i>=0 with its average at least one, and D_i>=1. The bound d=1/max pi>=4 makes every coefficient whose sign is used nonnegative.",
+    "Verified the cycle-mixture coefficient alpha^q+(d-1) beta^q. It is not generally the operator trace and the note correctly distinguishes d-1 from centered dimension.",
+    "Independently reconstructed the12-state weighted example with Fraction arithmetic, checked all original W rows, p=1024/9853, min W=8/9853, max W=1 and max A=38294287/4194304.",
+    "Checked the coarse invariant subspaces and eigenvalues, all four centered fine-square values with multiplicities, the coefficient299, and the exact hypotheses of the prior coarse common-cone transfer."
+  ],
+  "limits": [
+    "This review is analytical collaborating-agent review with the specific exact finite checks described above. It is not Lean verification, external peer review, or a novelty assessment.",
+    "The shared channel-spectrum verifier and its output are being independently audited elsewhere and are not included in this detached review.",
+    "The18-state commuting strengthening is authored in continuation3_tensor.md and requires the root agent or another independent reviewer; it is not self-certified as an independent review here.",
+    "Neither note resolves the unrestricted common-power density target or its complete-cover comparison. Only the two listed file contents are hash-bound; later changes are outside the review."
+  ]
+}

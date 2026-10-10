@@ -1,0 +1,171 @@
+{
+  "config_sources_and_payload_hashes_match": true,
+  "frozen_start_selection_reconstructed_exactly": true,
+  "sample_unique_exact_roots": 224,
+  "sample_exact_boundary_roots": 112,
+  "sample_maximum_root": "241/102",
+  "sample_minimum_p": "102/241",
+  "sample_maximum_root_record": [
+    0,
+    1,
+    "boundary",
+    0
+  ],
+  "sample_band_counts_over_224_roots_including_zero": {
+    "6": 84,
+    "7": 112,
+    "5": 28
+  },
+  "sample_literal_float_root_minimum": "-65/1152921504606846976",
+  "sample_literal_float_root_minimum_decimal": -5.637851296924623e-17,
+  "optimization_runs": 12,
+  "optimization_iterations": 233,
+  "optimization_calls": 656,
+  "termination_messages": {
+    "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH": 5,
+    "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL": 7
+  },
+  "optimizer_endpoint_minimum_p": "27914925100926095/69782948102995432",
+  "optimizer_endpoint_minimum_p_decimal": 0.400025018428934,
+  "optimizer_literal_float_minimum_T": "-7496573/75557863725914323419136",
+  "optimizer_literal_float_minimum_T_decimal": -9.921631753901581e-17,
+  "optimizer_max_coordinate_rounding_error_decimal": 3.771767942809041e-17,
+  "optimizer_endpoints": [
+    {
+      "run": 0,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "27914925100926095/69782948102995432",
+      "p_decimal": 0.400025018428934,
+      "literal_rounded_lambda_minimum_T": "-3/36028797018963968",
+      "literal_rounded_lambda_minimum_T_decimal": -8.326672684688674e-17,
+      "max_abs_coordinate_rounding_error": "37934223047531183/1005741170260848535094074235944960",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 7
+    },
+    {
+      "run": 1,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "1/2",
+      "p_decimal": 0.5,
+      "literal_rounded_lambda_minimum_T": "-1051194445790511679813/42535295865117307932921825928971026432",
+      "literal_rounded_lambda_minimum_T_decimal": -2.4713462652850235e-17,
+      "max_abs_coordinate_rounding_error": "139923601280676989512522402751848373771/16985557324808612414008224080601129640947820911394816000",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 5
+    },
+    {
+      "run": 2,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "1/2",
+      "p_decimal": 0.5,
+      "literal_rounded_lambda_minimum_T": "-1204935395492200853891/42535295865117307932921825928971026432",
+      "literal_rounded_lambda_minimum_T_decimal": -2.832789501013802e-17,
+      "max_abs_coordinate_rounding_error": "160388314285093964396027232862042306183/16985546726503926297768487719080469668596959173937201152",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 5
+    },
+    {
+      "run": 3,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "1/2",
+      "p_decimal": 0.5,
+      "literal_rounded_lambda_minimum_T": "53926943409379686949093/680564733841876926926749214863536422912",
+      "literal_rounded_lambda_minimum_T_decimal": 7.923852166854877e-17,
+      "max_abs_coordinate_rounding_error": "448636773417981721535310440585103750845/16985556887122839448783773148349767763340186845622304768",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 5
+    },
+    {
+      "run": 4,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "1/2",
+      "p_decimal": 0.5,
+      "literal_rounded_lambda_minimum_T": "433189699/19342813113834066795298816",
+      "literal_rounded_lambda_minimum_T_decimal": 2.2395382535655105e-17,
+      "max_abs_coordinate_rounding_error": "150160644483664912409651/20114935614237008101968090284554383785984",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 5
+    },
+    {
+      "run": 5,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "1/2",
+      "p_decimal": 0.5,
+      "literal_rounded_lambda_minimum_T": "-7496573/75557863725914323419136",
+      "literal_rounded_lambda_minimum_T_decimal": -9.921631753901581e-17,
+      "max_abs_coordinate_rounding_error": "31183260484537489098709/942887582951604415344276769985936752640",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 5
+    },
+    {
+      "run": 6,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "1/2",
+      "p_decimal": 0.5,
+      "literal_rounded_lambda_minimum_T": "3585294425/38685626227668133590597632",
+      "literal_rounded_lambda_minimum_T_decimal": 9.267768870795172e-17,
+      "max_abs_coordinate_rounding_error": "2485609776951202698066597/80459835455411620695395984349523722895360",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 5
+    },
+    {
+      "run": 7,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "942887220196543967453654219516462193049/1885774440393087934907324847022010988326",
+      "p_decimal": 0.5,
+      "literal_rounded_lambda_minimum_T": "35428323073443176539177/680564733841876926926749214863536422912",
+      "literal_rounded_lambda_minimum_T_decimal": 5.2057242039924197e-17,
+      "max_abs_coordinate_rounding_error": "294740182490121916028004367292012951645/16985546134118232888189264146268097306756198277595529216",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 5
+    },
+    {
+      "run": 8,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "27915126858577121/69783148285321822",
+      "p_decimal": 0.4000267621122618,
+      "literal_rounded_lambda_minimum_T": "-1/18014398509481984",
+      "literal_rounded_lambda_minimum_T_decimal": -5.551115123125783e-17,
+      "max_abs_coordinate_rounding_error": "12746537167310811/502874219673152186907717024088064",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 7
+    },
+    {
+      "run": 9,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "14094098825856629/35041074308894960",
+      "p_decimal": 0.4022165160124366,
+      "literal_rounded_lambda_minimum_T": "3/36028797018963968",
+      "literal_rounded_lambda_minimum_T_decimal": 8.326672684688674e-17,
+      "max_abs_coordinate_rounding_error": "9096534714265893/253896712881003438233847842471936",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 7
+    },
+    {
+      "run": 10,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "20934010335207594/34890036062007109",
+      "p_decimal": 0.5999996760680714,
+      "literal_rounded_lambda_minimum_T": "-3/36028797018963968",
+      "literal_rounded_lambda_minimum_T_decimal": -8.326672684688674e-17,
+      "max_abs_coordinate_rounding_error": "3120906608487863/125704534860014709865494014328832",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 7
+    },
+    {
+      "run": 11,
+      "p_of_exact_boundary_of_stored_dyadic_raw": "27948106118344247/69816403256958938",
+      "p_decimal": 0.40030859245901534,
+      "literal_rounded_lambda_minimum_T": "0",
+      "literal_rounded_lambda_minimum_T_decimal": 0.0,
+      "max_abs_coordinate_rounding_error": "17732575422236723/1006936642402289841369743513092096",
+      "exact_boundary_minimum_T": "0",
+      "whole_centered_bands_including_zero": 7
+    }
+  ],
+  "scope_correction": "Every exact sample root and every exactly boundary-projected dyadic optimizer endpoint has p>1/4. By the previously established density compensation criterion identified in parent review, all target evaluations are calibration on an already proved class. The complete two-cover comparison is the genuinely stronger unresolved diagnostic.",
+  "boundary_interpretation": "Sample admissibility belongs to stored rational lambda numerators/denominator. Optimizer admissibility belongs to the exact ray determined by stored dyadic raw_endpoint followed by exact min projection. Literal rounded boundary_lambda_endpoint vectors may have tiny negative entries and are not themselves claimed exact admissible hosts.",
+  "entire_support_ray_family_density_bound": {
+    "all_supports_contain_supplied_support": true,
+    "supplied_pair_product_patterns": 56,
+    "excluded_patterns": 8,
+    "p_lower_bound": "2/5",
+    "proof": "Writing B=sum(abs(lambda_i)), the actual minimum dot product is at most -B+2 min(abs(lambda_i)) <= -2B/3, since a forbidden minimizing sign vector is made allowed by one coordinate flip. The maximum is at most B, so exact boundary max(T)<=5/2."
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  }
+}

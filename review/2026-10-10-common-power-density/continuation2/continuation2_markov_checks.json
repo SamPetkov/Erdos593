@@ -1,0 +1,67 @@
+{
+  "eight_state": {
+    "mu": "1/8 at all eight states",
+    "p": "2/13",
+    "max_A": "5513/1024",
+    "charpoly_C": [
+      1,
+      -148,
+      7890,
+      -175952,
+      1326048
+    ],
+    "proper_matrix_modules": [],
+    "densities": [
+      {
+        "label": "interior",
+        "edge_exponents": [
+          3,
+          2,
+          1,
+          1,
+          1,
+          1
+        ],
+        "F": "1876780444808742782266838447/154742504910672534362390528",
+        "F_coarse": "128468580607093/17592186044416",
+        "difference": "746758859357726056495517103/154742504910672534362390528"
+      },
+      {
+        "label": "boundary",
+        "edge_exponents": [
+          1,
+          2,
+          1,
+          1,
+          1,
+          1
+        ],
+        "F": "376411113881551862951/18446744073709551616",
+        "F_coarse": "342695373809/34359738368",
+        "difference": "192427936006533119143/18446744073709551616"
+      }
+    ],
+    "positive_refresh": {
+      "rho": "99/100",
+      "p": "200/1289",
+      "minimum_W": "2/1289",
+      "max_A": "54236689/10240000"
+    }
+  },
+  "six_state_conditional_obstruction": {
+    "mu": "1/6 at all six states",
+    "p": "2/3",
+    "minimum_W": "1/3",
+    "conditional_coarse_colors": [
+      0,
+      0,
+      1,
+      2
+    ],
+    "conditional_density": "134183295/134217728",
+    "conditional_defect": "-34433/134217728",
+    "global_F": "134287905/134217728",
+    "global_defect": "70177/134217728",
+    "scope": "Pointwise conditional obstruction only; global density is above one."
+  }
+}

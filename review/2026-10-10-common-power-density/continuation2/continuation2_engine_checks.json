@@ -1,0 +1,129 @@
+{
+  "checks": [
+    {
+      "check": "original_measure_orthonormality_and_cubic_tensor",
+      "states": 32,
+      "nonzero_tensor_entries": 43,
+      "exact_binary_arithmetic_equal": true
+    },
+    {
+      "check": "state_contraction",
+      "bits": 1,
+      "states": 8,
+      "absolute_cover_error": 0.0,
+      "base_error": 2.220446049250313e-16
+    },
+    {
+      "check": "state_contraction",
+      "bits": 2,
+      "states": 8,
+      "absolute_cover_error": 2.220446049250313e-16,
+      "base_error": 2.220446049250313e-16
+    },
+    {
+      "check": "state_contraction",
+      "bits": 3,
+      "states": 8,
+      "absolute_cover_error": 2.220446049250313e-16,
+      "base_error": 2.220446049250313e-16
+    },
+    {
+      "check": "state_contraction",
+      "bits": 4,
+      "states": 8,
+      "absolute_cover_error": 2.220446049250313e-16,
+      "base_error": 2.220446049250313e-16
+    },
+    {
+      "check": "state_contraction",
+      "bits": 5,
+      "states": 8,
+      "absolute_cover_error": 2.220446049250313e-16,
+      "base_error": 2.220446049250313e-16
+    },
+    {
+      "check": "state_contraction",
+      "bits": 6,
+      "states": 8,
+      "absolute_cover_error": 0.0,
+      "base_error": 2.220446049250313e-16
+    },
+    {
+      "check": "state_contraction",
+      "bits": 7,
+      "states": 8,
+      "absolute_cover_error": 0.0,
+      "base_error": 2.220446049250313e-16
+    },
+    {
+      "check": "exact_integer_reference",
+      "base_equal": true,
+      "two_cover_equal": true,
+      "target_violation": false,
+      "cover_violation": false
+    },
+    {
+      "check": "boundary_gradient",
+      "relative_error": 3.4900288693831875e-11
+    },
+    {
+      "check": "color_registry",
+      "bits": null,
+      "free_chords": 3,
+      "assignments": 343,
+      "valid_assignments": 235
+    },
+    {
+      "check": "color_registry",
+      "bits": 1,
+      "free_chords": 5,
+      "assignments": 16807,
+      "valid_assignments": 7993
+    },
+    {
+      "check": "color_registry",
+      "bits": 2,
+      "free_chords": 5,
+      "assignments": 16807,
+      "valid_assignments": 7993
+    },
+    {
+      "check": "color_registry",
+      "bits": 3,
+      "free_chords": 5,
+      "assignments": 16807,
+      "valid_assignments": 7993
+    },
+    {
+      "check": "color_registry",
+      "bits": 4,
+      "free_chords": 5,
+      "assignments": 16807,
+      "valid_assignments": 7993
+    },
+    {
+      "check": "color_registry",
+      "bits": 5,
+      "free_chords": 5,
+      "assignments": 16807,
+      "valid_assignments": 7993
+    },
+    {
+      "check": "color_registry",
+      "bits": 6,
+      "free_chords": 5,
+      "assignments": 16807,
+      "valid_assignments": 7993
+    },
+    {
+      "check": "color_registry",
+      "bits": 7,
+      "free_chords": 5,
+      "assignments": 16807,
+      "valid_assignments": 7093
+    }
+  ],
+  "seconds": 0.48538994789123535,
+  "all_passed": true,
+  "adds_search_coverage": false
+}

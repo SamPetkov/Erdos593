@@ -1,0 +1,30 @@
+{
+  "reviewer": "/root/optimize",
+  "status": "PASS",
+  "scope": "Independent mathematical and exact-arithmetic audit of Section3 commuting18-state obstruction, using the Section2 compressed-power seed. This refutes a stronger sufficient mechanism only.",
+  "verdict": "At (k,u,r,l,h)=(8,2,3,1,1), the explicit original-measure actual host satisfies1<Ffine<Fcoarse, and its unique leading bcd channel cycle is negative.",
+  "checked_points": [
+    "V is a rational9x5 isometry. Its columns are orthogonal to the Euclidean block constants determined by the actual square-root weights w. Hence Rbar=V R V^T is a PSD contraction supported on block-centered subspaces.",
+    "The original coarse masses are pi_i=w_i^2/D and fine masses are pi_i/2. The relative kernel H has Euclidean representative delta Rbar. Original-pi composition gives PH=HP=0, Pi H=H Pi=0, and SH=HS=epsilon H; these are distinct from Schur products.",
+    "S is a convex combination of actual nonnegative Markov projections, with every entry at least epsilon and every entry at most D. Since |H|<=epsilon/2, T=S+abH is strictly positive. Taking p=1/(2D) gives0<W<1 and exactly the original-mu weighted row sum p. Both S and H are PSD, so the fine root is PSD as an additional property.",
+    "The actual channel identity gives exactly the seven Eulerian K4 contributions with exponents(8,4,2,3,2,1). The cycle bcd has weight6 and is uniquely smallest; all six other cycles have weight at least7.",
+    "Replacing the three hub factors by P forces all four coarse indices into one block. Summing the hub gives mass m_B, while three P kernels contribute m_B^(-3); the remaining original-pi weights cancel the H0 normalization and yield m_B^(-2) times the compressed Euclidean trace. The resulting D^2 tau/81 plus D^2/(625L^4) diagonal-product sum is correct.",
+    "I independently computed H0^2,H0^4,H0^6 by original-pi composition and directly summed all original four-vertex terms with the three P hub factors. That exact rational Gamma0 agrees with the compressed formula, independently of its Euclidean traversal.",
+    "For root power q>=1, S^q-P=epsilon^q(Id-P)+(1-(1-epsilon)^q)(Pi-P). The max norms of the differences are at most D, so the bound(q+1)epsilon D is valid. Telescoping only the complementary root powers16,8,4 gives the stated31 epsilon D^6 bound after including three channel factors bounded by D.",
+    "The exact parameters satisfy Gamma_bcd<=-eta D^2/324 and delta^2<=eta/(3888D^4). Thus six higher-weight cycles contribute at most6D^6 delta^14, and the complete difference is at most-eta D^2 delta^12/648<0. No sign claim for a trace product of three arbitrary PSD matrices is used.",
+    "Each coarse power has a nonnegative P coefficient b_n>0 with product greater than1/2, because the exponent total gives46 epsilon<1/2. Its all-P density is sum_B m_B^(-2), yielding Fcoarse>D^2/162. The independent bound|Ffine-Fcoarse|<=7D^6 delta^12<1 yields Ffine>D^2/162-1>1.",
+    "The entire centered fine spectrum has multiplicities3,5,1,1,1,6 at(1-epsilon)^2,epsilon^2,delta^2,delta^2t^4,delta^2t^8,0. They account for all17 centered dimensions; the zero band is included."
+  ],
+  "exact_checks": {
+    "both_embedded_blocks_executed": true,
+    "original_measure_Gamma0_direct_sum_equal": true,
+    "all_rational_separation_bounds_pass": true,
+    "rounded_full_density_comparison_used": false
+  },
+  "mathematical_corrections_required": [],
+  "hashes": {
+    "continuation3_tensor.md": "2035c00ec32d4ceddcc90089ee7e024e516dfa72994052ffbe53e65273a3ba7c",
+    "continuation3_optimize_obstruction_verify.py": "2613f83529cac74630e3749098aa11acdf74c9b76b7ea39b5da2eb63a92543bc",
+    "continuation3_optimize_obstruction_checks.json": "46379e373d7283fed616009fc5d1f938e40e2f43841c9cf18df0fb9cf094ebf8"
+  }
+}

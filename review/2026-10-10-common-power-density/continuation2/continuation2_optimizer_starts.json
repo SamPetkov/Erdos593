@@ -1,0 +1,1526 @@
+[
+  {
+    "record": {
+      "id": [
+        0,
+        1,
+        "boundary",
+        0
+      ],
+      "law": "supplied_half",
+      "pattern": "near_equal",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "lambda_numerators": [
+        37,
+        39,
+        43,
+        47,
+        53,
+        59
+      ],
+      "lambda_denominator": 204,
+      "state_count": 32,
+      "root_minimum": "0",
+      "root_maximum": "241/102",
+      "F_approx": 1.0026985184291468,
+      "target_defect": {
+        "value": 0.002698518429146921,
+        "log_abs_sum": -5.91505144297356,
+        "normalized": 0.9999990564491926,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.004895025160509813,
+            "log_abs_sum": -5.319534820161536,
+            "normalized": 0.9999989571920689,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9951312869174262,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.00036546683679675575,
+            "log_abs_sum": -7.9143210458587845,
+            "normalized": 0.999986029267169,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9996364976458315,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.00520833604559328,
+            "log_abs_sum": -5.257491178145517,
+            "normalized": 0.9999963268782557,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9948196601626907,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 5,
+    "starting_normalized_defect": 0.999986029267169
+  },
+  {
+    "record": {
+      "id": [
+        1,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "one_star_face",
+      "pattern": "seeded_10",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "3/4",
+        "1/4",
+        "1/4",
+        "-1/4"
+      ],
+      "lambda_numerators": [
+        768,
+        5,
+        112,
+        768,
+        192,
+        40
+      ],
+      "lambda_denominator": 1885,
+      "state_count": 40,
+      "root_minimum": "0",
+      "root_maximum": "2",
+      "F_approx": 1.0233601175012508,
+      "target_defect": {
+        "value": 0.023360117501250832,
+        "log_abs_sum": -3.7567250910154577,
+        "normalized": 0.9999999999999957,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02522925374992261,
+            "log_abs_sum": -3.679751094653136,
+            "normalized": 0.9999999999999917,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759094103751641,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.03795700765976073,
+            "log_abs_sum": -3.2713011371209815,
+            "normalized": 0.9999999999999944,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9637560942554295,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02522925374992261,
+            "log_abs_sum": -3.679751094653136,
+            "normalized": 0.9999999999999917,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759094103751641,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02522925374992261,
+            "log_abs_sum": -3.679751094653136,
+            "normalized": 0.9999999999999917,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759094103751641,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0072306630716613895,
+            "log_abs_sum": -4.92942453586016,
+            "normalized": 0.9999999999999707,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.993095676213753,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02522925374992261,
+            "log_abs_sum": -3.679751094653136,
+            "normalized": 0.9999999999999917,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759094103751641,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.042989651701542834,
+            "log_abs_sum": -3.1467940370932292,
+            "normalized": 0.9999981867398355,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9589505869843783,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 7,
+    "starting_normalized_defect": 0.9999981867398355
+  },
+  {
+    "record": {
+      "id": [
+        2,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "two_star_face",
+      "pattern": "seeded_10",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/4",
+        "-1/4"
+      ],
+      "lambda_numerators": [
+        768,
+        5,
+        112,
+        768,
+        192,
+        40
+      ],
+      "lambda_denominator": 1885,
+      "state_count": 48,
+      "root_minimum": "0",
+      "root_maximum": "2",
+      "F_approx": 1.0233656276313454,
+      "target_defect": {
+        "value": 0.023365627631345438,
+        "log_abs_sum": -3.7564892411598994,
+        "normalized": 0.9999999999999941,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02523942137747748,
+            "log_abs_sum": -3.6793481663944947,
+            "normalized": 0.9999999999999888,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9758999611668426,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.03796805660937049,
+            "log_abs_sum": -3.2710100883139983,
+            "normalized": 0.9999999999999926,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9637459343849348,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02523942137747748,
+            "log_abs_sum": -3.6793481663944947,
+            "normalized": 0.9999999999999888,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9758999611668426,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02523942137747748,
+            "log_abs_sum": -3.6793481663944947,
+            "normalized": 0.9999999999999888,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9758999611668426,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.007235154964164713,
+            "log_abs_sum": -4.928803500445966,
+            "normalized": 0.9999999999999608,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9930914614486417,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02523942137747748,
+            "log_abs_sum": -3.6793481663944947,
+            "normalized": 0.9999999999999888,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9758999611668426,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.04300080110250007,
+            "log_abs_sum": -3.146529282024104,
+            "normalized": 0.9999927488789768,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9589403829458668,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 7,
+    "starting_normalized_defect": 0.9999927488789768
+  },
+  {
+    "record": {
+      "id": [
+        3,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "opposite_star_face",
+      "pattern": "seeded_10",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "1/2",
+        "1/4",
+        "1/4",
+        "-1/2"
+      ],
+      "lambda_numerators": [
+        768,
+        5,
+        112,
+        768,
+        192,
+        40
+      ],
+      "lambda_denominator": 1885,
+      "state_count": 48,
+      "root_minimum": "0",
+      "root_maximum": "2",
+      "F_approx": 1.023360117499497,
+      "target_defect": {
+        "value": 0.023360117499497082,
+        "log_abs_sum": -3.7567250910905305,
+        "normalized": 0.9999999999999941,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02522925374659995,
+            "log_abs_sum": -3.679751094784832,
+            "normalized": 0.9999999999999887,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759094103782543,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.03795700765617096,
+            "log_abs_sum": -3.2713011372155547,
+            "normalized": 0.9999999999999926,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.963756094258733,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02522925374659995,
+            "log_abs_sum": -3.679751094784832,
+            "normalized": 0.9999999999999887,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759094103782543,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02522925374659995,
+            "log_abs_sum": -3.679751094784832,
+            "normalized": 0.9999999999999887,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759094103782543,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.007230663070619164,
+            "log_abs_sum": -4.92942453600429,
+            "normalized": 0.9999999999999608,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9930956762147246,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02522925374659995,
+            "log_abs_sum": -3.679751094784832,
+            "normalized": 0.9999999999999887,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759094103782543,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.04298965169795401,
+            "log_abs_sum": -3.1467940371767367,
+            "normalized": 0.9999981867398616,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9589505869876644,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 7,
+    "starting_normalized_defect": 0.9999981867398616
+  },
+  {
+    "record": {
+      "id": [
+        4,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "asymmetric_interior",
+      "pattern": "seeded_10",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "9/20",
+        "2/5",
+        "7/20",
+        "-3/10"
+      ],
+      "lambda_numerators": [
+        768,
+        5,
+        112,
+        768,
+        192,
+        40
+      ],
+      "lambda_denominator": 1885,
+      "state_count": 64,
+      "root_minimum": "0",
+      "root_maximum": "2",
+      "F_approx": 1.0233629822766117,
+      "target_defect": {
+        "value": 0.023362982276611773,
+        "log_abs_sum": -3.756602463219861,
+        "normalized": 0.9999999999999929,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.025234539906867543,
+            "log_abs_sum": -3.679541591697399,
+            "normalized": 0.9999999999999865,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759044977019042,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.037962752110402856,
+            "log_abs_sum": -3.271149807594371,
+            "normalized": 0.999999999999991,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9637508120182009,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.025234539906867543,
+            "log_abs_sum": -3.679541591697399,
+            "normalized": 0.9999999999999865,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759044977019042,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.025234539906867543,
+            "log_abs_sum": -3.679541591697399,
+            "normalized": 0.9999999999999865,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759044977019042,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.007232997847488499,
+            "log_abs_sum": -4.92910168871094,
+            "normalized": 0.9999999999999528,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9930934854806348,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.025234539906867543,
+            "log_abs_sum": -3.679541591697399,
+            "normalized": 0.9999999999999865,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759044977019042,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.04299544838107366,
+            "log_abs_sum": -3.1466563791763313,
+            "normalized": 0.9999953586929131,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9589452817805537,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 7,
+    "starting_normalized_defect": 0.9999953586929131
+  },
+  {
+    "record": {
+      "id": [
+        5,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "attenuated_half",
+      "pattern": "seeded_10",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "17/40",
+        "17/40",
+        "17/40",
+        "-17/40"
+      ],
+      "lambda_numerators": [
+        768,
+        5,
+        112,
+        768,
+        192,
+        40
+      ],
+      "lambda_denominator": 1885,
+      "state_count": 64,
+      "root_minimum": "0",
+      "root_maximum": "2",
+      "F_approx": 1.0233635884236025,
+      "target_defect": {
+        "value": 0.023363588423602595,
+        "log_abs_sum": -3.756576518795441,
+        "normalized": 0.9999999999999878,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02523565841290318,
+            "log_abs_sum": -3.6794972682719598,
+            "normalized": 0.9999999999999765,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759034582282362,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.037963967561454585,
+            "log_abs_sum": -3.2711177911696567,
+            "normalized": 0.9999999999999843,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9637496943729935,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02523565841290318,
+            "log_abs_sum": -3.6794972682719598,
+            "normalized": 0.9999999999999765,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759034582282362,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02523565841290318,
+            "log_abs_sum": -3.6794972682719598,
+            "normalized": 0.9999999999999765,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759034582282362,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.007233492022325886,
+            "log_abs_sum": -4.929033368773999,
+            "normalized": 0.9999999999999183,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9930930217940114,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02523565841290318,
+            "log_abs_sum": -3.6794972682719598,
+            "normalized": 0.9999999999999765,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759034582282362,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.04299667488215819,
+            "log_abs_sum": -3.1466272551387062,
+            "normalized": 0.9999947605519663,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9589441592768143,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 7,
+    "starting_normalized_defect": 0.9999947605519663
+  },
+  {
+    "record": {
+      "id": [
+        6,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "skew_star_face",
+      "pattern": "seeded_10",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "4/5",
+        "1/5",
+        "1/10",
+        "-1/10"
+      ],
+      "lambda_numerators": [
+        768,
+        5,
+        112,
+        768,
+        192,
+        40
+      ],
+      "lambda_denominator": 1885,
+      "state_count": 48,
+      "root_minimum": "0",
+      "root_maximum": "2",
+      "F_approx": 1.0233594565502306,
+      "target_defect": {
+        "value": 0.023359456550230667,
+        "log_abs_sum": -3.756753385409562,
+        "normalized": 0.9999999999999994,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.025228034177190314,
+            "log_abs_sum": -3.6797994354491963,
+            "normalized": 0.9999999999999989,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759105437883022,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.03795568232496969,
+            "log_abs_sum": -3.2713360544659373,
+            "normalized": 0.9999999999999991,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9637573129586469,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.025228034177190314,
+            "log_abs_sum": -3.6797994354491963,
+            "normalized": 0.9999999999999989,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759105437883022,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.025228034177190314,
+            "log_abs_sum": -3.6797994354491963,
+            "normalized": 0.9999999999999989,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759105437883022,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.007230124587247307,
+            "log_abs_sum": -4.9294990109755155,
+            "normalized": 0.9999999999999959,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9930961814770694,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.025228034177190314,
+            "log_abs_sum": -3.6797994354491963,
+            "normalized": 0.9999999999999989,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9759105437883022,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.04298831431571979,
+            "log_abs_sum": -3.146825799797523,
+            "normalized": 0.9999988394766149,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9589518109873368,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 7,
+    "starting_normalized_defect": 0.9999988394766149
+  },
+  {
+    "record": {
+      "id": [
+        0,
+        10,
+        "boundary",
+        0
+      ],
+      "law": "supplied_half",
+      "pattern": "seeded_10",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "lambda_numerators": [
+        768,
+        5,
+        112,
+        768,
+        192,
+        40
+      ],
+      "lambda_denominator": 1875,
+      "state_count": 32,
+      "root_minimum": "0",
+      "root_maximum": "752/375",
+      "F_approx": 1.0241850609846075,
+      "target_defect": {
+        "value": 0.024185060984607418,
+        "log_abs_sum": -3.7220201511222775,
+        "normalized": 0.9999999999999754,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02615020258720765,
+            "log_abs_sum": -3.6438983413804156,
+            "normalized": 0.9999999999999534,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9750702350326221,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.039236070412719856,
+            "log_abs_sum": -3.2381587916868906,
+            "normalized": 0.9999999999999688,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9625950884942249,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02615020258720765,
+            "log_abs_sum": -3.6438983413804156,
+            "normalized": 0.9999999999999534,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9750702350326221,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02615020258720765,
+            "log_abs_sum": -3.6438983413804156,
+            "normalized": 0.9999999999999534,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9750702350326221,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.007566481123557392,
+            "log_abs_sum": -4.884027164579139,
+            "normalized": 0.9999999999998387,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9927866487683479,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.02615020258720765,
+            "log_abs_sum": -3.6438983413804156,
+            "normalized": 0.9999999999999534,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9750702350326221,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.044475462527451735,
+            "log_abs_sum": -3.112810005969572,
+            "normalized": 0.9999923602322983,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9576002203452456,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 7,
+    "starting_normalized_defect": 0.9999923602322983
+  },
+  {
+    "record": {
+      "id": [
+        0,
+        1,
+        "boundary",
+        10
+      ],
+      "law": "supplied_half",
+      "pattern": "near_equal",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "lambda_numerators": [
+        37,
+        39,
+        43,
+        47,
+        53,
+        59
+      ],
+      "lambda_denominator": 204,
+      "state_count": 32,
+      "root_minimum": "0",
+      "root_maximum": "241/102",
+      "F_approx": 1.0025162534035799,
+      "target_defect": {
+        "value": 0.0025162534035798128,
+        "log_abs_sum": -5.984984228371421,
+        "normalized": 1.0,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0026079369064780865,
+            "log_abs_sum": -5.9491958275117165,
+            "normalized": 1.0,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9974051381827295,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.004867945027470391,
+            "log_abs_sum": -5.325083396552009,
+            "normalized": 1.0,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9951564607836264,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0026079369064780865,
+            "log_abs_sum": -5.9491958275117165,
+            "normalized": 1.0,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9974051381827295,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0026079369064780865,
+            "log_abs_sum": -5.9491958275117165,
+            "normalized": 1.0,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9974051381827295,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 1.4899434837536338e-20,
+            "log_abs_sum": -45.65295728096123,
+            "normalized": 0.9999936099720378,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 1.0,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0026079369064780865,
+            "log_abs_sum": -5.9491958275117165,
+            "normalized": 1.0,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9974051381827295,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.004867945027470391,
+            "log_abs_sum": -5.325083396552009,
+            "normalized": 1.0,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9951564607836264,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 5,
+    "starting_normalized_defect": 0.9999936099720378
+  },
+  {
+    "record": {
+      "id": [
+        0,
+        1,
+        "boundary",
+        0
+      ],
+      "law": "supplied_half",
+      "pattern": "near_equal",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "lambda_numerators": [
+        37,
+        39,
+        43,
+        47,
+        53,
+        59
+      ],
+      "lambda_denominator": 204,
+      "state_count": 32,
+      "root_minimum": "0",
+      "root_maximum": "241/102",
+      "F_approx": 1.0026985184291468,
+      "target_defect": {
+        "value": 0.002698518429146921,
+        "log_abs_sum": -5.91505144297356,
+        "normalized": 0.9999990564491926,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.004895025160509813,
+            "log_abs_sum": -5.319534820161536,
+            "normalized": 0.9999989571920689,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9951312869174262,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.00036546683679675575,
+            "log_abs_sum": -7.9143210458587845,
+            "normalized": 0.999986029267169,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9996364976458315,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.00520833604559328,
+            "log_abs_sum": -5.257491178145517,
+            "normalized": 0.9999963268782557,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9948196601626907,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 7,
+    "starting_normalized_defect": 0.9999963268782557
+  },
+  {
+    "record": {
+      "id": [
+        0,
+        5,
+        "boundary",
+        0
+      ],
+      "law": "supplied_half",
+      "pattern": "signed_near_equal",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "lambda_numerators": [
+        37,
+        -39,
+        43,
+        -47,
+        53,
+        -59
+      ],
+      "lambda_denominator": 278,
+      "state_count": 32,
+      "root_minimum": "0",
+      "root_maximum": "241/139",
+      "F_approx": 1.0004012695252469,
+      "target_defect": {
+        "value": 0.0004012695252468597,
+        "log_abs_sum": -7.820877140351619,
+        "normalized": 0.9999999166990267,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.000408625616549624,
+            "log_abs_sum": -7.802711020418396,
+            "normalized": 0.9999998363370762,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9995917021241829,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0007600180346456502,
+            "log_abs_sum": -7.18216830717595,
+            "normalized": 0.9999999120074178,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9992405915425746,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.000408625616549624,
+            "log_abs_sum": -7.802711020418396,
+            "normalized": 0.9999998363370762,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9995917021241829,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.000408625616549624,
+            "log_abs_sum": -7.802711020418396,
+            "normalized": 0.9999998363370762,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9995917021241829,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 2.959448152837344e-05,
+            "log_abs_sum": -10.42792038902702,
+            "normalized": 0.9999977401619285,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9999704292549108,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.000408625616549624,
+            "log_abs_sum": -7.802711020418396,
+            "normalized": 0.9999998363370762,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9995917021241829,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0007873191387974191,
+            "log_abs_sum": -7.146876668861997,
+            "normalized": 0.9999997902013333,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9992133123354442,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 5,
+    "starting_normalized_defect": 0.9999977401619285
+  },
+  {
+    "record": {
+      "id": [
+        0,
+        1,
+        "boundary",
+        0
+      ],
+      "law": "supplied_half",
+      "pattern": "near_equal",
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "root_mode": "boundary",
+      "t": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "-1/2"
+      ],
+      "lambda_numerators": [
+        37,
+        39,
+        43,
+        47,
+        53,
+        59
+      ],
+      "lambda_denominator": 204,
+      "state_count": 32,
+      "root_minimum": "0",
+      "root_maximum": "241/102",
+      "F_approx": 1.0026985184291468,
+      "target_defect": {
+        "value": 0.002698518429146921,
+        "log_abs_sum": -5.91505144297356,
+        "normalized": 0.9999990564491926,
+        "zero_polynomial_at_point": false
+      },
+      "target_candidate_numeric": false,
+      "covers": [
+        {
+          "bits": 1,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 2,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.004895025160509813,
+            "log_abs_sum": -5.319534820161536,
+            "normalized": 0.9999989571920689,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9951312869174262,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 3,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 4,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 5,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.00036546683679675575,
+            "log_abs_sum": -7.9143210458587845,
+            "normalized": 0.999986029267169,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9996364976458315,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 6,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.0027913523051904788,
+            "log_abs_sum": -5.881227274528664,
+            "normalized": 0.9999981711546162,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9972236519648577,
+          "cover_candidate_numeric": false
+        },
+        {
+          "bits": 7,
+          "cover_defect_F2_minus_Z": {
+            "value": 0.00520833604559328,
+            "log_abs_sum": -5.257491178145517,
+            "normalized": 0.9999963268782557,
+            "zero_polynomial_at_point": false
+          },
+          "cover_ratio_approx": 0.9948196601626907,
+          "cover_candidate_numeric": false
+        }
+      ]
+    },
+    "bits": 1,
+    "starting_normalized_defect": 0.9999981711546162
+  }
+]
