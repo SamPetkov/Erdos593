@@ -1,0 +1,76 @@
+{
+  "status": "passed",
+  "scope": "Floating-point replay and diagnostic checks only; no exact J or F sign claim.",
+  "source_sha256": "ca52fdf83daf6c10164695f72d95c30e009c72b5d5bb7107f19ab259fe390c3d",
+  "bindings": {
+    "continuation5_search_projection_optimizations.json": "e16838b1b851876300543b02a8e915036d5b20cb322f7c6f0606fa08c129b269",
+    "continuation5_search_projection_budget_optimizations.json": "4e24fb0977d1fcbbc7063f76b7368a3ae2ca453af9604d5ca5785965fd3d9f35",
+    "continuation5_search_projection_opt.py": "441cc8c933b4183bb47cec6eba8f42797f392862c4c920abc84376e1f462a20a",
+    "continuation5_search_projection_budget_opt.py": "cd799b9c42d593e6884293f72e531f08f5495a874c819450a7951344d95ae3cf"
+  },
+  "replayed_start_or_retained_points": 48,
+  "stages": [
+    {
+      "stage": 1,
+      "starts": 12,
+      "iterations": 1290,
+      "objective_evaluations_including_complex_step": 43260,
+      "real_objective_evaluations": 1538,
+      "statuses": {
+        "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL": 4,
+        "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT": 8
+      },
+      "min_retained_J": 2.0000000000892886,
+      "min_retained_cubic_pair_ratio": null
+    },
+    {
+      "stage": 2,
+      "starts": 12,
+      "iterations": 1672,
+      "objective_evaluations_including_complex_step": 58466,
+      "real_objective_evaluations": 2186,
+      "statuses": {
+        "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT": 9,
+        "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL": 3
+      },
+      "min_retained_J": 2.000036732068603,
+      "min_retained_cubic_pair_ratio": -0.9108008774326003
+    }
+  ],
+  "maximum_relative_replay_error": 0.0,
+  "maximum_centered_identity_relative_error": 5.9952043327081935e-15,
+  "directional_gradient_checks": [
+    {
+      "stage": 1,
+      "direction": 0,
+      "relative_error": 4.791644858670452e-11
+    },
+    {
+      "stage": 1,
+      "direction": 1,
+      "relative_error": 2.5150614924029924e-10
+    },
+    {
+      "stage": 1,
+      "direction": 2,
+      "relative_error": 8.36761909761563e-11
+    },
+    {
+      "stage": 2,
+      "direction": 0,
+      "relative_error": 1.764338675158683e-11
+    },
+    {
+      "stage": 2,
+      "direction": 1,
+      "relative_error": 2.918315589184317e-11
+    },
+    {
+      "stage": 2,
+      "direction": 2,
+      "relative_error": 1.7940265592542026e-11
+    }
+  ],
+  "numpy": "2.3.5",
+  "scipy": "1.17.0"
+}

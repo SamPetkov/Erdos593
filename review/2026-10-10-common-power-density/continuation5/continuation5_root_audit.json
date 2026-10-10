@@ -1,0 +1,90 @@
+{
+  "status": "PASS",
+  "source_sha256": "f36e00e1c731fbd6d1291b798b8fc769a5f368eeb148b504e0fa0fc83535d629",
+  "program_count": 8,
+  "exact_program_count": 7,
+  "floating_diagnostic_program_count": 1,
+  "programs": [
+    {
+      "program": "continuation5_cone_verify.py",
+      "result": "continuation5_cone_checks.json",
+      "kind": "exact",
+      "status": "PASS",
+      "source_sha256": "c4313d4690045d57a694fe3b1c409a11c889566540e91bf42624d9eb34029e8d",
+      "archived_result_sha256": "444fb122c09d5230a985e2d481290128976b9f02038373454129e71295198d15",
+      "archival_values_identical_excluding_elapsed_seconds": true
+    },
+    {
+      "program": "continuation5_unequal_cancellation_verify.py",
+      "result": "continuation5_unequal_cancellation_checks.json",
+      "kind": "exact",
+      "status": "PASS",
+      "source_sha256": "efb508858fb550790eb98ecd4d9a88e4a1f1034fd2123c664a8895e5fe920353",
+      "archived_result_sha256": "fd0d4cdf35caf1abc2154b878b87826ea79d50268cd71232c7c800b16c126da8",
+      "archival_values_identical_excluding_elapsed_seconds": true
+    },
+    {
+      "program": "continuation5_unequal_quadratic_verify.py",
+      "result": "continuation5_unequal_quadratic_checks.json",
+      "kind": "exact",
+      "status": "PASS",
+      "source_sha256": "03b11b109ccfb125425c28897c6ddcfec5dce991b24146ed5dafe052e30e71cc",
+      "archived_result_sha256": "8664d8d58895c4440850cadba0f7e153f2fbd7abaa19fde3bb8fa6165ee20780",
+      "archival_values_identical_excluding_elapsed_seconds": true
+    },
+    {
+      "program": "continuation5_search_pointwise_verify.py",
+      "result": "continuation5_search_pointwise_checks.json",
+      "kind": "exact",
+      "status": "PASS",
+      "source_sha256": "74b10713d4792687ef26bc625c83c1412df03c82a38346a999e7ae98ea042653",
+      "archived_result_sha256": "f185b2111437d07fa1c46335623a12ac7271f0a80941684c76bf9385aba95416",
+      "archival_values_identical_excluding_elapsed_seconds": true
+    },
+    {
+      "program": "continuation5_cover_obstructions_verify.py",
+      "result": "continuation5_cover_obstructions_checks.json",
+      "kind": "exact",
+      "status": "PASS",
+      "source_sha256": "178dc98339a148add8750ecc7498fa00b0b40979cb7d3ab34009bfe1e8402e0a",
+      "archived_result_sha256": "aefca9211412e4a95d9fcf9c53e32c9ba5a2766825e69b3f467b6e2a9d67b1c3",
+      "archival_values_identical_excluding_elapsed_seconds": true
+    },
+    {
+      "program": "continuation5_search_cone_review.py",
+      "result": "continuation5_search_cone_review.json",
+      "kind": "exact",
+      "status": "PASS",
+      "source_sha256": "6ab87850e99885011f71888ffadd5d0a855d12a7ad24916614dea44d9b7d4b8e",
+      "archived_result_sha256": "0ea1dda0fd715f9bb4e4538f26b76f2b00fcb711360a42d116f3bc171db64065",
+      "archival_values_identical_excluding_elapsed_seconds": true
+    },
+    {
+      "program": "continuation5_root_cover_review.py",
+      "result": "continuation5_root_cover_review.json",
+      "kind": "exact",
+      "status": "PASS",
+      "source_sha256": "d31b2f15f3e793cae1c7bb0a26e8f0f681f07461e79d3c7a9670f54ee7fc9ee6",
+      "archived_result_sha256": "2b962434fa9430bb88d120d5bf066462e429a07ab86415f9a67b7d18e071a678",
+      "archival_values_identical_excluding_elapsed_seconds": true
+    },
+    {
+      "program": "continuation5_search_projection_audit.py",
+      "result": "continuation5_search_projection_audit.json",
+      "kind": "floating_diagnostic",
+      "status": "PASS",
+      "source_sha256": "ca52fdf83daf6c10164695f72d95c30e009c72b5d5bb7107f19ab259fe390c3d",
+      "archived_result_sha256": "e6d81c44d1e3a04a24b50e42769be1462e6bb22412379440936c684d0de473aa",
+      "archival_values_identical_excluding_elapsed_seconds": true
+    }
+  ],
+  "peer_review_basename_hash_bindings_checked": 16,
+  "archived_package_unchanged": true,
+  "proof_review_scope": [
+    "Common-cone comparison is for an actual binary projection channel; it has no reflection restriction but is not a reduction of every target root.",
+    "Quadratic unequal-star estimate has no unknown cubic on its right; its exact limitation control rules out treating it as a necessary or universal certificate.",
+    "Cancellation, pointwise, and cover-core signs are failures of stronger mechanisms; all complete densities displayed are positive relative to the target baseline.",
+    "Original probability, actual roots, zero bands and full centered multiplicities are explicit in every certificate."
+  ],
+  "limitation": "The finite programs audit displayed instances and identities. Universal proofs and asymptotic claims are established by the written mathematics; the unrestricted target remains unresolved."
+}

@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "reviewer": "root independent polynomial integration",
+  "review_source_sha256": "d31b2f15f3e793cae1c7bb0a26e8f0f681f07461e79d3c7a9670f54ee7fc9ee6",
+  "source_hashes": {
+    "continuation5_cover_obstructions.md": "3ed590700190c44ce80af670b21216df91d65bc9747cc3aed68b4adf452fa07a",
+    "continuation5_cover_obstructions_verify.py": "178dc98339a148add8750ecc7498fa00b0b40979cb7d3ab34009bfe1e8402e0a",
+    "continuation5_cover_obstructions_checks.json": "aefca9211412e4a95d9fcf9c53e32c9ba5a2766825e69b3f467b6e2a9d67b1c3"
+  },
+  "independent_method": "Literal original-law eight-vertex sums with polynomial-valued edge multiplication; no edge-subset counting or diamond trace formula imported.",
+  "assignments_per_cover": 256,
+  "polynomial_degree": 14,
+  "defect_coefficients_in_z": [
+    "0",
+    "0",
+    "0",
+    "2",
+    "4",
+    "146/9",
+    "530/9",
+    "8678/81",
+    "-56/9",
+    "566/9",
+    "146/9",
+    "-128/9",
+    "0",
+    "0",
+    "0"
+  ],
+  "full_grouping_identity_exact": true,
+  "mathematical_review": [
+    "Original trace-source R=K_k D* follows by integrating each sheet's c,d and matching crossed endpoints.",
+    "The full symbolic rank-one defect matches the independent vertex polynomial; its two negative coefficients coexist with the nonnegative grouped formula.",
+    "The proper centered barbell reduces to <diag C_s,C_k diag C_t> by original-law cycle composition, so PSD does not force its cross pairing nonnegative.",
+    "The five-state projection has original conditional mean-zero rows and is orthogonal to the pulled-back coarse root; the claimed power transport and diagonal-variance reduction use those exact identities.",
+    "Three centered positive bands plus zero are all counted; complete F>1 and Z_ab<F^2 are separate exact finite assertions, not inferred from an individual barbell.",
+    "For fixed bridge exponent, the stated matrix of length-indexed barbells is a Gram matrix; its diagonal budget in arbitrary covers is not assumed available."
+  ],
+  "scope": "Exact obstruction to coefficientwise positivity, with whole polynomial nonnegative; no global cover or target counterexample."
+}
