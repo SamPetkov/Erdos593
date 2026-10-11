@@ -175,6 +175,50 @@ projection, the weight is constant on its components and \(P_v=E_v=0\).
 The auxiliary case \(h=0\) likewise has zero gradients. These checks do
 not add either condition to the target.
 
+## A calibrated full-flag budget
+
+The actual nonnegative root supplies a second useful flag, without centered
+mode coefficients:
+\[
+q(e,c,d)=\mathbb E_a T^k(e,a)K_r(a,c)K_u(a,d)\ge0,
+\qquad b=q-1,\qquad m=r+u.
+\]
+It integrates to one against \(\mu^3\). Integrating two copies over \(e\),
+\(c\) and \(d\) gives the exact unweighted norm
+\[
+\begin{aligned}
+N_b:=\mathbb E_{e,c,d}b^2
+ &=\mathbb E_{a,a'}K_k(a,a')K_{2r}(a,a')K_{2u}(a,a')-1\\
+ &=\sigma(k+2r)+\sigma(k+2u)+\sigma(2m)
+                  +\mathcal M(k,2r,2u).
+\end{aligned}
+\]
+The cubic comparison (8), using symmetry of \(\mathcal M\), bounds its
+last term by \(\mathcal M(k+u,u,r+l)\). Also
+\(k+2r\ge m+l\) and \(2m\ge m+l\), so monotonicity of \(\sigma\) yields
+\[
+N_b\le Z+2\sigma(m+l)\le Z+2U_2.
+\]
+For the last comparison, the complete packet expansion is
+\[
+U_2=\sigma(k+r+h+u+l)+\sigma(r+u+l)
+                  +\mathcal M(k+r+h,r,u+l).
+\]
+Thus the retained proper-subgraph packets pay for the entire unweighted
+centered full flag as well as the earlier \(v_i\)-flags. No additional
+stationary mode has been discarded.
+
+The flag also gives an exact calibration, since
+\(\mathbb E_e q(e,c,d)=K_m(c,d)\):
+\[
+F(h)=1+\sigma(m+l)+\sigma(m+l+h)
+ +\mathbb E_{e,c,d}K_l(c,d)b(e,c,d)(A_c^hb)(e,c,d).
+\]
+Both linear trace terms are nonnegative. The final cross form still has
+the actual kernel weight; the bound on \(N_b\) does not sign it. This is a
+second constructive norm budget for the same collective proof attempt,
+not a new density region or a solution of the weighted gap.
+
 ## Status and proof boundary
 
 There is also a genuinely sufficient quantitative certificate, as distinct

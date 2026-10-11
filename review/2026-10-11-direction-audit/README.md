@@ -90,8 +90,10 @@ positive exponents. It does not reduce an arbitrary root to this class.
     centered flag norm. An exact support-safe identity isolates the remaining
     coupled gradients. The [complete analytical source review](ordered-gradient-review.json)
     verifies this positive step, not the unresolved weighted estimate.
-    The author has confirmed a [focused Pro question](weighted-gradient-pro-prompt.md);
-    confirmation and a saved prompt alone do not establish submission.
+    A calibrated actual-root full flag has a second all-host norm budget,
+    paid by the same retained packets. The author-confirmed
+    [focused Pro question](weighted-gradient-pro-prompt.md) was dispatched
+    once and is still thinking; it is not an accepted proof.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean

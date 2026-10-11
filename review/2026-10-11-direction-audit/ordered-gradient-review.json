@@ -2,8 +2,9 @@
   "date": "2026-10-11",
   "research_checkpoint": "collective-round2-brief.json",
   "source": "ordered-gradient-compensation.md",
-  "source_sha256": "81716a56fc528803a112b85d4341956146d867c5fd8456ed47aad0d992e03ed6",
-  "prior_checked_source_sha256": "9332137c23a3d229fc764f81d8dbfb43b6c50a62d511996c85a482d6320ce3ef",
+  "source_sha256": "559d67eb29087d8bb13ae0c33430b694d84e4ceecdcfd83d7bd12f534b5790e9",
+  "prior_checked_source_sha256": "81716a56fc528803a112b85d4341956146d867c5fd8456ed47aad0d992e03ed6",
+  "earlier_checked_source_sha256": "9332137c23a3d229fc764f81d8dbfb43b6c50a62d511996c85a482d6320ce3ef",
   "root_review": {
     "independent": false,
     "verdict": "PASS within explicitly incomplete scope",
@@ -23,6 +24,10 @@
       "Square-root mixed-gradient identity, coefficients and E<=2P",
       "Actual full superseding source: adaptive sufficient certificate (13)-(14), Parseval powers and weighted Cauchy--Schwarz",
       "No division when NN_h=0; simple maximum<=2 corollary is subsumed by the earlier maximum<=4 mixing criterion",
+      "Full actual-root flag normalization and exact second-moment integration, without refining an A eigenbasis to a T eigenbasis",
+      "N_b<=Z+2sigma(r+u+l)<=Z+2U2, with the cubic comparison applied before adding sigma(k+2u)",
+      "Exact full-flag calibration: both linear traces and the remaining actual weighted cross form",
+      "The v_i and full-flag norm estimates share Z; they are alternatives, not independently spendable duplicate budgets",
       "Zeros, nonuniform weights, periodic roots and negative root eigenvalues",
       "Full collective estimate explicitly remains equivalent to the unproved target"
     ],
@@ -31,6 +36,7 @@
   },
   "status": {
     "new_all_host_norm_budget": true,
+    "calibrated_full_flag_norm_budget": true,
     "unrestricted_density_proved": false,
     "new_density_host_or_exponent_coverage": false,
     "lean_accepted": false,
