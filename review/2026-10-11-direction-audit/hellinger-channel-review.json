@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-11",
+  "research_checkpoint": "collective-round2-brief.json",
+  "scope": "A floor-free actual-ancestor Hellinger compensation bound and its exact nonnegative remainder, stationary-channel processing, input minor, and one exact binary separation from the older floor certificate. Universal joint payment is not proved.",
+  "sources": {
+    "hellinger-channel-payment.md": "045f00d661a18237e1651868ed90c6fc0af12c3fd3b6728d3cc10c41d7d97961",
+    "hellinger-channel-audit.md": "a5669854b6cdc53a73186e48c573fcb80b9d8460e469ea7208ada68384d9155d",
+    "check_hellinger_separation.py": "d0cc8a190bd2fb22b364cb4efadbd16317a43dcf44b851b7d47c9a29234fb77f",
+    "hellinger-separation-checks.json": "77b6bb7e0fd2efa0423a891d52b7d7477311c4878af919002bbb711b9070e999"
+  },
+  "root_review": {
+    "independent": false,
+    "actual_complete_sources_read": true,
+    "verdict": "PASS for equations (1)--(15), exact remainder and conditional certificates; unrestricted target remains open",
+    "checks": [
+      "Original law, actual nonnegative symmetric Markov root and all ordered exponent quantifiers",
+      "Retained full-flag and triangle identities, with extra stationary modes",
+      "Projection credit, original-law composition and exact quadratic spectral form",
+      "Both distinct Cauchy--Schwarz inequalities and their nonnegative variance remainder",
+      "Actual stationary processing, including odd root powers and the identity",
+      "Input affinity and squared two-by-two minor with no kernel division",
+      "Zeros, reducibility, periodicity, singleton and constant roots",
+      "Exact best-floor failure and positive input-overlap payment on one already-covered binary host",
+      "Universal O17/O18 are missing leaves, not silently assumed lemmas"
+    ]
+  },
+  "actual_separate_agent_review": {
+    "agent": "pro_negative_mass_audit",
+    "actual_complete_final_sources_read": true,
+    "reviewed_sources_match_all_four_hashes": true,
+    "verdict": "PASS; no corrections after final reread",
+    "corrections_applied_before_final_review": [
+      "Generic processing kernel explicitly preserves the original probability law",
+      "Certificate failure is a conditional possibility, not an asserted unexhibited counterexample"
+    ],
+    "exact_fractions_independently_checked_analytically": true,
+    "checker_rerun_by_agent": false,
+    "external_full_audit": false
+  },
+  "validation": {
+    "analytical_source_audit": "Complete root review and actual separate-agent full-source review",
+    "exact_checker": "check_hellinger_separation.py",
+    "actual_checker_exit": 0,
+    "actual_checker_wall_seconds": 0.400,
+    "checker_scope": "One fractions-only original-law binary matrix computation; symbolic rational square-root bounds, no optimizer or sampling",
+    "saved_values": "Semantic values retained from actual stdout, not a byte-original compiler or service log",
+    "new_compiler_or_service_run": false,
+    "new_lean_acceptance": false
+  },
+  "status": {
+    "floor_free_lower_bound_proved": true,
+    "exact_nonnegative_remainder_proved": true,
+    "stationary_overlap_processing_proved": true,
+    "input_minor_identity_proved": true,
+    "older_floor_guarantees_refuted": true,
+    "new_certificate_separation_checked": true,
+    "unrestricted_density_proved": false,
+    "admissible_density_counterexample_found": false,
+    "new_density_host_or_exponent_coverage_claimed": false,
+    "manuscript_theorem_added": false,
+    "novelty_or_breakthrough_claim": false,
+    "private_chat_or_identifiers_exported": false,
+    "new_pro_consultation_or_retry": false,
+    "monitors_restarted": false
+  },
+  "remaining_gap": "Prove a universal joint payment of the actual Hellinger loss by triangle surplus and retained Gram gain (or another complete original-law compensation route). Neither O17 nor O18 is proved. The exact correlated original tail obligation remains open."
+}

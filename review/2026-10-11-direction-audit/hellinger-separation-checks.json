@@ -1,0 +1,16 @@
+{
+  "scope": "one exact uniform binary actual root; already covered host",
+  "tuple_k_u_r_l_h": [4, 4, 4, 2, 1],
+  "all_matrix_powers_from_original_weighted_composition": true,
+  "density": "17179891025/17179869184",
+  "triangle_D": "17179889665/17179869184",
+  "largest_actual_root_floor": "15/16",
+  "root_floor_loss_lower": "12884901885/4503599627370496",
+  "triangle_surplus": "20481/17179869184",
+  "largest_root_floor_certificate_fails": true,
+  "input_hellinger_loss_upper": "196605/8796093022208",
+  "input_loss_to_surplus_ratio_upper": "3/160",
+  "input_hellinger_certificate_passes": true,
+  "unrestricted_theorem_proved": false,
+  "lean_validation": false
+}

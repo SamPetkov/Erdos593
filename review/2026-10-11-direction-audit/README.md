@@ -116,6 +116,16 @@ positive exponents. It does not reduce an arbitrary root to this class.
     [full-source review receipt](actual-channel-tail-review.json). These are
     conditional compensation and variance results, not an unrestricted
     density proof or an accepted Lean endpoint.
+21. [Hellinger channel payment](hellinger-channel-payment.md): a floor-free
+    bound keeps a positive Gram credit and an actual conditional-overlap
+    loss. Its input loss is an explicit square-gradient/minor interaction.
+    An exact binary example disproves universal success of the old floor
+    certificates while the input-overlap certificate succeeds. Read the
+    [dependency audit](hellinger-channel-audit.md),
+    [rational checker](check_hellinger_separation.py),
+    [saved values](hellinger-separation-checks.json), and
+    [full-source review](hellinger-channel-review.json). Universal joint
+    payment remains open; the example is not new density coverage.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
