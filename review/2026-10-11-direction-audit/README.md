@@ -72,6 +72,19 @@ positive exponents. It does not reduce an arbitrary root to this class.
     root, with explicit positivity radius and positive payoff. It supplies
     a constructive compensation mechanism, not new weak-host density
     coverage or an unrestricted extension.
+16. [Explicit correction budgets and a convergent exact-pair path](collective-correction-budgets.md):
+    positive two-point operator certificates retain spectral budgets; a
+    support-safe entropy correction preserves every pair law. A continuous
+    path converges globally to the compatible relative-entropy minimizer and
+    repairs an actually negative ancestral trial. Neither its available
+    budget nor the operator certificate is proved sufficient on every host.
+    Read the [actual full-note analytical review](collective-correction-review.json).
+17. [Academic readability comparison](humanizer-comparison.md) and
+    [exact source-preservation report](humanizer-static-qa.json): four
+    paragraph groups are clearer without changing mathematics or citations.
+    The [bounded excerpt checks](detector-checks.md) record an abstract-prefix
+    flag and a low score on the selected proof passage; no detector guarantee
+    or whole-paper authorship conclusion is drawn.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
@@ -100,6 +113,8 @@ strip or supply Lean acceptance. Private chat transcripts and IDs
 remain outside this public packet.
 
 No Lean run, optimizer, Aristotle request, merge, workflow change or monitor
-restart occurred in these passes. The follow-on research notes do not change
-the manuscript/PDF. Development remains public-only; private coordination
-and chat transcripts are not exported.
+restart occurred in these passes. The follow-on research notes do not add
+manuscript theorem claims. A separate restrained academic-readability pass
+updates the existing manuscript/PDF, preserving all mathematical bodies and
+citation calls. Development remains public-only; private coordination and
+chat transcripts are not exported.

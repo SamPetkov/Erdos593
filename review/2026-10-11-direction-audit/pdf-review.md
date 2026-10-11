@@ -1,5 +1,32 @@
 # Exact manuscript build and visual review
 
+## Current readability revision
+
+Current source SHA256:
+`7b0dc06f31631f2c8bd73d5e24c503ee5a7579663f4f6adbc5e9a65c9fc503fe`.
+Current PDF SHA256:
+`dd7301b8d5176d19db528aca551fb832861f642e07559174d7072c02a4fe035b`.
+The fresh PDF has 59 pages and 738,205 bytes. Both actual serial native
+compiler calls returned zero; the second final log has no unresolved
+references/citations, rerun request or overfull/underfull boxes. The expected
+disabled-shell warning remains. The built-in preview initialization failed
+at the known Windows path boundary; it is not counted as successful.
+
+The existing open source was edited in place, its editor left open, and the
+generated PDF was copied to the public review packet. Exact source and PDF
+matching passes. All mathematical/citation bodies remain unchanged against
+the previous draft head; the [new checker](humanizer-static-qa.json) verifies
+this editorial scope.
+
+Pages 1–4, 44 and 46 were newly rendered and inspected at full-page scale,
+covering every changed prose group, title/abstract metadata, introduction,
+formalization caveat, appendix opening and adjacent proof layout. No clipping,
+overlap, bad glyph or detached heading was found. This restrained pass did not
+repeat the earlier all-page visual audit or a Lean build. The full historical
+render review below belongs to the preceding substantive revision.
+
+## Previous substantive revision
+
 Final source SHA256:
 `bee441b2372759dd97d29312efd26f549be9b8708eb09dec4ef7180f5c867562`.
 

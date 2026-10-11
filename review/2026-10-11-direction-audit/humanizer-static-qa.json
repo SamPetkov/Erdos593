@@ -1,0 +1,90 @@
+{
+  "baseline": "2f09f5800d7c7b551ef2783103c4b5df48148d85",
+  "scope": "Mechanical source preservation and artifact matching; not mathematical, Lean or authorship certification",
+  "checks": {
+    "exact_statement_bodies_preserved": true,
+    "exact_proof_bodies_preserved": true,
+    "exact_bracket_displays_preserved": true,
+    "exact_equation_bodies_preserved": true,
+    "exact_inline_math_preserved": true,
+    "exact_labels_preserved": true,
+    "exact_reference_calls_preserved": true,
+    "exact_citation_calls_preserved": true,
+    "inline_bibliography_preserved": true,
+    "date_preserved": true,
+    "open_source_equals_public_review_source": true,
+    "open_pdf_equals_public_review_pdf": true,
+    "pdf_59_pages": true
+  },
+  "counts": {
+    "statement_bodies": [
+      54,
+      54
+    ],
+    "proof_bodies": [
+      50,
+      50
+    ],
+    "bracket_displays": [
+      175,
+      175
+    ],
+    "equation_bodies": [
+      9,
+      9
+    ],
+    "inline_math": [
+      1072,
+      1072
+    ],
+    "labels": [
+      91,
+      91
+    ],
+    "reference_calls": [
+      59,
+      59
+    ],
+    "citation_calls": [
+      88,
+      88
+    ]
+  },
+  "files": {
+    "source_after": {
+      "sha256": "7b0dc06f31631f2c8bd73d5e24c503ee5a7579663f4f6adbc5e9a65c9fc503fe",
+      "bytes": 178332
+    },
+    "pdf_after": {
+      "sha256": "dd7301b8d5176d19db528aca551fb832861f642e07559174d7072c02a4fe035b",
+      "bytes": 738205
+    },
+    "collective_correction_note": {
+      "sha256": "45c0e7d8e79045f3dcb5bfe49ee1b12225a17d528a3fbcb1d06d643372deec9b",
+      "bytes": 14069
+    }
+  },
+  "source_before_sha256": "bee441b2372759dd97d29312efd26f549be9b8708eb09dec4ef7180f5c867562",
+  "abstract": {
+    "characters": 2145,
+    "words": 315
+  },
+  "selected_detector_section": {
+    "method": "First eight hex characters of baseline source SHA256, unsigned integer modulo ordinary section count",
+    "seed_hex": "bee441b2",
+    "ordinary_sections": 13,
+    "one_based_index": 13,
+    "section": "Exact marginal entropy and common-power densities",
+    "excerpt": "The removed-edge sign: a complete prose proof paragraph within the selected section",
+    "limitation": "One section is reproducibly selected; the paragraph is a readable bounded excerpt, not a random sample of every sentence"
+  },
+  "changed_passage_pdf_pages": {
+    "formal interfaces remain unfinished": [],
+    "Every marginal below": [
+      44
+    ],
+    "All logarithms in this appendix": [
+      44
+    ]
+  }
+}

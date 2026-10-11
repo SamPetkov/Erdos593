@@ -1,5 +1,42 @@
 # Erdős 593 manuscript review 11 October 2026
 
+## Current academic readability pass — 11 October 2026
+
+The [current 59-page PDF](erdos593_obligatory_triple_systems.pdf) and matching
+[source](erdos593_obligatory_triple_systems.tex) include four restrained prose
+edits: the abstract, the distinction between finite classification questions,
+the formalization boundary, and Appendix B's conventions. The date and all
+54 mathematical statement bodies, 50 proofs, 175 bracket displays, nine
+equation environments, 1,072 inline expressions, 91 labels and 88 citation
+calls remain unchanged against the previous draft head. All 44 references
+remain cited in first-appearance order.
+
+Read the [complete changed-paragraph comparison](../2026-10-11-direction-audit/humanizer-comparison.md),
+[mechanical source check](../2026-10-11-direction-audit/humanizer-static-qa.json),
+[claim review](../2026-10-11-direction-audit/humanizer-review.json) and
+[excerpt-check limitations](../2026-10-11-direction-audit/detector-checks.md).
+The academic-humanizer skill informed clarity and direct exposition, not
+detector-score optimization. Sapling still flags the abstract prefix; a low
+score on one proof paragraph does not clear the paper.
+
+The existing native MiKTeX compiler rebuilt the saved open document twice,
+both exit zero, with installation and shell execution disabled. The final
+log has no unresolved references/citations, rerun request or bad boxes.
+Changed pages were rendered and reviewed. The built-in editor's Windows-path
+initialization error remains recorded separately.
+
+Current source SHA256:
+`7b0dc06f31631f2c8bd73d5e24c503ee5a7579663f4f6adbc5e9a65c9fc503fe`.
+Current PDF SHA256:
+`dd7301b8d5176d19db528aca551fb832861f642e07559174d7072c02a4fe035b`.
+The open local document and public review source/PDF match byte-for-byte.
+
+The new [compensation research note](../2026-10-11-direction-audit/collective-correction-budgets.md)
+has separate analytical review. It does not add a theorem to this manuscript,
+close the unrestricted inequality, establish novelty or supply Lean acceptance.
+Accepted Lean source/pins remain unchanged, both clocks stay paused, and the
+public-only PR remains a draft. Earlier source/PDF hashes below are historical.
+
 ## Current direction audit and transfer theorem — 11 October 2026
 
 The [current PDF](erdos593_obligatory_triple_systems.pdf) is a fresh **59-page**

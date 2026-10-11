@@ -42,12 +42,12 @@
   ],
   "files": {
     "erdos593_obligatory_triple_systems.tex": {
-      "sha256": "bee441b2372759dd97d29312efd26f549be9b8708eb09dec4ef7180f5c867562",
-      "bytes": 178503
+      "sha256": "7b0dc06f31631f2c8bd73d5e24c503ee5a7579663f4f6adbc5e9a65c9fc503fe",
+      "bytes": 178332
     },
     "erdos593_obligatory_triple_systems.pdf": {
-      "sha256": "bf3edecdecb6f4bbacc682cfda2578066a230ca6a447ab6391a27f5696163083",
-      "bytes": 738880
+      "sha256": "dd7301b8d5176d19db528aca551fb832861f642e07559174d7072c02a4fe035b",
+      "bytes": 738205
     },
     "references.bib": {
       "sha256": "b2079ec8a672115f532d33ad5baec73e12a597276601a17b735be647e825e0ae",
