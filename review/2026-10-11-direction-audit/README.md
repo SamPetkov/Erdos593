@@ -133,6 +133,15 @@ positive exponents. It does not reduce an arbitrary root to this class.
     not the still-open universal processed payment. Its
     [complete analytical review](actual-feature-processing-review.json)
     records the scope and actual checks.
+22. [Tensor constraint for collective overlap payment](tensor-overlap-constraint.md):
+    exact tensor factorization identifies the exponential rate of the
+    retained certificate as the maximum of three positive quantities.
+    Tensor amplification alone cannot supply the missing payment. A universal
+    lower bound for the actual processed overlap at the shortest allowed
+    channel time would suffice, but remains unproved. Read the
+    [conclusion-first audit](tensor-overlap-audit.md) and
+    [complete analytical review](tensor-overlap-review.json); no new density
+    coverage or Lean endpoint is claimed.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean

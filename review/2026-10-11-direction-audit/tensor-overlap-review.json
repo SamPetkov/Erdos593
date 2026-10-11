@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-11",
+  "reviewed_sources": {
+    "tensor-overlap-constraint.md": {
+      "sha256": "260c7971e91fffed9d5fefe3ee80db88219afac977b700bd5c2e3746d020a398",
+      "bytes": 5001
+    },
+    "tensor-overlap-audit.md": {
+      "sha256": "037afed5be574e682d2bfc76b98b977f177431a4ae66aa7d4aab0b4be157a9ef",
+      "bytes": 4382
+    },
+    "hellinger-channel-payment.md": {
+      "sha256": "045f00d661a18237e1651868ed90c6fc0af12c3fd3b6728d3cc10c41d7d97961",
+      "role": "Earlier reviewed exact definitions and Hellinger lower bound; unchanged"
+    }
+  },
+  "root_review": {
+    "independent": false,
+    "complete_source_read": true,
+    "tensor_product_flags_affinities_and_scalar_factors": "PASS",
+    "three_regroupings_and_exponential_rate": "PASS",
+    "universal_certificate_equivalence_uses_actual_tensor_closure": "PASS",
+    "actual_overlap_monotonicity_and_conditional_implication": "PASS",
+    "identity_root_example_rederived": "PASS: G0=S=W=X=4,S0=2,LB1=6,LB2=28,F=8",
+    "support_and_boundary_review": "PASS: no division; finite positive original law; zeros, reducibility, periodicity, negative root eigenvalues and extra unit modes retained"
+  },
+  "actual_helper_review": {
+    "agent": "pro_negative_mass_audit",
+    "complete_initial_and_final_source_reads": true,
+    "analytical_verdict": "PASS for equations1-6 and C0-C3; universal W_u>=1 and unrestricted density remain unproved",
+    "requested_corrections": "Inline delimiters/restored commands and three direct dependency-table parent entries; all applied",
+    "final_diff_review": "Only those presentation/bookkeeping repairs and the checked identity-root example changed; no other proof, hypothesis or verdict changed",
+    "final_source_hashes_match": true,
+    "full_external_or_kernel_audit": false
+  },
+  "proof_route_verdict": {
+    "tensor_statements_and_conditional_route": "FOLLOWS",
+    "unrestricted_density_by_proposed_W_route": "NOT ESTABLISHED BY THIS PROOF: universal W_u>=1 is a missing leaf",
+    "shadow_or_density_counterexample_found": false
+  },
+  "new_density_coverage": false,
+  "new_lean_acceptance": false,
+  "numerical_or_optimizer_run": false,
+  "compiler_or_service_dispatch": false,
+  "manuscript_theorem_or_date_change": false,
+  "novelty_or_publication_readiness_claim": false,
+  "monitor_restart": false,
+  "goal_status": "active",
+  "unrestricted_density_proved": false
+}
