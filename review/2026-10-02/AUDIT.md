@@ -1,4 +1,31 @@
-# Mathematics and Lean coverage audit — updated 4 October 2026
+# Mathematics and Lean coverage audit — updated 11 October 2026
+
+## Current scoped mathematical pass — 11 October
+
+Read the [source-bound PR58–63 audit](../2026-10-11-direction-audit/audit.md)
+and [exact new transfer contract](../2026-10-11-direction-audit/transfer-and-directions.md).
+Restricted refinement, source-compensation and cover statements passed the
+bounded source/agent review, with certificate replay limits explicitly retained.
+The manuscript adds one complete weighted flat-complement transfer, including
+the full coarse density and a seven-cycle margin. Its actual-root, projection
+shape and nonuniform-law criterion are assumptions, not properties of all
+Markov-square hosts. Both unrestricted questions remain open.
+
+The accepted structural Lean baseline is unchanged. **None of the new
+entropy/density material is an accepted Lean theorem.** The whole extended
+manuscript is not fully formalized; an analytical manuscript proof or a green
+PDF build cannot replace the remaining kernel/crosswalk obligations.
+
+Root self-review and actual separate-agent mathematical/preservation checks
+are recorded honestly, not as a full external independent audit. No Lean,
+Aristotle, Pro, scheduler job, optimizer, accepted-gate replay or proof-counter
+reset occurred. Public-only development and both paused monitors are retained.
+The [mechanical QA](../2026-10-11-direction-audit/static-qa.json) preserves the
+53 previous statement bodies, 49 proof bodies, 89 labels and all citations;
+the new proposition/proof/two labels are intentional additions. The matching
+59-page PDF passed the separately recorded native build and visual checks.
+
+Previous sections below remain historical, not current source/PDF receipts.
 
 ## Bounded editorial/source check — 4 October
 

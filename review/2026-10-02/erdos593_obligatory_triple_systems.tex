@@ -90,7 +90,7 @@
 \email{samuil.petkov@ens.psl.eu}
 \subjclass[2020]{Primary 05C65; Secondary 05C15, 05C35, 05C40, 05C63, 06A07, 03E05}
 \keywords{Erdős Problem 593, obligatory triple systems, uncountable chromatic number, canonical decomposition, partition lattices, entropy, homomorphism densities, Lean~4}
-\date{9 October 2026}
+\date{11 October 2026}
 
 \begin{document}
 
@@ -116,8 +116,10 @@ extremal assemblies can have the same atoms and global parameters.
 These results separate the constraints imposed by cyclic content from
 the freedom of assembly.  For the associated graph cores, we also prove
 exact edge-marginal entropy bounds for uniform Potts laws and nearby general
-pair laws, and a common-power density bound for regular hosts with two
-centered spectral levels.  These quantitative comparisons are separate
+pair laws, and common-power density bounds for two-level regular hosts.
+For a class of weighted signed projection lifts, a comparison retains the
+full coarse density with an explicit positive cycle margin
+for every choice of the six positive exponents.  These comparisons are separate
 from the obligatory classification; their unrestricted versions remain open.
 The classification and specified structural
 extensions are verified in Lean~4; profile realization, full lattice
@@ -254,7 +256,11 @@ comparison for the original graph.  Section~\ref{sec:quantitative-cores}
 studies exact pair-marginal entropy witnesses and regular-host homomorphism
 densities for these cores.  The first results cover uniform $q$-state Potts
 tables, arbitrary tables in specified open families, and hosts with two
-centered spectral levels.  They are not a universal Sidorenko theorem.
+centered spectral levels.  A further transfer theorem allows signed
+projection channels over mildly nonuniform original measures, with no
+bound on the number of spectral levels
+(Proposition~\ref{proposition-weighted-projection-lift}).
+They are not a universal Sidorenko theorem.
 
 The entropy formulation has established predecessors
 \citep{csikvarilin2017,szegedy2015}; local density comparisons near independence
@@ -2557,6 +2563,64 @@ substitution under divisibility conditions, and a clique subdivision with
 one exceptional vertex.  We do not treat these cases as new results or
 infer arbitrary nonuniform path lengths from them.
 
+\subsection{Collective compensation in signed projection lifts}
+The two-level theorem constrains the full spectrum.  The next result
+instead constrains the geometry of one signed channel, while retaining
+arbitrary coarse spectra and all six positive exponents.  Its point is
+not positivity of each centered contribution: some cubic contributions
+are negative even in the class below.  The proof absorbs that error into
+the quadratic surplus under the original probability law.
+
+\begin{proposition}[Weighted flat-complement transfer]
+\label{proposition-weighted-projection-lift}
+Let $(I,\pi)$ have $n\ge4$ points and positive weights summing to one.
+Let $S$ be a symmetric nonnegative Markov kernel relative to $\pi$.
+Choose $f_i\in\{-1,1\}$ and put
+\[
+ Q(i,j)=\frac{\mathbf1_{i=j}}{\pi_j}-f_if_j,
+ \qquad \delta=\max_i|\pi_i^{-1}-n|.
+\]
+Suppose
+\[
+ \delta<n-2,\qquad
+ \delta^2(n+\delta-1)\le8(n-3)(n-2-\delta).
+\]
+Let $H$ be a self-adjoint kernel with $H^2=\beta Q$, $\beta\ge0$,
+and $|H(i,j)|\le S(i,j)$.  On the original law
+$\mu(i,\varepsilon)=\pi_i/2$, $\varepsilon\in\{-1,1\}$, define
+\[
+ T((i,\varepsilon),(j,\eta))=S(i,j)+\varepsilon\eta H(i,j).
+\]
+This is an actual nonnegative self-adjoint Markov root.  For every six
+positive integers $a_e$,
+\[
+ F(a;T)\ge F(a;S)+(n-1)
+       \sum_{C\in\mathcal C(K_4)}\beta^{\sum_{e\in C}a_e},
+\]
+where $\mathcal C(K_4)$ consists of its four triangles and three
+quadrilaterals.  Thus $F(a;S)\ge1$ implies $F(a;T)\ge1$, strictly if
+$\beta>0$.  If a lift in this class had $F(a;T)<1$, its coarse root
+would also violate the inequality; for $\beta>0$ its density would be
+strictly smaller.
+\end{proposition}
+
+The restriction on $\pi$ is independent of $S$ and of the exponents;
+$\delta\le1$ suffices in every dimension $n\ge4$.
+The signs need not be centered or be eigenfunctions of $S$.  The
+projection has rank $n-1$, and neither balance of the smoothed source
+trace nor a small source norm is assumed.  For example, the construction
+in the \href{https://github.com/SamPetkov/Erdos593/blob/be6f7637147e0a02e8f03fa4f0ad770370b2327a/review/2026-10-10-common-power-density/continuation7/continuation7_source_weighted_complement.md}{source-bound research supplement}
+has thirteen coarse states, an
+unbalanced rank-twelve channel, and fourteen distinct values on the
+entire centered space of the fine square, including zero.
+The proposition is a structured comparison, not a reduction of
+arbitrary roots to signed lifts.  Its proof and a stronger spectral
+remainder are in Appendix~\ref{appendix-weighted-projection}.
+The separate finite-cover certificates in that research record concern
+one host and connected covering degree at most three; arbitrary
+simultaneous covers remain open.  No such certificate is used to infer
+the unrestricted common-power inequality.
+
 \section*{Scope of formal verification}
 
 The classification and specified finite structural extensions have verified
@@ -3283,6 +3347,126 @@ positive-semidefinite kernels.  Nor does this restricted density result
 give a universal exact-edge entropy witness; the universal entropy
 formulation and its graph-density relation require their full quantifiers
 \citep{szegedy2015}.
+\end{proof}
+
+\subsection{Weighted projection transfer}
+\label{appendix-weighted-projection}
+
+\begin{proof}[Proof of Proposition~\ref{proposition-weighted-projection-lift}]
+All coarse kernels and compressed traces use $L^2(\pi)$;
+the lifted root acts on $L^2(\mu)$.
+Since $\mathbb E_\pi f^2=1$, $Q=I-f\otimes f$ is an orthogonal
+projection of rank $d=n-1$.  Put $B=S^2$, $E=\operatorname{ran}Q$,
+and define the actual compressed multiplication fields
+\[
+ R_i=QD_{\mathbf1_i/\pi_i}Q|_E,\qquad
+ M_s(i)=(B^sR)_i,\qquad X_s(i)=M_s(i)-I_E.
+\]
+Then $\mathbb E_\pi R_i=I_E$, and each $M_s(i)$ is positive
+semidefinite.  For a complete real orthonormal eigenbasis
+$\phi_0=1,\phi_j$ of $B$, write $B\phi_j=\lambda_j\phi_j$,
+$0\le\lambda_j\le1$, and $Z_j=QD_{\phi_j}Q|_E$.
+Every mode except the chosen constant is retained.  In particular,
+additional stationary modes are not discarded.  Set
+$a_i=\pi_i^{-1}-n$ and
+$\sigma_t=\operatorname{tr}(B^t)-1=\sum_{j>0}\lambda_j^t$.
+For centered modes, expansion of the two and three projection factors
+gives
+\[
+ \operatorname{tr}(Z_jZ_k)
+ =(n-2)\mathbf1_{j=k}+\mathbb E_\pi(a\phi_j\phi_k),
+\]
+\[
+ \operatorname{tr}(Z_jZ_kZ_l)
+ =(n-3)\mathbb E_\pi(\phi_j\phi_k\phi_l)
+       +\mathbb E_\pi(a\phi_j\phi_k\phi_l).
+\]
+Indeed, $\operatorname{tr}D_g=\sum_i g_i
+=\mathbb E_\pi[(n+a)g]$, whereas
+$\operatorname{tr}((f\otimes f)D_g)=\mathbb E_\pi g$.
+The remaining terms contain an individual centered mean and vanish.
+Hence, with $b_0=n-2-\delta>0$,
+\[
+ g_{st}:=\mathbb E_\pi\operatorname{tr}(X_sX_t)
+ =\sum_{j>0}\lambda_j^{s+t}\|Z_j\|_{\rm HS}^2
+ \ge b_0\sigma_{s+t}.
+\]
+
+The trilinear trace of real symmetric matrices is permutation invariant,
+so order $x\le y\le z$.  Write $L_s=B^s-\Pi$ and let
+$\mathcal H=L_x\circ L_y\circ L_z$ be the entrywise product.
+The Schur product theorem makes $\mathcal H$ positive semidefinite
+under the original weighted law.  The triple identity above gives
+\[
+ C:=\mathbb E_\pi\operatorname{tr}(X_xX_yX_z)
+ =(n-3)\langle1,\mathcal H1\rangle
+       +\langle a,\mathcal H1\rangle
+ \ge-\frac{\langle a,\mathcal Ha\rangle}{4(n-3)}.
+\]
+The inequality is completion of the square in the same positive
+quadratic form, not a sign assertion for a product of three matrices.
+Since $0\preceq L_x\preceq I-\Pi$, its kernel entries have absolute
+value at most $M=n+\delta-1$.  Thus weighted Cauchy--Schwarz gives
+\[
+ 0\le\langle a,\mathcal Ha\rangle
+ \le\delta^2M\,\mathbb E_{\pi^2}|L_yL_z|
+ \le\delta^2M\sqrt{\sigma_{2y}\sigma_{2z}}.
+\]
+Linear terms vanish because $\mathbb E_\pi X_s=0$.
+Spectral ordering and arithmetic--geometric mean now imply
+\[
+ \begin{aligned}
+ J_{xyz}-d
+ &:=
+ \mathbb E_\pi\operatorname{tr}(M_xM_yM_z)-d\\
+ &\ge b_0\sigma_{x+z}
+   +b_1(\sigma_{x+y}+\sigma_{y+z})\ge0,\\
+ b_1&=b_0-\frac{\delta^2M}{8(n-3)}\ge0.
+ \end{aligned}
+\]
+Here $\sigma_{2y}\le\sigma_{x+y}$ and
+$\sigma_{2z}\le\sigma_{y+z}$.  In particular $J_{xyz}=d$ forces
+$B=\Pi$, hence $S=\Pi$ by self-adjointness; the converse is immediate.
+To check the simpler sufficient range $\delta\le1$, note that
+$\delta\le\sqrt n/2$, $b_0\ge(n-2)/2$, $M\le5n/4$, and
+$(n-3)(n-2)\ge n^2/8$.  Therefore
+$\delta^2M\le5n^2/16<4(n-3)(n-2)\le8(n-3)b_0$.
+
+It remains to transfer this estimate to the full density.
+The entrywise condition makes $T$ nonnegative, and averaging the middle
+sign with probability $1/2$ proves both its Markov property and
+\[
+ T^{2s}((i,\varepsilon),(j,\eta))
+       =S^{2s}(i,j)+\varepsilon\eta\beta^sQ(i,j).
+\]
+Expanding the six factors and averaging the four independent signs
+leaves exactly the empty subset and the seven cycles of $K_4$.
+The empty contribution is $F(a;S)$.  The rank-one identity
+$\operatorname{tr}(R_aR_bR_c)=Q(a,b)Q(b,c)Q(c,a)$
+identifies the triangle coefficient.  Its complementary
+three-edge star has some exponents $x,y,z$, and its contraction is
+exactly $J_{xyz}$.
+
+For a quadrilateral, let $L,M$ be its two complementary coarse powers.
+Both are nonnegative PSD Markov kernels.  Set
+$v_{b,d}(a)=Q(a,b)Q(a,d)$ and
+$G(a,c)=\mathbb E_{b,d}M(b,d)v_{b,d}(a)v_{b,d}(c)$.
+This is a nonnegative mixture of positive rank-one operators.
+The quadrilateral contraction is therefore
+\[
+ \langle L,G\rangle_{\rm HS}
+ \ge\langle\Pi,G\rangle_{\rm HS}
+ =\langle M,Q\circ Q\rangle_{\rm HS}
+ \ge\langle\Pi,Q\circ Q\rangle_{\rm HS}=d.
+\]
+The first inequality uses $L-\Pi\succeq0$, the equality uses
+$Q^2=Q$, and the second inequality uses the PSD Schur square.
+Combining all seven terms proves the proposition.  More precisely,
+each triangle contributes the additional nonnegative remainder
+$\beta^{\sum_{e\in C}a_e}
+[b_0\sigma_{x+z}+b_1(\sigma_{x+y}+\sigma_{y+z})]$.
+If $\beta=0$, self-adjointness gives $H=0$ and $F(a;T)=F(a;S)$;
+if $\beta>0$, the cycle margin is strictly positive.
 \end{proof}
 
 \section*{Acknowledgments}

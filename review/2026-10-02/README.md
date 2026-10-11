@@ -1,4 +1,44 @@
-# Erdős 593 manuscript review 9 October 2026
+# Erdős 593 manuscript review 11 October 2026
+
+## Current direction audit and transfer theorem — 11 October 2026
+
+The [current PDF](erdos593_obligatory_triple_systems.pdf) is a fresh **59-page**
+build of the [in-place manuscript](erdos593_obligatory_triple_systems.tex).
+All 44 references remain cited and numbered by first appearance.
+
+Proposition 11.8 now compares weighted signed projection lifts with their
+coarse roots for all six positive edge exponents: it retains the full coarse
+density and adds an explicit seven-cycle margin. Its original-law/projection
+conditions are visible; the complete tensor and Schur-form proof is in
+Appendix B. This is not a general reduction of arbitrary roots, an unrestricted
+density theorem, a novelty/B-level claim or an accepted Lean endpoint.
+
+Read the [source-bound audit and research directions](../2026-10-11-direction-audit/README.md),
+[paragraph comparison](../2026-10-11-direction-audit/editorial-comparison.md),
+[static checks](../2026-10-11-direction-audit/static-qa.json) and
+[build/visual review](../2026-10-11-direction-audit/pdf-review.md).
+The actual separate-agent audits support the restricted PR58–63 statements,
+with exact arithmetic replay limits recorded. Universal source geometry and
+simultaneous-cover compensation remain separate open obligations; the
+unrestricted finite-alphabet entropy and common-power density questions remain
+open. An inaccessible Pro response is not counted as proof evidence.
+
+All 53 previous mathematical statement bodies, 49 proof bodies, 89 labels
+and 88 citation calls remain unchanged and in order. One proposition, one
+proof and two labels are intentional additions. The existing native MiKTeX
+compiler returned zero on the final call with installation/shell execution
+disabled; references resolve and no bad boxes remain. All pages were rendered
+and reviewed, with changed pages checked at full scale. The built-in editor's
+Windows-path initialization failure is recorded separately.
+
+Source SHA256: `bee441b2372759dd97d29312efd26f549be9b8708eb09dec4ef7180f5c867562`.
+PDF SHA256: `bf3edecdecb6f4bbacc682cfda2578066a230ca6a447ab6391a27f5696163083`.
+BibTeX SHA256: `b2079ec8a672115f532d33ad5baec73e12a597276601a17b735be647e825e0ae`.
+
+Accepted structural Lean source, pins and workflows remain unchanged; all new
+entropy/density material is still unformalized. Development is public-only,
+both stopped monitors remain paused, and no candidate stack is blanket-merged.
+Older dated sections below are historical where counts or PDF hashes differ.
 
 ## Current entropy and density review 9 October 2026
 
