@@ -1,10 +1,10 @@
 {
   "date": "2026-10-11",
   "research_checkpoint": "collective-round2-brief.json",
-  "scope": "Two connected analytical steps for original-law collective compensation: an actual-root floor pays a positive full-flag gradient remainder, and a conditional-covariance identity isolates edge-length losses. Not an unrestricted proof.",
+  "scope": "Two connected analytical steps for original-law collective compensation: an actual-root floor, refined by actual stationary channels, pays a positive full-flag gradient remainder; a conditional-covariance identity isolates edge-length losses and an exact binary check shows why the base tetrahedron must be retained. Not an unrestricted proof.",
   "sources": {
-    "actual-channel-tail-payment.md": "21cfe7c9a21c9005b87a1df46f86940bde31e1fb5eb68b0cdc897258a65df172",
-    "actual-channel-tail-audit.md": "dbbde3e6348e5620b2777dce4672f05ed4b2cf267f21626d7ea81f60ebdaa1cd"
+    "actual-channel-tail-payment.md": "a34a8bab8579edb0362ec575b884524857893848154119d5c59b3afc3b87aff6",
+    "actual-channel-tail-audit.md": "5c89bc1937e6498f063f7ced47853d0f1e18730787747f65106c5027167cad2b"
   },
   "root_review": {
     "independent": false,
@@ -21,7 +21,11 @@
       "Comparison with the already recorded H/Gamma floor certificate avoids duplicate claims",
       "Conditional covariance under the actual T^d, its sign, all unit modes and d=0",
       "Centered edge-length difference, weight-one cubic correction, polarization and weighted covariance Cauchy--Schwarz",
-      "Proper-subgraph correction P(k), not P(u), and exact unproved universal bridges O16/O18"
+      "Proper-subgraph correction P(k), not P(u), and exact unproved universal bridges O16/O18/O23",
+      "Actual support components of A, root-induced involution and equal masses of exchanged classes",
+      "Rectangular actual root channel with two normalized marginals and exact Gram identity; no assumed symmetric within-class root",
+      "Four vertex measures and six kernel normalizations give exactly p_C^(-2), retaining stationary surplus and the deterministic binary flip F=8",
+      "Exact binary covariance loss, phi squared equals 1+alpha phi, actual nonnegative root, fourth-order tetrahedron payment and proper-subgraph quadratic growth"
     ]
   },
   "actual_separate_agent_reviews": [
@@ -30,11 +34,12 @@
       "actual_complete_source_read": true,
       "reviewed_source_sha256": "16c270d0d978bd77f93dce895bfc1a4226a6e159c5e738c88739e93a97884d4b",
       "verdict": "PASS; all ten equations, centered correction, weighted covariance and original-law boundaries checked",
-      "later_change": "Only inline mathematical parentheses were converted to explicit TeX delimiters; no formula, hypothesis or proof changed. Final complete source was separately reread by pro_negative_mass_audit."
+      "later_change": "Inline mathematical parentheses were converted to explicit TeX delimiters. A later refinement adds stationary channels and an exact binary covariance check; the expanded final complete source was separately reread by pro_negative_mass_audit."
     },
     {
       "agent": "pro_negative_mass_audit",
-      "actual_complete_final_sources_read": true,
+      "review_stage": "Original two-estimate note before stationary-channel refinement",
+      "actual_complete_review_stage_sources_read": true,
       "reviewed_source_sha256": "21cfe7c9a21c9005b87a1df46f86940bde31e1fb5eb68b0cdc897258a65df172",
       "reviewed_audit_sha256": "dbbde3e6348e5620b2777dce4672f05ed4b2cf267f21626d7ea81f60ebdaa1cd",
       "verdict": "PASS; exact P(k) correction, actual-root payment, stationary and boundary cases, and missing universal leaves checked",
@@ -42,6 +47,20 @@
         "Presentational inline TeX delimiters, without mathematical change",
         "C3 graph/table now explicitly depend on O8, which supplies its beta=1 branch; final complete audit reread and hash confirmed"
       ]
+    },
+    {
+      "agent": "pro_negative_mass_audit",
+      "review_stage": "Expanded final note including stationary channels and exact binary covariance check",
+      "actual_complete_final_sources_read": true,
+      "reviewed_source_sha256": "a34a8bab8579edb0362ec575b884524857893848154119d5c59b3afc3b87aff6",
+      "reviewed_audit_sha256": "5c89bc1937e6498f063f7ced47853d0f1e18730787747f65106c5027167cad2b",
+      "verdict": "PASS; all fifteen equations, rectangular channel normalizations, exact class scaling, binary fourth-order payment and complete audit graph checked",
+      "corrections_applied_and_checked": [
+        "Describe P(k) as the covariance/transfer route after adding the classwise partial route",
+        "Explicitly distinguish positive class-mass division from residual normalization and its beta=1 endpoint",
+        "Refer to any of the three missing universal leaves, not either of two"
+      ],
+      "no_mathematical_repair_required": true
     }
   ],
   "validation": {
@@ -55,6 +74,8 @@
     "actual_root_floor_bound_proved": true,
     "explicit_sufficient_payment_certificate_proved": true,
     "centered_edge_variance_identity_proved": true,
+    "actual_stationary_channel_refinement_proved": true,
+    "binary_covariance_payment_boundary_checked": true,
     "unrestricted_density_proved": false,
     "admissible_density_counterexample_found": false,
     "new_unconditional_density_class_claimed": false,
@@ -64,5 +85,5 @@
     "new_pro_consultation_or_retry": false,
     "monitors_restarted": false
   },
-  "remaining_gap": "The actual-root floor need not make the smaller sufficient certificate hold, and no universal payment of the edge-transfer variances by the full proper-subgraph surplus is proved. The original correlated H_(Z/Delta) <= B + Q_(Z/Delta) obligation remains open."
+  "remaining_gap": "Neither global nor classwise actual-root floors are proved to make their smaller sufficient certificates hold on every host. No universal joint payment of the edge-transfer variances by the retained base tetrahedron plus proper-subgraph surplus is proved. The original correlated H_(Z/Delta) <= B + Q_(Z/Delta) obligation remains open."
 }

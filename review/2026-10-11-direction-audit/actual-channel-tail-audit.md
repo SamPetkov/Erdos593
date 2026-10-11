@@ -3,8 +3,9 @@
 ## Audit boundary
 
 The source is [actual channel compensation](actual-channel-tail-payment.md),
-equations (1)--(10). Its two analytical conclusions are the conditional
-root-floor density certificate and the exact centered-edge variance
+equations (1)--(15). Its two analytical conclusions are the conditional
+root-floor density certificate (including its stationary-class refinement)
+and the exact centered-edge variance
 identity. The unrestricted target is the original-law six-edge density
 \(F\ge1\), for every finite positive law and actual symmetric nonnegative
 Markov root, with \(k\ge u\ge1,r\ge l\ge1,h\ge1\).
@@ -61,18 +62,35 @@ C5\leftarrow R_{\rm length}
 The consequent lower bound \(C6\) follows from weighted covariance
 Cauchy--Schwarz, \(O15\).
 
+The first direction has a stationary-channel refinement, not a third
+research direction:
+\[
+\begin{aligned}
+C7:\ F&\ge\sum_Cp_C^{-2}[D_C-(1-\beta_C)^2J_{0,C}]
+\leftarrow R_{\rm classes}
+ (\mathrm{AND}:O19,O20,O21,O24),\\
+C8:\ \text{certificate (15)}&\Longrightarrow F\ge1
+\leftarrow R_{\rm classpay}(\mathrm{AND}:C7,O22).
+\end{aligned}
+\]
+The rectangular channel in \(O21\), not an assumed restriction of
+\(T\) to a class, supplies the nonnegative Gram factor and both
+normalized marginals needed in the repeated flag proof.
+
 For the unrestricted conclusion \(C0\), the source supplies only partial
 routes. The missing bridges are explicit:
 \[
 \begin{aligned}
 C0&\leftarrow R_{\rm certificate}
      (\mathrm{AND}:C1,O16),\\
+C0&\leftarrow R_{\rm classcertificate}
+     (\mathrm{AND}:C7,O23),\\
 C0&\leftarrow R_{\rm transfer}
      (\mathrm{AND}:C5,O17,O18).
 \end{aligned}
 \]
 Here \(O16\) is a universal guarantee of the sufficient certificate, not
-a fact proved by the source. For the second route define
+a fact proved by the source. For the covariance/transfer route define
 \(P(k)=F(k)-1-C_6(k)\), the proper centered-subgraph sum. Its terms are
 nonnegative by the previously checked expansion: degree-one subgraphs
 vanish, cycles are traces, and triangles and diamonds are cubic-moment
@@ -82,7 +100,8 @@ O18:\quad P(k)+C_6(u)+V_h
 \ge\tfrac12(L_0+L_h-L_{\rm diff}).
 \]
 By \(C5\) and \(O17\), this is equivalent to the full target, not a
-smaller newly proved lemma. Neither route is completed universally.
+smaller newly proved lemma. The class certificate likewise lacks a
+universal guarantee \(O23\). None of these routes closes universally.
 
 ## Critical findings
 
@@ -92,16 +111,31 @@ The argument also needs the actual entrywise floor, not merely a spectral
 gap or an arbitrary PSD decomposition. The residual \(P\) in the source
 is nonnegative symmetric Markov; it need not have a nonnegative square root.
 
-Every integration and covariance uses the original probability law. Zeros
-cause no division by a kernel: only \(1-\beta\) is divided out, and the
-\(\beta=1\) case is handled separately. Reducibility, periodicity, negative
+Every integration and covariance uses the original probability law. No
+division by a kernel is used. Residual normalization divides by
+\(1-\beta\), with \(\beta=1\) handled separately; class normalization
+divides only by the explicitly positive masses \(p_C\).
+Reducibility, periodicity, negative
 root eigenvalues and extra stationary modes remain admissible. In particular,
 \(I-A^d\) annihilates every unit mode, not just the global constant.
+
+The classwise bound preserves these modes through the exact masses
+\(p_C^{-2}\). A periodic root can exchange its feature and state
+classes; substituting a nonexistent symmetric within-class root would
+break the proof. Row normalization, column normalization and the Gram
+identity hold instead for the actual rectangular channel. The four
+vertex measures and six kernel factors give \(p_C^{4-6}\), not
+\(p_C^{-1}\). The binary flip example consequently gives exactly eight.
 
 The sign of \(V_h\) is valid because the only changed exponent is
 \(u\le k\) and the cubic moments are squared. The weight-one correction
 uses two centered \(r\)-legs and two centered \(u\)-legs; dropping that
 correction would give the wrong length-transfer identity.
+The explicit binary calculation confirms why \(O18\) must retain
+\(C_6(u)\): its positive fourth-order contribution pays a fourth-order
+mixed covariance loss, while the proper-subgraph terms grow only
+quadratically in the cubic moment. This refutes the stronger shortcut
+without refuting the density or \(O18\).
 
 The rare-state two-symbol illustration shows that the sufficient certificate
 can succeed with unbounded transition density. That family was already
@@ -109,15 +143,15 @@ covered, so this is a mechanism example, not new density coverage. The
 earlier overlap-channel floor certificate has different kernels and is not
 silently counted again as a theorem.
 
-The failing leaves \(O16\) and \(O18\) are missing proofs, not counterexamples
-to the target. The source does not claim either leaf as a known theorem.
+The failing leaves \(O16\), \(O18\) and \(O23\) are missing proofs, not counterexamples
+to the target. The source does not claim any leaf as a known theorem.
 A zero root floor alone is not an admissible density counterexample.
 
 ## Dependency table
 
 | ID | Exact claim or obligation | Needed by | Route / edge | Classification | Support | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| C0 | Unrestricted original-root ordered density F>=1 | root | Certificate or transfer route | root | Missing O16 or O18 | failing |
+| C0 | Unrestricted original-root ordered density F>=1 | root | Global or class certificate, or transfer route | root | Missing O16, O23 or O18 | failing |
 | O1 | Finite positive law, actual symmetric nonnegative Markov root, ordered exponents and actual floor 0<=beta<=1 | C1 | Claim scope | hypothesis | Exact conditional statement | discharged |
 | C1 | F>=D−(1−beta)^2(D−G0) | C4, C0 | Full-flag primary route | major claim | C2, C3, O7, O8 | discharged |
 | C2 | F=Gq+Jq with both terms nonnegative | C1 | Symmetrization route | major claim | O2--O4 | discharged |
@@ -142,14 +176,23 @@ A zero root floor alone is not an admissible density counterexample.
 | O16 | Every admitted host satisfies certificate (7) for a usable actual floor | C0 | Universal certificate bridge | missing | No supplied universal estimate | failing |
 | O17 | F(k)−1=P(k)+C6(k), with P the nonnegative proper-subgraph sum | C0 | Exact earlier expansion | proved earlier | Centered expansion in the existing packet | discharged |
 | O18 | P(k)+C6(u)+Vh>=(L0+Lh−Ldiff)/2 on every admitted host | C0 | Universal variance payment | missing | Exact full target reformulation, not proved | failing |
+| C7 | Stationary-class allocation and lower bound (14) | C8, C0 | Class-channel primary route | major claim | O19--O21, O24 | discharged |
+| O19 | Actual finite positive law/root and support classes of A, positive masses and normalized class laws | C7 | Scope and class construction | definition | Original target and definitions before (11) | discharged |
+| O20 | T induces a class involution tau with equal masses of exchanged classes | C7 | Support and flow | algebraic/logical step | Common-neighbor argument, symmetry and Markov normalization | discharged |
+| O21 | Actual rectangular B_C has both normalized marginals and Gram hatK_k; the repeated full-flag proof gives (13), including endpoints | C7 | Classwise compensation | algebraic/logical step | Equations (11)--(13); only these channel properties and local PSD Ah enter | discharged |
+| O24 | Six positive-power edges restrict all vertices to one class and F=sum p_C^(-2)F_C | C7 | Original-law allocation | algebraic/logical step | Four measure masses, six kernel normalization factors | discharged |
+| C8 | Class certificate (15) implies F>=1 | root | Conditional class payment | major claim | C7, O22 | discharged |
+| O22 | sum p_C^(-2)(1−beta_C)^2J0_C<=sum p_C^(-2)D_C−1 | C8 | Class certificate scope | hypothesis | Explicit sufficient condition (15) | discharged |
+| O23 | Every admitted host satisfies class certificate (15) | C0 | Universal class payment | missing | No supplied universal estimate, especially for irreducible weak floors | failing |
 
 ## Verdict
 
 For the conditional root-floor estimate \(C1\), certificate \(C4\), and
-variance identity and bound \(C5,C6\): **FOLLOWS**. Their stated hypotheses
+variance identity and bound \(C5,C6\), and class allocation and certificate
+\(C7,C8\): **FOLLOWS**. Their stated hypotheses
 and every required boundary case discharge the supplied routes.
 
 For the unrestricted \(C0\): **NOT ESTABLISHED BY THIS PROOF**. The supplied
-partial routes leave \(O16\) or \(O18\) unproved. This does not show the
+partial routes leave \(O16\), \(O23\) or \(O18\) unproved. This does not show the
 target is false or exclude another proof. No Lean acceptance, novelty claim,
 or full external audit follows from these analytical verdicts.

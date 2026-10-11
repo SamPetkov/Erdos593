@@ -106,8 +106,12 @@ positive exponents. It does not reduce an arbitrary root to this class.
 20. [Actual channel tail payment](actual-channel-tail-payment.md): retaining
     the nonnegative full flag gives a sufficient gradient-payment certificate
     using an actual root floor and triangle surplus, with no transition cap.
+    Its stationary-channel refinement retains the exact component masses and
+    handles some zero global floors, including a periodic flip.
     A separate exact conditional-covariance identity tracks the losses from
     lengthening the distinguished edge and retains every stationary mode.
+    A binary check shows that its fourth-order loss must be paid jointly
+    with the base tetrahedron, not just proper-subgraph terms.
     Read the [conclusion-first audit](actual-channel-tail-audit.md) and
     [full-source review receipt](actual-channel-tail-review.json). These are
     conditional compensation and variance results, not an unrestricted

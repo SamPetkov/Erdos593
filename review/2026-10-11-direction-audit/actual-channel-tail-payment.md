@@ -185,14 +185,99 @@ extra positive budget: both groupings contain the same signed tetrahedron.
 The needed comparison with the retained proper-subgraph surplus is still
 unproved.
 
+The base tetrahedron is essential to that comparison. On a two-state
+law take \(T=1+\lambda\phi\otimes\phi\), with
+\(0<\lambda<1\), \(\mathbb E\phi=0\), \(\mathbb E\phi^2=1\),
+\(\theta=\lambda^2\) and \(\alpha=\mathbb E\phi^3\).
+This is an actual nonnegative root for every positive two-state law.
+Since \(\phi^2=1+\alpha\phi\), direct substitution gives
+\[
+\mathbb E_{x,y}K_l(x,y)\mathcal E_d(a_h,a_0)
+=V_h+\theta^{3u+2r+h+l}(1-\theta^{k-u})\alpha^4.
+\]
+Meanwhile \(C_6(u)=\theta^{3u+2r+h+l}\alpha^4\), and every proper
+centered-subgraph contribution is \(O(1+\alpha^2)\) at fixed exponents
+and \(\theta\). As the rare-state mass tends to zero, \(\alpha^2\)
+diverges. For \(k>u\), a bound paying this mixed covariance from only
+the proper-subgraph sum and \(V_h\) is therefore false. The density does
+not fail: the retained \(C_6(u)\) pays the fourth-order loss, leaving
+\(C_6(k)=\theta^{k-u}C_6(u)\ge0\). This already covered rank-one family
+checks the need for joint compensation, not a counterexample to the target.
+
+## Stationary classes instead of a zero global floor
+
+Let \(\mathcal C\) be the support components of \(A=T^2\), and let
+\(p_C=\mu(C)>0\). The root \(T\) sends each class \(C\) into exactly
+one class \(\tau(C)\). To see this, any two neighbors of a state under
+\(T\) are joined by a positive \(A\)-entry. States joined by a positive
+\(A\)-entry have a common \(T\)-neighbor, so the neighbor class is
+constant along an \(A\)-component. Symmetry gives
+\(\tau^2(C)=C\), and the symmetric mass flow gives
+\(p_{\tau(C)}=p_C\).
+
+In particular, \(T\) need not restrict to \(C\): a periodic root may
+swap two classes. Use normalized laws \(\mu_C=\mu|_C/p_C\) and the
+actual rectangular channel
+\[
+B_C(e,a)=p_CT^k(e,a),\qquad e\in\tau^k(C),\ a\in C.
+\tag{11}
+\]
+Its rows and columns integrate to one under these class laws. Its Gram
+kernel is exactly
+\[
+\mathbb E_{e\sim\mu_{\tau^k(C)}}B_C(e,a)B_C(e,b)
+=p_CK_k(a,b)=\widehat K_k(a,b).
+\tag{12}
+\]
+Here \(\widehat K_j=p_CK_j|_{C\times C}\) are the powers, under
+\(\mu_C\), of the normalized PSD Markov kernel \(p_CA|_{C\times C}\).
+No symmetric within-class square root is asserted.
+
+Define \(F_C\) by the original six-edge target using \(\widehat K_j\)
+and \(\mu_C\). Repeat (1)--(4) with the rectangular full flag
+\[
+q_C(e,c,d)=\mathbb E_{a\sim\mu_C}
+B_C(e,a)\widehat K_r(a,c)\widehat K_u(a,d).
+\]
+Write \(D_C,G_{0,C},J_{0,C}=D_C-G_{0,C}\ge0\) for the corresponding
+baseline quantities. The argument needs only the nonnegative channel,
+its two normalized marginals and its Gram identity (12). Consequently
+\[
+F_C\ge D_C-(1-\beta_C)^2J_{0,C},\qquad
+\beta_C=\min_{\tau^k(C)\times C}B_C\in[0,1].
+\tag{13}
+\]
+The \(\beta_C=1\) case is handled directly, as before.
+
+All six \(K_j\)-edges force the four vertices into the same class.
+Their six normalization factors and four original-law masses give
+\[
+F=\sum_{C\in\mathcal C}p_C^{-2}F_C
+\ge\sum_{C\in\mathcal C}p_C^{-2}
+       [D_C-(1-\beta_C)^2J_{0,C}].
+\tag{14}
+\]
+Thus a further sufficient certificate is
+\[
+\sum_Cp_C^{-2}(1-\beta_C)^2J_{0,C}
+\le\sum_Cp_C^{-2}D_C-1.
+\tag{15}
+\]
+For a deterministic binary flip the two classes are singletons,
+\(p_C=1/2\) and \(\beta_C=1\). Formula (14) gives \(F=8\), even though
+the global root floor is zero. The stationary surplus is not discarded:
+it is retained exactly by the class masses in (14). This is a refinement
+of the same payment estimate, not a separate universal theorem. Weak
+local floors need not make (15) hold.
+
 ## Proof boundary
 
 Equations (6)--(7) give an actual conditional payment, rather than a sign
 claim for an arbitrary PSD cross form. Equations (9)--(10) isolate the
 remaining length-transfer losses using genuine conditional variances.
-Poorly mixed, periodic or reducible roots can have zero root floor, and
-the variance losses have no universal payment here. The exact unrestricted
-tail inequality in [the negative-mass derivation](ordered-negative-mass.md)
+The classwise formula handles some zero global floors, but weak local
+floors and the variance losses have no universal payment here. The exact
+unrestricted tail inequality in [the negative-mass derivation](ordered-negative-mass.md)
 therefore remains open.
 
 The [bounded conclusion-first audit](actual-channel-tail-audit.md) records
