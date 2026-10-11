@@ -177,6 +177,41 @@ not add either condition to the target.
 
 ## Status and proof boundary
 
+There is also a genuinely sufficient quantitative certificate, as distinct
+from the equivalent remaining obligation (12). Put
+\[
+\varepsilon_l=\max_{c,d}|K_l(c,d)-1|,\qquad
+N_h=\mathcal M(k,2u,2r+2h),\qquad
+V_h=\mathcal M(k,2u,2r+h),
+\]
+and \(B=(U_0-1)+U_1+U_2+M_0\ge0\). Parseval gives
+\(N_h=\sum_{i\ne0}\theta_i^k\|A_c^hv_i\|^2\le N\) and
+\(V_h=\sum_{i\ne0}\theta_i^k\langle v_i,A_c^hv_i\rangle\ge0\).
+Splitting the weight as \(K_l=1+R_l\), followed by Cauchy--Schwarz on
+the original product probability space and the centered mode sum, proves
+\[
+F\ge1+B+Z+V_h-\varepsilon_l\sqrt{NN_h}.
+\tag{13}
+\]
+Consequently
+\[
+\varepsilon_l\sqrt{NN_h}\le B+Z+V_h
+\tag{14}
+\]
+is a sufficient, explicitly evaluable certificate. This is not equivalent
+to the target: the pointwise absolute-value and Cauchy--Schwarz estimates
+discard information. No division is necessary if \(N N_h=0\).
+The estimate uses the actual moment budgets and semigroup contraction,
+not an assumed bound on a weighted operator norm.
+
+For example, \(\varepsilon_l\le1\) suffices by \(N_h\le N\le Z\).
+However, this simple consequence supplies no newly established coverage:
+the earlier maximum-kernel mixing criterion already covers
+\(\max K_l\le4\), whereas this consequence only requires
+\(\max K_l\le2\). The quantitative budget (14) is retained as a tool
+for the collective argument, without a claim that it enlarges every
+previous sufficient family. It does not close the unrestricted problem.
+
 The norm comparison and mixed-gradient identities are analytical statements.
 They do not add a newly covered exponent region or an accepted Lean result.
 The unrestricted estimate (12) remains unproved. In particular, neither a

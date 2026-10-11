@@ -2,7 +2,8 @@
   "date": "2026-10-11",
   "research_checkpoint": "collective-round2-brief.json",
   "source": "ordered-gradient-compensation.md",
-  "source_sha256": "9332137c23a3d229fc764f81d8dbfb43b6c50a62d511996c85a482d6320ce3ef",
+  "source_sha256": "81716a56fc528803a112b85d4341956146d867c5fd8456ed47aad0d992e03ed6",
+  "prior_checked_source_sha256": "9332137c23a3d229fc764f81d8dbfb43b6c50a62d511996c85a482d6320ce3ef",
   "root_review": {
     "independent": false,
     "verdict": "PASS within explicitly incomplete scope",
@@ -20,6 +21,8 @@
       "Parseval and the exact symmetric exponent-majorization polynomial",
       "Both original order assumptions in the all-host norm comparison",
       "Square-root mixed-gradient identity, coefficients and E<=2P",
+      "Actual full superseding source: adaptive sufficient certificate (13)-(14), Parseval powers and weighted Cauchy--Schwarz",
+      "No division when NN_h=0; simple maximum<=2 corollary is subsumed by the earlier maximum<=4 mixing criterion",
       "Zeros, nonuniform weights, periodic roots and negative root eigenvalues",
       "Full collective estimate explicitly remains equivalent to the unproved target"
     ],
