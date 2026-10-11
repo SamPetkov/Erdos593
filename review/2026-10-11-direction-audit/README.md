@@ -42,6 +42,10 @@ positive exponents. It does not reduce an arbitrary root to this class.
     high-information copying regime, and a corrected stationary-bridge
     identity. [Continuation checks](continuation-checks.json) include
     the quantitative-class tail corollary, cloning and endpoint obstruction.
+11. [Unrestricted density and independent compensation](unrestricted-density-pass.md):
+    actual tensor hosts refute the total-negative-variation shortcut;
+    compatible-star and powered-branch obstructions explain why the remaining
+    proof must control correlated contributions collectively.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
