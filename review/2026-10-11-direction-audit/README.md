@@ -142,6 +142,15 @@ positive exponents. It does not reduce an arbitrary root to this class.
     [conclusion-first audit](tensor-overlap-audit.md) and
     [complete analytical review](tensor-overlap-review.json); no new density
     coverage or Lean endpoint is claimed.
+23. [Positive processed-overlap cases](processed-overlap-positive-cases.md):
+    a complete balanced-binary bound and a finite Taylor proof establish
+    actual overlap payment near the constant root on every fixed finite
+    positive probability space. The local leading coefficient is a positive
+    even spectral trace, with half that coefficient at the boundary \(l=r\).
+    The radius is host-dependent; unrestricted overlap and density remain
+    open. Read the [analytical review](processed-overlap-positive-review.json).
+    This gives a checked compensation mechanism, not new weak-host density
+    coverage, a novelty claim or a Lean endpoint.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
