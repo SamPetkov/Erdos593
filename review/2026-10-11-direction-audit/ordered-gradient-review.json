@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-11",
+  "research_checkpoint": "collective-round2-brief.json",
+  "source": "ordered-gradient-compensation.md",
+  "source_sha256": "9332137c23a3d229fc764f81d8dbfb43b6c50a62d511996c85a482d6320ce3ef",
+  "root_review": {
+    "independent": false,
+    "verdict": "PASS within explicitly incomplete scope",
+    "actual_derivation_checked": true
+  },
+  "separate_agent_review": {
+    "agent": "ordered_gradient_source_audit",
+    "actual_full_source_read": true,
+    "verdict": "PASS; no mathematical correction found",
+    "crosschecked_source": "collective-compensation-positive-pass.md",
+    "crosschecked_sha256": "e9b34c1f130fbe33ca7be5bb4324e874a45601e885837342f7b8320329feede1",
+    "checked": [
+      "Original-law M1 expansion and q/v centering including extra unit modes",
+      "Constant budget and both cubic cross exponents with no missing coefficient",
+      "Parseval and the exact symmetric exponent-majorization polynomial",
+      "Both original order assumptions in the all-host norm comparison",
+      "Square-root mixed-gradient identity, coefficients and E<=2P",
+      "Zeros, nonuniform weights, periodic roots and negative root eigenvalues",
+      "Full collective estimate explicitly remains equivalent to the unproved target"
+    ],
+    "external_full_audit": false,
+    "kernel_validation": false
+  },
+  "status": {
+    "new_all_host_norm_budget": true,
+    "unrestricted_density_proved": false,
+    "new_density_host_or_exponent_coverage": false,
+    "lean_accepted": false,
+    "manuscript_theorem_added": false,
+    "monitors_restarted": false,
+    "new_expensive_run": false
+  },
+  "next_pro_consultation": {
+    "author_confirmed": true,
+    "prompt": "weighted-gradient-pro-prompt.md",
+    "prompt_sha256": "f43d6d619ff3a3eb1e87005049cc8f869e408c9f402324874c2da826d3eef13e",
+    "submission_verified": true,
+    "model_observation": "GPT-6 selected; Pro, 5 of 5",
+    "actual_prompt_persisted": true,
+    "response_complete": false,
+    "automatic_retry_authorized": false,
+    "private_receipt_exported": false
+  },
+  "remaining_gap": "Pay the actual weighted mixed-gradient E_v with Z+G_v+P_v and the retained proper-subgraph budgets. The unweighted norm budget alone does not imply the target."
+}

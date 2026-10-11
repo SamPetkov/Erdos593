@@ -85,6 +85,13 @@ positive exponents. It does not reduce an arbitrary root to this class.
     The [bounded excerpt checks](detector-checks.md) record an abstract-prefix
     flag and a low score on the selected proof passage; no detector guarantee
     or whole-paper authorship conclusion is drawn.
+18. [Ordered norm budget and weighted gradient compensation](ordered-gradient-compensation.md):
+    the original inequalities \(k\ge u,\ r\ge l\) pay the entire unweighted
+    centered flag norm. An exact support-safe identity isolates the remaining
+    coupled gradients. The [complete analytical source review](ordered-gradient-review.json)
+    verifies this positive step, not the unresolved weighted estimate.
+    The author has confirmed a [focused Pro question](weighted-gradient-pro-prompt.md);
+    confirmation and a saved prompt alone do not establish submission.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
@@ -118,3 +125,10 @@ manuscript theorem claims. A separate restrained academic-readability pass
 updates the existing manuscript/PDF, preserving all mathematical bodies and
 citation calls. Development remains public-only; private coordination and
 chat transcripts are not exported.
+
+One further focused weighted-gradient consultation was explicitly confirmed
+by the author and dispatched once. GPT-6 was visibly selected, with Pro at
+5 of 5; the persisted prompt matches the public prompt source byte-for-byte.
+The initial response was still thinking. This is a consultation receipt,
+not a proof or authorization for an automatic retry. The new all-host norm
+budget is checked, while the weighted compensation estimate remains open.
