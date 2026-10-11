@@ -173,10 +173,41 @@ Left convolution by a Markov kernel contracts the maximum absolute relative
 kernel entry under the original law. PSD gives
 \(\max_{x,y}|R_r(x,y)|\le M_r\). Applying (6) proves (3).
 
+## A cutoff for a quantitative connected class
+
+For a connected quantitative mixing class, there is also a cutoff uniform
+in two of the base exponents. Suppose the positive-support graph of
+\(A=T^2\) is connected, \(|X|=n\), \(\min_x\mu_x\ge a_0>0\),
+and the largest centered eigenvalue of \(A\) is at most \(s_0<1\).
+For \(0<s_0<1\), set
+\[
+C_0=\frac n{a_0}(a_0^{-1}-1),\qquad
+H=\min\{q\in\mathbb Z_{\ge0}:C_0s_0^q\le1\}.
+\]
+Every \(h\ge u+l+H\) then gives \(F(h)\ge1\), for all positive \(k,r\).
+To see this, let \(a=\min\mu\) and \(0<\lambda<1\) be the actual largest
+centered eigenvalue. Orthonormal completeness and the Markov row bound give
+\[
+M_r\le\lambda^r(a^{-1}-1),\quad
+D\le a^{-1}\operatorname{tr}(A^{k+u+r+l})\le n/a,\quad
+D-1\ge\lambda^{u+r+l}.
+\]
+Since \(D=L\) in the connected case, (1) yields
+\[
+F(h)-1\ge\lambda^{u+r+l}
+\left[1-\frac n a(a^{-1}-1)\lambda^{h-u-l}\right].
+\]
+For \(h\ge u+l\), replacing the last power by \(s_0^{h-u-l}\) proves
+the claim. If the actual centered eigenvalue is zero, \(A=\Pi\) and
+the density is exactly one. The class \(s_0=0\) is handled by that equality
+case directly. This additional sufficient bound is not uniform without
+the lower mass and quantitative mixing assumptions.
+
 ## What the certificate does not permit
 
-It does not show that all exceptional \(h\)'s pass. Nor does it bound the
-cutoff uniformly as the host varies. It supplements the earlier mixing
+The tail certificate does not show that all exceptional \(h\)'s pass.
+Nor does it bound the cutoff uniformly over hosts without the quantitative
+mass and mixing restrictions above. It supplements the earlier mixing
 compensation route; no novelty, unrestricted proof or Lean acceptance is
 claimed.
 

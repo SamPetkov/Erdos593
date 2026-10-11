@@ -32,6 +32,16 @@ positive exponents. It does not reduce an arbitrary root to this class.
 7. [Follow-on review and remaining obligations](follow-on-review.md), with
    [small exact checks](tail-and-bridge-checks.json) reproduced by
    [this read-only script](check_tail_and_bridge.py).
+8. [Exact entropy fitting for sufficiently long subdivisions](long-subdivision-entropy.md):
+   a complete positive-table, input-dependent theorem with explicit finite
+   conditions and a global correction of all actual singleton and edge laws.
+9. [Rational uniform-host reduction](uniform-host-reduction.md): strict
+   weighted density counterexamples can be carried to this smaller class
+   at the same exponent tuple, preserving an actual Markov root.
+10. [Returned Pro advice audit](pro-advice-audit.md), the restricted
+    high-information copying regime, and a corrected stationary-bridge
+    identity. [Continuation checks](continuation-checks.json) include
+    the quantitative-class tail corollary, cloning and endpoint obstruction.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
@@ -44,10 +54,12 @@ and explicitly bounded exact-arithmetic checks. They were not a full fresh
 replay of the large certificate packets. The initial manuscript pass made no
 new consultation. In the direct mathematical follow-on, one authorized
 GPT-6 Pro question was submitted in Chrome; the prompt persisted, but the
-response stream failed. It is not treated as an active or completed review,
-and was not retried. The exact Astra identity was not displayed.
+initial response stream failed. The author subsequently authorized one
+retry of that same question. Its response completed and was reviewed,
+including correction of an invalid entropy identity. No new question or
+second retry was sent. The exact Astra identity was not displayed.
 
 No Lean run, optimizer, Aristotle request, merge, workflow change or monitor
-restart occurred in either pass. The follow-on research notes do not change
+restart occurred in these passes. The follow-on research notes do not change
 the manuscript/PDF. Development remains public-only; private coordination
 and chat transcripts are not exported.

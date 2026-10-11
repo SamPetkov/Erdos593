@@ -193,7 +193,71 @@ error_scaled = 4737024*t + 50725776*t**2 + Q(1086373952, 6)*t**3
 assert error_scaled < 5
 assert 2*mu3_squared - 4 - 5 == Q(121169, 11979) > 10
 
-for filename in ["fixed-host-tail.md", "entropy-construction-boundary.md"]:
+# Quantitative connected-class cutoffs on two rank-one centered squares.
+class_cutoffs = []
+for name, weights, transition, lam in [
+    ("connected_two_state", two_mu, two_root, Q(1, 4)),
+    ("connected_weighted", [Q(1, 4), Q(1, 4), Q(1, 2)],
+     [[Q(3, 2), Q(1, 2), Q(1)], [Q(1, 2), Q(3, 2), Q(1)],
+      [Q(1), Q(1), Q(1)]], Q(1, 16)),
+]:
+    square = compose(transition, transition, weights)
+    centered = [[entry - 1 for entry in row] for row in square]
+    assert compose(centered, centered, weights) == [
+        [lam * entry for entry in row] for row in centered
+    ]
+    assert sum(weights[i] * centered[i][i] for i in range(len(weights))) == lam
+    assert len(components(square)) == 1
+    a0, s0 = min(weights), Q(1, 2)
+    c0 = Q(len(weights), 1) / a0 * (1 / a0 - 1)
+    cutoff = next(j for j in range(17) if c0 * s0**j <= 1)
+    powers = {j: matrix_power(square, j, weights) for j in range(1, 16)}
+    checked = 0
+    for u, ell in product([1, 2], repeat=2):
+        for k, r in product([u, u + 1], [ell, ell + 1]):
+            for h in [u + ell + cutoff, u + ell + cutoff + 1]:
+                assert density(weights, powers, k, u, r, ell, h) >= 1
+                checked += 1
+    class_cutoffs.append({
+        "host": name, "actual_centered_eigenvalue": str(lam),
+        "class_s0": str(s0), "class_a0": str(a0),
+        "C0": str(c0), "H": cutoff, "tuples_checked": checked,
+    })
+
+# Uniform cloning preserves actual powers and six individual factors.
+clone_mu = [Q(1, 4)] * 4
+type_mu = [Q(1, 4), Q(1, 4), Q(1, 2)]
+types = [0, 1, 2, 2]
+type_root = [[Q(3, 2), Q(1, 2), Q(1)],
+             [Q(1, 2), Q(3, 2), Q(1)],
+             [Q(1), Q(1), Q(1)]]
+clone_root = [[type_root[i][j] for j in types] for i in types]
+assert all(sum(clone_mu[j] * row[j] for j in range(4)) == 1
+           for row in clone_root)
+for exponent in range(1, 7):
+    original_power = matrix_power(type_root, exponent, type_mu)
+    cloned_power = matrix_power(clone_root, exponent, clone_mu)
+    assert cloned_power == [[original_power[i][j] for j in types] for i in types]
+type_a = compose(type_root, type_root, type_mu)
+clone_a = compose(clone_root, clone_root, clone_mu)
+type_powers = {j: matrix_power(type_a, j, type_mu) for j in range(1, 6)}
+clone_powers = {j: matrix_power(clone_a, j, clone_mu) for j in range(1, 6)}
+clone_densities = []
+for h in [1, 2, 3, 4]:
+    original = density(type_mu, type_powers, 1, 1, 1, 1, h)
+    cloned = density(clone_mu, clone_powers, 1, 1, 1, 1, h)
+    assert original == cloned
+    clone_densities.append(str(cloned))
+
+# Unequal stationary endpoint laws cannot fit the three branch variables.
+theta = Q(9, 10)
+delta = lambda exponent: (1 - theta**exponent) / 2
+endpoint_excess = delta(8) - delta(2) - delta(4)
+assert endpoint_excess == Q(3563279, 200000000) > 0
+
+for filename in ["fixed-host-tail.md", "entropy-construction-boundary.md",
+                 "long-subdivision-entropy.md", "uniform-host-reduction.md",
+                 "pro-advice-audit.md"]:
     source = Path(__file__).with_name(filename).read_text(encoding="utf-8")
     assert source.count(r"\(") == source.count(r"\)")
     assert source.count(r"\[") == source.count(r"\]")
@@ -204,6 +268,18 @@ print(json.dumps({
     "density_fixed_base_exponents": [1, 1, 1, 1],
     "density_hosts": hosts,
     "reflection": {"determinant": str(determinant), "quadratic": str(quadratic)},
+    "quantitative_connected_class_cutoffs": class_cutoffs,
+    "uniform_cloning": {
+        "type_weights": [str(x) for x in type_mu], "clone_types": types,
+        "root_powers_checked": list(range(1, 7)),
+        "density_base_exponents": [1, 1, 1, 1],
+        "equal_density_h_1_to_4": clone_densities,
+    },
+    "stationary_endpoint_triangle": {
+        "theta": str(theta), "path_lengths": [2, 4, 8],
+        "strict_triangle_excess": str(endpoint_excess),
+        "target_counterexample": False,
+    },
     "entropy": {
         "alphabet_size": 3, "triple_entries_checked": 27,
         "branch_tuples_checked": 81, "t": str(t),
@@ -212,6 +288,6 @@ print(json.dumps({
         "pair_and_triple_positive": True, "all_pair_marginals_exact": True,
         "nontrivial_deterministic_lumpings": "all three fail",
     },
-    "scope": "Fixed exact diagnostics supporting two written analytic arguments; "
+    "scope": "Fixed exact diagnostics supporting the written analytic arguments; "
              "not an unrestricted proof, theorem novelty check, or Lean validation.",
 }, indent=2))

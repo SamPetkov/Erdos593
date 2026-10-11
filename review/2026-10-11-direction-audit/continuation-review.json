@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-11",
+  "scope": "Author-authorized retry once plus direct work on the already confirmed two-target brief",
+  "predecessor_commit": "71226e4c4ea719d77f038445c13a191884a9fbef",
+  "root_review": {
+    "reviewer": "Codex root",
+    "independent": false,
+    "verdict": "PASS after the precision corrections listed below",
+    "kind": "analytical source review"
+  },
+  "actual_separate_reviews": [
+    {
+      "role": "entropy proof and returned formula reviewer",
+      "verdict": "PASS",
+      "scope": "Complete saved long-subdivision theorem/proof: all constants, selected subsets, inserted statistics, covariance ball, entropy signs, exact tables, eventual quantifiers; complete saved advice audit"
+    },
+    {
+      "role": "density reduction and cutoff reviewer",
+      "verdict": "PASS",
+      "scope": "Complete saved positive smoothing, rational flux, uniform cloning reduction and connected quantitative-class cutoff"
+    }
+  ],
+  "corrections": [
+    "Replace claimed nonexistence of a zero-table threshold by the precise statement that these estimates provide none.",
+    "Make positive-support connectedness of A=T^2 explicit and take the cutoff minimum over nonnegative integers.",
+    "Do not adopt the returned bridge identity: correct both the missing pair divergences and the endpoint-divergence sign; spell out zero-support inclusion."
+  ],
+  "conclusions": [
+    "Exact-edge entropy witness with positive slack under the finite long-subdivision conditions; each fixed positive pair table eventually satisfies them after common even lengthening.",
+    "Quantitative connected-class density cutoff, uniform in k and r under fixed minimum mass and mixing bounds.",
+    "Any strict weighted density counterexample yields a positive rational uniform-host actual-root counterexample at the same exponents.",
+    "Audited copying regime and exact tree identity; unequal stationary endpoint laws may be incompatible."
+  ],
+  "checks": {
+    "script": "check_tail_and_bridge.py",
+    "actual_stdout": "continuation-checks.json",
+    "actual_exit": 0,
+    "actual_wall_seconds": 0.194061,
+    "arithmetic": "fractions.Fraction",
+    "new_class_tuples": 64,
+    "new_clone_root_powers": 6,
+    "new_clone_densities": 4,
+    "optimizer": false,
+    "scope": "Small exact diagnostics, not proofs of universal assertions"
+  },
+  "consultation": {
+    "same_saved_question_retried_once": true,
+    "response_complete_and_read": true,
+    "visible_model": "GPT-6; Pro maximum power",
+    "exact_astra_identity": "not displayed",
+    "new_question": false,
+    "automatic_followup": false,
+    "full_target_proof": false,
+    "private_transcript_export": false
+  },
+  "unchanged": [
+    "manuscript/PDF",
+    "bibliography",
+    "accepted Lean source",
+    "pins",
+    "workflows",
+    "paused clocks"
+  ],
+  "open": [
+    "arbitrary original-length and zero-entry entropy target",
+    "unrestricted density exceptional exponents",
+    "Lean implementation of this material",
+    "novelty assessment",
+    "full external audit",
+    "publication readiness"
+  ]
+}
