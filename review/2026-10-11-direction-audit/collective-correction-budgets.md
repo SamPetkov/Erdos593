@@ -354,4 +354,3 @@ already supplied near-constant-host density coverage; it is not counted
 again. Entropy projection, entropy flows and minorization are established
 methods, not novelty-cleared results here. No manuscript theorem or
 accepted Lean interface is added by this research note.
-

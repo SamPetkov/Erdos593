@@ -1,7 +1,9 @@
 {
   "date": "2026-10-11",
   "source": "collective-correction-budgets.md",
-  "source_sha256": "45c0e7d8e79045f3dcb5bfe49ee1b12225a17d528a3fbcb1d06d643372deec9b",
+  "source_sha256": "082708ff072d26d4b9e972d140f3e83273c27e97ad2672a1627db9a3cb528813",
+  "agent_reviewed_sha256": "45c0e7d8e79045f3dcb5bfe49ee1b12225a17d528a3fbcb1d06d643372deec9b",
+  "final_normalization": "One empty EOF line removed; actual git diff is zero inserted lines and one deleted blank line, with no mathematical or prose change",
   "research_checkpoint": "collective-round2-brief.json",
   "root_review": {
     "verdict": "PASS within stated scope",
