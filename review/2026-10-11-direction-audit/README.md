@@ -126,6 +126,13 @@ positive exponents. It does not reduce an arbitrary root to this class.
     [saved values](hellinger-separation-checks.json), and
     [full-source review](hellinger-channel-review.json). Universal joint
     payment remains open; the example is not new density coverage.
+    A [feature-preserving follow-on](actual-feature-processing.md) gives
+    an admitted skew-binary sequence where the stronger input certificate
+    fails but the actual processed certificate succeeds. It supersedes
+    the earlier audit's merely-open status for its universal input leaf,
+    not the still-open universal processed payment. Its
+    [complete analytical review](actual-feature-processing-review.json)
+    records the scope and actual checks.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean

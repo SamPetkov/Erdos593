@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-11",
+  "research_checkpoint": "collective-round2-brief.json",
+  "source": "actual-feature-processing.md",
+  "source_sha256": "e65e847d63e4bd412cb358bdcf0833f173f07f2792b4aa4d728dfe2738465247",
+  "scope": "An explicit admitted binary sequence refutes universal satisfaction of the input-payment certificate, while actual processed payment succeeds eventually. No new density coverage or arbitrary-host proof.",
+  "root_review": {
+    "independent": false,
+    "actual_complete_source_read": true,
+    "verdict": "PASS for all equations (1)--(11) and their eventual finite-integer conclusions",
+    "checks": [
+      "Positive original binary law and actual reversible nonnegative root",
+      "Original exponent orders including u=r+l",
+      "Exact input two-state determinant and all original probability factors",
+      "Triangle expansion and asymptotic separation constants",
+      "Actual normalized feature contrast, positive denominators and exact Gram denominator",
+      "Uniform small relative flag perturbations under the changing original law",
+      "Both rare and common state contributions to the order of the Gram credit",
+      "Limits along an explicit integer sequence yield finite counterexamples to the certificate, not density",
+      "Previously covered host family and universal processed obligation remain honestly distinct"
+    ]
+  },
+  "actual_separate_agent_review": {
+    "agent": "pro_negative_mass_audit",
+    "actual_complete_source_read": true,
+    "complete_mathematical_review_sha256": "ae134c2af3be9b72784b19304397c795a1e7a5ceedad1ced5d581a13e28db4d5",
+    "verdict": "PASS; all eleven equations and asymptotic/existence boundaries checked",
+    "sole_final_repair": "Introductory 'not universally sufficient' changed to 'not universally satisfied'; conditional sufficiency remains valid",
+    "actual_final_minimal_diff_and_hash_verified": true,
+    "final_source_sha256": "e65e847d63e4bd412cb358bdcf0833f173f07f2792b4aa4d728dfe2738465247",
+    "external_full_audit": false
+  },
+  "validation": {
+    "method": "Exact finite algebra, explicit analytical limits, complete source derivation and actual helper audit",
+    "new_numerical_run": false,
+    "new_optimizer_compiler_or_service_run": false,
+    "new_lean_acceptance": false,
+    "finite_cutoff_claimed": false
+  },
+  "status": {
+    "universal_input_certificate_refuted": true,
+    "actual_processed_compensation_on_this_sequence_proved": true,
+    "universal_processed_payment_proved": false,
+    "unrestricted_density_proved": false,
+    "density_counterexample_found": false,
+    "new_host_or_exponent_coverage_claimed": false,
+    "manuscript_theorem_added": false,
+    "novelty_or_breakthrough_claim": false,
+    "private_chat_or_identifiers_exported": false,
+    "new_pro_request_or_retry": false,
+    "monitors_restarted": false
+  },
+  "superseded_status": "O18 in the earlier frozen Hellinger audit is now refuted rather than merely open. The conditional input implication remains correct; O17 and the original exact tail payment remain unproved."
+}
