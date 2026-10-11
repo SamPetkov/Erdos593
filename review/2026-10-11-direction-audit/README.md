@@ -103,6 +103,15 @@ positive exponents. It does not reduce an arbitrary root to this class.
     payment remains unproved. The [actual-loop information check](loop-information-check.md)
     and its short rational checker isolate the higher-order information
     that pair-marginal relaxations lose; they do not refute the density.
+20. [Actual channel tail payment](actual-channel-tail-payment.md): retaining
+    the nonnegative full flag gives a sufficient gradient-payment certificate
+    using an actual root floor and triangle surplus, with no transition cap.
+    A separate exact conditional-covariance identity tracks the losses from
+    lengthening the distinguished edge and retains every stationary mode.
+    Read the [conclusion-first audit](actual-channel-tail-audit.md) and
+    [full-source review receipt](actual-channel-tail-review.json). These are
+    conditional compensation and variance results, not an unrestricted
+    density proof or an accepted Lean endpoint.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean

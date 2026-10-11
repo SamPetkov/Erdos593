@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-11",
+  "research_checkpoint": "collective-round2-brief.json",
+  "scope": "Two connected analytical steps for original-law collective compensation: an actual-root floor pays a positive full-flag gradient remainder, and a conditional-covariance identity isolates edge-length losses. Not an unrestricted proof.",
+  "sources": {
+    "actual-channel-tail-payment.md": "21cfe7c9a21c9005b87a1df46f86940bde31e1fb5eb68b0cdc897258a65df172",
+    "actual-channel-tail-audit.md": "dbbde3e6348e5620b2777dce4672f05ed4b2cf267f21626d7ea81f60ebdaa1cd"
+  },
+  "root_review": {
+    "independent": false,
+    "actual_complete_sources_read": true,
+    "verdict": "PASS for both stated analytical results and their explicitly conditional scope; unrestricted payment remains unproved",
+    "checks": [
+      "Original positive finite law, actual nonnegative Markov root, and all ordered exponent quantifiers",
+      "Two-copy actual-root composition, dummy-variable symmetry and nonnegative full flags",
+      "Exact square-gradient completion and mean-zero PSD Gram gain",
+      "Triangle surplus with all additional stationary modes retained",
+      "Actual entrywise floor, residual Markov normalization and both integrated cross coefficients",
+      "Beta=0 and beta=1, singleton law, zero kernel entries and no division by a kernel",
+      "Rare-state rank-one illustration shows noncap payment, not new density coverage",
+      "Comparison with the already recorded H/Gamma floor certificate avoids duplicate claims",
+      "Conditional covariance under the actual T^d, its sign, all unit modes and d=0",
+      "Centered edge-length difference, weight-one cubic correction, polarization and weighted covariance Cauchy--Schwarz",
+      "Proper-subgraph correction P(k), not P(u), and exact unproved universal bridges O16/O18"
+    ]
+  },
+  "actual_separate_agent_reviews": [
+    {
+      "agent": "ordered_gradient_source_audit",
+      "actual_complete_source_read": true,
+      "reviewed_source_sha256": "16c270d0d978bd77f93dce895bfc1a4226a6e159c5e738c88739e93a97884d4b",
+      "verdict": "PASS; all ten equations, centered correction, weighted covariance and original-law boundaries checked",
+      "later_change": "Only inline mathematical parentheses were converted to explicit TeX delimiters; no formula, hypothesis or proof changed. Final complete source was separately reread by pro_negative_mass_audit."
+    },
+    {
+      "agent": "pro_negative_mass_audit",
+      "actual_complete_final_sources_read": true,
+      "reviewed_source_sha256": "21cfe7c9a21c9005b87a1df46f86940bde31e1fb5eb68b0cdc897258a65df172",
+      "reviewed_audit_sha256": "dbbde3e6348e5620b2777dce4672f05ed4b2cf267f21626d7ea81f60ebdaa1cd",
+      "verdict": "PASS; exact P(k) correction, actual-root payment, stationary and boundary cases, and missing universal leaves checked",
+      "corrections_applied_and_checked": [
+        "Presentational inline TeX delimiters, without mathematical change",
+        "C3 graph/table now explicitly depend on O8, which supplies its beta=1 branch; final complete audit reread and hash confirmed"
+      ]
+    }
+  ],
+  "validation": {
+    "method": "Complete analytical source derivation and actual separate-agent full-source audits",
+    "new_numerical_or_optimizer_run": false,
+    "new_compiler_or_service_run": false,
+    "external_full_audit": false,
+    "new_lean_acceptance": false
+  },
+  "status": {
+    "actual_root_floor_bound_proved": true,
+    "explicit_sufficient_payment_certificate_proved": true,
+    "centered_edge_variance_identity_proved": true,
+    "unrestricted_density_proved": false,
+    "admissible_density_counterexample_found": false,
+    "new_unconditional_density_class_claimed": false,
+    "manuscript_theorem_added": false,
+    "novelty_or_breakthrough_claim": false,
+    "private_chat_or_identifiers_exported": false,
+    "new_pro_consultation_or_retry": false,
+    "monitors_restarted": false
+  },
+  "remaining_gap": "The actual-root floor need not make the smaller sufficient certificate hold, and no universal payment of the edge-transfer variances by the full proper-subgraph surplus is proved. The original correlated H_(Z/Delta) <= B + Q_(Z/Delta) obligation remains open."
+}
