@@ -54,6 +54,19 @@ positive exponents. It does not reduce an arbitrary root to this class.
     [small exact checks](collective-compensation-checks.json) and
     [focused Pro brief](collective-compensation-pro-prompt.md); the unrestricted
     estimate remains unresolved.
+13. [Markov Jensen compensation](markov-jensen-compensation.md): an analytical
+    six-edge theorem closes the all-host regions \(u+l\le r+h\) and
+    \(u\ge r+l\), hence every \(\min(u,l)=1\) tuple and every \(h\ge2l-1\) tuple.
+    A quantitative square-root distance bound also characterizes equality.
+    The remaining integer strip is explicit, not solved. Read the
+    [exact channel checks](markov-jensen-checks.json),
+    [read-only checker](check_markov_jensen_compensation.py), and
+    [bounded follow-on brief](collective-round2-brief.json).
+14. [Compatible entropy mixture certificate](entropy-mixture-certificate.md):
+    an explicit marginalized law has positive Gibbs payoff although both
+    components have negative payoffs. The [rational checker](check_entropy_mixture_certificate.py)
+    certifies the signs, not universal coverage; this binary benchmark
+    was already covered by earlier results.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
@@ -75,8 +88,10 @@ In a separate author-authorized collective-compensation pass, one new question
 was submitted in the Erdos project with GPT-6 visibly selected and Pro at
 maximum effort. The browser recovered after the author reopened the project.
 No automatic retry or additional consultation was sent. This question is
-distinct from the preceding completed entropy consultation; its response is
-pending, not a mathematical acceptance. Private chat transcripts and IDs
+distinct from the preceding completed entropy consultation; its response
+completed and its regional proof, positive surplus decomposition, logarithmic
+transfer and mixture example were audited. It does not close the unrestricted
+strip or supply Lean acceptance. Private chat transcripts and IDs
 remain outside this public packet.
 
 No Lean run, optimizer, Aristotle request, merge, workflow change or monitor
