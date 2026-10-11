@@ -46,6 +46,14 @@ positive exponents. It does not reduce an arbitrary root to this class.
     actual tensor hosts refute the total-negative-variation shortcut;
     compatible-star and powered-branch obstructions explain why the remaining
     proof must control correlated contributions collectively.
+12. [Positive collective compensation](collective-compensation-positive-pass.md):
+    an exact Schur grouping retains one triangle and three diamonds with the
+    signed tetrahedron; an actual normalized overlap channel and a compatible
+    marginalized-entropy witness give constructive routes. The witness has
+    a certified positive payoff on an already covered binary host. Read the
+    [small exact checks](collective-compensation-checks.json) and
+    [focused Pro brief](collective-compensation-pro-prompt.md); the unrestricted
+    estimate remains unresolved.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
@@ -62,6 +70,14 @@ initial response stream failed. The author subsequently authorized one
 retry of that same question. Its response completed and was reviewed,
 including correction of an invalid entropy identity. No new question or
 second retry was sent. The exact Astra identity was not displayed.
+
+In a separate author-authorized collective-compensation pass, one new question
+was submitted in the Erdos project with GPT-6 visibly selected and Pro at
+maximum effort. The browser recovered after the author reopened the project.
+No automatic retry or additional consultation was sent. This question is
+distinct from the preceding completed entropy consultation; its response is
+pending, not a mathematical acceptance. Private chat transcripts and IDs
+remain outside this public packet.
 
 No Lean run, optimizer, Aristotle request, merge, workflow change or monitor
 restart occurred in these passes. The follow-on research notes do not change
