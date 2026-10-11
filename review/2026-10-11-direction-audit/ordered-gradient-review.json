@@ -51,7 +51,9 @@
     "submission_verified": true,
     "model_observation": "GPT-6 selected; Pro, 5 of 5",
     "actual_prompt_persisted": true,
-    "response_complete": false,
+    "response_complete": true,
+    "completed_response_review": "negative-mass-review.json",
+    "historical_note_status": "The unchanged norm derivation retains its original incomplete scope; the new response and capped/finite-host deductions are recorded separately.",
     "automatic_retry_authorized": false,
     "private_receipt_exported": false
   },

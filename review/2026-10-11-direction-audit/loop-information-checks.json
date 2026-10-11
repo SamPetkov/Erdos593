@@ -1,0 +1,20 @@
+{
+  "scope": "Exact actual-loop and pair-marginal-relaxation diagnostic; not a density counterexample",
+  "actual_root_positive_markov": true,
+  "weighted_matrix_powers_constructed": 16,
+  "even_powers_compared_with_closed_form": [4,6,8,10],
+  "configurations": 16,
+  "all_six_full_pair_tables_identical": true,
+  "alternative_min_probability": "6254165/1374389536",
+  "actual_fourth_moment": "16384/214748365",
+  "alternative_fourth_moment": "-9/10",
+  "actual_density": "536873515/536870912",
+  "all_pair_relaxation_payoff": "35182609779915/35184372088832",
+  "two_chord_relaxation_payoff": "17591197679615/17592186044416",
+  "all_assertions_passed": true,
+  "actual_command_exit": 0,
+  "arithmetic": "fractions.Fraction",
+  "script": "check_loop_information.py",
+  "unrestricted_proof": false,
+  "kernel_validation": false
+}

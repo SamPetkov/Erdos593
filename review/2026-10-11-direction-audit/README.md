@@ -93,7 +93,16 @@ positive exponents. It does not reduce an arbitrary root to this class.
     A calibrated actual-root full flag has a second all-host norm budget,
     paid by the same retained packets. The author-confirmed
     [focused Pro question](weighted-gradient-pro-prompt.md) was dispatched
-    once and is still thinking; it is not an accepted proof.
+    once; its completed response has now been fully read and audited.
+19. [Negative mass payment and finite host density](ordered-negative-mass.md):
+    the correlated spatial negative mass is paid up to a transition-density
+    cap of \(4(1+\sqrt2)\). A separate direct moment estimate proves the target
+    for every law with \(\min\mu\ge1/10\), including all uniform hosts on at
+    most ten states. Read the [conclusion-first audit](negative-mass-audit.md)
+    and [source review receipt](negative-mass-review.json). The exact heavy-tail
+    payment remains unproved. The [actual-loop information check](loop-information-check.md)
+    and its short rational checker isolate the higher-order information
+    that pair-marginal relaxations lose; they do not refute the density.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
@@ -131,6 +140,10 @@ chat transcripts are not exported.
 One further focused weighted-gradient consultation was explicitly confirmed
 by the author and dispatched once. GPT-6 was visibly selected, with Pro at
 5 of 5; the persisted prompt matches the public prompt source byte-for-byte.
-The initial response was still thinking. This is a consultation receipt,
-not a proof or authorization for an automatic retry. The new all-host norm
-budget is checked, while the weighted compensation estimate remains open.
+The response completed, was preserved privately, and was fully read. Its
+negative-mass, cutoff, smoothing and actual-loop formulas passed root and
+separate-agent source review. The additional minimum-mass corollary is a
+direct analytical deduction, not a claim made by the consultation itself.
+The model's reported numerical probes are not adopted as our run evidence.
+No new message or automatic retry was sent. The unrestricted tail payment
+and Lean implementation remain open.
