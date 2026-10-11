@@ -67,6 +67,11 @@ positive exponents. It does not reduce an arbitrary root to this class.
     components have negative payoffs. The [rational checker](check_entropy_mixture_certificate.py)
     certifies the signs, not universal coverage; this binary benchmark
     was already covered by earlier results.
+15. [Weak-host exact-pair compensation](weak-host-exact-pair-compensation.md):
+    a complete entropy proof fits all six target pair laws near the constant
+    root, with explicit positivity radius and positive payoff. It supplies
+    a constructive compensation mechanism, not new weak-host density
+    coverage or an unrestricted extension.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean

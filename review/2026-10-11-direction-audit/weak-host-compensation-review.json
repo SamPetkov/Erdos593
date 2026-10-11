@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-11",
+  "status": "complete analytical method certificate; unrestricted density remains open",
+  "brief": "collective-round2-brief.json",
+  "source": "weak-host-exact-pair-compensation.md",
+  "source_sha256": "44d39ff333133a7ae6e41788e9dc80560d694c6e9590b61282271e1d8219086f",
+  "post_review_change": "Removed one blank line at EOF only; reviewer hashes below remain the actual reviewed versions. Proof and scope text unchanged.",
+  "root_review": {
+    "reviewer": "Codex root",
+    "independent": false,
+    "status": "PASS",
+    "scope": "All six exact pair laws, positivity, triangle weights, all mixed multigraph support classes including repeated forest leaves, finite and series-tail remainder, Gibbs implication and limits"
+  },
+  "derivation": {
+    "agent": "collective_variational_positive",
+    "status": "complete",
+    "helper": "collective_variational_positive/two_ancestor_residual",
+    "helper_status": "PASS",
+    "external_full_audit": false
+  },
+  "separate_review": {
+    "reviewer": "community_value_oct11",
+    "status": "PASS",
+    "external_full_audit": false,
+    "full_source_review_sha256": "c201730882413cc1d4c24415d8de5a3cea9bb233a3647ba70e77f8488c7c43a1",
+    "final_scope_review_sha256": "746a323ba3d0cff20b0db9d1292a6b386d450c677e82a116a370d04e1821a4c4",
+    "change_between_reviews": "Only final comparison/scope paragraph; theorem and proof unchanged",
+    "execution": false
+  },
+  "theorem": {
+    "root": "T_z=Pi+z R0, R0 symmetric row-centered with operator norm1 under original positive mu",
+    "tuple": "k>=u,r>=l,h>=1,r+h-l<u<r+l; if u<l require k<2u",
+    "constants": "B=1/min(mu),C=6B,tau=min{k+2u,r+u+l},N_tau=number of these attaining tau",
+    "radius": "0<z<=1/(2 C^((tau+2)/2))",
+    "conclusion": "q=1+sum_e z^(2n_e)R0^(2n_e) is >=1/2 and fits all target pairs; |P-N_tau tr(R0^(2tau)) z^(2tau)|<=2 C^(tau+2) z^(2tau+2), hence P>=z^(2tau)/2 and F>=exp(P)>1"
+  },
+  "comparison": {
+    "construction": "Pair-additive centered correction already exists in the 9 October packet; not claimed new",
+    "coverage": "Weak-host density positivity already follows the proper-subgraph expansion; not a new density class",
+    "utility": "Explicit simultaneous marginal compatibility and positive collective entropy payoff with every repeated-support remainder audited",
+    "limitation": "No arbitrary-root extension, universal powered-pair compatibility, novelty clearance, B-level claim or Lean acceptance"
+  },
+  "resources": {
+    "new_numerical_runs": 0,
+    "compiler": 0,
+    "optimizer": 0,
+    "aristotle": 0,
+    "pro": 0,
+    "review": "Analytical source/hash reads only"
+  },
+  "preservation": "Earlier accepted Lean source/pins, manuscript/PDF, workflow, main/private repositories, original checks and paused clocks remain unchanged. Public draft review notes only."
+}
