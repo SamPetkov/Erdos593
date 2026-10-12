@@ -184,6 +184,15 @@ positive exponents. It does not reduce an arbitrary root to this class.
     [saved exact checks](full-density-finite-host-checks.json), and
     [read-only checker](check_full_density_finite_host.py).
 
+    A connected [all-exponent mixing corollary](all-ordered-density-spectral-window.md)
+    pays every ordered tuple when each nonconstant component satisfies
+    gamma_C rho_C^7 <= 1. For the fixed original law, the explicit actual-root
+    radius epsilon <= (1/min(mu)-1)^(-3/7) is uniform over all roots and all
+    five exponents. A 101-state comparison lies outside both earlier cap and
+    minimum-mass guards. This remains a sufficient class, not the unrestricted
+    inequality, a novelty claim or Lean validation. Read its
+    [complete source review](all-ordered-density-spectral-window-review.json).
+
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
 implementation.** The unrestricted finite-alphabet entropy problem and

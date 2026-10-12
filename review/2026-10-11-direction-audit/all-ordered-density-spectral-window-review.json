@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "scope": "Analytical sufficient class for every ordered common-power density tuple; not the unrestricted theorem",
+  "source": "all-ordered-density-spectral-window.md",
+  "source_sha256": "1522d1673bb16eb57deef3dcd7d4f52570f193a9a5d6568b984e48c0f036e714",
+  "target": "For original finite positive mu, actual symmetric entrywise nonnegative Markov root T, A=T^2 and K_j=A^j: E K_k(ab)K_(r+h)(ac)K_u(ad)K_r(bc)K_u(bd)K_l(cd)>=1 for k>=u>=1,r>=l>=1,h>=1.",
+  "assumptions": "For every nonconstant A-support component C, gamma_C rho_C^7<=1, with gamma_C=max_x(mu_C(x)^(-1)-1)^6 and rho_C the largest nonconstant eigenvalue of A_C. Constant/singleton components impose no condition.",
+  "root_self_review": "PASS",
+  "root_independent": false,
+  "actual_separate_agent": "density_finite_host_tail_audit",
+  "separate_agent_complete_corrected_source_read": true,
+  "separate_agent_actual_hash_matches": true,
+  "separate_agent_verdict": "PASS",
+  "proof_obligation_graph": [
+    {
+      "id": "O1",
+      "claim": "All ordered tuples under the spectral criterion",
+      "depends_on": [
+        "O2",
+        "O3",
+        "O4"
+      ]
+    },
+    {
+      "id": "O2",
+      "claim": "l>=2: triangle complement 2r+l+h>=7 pays the sole signed tetrahedral term",
+      "depends_on": [
+        "full-density-finite-host-certificate.md"
+      ],
+      "status": "FOLLOWS"
+    },
+    {
+      "id": "O3",
+      "claim": "l=1: exhaustive u<=r or u>=r+1 cases fall in accepted original-root Jensen regions",
+      "depends_on": [
+        "markov-jensen-compensation.md"
+      ],
+      "status": "FOLLOWS"
+    },
+    {
+      "id": "O4",
+      "claim": "Global original-law component sum F=sum_C p_C^(-2) F_C, with no local nonnegative root assumption",
+      "depends_on": [
+        "full-density-finite-host-certificate.md"
+      ],
+      "status": "FOLLOWS"
+    },
+    {
+      "id": "O5",
+      "claim": "Uniform fixed-law actual-root radius epsilon<=J^(-3/7)",
+      "depends_on": [
+        "O1",
+        "rho_epsilon<=epsilon^2",
+        "J^6 epsilon^14<=1"
+      ],
+      "status": "FOLLOWS"
+    },
+    {
+      "id": "O6",
+      "claim": "Equality iff T=Pi under the stated sufficient class",
+      "depends_on": [
+        "strict local triangle surplus",
+        "original-root Jensen equality",
+        "sum_C p_C^(-2)>1 for multiple components",
+        "A=Pi implies self-adjoint T=Pi"
+      ],
+      "status": "FOLLOWS"
+    }
+  ],
+  "boundaries_checked": [
+    "l=1 and l>=2 exhaustive integer cases",
+    "zero entries and eigenvalues",
+    "extra stationary modes",
+    "negative T eigenvalues",
+    "periodic and reducible T",
+    "constant and singleton A-components",
+    "epsilon=0 and epsilon=1",
+    "one-state law",
+    "uniform binary epsilon=1 boundary",
+    "original nonuniform positive law",
+    "conservative alpha_C replacement"
+  ],
+  "corrected_finding": "Before publication, the helper caught a relative-kernel/stochastic-matrix normalization typo in the 101-state example. The final source uses P_Q(1,1)=1 and relative Q(1,1)=101, yielding relative T_epsilon(1,1)=11. The entire corrected source was reread and hash-checked.",
+  "exact_arithmetic_diagnostic": {
+    "exit_code": 0,
+    "elapsed_seconds": 0.2128328,
+    "identity": "100^6*(1/10)^14=1/100",
+    "relative_diagonal": "11",
+    "cap_comparison": "49>32 implies 11>4(1+sqrt(2))",
+    "minimum_mass": "1/101<1/10",
+    "matrix_run_101_states": false,
+    "numerical_search": false
+  },
+  "critical_limitations": [
+    "The condition is sufficient, not necessary; it leaves epsilon=1 and arbitrary small-mass/large-spectrum hosts open.",
+    "Comparison is only against two prior sufficient guards, not against all known density families.",
+    "No unrestricted proof, literature-wide novelty, new manuscript theorem, full external audit or Lean acceptance."
+  ],
+  "dependency_table": [
+    {
+      "source": "full-density-finite-host-certificate.md",
+      "role": "64-subset expansion, local triangle payment, component normalization",
+      "status": "Complete root and actual separate-agent analytical review; exact finite checker, no Lean"
+    },
+    {
+      "source": "markov-jensen-compensation.md",
+      "role": "Two original-root exponent regions and equality",
+      "status": "Complete source reread by root and actual separate agent; not a new proof run"
+    }
+  ],
+  "lean_validation": false,
+  "full_external_audit": false,
+  "unrestricted_density_proved": false,
+  "verdict": "FOLLOWS for the stated all-exponent spectral class and fixed-law uniform mixing radius"
+}
