@@ -193,6 +193,19 @@ positive exponents. It does not reduce an arbitrary root to this class.
     inequality, a novelty claim or Lean validation. Read its
     [complete source review](all-ordered-density-spectral-window-review.json).
 
+27. [Structural spectral density without a mixing bound](non-mixing-spectral-density.md):
+    a flat positive nonconstant spectrum, of any active rank, pays every six-edge
+    positive labeling. With at most two active modes, an equal opposite pair
+    also pays the full density, including the retained r=u and r+h=u cases.
+    The proofs keep arbitrary positive masses and zero or stationary modes;
+    equality is exactly the constant kernel. An actual-root counterexample
+    shows why entrywise positivity of the chosen pair matrix cannot be assumed
+    for unequal filters; it does not refute density. Read the
+    [complete source and code reviews](non-mixing-spectral-density-review.json),
+    [exact fixed checks](non-mixing-spectral-density-checks.json), and
+    [Fraction-only checker](check_non_mixing_spectral_density.py).
+    The general mixed-spectrum collective payment and Lean endpoint remain open.
+
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
 implementation.** The unrestricted finite-alphabet entropy problem and

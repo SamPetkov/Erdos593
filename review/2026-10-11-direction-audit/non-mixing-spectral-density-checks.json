@@ -1,0 +1,168 @@
+{
+  "method": "fixed_fraction_only_algebraic_checks",
+  "rank_two": {
+    "states": 3,
+    "inactive_zero_mode": false,
+    "minimum_mu": "49/1250",
+    "minimum_T": "79/1000",
+    "exact_pair_identity_checks": [
+      {
+        "labels_alpha_beta_gamma_delta_J_U": [
+          5,
+          5,
+          4,
+          2,
+          5,
+          5
+        ],
+        "F_exact": "495381502199687798776610870212518075910715143673408099871961750030198269941309225761/108131427053165608960000000000000000000000000000000000000000000000000000000000000000",
+        "negative_H_entries": 0,
+        "axis_extraction_exact": true
+      },
+      {
+        "labels_alpha_beta_gamma_delta_J_U": [
+          1,
+          4,
+          2,
+          3,
+          5,
+          5
+        ],
+        "F_exact": "329983309842414873292290459402160136444653373521637314433394129046561/26399274182901760000000000000000000000000000000000000000000000000000",
+        "negative_H_entries": 0
+      },
+      {
+        "labels_alpha_beta_gamma_delta_J_U": [
+          5,
+          5,
+          5,
+          2,
+          6,
+          5
+        ],
+        "F_exact": "59966045834086519051435867237197716428921064420762599491997837051107066895528615377627361/17301028328506497433600000000000000000000000000000000000000000000000000000000000000000000",
+        "negative_H_entries": 4,
+        "equal_opposite_pair_relabeling_exact": true,
+        "axis_extraction_exact": true
+      },
+      {
+        "labels_alpha_beta_gamma_delta_J_U": [
+          4,
+          4,
+          5,
+          3,
+          6,
+          4
+        ],
+        "F_exact": "493717116146536279839882954160709383971839286391205021227538444044655423782654985761/108131427053165608960000000000000000000000000000000000000000000000000000000000000000",
+        "negative_H_entries": 4,
+        "axis_extraction_exact": true
+      }
+    ]
+  },
+  "rank_two_with_inactive_zero_mode": {
+    "states": 4,
+    "inactive_zero_mode": true,
+    "minimum_mu": "49/1250",
+    "minimum_T": "79/1000",
+    "exact_pair_identity_checks": [
+      {
+        "labels_alpha_beta_gamma_delta_J_U": [
+          5,
+          5,
+          4,
+          2,
+          5,
+          5
+        ],
+        "F_exact": "495381502199687798776610870212518075910715143673408099871961750030198269941309225761/108131427053165608960000000000000000000000000000000000000000000000000000000000000000",
+        "negative_H_entries": 0,
+        "axis_extraction_exact": true
+      },
+      {
+        "labels_alpha_beta_gamma_delta_J_U": [
+          1,
+          4,
+          2,
+          3,
+          5,
+          5
+        ],
+        "F_exact": "329983309842414873292290459402160136444653373521637314433394129046561/26399274182901760000000000000000000000000000000000000000000000000000",
+        "negative_H_entries": 0
+      },
+      {
+        "labels_alpha_beta_gamma_delta_J_U": [
+          5,
+          5,
+          5,
+          2,
+          6,
+          5
+        ],
+        "F_exact": "59966045834086519051435867237197716428921064420762599491997837051107066895528615377627361/17301028328506497433600000000000000000000000000000000000000000000000000000000000000000000",
+        "negative_H_entries": 4,
+        "equal_opposite_pair_relabeling_exact": true,
+        "axis_extraction_exact": true
+      },
+      {
+        "labels_alpha_beta_gamma_delta_J_U": [
+          4,
+          4,
+          5,
+          3,
+          6,
+          4
+        ],
+        "F_exact": "493717116146536279839882954160709383971839286391205021227538444044655423782654985761/108131427053165608960000000000000000000000000000000000000000000000000000000000000000",
+        "negative_H_entries": 4,
+        "axis_extraction_exact": true
+      }
+    ]
+  },
+  "flat_rank_three": {
+    "states": 4,
+    "active_rank": 3,
+    "rho": "81/100",
+    "minimum_mu": "1/100",
+    "maximum_T": "901/10",
+    "labels_alpha_beta_gamma_delta_J_U": [
+      3,
+      3,
+      3,
+      2,
+      4,
+      3
+    ],
+    "F_exact": "3359784419795431066303912412365729840989011/4704500000000000000000000000000000000000",
+    "previous_spectral_guard_gamma_rho7_lower": "1744581724243300499333897241/10000000000000000000000"
+  },
+  "sharpness_of_entrywise_certificate": {
+    "J": 4,
+    "U": 3,
+    "R": "128",
+    "negative_H_22_12_exact": "-111573/4399691637392932864",
+    "density_counterexample": false
+  },
+  "boundaries": [
+    {
+      "case": "one_state",
+      "F_exact": "1"
+    },
+    {
+      "case": "constant_root",
+      "F_exact": "1"
+    },
+    {
+      "case": "three_stationary_components",
+      "F_exact": "27"
+    },
+    {
+      "case": "binary_flip",
+      "F_exact": "8"
+    }
+  ],
+  "numerical_search": false,
+  "lean_validation": false,
+  "unrestricted_density_proved": false
+}
