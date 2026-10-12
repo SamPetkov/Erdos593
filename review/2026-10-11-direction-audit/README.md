@@ -217,8 +217,9 @@ positive exponents. It does not reduce an arbitrary root to this class.
     diagnostics do not replace the proof of the other branches. Read the
     [complete source/code reviews](rank-two-midpoint-density-review.json) and
     [Fraction-only checker](check_rank_two_midpoint_density.py).
-    Arbitrary active rank, the remaining two-mode \(l\ge3\) cases and Lean
-    validation remain open; no novelty or unrestricted-theorem claim follows.
+    The following entries extend the two-mode coverage. Arbitrary active
+    rank and Lean validation remain open; no novelty or unrestricted-theorem
+    claim follows.
 
 29. [A larger two-mode compensation domain](rank-two-general-compensation.md):
     the full channel argument pays every ordered tuple with \(h\ge l-1\)
@@ -231,6 +232,18 @@ positive exponents. It does not reduce an arbitrary root to this class.
     The remaining leaf excludes previously paid matching-edge families and
     is not claimed unresolved by every other host-specific guard. No new
     computation, Lean validation, novelty or unrestricted conclusion follows.
+
+30. [Power-selected collective payment](rank-two-power-selected-compensation.md):
+    a wedge inequality from an actual integer kernel power pays the negative
+    channel throughout the residual strip when \(r<2u\). With the original
+    nonnegative Markov root retained, all ordered tuples in that domain are
+    covered for at most two active nonconstant modes. This also pays every
+    strip tuple with \(u\ge l\). The
+    [complete actual saved-source reviews](rank-two-power-selected-compensation-review.json)
+    check the selected power, ceiling, signs and distinct triangle credit.
+    The remaining two-mode route has \(r\ge2u\) and \(l\ge u+h+1\), subject
+    to previous guards; arbitrary rank remains open. No new computation,
+    Lean validation, novelty or unrestricted conclusion follows.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
