@@ -152,6 +152,15 @@ positive exponents. It does not reduce an arbitrary root to this class.
     This gives a checked compensation mechanism, not new weak-host density
     coverage, a novelty claim or a Lean endpoint.
 
+24. [Quantitative output compensation](processed-overlap-output-tail.md):
+    the actual weighted Gram loss decays quadratically in the output error,
+    while a retained spectral surplus pays it for large output exponents.
+    Explicit cutoffs include periodic/reducible roots; a sharper bound keeps
+    the actual feature-smoothing decay rather than changing the law. These
+    are guarded partial certificates, uniform in the long-edge exponent,
+    not an unrestricted proof or a Lean result. Read the
+    [complete analytical review](processed-overlap-output-review.json).
+
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
 implementation.** The unrestricted finite-alphabet entropy problem and
