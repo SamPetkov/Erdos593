@@ -206,6 +206,20 @@ positive exponents. It does not reduce an arbitrary root to this class.
     [Fraction-only checker](check_non_mixing_spectral_density.py).
     The general mixed-spectrum collective payment and Lean endpoint remain open.
 
+28. [Collective payment at the two-mode midpoint](rank-two-midpoint-density.md):
+    the actual signed wedge budget and the positive companion channels pay
+    every moment-sign case. The analytical midpoint theorem has no mixing,
+    mass or added moment-sign condition. Combined with the earlier regions
+    and matching theorem, it closes every ordered \(l=2\) tuple with at most
+    two active nonconstant modes, retaining the actual nonnegative root in
+    that corollary. A genuine negative channel is paid in the
+    [fixed exact checks](rank-two-midpoint-density-checks.json); those finite
+    diagnostics do not replace the proof of the other branches. Read the
+    [complete source/code reviews](rank-two-midpoint-density-review.json) and
+    [Fraction-only checker](check_rank_two_midpoint_density.py).
+    Arbitrary active rank, the remaining two-mode \(l\ge3\) cases and Lean
+    validation remain open; no novelty or unrestricted-theorem claim follows.
+
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
 implementation.** The unrestricted finite-alphabet entropy problem and

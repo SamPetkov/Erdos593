@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "scope": "Analytical unconditional rank-two midpoint density and original actual-root all-ordered l=2 corollary",
+  "source": "rank-two-midpoint-density.md",
+  "source_sha256": "5a77bb026cfa379105c1bdda2d419a88c916c97c5d31de7363d689c6e367b034",
+  "checker": "check_rank_two_midpoint_density.py",
+  "checker_sha256": "b9af48e4a9e374f7e77d671c391df8564ffd9d1c9ffdb0d2b6de015bfecec8f8",
+  "checks": "rank-two-midpoint-density-checks.json",
+  "checks_sha256": "1bb4ab90840125c542976a9fec90168b0bc572185f7ebba6be58c01e1ec5652a",
+  "imported_dependency": "check_non_mixing_spectral_density.py",
+  "imported_dependency_sha256": "f7582c194ce2da589d4faddd69ec6111f3b287fd0922336a17651d43b9e5780c",
+  "root_complete_saved_source_review": "PASS",
+  "root_independent": false,
+  "actual_separate_mathematical_review": {
+    "agent": "collective_maximum_certificate",
+    "complete_final_saved_source_read": true,
+    "actual_hash_confirmed": true,
+    "verdict": "FOLLOWS",
+    "preacceptance_scope_repair": "The all-ordered l=2 corollary explicitly retains actual nonnegative root A=T^2; the midpoint theorem itself is A-only."
+  },
+  "actual_separate_source_code_results_review": {
+    "agent": "density_finite_host_tail_audit",
+    "complete_saved_files_read": true,
+    "actual_hashes_confirmed": true,
+    "verdict": "PASS",
+    "checker_exit_code": 0,
+    "checker_wall_time_seconds": 0.2006761,
+    "returned_json_semantically_matches_saved": true
+  },
+  "root_exact_check": {
+    "exit_code": 0,
+    "wall_time_seconds": 0.2546992,
+    "method": "Fixed Fraction-only original-law matrices, no search/eigensolve/optimizer",
+    "record": "Normalized returned JSON; not a preserved raw OS stdout byte original",
+    "fixtures": 7,
+    "tuples": 9,
+    "fixture_branches": [
+      "joint_wedge",
+      "Y_paid_by_X"
+    ],
+    "not_every_analytical_branch_has_a_fixture": true
+  },
+  "proved": [
+    "A-only rank(A-Pi)=2, u>=3,k>=u: original six-edge midpoint density F>=1+p^(2u+1)+p^(k+2u)-p^(k+4u)>1, without a moment-sign, mixing or mass guard.",
+    "With the actual nonnegative symmetric Markov root A=T^2 retained, all ordered tuples with l=2 and at most two active nonconstant modes satisfy F>=1.",
+    "Both complementary moment-sign branches are paid by the positive companion channel or the actual signed wedge budget; no multiplication closure is assumed."
+  ],
+  "analytical_checks": [
+    "Complete active pair contraction and four occurrences of each signed channel",
+    "Two distinct positive triangles and no double counting",
+    "Joint signed-wedge identity from actual K1",
+    "Exact square without erroneous extra prefactor",
+    "Both channel weight ratios",
+    "Concave crossing quadratic and small-tau product bound",
+    "Exhaustive moment/filter zeros, equal eigenvalues, active unit and inactive zero modes",
+    "All-host integer-strip exhaustion with actual-root hypothesis retained"
+  ],
+  "diagnostics": [
+    "Exact original-law six-edge density equals full H contraction",
+    "All entries outside the two named channels are nonnegative",
+    "Negative Y on an actual strictly positive root is paid by positive X",
+    "Cloning preserves values while adding an inactive mode",
+    "Negative root eigenvalues and three stationary components remain admissible"
+  ],
+  "earlier_diagnostic_failure": {
+    "candidate": "check_midpoint_wedge_payment.py",
+    "retained_privately": true,
+    "cause": "A fixed positive-filter fixture was incorrectly expected to contain a negative channel.",
+    "used_as_proof_evidence": false,
+    "theorem_failure": false,
+    "recovery": "New full-theorem checker uses a verified genuine negative-Y fixture; the distinct older candidate is not relabeled successful."
+  },
+  "proof_by_finite_diagnostics": false,
+  "numerical_search": false,
+  "lean_validation": false,
+  "full_external_audit": false,
+  "novelty_claim": false,
+  "unrestricted_density_proved": false,
+  "manuscript_changed": false,
+  "monitors": "paused",
+  "verdict": "FOLLOWS for the full two-mode midpoint and actual-root all-ordered l=2 class; arbitrary mixed active rank and remaining l>=3 two-mode payment remain open."
+}

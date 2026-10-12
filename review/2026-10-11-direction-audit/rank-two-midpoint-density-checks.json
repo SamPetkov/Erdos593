@@ -1,0 +1,202 @@
+{
+  "method": "fixed_fraction_only_algebraic_diagnostics",
+  "cases": [
+    {
+      "fixture": "nonnegative_wedge_coordinates",
+      "states": 3,
+      "inactive_zero_mode": false,
+      "root_eigenvalues": [
+        "1",
+        "9/10",
+        "3/5"
+      ],
+      "minimum_root": "22/375",
+      "eta": "193/225",
+      "zeta": "32/225",
+      "wedge_exact": "127/500",
+      "fixed_midpoint_checks": [
+        {
+          "k": 4,
+          "u": 3,
+          "checked_branch": "joint_wedge",
+          "negative_channel_count": 0,
+          "F_exact": "11005627989233273515564543903398253973240281/4000000000000000000000000000000000000000000",
+          "theorem_lower_bound_exact": "131600774093725416316342150910719/100000000000000000000000000000000",
+          "signed_two_channel_sum_exact": "1046978967491977016410791942632694534027/4882812500000000000000000000000000000000000"
+        },
+        {
+          "k": 7,
+          "u": 4,
+          "checked_branch": "joint_wedge",
+          "negative_channel_count": 0,
+          "F_exact": "134541989443176605477908656774788810405063376227994496181/80000000000000000000000000000000000000000000000000000000",
+          "theorem_lower_bound_exact": "11846306263609363833309921754694709453939626959/10000000000000000000000000000000000000000000000",
+          "signed_two_channel_sum_exact": "6123251166805155498102739079419707433204846187329809/195312500000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "fixture": "nonnegative_wedge_coordinates",
+      "states": 4,
+      "inactive_zero_mode": true,
+      "root_eigenvalues": [
+        "1",
+        "9/10",
+        "3/5"
+      ],
+      "minimum_root": "22/375",
+      "eta": "193/225",
+      "zeta": "32/225",
+      "wedge_exact": "127/500",
+      "fixed_midpoint_checks": [
+        {
+          "k": 4,
+          "u": 3,
+          "checked_branch": "joint_wedge",
+          "negative_channel_count": 0,
+          "F_exact": "11005627989233273515564543903398253973240281/4000000000000000000000000000000000000000000",
+          "theorem_lower_bound_exact": "131600774093725416316342150910719/100000000000000000000000000000000",
+          "signed_two_channel_sum_exact": "1046978967491977016410791942632694534027/4882812500000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "fixture": "nonnegative_wedge_coordinates",
+      "states": 3,
+      "inactive_zero_mode": false,
+      "root_eigenvalues": [
+        "1",
+        "9/10",
+        "9/10"
+      ],
+      "minimum_root": "1/10",
+      "eta": "193/225",
+      "zeta": "32/225",
+      "wedge_exact": "19/100",
+      "fixed_midpoint_checks": [
+        {
+          "k": 4,
+          "u": 3,
+          "checked_branch": "joint_wedge",
+          "negative_channel_count": 0,
+          "F_exact": "1160974571502331806978938576290015690417/256000000000000000000000000000000000000",
+          "theorem_lower_bound_exact": "131600774093725416316342150910719/100000000000000000000000000000000",
+          "signed_two_channel_sum_exact": "88053283424618325397458561299779120804137/1562500000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "fixture": "nonnegative_wedge_coordinates",
+      "states": 3,
+      "inactive_zero_mode": false,
+      "root_eigenvalues": [
+        "1",
+        "1",
+        "1"
+      ],
+      "minimum_root": "0",
+      "eta": "193/225",
+      "zeta": "32/225",
+      "wedge_exact": "0",
+      "fixed_midpoint_checks": [
+        {
+          "k": 4,
+          "u": 3,
+          "checked_branch": "joint_wedge",
+          "negative_channel_count": 0,
+          "F_exact": "1330625/20736",
+          "theorem_lower_bound_exact": "2",
+          "signed_two_channel_sum_exact": "35176913/14062500"
+        }
+      ]
+    },
+    {
+      "fixture": "nonnegative_wedge_coordinates",
+      "states": 3,
+      "inactive_zero_mode": false,
+      "root_eigenvalues": [
+        "1",
+        "-1/10",
+        "-1/20"
+      ],
+      "minimum_root": "817/1500",
+      "eta": "193/225",
+      "zeta": "32/225",
+      "wedge_exact": "7433/7500",
+      "fixed_midpoint_checks": [
+        {
+          "k": 4,
+          "u": 3,
+          "checked_branch": "joint_wedge",
+          "negative_channel_count": 0,
+          "F_exact": "1036800000000010369690457202624923669308966288003/1036800000000000000000000000000000000000000000000",
+          "theorem_lower_bound_exact": "100000000000001000000999999999999/100000000000000000000000000000000",
+          "signed_two_channel_sum_exact": "488170453/180000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "fixture": "negative_wedge_coordinate",
+      "states": 3,
+      "inactive_zero_mode": false,
+      "root_eigenvalues": [
+        "1",
+        "9/10",
+        "3/4"
+      ],
+      "minimum_root": "79/1000",
+      "eta": "-464/175",
+      "zeta": "639/175",
+      "wedge_exact": "76561/70000",
+      "fixed_midpoint_checks": [
+        {
+          "k": 6,
+          "u": 5,
+          "checked_branch": "Y_paid_by_X",
+          "negative_channel_count": 1,
+          "F_exact": "60287383215393748141055875209990062692687756893447285934952947914685199603517813777627361/17301028328506497433600000000000000000000000000000000000000000000000000000000000000000000",
+          "theorem_lower_bound_exact": "11286393705033569563532831557417084676911129290717919/10000000000000000000000000000000000000000000000000000",
+          "signed_two_channel_sum_exact": "61462154057599664874109473631969304828907363072428937727979436305358342942449961/2206763817411543040000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "k": 8,
+          "u": 5,
+          "checked_branch": "Y_paid_by_X",
+          "negative_channel_count": 1,
+          "F_exact": "7643276115410086286304138482691807958663178224703192126441401945410358901169119635136078988961/2768164532561039589376000000000000000000000000000000000000000000000000000000000000000000000000",
+          "theorem_lower_bound_exact": "111826656231334688936216666848213492565213919276400266559/100000000000000000000000000000000000000000000000000000000",
+          "signed_two_channel_sum_exact": "6073055054767685763034483067874688425045510665293446118285470524943350086603474371561/353082210785846886400000000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "fixture": "negative_wedge_coordinate",
+      "states": 4,
+      "inactive_zero_mode": true,
+      "root_eigenvalues": [
+        "1",
+        "9/10",
+        "3/4"
+      ],
+      "minimum_root": "79/1000",
+      "eta": "-464/175",
+      "zeta": "639/175",
+      "wedge_exact": "76561/70000",
+      "fixed_midpoint_checks": [
+        {
+          "k": 6,
+          "u": 5,
+          "checked_branch": "Y_paid_by_X",
+          "negative_channel_count": 1,
+          "F_exact": "60287383215393748141055875209990062692687756893447285934952947914685199603517813777627361/17301028328506497433600000000000000000000000000000000000000000000000000000000000000000000",
+          "theorem_lower_bound_exact": "11286393705033569563532831557417084676911129290717919/10000000000000000000000000000000000000000000000000000",
+          "signed_two_channel_sum_exact": "61462154057599664874109473631969304828907363072428937727979436305358342942449961/2206763817411543040000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    }
+  ],
+  "not_every_analytical_branch_has_a_fixed_fixture": true,
+  "numerical_search": false,
+  "lean_validation": false,
+  "unrestricted_density_proved": false
+}
