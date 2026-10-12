@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-12",
+  "source": "actual-overlap-bridge-counterexample.md",
+  "source_sha256": "3973805c459e63b13f122c41b2eb52d23d33c287bc157b51fb3d63080717c6ba",
+  "scope": "An analytical existential counterexample to universal actual processed overlap W_u>=1. The original unrestricted density theorem remains open.",
+  "conventions": "Finite nonempty original probability space, symmetric nonnegative relative Markov root T, A=T^2, K_j=A^j; all kernel composition and external weights use original mu.",
+  "result": {
+    "host": "Uniform original law on the 34,081,800 vertices of the point-line incidence graph of the symplectic generalized quadrangle over F_257; degree258.",
+    "root": "Stochastic matrix aI+bP with c=sqrt514/258, a=(1-c)/(3-c), b=2/(3-c); relative kernel is n times that matrix, not the transition matrix itself.",
+    "top_square_mode": "rho=((1+c)/(3-c))^2 in (0,1); both normalized-adjacency +c modes and the -1 mode contribute.",
+    "parameters": "u=1, h=2 and r=l sufficiently large. No explicit failing integer exponent or numerical overlap value is claimed.",
+    "actual_trace": "The observable three-step geodesic event reveals the actual ancestor, giving L_rho>=d*b^3*(257/258)^2 with all top modes summed.",
+    "asymptotic": "W_r-1=half*rho^(2r)*[(1+rho^h)d(2rho^u+rho^(2u))-(1-rho^h)L_rho]+o(rho^(2r)); zero-m rows vanish rather than being divided by.",
+    "strict_margin": "Credit<1909201/6250000 while loss per top mode>1960800/6250000, so the bracket is strictly below -d*51599/6250000.",
+    "density_boundary": "u+l<=r+h in this family; it is already covered for F>=1. The example is not in the unpaid strip and refutes neither F nor the maximum certificate there.",
+    "tail_boundary": "l varies with r, so the example does not contradict a fixed-l large-output cutoff."
+  },
+  "complete_checks": [
+    "Self-contained finite geometry, point counts, degree, unique nonbacktracking length-three paths, and incidence spectrum.",
+    "Original-law normalization, actual nonnegative root, all squared top modes including the negative root mode, and observable posterior trace.",
+    "Uniform finite-host Taylor expansion on positive rows; zero rows identically zero; conditional-variance subtraction retained.",
+    "Constant A=Pi case explicitly separated from positive-rho asymptotics; T=Pi and W=1 there.",
+    "Exact rational comparisons and vertex count checked with Python fractions; actual command exit0, no graph simulation or overlap evaluation.",
+    "Public mathematical body matches the reviewed final private mathematical body; only the review-status prose differs."
+  ],
+  "review_provenance": {
+    "root_self_review": "Complete independent rederivation and final entire-source reading by the root; independent=false.",
+    "actual_helper_review": "A real separate helper read the entire corrected source at SHA9a896462eaec1c4490b62bc8171fbe2aabd4d85a208e15d76603bdd8567df178 and returned PASS, specifically including the constant-root precision correction.",
+    "public_status": "The final public source includes completed review wording; original private pending-byte wording is historical and superseded by this record.",
+    "external_full_audit": false,
+    "lean_validation": false
+  },
+  "literature": [
+    {
+      "url": "https://arxiv.org/abs/1708.01095",
+      "purpose": "Primary author/title verification and classical symplectic generalized-quadrangle context, not the overlap claim."
+    },
+    {
+      "url": "https://aeb.win.tue.nl/2WF02/spectra.pdf",
+      "purpose": "Author-hosted Brouwer-Haemers Section9.6 comparison for classical spectral facts, independently derived in the proof."
+    }
+  ],
+  "universal_overlap_refuted_analytically": true,
+  "unrestricted_density_proved": false,
+  "unrestricted_density_refuted": false,
+  "residual_strip_counterexample": false,
+  "maximum_certificate_counterexample": false,
+  "new_density_coverage_claim": false,
+  "novelty_claim": false,
+  "explicit_exponent_claim": false,
+  "manuscript_or_revision_date_change": false,
+  "compiler_optimizer_or_service_run": false,
+  "monitor_restart": false,
+  "private_chat_export": false,
+  "next_direct_route": "Retain the full six-edge reflected identity F(k)=D'_k+P+M_k, positive P and D'_k-1; the actual signed multi-mode collective payment remains missing.",
+  "delivery_scope": "Three-path correction on the existing public draft research branch, no main push or merge."
+}

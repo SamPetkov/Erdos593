@@ -147,8 +147,9 @@ positive exponents. It does not reduce an arbitrary root to this class.
     actual overlap payment near the constant root on every fixed finite
     positive probability space. The local leading coefficient is a positive
     even spectral trace, with half that coefficient at the boundary \(l=r\).
-    The radius is host-dependent; unrestricted overlap and density remain
-    open. Read the [analytical review](processed-overlap-positive-review.json).
+    The radius is host-dependent; the density theorem remains open, while
+    item 25 below now refutes universal overlap. Read the
+    [analytical review](processed-overlap-positive-review.json).
     This gives a checked compensation mechanism, not new weak-host density
     coverage, a novelty claim or a Lean endpoint.
 
@@ -160,6 +161,15 @@ positive exponents. It does not reduce an arbitrary root to this class.
     are guarded partial certificates, uniform in the long-edge exponent,
     not an unrestricted proof or a Lean result. Read the
     [complete analytical review](processed-overlap-output-review.json).
+
+25. [An actual bridge-decoding obstruction](actual-overlap-bridge-counterexample.md):
+    a finite nonnegative Markov root makes the stronger processed overlap
+    fall below one when u=1, h=2 and r=l is sufficiently large. The proof
+    keeps the original law, every top mode and the exact variance subtraction.
+    This is an existential analytical family, not a computed failing exponent.
+    It lies in an already-covered density region: the full density, unpaid
+    strip and maximum certificate are not refuted. Read the
+    [complete analytical review](actual-overlap-bridge-review.json).
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
