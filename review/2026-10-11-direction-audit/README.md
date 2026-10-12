@@ -220,6 +220,18 @@ positive exponents. It does not reduce an arbitrary root to this class.
     Arbitrary active rank, the remaining two-mode \(l\ge3\) cases and Lean
     validation remain open; no novelty or unrestricted-theorem claim follows.
 
+29. [A larger two-mode compensation domain](rank-two-general-compensation.md):
+    the full channel argument pays every ordered tuple with \(h\ge l-1\)
+    on actual-root hosts with at most two active nonconstant modes, plus an
+    explicit larger part of the residual strip. The negative-\(Y\) branch
+    is paid throughout that strip; the exponent guard pays negative \(X\)
+    through its positive companion. The
+    [complete saved-source reviews](rank-two-general-compensation-review.json)
+    check all signs, zero modes, credits and root-dependent interfaces.
+    The remaining leaf excludes previously paid matching-edge families and
+    is not claimed unresolved by every other host-specific guard. No new
+    computation, Lean validation, novelty or unrestricted conclusion follows.
+
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
 implementation.** The unrestricted finite-alphabet entropy problem and
