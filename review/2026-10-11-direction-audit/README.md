@@ -138,7 +138,8 @@ positive exponents. It does not reduce an arbitrary root to this class.
     retained certificate as the maximum of three positive quantities.
     Tensor amplification alone cannot supply the missing payment. A universal
     lower bound for the actual processed overlap at the shortest allowed
-    channel time would suffice, but remains unproved. Read the
+    channel time would suffice, but item 25 below now disproves that universal
+    stronger claim. The maximum certificate remains unresolved. Read the
     [conclusion-first audit](tensor-overlap-audit.md) and
     [complete analytical review](tensor-overlap-review.json); no new density
     coverage or Lean endpoint is claimed.
@@ -170,6 +171,18 @@ positive exponents. It does not reduce an arbitrary root to this class.
     It lies in an already-covered density region: the full density, unpaid
     strip and maximum certificate are not refuted. Read the
     [complete analytical review](actual-overlap-bridge-review.json).
+
+26. [Finite certification of the full common-power density](full-density-finite-host-certificate.md):
+    the nonnegative triangle budget pays the signed tetrahedral term outside
+    an explicit finite set of all five exponent variables for each fixed host.
+    A rational cutoff retains reducibility, periodicity, zeros and the original
+    component masses. This strengthens item 5's tail in a single exponent,
+    not the unresolved universal theorem. Exact rational checks reproduce
+    the 64-subset expansion and periodic-component normalizations; no enormous
+    exceptional-set enumeration is claimed. Read the
+    [complete analytical review](full-density-finite-host-review.json),
+    [saved exact checks](full-density-finite-host-checks.json), and
+    [read-only checker](check_full_density_finite_host.py).
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
