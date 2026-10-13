@@ -796,6 +796,8 @@ review/2026-10-11-direction-audit/compatible-block-density-review.json
 review/2026-10-11-direction-audit/compatible-block-density.md
 review/2026-10-11-direction-audit/continuation-checks.json
 review/2026-10-11-direction-audit/continuation-review.json
+review/2026-10-11-direction-audit/cubic-sector-density-review.json
+review/2026-10-11-direction-audit/cubic-sector-density.md
 review/2026-10-11-direction-audit/detector-checks.md
 review/2026-10-11-direction-audit/editorial-comparison.md
 review/2026-10-11-direction-audit/entropy-construction-boundary.md
