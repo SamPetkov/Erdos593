@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-13",
+  "source": "rank-two-ordered-density.md",
+  "source_sha256": "fc382cd7bd513ab52358afedcaa6f28750f17dcf92218b6542018088e2a509bc",
+  "scope": "Full original-law ordered common-power density inequality for rank(A-Pi)<=2",
+  "root_complete_saved_source_review": "PASS",
+  "root_independent": false,
+  "actual_separate_complete_saved_source_reviews": [
+    {
+      "agent": "density_finite_host_tail_audit",
+      "verdict": "PASS",
+      "complete_actual_source_read": true,
+      "actual_hash_confirmed": true,
+      "review_date": "2026-10-12"
+    },
+    {
+      "agent": "full_rank_two_final_audit_13",
+      "verdict": "PASS",
+      "complete_actual_source_and_dependencies_read": true,
+      "actual_hash_confirmed": true,
+      "review_date": "2026-10-13"
+    }
+  ],
+  "actual_checks": [
+    "Complete constant-containing and centered grouping; no PSD cross-form sign assumption",
+    "Four occurrences of each signed channel and distinct BCD/ABD triangle credits",
+    "Exact weight ratio uniform in finite k",
+    "Actual positive integer K_v wedge, sign exhaustion and moment zeros",
+    "Retained-z crossing quotient and both integer ceiling bounds",
+    "Correct p-exponent directions and scalar collective payment",
+    "Rank-zero/one, equal eigenvalues, zero/unit modes, reducible and periodic roots",
+    "Original positive law, actual nonnegative root, negative root eigenvalues and kernel zeros",
+    "All ordered integer boundaries and inherited outer-region stitching"
+  ],
+  "inherited_sources": {
+    "non-mixing-spectral-density.md": "44d267480b112ee9b31f273c8513d40a52c1c80772b4fb2f77f5c7a58bfda738",
+    "rank-two-general-compensation.md": "999ee928fcc95ff819df6229e5dff062623aee7434a628d4013ed74fdbf1101a",
+    "rank-two-power-selected-compensation.md": "caa3fcb0b0395e36e068040e4ff41bf0354697caee369b0eebd093d3860906d1"
+  },
+  "proved": [
+    "For finite positive original mu, nonnegative symmetric relative Markov T, A=T^2 and rank(A-Pi)<=2, F>=1 for every k>=u>=1,r>=l>=1,h>=1.",
+    "For two active modes, the A-only residual strip J-l<u<r+l has F>=1+p^(u+r+l)/2; the u<l substrip has F>=1+p^(u+r+l)."
+  ],
+  "remaining": "Arbitrary active rank has additional coupled channels; summing two-mode payments is not licensed. Lean formalization, manuscript theorem integration and literature-wide novelty comparison remain separate.",
+  "new_optimizer_or_numerical_search": false,
+  "proof_by_finite_testing": false,
+  "new_service_request": false,
+  "lean_validation": false,
+  "full_external_audit": false,
+  "novelty_claim": false,
+  "unrestricted_density_proved": false,
+  "monitors": "paused",
+  "verdict": "Complete source reviews support full ordered rank-at-most-two analytical coverage, not an arbitrary-rank result or kernel acceptance."
+}

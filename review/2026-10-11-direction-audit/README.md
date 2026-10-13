@@ -241,9 +241,23 @@ positive exponents. It does not reduce an arbitrary root to this class.
     strip tuple with \(u\ge l\). The
     [complete actual saved-source reviews](rank-two-power-selected-compensation-review.json)
     check the selected power, ceiling, signs and distinct triangle credit.
-    The remaining two-mode route has \(r\ge2u\) and \(l\ge u+h+1\), subject
-    to previous guards; arbitrary rank remains open. No new computation,
+    The then-remaining two-mode route is closed by the next entry;
+    arbitrary rank remains open. No new computation,
     Lean validation, novelty or unrestricted conclusion follows.
+
+31. [Full ordered density at rank at most two](rank-two-ordered-density.md):
+    a weight ratio uniform in the actual finite \(k\), an actual integer-power
+    wedge and a retained crossing quotient pay the final signed channel.
+    Every original ordered tuple \(k\ge u\ge1,r\ge l\ge1,h\ge1\) is now
+    covered when \(\operatorname{rank}(A-\Pi)\le2\), without a mixing,
+    minimum-mass or additional moment-sign assumption. The actual nonnegative
+    root remains part of the full theorem; the residual strip also has an
+    A-only quantitative margin. The
+    [complete actual-source reviews](rank-two-ordered-density-review.json)
+    check the full expansion, all signs, integer rounding, zero/unit modes,
+    periodic/reducible roots and outer-region stitching. This closes the
+    two-mode analytical problem, not arbitrary rank, Lean formalization or
+    literature-wide novelty clearance.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
