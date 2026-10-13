@@ -1,0 +1,90 @@
+{
+  "status": "PASS_WITH_SCOPE_AND_ROUNDING_CORRECTIONS_APPLIED",
+  "reviewer_scope": "Independent original-state integer audit of the root/tensor certificate; self-audit of numerical provenance. No new numerical search or optimization.",
+  "bound_sha256": {
+    "continuation2_root_verify.py": "cff895cc2c616177107f9c3ae9e8d1c0b3138c04ef344faddd60fb7e3f1515f6",
+    "continuation2_root_checks.json": "7bcd0307370b867efde82871a87bd44e165e36003669cc6c2fa528896005a63d",
+    "continuation2_tensor.md": "1a79cabc0c33fa42da6655fca695f347b164dcad879973574dc2b20f1ee4651c",
+    "continuation2_sign_engine.py": "07e655e6a2fd1eae054f879f2b12f116e96d38acb5f94829445939d011938d15",
+    "continuation2_search.py": "87e1579ed8cc9bfba73c15d9d424f83b2eb19bb702b9573da6df47941e34ab19",
+    "continuation2_engine_checks.py": "bb557bd2b275e1bf2979e4137e8bc01229a91e43c23147753f8f856cf34c172f",
+    "continuation_cover_engine.py": "1187d00bdafdec7f1ffd3b7ad7ee1b2f2eb8d27f2593fd6ee12808628a14495a",
+    "continuation2_config.json": "1a0351d89cf03e50e1d4cb29c69ba3c251973462d8de7df94adff562d1b8f1a7",
+    "continuation2_engine_checks.json": "806c49754f27e962d144e6bb057bc727d18e2d3bd1f53dc074d7658891a2364d",
+    "continuation2_optimizer_starts.json": "99f08182fb78999a7d705be6d1d68389a950a3ce9cecfad30e25000285988e34",
+    "continuation2_optimizations.json": "255cbddc8cb21d8ed0c00797fa0bc4f2616c33e86152348d9584650255208a7d",
+    "continuation2_samples.json.gz": "bb4edc2b0945c33da4737cf757ba2c45da35f18f38dba1f971b14960e03d0bdd",
+    "continuation2_summary.json": "cef1e938c5ba2d4db9d24e5765b23c62492b87818c9206d0640f500b917f2cf5",
+    "continuation2_optimization_report.md": "6ea279cac88e62aecf4c96b1ba2a27cd422d4d74e060fa6424caf8c4b650d72c",
+    "continuation2_optimize_direct_audit.json": "c8f8ef44abb80860e3ed2e62faa46d75d12e5f058e0a486b935913b22afb49dc",
+    "continuation2_optimize_provenance_audit.json": "8806f9dd6053df309eee0d7b42f5dd06b87a6d2a13a289365307cf2660efe727",
+    "continuation2_allowlist.json": "baddb159e424402b383c979ffc37cd86184e6b644b4b8d3a95ddc5a151022d47"
+  },
+  "ordered_fan_math": {
+    "root_verifier_output_recomputed_exactly": true,
+    "independent_direct_original_32_state_integer_contraction": true,
+    "independence": "The additional audit uses ordinary state sums and cleared integer matrices, not the sparse cubic-tensor traversal. It independently computes both actual fan sources and full F.",
+    "original_measure": "mu_x=1/32 on exactly the supplied 32 states",
+    "actual_power_checks": [
+      "T*T=K1",
+      "K1*K1=K2",
+      "K2*K2=K4",
+      "K4*K2=K6"
+    ],
+    "admissible_p": "1048576/1967105",
+    "minimum_W": "130049/1967105",
+    "maximum_W": "1",
+    "exact_negative_ordered_fan_bound": "w_1 < -2^(-57)",
+    "exact_full_density": "F=1+G/2^400 with the positive G recorded in root_checks.json; independently matched from original-state contraction",
+    "centered_spectrum": "four distinct positive centered eigenvalues plus zero of multiplicity 25; five values on the whole centered space",
+    "reflection_audit": "The formulas F=tr(K H*) and Z=tr((K H*)^2) have the correct original-measure orientation. H self-adjoint PSD would suffice by one PSD sandwich. Negative <phi_1,H_ac phi_1> blocks that sufficient premise only.",
+    "scope": "Exact failure of ordered-fan/terminal-PSD positivity. It is neither a target nor a complete-cover counterexample.",
+    "corrections_needed": []
+  },
+  "numerical_provenance": {
+    "frozen_source_hashes_match_config": true,
+    "config_hash_matches_both_result_files": true,
+    "lossless_sample_archive_verified": true,
+    "all_fixed_input_tuples_and_bits_audited": true,
+    "host_tuple_evaluations": 2688,
+    "cover_comparisons": 18816,
+    "unique_exact_sample_roots": 224,
+    "exact_sample_boundary_roots": 112,
+    "frozen_optimizer_start_selection_reconstructed_exactly": true,
+    "raw_start_reconstruction": "Use the frozen rational root vector, normalize by its largest absolute component, retain its signs/zero support, and take logs of nonzero amplitudes as in the bound source.",
+    "optimizer_starts": 12,
+    "optimizer_iterations": 233,
+    "optimizer_calls": 656,
+    "maximum_iterations": 27,
+    "iteration_cap": 80,
+    "termination_messages": {
+      "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH": 5,
+      "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL": 7
+    },
+    "independent_exact_gate": "The sparse engine was compared exactly against ordinary-Markov-power integer contraction on a weighted eight-state cubic-star host. Seven cover comparisons are floating point; one base and one cover comparison are exact. This is independent of the sparse color traversal.",
+    "whole_centered_band_counts_over_224_roots": {
+      "6": 84,
+      "7": 112,
+      "5": 28
+    },
+    "target_scope_correction": "All 2688 target cases satisfy the already proved density compensation condition: sample p>=102/241>1/4, and all exact optimizer endpoints also have p>1/4. The whole seven-support boundary-ray family even has p>=2/5. Complete two-cover comparison remains the unresolved diagnostic.",
+    "boundary_rounding_correction": "Sample admissibility belongs to stored rational lambda numerators/denominator. Optimizer admissibility belongs to the exact ray determined by stored dyadic raw_endpoint followed by exact min projection. Literal rounded boundary_lambda_endpoint vectors may have tiny negative entries and are not themselves claimed exact admissible hosts.",
+    "sample_literal_rounded_root_minimum": "-65/1152921504606846976",
+    "optimizer_literal_rounded_root_minimum": "-7496573/75557863725914323419136",
+    "exact_optimizer_endpoint_minimum_p": "27914925100926095/69782948102995432",
+    "corrections_applied_to": [
+      "continuation2_optimization_report.md",
+      "continuation2_summary.json",
+      "continuation2_allowlist.json"
+    ],
+    "engine_and_config_unchanged": true,
+    "remaining_limits": [
+      "Finite numerical evidence, not interval-certified universal bounds.",
+      "Local termination is not global optimization.",
+      "Rounded boundary eigenvalue vectors are approximations to the exactly specified admissible rays."
+    ]
+  },
+  "publication_corrections_outstanding": [],
+  "new_searches": 0,
+  "new_optimization_runs": 0
+}

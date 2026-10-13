@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-07",
+  "direction": "D1: low-cyclic-rank boundary for single canonical atoms",
+  "stage": "Analytical corollary with a complete uncompiled structural Lean candidate; no density kernel acceptance",
+  "author_request": "Develop the three audited directions and formalize as work proceeds.",
+  "research_contract": {
+    "question": "Does every single canonical obligatory r-uniform atom of actual Levi cycle rank at most two satisfy the Sidorenko homomorphism-density inequality?",
+    "deliverable": "A precisely stated analytical corollary, dependency audit, and a complete candidate Lean structural bridge retaining both theta parity cases.",
+    "acceptance": "The mathematical deduction must name every external density theorem and distinguish it from the already accepted graph-recognition results. The Lean candidate is not accepted until pinned compilation, actual type/definition/axiom review and source/artifact reconciliation.",
+    "scope": "Finite simple r-uniform patterns; r>=3. Single canonical atom only. Finite weighted probability kernels with all-homomorphism counting, not injective embeddings.",
+    "non_goals": [
+      "No rank-three counterexample existence or sharpness claim.",
+      "No arbitrary assembly closure theorem.",
+      "No new axioms or a hypothesis equivalent to the Sidorenko endpoint.",
+      "No compiler/service attempt, cache/pin change, manuscript mutation, Git write, public delivery or clock restart in this subtask."
+    ]
+  },
+  "sources": {
+    "draft_head": "3925e6aa58d44fa580548a8546b597029e37e204",
+    "draft_path": "review/2026-10-06-uniformity/erdos593_obligatory_uniform_hypergraphs.tex",
+    "public_main": "7b4d68b3a523c1f6997feab4588f041190568f61",
+    "primary_theta": "https://arxiv.org/html/2408.03491v2",
+    "source_result": "Im–Li–Liu, Sidorenko's conjecture for subdivisions and theta substitutions: Theorem 1.3 supplies the even generalized theta case; Proposition 4.3 supplies the odd generalized theta case. Their density theorem is an external analytical dependency, not an imported Lean axiom.",
+    "accepted_graph_sources": [
+      "Erdos593.Graph.ThetaRecognition",
+      "Erdos593.Graph.ThetaPathRecognition",
+      "Erdos593.Graph.ThetaGraphModel",
+      "Erdos593.Graph.BoundaryCoreRecognition",
+      "Erdos593.Graph.BoundaryCoreDegreePatterns",
+      "Erdos593.Graph.TwoConnectedBipartiteSpectrum"
+    ],
+    "status_caution": "Several accepted source headers still say candidate/unintegrated. Acceptance is supplied by the retained project evidence, not by those stale source comments; no new acceptance is inferred from reading."
+  },
+  "definitions": {
+    "probability_space": "Omega is a finite set with weights mu(x)>=0 and sum_x mu(x)=1. No positivity is required for each individual weight.",
+    "kernel": "U: Omega^r -> [0,1] is invariant under all coordinate permutations.",
+    "mean": "p(U)=sum_{x:Fin r -> Omega} (product_i mu(x_i)) U(x).",
+    "density": "t(A,U)=sum_{x:V(A)->Omega} (product_v mu(x_v)) (product_{e in E(A)} U(x restricted to e)); any bijective ordering of the r vertices of e is allowed because U is symmetric.",
+    "private_expansion": "For a finite simple graph J, J^[r] has original vertices V(J), plus r-2 distinct private vertices for each edge. A graph edge uv becomes the r-edge consisting of u,v and its own private vertices. Every private vertex belongs to exactly one edge.",
+    "pair_marginal": "M_U(a,b)=E_{z_1,...,z_{r-2}} U(a,b,z_1,...,z_{r-2}). It is symmetric, lies in [0,1], and has weighted mean p(U).",
+    "cycle_rank": "beta(A)=|E(Levi(A))|-|V(Levi(A))|+1 for the connected single atom. For J^[r] this is |E(J)|-|V(J)|+1. Counts are on actual carriers; no assembly-list count is substituted.",
+    "canonical_atom_shape": "By the retained higher-uniformity canonical classification in the draft, a single atom is one r-edge or J^[r] for a finite simple bipartite two-vertex-connected graph J. The higher-uniformity shape theorem itself is not yet an accepted Lean endpoint."
+  },
+  "theorem": {
+    "quantifiers": "For every integer r>=3, every single canonical obligatory r-uniform atom A with beta(A)<=2, every finite weighted probability space (Omega,mu), and every symmetric U:Omega^r->[0,1], t(A,U)>=p(U)^|E(A)|.",
+    "contrapositive": "If such a single canonical atom violates the inequality for some finite weighted kernel, then beta(A)>=3.",
+    "proof": [
+      {
+        "step": 1,
+        "claim": "For the single-edge atom beta=0 and t(A,U)=p(U).",
+        "reason": "Every edge vertex is sampled independently once. Its Levi graph is a star and has cycle rank zero."
+      },
+      {
+        "step": 2,
+        "claim": "For the cyclic atom A=J^[r], beta(A)=beta(J)>0.",
+        "reason": "If n=|V(J)| and m=|E(J)|, the Levi graph has n+(r-1)m vertices and rm edges. Thus beta(A)=rm-[n+(r-1)m]+1=m-n+1. Two-connectivity gives degree at least two; handshaking gives m>=n, hence beta(J)>=1."
+      },
+      {
+        "step": 3,
+        "claim": "If beta(J)=1, J is an even cycle on its actual carrier, of length at least four.",
+        "reason": "Connected Euler balance gives m=n. Since every degree is at least two and the degree sum is 2m=2n, all degrees are exactly two. Connected finite simple two-regular graph recognition produces the cycle isomorphism. Bipartiteness makes its length even."
+      },
+      {
+        "step": 4,
+        "claim": "If beta(J)=2, J is an actual theta graph consisting of three internally disjoint positive-length paths between two branch vertices.",
+        "reason": "The total degree excess above two is exactly two. Deleting an actual vertex and applying connected Euler balance yields degree(v)<=beta(J)+1=3, ruling out the alternative single degree-four vertex. Exactly two vertices have degree three. The accepted rank_two_three_paths theorem derives the internally disjoint paths and actual vertex/edge coverage from vertex-deletion connectivity and saturation; no theta presentation is inserted as a hypothesis."
+      },
+      {
+        "step": 5,
+        "claim": "The three theta path lengths are all even or all odd.",
+        "reason": "A fixed two-colouring c gives Even(length(P)) iff c(a)=c(b) for every actual a-b walk P. All three constructed paths have the same endpoints. No odd-order restriction is imposed. The simple-graph restriction allows at most one path of length one."
+      },
+      {
+        "step": 6,
+        "claim": "For every symmetric pair kernel M in [0,1], the core J satisfies t(J,M)>=(E M)^m.",
+        "reason": "The even-cycle case is classical Sidorenko. The all-even theta case follows from Im–Li–Liu Theorem 1.3; the all-odd theta case follows from Proposition 4.3. A finite weighted kernel is represented as a step graphon using intervals of lengths mu(x); zero-weight cells may be omitted. Thus the graphon statements apply exactly to finite weighted densities."
+      },
+      {
+        "step": 7,
+        "claim": "t(J^[r],U)=t(J,M_U) and E M_U=p(U).",
+        "reason": "For each fixed assignment of the original core vertices, the private assignments belonging to distinct edges are disjoint independent samples. Finite Fubini factors their integrals edge by edge, giving one pair marginal per original graph edge. Averaging the core assignment proves the identity. Averaging the pair marginal proves the mean identity."
+      },
+      {
+        "step": 8,
+        "claim": "t(A,U)>=p(U)^|E(A)|.",
+        "reason": "The expansion has one hyperedge for each original graph edge. Apply the graph inequality in Step 6 to M_U and substitute the exact identities of Step 7. The single-edge case was Step 1."
+      }
+    ],
+    "edge_case_review": [
+      "An empty probability carrier cannot have total weight one; the weighted assumptions exclude it without an arbitrary Nonempty extra hypothesis.",
+      "Zero individual weights cause no problem; the step-graphon representation can use zero-length cells or omit them.",
+      "p=0 and p=1 require no division or limiting argument.",
+      "Single-edge beta=0 is treated separately: its two-vertex core is not two-vertex-connected under the project's >=3-vertex convention.",
+      "Two-connected cyclic cores have at least three vertices; bipartite rank-one cycles have at least four.",
+      "Both theta parity cases are retained. All-odd simple theta graphs may contain one direct length-one branch, but never two.",
+      "Isolated vertices do not change homomorphism densities; the canonical atom statement uses the active original carrier.",
+      "No inference is made from unrooted individual atom inequalities to an arbitrary one-point assembly."
+    ]
+  },
+  "lean_candidate": {
+    "path": "research/e593-density-development-20261007/d1/LowRankBipartiteNormalForms.lean",
+    "suggested_module": "Erdos593.DensityCandidates.LowRankBipartiteNormalForms",
+    "namespace": "Erdos593.DensityCandidates.LowRankBipartiteNormalForms",
+    "sha256": "8156d37769957caacd12c0e40bdd0e953deba8a621d0a52df0c00b88ef3fbbf4",
+    "direct_import": [
+      "Erdos593.Graph.ThetaRecognition"
+    ],
+    "transitive_local_module_count": 60,
+    "transitive_external_import_count": 25,
+    "compile_status": "UNCOMPILED; zero compiler/service attempts in this subtask.",
+    "declarations": [
+      {
+        "name": "cycleRank_pos_of_two_connected",
+        "type": "{V : Type u} [Fintype V] (G : SimpleGraph V) (htwo : Erdos593.TripleSystem.CanonicalAtom.IsTwoVertexConnected G) : 1 <= SimpleGraph.FiniteCycleRank.cycleRank G",
+        "proof": "Actual minimum degrees, handshaking and connected Euler balance; no rank-positivity premise."
+      },
+      {
+        "name": "three_paths_uniform_parity",
+        "type": "{V : Type u} (G : SimpleGraph V) {a b : V} (P : E593Theta.ThreePaths G a b) (hb : G.Colorable 2) : (forall i : Fin 3, Even (P.path i).length) OR (forall i : Fin 3, Odd (P.path i).length)",
+        "proof": "Accepted two_colour_walk_parity followed by the parity dichotomy at branch0."
+      },
+      {
+        "name": "rank_two_bipartite_iso_theta_parity",
+        "type": "{V : Type u} [Fintype V] (G : SimpleGraph V) (htwo : IsTwoVertexConnected G) (hb : G.Colorable 2) (hr : cycleRank G = 2) : exists r : Fin 3 -> Nat, (forall i, 0 < r i) AND (forall i j, r i=1 -> r j=1 -> i=j) AND ((forall i, Even (r i)) OR (forall i, Odd (r i))) AND (sum_i r i = Nat.card V + 1) AND Nonempty (G graph-isomorphic-to E593Theta.thetaGraph r)",
+        "proof": "Use actual three-path recognition once; obtain lengths, parity, simple direct-edge restriction, original carrier count and graph isomorphism as conclusions."
+      },
+      {
+        "name": "low_rank_bipartite_normal_form",
+        "type": "{V : Type u} [Fintype V] (G : SimpleGraph V) (htwo : IsTwoVertexConnected G) (hb : G.Colorable 2) (hr : cycleRank G <= 2) : (exists t : Nat, 2 <= t AND Nat.card V=2*t AND Nonempty (G graph-isomorphic-to cycleGraph (2*t))) OR (exists r : Fin 3 -> Nat, positive lengths AND at-most-one-direct AND all-even-or-all-odd AND sum_i r i=Nat.card V+1 AND Nonempty (G graph-isomorphic-to thetaGraph r))",
+        "proof": "Prove beta>=1, split beta=1 or2, and use actual accepted recognition endpoints plus the new parity bridge."
+      }
+    ],
+    "formalization_boundary": "This coherent structural candidate does not claim the final Sidorenko inequality. The main theorem of Im–Li–Liu is not replaced by an axiom, sorry, supplied inequality premise, or native evaluation.",
+    "remaining_density_obligations": [
+      "Reusable density definitions on original graph/hypergraph carriers and finite probability weights.",
+      "Density invariance under graph/hypergraph isomorphism.",
+      "Actual private-expansion marginal identity, including arbitrary r-2 private coordinates and the unchanged mean.",
+      "Even-cycle finite-kernel inequality (a spectral proof or a suitable finite Hölder/Cauchy–Schwarz route).",
+      "Both all-even and all-odd generalized-theta finite-kernel inequalities. The even case uses a substantive regularization/correlation theorem; it is not a one-line Hölder consequence in general.",
+      "Canonical higher-uniformity atom extraction and actual cycle-rank transport before an original r-uniform endpoint can be accepted."
+    ],
+    "resource_request": "Root alone will reconcile the exact accepted source/artifact closure and freeze a reviewed bounded runner. No run authorization is inferred from the existence of this file."
+  },
+  "review": {
+    "main": "Internal source/math self-review; independent=false.",
+    "helper": "Actual separate helper /root/density_low_rank_develop/low_rank_candidate_source_audit source/math review PASS for candidate8156d377; exact review and source closure recorded in source-review.json. This is not compilation or full external audit.",
+    "external_full_audit": "pending",
+    "novelty": "not established",
+    "publication_readiness": "not certified"
+  }
+}

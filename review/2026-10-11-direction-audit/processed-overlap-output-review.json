@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-12",
+  "source": "processed-overlap-output-tail.md",
+  "source_sha256": "e936a9274f6cd6470430ff5e0b2978b18f673869c21ddb79c90ac1d9f65b39e3",
+  "scope": "Complete analytical proofs of guarded actual-overlap compensation bounds. Unrestricted overlap and density remain open.",
+  "conventions": "Finite strictly positive original probability law mu; symmetric nonnegative relative Markov root T; A=T^2, K_j=A^j; r>=l>=1,u>=1,h>=1. q_r=E_a T^u(e,a)K_r(a,c)K_u(a,d), H_r=E_e sqrt(q_r(e,c,d)q_r(e,x,d)), W_r=E_cxd K_h(c,x)K_l(c,d)H_r^2. Only output r varies in the fixed-u tail. All compositions and weights use original mu.",
+  "results": {
+    "mixing_output_tail": "If A is irreducible, 0<rho<1 is its largest nonconstant eigenvalue and J=mu_min^-1-1, then Jrho^r<=1/2 gives W_r-1>=rho^(r+u+l)-6J^2rho^(2r). Guard rho^r<=min(1/(2J),rho^(u+l)/(12J^2)) gives at least half the positive surplus for every h.",
+    "eventual_decrease": "With u,l,h fixed, the stronger guard rho^r<=min(1/(2J),(1-rho)rho^(u+l)/(12J^2)) gives W_r-W_(r+1)>=half*(1-rho)rho^(r+u+l)>0. Not global monotonicity.",
+    "classes": "For A-support components of mass p_C, actual T induces an equal-mass involution; feature processing is rectangular between tau^u(C) and C. Exact W=sum p_C^-1 W_C and limit sum p_C^-1. The class error is at most sum 6p_C^-1 J_C^2rho_C^(2r), under every J_Crho_C^r<=1/2. Multiple-class strictness has an explicit cutoff uniform in u,h and admissible l.",
+    "actual_feature_gain": "Let C=J(1+J). Under Jrho^(3u/2)<=1/2 and 2Crho^(r+u/2)<=1/2, W_r-1>=rho^(r+u+l)-24C^2rho^(2r+u). Additional rho^(r-l)<=1/(48C^2) pays half the surplus, uniformly in h, allowing u to vary withr."
+  },
+  "exact_checks": [
+    "Original external KhKl law has total mass one; no posterior-law substitution.",
+    "Exact Gram-wedge defect, including m=T^(3u)=0 rows; square-root Lipschitz constant gives 6epsilon^2.",
+    "Complete positive pair/cubic spectral expansion; every stationary mode retained by class normalization.",
+    "Eventual-monotonicity sign uses nonnegative next loss, not an assumption that two decreasing quantities have ordered difference.",
+    "Rectangular class scalings q_C=p_C^2q, H=p_C^-1H_C, W=sum p_C^-1 W_C; no internal symmetric root assumed.",
+    "Actual centred identity q-m=R_(r+u)+E(T^u-1)K_u R_r; absolute root spectrum retains negative modes and half exponents.",
+    "All explicit mass/gap, positive-m and relative-error guards retained; one-state and rho=0 treated separately."
+  ],
+  "dependencies": {
+    "retained_density_certificate": "F(k)>=W_r for k>=u uses the earlier actual-feature bound and feature data processing; not newly reproved in this note.",
+    "earlier_long_edge_tail": "fixed-host-tail.md varies h with four base exponents fixed; this note instead certifies the stronger overlap via output/feature decay. No novelty or new density-coverage claim."
+  },
+  "review_provenance": {
+    "root_self_review": "Complete rederivation and final full source read; independent=false.",
+    "actual_separate_agent_source_review": "A real helper fully read and hash-verified the entire final source at e936a927, including formulas12-15, and returned a complete-source analytical PASS. This is supplemental mathematical review, not a full external audit.",
+    "package_qa": "The public mathematical source is byte-identical to the fully reviewed source. Final packaging/static and scoped-diff checks are recorded separately before delivery.",
+    "external_full_audit": false,
+    "lean_validation": false
+  },
+  "unrestricted_overlap_proved": false,
+  "unrestricted_density_proved": false,
+  "new_density_coverage_claim": false,
+  "novelty_claim": false,
+  "manuscript_or_revision_date_change": false,
+  "compiler_optimizer_or_service_run": false,
+  "monitor_restart": false,
+  "private_chat_export": false,
+  "delivery_scope": "Research-note-only three-path update to the existing public draft branch; no main push or merge."
+}

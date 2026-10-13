@@ -1,0 +1,250 @@
+REVISION ASSESSMENT: FROM CANONICAL ATOMS TO FINITE COUNTING
+7 October 2026 — Complete 81-page author-review manuscript
+
+1. WHAT THIS CONTINUATION CONTRIBUTES
+
+The preceding version established an exact universal pair-marginal criterion
+and quantitative bounds for private graph expansions. This revision develops
+those results into a counting theory for every finite linear hypergraph,
+including the full one-point assemblies described by the classification.
+
+It also makes the arguments usable: explicit three- and four-coordinate
+constructions, a stable finite-alphabet obstruction, exact star and cycle
+examples, a degree-variance refinement, and a fully computed example in which
+the location of an attachment changes the density while the atoms, attachment
+multiplicities, vertex/edge counts, and cyclic rank stay fixed.
+
+The additions connect the structural and quantitative parts of the paper.
+They do not rely on the recent OpenAI rank-layer estimate. The older
+classification/spectra proofs and conditional transfer proof are preserved.
+
+2. THE FULL LINEAR-PATTERN THEOREM
+
+Theorem 13.9 extends the density estimate to a finite simple linear r-uniform
+pattern H with m>=1 edges, for any r>=2. For each edge e, let b_e count its
+vertices that also belong to another edge, and put b=max_e b_e. Linearity gives
+b<=min(r,m-1). If U is a symmetric [0,1]-valued r-kernel of mean p, then
+
+  |t(H,U)-p^m|
+    <= [p(1-p)/r] sum_{unordered edge pairs {e,f}} sqrt(b_e b_f)
+    <= binom(m,2) [b/r] p(1-p).
+
+The density counts all homomorphisms. The result is exact for the adjacency
+kernel of every finite simple host; there is no hidden collision error in
+this finite-host assertion.
+
+The proof integrates vertices that occur in only one pattern edge. The
+resulting factor on e is a b_e-coordinate marginal. The higher-coordinate
+Hoeffding budget (Lemma 13.8) gives squared L2 norm at most
+(b_e/r)p(1-p) after centering. A Taylor expansion around the constant p has
+zero first derivative. Cauchy-Schwarz bounds each second derivative term,
+and the integral remainder produces the displayed unordered-pair sum.
+
+At fixed edge count m this gives a uniform error of order 1/r for all linear
+incidence structures, not only individual expansion atoms. It includes
+attachments through vertices that were private in the separate atoms.
+
+3. REGULAR HOSTS, BERGE GIRTH, AND THE OBLIGATORY CLASS
+
+If every one-coordinate marginal of U equals p, the higher projection budget
+improves to b(b-1)p(1-p)/(r(r-1)). Theorem 13.9 gives exact equality
+t(H,U)=p^m when H has no Berge cycle. If its Berge girth is g, it gives
+
+  |t(H,U)-p^m|
+    <= (2^m-1) [b(b-1)p(1-p)/(r(r-1))]^(g/2).
+
+To prove this, expand in centered edge factors. Integrating private variables
+annihilates a selected edge supported on zero or one shared point. Every
+remaining term contains a Berge cycle. A shortest cycle in a linear pattern
+has no extra intersections among its selected edges. Integrate variables
+belonging to only one of these cycle factors, then bound the cyclic product
+by the product of Hilbert-Schmidt norms. This gives the power r^(-g).
+
+Corollary 13.11 applies the classification: an obligatory pattern is linear
+and every Berge cycle is even. Its finite girth is therefore at least four.
+For every fixed m, the entire obligatory class on m edges consequently has
+error O_m(r^(-4)) in regular kernels and finite simple regular hosts. Berge
+forests have exact equality. This statement concerns complete assemblies,
+without assuming that their unrooted densities factor over the atoms.
+
+4. OPTIMAL RATES FOR EVERY FIXED CYCLIC INCIDENCE PATTERN
+
+Proposition 13.10 fixes the incidence data of shared vertices and adds private
+vertices as r grows. The same regular cosine kernels as in the preceding
+version have exact density 1/2:
+
+  U_r(x)=1/2 + [cos(r^(-1/2) sum_i x_i)-cos(r^(-1/2))^r]/4,
+
+on independent uniform signs. A j-coordinate Fourier coefficient, for even
+j>=2, equals (1/4)(-1)^(j/2)sin(theta)^j cos(theta)^(r-j), independently of
+the number of other retained coordinates. Its order is r^(-j/2).
+
+Sign averaging selects the even-degree incidence subsets on both sides of
+the Levi graph. The smallest nonempty such subsets are exactly its shortest
+cycles, with 2g incidences. If N_g counts them and
+b_r=(1/4)sin(theta)^2 cos(theta)^(r-2) ~ exp(-1/2)/(4r), then
+
+  t(H_r,U_r)-2^(-m)
+    = N_g(-b_r)^g 2^(-(m-g)) + O_H(r^(-g-1)).
+
+The leading coefficient cannot cancel. Thus the r^(-g) order is optimal for
+every fixed cyclic linear incidence pattern, including arbitrary canonical
+assemblies. These are optimal ABSOLUTE ERROR rates. For obligatory patterns,
+g is even and the leading deviation in this example is positive. The example
+does not prove a negative Sidorenko deficit of this order, and the numerical
+constants in the upper bounds are not claimed optimal.
+
+5. DEGREE VARIANCE AND CYCLIC ERROR
+
+Theorem 13.12 removes the need for exact regularity. Let d be the one-coordinate
+degree function, put delta^2=Var(d), and define
+
+  q^2 = [b(b-1)/(r(r-1))] [p(1-p)-r delta^2],
+  C_{m,b} = [(b+1)(b+2)]^m.
+
+The orthogonal projection budget makes the bracket nonnegative. The theorem
+gives error at most C_{m,b} delta^2 for Berge forests, and at most
+C_{m,b}(delta^2+q^g) for cyclic patterns of Berge girth g. Since b<=m-1,
+this constant can be bounded using m alone. It is deliberately coarse.
+
+Consequently, for a fixed incidence pattern,
+
+  |t(H_r,U_r)-p_r^m| = O_H(Var(d_r)+r^(-g)).
+
+The regular cyclic rate persists whenever the degree variance is O(r^(-g)).
+For a finite host of order n, d(v)=(r-1)!deg(v)/n^(r-1), so this is an
+explicit condition on its normalized degree sequence.
+
+The proof decomposes every shared marginal into its constant, first-order
+degree functions, and a higher remainder K. This remainder has zero marginals
+on sets of size at most one; it is not assumed fully degenerate coordinate by
+coordinate. Terms with at least two degree functions cost Var(d). With no
+degree function, a surviving term contains a cycle. With exactly one degree
+function, retain its marked point while integrating the other private
+coordinates. A surviving incidence forest would have at most one possible
+leaf, which is impossible. The remaining cycle terms cost delta q^(g/2),
+absorbed by delta^2+q^g.
+
+Small degree variance alone does not justify a universal leading coefficient
+proportional to that variance: rare-event OR kernels can have a third degree
+moment of the same order. The manuscript states the robust bound proved here,
+without that stronger and unsupported asymptotic claim.
+
+6. AN EXACT ATTACHMENT-SENSITIVE EXAMPLE
+
+The rooted-gluing identity (19) writes a one-point density as the product
+of the two unrooted densities plus the covariance of their rooted profiles.
+Remark 13.13 turns this into an explicit example.
+
+Take B=C4^[r]. Glue two copies either at two core vertices or at two private
+vertices, giving H_c and H_p. Both have 8 edges, 8r-9 vertices, cyclic rank2,
+the same two canonical atoms, and the same attachment excess profile (1).
+
+On the uniform space {-1,0,1}, put s=E Z^2=2/3 and choose
+0<epsilon<=min(p,1-p)/binom(r,2). The kernel
+
+  U_r=p+epsilon sum_{i<j} Z_i Z_j
+
+is [0,1]-valued, symmetric, and exactly regular. The atom's rooted densities
+are a_c(z)=p^4+epsilon^4 s^3 z^2 and a_p(z)=p^4+epsilon^4 s^4, the latter
+being constant. Therefore
+
+  t(H_c,U_r)-t(H_p,U_r)
+    = epsilon^8 s^6 Var(Z^2) = (128/6561)epsilon^8 > 0.
+
+This distinguishes the position of a joint inside an atom from its
+multiplicity. The direct statement is for bounded regular kernels. Ordinary
+sampling preserves a strict density gap in finite simple hosts, but does not
+automatically preserve exact regularity; that stronger realization is not
+claimed for this three-point example.
+
+7. USING THE MARGINAL CRITERION
+
+The new construction subsection explains the sampling rule behind a matching
+decomposition, then gives explicit formulas for r=3 and r=4. In four
+coordinates, opposite-edge minima give the perfect-matching weights, the
+residuals give singleton weights, and the empty-matching weight is one minus
+the sum of the opposite-edge maxima. The degree and triangle constraints
+ensure all weights are nonnegative.
+
+Examples show why triangle inequalities and larger odd-set inequalities
+cannot be removed. These are useful consequences of the preceding matching
+polytope theorem, without a separate first-priority claim for the formulas.
+
+Proposition 13.3 gives a stable finite obstruction. Write L=binom(r,2), take
+lambda in [0,1]^L, and test its proposed marginals using the fixed-point-free
+involution kernel V_N(x,y)=N 1[y=f(x)] on an even N-letter alphabet. If a
+joint law realizes every target pair marginal within total variation eta,
+then
+
+  dist_infinity(lambda, matching_polytope) <= L/N+(L+1)eta.
+
+Thus any profile at distance delta>0 has a finite exact obstruction for
+every even N>L/delta, with an explicit lower bound on the unavoidable
+marginal error. The estimate does not claim optimal constants.
+
+8. MAKING THE CONDITIONAL TRANSFER'S ERROR BUDGET EXPLICIT
+
+Before the retained transfer lemma, equation (20) now states that if the
+full graph density is at most1-delta and every proper subgraph density is
+within epsilon of1, then
+
+  t(J,1+lambda(V-1))
+    <=1-delta lambda^m+epsilon(1-lambda^m).
+
+Hence epsilon(1-lambda^m)<delta lambda^m suffices for a strict deficit.
+At the universal lambda_r~1/r, the retained signal has order r^(-m).
+This explains the order of limits and the accuracy required of the proper
+subgraph profile. It does not provide a uniform host density or field-size
+bound. The graph/kernel notation and normalization are explicitly defined.
+
+The existing OpenAI-based application retains its stated rank-layer
+hypothesis. No new finite-field proof or Lean certification is asserted.
+
+9. RELATION TO PRIOR WORK AND PUBLICATION ASSESSMENT
+
+Hoeffding's decomposition, matching polytopes, cycle norm inequalities, and
+rooted homomorphism identities are classical tools and are credited as such.
+Kohayakawa-Nagle-Rodl-Schacht (JCTB100(2),2010,151-160), Theorem4, is now cited
+for counting linear patterns under quasirandomness at fixed uniformity.
+Nie-Spiro's published Theorem1.13 remains the acknowledged one-sided
+high-uniformity predecessor for expansions. Their hypotheses and conclusions
+differ from the uniform two-sided, regular Berge-girth, and degree-variance
+statements proved here.
+
+A targeted primary-source search did not locate these exact new statements.
+This supports a carefully delimited novelty case and does not certify first
+priority. The explicit calculations are explanatory examples and consequences;
+they are not advertised individually as major independent discoveries.
+
+The strongest coherent narrative is now: classify the obligatory finite
+patterns; describe their canonical assembly; control the densities of every
+such assembly using shared incidences, degree fluctuations, and Berge cycles;
+then explain the separate conditional example that defeats an exact density
+inequality. This gives the new analytic section a role in the main paper.
+
+The larger manuscript still needs a clear editorial case for its length.
+The new pages contain proofs, operational examples, and a generalization
+beyond single atoms. They should be assessed for these contributions rather
+than page count. The appropriate status remains an author-review research
+draft. The prior ambitious JCTB positioning is not an acceptance prediction,
+and internal checking is not external peer review.
+
+10. FINAL VERIFICATION
+
+The complete new arguments received independent internal AI-assisted
+mathematical readings and integrating-assistant review. The final integrated
+review requested explicit graph/kernel notation before the transfer error
+budget; this was added and the updated source approved. The standalone
+higher-coordinate lemma states r>=2. No required repairs remain in that review.
+
+The final three-pass PDF build has81 pages, no warnings, no unresolved
+references/citations, and no overfull or underfull boxes. The introduction,
+Section13, section transitions, formalization boundary and bibliography were
+visually inspected. All45 preceding bibliography entries retain their content;
+one primary entry is added. Sections1-12 and the conditional transfer/application
+source spans are byte-for-byte unchanged.
+
+No new Lean formalization, external Lean replay, external peer review,
+first-priority certification, merge, or journal submission is claimed.
+Draft PR: https://github.com/SamPetkov/Erdos593/pull/53

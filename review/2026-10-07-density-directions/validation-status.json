@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-07",
+  "status": "SOURCE_REVIEWED_CANDIDATES_UNCOMPILED_TWO_RUNNER_PREFLIGHT_FAILURES_BUDGET_SPENT",
+  "accepted_root": "UNCHANGED250modules401ordered_audits",
+  "full_manuscript_formalized": false,
+  "analytical_review": "Three deductions source-reviewed; external theta/random-Turan inputs attributed; positive-excess transfer conditional; no novelty certification",
+  "source_definitions_types_binder_body_review": "PASS actual root/helper review, not compilation",
+  "first_focused_job": {
+    "id": 66840,
+    "job_and_batch_state": "FAILED1:0/node01/1s",
+    "actual_cause": "Runner rejected absolute Windows provenance paths under native POSIX path validation",
+    "compiler_runs": 0,
+    "actual_wrapper_exit": 1,
+    "mathematical_diagnostics": "NONE",
+    "originals": {
+      "focused-report.json": "1226d5a0f5bea057e6e09b5efc9604a550a154bf53d9549e55c554e04a1906c1",
+      "focused-report.log": "476dc3f270ec64a5f26a7091fab44785abd5947afc9278e56059dfb9dd965d38",
+      "wrapper-66840.log": "476dc3f270ec64a5f26a7091fab44785abd5947afc9278e56059dfb9dd965d38"
+    },
+    "download_count": 1,
+    "originals_preserved_and_fully_read": true
+  },
+  "second_route": {
+    "status": "SUBMITTED_AND_TERMINAL_FAILED_BEFORE_COMPILER",
+    "job_id": 66842,
+    "compiler_runs": 0,
+    "source_archive_byte_identical_to_r1": true,
+    "archive_sha256": "979e4c8890204ac55274e58bf8df55f1c6c6d0f47d4410a46032f43774c088b0",
+    "freeze_sha256": "0775bc2e29ba2a254b63e3f5861b8465e401a39b32f4574850e74758810bb786",
+    "helper_static_review_sha256": "7dbab1b0830f86e6b5856640b8590d2230c65a175eb98426f40135fe7552d5f3",
+    "source_and_proof_changes": "NONE; provenance-path validator and authorization filename guard repaired only",
+    "job_and_batch_state": "FAILED1:0/node01/4s",
+    "actual_wrapper_exit": 1,
+    "actual_elapsed_seconds": 1.446901896968484,
+    "actual_cause": "Dependency source scanner's without_comments rejected text as unterminated comment/string before compiler/version. Precise culprit is being diagnosed read-only.",
+    "originals": {
+      "focused-report.json": "3c5b96b97f3035fb1440d05a38c1b32e73f418b5705f3e700a9be51a2f8bd036",
+      "focused-report.log": "a15e0e0e5aaca79dd3bfd1229a4cbe107a931fbf7c0d09b27af8ab218f879dd2",
+      "wrapper-66842.log": "a15e0e0e5aaca79dd3bfd1229a4cbe107a931fbf7c0d09b27af8ab218f879dd2"
+    },
+    "download_count": 1,
+    "originals_preserved_and_fully_read": true,
+    "all_ten_uploaded_authorized_hashes_verified": true,
+    "initial_queue_stop": "Preserved before remote mutation; other job completed0:0, new read confirmed empty queue and idle node01; separately reviewed first actual upload and sole dispatch, not an upload/write retry."
+  },
+  "focused_jobs_consumed": 2,
+  "joint_limit": 2,
+  "budget_reset": false,
+  "required_actual_output": {
+    "new_modules": 5,
+    "complete_definitions": 27,
+    "complete_theorem_types": 51,
+    "exact_ordered_standard_axiom_records": 51
+  },
+  "dependency_artifact_lineage": "PENDING_HISTORICAL_FULL_CLOSURE_LINEAGE",
+  "canonical_standalone_final_acceptance": "PENDING",
+  "external_full_audit": "PENDING",
+  "root_review_independent": false,
+  "clocks": "PAUSED_UNCHANGED",
+  "no_accepted_replay_cache_pin_install_or_video_process_change": true,
+  "accepted": false,
+  "budget_state": "SPENT_STOPPED",
+  "remaining_focused_attempts": 0,
+  "total_actual_compiler_runs": 0,
+  "no_new_theorem_kernel_validation": true,
+  "no_active_job_in_this_lane": true
+}

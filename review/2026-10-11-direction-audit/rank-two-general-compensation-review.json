@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "scope": "Analytical larger two-active-mode residual domain and actual-root all-ordered h>=l-1 corollary",
+  "source": "rank-two-general-compensation.md",
+  "source_sha256": "999ee928fcc95ff819df6229e5dff062623aee7434a628d4013ed74fdbf1101a",
+  "root_complete_final_saved_source_review": "PASS",
+  "root_independent": false,
+  "actual_separate_complete_source_reviews": [
+    {
+      "agent": "collective_maximum_certificate",
+      "verdict": "FOLLOWS",
+      "complete_final_saved_source_read": true,
+      "actual_hash_confirmed": true,
+      "precision_repair": "Exclude already-paid k=l matching family from the remaining leaf; final complete actual reread confirms the repair and unchanged proof."
+    },
+    {
+      "agent": "density_finite_host_tail_audit",
+      "verdict": "PASS",
+      "complete_final_saved_source_read": true,
+      "actual_hash_confirmed": true,
+      "proof_and_scope_rechecked": true
+    }
+  ],
+  "proved": [
+    "A-only rank(A-Pi)=2 in J-l<u<r+l under 2min(J,u)>=max(u,l)+min(k,r): F>=1+p^(u+r+l)+p^(k+2u)-p^(N+J+u-2)>1.",
+    "Keeping the actual nonnegative symmetric root A=T^2, every ordered tuple with rank(A-Pi)<=2 and h>=l-1 satisfies F>=1.",
+    "Joint-wedge and negative-Y branches are paid throughout the residual strip; the additional exponent domain pays negative X through its positive companion.",
+    "Negative X is also paid throughout the residual strip if tau=d/b<=1/(2t)."
+  ],
+  "analytical_checks": [
+    "Exact full channel contraction and four occurrences per channel",
+    "Two disjoint retained triangle credits",
+    "Sharp crossing quadratics for arbitrary J,u",
+    "Actual joint-wedge budget without product closure",
+    "Exact weight-ratio convex combination",
+    "Small-tau threshold and positive exponent bounds",
+    "Integer domain exhaustion and expressly retained actual root",
+    "Jensen/Bessel constraint (25), not a completed diagonal payment",
+    "Matching family removed from route's remaining gap"
+  ],
+  "preacceptance_repairs": [
+    "Explicit active basis/theta/moment definitions",
+    "l=1 provenance assigned to Markov Jensen",
+    "k=l matching family removed from remaining leaf and other host guards acknowledged"
+  ],
+  "retained_next_gap": "Actual negative X in the strip, outside the exponent guard, k!=l, bd>0,zeta<0,tau>1/(2t); other prior sufficient guards may pay individual hosts. No universal remaining diagonal-budget payment.",
+  "new_computation": false,
+  "new_service_request": false,
+  "proof_by_finite_diagnostics": false,
+  "lean_validation": false,
+  "full_external_audit": false,
+  "novelty_claim": false,
+  "unrestricted_density_proved": false,
+  "manuscript_changed": false,
+  "monitors": "paused",
+  "verdict": "Complete corrected-source source review supports the displayed analytical domains; arbitrary rank and the remaining two-mode leaf are open."
+}

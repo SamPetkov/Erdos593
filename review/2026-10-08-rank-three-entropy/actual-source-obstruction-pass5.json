@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-09",
+  "status": "ANALYTICAL_COUNTEREXAMPLE_TO_MODEWISE_POSITIVITY_NOT_TO_DENSITY_TARGET",
+  "scope": "Every kernel, eigenfunction, source and moment is obtained from one strictly positive admissible weighted common-power host. This refutes the stronger sufficient lemma q_i(h)>=0, not the target F>=1.",
+  "space": "Write R_e for the six signs indexed by ab,ac,ad,bc,bd,cd, and S_v for the product over the three edges incident to v. Uniform probability on Omega={R:S_a+S_b+S_c-S_d=2}, a32-state support; equivalently density2^-6[1+(S_a+S_b+S_c-S_d)/2] on the full cube before removing zero masses.",
+  "actual_moments": "The six R_e are centered orthonormal. Their only nonzero distinct-coordinate cubic moments are the four stars: E S_a=E S_b=E S_c=1/2,E S_d=-1/2. Repeated-coordinate cubic moments vanish. These follow from the Fourier density; an actual complete32-dimensional orthonormal basis adds zero-eigenvalue complementary modes.",
+  "host": "T(x,y)=1+sum_e s_e R_e(x)R_e(y), s=(2^-64,1/32,1/4,1/8,1/16,1/8). Sum s=19/32+2^-64<1, so13/32-2^-64<=T<=51/32+2^-64. T is symmetric Markov. Set p=(51/32+2^-64)^-1,W=pT, hence0<W<=1, all weighted row means p. A=T² has eigenvalues theta_e=s_e² and actual nonnegative powers K_j=A^j.",
+  "mode_and_parameters": "f=R_ab, eta=theta_ab=2^-128>0, r=l=1,u=4,h=8. Full ordered tuple can be(k,9,4,1,4,1),k>=4.",
+  "definition": "g_eta(c,d)=sum_x mu_x f(x)K_r(x,c)K_u(x,d), q_eta=sum_cd mu_c mu_d K_l(c,d)g_eta(c,d)(A_c^h g_eta)(c,d).",
+  "base_notation": "Set eta=0 temporarily, alpha=2^-10,beta=2^-4,delta=2^-6,epsilon=2^-8,zeta=2^-6. G=(alpha^r beta^u R_ac(c)R_ad(d)+beta^r alpha^u R_ad(c)R_ac(d)+delta^r epsilon^u R_bc(c)R_bd(d)+epsilon^r delta^u R_bd(c)R_bc(d))/2. V=A_c^(0,h)G multiplies the four c-modes by their actual hth eigenvalue powers.",
+  "base_contraction": "q0=(alpha^(2r+h)beta^(2u)+beta^(2r+h)alpha^(2u)+delta^(2r+h)epsilon^(2u)+epsilon^(2r+h)delta^(2u))/4-zeta^l[(alpha delta)^r(alpha^h+delta^h)(beta epsilon)^u+(beta epsilon)^r(beta^h+epsilon^h)(alpha delta)^u]/16. Constant weighting gives four squares. Only centered R_cd weighting survives cross contractions, using opposite star signs; all other centered contractions vanish.",
+  "exact_arithmetic": "q0=[2^20+2^32+2^28+2^24-(2^32+1+16+2^36)]/2^154=-68433215505/2^154.",
+  "positive_eigenvalue_perturbation": "g_eta=G+eta^r f(c)+eta^u f(d); A_c^h g_eta=V+eta^(r+h)f(c)+eta^u f(d); K_l^eta=K_l^0+eta^l f(c)f(d). Actual base kernels have maximum<=2, |G|,|V|<=2, and both source increments<=2eta. K_l^0 mu² is a probability. Thus |q_eta-q0|<=8eta+4eta²+eta(2+2eta)²<=28eta for0<=eta<=1.",
+  "strict_certificate": "q_eta<=(-68433215505+28*2^26)/2^154=-66554167313/2^154<0.",
+  "density_boundary": "F=q_constant+sum_i theta_i^k q_i retains the proper-term and constant-mode surplus. This example has p>1/2 and is covered by the earlier density-compensation theorem; it is not a density counterexample. A successful general route must permit individual negative modes and control their weighted total.",
+  "review": "Root self-review independent=false, actual separate analytical helper verified the star moments, exact contraction and perturbation bound. No compiler, numerical scan, service request, external full audit, novelty or significance claim.",
+  "lean_validated": false,
+  "general_target_proved": false
+}

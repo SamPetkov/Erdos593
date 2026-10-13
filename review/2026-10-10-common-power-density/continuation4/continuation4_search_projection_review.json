@@ -1,0 +1,562 @@
+{
+  "verdict": "The exact projection example and the retained-coarse-density quantitative comparison pass this independent review. The reflection boundary already has F>=1 for every actual root, so this is not new density coverage. The unrestricted target remains unresolved.",
+  "source_bindings_sha256": {
+    "continuation4_projection_example.md": "da6312e19e2cdeb6009bd481ecde99368c99c1c379e29509eacf3d2631c0b11a",
+    "continuation4_projection_verify.py": "4ab0f3f2b28107b46c917536ea7de1acc9c15626b1cf9f93d225264c1cd5b33e",
+    "continuation4_projection_checks.json": "ed65e1162206cfec230f886717594f963decd35c45acf6e98f7fec51d5f2614d",
+    "continuation4_tensor_projection_lemmas.md": "9d4a862b2d62a5d064ed8a9ae84f5df7de599ec02d31a52896b75b665805491c",
+    "continuation4_boundary_scope.md": "a52ad9f4361599889623669f6becd78f053043e9dd30832480c26f4dcaf9b4ce"
+  },
+  "archival_verifier_rerun": "Executed in a fresh temporary directory; archival result left unchanged.",
+  "reproduced_archival_checks_byte_identical": true,
+  "reproduced_counts": {
+    "lemma_check_count": 60,
+    "actual_host_count": 7,
+    "actual_host_tuple_count": 11
+  },
+  "independent_exact_checks": {
+    "original_mu": [
+      "3/10",
+      "3/10",
+      "1/10",
+      "1/10",
+      "1/20",
+      "1/20",
+      "1/20",
+      "1/20"
+    ],
+    "original_coarse_pi": [
+      "3/5",
+      "1/5",
+      "1/10",
+      "1/10"
+    ],
+    "all_36_TP2_minors": [
+      {
+        "rows": [
+          0,
+          1
+        ],
+        "columns": [
+          0,
+          1
+        ],
+        "integer_minor": 1061,
+        "relative_minor": "1061/144"
+      },
+      {
+        "rows": [
+          0,
+          1
+        ],
+        "columns": [
+          0,
+          2
+        ],
+        "integer_minor": 59,
+        "relative_minor": "59/72"
+      },
+      {
+        "rows": [
+          0,
+          1
+        ],
+        "columns": [
+          0,
+          3
+        ],
+        "integer_minor": 0,
+        "relative_minor": "0"
+      },
+      {
+        "rows": [
+          0,
+          1
+        ],
+        "columns": [
+          1,
+          2
+        ],
+        "integer_minor": 1,
+        "relative_minor": "1/24"
+      },
+      {
+        "rows": [
+          0,
+          1
+        ],
+        "columns": [
+          1,
+          3
+        ],
+        "integer_minor": 0,
+        "relative_minor": "0"
+      },
+      {
+        "rows": [
+          0,
+          1
+        ],
+        "columns": [
+          2,
+          3
+        ],
+        "integer_minor": 0,
+        "relative_minor": "0"
+      },
+      {
+        "rows": [
+          0,
+          2
+        ],
+        "columns": [
+          0,
+          1
+        ],
+        "integer_minor": 59,
+        "relative_minor": "59/72"
+      },
+      {
+        "rows": [
+          0,
+          2
+        ],
+        "columns": [
+          0,
+          2
+        ],
+        "integer_minor": 472,
+        "relative_minor": "118/9"
+      },
+      {
+        "rows": [
+          0,
+          2
+        ],
+        "columns": [
+          0,
+          3
+        ],
+        "integer_minor": 59,
+        "relative_minor": "59/36"
+      },
+      {
+        "rows": [
+          0,
+          2
+        ],
+        "columns": [
+          1,
+          2
+        ],
+        "integer_minor": 8,
+        "relative_minor": "2/3"
+      },
+      {
+        "rows": [
+          0,
+          2
+        ],
+        "columns": [
+          1,
+          3
+        ],
+        "integer_minor": 1,
+        "relative_minor": "1/12"
+      },
+      {
+        "rows": [
+          0,
+          2
+        ],
+        "columns": [
+          2,
+          3
+        ],
+        "integer_minor": 0,
+        "relative_minor": "0"
+      },
+      {
+        "rows": [
+          0,
+          3
+        ],
+        "columns": [
+          0,
+          1
+        ],
+        "integer_minor": 0,
+        "relative_minor": "0"
+      },
+      {
+        "rows": [
+          0,
+          3
+        ],
+        "columns": [
+          0,
+          2
+        ],
+        "integer_minor": 59,
+        "relative_minor": "59/36"
+      },
+      {
+        "rows": [
+          0,
+          3
+        ],
+        "columns": [
+          0,
+          3
+        ],
+        "integer_minor": 531,
+        "relative_minor": "59/4"
+      },
+      {
+        "rows": [
+          0,
+          3
+        ],
+        "columns": [
+          1,
+          2
+        ],
+        "integer_minor": 1,
+        "relative_minor": "1/12"
+      },
+      {
+        "rows": [
+          0,
+          3
+        ],
+        "columns": [
+          1,
+          3
+        ],
+        "integer_minor": 9,
+        "relative_minor": "3/4"
+      },
+      {
+        "rows": [
+          0,
+          3
+        ],
+        "columns": [
+          2,
+          3
+        ],
+        "integer_minor": 0,
+        "relative_minor": "0"
+      },
+      {
+        "rows": [
+          1,
+          2
+        ],
+        "columns": [
+          0,
+          1
+        ],
+        "integer_minor": 1,
+        "relative_minor": "1/24"
+      },
+      {
+        "rows": [
+          1,
+          2
+        ],
+        "columns": [
+          0,
+          2
+        ],
+        "integer_minor": 8,
+        "relative_minor": "2/3"
+      },
+      {
+        "rows": [
+          1,
+          2
+        ],
+        "columns": [
+          0,
+          3
+        ],
+        "integer_minor": 1,
+        "relative_minor": "1/12"
+      },
+      {
+        "rows": [
+          1,
+          2
+        ],
+        "columns": [
+          1,
+          2
+        ],
+        "integer_minor": 143,
+        "relative_minor": "143/4"
+      },
+      {
+        "rows": [
+          1,
+          2
+        ],
+        "columns": [
+          1,
+          3
+        ],
+        "integer_minor": 18,
+        "relative_minor": "9/2"
+      },
+      {
+        "rows": [
+          1,
+          2
+        ],
+        "columns": [
+          2,
+          3
+        ],
+        "integer_minor": 1,
+        "relative_minor": "1/2"
+      },
+      {
+        "rows": [
+          1,
+          3
+        ],
+        "columns": [
+          0,
+          1
+        ],
+        "integer_minor": 0,
+        "relative_minor": "0"
+      },
+      {
+        "rows": [
+          1,
+          3
+        ],
+        "columns": [
+          0,
+          2
+        ],
+        "integer_minor": 1,
+        "relative_minor": "1/12"
+      },
+      {
+        "rows": [
+          1,
+          3
+        ],
+        "columns": [
+          0,
+          3
+        ],
+        "integer_minor": 9,
+        "relative_minor": "3/4"
+      },
+      {
+        "rows": [
+          1,
+          3
+        ],
+        "columns": [
+          1,
+          2
+        ],
+        "integer_minor": 18,
+        "relative_minor": "9/2"
+      },
+      {
+        "rows": [
+          1,
+          3
+        ],
+        "columns": [
+          1,
+          3
+        ],
+        "integer_minor": 162,
+        "relative_minor": "81/2"
+      },
+      {
+        "rows": [
+          1,
+          3
+        ],
+        "columns": [
+          2,
+          3
+        ],
+        "integer_minor": 9,
+        "relative_minor": "9/2"
+      },
+      {
+        "rows": [
+          2,
+          3
+        ],
+        "columns": [
+          0,
+          1
+        ],
+        "integer_minor": 0,
+        "relative_minor": "0"
+      },
+      {
+        "rows": [
+          2,
+          3
+        ],
+        "columns": [
+          0,
+          2
+        ],
+        "integer_minor": 0,
+        "relative_minor": "0"
+      },
+      {
+        "rows": [
+          2,
+          3
+        ],
+        "columns": [
+          0,
+          3
+        ],
+        "integer_minor": 0,
+        "relative_minor": "0"
+      },
+      {
+        "rows": [
+          2,
+          3
+        ],
+        "columns": [
+          1,
+          2
+        ],
+        "integer_minor": 1,
+        "relative_minor": "1/2"
+      },
+      {
+        "rows": [
+          2,
+          3
+        ],
+        "columns": [
+          1,
+          3
+        ],
+        "integer_minor": 9,
+        "relative_minor": "9/2"
+      },
+      {
+        "rows": [
+          2,
+          3
+        ],
+        "columns": [
+          2,
+          3
+        ],
+        "integer_minor": 71,
+        "relative_minor": "71"
+      }
+    ],
+    "holding_probabilities": [
+      "59/60",
+      "9/10",
+      "4/5",
+      "9/10"
+    ],
+    "minimum_holding_probability": "4/5",
+    "spectrum_argument": "Positive adjacent entries give a simple symmetric tridiagonal spectrum by eigenvector recurrence. S0=(4/5)I+(1/5)R with reversible stochastic R gives eigenvalues at least 3/5; connectedness makes the eigenvalue one simple. The three centered squares are distinct and exceed beta.",
+    "entire_centered_square_values_count": 5,
+    "centered_zero_multiplicity": 2,
+    "channel_beta_multiplicity": 2,
+    "rank_Q": 2,
+    "Q_preserves_constant": true,
+    "Sf_at_zero_coordinate": "-31/320",
+    "S_and_Q_do_not_commute": true,
+    "p": "512/4499",
+    "min_T": "3/128",
+    "max_T": "4499/512",
+    "max_A": "2541919/327680",
+    "fine_square_characteristic_polynomial": [
+      "1",
+      "-11500741/3686400",
+      "168711133403/47185920000",
+      "-8792290627722953/4947802324992000",
+      "130258618816898085073/405323966463344640000",
+      "-203426074115599877/5188146770730811392000",
+      "31035116220889/25940733853654056960000",
+      "0",
+      "0"
+    ],
+    "coarse_square_characteristic_polynomial": [
+      "1",
+      "-11500291/3686400",
+      "5398181248721/1509949440000",
+      "-171682251908633/96636764160000",
+      "31035116220889/96636764160000"
+    ],
+    "minimal_boundary_tuple_F": "12773126531938892011509728310096361262722355954351/426314075886774432579887228918956032000000000000",
+    "simple_boundary_lower_bound": "295147905179621285889/295147905179352825856",
+    "minimal_boundary_coarse_F": "99790051030750584929010047309287592589092935117/3330578717865425254530368975929344000000000000",
+    "minimal_boundary_channel_lower_surplus": "268460033/295147905179352825856",
+    "minimal_boundary_fine_trace_lower_bound": "367400816931560548336292017/184675732219861401600000000",
+    "minimal_boundary_coarse_trace_lower_bound": "367400816931560543210510767/184675732219861401600000000",
+    "minimal_boundary_six_further_cycle_surplus": "268451841/295147905179352825856"
+  },
+  "analytical_scope_review": {
+    "status": "The following are analytical proof checks, not claims of formal verification or consequences of the finite examples.",
+    "generic_reflection_proof": "For twins with incident powers s,t, use the actual source g_ac(b)=K_s(a,b)K_t(c,b). Subtract Pi from the PSD inner-edge kernel, integrate the two actual source factors to K_(s+t), then pair the PSD outside-edge kernel minus Pi with the PSD Schur square K_(s+t) circ K_(s+t). This yields F>=tr(A^(2(s+t)))>=1 under the original measure.",
+    "reflection_families": [
+      {
+        "vertices": [
+          "b",
+          "d"
+        ],
+        "equalities": [
+          "k=u",
+          "r=l"
+        ],
+        "bound": "tr(A^(2(u+r)))"
+      },
+      {
+        "vertices": [
+          "a",
+          "c"
+        ],
+        "equalities": [
+          "k=r",
+          "u=l"
+        ],
+        "bound": "tr(A^(2(u+r)))"
+      },
+      {
+        "vertices": [
+          "b",
+          "c"
+        ],
+        "equalities": [
+          "k=r+h",
+          "u=l"
+        ],
+        "bound": "tr(A^(2(k+u)))"
+      }
+    ],
+    "exhaustiveness": "The other three transpositions require h=0 or r+h<=l, both impossible under the target assumptions.",
+    "equality": "F=1 in any of these reflection families forces all centered eigenvalues of A to vanish. Thus A=Pi, and self-adjointness with T1=1 gives T=Pi. The converse holds. Zero modes, disconnected hosts and the one-state case require no changed measure.",
+    "paired_star_classification": "All four complementary stars have a repeated pair exactly for r=l,k=u or for r=l=u,k=u+h. Both are ordinary reflection families and give no new density coverage.",
+    "projection_comparison": "For H^2=beta Q, d=rank Q, the separate cycle proof retains F(T;n)>=F(S;n)+d sum_C beta^(q_C). Coarse reflection gives F(S;n)>=tr((S^2)^(2(u+r))) on k=u,r=l.",
+    "trace_transport": "The original binary-sign decomposition is an orthogonal direct sum: T acts as S on sign-constant functions and H on sign-odd functions. Therefore tr((T^2)^(2(u+r)))=tr((S^2)^(2(u+r)))+d beta^(2(u+r)). No commutation of S and H is needed.",
+    "six_extra_cycles": "The quadrilateral abcd has q_C=2(u+r). Removing exactly that term leaves F(T;n)>=tr((T^2)^(2(u+r)))+d sum_(C!=abcd) beta^(q_C), with six additional positive terms when d>0 and beta>0. If d=0 or beta=0 the gain is zero.",
+    "arbitrary_channel_scope": "The scalar fine and coarse reflection bounds do not compare F(T;n) with F(S;n). No general coarse-domination conclusion is made for arbitrary H; that comparison retains signed cross terms outside the proved projection mechanism.",
+    "novelty": "No novelty claim and no extension of the unrestricted tuple range is made."
+  },
+  "literature_scope": "The coarse TP2-convex certificate is checked as an application of the already-reviewed repository note; no new primary-literature or novelty claim is made by this audit.",
+  "review_source_sha256": "45a6f9236496b62e4808318590d7e4733acb0f100745b3b739b5cace754232c0"
+}

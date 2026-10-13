@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-07",
+  "reviewer": "/root/density_binder_audit",
+  "kind": "Actual separate-agent successor execution-status and unchanged-source review",
+  "independent_external": false,
+  "scope": "Only the terminal r2 execution record, its actual originals/accounting, public validation-status successor and preservation of the previously reviewed public packet. This is not a fresh proof/source acceptance review or an approval of a later parser repair.",
+  "public_snapshot": {
+    "directory": "C:/Users/petko/e593-frontmatter-story-public-20261004/review/2026-10-07-density-directions",
+    "validation_status_sha256": "d866524de7af8a97181755728a1a43012f2fa3901f8d29e120bc60fa7dd107e0",
+    "historical_delivery_source_review_sha256": "8ac5b8384b4f9e7e5987d08718c8840158b6bbc17a2783faad0c5e3a8e4b76ec",
+    "source_copy_manifest_sha256": "e99481104cbdd31ef21eb393e44558cbab73185023c1e2bdf57a1160132e181e",
+    "current_files": 21,
+    "same_existing_path_set": true,
+    "unchanged_existing_files": 20,
+    "changed_existing_files": ["validation-status.json"],
+    "preservation_check": "Independently recomputed all 15 source-copy manifest members, three additional README/Armstrong/.gitattributes hashes, the manifest hash and the historical delivery-source-review hash. All 20 match the earlier frozen review; only the actual validation-status successor changed.",
+    "six_lean_sources": "All six candidate blobs retain their exact originally reviewed hashes, including D1 at candidates/Erdos593/DensityCandidates/LowRankBipartiteNormalForms.lean. No statement, definition, proof, import, candidate path, manuscript fragment, bibliography or next-obligation mutation is inferred or approved."
+  },
+  "actual_r2_evidence_fully_read": {
+    "focused_report": {"path": "originals-r2/focused-report.json", "sha256": "3c5b96b97f3035fb1440d05a38c1b32e73f418b5705f3e700a9be51a2f8bd036"},
+    "focused_log": {"path": "originals-r2/focused-report.log", "sha256": "a15e0e0e5aaca79dd3bfd1229a4cbe107a931fbf7c0d09b27af8ab218f879dd2"},
+    "wrapper_log": {"path": "originals-r2/wrapper-66842.log", "sha256": "a15e0e0e5aaca79dd3bfd1229a4cbe107a931fbf7c0d09b27af8ab218f879dd2"},
+    "terminal_accounting": {"path": "dispatch-r2/retrieval-once/terminal-accounting.stdout", "sha256": "b5cbe06f8c47bed1763ba3a7332a65cf2128d9b232f33d17ee4e098354869334"},
+    "other_records": ["dispatch-r2/retrieval-once/terminal-accounting.result.json", "dispatch-r2/retrieval-once/retrieval.json", "failure-review-r2.json"],
+    "failure_review_sha256": "747695597a4e56d64542b4c92e50471410e71716155a39f45f25b6769dfdeebd",
+    "local_hash_reconciliation": "PASS: all three actual original hashes match both the retrieval metadata and current public validation-status originals dictionary. Logs are identical, not duplicate compiler-success evidence."
+  },
+  "reviewed_terminal_result": {
+    "job_id": 66842,
+    "node": "node01",
+    "job_state": "FAILED",
+    "job_exit": "1:0",
+    "batch_state": "FAILED",
+    "batch_exit": "1:0",
+    "scheduler_elapsed": "00:00:04",
+    "accounting_read_command_exit": 0,
+    "actual_wrapper_exit": 1,
+    "report_elapsed_seconds": 1.446901896968484,
+    "wrapper_log_elapsed_seconds": 1.4457490034401417,
+    "timing_reconciliation": "Scheduler allocation time and measured wrapper/report times are distinct measurements, not conflicting child exits.",
+    "actual_failure": "dependency_snapshot called imports_of on dependency source text; without_comments raised ValueError: Unterminated Lean comment/string. The traceback reaches focus.py line171 before writing a dependency manifest or invoking the compiler/version or a candidate child.",
+    "source_order_check": "Read the actual tools-r2/focus.py main segment through dependency_snapshot and manifest generation; this preflight occurs before compiler execution. The missing compiler/version/child/artifact records listed in retrieval.json are retained as missing, not relabelled green.",
+    "precise_dependency_culprit": "Not established by these original logs. The review does not assert malformed Lean dependency source, a mathematical defect, or a diagnosis beyond the actual runner scanner failure.",
+    "mathematical_or_kernel_result": "NONE; all new candidate bodies remain UNCOMPILED."
+  },
+  "status_consistency": {
+    "first_job": "66840 FAILED1:0 before compiler, unchanged historical record",
+    "second_job": "66842 FAILED1:0 before compiler, correctly supersedes the earlier queue-blocked snapshot",
+    "focused_jobs_consumed": 2,
+    "joint_limit": 2,
+    "remaining": 0,
+    "budget_state": "SPENT_STOPPED",
+    "total_actual_compiler_runs": 0,
+    "no_active_job_in_this_lane": "Both recorded allocated jobs are terminal; no third job is claimed by this status record.",
+    "accepted": false,
+    "accepted_root": "Unchanged 250-module/401-audit accepted root is not replayed or promoted by this failed checkpoint.",
+    "future_proof_gates": "Actual full types/definitions/ordered axioms, historical dependency-artifact lineage and canonical/standalone/final reconciliation remain pending.",
+    "clocks": "PAUSED_UNCHANGED",
+    "verdict": "PASS: the current public status honestly preserves both failures, the consumed joint budget and zero kernel progress."
+  },
+  "publication_safety": {
+    "no_new_private_export": true,
+    "scan_result": "No credential or private-key pattern found. The sole .agent-coordination token match is the historical delivery review's statement that such references were excluded; it is not a private path or private coordination content.",
+    "allowlist_boundary": "The existing 21 public review paths remain exactly the previous narrow packet. A public copy of this successor status review may be added as explicit review evidence; outgoing Git blob/path verification remains root's separate delivery gate.",
+    "no_new_mathematical_claim": true
+  },
+  "not_certified": [
+    "Any later unexecuted parser/scanner correction or its tests",
+    "A third compiler/service/job attempt, venue switch or attempt-budget reset",
+    "New kernel validation, proof success or mathematical failure",
+    "A future PR commit/push/readback not inspected by this source-only reviewer",
+    "Canonical/all-root/standalone acceptance, whole-paper completion, novelty or journal readiness"
+  ],
+  "actions": {
+    "new_file": "research/e593-density-development-20261007/delivery-status-review-r2.json",
+    "compiler_version_or_remote_command": false,
+    "network_or_git_mutation": false,
+    "public_candidate_manuscript_or_runner_edit": false
+  },
+  "final_verdict": "PASS_FOR_HONEST_TERMINAL_STATUS_SUCCESSOR_ONLY. Preserve the earlier delivery-source review as historical. The current candidates remain uncompiled, both focused jobs are consumed, and no future recovery or proof acceptance is certified."
+}

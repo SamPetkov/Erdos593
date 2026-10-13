@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-11",
+  "research_checkpoint": "collective-round2-brief.json",
+  "scope": "Analytical source review of the original-root correlated negative-mass bound, conditional density deductions, and exact pair-marginal limitation; not an unrestricted proof or kernel acceptance",
+  "sources": {
+    "ordered-negative-mass.md": "03074e03475afbf37eebb8d8e34902605340029530ff2e9db9677c9e5130c3c1",
+    "negative-mass-audit.md": "5e53b2ce23f5087d8a546358f8a5cc9d3123966585e700efdc20101151cdb1a5",
+    "loop-information-check.md": "d1cb188ac30abdd335706a44682f7bd40a885fb3bf67d0f94b67cff8391b773b",
+    "check_loop_information.py": "d017ec28176049b07ca12958c20129bd8dd7dfae40c553e34524f69e4afad945",
+    "loop-information-checks.json": "5200661afd6bd432cf1cbb01de320e93fd4694787eb7e4269d7942256eeed6b0"
+  },
+  "pro_response": {
+    "completed": true,
+    "root_read_entire_response": true,
+    "preserved_privately": true,
+    "capture_matches_visible_response_after_whitespace_normalization": true,
+    "new_message_or_retry": false,
+    "reported_numerical_probes_adopted_as_run_evidence": false,
+    "private_transcript_or_identifiers_exported": false
+  },
+  "root_review": {
+    "independent": false,
+    "actual_sources_read": true,
+    "verdict": "PASS for the stated capped and minimum-mass theorems and the marginal-relaxation limitation; unrestricted tail payment remains unproved",
+    "checks": [
+      "Actual original-law composition, centered indices and both exponent order assumptions",
+      "N_t <= Z_t, correlated spatial negative part, Parseval and positive contraction",
+      "Constants, square completion, zero norms, zero Delta, unit and zero modes",
+      "Exact H_b/Q_b identity and the equivalent missing tail-payment obligation",
+      "Smoothing exponent and its boundary cases",
+      "Completeness subtraction of both constant rows, cubic AM-GM and coefficient signs",
+      "Minimum mass >= 1/10 is substantive; uniform hosts of size at most ten are a corollary, not all nonuniform ten-state hosts",
+      "Quantitative coefficient 57-40sqrt(2)>0, one-state case and strictness away from T=Pi",
+      "Actual loop law, all six full pair marginals, positive alternative law and exact rational payoffs",
+      "The alternative law is not an admissible common-power density counterexample"
+    ]
+  },
+  "actual_separate_agent_reviews": [
+    {
+      "agent": "pro_negative_mass_audit",
+      "actual_complete_sources_read": true,
+      "reviewed_derivation_sha256": "54c145408b5d184857e67f28f350db5454200631a9db2012081e32347747b3cd",
+      "reviewed_audit_sha256": "b476304dd5fd46b1a1bbfd54b8074783933dba42d1e2c337044ded1f4c0db1f2",
+      "verdict": "PASS; capped and minimum-mass routes close, exact universal obligation O7 remains missing",
+      "final_audit_change": "One clarity-only sentence now explicitly says all identities and the negative spatial-mass bound pass, while global payment O7 remains unproved. Root checked the exact diff; no formulas, hypotheses, table or verdict changed."
+    },
+    {
+      "agent": "ordered_gradient_source_audit",
+      "actual_complete_derivation_read": true,
+      "verdict": "PASS; direct minimum-mass deduction, completeness, AM-GM, signs and strictness checked",
+      "final_derivation_change": "Agent-requested clarity-only wording says sigma0>0 gives F>1 and T=Pi gives F=1; final complete derivation independently reread by pro_negative_mass_audit."
+    },
+    {
+      "agent": "pro_loop_audit",
+      "actual_complete_sources_read": true,
+      "reviewed_loop_sha256": "73ea69298259ffa69a36a653ef58ddf22ecc124782678507ef2ce469146e1bfb",
+      "reviewed_final_checker_sha256": "a84584863a436b574f69708c5d959915eae1fe86135b579a30834e85489f12a0",
+      "verdict": "PASS; exact weighted matrix construction, all pair tables, minimum probability and both rational payoffs reconstructed",
+      "checker_metadata_change": "Sixteen matrix powers are constructed; used even powers 4,6,8,10 are compared with closed form. Final full script read and metadata-only change acknowledged, no agent rerun."
+    }
+  ],
+  "final_formatting_only": {
+    "reason": "Staged git diff --check found trailing whitespace and redundant final blank lines; the first commit was stopped before creation.",
+    "changes": "Remove one redundant final blank line from the two derivations, audit and checker; remove an unnecessary TeX spacing escape at the end of the displayed C0 line. No mathematical assertion, calculation or verdict changed.",
+    "root_checked_exact_patch": true,
+    "agent_review_hashes_are_pre_formatting_and_preserved_honestly": true
+  },
+  "diagnostic": {
+    "record": "loop-information-checks.json",
+    "actual_command_exit": 0,
+    "arithmetic": "fractions.Fraction",
+    "configurations": 16,
+    "universal_numerical_proof": false
+  },
+  "status": {
+    "conditional_transition_cap_theorem": true,
+    "conditional_minimum_mass_theorem": true,
+    "uniform_hosts_at_most_ten_states_covered": true,
+    "unrestricted_density_proved": false,
+    "admissible_density_counterexample_found": false,
+    "new_lean_acceptance": false,
+    "manuscript_theorem_added": false,
+    "novelty_or_breakthrough_claim": false,
+    "external_full_audit": false,
+    "monitors_restarted": false,
+    "new_lean_or_aristotle_run": false
+  },
+  "remaining_gap": "For the actual correlated flags and original-law semigroup, prove H_(Z/Delta) <= B + Q_(Z/Delta) on Delta>0 without assuming an equivalent hard lemma, replacing the joint law, or paying twice with the same Z budget."
+}

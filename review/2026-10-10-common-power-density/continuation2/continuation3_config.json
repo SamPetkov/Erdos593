@@ -1,0 +1,12099 @@
+{
+  "schema": "actual-signed-binary-channel/v1",
+  "seed": 20261013,
+  "tuples": [
+    [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      2,
+      2,
+      1,
+      1,
+      1
+    ],
+    [
+      3,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      6,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      3,
+      3,
+      1
+    ],
+    [
+      2,
+      1,
+      3,
+      1,
+      1
+    ],
+    [
+      4,
+      4,
+      1,
+      1,
+      8
+    ],
+    [
+      8,
+      4,
+      1,
+      1,
+      8
+    ],
+    [
+      3,
+      2,
+      5,
+      3,
+      7
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      16
+    ],
+    [
+      4,
+      1,
+      2,
+      1,
+      6
+    ],
+    [
+      4,
+      4,
+      2,
+      2,
+      1
+    ]
+  ],
+  "tuple_order": [
+    "k",
+    "u",
+    "r",
+    "l",
+    "h"
+  ],
+  "cycles": [
+    [
+      0,
+      1,
+      3
+    ],
+    [
+      0,
+      2,
+      4
+    ],
+    [
+      1,
+      2,
+      5
+    ],
+    [
+      3,
+      4,
+      5
+    ],
+    [
+      0,
+      3,
+      5,
+      2
+    ],
+    [
+      0,
+      4,
+      5,
+      1
+    ],
+    [
+      1,
+      3,
+      4,
+      2
+    ]
+  ],
+  "sample_cap": 180,
+  "optimization_start_cap": 12,
+  "iterations_per_start": 100,
+  "log_G_bounds": [
+    -10,
+    10
+  ],
+  "channel_atanh_bounds": [
+    -6,
+    6
+  ],
+  "optimizer_options": {
+    "maxiter": 100,
+    "ftol": 1e-12,
+    "gtol": 1e-08,
+    "maxls": 25
+  },
+  "candidate_normalized_threshold": -1e-08,
+  "target_absolute_threshold": 0.99999999,
+  "hosts": [
+    {
+      "id": 0,
+      "n": 3,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          4,
+          2,
+          1
+        ],
+        [
+          2,
+          2051,
+          3
+        ],
+        [
+          1,
+          3,
+          68
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -7,
+          7,
+          -7
+        ],
+        [
+          7,
+          -1,
+          6
+        ],
+        [
+          -7,
+          6,
+          -5
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "n": 3,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          66,
+          1,
+          4
+        ],
+        [
+          1,
+          66,
+          4
+        ],
+        [
+          4,
+          4,
+          1025
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -6,
+          5
+        ],
+        [
+          -6,
+          6,
+          -3
+        ],
+        [
+          5,
+          -3,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 2,
+      "n": 3,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          3,
+          2,
+          2
+        ],
+        [
+          2,
+          16386,
+          2
+        ],
+        [
+          2,
+          2,
+          19
+        ]
+      ],
+      "channel_numerators": [
+        [
+          2,
+          -1,
+          4
+        ],
+        [
+          -1,
+          6,
+          -7
+        ],
+        [
+          4,
+          -7,
+          -1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "n": 3,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          3,
+          2,
+          2
+        ],
+        [
+          2,
+          6,
+          3
+        ],
+        [
+          2,
+          3,
+          33
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 4,
+      "n": 3,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          1,
+          2,
+          1
+        ],
+        [
+          2,
+          16386,
+          4
+        ],
+        [
+          1,
+          4,
+          132
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          -8
+        ],
+        [
+          -8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 5,
+      "n": 3,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          4,
+          1,
+          2
+        ],
+        [
+          1,
+          2050,
+          2
+        ],
+        [
+          2,
+          2,
+          4099
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -3,
+          1,
+          -1
+        ],
+        [
+          1,
+          6,
+          -8
+        ],
+        [
+          -1,
+          -8,
+          -7
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 6,
+      "n": 3,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          515,
+          4
+        ],
+        [
+          1,
+          4,
+          34
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -4,
+          -8,
+          -2
+        ],
+        [
+          -8,
+          -4,
+          8
+        ],
+        [
+          -2,
+          8,
+          6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 7,
+      "n": 3,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          4,
+          2,
+          2
+        ],
+        [
+          2,
+          257,
+          4
+        ],
+        [
+          2,
+          4,
+          65
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 8,
+      "n": 3,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          6,
+          1,
+          1
+        ],
+        [
+          1,
+          4099,
+          4
+        ],
+        [
+          1,
+          4,
+          67
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 9,
+      "n": 3,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          10,
+          2
+        ],
+        [
+          2,
+          2,
+          7
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8
+        ],
+        [
+          8,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 10,
+      "n": 3,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          4,
+          0
+        ],
+        [
+          2,
+          0,
+          96
+        ]
+      ],
+      "channel_numerators": [
+        [
+          2,
+          2,
+          7
+        ],
+        [
+          2,
+          -3,
+          0
+        ],
+        [
+          7,
+          0,
+          6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 11,
+      "n": 3,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          4,
+          2,
+          2
+        ],
+        [
+          2,
+          2048,
+          0
+        ],
+        [
+          2,
+          0,
+          320
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -2,
+          -7,
+          1
+        ],
+        [
+          -7,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          4
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 12,
+      "n": 3,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          320,
+          0
+        ],
+        [
+          2,
+          0,
+          192
+        ]
+      ],
+      "channel_numerators": [
+        [
+          6,
+          -1,
+          -4
+        ],
+        [
+          -1,
+          -7,
+          0
+        ],
+        [
+          -4,
+          0,
+          0
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 13,
+      "n": 3,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          128,
+          0
+        ],
+        [
+          2,
+          0,
+          2048
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -1,
+          7,
+          -7
+        ],
+        [
+          7,
+          8,
+          0
+        ],
+        [
+          -7,
+          0,
+          5
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 14,
+      "n": 3,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          256,
+          0
+        ],
+        [
+          2,
+          0,
+          512
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -6,
+          7,
+          -7
+        ],
+        [
+          7,
+          -7,
+          0
+        ],
+        [
+          -7,
+          0,
+          6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 15,
+      "n": 3,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          128,
+          5,
+          1
+        ],
+        [
+          5,
+          1024,
+          0
+        ],
+        [
+          1,
+          0,
+          1024
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -7,
+          8
+        ],
+        [
+          -7,
+          4,
+          0
+        ],
+        [
+          8,
+          0,
+          -3
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 16,
+      "n": 3,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          3,
+          0
+        ],
+        [
+          2,
+          0,
+          2
+        ]
+      ],
+      "channel_numerators": [
+        [
+          3,
+          4,
+          -2
+        ],
+        [
+          4,
+          -1,
+          0
+        ],
+        [
+          -2,
+          0,
+          -2
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 17,
+      "n": 3,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          768,
+          5,
+          5
+        ],
+        [
+          5,
+          160,
+          0
+        ],
+        [
+          5,
+          0,
+          10
+        ]
+      ],
+      "channel_numerators": [
+        [
+          2,
+          7,
+          5
+        ],
+        [
+          7,
+          -3,
+          0
+        ],
+        [
+          5,
+          0,
+          1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 18,
+      "n": 3,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          128,
+          0
+        ],
+        [
+          2,
+          0,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          -8
+        ],
+        [
+          -8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 19,
+      "n": 3,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          4,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          0,
+          768
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          -8,
+          0
+        ],
+        [
+          8,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 20,
+      "n": 3,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          2,
+          512,
+          7
+        ],
+        [
+          0,
+          7,
+          2
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          0
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 21,
+      "n": 3,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          6,
+          6,
+          0
+        ],
+        [
+          6,
+          1024,
+          7
+        ],
+        [
+          0,
+          7,
+          4
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          0
+        ],
+        [
+          8,
+          -8,
+          8
+        ],
+        [
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 22,
+      "n": 3,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          4,
+          2,
+          0
+        ],
+        [
+          2,
+          4,
+          3
+        ],
+        [
+          0,
+          3,
+          32
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          0
+        ],
+        [
+          8,
+          -8,
+          -8
+        ],
+        [
+          0,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 23,
+      "n": 3,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          2,
+          1,
+          8
+        ],
+        [
+          0,
+          8,
+          4
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          0
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          0,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 24,
+      "n": 3,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          2,
+          8,
+          1
+        ],
+        [
+          0,
+          1,
+          512
+        ]
+      ],
+      "channel_numerators": [
+        [
+          0,
+          4,
+          0
+        ],
+        [
+          4,
+          -6,
+          0
+        ],
+        [
+          0,
+          0,
+          5
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 25,
+      "n": 3,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          2,
+          32,
+          3
+        ],
+        [
+          0,
+          3,
+          256
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          0
+        ],
+        [
+          8,
+          -8,
+          8
+        ],
+        [
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 26,
+      "n": 3,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          2,
+          6,
+          5
+        ],
+        [
+          0,
+          5,
+          128
+        ]
+      ],
+      "channel_numerators": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          5,
+          8
+        ],
+        [
+          0,
+          8,
+          -5
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 27,
+      "n": 3,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          2,
+          512,
+          5
+        ],
+        [
+          0,
+          5,
+          10
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          -8,
+          8
+        ],
+        [
+          0,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 28,
+      "n": 3,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          384,
+          7,
+          0
+        ],
+        [
+          7,
+          768,
+          3
+        ],
+        [
+          0,
+          3,
+          1024
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          0,
+          0
+        ],
+        [
+          0,
+          7,
+          4
+        ],
+        [
+          0,
+          4,
+          0
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 29,
+      "n": 3,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          128,
+          4,
+          0
+        ],
+        [
+          4,
+          10,
+          7
+        ],
+        [
+          0,
+          7,
+          32
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          8,
+          -8
+        ],
+        [
+          0,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 30,
+      "n": 3,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          142,
+          0
+        ],
+        [
+          0,
+          0,
+          131
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          0
+        ],
+        [
+          0,
+          0,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 31,
+      "n": 3,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          2,
+          256,
+          0
+        ],
+        [
+          0,
+          0,
+          2058
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          0
+        ],
+        [
+          8,
+          8,
+          0
+        ],
+        [
+          0,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 32,
+      "n": 3,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          4,
+          0,
+          2
+        ],
+        [
+          0,
+          11,
+          10
+        ],
+        [
+          2,
+          10,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -6,
+          0,
+          -2
+        ],
+        [
+          0,
+          3,
+          3
+        ],
+        [
+          -2,
+          3,
+          2
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 33,
+      "n": 3,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          4,
+          2,
+          0
+        ],
+        [
+          2,
+          139,
+          0
+        ],
+        [
+          0,
+          0,
+          512
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          0
+        ],
+        [
+          8,
+          -8,
+          0
+        ],
+        [
+          0,
+          0,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 34,
+      "n": 3,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          10
+        ],
+        [
+          0,
+          10,
+          4
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          8
+        ],
+        [
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 35,
+      "n": 3,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          20,
+          11,
+          0
+        ],
+        [
+          11,
+          1039,
+          7
+        ],
+        [
+          0,
+          7,
+          1031
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          0
+        ],
+        [
+          8,
+          8,
+          -8
+        ],
+        [
+          0,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 36,
+      "n": 3,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          4,
+          2,
+          0
+        ],
+        [
+          2,
+          31,
+          0
+        ],
+        [
+          0,
+          0,
+          20
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -6,
+          -3,
+          0
+        ],
+        [
+          -3,
+          -3,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 37,
+      "n": 3,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          1,
+          0,
+          2
+        ],
+        [
+          0,
+          128,
+          7
+        ],
+        [
+          2,
+          7,
+          5
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          0,
+          -4
+        ],
+        [
+          0,
+          5,
+          -5
+        ],
+        [
+          -4,
+          -5,
+          -1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 38,
+      "n": 3,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          0,
+          1,
+          13
+        ],
+        [
+          2,
+          13,
+          256
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          0,
+          -8
+        ],
+        [
+          0,
+          8,
+          -8
+        ],
+        [
+          -8,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 39,
+      "n": 3,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          4,
+          0,
+          0
+        ],
+        [
+          0,
+          64,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          -8,
+          0
+        ],
+        [
+          0,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 40,
+      "n": 3,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          160,
+          6,
+          0
+        ],
+        [
+          6,
+          24,
+          1
+        ],
+        [
+          0,
+          1,
+          96
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -5,
+          -5,
+          0
+        ],
+        [
+          -5,
+          -7,
+          7
+        ],
+        [
+          0,
+          7,
+          -6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 41,
+      "n": 3,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          13,
+          12,
+          0
+        ],
+        [
+          12,
+          11,
+          1
+        ],
+        [
+          0,
+          1,
+          128
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          0
+        ],
+        [
+          8,
+          -8,
+          -8
+        ],
+        [
+          0,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 42,
+      "n": 3,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          4,
+          1,
+          0
+        ],
+        [
+          1,
+          16,
+          2
+        ],
+        [
+          0,
+          2,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          7,
+          1,
+          0
+        ],
+        [
+          1,
+          -8,
+          -2
+        ],
+        [
+          0,
+          -2,
+          -4
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 43,
+      "n": 3,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          15,
+          1
+        ],
+        [
+          0,
+          1,
+          8
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          0
+        ],
+        [
+          8,
+          -8,
+          8
+        ],
+        [
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 44,
+      "n": 3,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          352,
+          4,
+          0
+        ],
+        [
+          4,
+          288,
+          1
+        ],
+        [
+          0,
+          1,
+          13
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          0
+        ],
+        [
+          8,
+          8,
+          -8
+        ],
+        [
+          0,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 45,
+      "n": 3,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          2,
+          512,
+          1
+        ],
+        [
+          0,
+          1,
+          10
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          8,
+          -8
+        ],
+        [
+          0,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 46,
+      "n": 3,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          128,
+          448,
+          0
+        ],
+        [
+          448,
+          8,
+          1
+        ],
+        [
+          0,
+          1,
+          256
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          0
+        ],
+        [
+          8,
+          -8,
+          8
+        ],
+        [
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 47,
+      "n": 3,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          2,
+          112,
+          1
+        ],
+        [
+          0,
+          1,
+          112
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          -8,
+          -6
+        ],
+        [
+          0,
+          -6,
+          7
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 48,
+      "n": 3,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          16,
+          1
+        ],
+        [
+          0,
+          1,
+          576
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          8,
+          -8
+        ],
+        [
+          0,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 49,
+      "n": 3,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          4,
+          2,
+          0
+        ],
+        [
+          2,
+          12,
+          1
+        ],
+        [
+          0,
+          1,
+          96
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          0
+        ],
+        [
+          8,
+          -8,
+          8
+        ],
+        [
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 50,
+      "n": 3,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          1,
+          512,
+          4
+        ],
+        [
+          512,
+          64,
+          16
+        ],
+        [
+          4,
+          16,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          4,
+          5,
+          -8
+        ],
+        [
+          5,
+          -4,
+          -3
+        ],
+        [
+          -8,
+          -3,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 51,
+      "n": 3,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          4,
+          2,
+          1
+        ],
+        [
+          2,
+          1,
+          32
+        ],
+        [
+          1,
+          32,
+          2
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -5,
+          -6,
+          8
+        ],
+        [
+          -6,
+          -7,
+          5
+        ],
+        [
+          8,
+          5,
+          -3
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 52,
+      "n": 3,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          2048,
+          2,
+          2
+        ],
+        [
+          2,
+          1,
+          4096
+        ],
+        [
+          2,
+          4096,
+          4096
+        ]
+      ],
+      "channel_numerators": [
+        [
+          0,
+          -8,
+          -3
+        ],
+        [
+          -8,
+          8,
+          -2
+        ],
+        [
+          -3,
+          -2,
+          0
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 53,
+      "n": 3,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          1024,
+          128
+        ],
+        [
+          2,
+          128,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          -8
+        ],
+        [
+          -8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 54,
+      "n": 3,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          1,
+          2,
+          1
+        ],
+        [
+          2,
+          16,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 55,
+      "n": 3,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          128,
+          2,
+          4
+        ],
+        [
+          2,
+          1,
+          4096
+        ],
+        [
+          4,
+          4096,
+          4096
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          -8
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 56,
+      "n": 3,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          256
+        ],
+        [
+          2,
+          256,
+          128
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          -8
+        ],
+        [
+          8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 57,
+      "n": 3,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          16,
+          8
+        ],
+        [
+          2,
+          8,
+          8
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 58,
+      "n": 3,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          3,
+          1,
+          2
+        ],
+        [
+          1,
+          2,
+          1
+        ],
+        [
+          2,
+          1,
+          2
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          -8
+        ],
+        [
+          8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 59,
+      "n": 3,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          1,
+          2,
+          1
+        ],
+        [
+          2,
+          256,
+          16
+        ],
+        [
+          1,
+          16,
+          4
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -7,
+          -3,
+          7
+        ],
+        [
+          -3,
+          4,
+          6
+        ],
+        [
+          7,
+          6,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 60,
+      "n": 4,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          4,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          258,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          4100,
+          4
+        ],
+        [
+          2,
+          2,
+          4,
+          16385
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          8
+        ],
+        [
+          8,
+          8,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 61,
+      "n": 4,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          18,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          5,
+          3,
+          3
+        ],
+        [
+          2,
+          3,
+          34,
+          2
+        ],
+        [
+          1,
+          3,
+          2,
+          8
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -7,
+          1,
+          1,
+          -6
+        ],
+        [
+          1,
+          3,
+          6,
+          -4
+        ],
+        [
+          1,
+          6,
+          -7,
+          -2
+        ],
+        [
+          -6,
+          -4,
+          -2,
+          7
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 62,
+      "n": 4,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          11,
+          4,
+          4
+        ],
+        [
+          2,
+          4,
+          2052,
+          4
+        ],
+        [
+          2,
+          4,
+          4,
+          1025
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          8,
+          8,
+          -8
+        ],
+        [
+          8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 63,
+      "n": 4,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          4100,
+          2,
+          2,
+          4
+        ],
+        [
+          2,
+          516,
+          2,
+          4
+        ],
+        [
+          2,
+          2,
+          7,
+          2
+        ],
+        [
+          4,
+          4,
+          2,
+          257
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          8,
+          -8
+        ],
+        [
+          8,
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 64,
+      "n": 4,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          3,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          8193,
+          2,
+          3
+        ],
+        [
+          1,
+          2,
+          67,
+          3
+        ],
+        [
+          2,
+          3,
+          3,
+          8196
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          5,
+          -3,
+          -1
+        ],
+        [
+          5,
+          5,
+          -7,
+          5
+        ],
+        [
+          -3,
+          -7,
+          -3,
+          6
+        ],
+        [
+          -1,
+          5,
+          6,
+          -6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 65,
+      "n": 4,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          4,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          33,
+          1,
+          2
+        ],
+        [
+          1,
+          1,
+          516,
+          1
+        ],
+        [
+          2,
+          2,
+          1,
+          258
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -1,
+          4,
+          1,
+          -2
+        ],
+        [
+          4,
+          -1,
+          3,
+          0
+        ],
+        [
+          1,
+          3,
+          4,
+          -1
+        ],
+        [
+          -2,
+          0,
+          -1,
+          5
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 66,
+      "n": 4,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          3,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          20,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          8195,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          4100
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -7,
+          2,
+          -2,
+          -5
+        ],
+        [
+          2,
+          1,
+          -2,
+          -8
+        ],
+        [
+          -2,
+          -2,
+          5,
+          5
+        ],
+        [
+          -5,
+          -8,
+          5,
+          -5
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 67,
+      "n": 4,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          2,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          19,
+          2,
+          2
+        ],
+        [
+          1,
+          2,
+          16387,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          2052
+        ]
+      ],
+      "channel_numerators": [
+        [
+          4,
+          3,
+          1,
+          8
+        ],
+        [
+          3,
+          7,
+          -7,
+          7
+        ],
+        [
+          1,
+          -7,
+          2,
+          7
+        ],
+        [
+          8,
+          7,
+          7,
+          1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 68,
+      "n": 4,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          3,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          65,
+          3,
+          2
+        ],
+        [
+          2,
+          3,
+          5,
+          3
+        ],
+        [
+          1,
+          2,
+          3,
+          1027
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          8
+        ],
+        [
+          8,
+          -8,
+          8,
+          -8
+        ],
+        [
+          8,
+          8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 69,
+      "n": 4,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          8,
+          3,
+          4
+        ],
+        [
+          2,
+          3,
+          16386,
+          1
+        ],
+        [
+          2,
+          4,
+          1,
+          6
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          8,
+          8
+        ],
+        [
+          8,
+          -8,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 70,
+      "n": 4,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          3,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          16,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          40,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          2,
+          -3,
+          0,
+          3
+        ],
+        [
+          -3,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -5,
+          0
+        ],
+        [
+          3,
+          0,
+          0,
+          -6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 71,
+      "n": 4,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          5,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          320,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          8
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          0,
+          0
+        ],
+        [
+          -8,
+          0,
+          8,
+          0
+        ],
+        [
+          -8,
+          0,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 72,
+      "n": 4,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          3,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          2048,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1024
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          -8,
+          -8
+        ],
+        [
+          -8,
+          -8,
+          0,
+          0
+        ],
+        [
+          -8,
+          0,
+          8,
+          0
+        ],
+        [
+          -8,
+          0,
+          0,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 73,
+      "n": 4,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          256,
+          3,
+          2,
+          8
+        ],
+        [
+          3,
+          12,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          4,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          512
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -4,
+          1,
+          -4,
+          0
+        ],
+        [
+          1,
+          5,
+          0,
+          0
+        ],
+        [
+          -4,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          4
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 74,
+      "n": 4,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          1024,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          1,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          12
+        ]
+      ],
+      "channel_numerators": [
+        [
+          2,
+          4,
+          -4,
+          2
+        ],
+        [
+          4,
+          -1,
+          0,
+          0
+        ],
+        [
+          -4,
+          0,
+          5,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 75,
+      "n": 4,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          640,
+          4,
+          7,
+          8
+        ],
+        [
+          4,
+          384,
+          0,
+          0
+        ],
+        [
+          7,
+          0,
+          20,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          4
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          -8,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 76,
+      "n": 4,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          40,
+          1,
+          2,
+          7
+        ],
+        [
+          1,
+          128,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          128,
+          0
+        ],
+        [
+          7,
+          0,
+          0,
+          8
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          -8,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          -8,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 77,
+      "n": 4,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          3,
+          1,
+          2,
+          2
+        ],
+        [
+          1,
+          8,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          80,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          1280
+        ]
+      ],
+      "channel_numerators": [
+        [
+          6,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          7,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -5,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          2
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 78,
+      "n": 4,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          4,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          16,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          24
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -4,
+          7,
+          -8,
+          1
+        ],
+        [
+          7,
+          -4,
+          0,
+          0
+        ],
+        [
+          -8,
+          0,
+          7,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          -1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 79,
+      "n": 4,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          1,
+          1,
+          2,
+          2
+        ],
+        [
+          1,
+          256,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          16,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          8,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          8,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 80,
+      "n": 4,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          1,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          20,
+          4,
+          0
+        ],
+        [
+          0,
+          4,
+          4,
+          4
+        ],
+        [
+          0,
+          0,
+          4,
+          16
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          0,
+          0
+        ],
+        [
+          8,
+          -8,
+          -8,
+          0
+        ],
+        [
+          0,
+          -8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 81,
+      "n": 4,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          2,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          640,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          6,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          16
+        ]
+      ],
+      "channel_numerators": [
+        [
+          7,
+          -3,
+          0,
+          0
+        ],
+        [
+          -3,
+          -4,
+          -3,
+          0
+        ],
+        [
+          0,
+          -3,
+          -2,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          -3
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 82,
+      "n": 4,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          4,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          2048,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1024,
+          7
+        ],
+        [
+          0,
+          0,
+          7,
+          640
+        ]
+      ],
+      "channel_numerators": [
+        [
+          7,
+          -2,
+          0,
+          0
+        ],
+        [
+          -2,
+          -7,
+          -8,
+          0
+        ],
+        [
+          0,
+          -8,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 83,
+      "n": 4,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          384,
+          7,
+          0,
+          0
+        ],
+        [
+          7,
+          48,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          128,
+          2
+        ],
+        [
+          0,
+          0,
+          2,
+          1280
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          0,
+          0
+        ],
+        [
+          8,
+          -8,
+          -8,
+          0
+        ],
+        [
+          0,
+          -8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 84,
+      "n": 4,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          24,
+          4,
+          0,
+          0
+        ],
+        [
+          4,
+          320,
+          4,
+          0
+        ],
+        [
+          0,
+          4,
+          256,
+          8
+        ],
+        [
+          0,
+          0,
+          8,
+          1
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -5,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1,
+          0
+        ],
+        [
+          0,
+          -1,
+          -8,
+          8
+        ],
+        [
+          0,
+          0,
+          8,
+          4
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 85,
+      "n": 4,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          3,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          128,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1024,
+          7
+        ],
+        [
+          0,
+          0,
+          7,
+          12
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          0,
+          0
+        ],
+        [
+          8,
+          -8,
+          -8,
+          0
+        ],
+        [
+          0,
+          -8,
+          -8,
+          -8
+        ],
+        [
+          0,
+          0,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 86,
+      "n": 4,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          3,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          64,
+          7,
+          0
+        ],
+        [
+          0,
+          7,
+          8,
+          5
+        ],
+        [
+          0,
+          0,
+          5,
+          6
+        ]
+      ],
+      "channel_numerators": [
+        [
+          1,
+          -8,
+          0,
+          0
+        ],
+        [
+          -8,
+          -7,
+          -1,
+          0
+        ],
+        [
+          0,
+          -1,
+          6,
+          7
+        ],
+        [
+          0,
+          0,
+          7,
+          7
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 87,
+      "n": 4,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          1,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          1024,
+          3,
+          0
+        ],
+        [
+          0,
+          3,
+          256,
+          5
+        ],
+        [
+          0,
+          0,
+          5,
+          1
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -2,
+          -7,
+          0,
+          0
+        ],
+        [
+          -7,
+          2,
+          7,
+          0
+        ],
+        [
+          0,
+          7,
+          -7,
+          -2
+        ],
+        [
+          0,
+          0,
+          -2,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 88,
+      "n": 4,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          3,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          256,
+          8,
+          0
+        ],
+        [
+          0,
+          8,
+          320,
+          2
+        ],
+        [
+          0,
+          0,
+          2,
+          2
+        ]
+      ],
+      "channel_numerators": [
+        [
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          8,
+          5,
+          -4,
+          0
+        ],
+        [
+          0,
+          -4,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          -2
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 89,
+      "n": 4,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          1,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          8,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          16,
+          4
+        ],
+        [
+          0,
+          0,
+          4,
+          192
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          0,
+          0
+        ],
+        [
+          -8,
+          -8,
+          8,
+          0
+        ],
+        [
+          0,
+          8,
+          8,
+          -8
+        ],
+        [
+          0,
+          0,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 90,
+      "n": 4,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          3,
+          0,
+          2,
+          2
+        ],
+        [
+          0,
+          41,
+          7,
+          13
+        ],
+        [
+          2,
+          7,
+          137,
+          0
+        ],
+        [
+          2,
+          13,
+          0,
+          10
+        ]
+      ],
+      "channel_numerators": [
+        [
+          2,
+          0,
+          0,
+          -6
+        ],
+        [
+          0,
+          -6,
+          -7,
+          -7
+        ],
+        [
+          0,
+          -7,
+          2,
+          0
+        ],
+        [
+          -6,
+          -7,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 91,
+      "n": 4,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          2,
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          1027,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          1024,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          4
+        ]
+      ],
+      "channel_numerators": [
+        [
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          -5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 92,
+      "n": 4,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          1,
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          137,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          518,
+          5
+        ],
+        [
+          0,
+          0,
+          5,
+          24
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          0,
+          -8,
+          0
+        ],
+        [
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          -8,
+          0,
+          -8,
+          -8
+        ],
+        [
+          0,
+          0,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 93,
+      "n": 4,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          43,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          32,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          256
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -8,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 94,
+      "n": 4,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          44,
+          14,
+          0,
+          10
+        ],
+        [
+          14,
+          12,
+          4,
+          3
+        ],
+        [
+          0,
+          4,
+          256,
+          0
+        ],
+        [
+          10,
+          3,
+          0,
+          512
+        ]
+      ],
+      "channel_numerators": [
+        [
+          0,
+          6,
+          0,
+          5
+        ],
+        [
+          6,
+          0,
+          3,
+          -1
+        ],
+        [
+          0,
+          3,
+          -4,
+          0
+        ],
+        [
+          5,
+          -1,
+          0,
+          6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 95,
+      "n": 4,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          77,
+          0,
+          0,
+          14
+        ],
+        [
+          0,
+          68,
+          0,
+          2
+        ],
+        [
+          0,
+          0,
+          1024,
+          14
+        ],
+        [
+          14,
+          2,
+          14,
+          12
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -5,
+          0,
+          0,
+          5
+        ],
+        [
+          0,
+          0,
+          0,
+          -5
+        ],
+        [
+          0,
+          0,
+          -2,
+          -7
+        ],
+        [
+          5,
+          -5,
+          -7,
+          2
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 96,
+      "n": 4,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          1,
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          2048,
+          1,
+          10
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          2,
+          10,
+          0,
+          8
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          0,
+          0,
+          8
+        ],
+        [
+          0,
+          -8,
+          8,
+          8
+        ],
+        [
+          0,
+          8,
+          8,
+          0
+        ],
+        [
+          8,
+          8,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 97,
+      "n": 4,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          3,
+          2,
+          0,
+          2
+        ],
+        [
+          2,
+          16,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          256,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          2048
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -7,
+          5,
+          0,
+          -1
+        ],
+        [
+          5,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -8,
+          0
+        ],
+        [
+          -1,
+          0,
+          0,
+          2
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 98,
+      "n": 4,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          4,
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          42,
+          8,
+          0
+        ],
+        [
+          0,
+          8,
+          256,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          128
+        ]
+      ],
+      "channel_numerators": [
+        [
+          3,
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          2,
+          -5,
+          0
+        ],
+        [
+          0,
+          -5,
+          -8,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          5
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 99,
+      "n": 4,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2048,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          525,
+          11
+        ],
+        [
+          0,
+          0,
+          11,
+          4
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -7,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -8,
+          0
+        ],
+        [
+          0,
+          -8,
+          -5,
+          -5
+        ],
+        [
+          0,
+          0,
+          -5,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 100,
+      "n": 4,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          4,
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          10,
+          120,
+          0
+        ],
+        [
+          2,
+          120,
+          64,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          256
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -5,
+          2,
+          -4,
+          0
+        ],
+        [
+          2,
+          8,
+          2,
+          0
+        ],
+        [
+          -4,
+          2,
+          0,
+          -7
+        ],
+        [
+          0,
+          0,
+          -7,
+          1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 101,
+      "n": 4,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          16,
+          14,
+          64
+        ],
+        [
+          0,
+          14,
+          14,
+          16
+        ],
+        [
+          0,
+          64,
+          16,
+          256
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          0,
+          0
+        ],
+        [
+          -8,
+          -8,
+          8,
+          -8
+        ],
+        [
+          0,
+          8,
+          8,
+          8
+        ],
+        [
+          0,
+          -8,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 102,
+      "n": 4,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          15,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          288,
+          12,
+          192
+        ],
+        [
+          0,
+          12,
+          160,
+          4
+        ],
+        [
+          0,
+          192,
+          4,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -3,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          1,
+          -8,
+          -7
+        ],
+        [
+          0,
+          -8,
+          -5,
+          7
+        ],
+        [
+          0,
+          -7,
+          7,
+          0
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 103,
+      "n": 4,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          4,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          12,
+          96,
+          208
+        ],
+        [
+          0,
+          96,
+          5,
+          26
+        ],
+        [
+          0,
+          208,
+          26,
+          20
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -1,
+          -4,
+          0,
+          0
+        ],
+        [
+          -4,
+          -1,
+          6,
+          -3
+        ],
+        [
+          0,
+          6,
+          5,
+          3
+        ],
+        [
+          0,
+          -3,
+          3,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 104,
+      "n": 4,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          4,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          5,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          22,
+          288
+        ],
+        [
+          0,
+          0,
+          288,
+          576
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          0,
+          0
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          0
+        ],
+        [
+          0,
+          -8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 105,
+      "n": 4,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          1,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          256,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          80,
+          32
+        ],
+        [
+          0,
+          0,
+          32,
+          128
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          0,
+          0
+        ],
+        [
+          8,
+          -8,
+          8,
+          0
+        ],
+        [
+          0,
+          8,
+          -8,
+          -8
+        ],
+        [
+          0,
+          0,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 106,
+      "n": 4,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          512,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          112,
+          640,
+          768
+        ],
+        [
+          0,
+          640,
+          28,
+          896
+        ],
+        [
+          0,
+          768,
+          896,
+          40
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          0,
+          0
+        ],
+        [
+          8,
+          8,
+          8,
+          -8
+        ],
+        [
+          0,
+          8,
+          8,
+          -8
+        ],
+        [
+          0,
+          -8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 107,
+      "n": 4,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          832,
+          12,
+          0
+        ],
+        [
+          2,
+          12,
+          80,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          96
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          -8,
+          0
+        ],
+        [
+          8,
+          -8,
+          8,
+          0
+        ],
+        [
+          -8,
+          8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 108,
+      "n": 4,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          128,
+          6,
+          16
+        ],
+        [
+          0,
+          6,
+          104,
+          288
+        ],
+        [
+          0,
+          16,
+          288,
+          704
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          0,
+          0
+        ],
+        [
+          -8,
+          8,
+          8,
+          8
+        ],
+        [
+          0,
+          8,
+          -8,
+          -8
+        ],
+        [
+          0,
+          8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 109,
+      "n": 4,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          288,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          256,
+          448,
+          4
+        ],
+        [
+          0,
+          448,
+          22,
+          1
+        ],
+        [
+          0,
+          4,
+          1,
+          16
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          0,
+          0
+        ],
+        [
+          -8,
+          -8,
+          8,
+          8
+        ],
+        [
+          0,
+          8,
+          -8,
+          8
+        ],
+        [
+          0,
+          8,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 110,
+      "n": 4,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          128,
+          512,
+          4096,
+          2048
+        ],
+        [
+          512,
+          128,
+          128,
+          256
+        ],
+        [
+          4096,
+          128,
+          32,
+          1024
+        ],
+        [
+          2048,
+          256,
+          1024,
+          1024
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 111,
+      "n": 4,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          4096,
+          4096,
+          32,
+          2
+        ],
+        [
+          4096,
+          4,
+          2048,
+          2048
+        ],
+        [
+          32,
+          2048,
+          128,
+          16
+        ],
+        [
+          2,
+          2048,
+          16,
+          32
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 112,
+      "n": 4,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2048,
+          64,
+          128
+        ],
+        [
+          2,
+          64,
+          2048,
+          8
+        ],
+        [
+          2,
+          128,
+          8,
+          256
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          -4,
+          8
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          2
+        ],
+        [
+          -4,
+          -8,
+          -6,
+          3
+        ],
+        [
+          8,
+          2,
+          3,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 113,
+      "n": 4,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          4,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          256,
+          64
+        ],
+        [
+          2,
+          256,
+          4,
+          1
+        ],
+        [
+          2,
+          64,
+          1,
+          1
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -4,
+          1,
+          0,
+          6
+        ],
+        [
+          1,
+          8,
+          7,
+          6
+        ],
+        [
+          0,
+          7,
+          8,
+          4
+        ],
+        [
+          6,
+          6,
+          4,
+          -7
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 114,
+      "n": 4,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          2048,
+          64,
+          8,
+          128
+        ],
+        [
+          64,
+          128,
+          64,
+          16
+        ],
+        [
+          8,
+          64,
+          64,
+          4
+        ],
+        [
+          128,
+          16,
+          4,
+          4
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          -8,
+          8,
+          8
+        ],
+        [
+          8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 115,
+      "n": 4,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          3,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          1,
+          4,
+          64
+        ],
+        [
+          2,
+          4,
+          2048,
+          32
+        ],
+        [
+          2,
+          64,
+          32,
+          1024
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          -8,
+          8
+        ],
+        [
+          8,
+          -8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 116,
+      "n": 4,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          32,
+          8,
+          128
+        ],
+        [
+          2,
+          8,
+          4,
+          2
+        ],
+        [
+          2,
+          128,
+          2,
+          1024
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -7,
+          0,
+          5,
+          -6
+        ],
+        [
+          0,
+          8,
+          -2,
+          -3
+        ],
+        [
+          5,
+          -2,
+          3,
+          7
+        ],
+        [
+          -6,
+          -3,
+          7,
+          4
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 117,
+      "n": 4,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          4,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          4096,
+          8,
+          64
+        ],
+        [
+          2,
+          8,
+          2048,
+          4096
+        ],
+        [
+          2,
+          64,
+          4096,
+          256
+        ]
+      ],
+      "channel_numerators": [
+        [
+          4,
+          6,
+          -2,
+          -4
+        ],
+        [
+          6,
+          -3,
+          8,
+          4
+        ],
+        [
+          -2,
+          8,
+          3,
+          -3
+        ],
+        [
+          -4,
+          4,
+          -3,
+          6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 118,
+      "n": 4,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          3,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          4096,
+          2,
+          256
+        ],
+        [
+          2,
+          2,
+          4096,
+          2
+        ],
+        [
+          2,
+          256,
+          2,
+          256
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          -8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 119,
+      "n": 4,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          2048,
+          1024,
+          256,
+          1024
+        ],
+        [
+          1024,
+          256,
+          64,
+          4
+        ],
+        [
+          256,
+          64,
+          16,
+          512
+        ],
+        [
+          1024,
+          4,
+          512,
+          4
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          0,
+          7,
+          -1
+        ],
+        [
+          0,
+          -3,
+          -4,
+          8
+        ],
+        [
+          7,
+          -4,
+          -6,
+          -7
+        ],
+        [
+          -1,
+          8,
+          -7,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 120,
+      "n": 5,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          4,
+          1,
+          1,
+          2,
+          2
+        ],
+        [
+          1,
+          33,
+          4,
+          3,
+          4
+        ],
+        [
+          1,
+          4,
+          4099,
+          3,
+          3
+        ],
+        [
+          2,
+          3,
+          3,
+          8,
+          4
+        ],
+        [
+          2,
+          4,
+          3,
+          4,
+          7
+        ]
+      ],
+      "channel_numerators": [
+        [
+          6,
+          1,
+          -1,
+          5,
+          4
+        ],
+        [
+          1,
+          6,
+          -5,
+          -6,
+          1
+        ],
+        [
+          -1,
+          -5,
+          -7,
+          1,
+          -7
+        ],
+        [
+          5,
+          -6,
+          1,
+          2,
+          5
+        ],
+        [
+          4,
+          1,
+          -7,
+          5,
+          2
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 121,
+      "n": 5,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          8196,
+          2,
+          2,
+          3,
+          4
+        ],
+        [
+          2,
+          1026,
+          1,
+          3,
+          4
+        ],
+        [
+          2,
+          1,
+          6,
+          1,
+          3
+        ],
+        [
+          3,
+          3,
+          1,
+          10,
+          2
+        ],
+        [
+          4,
+          4,
+          3,
+          2,
+          260
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          -8,
+          8,
+          -8
+        ],
+        [
+          8,
+          8,
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          -8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 122,
+      "n": 5,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          8193,
+          4,
+          4,
+          3
+        ],
+        [
+          2,
+          4,
+          1028,
+          2,
+          3
+        ],
+        [
+          2,
+          4,
+          2,
+          16387,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          1,
+          16385
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          -8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 123,
+      "n": 5,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          2,
+          2,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          2050,
+          1,
+          1,
+          4
+        ],
+        [
+          2,
+          1,
+          514,
+          4,
+          1
+        ],
+        [
+          2,
+          1,
+          4,
+          515,
+          1
+        ],
+        [
+          1,
+          4,
+          1,
+          1,
+          16385
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          8,
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          -8,
+          8,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 124,
+      "n": 5,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          65,
+          3,
+          3,
+          4,
+          2
+        ],
+        [
+          3,
+          258,
+          4,
+          1,
+          4
+        ],
+        [
+          3,
+          4,
+          516,
+          2,
+          4
+        ],
+        [
+          4,
+          1,
+          2,
+          514,
+          3
+        ],
+        [
+          2,
+          4,
+          4,
+          3,
+          516
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          -8,
+          8
+        ],
+        [
+          8,
+          -8,
+          -8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          -8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 125,
+      "n": 5,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          1,
+          2,
+          1,
+          1,
+          2
+        ],
+        [
+          2,
+          67,
+          2,
+          3,
+          2
+        ],
+        [
+          1,
+          2,
+          5,
+          4,
+          1
+        ],
+        [
+          1,
+          3,
+          4,
+          515,
+          3
+        ],
+        [
+          2,
+          2,
+          1,
+          3,
+          8193
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          -8,
+          8,
+          -8
+        ],
+        [
+          8,
+          8,
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8,
+          8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 126,
+      "n": 5,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          4,
+          1,
+          2,
+          2,
+          2
+        ],
+        [
+          1,
+          5,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          65,
+          4,
+          2
+        ],
+        [
+          2,
+          1,
+          4,
+          19,
+          4
+        ],
+        [
+          2,
+          1,
+          2,
+          4,
+          514
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          8,
+          -8,
+          8,
+          8
+        ],
+        [
+          8,
+          -8,
+          8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 127,
+      "n": 5,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          4,
+          2,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          16386,
+          3,
+          3,
+          1
+        ],
+        [
+          2,
+          3,
+          4099,
+          2,
+          1
+        ],
+        [
+          1,
+          3,
+          2,
+          8193,
+          4
+        ],
+        [
+          2,
+          1,
+          1,
+          4,
+          8196
+        ]
+      ],
+      "channel_numerators": [
+        [
+          7,
+          6,
+          -7,
+          -7,
+          -1
+        ],
+        [
+          6,
+          5,
+          -3,
+          -1,
+          1
+        ],
+        [
+          -7,
+          -3,
+          2,
+          4,
+          -4
+        ],
+        [
+          -7,
+          -1,
+          4,
+          -5,
+          6
+        ],
+        [
+          -1,
+          1,
+          -4,
+          6,
+          -7
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 128,
+      "n": 5,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          260,
+          2,
+          3,
+          2
+        ],
+        [
+          2,
+          2,
+          514,
+          1,
+          1
+        ],
+        [
+          2,
+          3,
+          1,
+          7,
+          3
+        ],
+        [
+          1,
+          2,
+          1,
+          3,
+          9
+        ]
+      ],
+      "channel_numerators": [
+        [
+          3,
+          5,
+          -5,
+          4,
+          8
+        ],
+        [
+          5,
+          -5,
+          -1,
+          -5,
+          1
+        ],
+        [
+          -5,
+          -1,
+          8,
+          -1,
+          2
+        ],
+        [
+          4,
+          -5,
+          -1,
+          -3,
+          -4
+        ],
+        [
+          8,
+          1,
+          2,
+          -4,
+          2
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 129,
+      "n": 5,
+      "family": "diagonal_weighted",
+      "G_integer": [
+        [
+          4,
+          1,
+          1,
+          2,
+          2
+        ],
+        [
+          1,
+          16387,
+          1,
+          4,
+          3
+        ],
+        [
+          1,
+          1,
+          34,
+          1,
+          1
+        ],
+        [
+          2,
+          4,
+          1,
+          67,
+          4
+        ],
+        [
+          2,
+          3,
+          1,
+          4,
+          1026
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          -8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8,
+          8,
+          -8
+        ],
+        [
+          -8,
+          8,
+          8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 130,
+      "n": 5,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          2,
+          2,
+          1,
+          1,
+          2
+        ],
+        [
+          2,
+          5,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          24,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          160
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -7,
+          -8,
+          -2,
+          0,
+          -7
+        ],
+        [
+          -8,
+          -2,
+          0,
+          0,
+          0
+        ],
+        [
+          -2,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          7,
+          0
+        ],
+        [
+          -7,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 131,
+      "n": 5,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          16,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          128,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          16
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          -8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          -8,
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          -8,
+          0,
+          0,
+          -8,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 132,
+      "n": 5,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          2,
+          2,
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          32,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          16,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          16,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -1,
+          -3,
+          -4,
+          -1,
+          2
+        ],
+        [
+          -3,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          -4,
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          -1,
+          0,
+          0,
+          -8,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          -1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 133,
+      "n": 5,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          2,
+          2,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          32,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          12,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          10,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          640
+        ]
+      ],
+      "channel_numerators": [
+        [
+          6,
+          6,
+          -6,
+          -8,
+          0
+        ],
+        [
+          6,
+          -2,
+          0,
+          0,
+          0
+        ],
+        [
+          -6,
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          -8,
+          0,
+          0,
+          -8,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          -7
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 134,
+      "n": 5,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          40,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          80,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          768
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          -8,
+          0,
+          0,
+          8,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 135,
+      "n": 5,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          3,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          128,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          96,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          40,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          -8,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          8,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 136,
+      "n": 5,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          1024,
+          8,
+          2,
+          6,
+          4
+        ],
+        [
+          8,
+          192,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          10,
+          0,
+          0
+        ],
+        [
+          6,
+          0,
+          0,
+          192,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          0,
+          1024
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -3,
+          6,
+          -4,
+          -5,
+          2
+        ],
+        [
+          6,
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          -4,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          -5,
+          0,
+          0,
+          -3,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          -6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 137,
+      "n": 5,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          1024,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          128,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          32
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -4,
+          1,
+          -5,
+          -2,
+          7
+        ],
+        [
+          1,
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          -5,
+          0,
+          6,
+          0,
+          0
+        ],
+        [
+          -2,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          7,
+          0,
+          0,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 138,
+      "n": 5,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          16,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          160,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          5
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          -8,
+          0,
+          0
+        ],
+        [
+          -8,
+          0,
+          0,
+          -8,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 139,
+      "n": 5,
+      "family": "weighted_star",
+      "G_integer": [
+        [
+          2048,
+          5,
+          1,
+          3,
+          5
+        ],
+        [
+          5,
+          512,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          512,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          0,
+          16,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          0,
+          512
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -6,
+          -6,
+          -6,
+          5,
+          -6
+        ],
+        [
+          -6,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          -6,
+          0,
+          -5,
+          0,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          -8,
+          0
+        ],
+        [
+          -6,
+          0,
+          0,
+          0,
+          6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 140,
+      "n": 5,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          40,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          640,
+          4,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          32,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          384,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          2048
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -2,
+          -7,
+          0,
+          0,
+          0
+        ],
+        [
+          -7,
+          0,
+          4,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          4,
+          8,
+          0
+        ],
+        [
+          0,
+          0,
+          8,
+          -6,
+          -6
+        ],
+        [
+          0,
+          0,
+          0,
+          -6,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 141,
+      "n": 5,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          4,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          12,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          256,
+          7,
+          0
+        ],
+        [
+          0,
+          0,
+          7,
+          32,
+          4
+        ],
+        [
+          0,
+          0,
+          0,
+          4,
+          128
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          0,
+          0,
+          0
+        ],
+        [
+          -8,
+          8,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          -8,
+          8,
+          0
+        ],
+        [
+          0,
+          0,
+          8,
+          -8,
+          -8
+        ],
+        [
+          0,
+          0,
+          0,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 142,
+      "n": 5,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          80,
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          512,
+          6,
+          0,
+          0
+        ],
+        [
+          0,
+          6,
+          1280,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          20,
+          4
+        ],
+        [
+          0,
+          0,
+          0,
+          4,
+          320
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -1,
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          2,
+          -4,
+          0,
+          0
+        ],
+        [
+          0,
+          -4,
+          5,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          -8,
+          -8
+        ],
+        [
+          0,
+          0,
+          0,
+          -8,
+          3
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 143,
+      "n": 5,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          3,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1280,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          5,
+          1024,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          64,
+          7
+        ],
+        [
+          0,
+          0,
+          0,
+          7,
+          2
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          0,
+          0,
+          0
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          0,
+          0
+        ],
+        [
+          0,
+          -8,
+          8,
+          -8,
+          0
+        ],
+        [
+          0,
+          0,
+          -8,
+          -8,
+          -8
+        ],
+        [
+          0,
+          0,
+          0,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 144,
+      "n": 5,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          1,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          192,
+          4,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          256,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          256,
+          2
+        ],
+        [
+          0,
+          0,
+          0,
+          2,
+          8
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          -8,
+          -8,
+          0,
+          0
+        ],
+        [
+          0,
+          -8,
+          -8,
+          -8,
+          0
+        ],
+        [
+          0,
+          0,
+          -8,
+          -8,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 145,
+      "n": 5,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          3,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          16,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          8,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          8,
+          3
+        ],
+        [
+          0,
+          0,
+          0,
+          3,
+          2560
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          0,
+          0,
+          0
+        ],
+        [
+          -8,
+          -8,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          8,
+          8,
+          0
+        ],
+        [
+          0,
+          0,
+          8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 146,
+      "n": 5,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          320,
+          6,
+          0,
+          0
+        ],
+        [
+          0,
+          6,
+          8,
+          5,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          2560,
+          6
+        ],
+        [
+          0,
+          0,
+          0,
+          6,
+          8
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          0,
+          0,
+          0
+        ],
+        [
+          -8,
+          8,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          -8,
+          8,
+          0
+        ],
+        [
+          0,
+          0,
+          8,
+          -8,
+          -8
+        ],
+        [
+          0,
+          0,
+          0,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 147,
+      "n": 5,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          32,
+          5,
+          0,
+          0,
+          0
+        ],
+        [
+          5,
+          1280,
+          6,
+          0,
+          0
+        ],
+        [
+          0,
+          6,
+          384,
+          7,
+          0
+        ],
+        [
+          0,
+          0,
+          7,
+          48,
+          7
+        ],
+        [
+          0,
+          0,
+          0,
+          7,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          8,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          8,
+          8,
+          0
+        ],
+        [
+          0,
+          0,
+          8,
+          8,
+          -8
+        ],
+        [
+          0,
+          0,
+          0,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 148,
+      "n": 5,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          4,
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          12,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          3,
+          8,
+          7
+        ],
+        [
+          0,
+          0,
+          0,
+          7,
+          192
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -6,
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          7,
+          -7,
+          -6,
+          0,
+          0
+        ],
+        [
+          0,
+          -6,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          7,
+          5
+        ],
+        [
+          0,
+          0,
+          0,
+          5,
+          6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 149,
+      "n": 5,
+      "family": "weighted_path",
+      "G_integer": [
+        [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          1024,
+          7,
+          0,
+          0
+        ],
+        [
+          0,
+          7,
+          10,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          8,
+          2
+        ],
+        [
+          0,
+          0,
+          0,
+          2,
+          32
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -1,
+          0,
+          0,
+          0
+        ],
+        [
+          -1,
+          2,
+          6,
+          0,
+          0
+        ],
+        [
+          0,
+          6,
+          7,
+          -3,
+          0
+        ],
+        [
+          0,
+          0,
+          -3,
+          -6,
+          4
+        ],
+        [
+          0,
+          0,
+          0,
+          4,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 150,
+      "n": 5,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          4,
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          256,
+          11,
+          0,
+          0
+        ],
+        [
+          2,
+          11,
+          2064,
+          5,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          16,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          12
+        ]
+      ],
+      "channel_numerators": [
+        [
+          7,
+          0,
+          -6,
+          0,
+          0
+        ],
+        [
+          0,
+          -2,
+          1,
+          0,
+          0
+        ],
+        [
+          -6,
+          1,
+          2,
+          -4,
+          0
+        ],
+        [
+          0,
+          0,
+          -4,
+          7,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          7
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 151,
+      "n": 5,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          4,
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          256,
+          8,
+          0,
+          0
+        ],
+        [
+          2,
+          8,
+          30,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          72,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          20
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          0,
+          -8,
+          -8,
+          0
+        ],
+        [
+          0,
+          8,
+          8,
+          0,
+          0
+        ],
+        [
+          -8,
+          8,
+          -8,
+          0,
+          0
+        ],
+        [
+          -8,
+          0,
+          0,
+          8,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 152,
+      "n": 5,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          256,
+          12,
+          15,
+          0
+        ],
+        [
+          0,
+          12,
+          37,
+          0,
+          0
+        ],
+        [
+          0,
+          15,
+          0,
+          28,
+          12
+        ],
+        [
+          0,
+          0,
+          0,
+          12,
+          32
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          8,
+          8,
+          0
+        ],
+        [
+          0,
+          8,
+          -8,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          0,
+          -8,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 153,
+      "n": 5,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          69,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          130,
+          0,
+          10
+        ],
+        [
+          2,
+          0,
+          0,
+          8,
+          15
+        ],
+        [
+          0,
+          0,
+          10,
+          15,
+          4
+        ]
+      ],
+      "channel_numerators": [
+        [
+          7,
+          3,
+          -3,
+          7,
+          0
+        ],
+        [
+          3,
+          -1,
+          0,
+          0,
+          0
+        ],
+        [
+          -3,
+          0,
+          -8,
+          0,
+          -6
+        ],
+        [
+          7,
+          0,
+          0,
+          -1,
+          -6
+        ],
+        [
+          0,
+          0,
+          -6,
+          -6,
+          4
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 154,
+      "n": 5,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          518,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          7,
+          0
+        ],
+        [
+          0,
+          0,
+          7,
+          140,
+          16
+        ],
+        [
+          0,
+          0,
+          0,
+          16,
+          128
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          8,
+          8,
+          0
+        ],
+        [
+          0,
+          0,
+          8,
+          -8,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 155,
+      "n": 5,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          4,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          1039,
+          14,
+          0,
+          15
+        ],
+        [
+          0,
+          14,
+          2048,
+          0,
+          9
+        ],
+        [
+          0,
+          0,
+          0,
+          36,
+          0
+        ],
+        [
+          0,
+          15,
+          9,
+          0,
+          2048
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          -8,
+          8,
+          0,
+          -8
+        ],
+        [
+          0,
+          8,
+          8,
+          0,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          8,
+          0
+        ],
+        [
+          0,
+          -8,
+          8,
+          0,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 156,
+      "n": 5,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          9,
+          0,
+          0,
+          6,
+          0
+        ],
+        [
+          0,
+          1024,
+          0,
+          0,
+          15
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          0
+        ],
+        [
+          6,
+          0,
+          0,
+          1024,
+          7
+        ],
+        [
+          0,
+          15,
+          0,
+          7,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          0,
+          0,
+          8,
+          0
+        ],
+        [
+          0,
+          -8,
+          0,
+          0,
+          8
+        ],
+        [
+          0,
+          0,
+          -8,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          -8,
+          8
+        ],
+        [
+          0,
+          8,
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 157,
+      "n": 5,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          4,
+          0,
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          16,
+          0,
+          0,
+          9
+        ],
+        [
+          0,
+          0,
+          20,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          527,
+          6
+        ],
+        [
+          2,
+          9,
+          0,
+          6,
+          2
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          0,
+          0,
+          0,
+          -8
+        ],
+        [
+          0,
+          -8,
+          0,
+          0,
+          -8
+        ],
+        [
+          0,
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          -8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 158,
+      "n": 5,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          16,
+          0,
+          0,
+          9,
+          1
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          513,
+          5,
+          0
+        ],
+        [
+          9,
+          0,
+          5,
+          4,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          3
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          0,
+          0,
+          -8,
+          8
+        ],
+        [
+          0,
+          -8,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          0,
+          -8,
+          -8,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 159,
+      "n": 5,
+      "family": "sparse_integer",
+      "G_integer": [
+        [
+          3,
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          516,
+          9,
+          5,
+          0
+        ],
+        [
+          2,
+          9,
+          2048,
+          11,
+          0
+        ],
+        [
+          0,
+          5,
+          11,
+          2048,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          2048
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          0,
+          -8,
+          0,
+          0
+        ],
+        [
+          0,
+          8,
+          8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          8,
+          8,
+          8,
+          0
+        ],
+        [
+          0,
+          -8,
+          8,
+          -8,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 160,
+      "n": 5,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          4,
+          2,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          1,
+          640,
+          0,
+          0
+        ],
+        [
+          2,
+          640,
+          112,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          20,
+          48
+        ],
+        [
+          0,
+          0,
+          0,
+          48,
+          24
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          8,
+          0,
+          0
+        ],
+        [
+          8,
+          8,
+          8,
+          0,
+          0
+        ],
+        [
+          8,
+          8,
+          8,
+          -8,
+          0
+        ],
+        [
+          0,
+          0,
+          -8,
+          -8,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 161,
+      "n": 5,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          176,
+          112,
+          96,
+          28,
+          0
+        ],
+        [
+          112,
+          11,
+          2,
+          128,
+          0
+        ],
+        [
+          96,
+          2,
+          8,
+          128,
+          0
+        ],
+        [
+          28,
+          128,
+          128,
+          96,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          24
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          8,
+          -8,
+          -8,
+          0
+        ],
+        [
+          8,
+          -8,
+          -8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 162,
+      "n": 5,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          2,
+          2,
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          104,
+          128,
+          16,
+          0
+        ],
+        [
+          2,
+          128,
+          44,
+          22,
+          0
+        ],
+        [
+          2,
+          16,
+          22,
+          576,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          192
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          8,
+          -8,
+          0
+        ],
+        [
+          8,
+          8,
+          8,
+          -8,
+          0
+        ],
+        [
+          8,
+          8,
+          8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          -8,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 163,
+      "n": 5,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          32,
+          288,
+          416,
+          384
+        ],
+        [
+          0,
+          288,
+          96,
+          120,
+          36
+        ],
+        [
+          0,
+          416,
+          120,
+          12,
+          14
+        ],
+        [
+          0,
+          384,
+          36,
+          14,
+          12
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -4,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          7,
+          -6,
+          1,
+          -5
+        ],
+        [
+          0,
+          -6,
+          0,
+          5,
+          -5
+        ],
+        [
+          0,
+          1,
+          5,
+          -8,
+          7
+        ],
+        [
+          0,
+          -5,
+          -5,
+          7,
+          -2
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 164,
+      "n": 5,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          4,
+          80,
+          0,
+          0,
+          0
+        ],
+        [
+          80,
+          14,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          24,
+          16,
+          5
+        ],
+        [
+          0,
+          0,
+          16,
+          80,
+          112
+        ],
+        [
+          0,
+          0,
+          5,
+          112,
+          832
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -7,
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          -2,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          -2,
+          7,
+          0
+        ],
+        [
+          0,
+          0,
+          7,
+          0,
+          4
+        ],
+        [
+          0,
+          0,
+          0,
+          4,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 165,
+      "n": 5,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          64,
+          448,
+          4,
+          16
+        ],
+        [
+          0,
+          448,
+          112,
+          384,
+          48
+        ],
+        [
+          0,
+          4,
+          384,
+          14,
+          512
+        ],
+        [
+          0,
+          16,
+          48,
+          512,
+          8
+        ]
+      ],
+      "channel_numerators": [
+        [
+          1,
+          -7,
+          0,
+          0,
+          0
+        ],
+        [
+          -7,
+          6,
+          -4,
+          -2,
+          -4
+        ],
+        [
+          0,
+          -4,
+          -2,
+          4,
+          -8
+        ],
+        [
+          0,
+          -2,
+          4,
+          0,
+          6
+        ],
+        [
+          0,
+          -4,
+          -8,
+          6,
+          1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 166,
+      "n": 5,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          2,
+          2,
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          10,
+          72,
+          0,
+          0
+        ],
+        [
+          2,
+          72,
+          32,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          16,
+          80
+        ],
+        [
+          0,
+          0,
+          0,
+          80,
+          256
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          4,
+          -3,
+          0,
+          0
+        ],
+        [
+          4,
+          -3,
+          3,
+          0,
+          0
+        ],
+        [
+          -3,
+          3,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          -8,
+          2
+        ],
+        [
+          0,
+          0,
+          0,
+          2,
+          -3
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 167,
+      "n": 5,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          64,
+          960,
+          192,
+          128
+        ],
+        [
+          0,
+          960,
+          104,
+          192,
+          320
+        ],
+        [
+          0,
+          192,
+          192,
+          256,
+          960
+        ],
+        [
+          0,
+          128,
+          320,
+          960,
+          768
+        ]
+      ],
+      "channel_numerators": [
+        [
+          1,
+          -8,
+          0,
+          0,
+          0
+        ],
+        [
+          -8,
+          6,
+          2,
+          2,
+          -2
+        ],
+        [
+          0,
+          2,
+          2,
+          7,
+          -2
+        ],
+        [
+          0,
+          2,
+          7,
+          -4,
+          -3
+        ],
+        [
+          0,
+          -2,
+          -2,
+          -3,
+          1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": 168,
+      "n": 5,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          3,
+          2,
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          128,
+          192,
+          160,
+          0
+        ],
+        [
+          2,
+          192,
+          160,
+          768,
+          0
+        ],
+        [
+          2,
+          160,
+          768,
+          8,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          32
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          8,
+          -8,
+          8,
+          0
+        ],
+        [
+          8,
+          8,
+          8,
+          -8,
+          0
+        ],
+        [
+          -8,
+          8,
+          -8,
+          -8,
+          0
+        ],
+        [
+          8,
+          -8,
+          -8,
+          8,
+          8
+        ],
+        [
+          0,
+          0,
+          0,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 169,
+      "n": 5,
+      "family": "bridged_blocks",
+      "G_integer": [
+        [
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          4,
+          32,
+          52,
+          60
+        ],
+        [
+          0,
+          32,
+          256,
+          1024,
+          192
+        ],
+        [
+          0,
+          52,
+          1024,
+          64,
+          576
+        ],
+        [
+          0,
+          60,
+          192,
+          576,
+          256
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -1,
+          -3,
+          0,
+          0,
+          0
+        ],
+        [
+          -3,
+          -8,
+          6,
+          7,
+          7
+        ],
+        [
+          0,
+          6,
+          -5,
+          -3,
+          -1
+        ],
+        [
+          0,
+          7,
+          -3,
+          -2,
+          -5
+        ],
+        [
+          0,
+          7,
+          -1,
+          -5,
+          -7
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 170,
+      "n": 5,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        [
+          2,
+          2048,
+          4,
+          128,
+          4
+        ],
+        [
+          1,
+          4,
+          32,
+          1024,
+          128
+        ],
+        [
+          2,
+          128,
+          1024,
+          4096,
+          4
+        ],
+        [
+          1,
+          4,
+          128,
+          4,
+          2
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          8,
+          8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          8,
+          -8,
+          8
+        ],
+        [
+          8,
+          8,
+          -8,
+          8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          8,
+          -8,
+          8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 171,
+      "n": 5,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          128,
+          32,
+          4,
+          256
+        ],
+        [
+          2,
+          32,
+          256,
+          8,
+          256
+        ],
+        [
+          2,
+          4,
+          8,
+          1024,
+          4
+        ],
+        [
+          2,
+          256,
+          256,
+          4,
+          2
+        ]
+      ],
+      "channel_numerators": [
+        [
+          1,
+          -3,
+          5,
+          -6,
+          1
+        ],
+        [
+          -3,
+          1,
+          -5,
+          -3,
+          -2
+        ],
+        [
+          5,
+          -5,
+          3,
+          -3,
+          5
+        ],
+        [
+          -6,
+          -3,
+          -3,
+          4,
+          -6
+        ],
+        [
+          1,
+          -2,
+          5,
+          -6,
+          1
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 172,
+      "n": 5,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          2,
+          64,
+          2,
+          32,
+          16
+        ],
+        [
+          64,
+          1024,
+          2048,
+          32,
+          128
+        ],
+        [
+          2,
+          2048,
+          1,
+          1,
+          1
+        ],
+        [
+          32,
+          32,
+          1,
+          2048,
+          32
+        ],
+        [
+          16,
+          128,
+          1,
+          32,
+          4096
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          -8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          8,
+          8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "id": 173,
+      "n": 5,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          2048,
+          8,
+          32,
+          8
+        ],
+        [
+          2,
+          8,
+          2048,
+          512,
+          64
+        ],
+        [
+          2,
+          32,
+          512,
+          2048,
+          16
+        ],
+        [
+          1,
+          8,
+          64,
+          16,
+          16
+        ]
+      ],
+      "channel_numerators": [
+        [
+          8,
+          -8,
+          8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8,
+          -8,
+          8
+        ],
+        [
+          8,
+          8,
+          8,
+          8,
+          -8
+        ],
+        [
+          8,
+          -8,
+          8,
+          -8,
+          8
+        ],
+        [
+          8,
+          8,
+          -8,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        2,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "id": 174,
+      "n": 5,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          1,
+          2,
+          1,
+          1,
+          2
+        ],
+        [
+          2,
+          512,
+          64,
+          512,
+          2
+        ],
+        [
+          1,
+          64,
+          16,
+          2,
+          1
+        ],
+        [
+          1,
+          512,
+          2,
+          512,
+          4
+        ],
+        [
+          2,
+          2,
+          1,
+          4,
+          4096
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          -8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          -8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8,
+          8,
+          -8
+        ],
+        [
+          8,
+          8,
+          8,
+          -8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 175,
+      "n": 5,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          3,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          64,
+          128,
+          4,
+          128
+        ],
+        [
+          2,
+          128,
+          256,
+          256,
+          128
+        ],
+        [
+          2,
+          4,
+          256,
+          512,
+          1
+        ],
+        [
+          2,
+          128,
+          128,
+          1,
+          512
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          -8,
+          -8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          -8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          -8,
+          8,
+          8
+        ],
+        [
+          -8,
+          -8,
+          8,
+          -8,
+          -8
+        ],
+        [
+          8,
+          8,
+          8,
+          -8,
+          -8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        8,
+        4,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "id": 176,
+      "n": 5,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          256,
+          1,
+          512,
+          32,
+          128
+        ],
+        [
+          1,
+          512,
+          8,
+          32,
+          128
+        ],
+        [
+          512,
+          8,
+          64,
+          1024,
+          4
+        ],
+        [
+          32,
+          32,
+          1024,
+          128,
+          2048
+        ],
+        [
+          128,
+          128,
+          4,
+          2048,
+          1024
+        ]
+      ],
+      "channel_numerators": [
+        [
+          1,
+          2,
+          8,
+          -3,
+          1
+        ],
+        [
+          2,
+          0,
+          8,
+          -1,
+          -3
+        ],
+        [
+          8,
+          8,
+          7,
+          1,
+          8
+        ],
+        [
+          -3,
+          -1,
+          1,
+          5,
+          0
+        ],
+        [
+          1,
+          -3,
+          8,
+          0,
+          6
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        3,
+        2,
+        5,
+        3,
+        7
+      ]
+    },
+    {
+      "id": 177,
+      "n": 5,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2048,
+          1,
+          1,
+          8
+        ],
+        [
+          2,
+          1,
+          8,
+          8,
+          64
+        ],
+        [
+          2,
+          1,
+          8,
+          8,
+          4096
+        ],
+        [
+          2,
+          8,
+          64,
+          4096,
+          64
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          8,
+          8,
+          -8,
+          8
+        ],
+        [
+          8,
+          -8,
+          8,
+          8,
+          -8
+        ],
+        [
+          8,
+          8,
+          -8,
+          8,
+          8
+        ],
+        [
+          -8,
+          8,
+          8,
+          8,
+          8
+        ],
+        [
+          8,
+          -8,
+          8,
+          8,
+          8
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        1,
+        1,
+        1,
+        1,
+        16
+      ]
+    },
+    {
+      "id": 178,
+      "n": 5,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          3,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          4,
+          128,
+          4,
+          1024
+        ],
+        [
+          2,
+          128,
+          16,
+          64,
+          512
+        ],
+        [
+          2,
+          4,
+          64,
+          512,
+          512
+        ],
+        [
+          2,
+          1024,
+          512,
+          512,
+          1
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -8,
+          2,
+          3,
+          -4,
+          2
+        ],
+        [
+          2,
+          7,
+          3,
+          7,
+          8
+        ],
+        [
+          3,
+          3,
+          -7,
+          2,
+          -2
+        ],
+        [
+          -4,
+          7,
+          2,
+          -5,
+          -6
+        ],
+        [
+          2,
+          8,
+          -2,
+          -6,
+          4
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        1,
+        2,
+        1,
+        6
+      ]
+    },
+    {
+      "id": 179,
+      "n": 5,
+      "family": "dense_logwide",
+      "G_integer": [
+        [
+          1,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2048,
+          512,
+          1024,
+          128
+        ],
+        [
+          2,
+          512,
+          2,
+          16,
+          512
+        ],
+        [
+          2,
+          1024,
+          16,
+          2,
+          16
+        ],
+        [
+          2,
+          128,
+          512,
+          16,
+          1024
+        ]
+      ],
+      "channel_numerators": [
+        [
+          -6,
+          -2,
+          2,
+          7,
+          6
+        ],
+        [
+          -2,
+          2,
+          2,
+          7,
+          -1
+        ],
+        [
+          2,
+          2,
+          -6,
+          -7,
+          7
+        ],
+        [
+          7,
+          7,
+          -7,
+          8,
+          0
+        ],
+        [
+          6,
+          -1,
+          7,
+          0,
+          -7
+        ]
+      ],
+      "channel_denominator": 8,
+      "tuple": [
+        4,
+        4,
+        2,
+        2,
+        1
+      ]
+    }
+  ],
+  "source_sha256": "d99dcf2bcbeb032a724483758bf04612056fa98159c63edfd1592c4655bd8128"
+}

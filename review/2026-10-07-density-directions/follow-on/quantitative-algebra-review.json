@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-07",
+  "reviewer": "/root/density_balanced_develop/d2_ratio_candidate",
+  "scope": "Bounded complete successor-source and metadata review. Only this new audit record is written; no earlier audit, frozen Lean, manuscript, Git, compiler, service or clock change.",
+  "reviewed_final_bytes": {
+    "follow-on-balancedness.json": "ca995fb9586877061189baeb9a669be3cc5f7d63d4ae9dadb4402208c7b05e9e",
+    "follow-on-balancedness.tex": "0ca45423bc46c729cdda970228433cd59010c2e526d9cb5c72b67fad2bb79623",
+    "follow-on-quantitative-source-check.json": "384b01a85adfa4b87db58423d34ff11ac0707c94dac0f8859ca92716f5924fcf"
+  },
+  "immutable_predecessor_audit": {
+    "file": "follow-on-ratio-audit.json",
+    "sha256": "4406c969765d1fb118eda235b9199fbdc7f2c10c7d8cad635836b5ba5d970cd8",
+    "preserved": true,
+    "boundary": "Earlier C1 rate-input classification is historical where the new source-derived power-saving checks narrow the extraction obligations. This successor does not retrospectively claim those source bounds were independently validated by the earlier audit."
+  },
+  "verdict": "Repaired final contracts and unchanged analytical algebra pass this bounded source audit. T1 and T3 remain credited/elementary analytical results. C1 is correctly a source-backed extraction and validation target, not a newly claimed open conjecture. C2 is a separate stronger unproved working question, not supplied by either lift. No kernel, novelty, established-openness or full external certification is claimed.",
+  "T1_T3_successor_check": {
+    "status": "analytical-route-unchanged-and-re-read",
+    "T1": "Actual finite maximum domain, signed numerator, isolate elimination, edge-support expansion, equality correspondence, literal strictness and degenerate cases remain exactly the contracts checked in the predecessor. Pairwise disjoint private sets remain explicit in both JSON and TeX; the earlier distinct-versus-disjoint defect is not reintroduced.",
+    "T3": "Fixed F,N,t,r regime, copy-to-edge expectation, near-full retention with concentration, feasible thinning rho'=n^-alpha/log n and marginal existence in original hosts remain unchanged. No first-appearance threshold, growing-r theorem, Sidorenko gain or matching upper bound is inferred.",
+    "T2_diagnostic": "The five-point abc/ade nonsaturation diagnostic remains valid: full 9-vertex/12-edge density 11/7 is smaller than the selected 5-vertex/6-edge density 5/3, and point a is a cut vertex. It violates N+2 saturation and not T2 itself."
+  },
+  "C1_successor_obligations": [
+    {
+      "id": "C1.final.1",
+      "claim": "The q-rate input is source-backed rather than wholly absent.",
+      "assessment": "The successor explicitly attributes transverse O_D(q^-1/2), fixed-D extractable O_D(q^-1/6), activation supremum and alphabet estimates to the pinned-source check. It does not advertise these as a new theorem or as kernel acceptance.",
+      "audit_limit": "This reviewer read the complete local quantitative-source-check record. No new network or exhaustive primary rank-layer proof audit was performed; the external estimates are not independently certified by this successor."
+    },
+    {
+      "id": "C1.final.2",
+      "claim": "The source domain is odd primes, not all prime powers.",
+      "assessment": "Final contracts consistently request every sufficiently large odd prime q. Polynomially bounded q selection can use a prime in a fixed-factor interval above the required polynomial threshold. No unsupported extension to all prime powers remains."
+    },
+    {
+      "id": "C1.final.3",
+      "claim": "Matching-lift algebra and normalization remain sound.",
+      "assessment": "Mean-one symmetric regular K gives a symmetric mean-one matching average with exact one-coordinate regularity and pair coefficient lambda=1/(r-1) for even r, 1/r for odd r. The private-port density identity and positive edge-subset weights remain unchanged. Proper-subset error costs at most epsilon*(1-lambda^66), and the full gain is c0*lambda^66. Choosing epsilon<=c0*lambda^66/2 retains an r^-66 relative deficit. A polynomial K supremum raised to floor(r/2) only gives mean at least r^-Cr under the current bound, not r^-C."
+    },
+    {
+      "id": "C1.final.4",
+      "claim": "C1 is an extraction and validation target, not a completed synthesized family.",
+      "assessment": "Final text explicitly leaves complete proper-edge synthesis, exact uniform finite-space passage via rational type-prior replication, validation of the external estimates and finite-host excess conversion separate. The stale instruction to retain C1 as a conjecture was repaired. No invented effective D, q threshold, denominator or practically small witness bound is stated."
+    },
+    {
+      "id": "C1.final.5",
+      "claim": "The weaker mean gives the stated excess scale.",
+      "assessment": "Delta>=c*r^-66 and -log p<=C*r*log r give kernel excess at least c'/(r^67*log r). The eventual 0<p<1 and positive density conditions follow from bounded normalization and the strict-deficit pair profile for large r. Finite-host approximation remains acknowledged separate."
+    }
+  ],
+  "C2_successor_obligations": [
+    {
+      "id": "C2.final.1",
+      "claim": "Exact stronger target",
+      "assessment": "For the same fixed atom and every sufficiently large integer r, the question requests both polynomial alphabet |Omega|<=r^C and polynomial mean p>=r^-C while retaining relative deficit at least c*r^-66. Constants c,C are independent of r. The fixed atom, symmetry, regularity, [0,1] range and noninjective hom-density convention remain explicit."
+    },
+    {
+      "id": "C2.final.2",
+      "claim": "Neither current lift proves C2",
+      "assessment": "The matching route supplies the r^-66 deficit but only an r^-Cr mean bound. The single-pair route supplies polynomial mean but only an r^-132 deficit. Combining their separate conclusions does not supply one kernel with both stronger properties. Failure or a loose/exponential normalization bound for one chosen construction is not proof that all alternative witnesses fail."
+    },
+    {
+      "id": "C2.final.3",
+      "claim": "Improved excess if the stronger target holds",
+      "assessment": "The same logarithmic argument now uses -log p<=C*log r, giving c'/(r^66*log r). This is a conditional consequence, not evidence that the desired target exists."
+    },
+    {
+      "id": "C2.final.4",
+      "claim": "Sufficient asymptotic falsification standard",
+      "assessment": "The stated condition is logically sufficient: for every fixed C, along some unbounded integer sequence r, the supremum positive relative deficit over all eligible uniform symmetric regular kernels with the two C-bounds is o(r^-66). If C2 held with constants c,C,r0, its witnesses would force this supremum to be at least c*r^-66 at every sufficiently large r, contradicting the chosen sequence for that C. The kernel class is nonempty (the constant-one kernel on a one-point space), and p>=r^-C excludes division by zero. This is sufficient, not asserted necessary or established."
+    },
+    {
+      "id": "C2.final.5",
+      "claim": "Research/novelty boundary",
+      "assessment": "C2 is expressly unproved, with no certified novelty, established-openness or sharpness claim. Two materially distinct routes remain visible: better normalization/control of a regular lift, or a different bounded regular witness. No desired existence is silently assumed."
+    }
+  ],
+  "unresolved_but_acknowledged": [
+    "Complete source-mapped C1 family synthesis and rational type-prior uniformization.",
+    "Validation of the external rank-layer/proper-edge/regularity estimates beyond the bounded source-derived checks.",
+    "Kernel-to-unweighted-finite-host conversion with deficit-scale error control.",
+    "A proof or disproof of C2; literature novelty/openness not established.",
+    "No new formalized actual-carrier expansion endpoint or probabilistic theorem is supplied by these source fragments."
+  ],
+  "actions": {
+    "written": ["follow-on-ratio-audit-final.json"],
+    "not_taken": ["frozen Lean edit", "previous audit edit", "compiler/version/job", "Git mutation", "network/service action", "manuscript change", "clock change"]
+  },
+  "review_identity": "Actual separate-agent source/algebra review. This agent authored the earlier RatioCandidate integer bridge, not the follow-on fragments. No external independent full audit or kernel validation is claimed."
+}

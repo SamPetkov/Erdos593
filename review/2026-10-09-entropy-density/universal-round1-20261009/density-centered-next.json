@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-09",
+  "agent": "/root/density_centered_round1",
+  "verdict": "INDEPENDENT_ANALYTICAL_COMMON_S_CONE_AUDIT_PASS; TWO_LEVEL_EXTENSION_CHECKED; THREE_LEVEL_ONE_S_CONE_OBSTRUCTION_AND_MULTI_S_COUNTEREXAMPLE; UNIVERSAL_TARGET_STILL_OPEN",
+  "scope_correction": "Every positive weighted three-state nonnegative PSD Markov host is already analytically covered by weighted-three-state-pass4.json and the public note. Three states are not a remaining universal gap. The present check investigates how its mechanism extends, and why it stops at general three-level centered spectra. No new validation of old accepted gates is claimed.",
+  "read_sources": [
+    "research/e593-substantial-target-20261008/weighted-three-state-pass4.json",
+    "research/e593-substantial-target-20261008/weighted-three-state-moment-audit-20261009.json",
+    "C:/Users/petko/e593-frontmatter-story-public-20261004/review/2026-10-08-rank-three-entropy/research-note.tex",
+    "research/e593-substantial-target-20261008/actual-source-positivity-pass5.json"
+  ],
+  "common_S_cone_audit": {
+    "exact_lemma": "Let S be any actual nonnegative self-adjoint PSD Markov kernel on a finite positive probability space (X,mu), and let every edge kernel L_e lie in the convex hull of I,Pi,S. Then the colored K4 density E product_e L_e>=1. All kernels and identity denominators use the original mu. The proof does not permit a different S for each edge.",
+    "proof_owner": "/root/density_prefix_round1 is writing the complete shared proof. This artifact records independent checks and scope limitations rather than duplicating that long proof.",
+    "homogeneous_anchor": "For fixed c,d, f_cd(a)=S(a,c)S(a,d). Since S>=Pi in Loewner order, F(K4,S)=E_cd S(c,d)<f_cd,S f_cd> >=E_cd S(c,d)[S^2(c,d)]^2. The latter is at least [E_cd S(c,d)S^2(c,d)]^2=[Tr S^3]^2>=1 by Jensen under the actual probability measure S(c,d)dmu(c)dmu(d). This proof retains the original mu and requires no imported complete-graph theorem.",
+    "identity_contraction": "Expand edge convex mixtures. In each fixed I/Pi/S coloring, keep an I spanning forest; on its equality-constraint support a removed cyclic I edge is 1/mu>=1, and outside that support the retained product is zero. Other factors are nonnegative. A component of v vertices has v factors mu and v-1 identity denominators, leaving exactly mu for its state. Both S and Pi loops may be deleted because S(v,v)>=1 and Pi(v,v)=1. The diagonal inequality follows from S-Pi PSD.",
+    "original_four_vertex_subgraphs": "Pi edges are deleted. Every leaf of the selected S graph integrates away because S is Markov. The remaining proper leaf-free cores are triangles (Tr S^3>=1), four-cycles (Tr S^4>=1), and diamonds (E S(S^2)^2>=1 by Jensen above); the full K4 is covered by the homogeneous anchor.",
+    "three_vertex_quotient": "The quotient edge multiplicities are bounded by (2,2,1). Write R=S composed-entrywise with S; R is nonnegative PSD by the Schur product theorem. A single doubled edge has E S^2>=1 by Jensen. The (2,2,0) pattern has E_a[E_b S(a,b)^2]^2 >=[E S^2]^2>=1. The (1,1,1) triangle has Tr S^3>=1. The (2,1,1) or (1,2,1) pattern equals Tr(R S^2)>=Tr(R Pi)=E S^2>=1, since S^2-Pi and R are PSD and Tr of their product is nonnegative. The full (2,2,1) pattern is E_a<R(a,.),S R(a,.)> >=E_a[E_b R(a,b)]^2 >=[E S^2]^2>=1. Other patterns reduce by a Markov leaf or are empty.",
+    "two_or_one_vertex_quotients": "Two vertices have at most four parallel S edges and their density E S^j>=1 by Jensen for every positive integer j; an empty graph has density1. One vertex has only deleted loops. These arguments do not need a rank-one moment factorization.",
+    "audit_verdict": "PASS. This is a common-base-kernel cone lemma, not a universal theorem for arbitrary different commuting kernels."
+  },
+  "two_centered_spectral_levels": {
+    "exact_statement": "Let P=P*=P^2 with P Pi=0, of arbitrary rank, and 0<=y<=x<=1. If A=yI+(1-y)Pi+(x-y)P is an actual nonnegative kernel, then its K4 common-power density is >=1 for all six positive integer exponents, without ordering assumptions. This extends the prior simple top eigenfunction result to arbitrary top-band multiplicity, but still requires the entire remaining centered band to have the single value y.",
+    "cone_reduction": "For y<1, set tau_m=(x^m-y^m)/(1-y^m). Convexity of z to z^m on [y,1], or the geometric-sum comparison, gives 0<=tau_m<=tau_1. S=Pi+tau_1 P is actually nonnegative: off-diagonal A=(1-y)S; diagonal S=1+tau_1 P(v,v)>=1. S is self-adjoint PSD Markov. If tau_1>0, A^m=y^m I+(1-y^m)[(1-tau_m/tau_1)Pi+(tau_m/tau_1)S] is in the ONE S cone. If tau_1=0, it is simply a convex mixture of I and Pi. Apply the common-S lemma. Boundary y=1 forces x=1,A=I and density sum mu^-2>=1.",
+    "scope_boundary": "An arbitrary-rank top band and weighted spaces are covered. Arbitrarily many centered spectral values are not. This does not solve the original universal density target, arbitrary-alphabet entropy, canonical Lean integration, or novelty/significance."
+  },
+  "one_S_cone_three_level_no_go": {
+    "exact_statement": "If A has three distinct centered eigenvalues, no single kernel S can have BOTH A and A^2 in the affine span of I,Pi,S. In particular, their common powers cannot all lie in one common-S convex cone.",
+    "proof": "Suppose A=aI+bPi+cS and A^2=a'I+b'Pi+c'S. Three distinct centered eigenvalues force c!=0, because c=0 would give only the centered eigenvalue a. Eliminating S, the restriction to 1-perp satisfies A^2=(a'-c'a/c)I+(c'/c)A. Therefore every centered eigenvalue lambda is a root of lambda^2-(c'/c)lambda-(a'-c'a/c)=0. A quadratic polynomial with leading coefficient1 cannot have three distinct roots. No commutation assumption was hidden: the first affine identity itself makes S affine in A,I,Pi.",
+    "meaning": "This is a structural limitation of the successful proof cone, not a density counterexample. Extending it requires more than algebraically rewriting powers in the same three-generator cone."
+  },
+  "actual_three_level_cutoff_obstruction": {
+    "space": "Uniform mu=1/4 on four states. Complete orthonormal basis is 1, f=(sqrt(2),-sqrt(2),0,0), g=(0,0,sqrt(2),-sqrt(2)), h=(1,1,-1,-1).",
+    "actual_root": "T=Pi+sqrt(4/5) f tensor f+sqrt(7/10) g tensor g+sqrt(13/20) h tensor h. It is symmetric Markov on original mu. Pair(1,2) is 1-2sqrt(4/5)+sqrt(13/20)>0: the positive right side 2sqrt(4/5)-1 has square21/5-4sqrt(4/5)<13/20, since sqrt(4/5)>71/80, and (71/80)^2=5041/6400<4/5. Pair(3,4) is larger because sqrt(7/10)<sqrt(4/5); cross-block entries are1-sqrt(13/20)>0. Diagonals are positive. Max T=1+2sqrt(4/5)+sqrt(13/20).",
+    "bounded_host": "Set p=[1+2sqrt(4/5)+sqrt(13/20)]^(-1), W=pT. Then 0<W<=1 and the weighted degree is exactly p. A=T^2 has the three distinct centered eigenvalues4/5,7/10,13/20.",
+    "failed_cutoff": "The top spectral cutoff Pi+(4/5) f tensor f has entry(1,2)=1-2(4/5)=-3/5<0, although T, A and all actual powers are strictly positive. Thus actual nonnegativity cannot be assigned to a spectral prefix merely because it is PSD or retains the constant mode.",
+    "meaning": "This is not a target counterexample. Uniform four-state hosts have max T<=4, hence the existing ordered density-compensation threshold already covers this example. It diagnoses an invalid three-level extension step."
+  },
+  "multi_S_commuting_cone_no_go": {
+    "space": "The existing32-state sign measure is uniform on {R:S_a+S_b+S_c-S_d=2}; R_ab,R_ac,R_ad,R_bc,R_bd,R_cd are centered orthonormal, and the four star cubic moments are(+1/2,+1/2,+1/2,-1/2).",
+    "kernels": "Fix0<t<=1 and use edge-specific S_e=Pi+t R_e tensor R_e. Each is entrywise1+t times a sign product, so it is nonnegative; every row mean is1. It is PSD and self-adjoint, and ALL six kernels commute because their rank-one centered projections are pairwise orthogonal.",
+    "exact_density": "Expand the six factors. A proper nonempty chosen edge subset either has a leaf, giving a zero centered singleton moment, or is a triangle/square/diamond with a degree-two vertex whose two incident distinct R coordinates have zero inner product. Thus all proper centered terms vanish. The full subset contributes t^6(1/2)(1/2)(1/2)(-1/2)=-t^6/16, so F_colored=1-t^6/16<1.",
+    "not_common_powers": "These are not powers of one common A: their centered positive eigenspaces are different one-dimensional spaces, whereas every positive integer power of a single PSD operator has the same positive eigenspace support. No actual T/W for the target is claimed. This is a counterexample only to the broader commuting-multiple-S lemma.",
+    "meaning": "Multiple nonnegative Markov/PSD generators plus commutativity are insufficient. A successful three-level extension must retain special coefficient ordering and common spectral support of the actual semigroup, or a genuinely stronger nested structure; arbitrary edge-specific base kernels do not suffice."
+  },
+  "reviews_and_actions": {
+    "root_agent": "Independent analytical checks relative to the companion prefix proof; own source review independent=false.",
+    "actual_helper": "/root/density_centered_round1/centered_tensor_compensation separately checked all quotient patterns, tau inequalities and two-level edge cases. Its further completed check independently confirmed the three-level affine obstruction, actual four-state T positivity, cutoff entry -3/5, rescaling, spectral values and dense-host coverage caveat.",
+    "formal_validation": "None; no compiler/API/job/service action.",
+    "other_mutations": "Only this new local research JSON artifact. No Git push, accepted-source, live manuscript, PDF, clock, pin, installation or cache change."
+  }
+}

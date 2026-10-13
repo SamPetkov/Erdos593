@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-09",
+  "skill": "codex-academic-humanizer",
+  "revision_intensity": "Meaning-preserving scholarly revision of abstract/scope; user-authorized new exact restricted mathematics added as a separately labelled section, with technical proofs in Appendix B.",
+  "clean_revised_version": "The existing open manuscript, not a replacement document.",
+  "source_sha256": "21bfa389a60599829b1a674d5d0b413ea18275146570427c873ef2c5cc4a6326",
+  "paragraph_comparison": [
+    {
+      "location": "Abstract",
+      "before": "Erdős Problem~593 asks which finite triple systems occur in every triple\nsystem of uncountable chromatic number.  We give an independent proof of the\nclassification and develop its finite structural consequences.  After\nisolated vertices are removed, a system is obligatory if and only if it is\nlinear, every hyperedge-node of its Levi graph is incident with a bridge,\nand every Berge cycle has even length.  Its canonical atoms are single\ntriples and private-vertex expansions of finite $2$-connected bipartite\ngraphs.  For reduced obligatory systems with at least one hyperedge, we\ndetermine the exact parameter and atom-count spectra, including the parity\nobstruction at cycle rank one.  The supported one-point factorizations form\na product of partition lattices: every attachment excess profile can be\nrealized with the atoms and component count fixed, and the lattice type\nrecovers that profile.  For connected systems of positive cycle rank, an\nexact budget relates cyclic-rank splitting and excess core order to the\navailable factorization rank.  At every prescribed original-edge piece\ncount we obtain sharp binomial and Stirling-number bounds, with binary\njoints and a common joint as the interior equality cases.  The two\nextremal assemblies can have the same atoms and global parameters.\nThese results separate the constraints imposed by cyclic content from\nthe freedom of assembly.  The classification and specified structural\nextensions are verified in Lean~4; profile realization, full lattice\nspectra and the new counting endpoints are not yet fully formalized.\nAll arguments are in ZFC.",
+      "after": "Erdős Problem~593 asks which finite triple systems occur in every triple\nsystem of uncountable chromatic number.  We give an independent proof of the\nclassification and develop its finite structural consequences.  After\nisolated vertices are removed, a system is obligatory if and only if it is\nlinear, every hyperedge-node of its Levi graph is incident with a bridge,\nand every Berge cycle has even length.  Its canonical atoms are single\ntriples and private-vertex expansions of finite $2$-connected bipartite\ngraphs.  For reduced obligatory systems with at least one hyperedge, we\ndetermine the exact parameter and atom-count spectra, including the parity\nobstruction at cycle rank one.  The supported one-point factorizations form\na product of partition lattices: every attachment excess profile can be\nrealized with the atoms and component count fixed, and the lattice type\nrecovers that profile.  For connected systems of positive cycle rank, an\nexact budget relates cyclic-rank splitting and excess core order to the\navailable factorization rank.  At every prescribed original-edge piece\ncount we obtain sharp binomial and Stirling-number bounds, with binary\njoints and a common joint as the interior equality cases.  The two\nextremal assemblies can have the same atoms and global parameters.\nThese results separate the constraints imposed by cyclic content from\nthe freedom of assembly.  For the associated graph cores, we also prove\nexact edge-marginal entropy bounds for uniform Potts laws and nearby general\npair laws, and a common-power density bound for regular hosts with two\ncentered spectral levels.  These quantitative comparisons are separate\nfrom the obligatory classification; their unrestricted versions remain open.\nThe classification and specified structural\nextensions are verified in Lean~4; profile realization, full lattice\nspectra, the new counting endpoints and the entropy--density arguments\nare not yet fully formalized.\nAll arguments are in ZFC.",
+      "notes": "Names the restricted entropy and regular-host density comparisons, explicitly keeps unrestricted versions open and excludes these arguments from accepted Lean coverage. Existing classification/finite claims preserved."
+    },
+    {
+      "location": "Introductory quantitative/scope paragraph 1",
+      "before": "No corresponding quantitative paragraph in the baseline; existing verification boundary was retained and augmented.",
+      "after": "The description of the cyclic atoms also identifies graph cores for finite\nquantitative questions.  Every simple bipartite subdivision of $K_4$ is\n$2$-connected and has cycle rank three, so its private-vertex expansion is\nan allowable atom.  This observation motivates, but does not prove, a density\ncomparison for the original graph.  Section~\\ref{sec:quantitative-cores}\nstudies exact pair-marginal entropy witnesses and regular-host homomorphism\ndensities for these cores.  The first results cover uniform $q$-state Potts\ntables, arbitrary tables in specified open families, and hosts with two\ncentered spectral levels.  They are not a universal Sidorenko theorem.",
+      "notes": "Rank-three graph-core motivation, not a deduction of Sidorenko from obligatoriness."
+    },
+    {
+      "location": "Introductory quantitative/scope paragraph 2",
+      "before": "No corresponding quantitative paragraph in the baseline; existing verification boundary was retained and augmented.",
+      "after": "The entropy formulation has established predecessors\n\\citep{csikvarilin2017,szegedy2015}; local density comparisons near independence\nare also classical \\citep{lovasz2010}.  The positive-spectrum comparison has\nits own prior literature \\citep{sidorenko2021}.  We give the finite arguments\nneeded for our restricted statements and separate them from the two\nunrestricted questions.  Neither the graph comparisons nor their novelty\nis inferred from the classification of obligatory triple systems.\nSome of these core graphs already belong to known scalar-density classes:\ngraphs with a vertex complete to the opposite part are covered in\n\\citet{conlonfoxsudakov2012}.  Such coverage is not a new graph family here.\nMore recently, \\citet{imliliu2026} proved subdivision and even-theta\nsubstitution results.  Their uniform substitution theorem and their\nnonuniform theorem with path-count divisibility hypotheses do not settle\narbitrary choices of the six subdivision lengths considered below.",
+      "notes": "Exact scope, attribution or formal-status qualification; no breakthrough or novelty claim."
+    },
+    {
+      "location": "Introductory quantitative/scope paragraph 3",
+      "before": "No corresponding quantitative paragraph in the baseline; existing verification boundary was retained and augmented.",
+      "after": "The classification and substantial structural extensions have accepted\nLean implementations.  The distinction is between the mathematical results\nproved in the manuscript and the exact interfaces already exported by Lean,\nnot between a numerical test and a proof.  Full profile realization, lattice\nspectra, maximal-chain and height endpoints, and the new counting statements\nstill have unfinished formal interfaces.  The finite results above have\nmanuscript proofs; they are not all claimed as accepted Lean exports.\nThe entropy and density arguments have no accepted Lean implementation.\nAppendix~\\ref{appendix-formalization} records the implementation routes,\nvalidation records and remaining obligations without interrupting the\nmathematical arguments.",
+      "notes": "Exact scope, attribution or formal-status qualification; no breakthrough or novelty claim."
+    },
+    {
+      "location": "New main mathematical section and Appendix B",
+      "before": "Not present in the baseline manuscript.",
+      "after": "Exact theorem contracts and full proof blocks in the saved manuscript; no previously existing mathematical statement was rewritten.",
+      "notes": "These are new analytical arguments, not stylistic rewrites or accepted Lean endpoints. All original main mathematics, old labels and attribution remain unchanged."
+    }
+  ],
+  "editorial_decisions": [
+    "No institution/journal banner or acceptance claim added.",
+    "Date advanced for substantive mathematics, not monitoring.",
+    "Six directly relevant primary references added;44 total cited by first appearance.",
+    "Very technical exact-fitting and kernel-contraction proofs moved to Appendix B; mathematically meaningful theorem statements remain in main text.",
+    "Known K3,3-minus-edge entropy existence credited; rational construction only illustrates budget transfer."
+  ],
+  "limitations": [
+    "Not a complete external mathematical audit, novelty clearance, B-level certification or new Lean acceptance.",
+    "Both unrestricted targets and several retained formalization interfaces remain open."
+  ]
+}

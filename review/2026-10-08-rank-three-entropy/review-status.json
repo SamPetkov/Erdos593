@@ -1,0 +1,178 @@
+{
+  "date": "2026-10-09",
+  "scope": "Draft analytical research fragment; not authoritative manuscript or accepted Lean source",
+  "source": {
+    "path": "review/2026-10-08-rank-three-entropy/research-note.tex",
+    "sha256": "60883a25abe8a00d53ea9f9bf6131f58453befbbeb58f8024133a0c84a39f8ee",
+    "format": "LaTeX fragment, requiring amsmath, amssymb, amsthm and hyperref in a containing document",
+    "rendered_or_compiled_this_pass": false
+  },
+  "analytical_results": [
+    {
+      "name": "Two-diamond compensation for an even K4 subdivision",
+      "parameters": "a=(k,r+h,u,r,u,l), k>=u>=1, r>=l>=1, h>=1, d=r-l",
+      "host": "Finite probability weights mu_x>0 summing to1; symmetric regular 0<=W<=1 with row mean p>0",
+      "conclusion": "t(J(2a),W)>=p^m if p>=gamma_dh, with gamma_dh=(1/4) max_[0,1] x^d(1-x^h)^2/(1+x^h) and m=2k+4r+4u+2h+2l",
+      "boundary": "Restricted host-density condition, not a universal exact-marginal entropy theorem; unequal-spoke, arbitrary-mismatch and two-diamond refinements derived separately during the Pro audit",
+      "lean_validated": false
+    },
+    {
+      "name": "An admissible common-power obstruction to arbitrary-input weighted positivity",
+      "host": "Uniform three-state measure, p=6/13 and the explicitly displayed strictly positive regular W",
+      "conclusion": "For v=(-1,-3,4) in range(B1), the K1-weighted form with A^3 equals -140/19683",
+      "boundary": "Refutes only an arbitrary-vector weighted positivity shortcut, not Q+D_cd or F>=1; exact rational arithmetic and separate analytical review agree",
+      "lean_validated": false
+    },
+    {
+      "name": "A full proper-term spectral reduction",
+      "conclusion": "F=R0+sum theta_s^(r+h) R_s, with R0>=1; nonnegative grouped spectral prefixes would suffice by Abel summation",
+      "boundary": "The spectral-prefix positivity lemma and the weaker exact residual inequality remain unproved; empty, zero and repeated eigenspaces are explicitly handled",
+      "lean_validated": false
+    },
+    {
+      "name": "Full uniform binary exact-marginal entropy on subcubic graphs",
+      "parameters": "Every finite simple graph G of maximum degree<=3, every r in[0,1]; bipartite G every r in[-1,1], isolated vertices allowed",
+      "conclusion": "Uniform singletons, every ACTUAL edge law lambda_r=(1+r st)/4, D(tau||uniform^V)<=|E| I(r). Box inverse-Ising fit plus two-active-neighbor saturation controls zero-coupling edges, not just an average edge law.",
+      "application": "Every actual simple bipartite K4 subdivision, all positive path lengths including1, entire triple-feasible uniform binary rho in[-1/3,1]",
+      "boundary": "Analytical proof, not Lean validation. Nonuniform binary singletons and arbitrary finite alphabets remain open. Methodological overlap acknowledged; no exhaustive novelty or significance conclusion.",
+      "lean_validated": false
+    },
+    {
+      "name": "Two exact obstruction examples",
+      "conclusion": "Directly mixing the iid and diagonal successful extensions fails the entropy budget on J(2,4,3,2,3,1); six distinct commuting PSD Markov projections give a coloured K4 density15/16",
+      "boundary": "These refute those construction/relaxation routes only, not the original common-pair-law target",
+      "lean_validated": false
+    },
+    {
+      "name": "Flat-spectrum and componentwise density-free comparison",
+      "host": "Actual nonnegative PSD Markov A=Pi+eta P, centered orthogonal P, eta in[0,1], any rank; componentwise normalization explicit",
+      "conclusion": "For all six positive exponents, F>=1+2d eta^(S-3m0)+d^2 eta^S; component masses contribute alpha^-2",
+      "boundary": "Restricted spectral host class, not arbitrary interacting spectra; analytical obligation graph closes",
+      "lean_validated": false
+    },
+    {
+      "name": "Independent-coordinate mixture extension",
+      "conclusion": "Exact F=1+sum(F_j-1), with sum of the flat quantitative gains",
+      "boundary": "Explicit product probability and reset-mixture construction; mixed cubic moments vanish under extra independence hypotheses only",
+      "lean_validated": false
+    },
+    {
+      "name": "Shifted spectral-prefix reduction",
+      "conclusion": "F_h is a convex combination of R0, the proper R0+S_j, and matched-spoke F0>=1",
+      "boundary": "Proper shifted-prefix inequality is unproved generally; exact negative individual R_s example has all old and shifted prefixes positive",
+      "lean_validated": false
+    },
+    {
+      "name": "Host-dependent mixing compensation",
+      "host": "Same ordered tuple and finite positive weighted common-power host",
+      "conclusion": "F>=1 if gamma_(r-l,h)*||K_l||inf<=1; in particular gamma*[1+(alpha^-1-1)beta^l]<=1. Every fixed finite host is covered for sufficiently large l, componentwise.",
+      "boundary": "Host-dependent length threshold, not a uniform all-host theorem at fixed lengths or exact-marginal entropy construction",
+      "lean_validated": false
+    },
+    {
+      "name": "Hierarchical common powers",
+      "host": "Nested finite partitions and a convex mixture of their conditional-expectation kernels",
+      "conclusion": "For every finite simple graph and every choice of positive edge exponents, the density of the common even powers is at least one",
+      "boundary": "Requires the actual nested hierarchy; unequal masses and mixed cubic moments allowed. Arbitrary commuting projections and arbitrary common-power hosts are not covered. Novelty and significance unestablished.",
+      "lean_validated": false
+    },
+    {
+      "name": "Weighted three-state and one-spike common powers",
+      "host": "Any finite positive probability mu; centered normalized real f; A=yI+(1-y)Pi+(x-y)f tensor f entrywise nonnegative,0<=y<=x<=1. ALL six arbitrary positive integer K4 edge exponents.",
+      "conclusion": "F>=1+y^S(sum mu^-2-1)+sum_triangle product_triangle(x^a-y^a)product_other(1-y^a)>=1. Covers every weighted three-state PSD Markov host. At least2states: equality iff A=Pi; original self-adjoint T gives equality iff W constant.",
+      "boundary": "Restricted host class, all six positive exponents; universal interacting spectra and novelty remain open",
+      "lean_validated": false
+    },
+    {
+      "name": "Actual-source dissipation identity",
+      "conclusion": "Actual complete eigenbasis sources g_i=A^r diag(phi_i)A^u: F_h=(H(l)+H(l+h)-D_h)/2, D_h>=0,H(s)>=[Tr A^(s+r+u)]^2>=1.",
+      "boundary": "D_h<=H(l)+H(l+h)-2 is EXACTLY equivalent to target and remains unproved, not a secretly assumed simpler lemma.",
+      "lean_validated": false
+    }
+  ],
+  "review": {
+    "root_self_review": true,
+    "independent_external_audit": false,
+    "actual_separate_agent_analytical_checks": true,
+    "audit_sha256": {
+      "normalized_density_and_direct_refinement": "bc5c16c001bede87b781b681183b7795606cd4defae41ab656338252dde3852d",
+      "binary_exact_marginals_and_primary_literature": "03f6073eefcef0bea303689b29e1c36c8d8c189ff86cc5171c1207061d5b69f5",
+      "mixture_and_projection_obstructions": "104e89e8ba2be4113c5f79ebb2f8981fa98123d6c7d87db855d7ba0a0f7ae6b8",
+      "complete_initial_public_fragment": "5821f135f175afb3b289f05b47821ea0942339199ab81a747e889ffdf45171a8",
+      "exact_final_delta_and_attribution": "21f7ee17ad0a61b92c93e4980a364e1b5310af35b998a998b23fe68b866da33a",
+      "weighted_obstruction_and_full_terms_delta": "21ab9b95c1c89dc6369e71dcd35257373595b6aeb14d307fbe93c12bac86d99b"
+    },
+    "model_advice": "Completed ChatGPT Pro response read; visible model-version identity unavailable; advice is not validation",
+    "novelty_established": false,
+    "B_level_significance_established": false,
+    "continuation_analytical_audit": "review/2026-10-08-rank-three-entropy/continuation-review.json",
+    "current_source_specific_audit": "review/2026-10-08-rank-three-entropy/pass5-review.json",
+    "historical_pass4_audit": "review/2026-10-08-rank-three-entropy/pass4-review.json"
+  },
+  "accepted_checkpoint": {
+    "modules": 250,
+    "ordered_standard_only_audits": 401,
+    "new_Lean_compiler_attempts": "Two distinct cumulative statement-API attempts:66902 failed on unsupported generated pp.maxDepth; corrected probe66905 passed pinned4.32.0 warning-fatal, three full definitions and three ordered standard-only axiom lists, child/wrapper/accounting0. Request source bytes unchanged. API2of2 consumed; no theorem proof or accepted-root build.",
+    "source_and_evidence_read_only_checker": "PASS;258 accepted source files,250-module coverage,401 ordered audits and existing evidence hashes",
+    "prior_spent_attempt_counters": "Density2/2, API2/2 and service1/1 retained. Returned-proof focused attempt1/2 consumed and passed as job66955; no accepted-root rebuild or canonical promotion."
+  },
+  "coefficient_formalization": {
+    "checkpoint": "review/2026-10-08-rank-three-entropy/coefficient-checkpoint.json",
+    "statement_API": "API passed historically; returned proof now separately passed pinned warning-fatal focused check66955",
+    "Aristotle_project": "850851cb-e0c2-4a9d-ab30-ab644d97ab78",
+    "actual_task": "8cc7c314-3422-4062-bc06-961f6faa6d1d",
+    "task_status_at_submission": "QUEUED",
+    "proof_accepted": false,
+    "density_free_graph_theorem": "OPEN; finite coefficient lemma is not the weighted-host transport or full theorem",
+    "external_full_audit": "PENDING",
+    "clocks": "PAUSED; no automation restarted",
+    "current_task_status": "COMPLETE; downloaded once, returned proof now focused checked; no active request",
+    "proof_replay_dispatch": "One actual job66955 COMPLETED0:0/batch0:0/43s; child0/wrapper0. All12fulltypes/3definitions/12orderedstandard-onlyaxioms and expanded target reviewed. All11originals retrieved once and reconciled.",
+    "focused_proof_check": "review/2026-10-08-rank-three-entropy/coefficient-proof-check.json",
+    "focused_proof_passed": true,
+    "historical_dependency_artifact_lineage": "PENDING; stable2254pair snapshot is not full historical lineage"
+  },
+  "remaining": [
+    "Unrestricted exact entropy budget on bipartite K4 subdivisions and arbitrary exchangeable triple pair marginals",
+    "Sparse-host common-power comparison and unrestricted exponent/parity families",
+    "Exact literature and novelty reconciliation",
+    "Pinned validation of new transport candidate (new exact package reviewed; fresh queue guard stopped before upload), original-host spectral/graph extraction and canonical integration under exact review/resource/attempt checkpoints"
+  ],
+  "delivery_policy": "Stacked public draft PR only; no merge, accepted-source change, live manuscript/PDF/bibliography revision, private coordination export or automation restart",
+  "computational_evidence": {
+    "script": "review/2026-10-08-rank-three-entropy/exact_checks.py",
+    "data": "review/2026-10-08-rank-three-entropy/route-diagnostics.json",
+    "results": "review/2026-10-08-rank-three-entropy/exact-check-results.json",
+    "method": "Exhaustive small finite sums with rational/integer arithmetic, 64 edge subsets, four exact diagnostic cases",
+    "actual_exit": 0,
+    "random_search": false,
+    "universal_proof": false,
+    "Lean_validation": false,
+    "continuation": {
+      "script": "review/2026-10-08-rank-three-entropy/continuation_checks.py",
+      "results": "review/2026-10-08-rank-three-entropy/continuation-exact-results.json",
+      "method": "Two fixed finite weighted sums with Fraction, actualexit0; no random campaign or universal inference"
+    },
+    "pass4": {
+      "script": "pass4_checks.py",
+      "script_sha256": "c6858b75a1bf33d149e36690930c001ce2d8673f28aab94d7a501103f425fe14",
+      "results": "pass4-exact-results.json",
+      "results_sha256": "853e41e677794265bb3123b14d542f9124db311f7f565e93c7b27fc4df89440a",
+      "actual_exit": 0,
+      "status": "TWO_FIXED_DIAGNOSTICS_PASS",
+      "scope": "Two predetermined exact rational hosts,64 branches for the first and one generic-g barrier for the second. No adopted random-scan evidence; finite evaluations are not universal proofs."
+    }
+  },
+  "restart_recovery": "Historical pre-restart0-proof-attempt boundary preserved; after refreshed readiness review one unchanged returned-proof check actually passed. Public-safe research update only; accepted250modules401audits and live manuscript/PDF unchanged; clocksPAUSED.",
+  "kernel_transport_candidate": {
+    "checkpoint": "review/2026-10-08-rank-three-entropy/kernel-transport-checkpoint.json",
+    "source": "review/2026-10-08-rank-three-entropy/KernelEnergyTransportCandidate.lean",
+    "source_sha256": "e5aecb13aad04a5da598808737d5191e403102ecb25eecf941e50a202269e250",
+    "status": "SOURCE_AND_EXACT_PACKAGE_REVIEWED_UNCOMPILED_FRESH_QUEUE_GUARD_STOP",
+    "compiler_attempts": 0,
+    "upload_performed": false,
+    "scheduler_job_launched": false,
+    "guard_stop": "Procida reachable and nine clean pins stable; another existing user job caused fresh user_queue_nonempty guard. No other-job action, blind retry or consumed compiler attempt.",
+    "planned_capture": "13fulltypes/7fulldefinitions/13orderedstandard-onlyaxioms plus compiler metadata, not yet actual proof output"
+  }
+}

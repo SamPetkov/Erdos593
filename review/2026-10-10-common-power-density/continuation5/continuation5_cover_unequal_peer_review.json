@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "reviewer": "cover5 independent review",
+  "proof_scope": "J>=rank Q+cP fails for every universal fixed c>0; J>=rank Q and unrestricted F>=1 are not refuted",
+  "isolated_replay_directory": "/tmp/e593_cover5_review_unequal_s9faguta",
+  "identical_exact_archival_results_excluding_elapsed_seconds": true,
+  "source_hashes": {
+    "continuation5_unequal_cancellation.md": "78fa9ffab14a8ae6a3077880f6f64b546d4ced8612b7fbf85f9a0a50f66eb58a",
+    "continuation5_unequal_cancellation_verify.py": "efb508858fb550790eb98ecd4d9a88e4a1f1034fd2123c664a8895e5fe920353",
+    "continuation5_unequal_cancellation_checks.json": "fd0d4cdf35caf1abc2154b878b87826ea79d50268cd71232c7c800b16c126da8"
+  },
+  "proof_checks": [
+    "Original-law Gram normalization is D/2 I, giving rank-two Q.",
+    "The two diagonal field coordinates and two sign components give exactly the factor 8 in J and the factor 4 in pair correlations.",
+    "Expanded formulas imply J -> 8 and t^2 P -> 4 algebraically; no numerical limit claim needed.",
+    "Strict-positive Pi perturbation scales each centered actual field and preserves the stated limits.",
+    "Eight-state W bounds and sign-averaged original-measure power transport are valid.",
+    "All centered bands, including two zero modes, are accounted for.",
+    "Existing coarse-cone and nonnegative-channel coverage is explicitly retained."
+  ],
+  "elapsed_seconds": 0.45189690589904785
+}

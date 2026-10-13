@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-09",
+  "scope": "Bounded analytical continuation and actual focused coefficient check; public research draft only",
+  "source_sha256": "8410ab48716aa68d11932ff893f88b124b30aea0f8d7fd23c640ded42bda329d",
+  "root_self_review": true,
+  "independent": false,
+  "actual_separate_agent_checks": true,
+  "external_full_audit": "PENDING",
+  "new_analytical_results": [
+    {
+      "name": "Host-dependent mixing compensation",
+      "verdict": "ANALYTICAL_ROUTE_DISCHARGED_UNDER_EXPLICIT_NORM_CONDITION",
+      "quantifiers": "Finite positive probability host; ordered tuple(k,r+h,u,r,u,l),k>=u>=1,r>=l>=1,h>=1",
+      "proof_obligations": [
+        "PSD B_k and nonnegative K_l give E<=||K_l||inf E0 without changing measure",
+        "Original exact coefficient comparison bounds E0 by gamma(D_ac+D_bc)",
+        "Full centered expansion retains all other nonnegative proper terms",
+        "Complete weighted eigenbasis gives norm<=1+(alpha^-1-1)beta^l",
+        "Use irreducible A components, not merely irreducible T, and actual mu(C)^-2 scaling"
+      ],
+      "boundary": "Host-dependent eventual coverage is not a fixed-length all-host or entropy theorem",
+      "lean_validated": false
+    },
+    {
+      "name": "Hierarchical common powers",
+      "verdict": "ANALYTICAL_ROUTE_DISCHARGED_FOR_NESTED_CONDITIONAL_EXPECTATIONS",
+      "quantifiers": "Every finite simple graph H; arbitrary positive integer a_e; any convex mixture of conditional expectations of nested partitions of finite positive probability space",
+      "proof_obligations": [
+        "Delete only level-zero factors equal to one",
+        "Normalize first-level cells exactly; each connected component contributes sum alpha_C^(n-m)local_density",
+        "Depth induction and connected edge count n-m<=1 give each sum>=1",
+        "Tower identity E_i E_j=E_min implies all positive powers are convex mixtures of same kernels",
+        "Finite edgewise expansion is a convex combination of proved colored densities"
+      ],
+      "edge_cases": "Unequal masses, zero weights, repeated partitions, nondiscrete final level, reducible host, isolated vertices and empty edge sets retained",
+      "boundary": "Hierarchy is additional structure; arbitrary commuting projections do not suffice",
+      "lean_validated": false
+    }
+  ],
+  "real_analytical_helper_review_sha256": "553a1ace6462cf6732e8e938765db86fcec82f455976047c5afd4a5e3521bf4a",
+  "focused_coefficient": {
+    "status": "ACTUAL_PINNED_WARNING_FATAL_FOCUSED_PROOF_PASS",
+    "job": 66955,
+    "compiler": "4.32.0",
+    "compiler_githash": "8c9756b28d64dab099da31a4c09229a9e6a2ef35",
+    "returned_original_sha256": "ef4956c4dec1a166d4aad3eed51ae4a35c9a27beafab5014d2c79797de119575",
+    "public_executable_source_identical": true,
+    "public_changes": "Documentary comments only",
+    "actual_output_sha256": "a4532116750312622f985761ff7c5381847a4a961effae8a5167982531fcb640",
+    "actual_full_types": 12,
+    "actual_full_definitions": 3,
+    "ordered_axioms": 12,
+    "every_actual_ordered_token_list": [
+      "propext",
+      "Classical.choice.{u}",
+      "Quot.sound.{u}"
+    ],
+    "complete_expanded_original_target": true,
+    "child_exit": 0,
+    "wrapper_exit": 0,
+    "job_exit": "0:0",
+    "batch_exit": "0:0",
+    "child_seconds": 6.336920341476798,
+    "scheduler_seconds": 43,
+    "originals_retrieved_once": 11,
+    "nine_clean_pins": true,
+    "dependency_snapshot": "2254source/artifact pairs stable before/after; full historical lineage separately PENDING",
+    "root_read_complete_actual_output": true,
+    "real_helper_actual_output_review_sha256": "5c0f104047cd768b78695f65f598fcf0055c64ae8bd52c0b9c1ca2ddcc2af644",
+    "edge_cases": "Actual empty finite carrier, arbitrary universe, signed moments, zero eigenvalues, k=u,r=l,c=0 retained; no Nonempty or DecidableEq premise added",
+    "attempt_history": "Proof1/2 consumed; API2/2,density2/2,service1/1 preserved. Busy-queue eligibility stop before upload and reviewed readiness recovery are retained locally; one actual proof child only.",
+    "canonical_acceptance": false,
+    "kernel_transport": "PENDING",
+    "unrestricted_graph_or_entropy_theorem": false,
+    "no_green_gate_rerun": true
+  },
+  "exact_diagnostics": {
+    "script": "continuation_checks.py",
+    "results": "continuation-exact-results.json",
+    "status": "TWO_FIXED_EXACT_DIAGNOSTICS_PASS",
+    "actual_exit": 0,
+    "method": "Finite Fraction sums over two fixed hosts, not random simulations or a universal proof"
+  },
+  "other_analytical_progress": {
+    "top_band": "Uniform three-state top coefficient has an exact positive allocation proof, but weighted general prefixes remain open; no general coverage claimed",
+    "pointwise_bridge": "An exact conditional bridge expectation559/560<1 rejects that shortcut, while its full aggregate F>1; not a counterexample to target"
+  },
+  "acceptance_boundaries": [
+    "Unrestricted weighted spectral-prefix residual remains OPEN",
+    "Unrestricted exchangeable-triple exact-marginal entropy theorem remains OPEN",
+    "Analytical new host classes not Lean-validated",
+    "No novelty/B/C-level significance established",
+    "Accepted250modules401audits and live manuscript/PDF unchanged",
+    "No local Lean/video or user-process changes",
+    "No new Aristotle POST/continuation/cancellation/redownload",
+    "Public draft PR55 update only; no merge",
+    "Clocks remain PAUSED"
+  ]
+}

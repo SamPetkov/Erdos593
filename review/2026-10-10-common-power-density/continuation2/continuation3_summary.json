@@ -1,0 +1,290 @@
+{
+  "verdict": "No numerical negative cycle, coarse-monotonicity deficit, or target deficit found; no universal positivity claim. The separately constructed analytical signed-channel obstruction is not contradicted by this finite scan.",
+  "counts": {
+    "samples": 180,
+    "sample_cycle_evaluations": 1260,
+    "optimization_starts": 12,
+    "individual_cycle_starts": 8,
+    "whole_delta_starts": 4,
+    "optimization_iterations": 1097,
+    "objective_evaluations": 29050,
+    "converged_starts": 4,
+    "iteration_limit_starts": 8,
+    "sample_p_below_quarter": 177,
+    "sample_max_A_above_four": 173,
+    "sample_both": 173,
+    "sample_root_zero": 173,
+    "sample_coarse_zero_band": 0,
+    "sample_fine_zero_band": 2,
+    "sample_weighted_nonuniform": 180,
+    "optimizer_p_below_quarter": 12,
+    "optimizer_max_A_above_four": 12,
+    "sample_coarse_band_counts": {
+      "2": 59,
+      "1": 3,
+      "3": 59,
+      "4": 59
+    },
+    "sample_fine_band_counts": {
+      "5": 51,
+      "3": 6,
+      "1": 3,
+      "4": 3,
+      "2": 1,
+      "7": 55,
+      "6": 4,
+      "9": 52,
+      "8": 5
+    },
+    "optimizer_coarse_band_counts": {
+      "3": 6,
+      "4": 6
+    },
+    "optimizer_fine_band_counts": {
+      "7": 6,
+      "9": 6
+    }
+  },
+  "seed": 20261013,
+  "tuples": [
+    [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      2,
+      2,
+      1,
+      1,
+      1
+    ],
+    [
+      3,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      6,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      3,
+      3,
+      1
+    ],
+    [
+      2,
+      1,
+      3,
+      1,
+      1
+    ],
+    [
+      4,
+      4,
+      1,
+      1,
+      8
+    ],
+    [
+      8,
+      4,
+      1,
+      1,
+      8
+    ],
+    [
+      3,
+      2,
+      5,
+      3,
+      7
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      16
+    ],
+    [
+      4,
+      1,
+      2,
+      1,
+      6
+    ],
+    [
+      4,
+      4,
+      2,
+      2,
+      1
+    ]
+  ],
+  "tuple_order": [
+    "k",
+    "u",
+    "r",
+    "l",
+    "h"
+  ],
+  "all_optimized_cycle_indices": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "sample_extrema": {
+    "cycle_normalized": [
+      0.8270543110484553,
+      9,
+      4
+    ],
+    "monotonicity_normalized": [
+      0.8823450362726888,
+      9
+    ],
+    "Ffine": [
+      1.0000493522745078,
+      116
+    ]
+  },
+  "optimizer_extrema": {
+    "cycle_normalized": [
+      0.6279118130251526,
+      0,
+      4
+    ],
+    "monotonicity_normalized": [
+      0.7729184087816959,
+      5
+    ],
+    "Ffine": [
+      1.6991042836928925,
+      3
+    ]
+  },
+  "certificate_candidates": 0,
+  "exact_gate_status": "PASS",
+  "exact_provenance_scope_audit_status": "PASS",
+  "optimizer_statuses": [
+    {
+      "run": 0,
+      "iterations": 100,
+      "calls": 1935,
+      "status": 1,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT"
+    },
+    {
+      "run": 1,
+      "iterations": 100,
+      "calls": 2550,
+      "status": 1,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT"
+    },
+    {
+      "run": 2,
+      "iterations": 100,
+      "calls": 1935,
+      "status": 1,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT"
+    },
+    {
+      "run": 3,
+      "iterations": 57,
+      "calls": 1848,
+      "status": 0,
+      "success": true,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    },
+    {
+      "run": 4,
+      "iterations": 81,
+      "calls": 1725,
+      "status": 0,
+      "success": true,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    },
+    {
+      "run": 5,
+      "iterations": 100,
+      "calls": 1890,
+      "status": 1,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT"
+    },
+    {
+      "run": 6,
+      "iterations": 100,
+      "calls": 2280,
+      "status": 1,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT"
+    },
+    {
+      "run": 7,
+      "iterations": 100,
+      "calls": 2900,
+      "status": 1,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT"
+    },
+    {
+      "run": 8,
+      "iterations": 89,
+      "calls": 4340,
+      "status": 0,
+      "success": true,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    },
+    {
+      "run": 9,
+      "iterations": 100,
+      "calls": 2869,
+      "status": 1,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT"
+    },
+    {
+      "run": 10,
+      "iterations": 100,
+      "calls": 3125,
+      "status": 1,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT"
+    },
+    {
+      "run": 11,
+      "iterations": 70,
+      "calls": 1653,
+      "status": 0,
+      "success": true,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    }
+  ],
+  "limitations": [
+    "180 assigned host-tuples, not all host/tuple combinations",
+    "Eight selected cycle starts all optimize cycle 4",
+    "Eight starts stopped at the fixed iteration cap",
+    "No floating numerical search gives a universal positivity proof",
+    "p<1/4 and max A>4 do not establish failure of every prior sufficient criterion"
+  ]
+}

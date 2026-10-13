@@ -1,0 +1,21 @@
+{
+  "verdict": "Unrestricted inequality unresolved; no admissible F<1 certificate. Quantitative projection and canonical-source proofs passed internal adversarial review.",
+  "base_commit": "0e2bdbb74868c1412325afd0a5bf9a4689bf7025",
+  "source_hash_bindings_checked": 29,
+  "independent_review_scope": [
+    "Three actual independent research routes were assigned to separate agents.",
+    "Root and peers audited the original-measure projection proof and corrected the reflection-boundary scope before publication.",
+    "Root reran final frozen canonical and search exact gates in isolated directories.",
+    "Root reran the final complementary exact example and checked ten cleared-integer sign certificates.",
+    "Numerical absence of a violation is not treated as a proof; all recorded apparent violations were resolved exactly."
+  ],
+  "proof_source_sha256": {
+    "continuation4_tensor_projection_lemmas.md": "9d4a862b2d62a5d064ed8a9ae84f5df7de599ec02d31a52896b75b665805491c",
+    "continuation4_boundary_scope.md": "a52ad9f4361599889623669f6becd78f053043e9dd30832480c26f4dcaf9b4ce",
+    "continuation4_cover_structure.md": "235bb4ffcdbab4c23f421356521bbecd1af6dbbd2978ea8f6a841af86a1ca689",
+    "continuation4_projection_example.md": "da6312e19e2cdeb6009bd481ecde99368c99c1c379e29509eacf3d2631c0b11a",
+    "continuation4_tensor_example.md": "b3a4b87ad9aedd887e17c8a46f915d35b3cf1f891967c9f94eaa4bdb48fb5b80"
+  },
+  "accepted_formal_classification": "unchanged",
+  "scope": "Internal review and exact finite arithmetic, not an external referee report or a new Lean proof."
+}

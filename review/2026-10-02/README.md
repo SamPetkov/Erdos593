@@ -1,4 +1,118 @@
-# Erdős 593 manuscript review — front matter, story and references, 4 October 2026
+# Erdős 593 manuscript review 11 October 2026
+
+## Current academic readability pass — 11 October 2026
+
+The [current 59-page PDF](erdos593_obligatory_triple_systems.pdf) and matching
+[source](erdos593_obligatory_triple_systems.tex) include four restrained prose
+edits: the abstract, the distinction between finite classification questions,
+the formalization boundary, and Appendix B's conventions. The date and all
+54 mathematical statement bodies, 50 proofs, 175 bracket displays, nine
+equation environments, 1,072 inline expressions, 91 labels and 88 citation
+calls remain unchanged against the previous draft head. All 44 references
+remain cited in first-appearance order.
+
+Read the [complete changed-paragraph comparison](../2026-10-11-direction-audit/humanizer-comparison.md),
+[mechanical source check](../2026-10-11-direction-audit/humanizer-static-qa.json),
+[claim review](../2026-10-11-direction-audit/humanizer-review.json) and
+[excerpt-check limitations](../2026-10-11-direction-audit/detector-checks.md).
+The academic-humanizer skill informed clarity and direct exposition, not
+detector-score optimization. Sapling still flags the abstract prefix; a low
+score on one proof paragraph does not clear the paper.
+
+The existing native MiKTeX compiler rebuilt the saved open document twice,
+both exit zero, with installation and shell execution disabled. The final
+log has no unresolved references/citations, rerun request or bad boxes.
+Changed pages were rendered and reviewed. The built-in editor's Windows-path
+initialization error remains recorded separately.
+
+Current source SHA256:
+`7b0dc06f31631f2c8bd73d5e24c503ee5a7579663f4f6adbc5e9a65c9fc503fe`.
+Current PDF SHA256:
+`dd7301b8d5176d19db528aca551fb832861f642e07559174d7072c02a4fe035b`.
+The open local document and public review source/PDF match byte-for-byte.
+
+The new [compensation research note](../2026-10-11-direction-audit/collective-correction-budgets.md)
+has separate analytical review. It does not add a theorem to this manuscript,
+close the unrestricted inequality, establish novelty or supply Lean acceptance.
+Accepted Lean source/pins remain unchanged, both clocks stay paused, and the
+public-only PR remains a draft. Earlier source/PDF hashes below are historical.
+
+## Current direction audit and transfer theorem — 11 October 2026
+
+The [current PDF](erdos593_obligatory_triple_systems.pdf) is a fresh **59-page**
+build of the [in-place manuscript](erdos593_obligatory_triple_systems.tex).
+All 44 references remain cited and numbered by first appearance.
+
+Proposition 11.8 now compares weighted signed projection lifts with their
+coarse roots for all six positive edge exponents: it retains the full coarse
+density and adds an explicit seven-cycle margin. Its original-law/projection
+conditions are visible; the complete tensor and Schur-form proof is in
+Appendix B. This is not a general reduction of arbitrary roots, an unrestricted
+density theorem, a novelty/B-level claim or an accepted Lean endpoint.
+
+Read the [source-bound audit and research directions](../2026-10-11-direction-audit/README.md),
+[paragraph comparison](../2026-10-11-direction-audit/editorial-comparison.md),
+[static checks](../2026-10-11-direction-audit/static-qa.json) and
+[build/visual review](../2026-10-11-direction-audit/pdf-review.md).
+The actual separate-agent audits support the restricted PR58–63 statements,
+with exact arithmetic replay limits recorded. Universal source geometry and
+simultaneous-cover compensation remain separate open obligations; the
+unrestricted finite-alphabet entropy and common-power density questions remain
+open. An inaccessible Pro response is not counted as proof evidence.
+
+All 53 previous mathematical statement bodies, 49 proof bodies, 89 labels
+and 88 citation calls remain unchanged and in order. One proposition, one
+proof and two labels are intentional additions. The existing native MiKTeX
+compiler returned zero on the final call with installation/shell execution
+disabled; references resolve and no bad boxes remain. All pages were rendered
+and reviewed, with changed pages checked at full scale. The built-in editor's
+Windows-path initialization failure is recorded separately.
+
+Source SHA256: `bee441b2372759dd97d29312efd26f549be9b8708eb09dec4ef7180f5c867562`.
+PDF SHA256: `bf3edecdecb6f4bbacc682cfda2578066a230ca6a447ab6391a27f5696163083`.
+BibTeX SHA256: `b2079ec8a672115f532d33ad5baec73e12a597276601a17b735be647e825e0ae`.
+
+Accepted structural Lean source, pins and workflows remain unchanged; all new
+entropy/density material is still unformalized. Development is public-only,
+both stopped monitors remain paused, and no candidate stack is blanket-merged.
+Older dated sections below are historical where counts or PDF hashes differ.
+
+## Current entropy and density review 9 October 2026
+
+The [current PDF](erdos593_obligatory_triple_systems.pdf) is a fresh 57-page build
+of the in-place [manuscript](erdos593_obligatory_triple_systems.tex), with
+44 cited references numbered by first appearance. Six directly relevant sources
+were added, including the recent Im–Li–Liu subdivision comparison.
+
+The new quantitative section states exact restricted entropy and common-power
+density results. Full Gibbs-fitting, marginal-correction and weighted-cone proofs
+are in Appendix B. The original classification and finite-result mathematical
+body, its 74 existing labels, Appendix A and attribution are preserved.
+The three-colour example illustrates explicit entropy-budget transfer on a graph
+with already known entropy existence. Both unrestricted questions remain open.
+
+Read the two detailed adversarial source reviews in
+[the research packet](../2026-10-09-entropy-density/README.md), along with the
+[paragraph comparison](../2026-10-09-entropy-density/public-review-round2-20261009/editorial-comparison.json)
+and [static QA](../2026-10-09-entropy-density/public-review-round2-20261009/static-qa.json).
+Their conclusion is a scoped analytical review draft, not a full external audit,
+novelty clearance, B-level result or complete Lean formalization.
+The new entropy/density arguments have no accepted Lean implementation.
+
+Three installed MiKTeX pdfLaTeX runs returned zero, with automatic installation
+and shell execution disabled. The final build has no unresolved references or
+citations, rerun requests, overfull or underfull boxes; the expected disabled-shell
+warning is retained. All 57 pages were rendered and checked, with selected pages
+inspected at full page scale. The built-in editor compiler's Windows-path
+initialization failure remains a separate platform limitation, not a successful build.
+
+Source SHA256: `21bfa389a60599829b1a674d5d0b413ea18275146570427c873ef2c5cc4a6326`.
+PDF SHA256: `c549243bd742bbdb7398c57f2780f24a61a8bd28d3ce5237bf42999b3b6f5359`.
+BibTeX SHA256: `b2079ec8a672115f532d33ad5baec73e12a597276601a17b735be647e825e0ae`.
+
+Public-only development continues in scoped draft PRs. Accepted Lean source,
+pins and workflows remain unchanged; both stopped monitors remain paused.
+The dated sections below are historical where their counts or PDF differ.
 
 ## Current review version — 4 October 2026
 

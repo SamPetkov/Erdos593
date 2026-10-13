@@ -1,4 +1,27 @@
-# Manuscript changes and comparison — updated 4 October 2026
+# Manuscript changes and comparison — updated 11 October 2026
+
+## Weighted transfer and connected direction audit — 11 October
+
+The [new comparison notes](../2026-10-11-direction-audit/editorial-comparison.md)
+record the changed abstract/introduction paragraphs, new Proposition 11.8 and
+complete Appendix B proof. The theorem retains the full coarse density and
+adds an explicit cycle margin under its exact original-law/root/projection
+conditions. All six positive exponents and arbitrary coarse spectra are
+allowed in that class; arbitrary roots are not reduced to it. The zero-channel
+branch is explicit and the unrestricted questions stay open.
+
+Actual separate-agent source audits and bounded exact checks informed the
+addition. All 53 previous statements, 49 proofs, 89 labels, 88 citation calls
+and 44-reference bibliography remain unchanged/in order. One proposition,
+one proof and two labels are added. No reference padding, private transcript
+export, Lean/pin/workflow change, service request or monitor restart occurred.
+
+The clean revision remains the existing open document, dated 11 October for
+the substantive mathematical addition. Its 59-page native PDF has passed
+the recorded build/static/visual checks. Detailed technical derivations are
+in the appendix; the main text states the result and its precise limitation.
+This is an analytical review draft, not a full external audit, novelty clearance
+or publication-readiness claim. Older dated records below are historical.
 
 ## Front matter, contribution narrative and selective appendix — 4 October
 

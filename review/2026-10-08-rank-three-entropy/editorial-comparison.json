@@ -1,0 +1,105 @@
+{
+  "date": "2026-10-09",
+  "purpose": "Paragraph-level comparison for the clean research-note revision; preserve mathematics, citations and provenance while making claim boundaries readable",
+  "intensity": "Moderate exposition and structural edit; mathematical refinements separately identified, not attributed to stylistic editing",
+  "comparisons": [
+    {
+      "source": "The earlier binary path criterion covers the triple-feasible interval only up to correlation1/2 and leaves short-path/high-correlation fitting unresolved.",
+      "revision": "Replace it with the complete uniform binary subcubic theorem and proof, controlling every zero-coupling edge, all endpoint correlations and isolated vertices. The actual bipartiteK4 application covers the entire triple-feasible interval[-1/3,1] including length-one paths.",
+      "note": "Substantive independently audited analytical proof, not a stylistic invention, numerical fit or Lean-validated result. Retain nonuniform-binary/arbitrary-alphabet gap and known inverse-Ising/entropy attribution. Correct only the sign explanation's single-zero case and the exact Szegedy source title."
+    },
+    {
+      "source": "The actual-source dissipation route still leaves modewise positive-eigenfunction positivity as a possible sufficient shortcut.",
+      "revision": "Add the exact admissible32-state common-host positive-eigenmode counterexample and link its moment contraction/perturbation certificate.",
+      "note": "Refute only the stronger modewise lemma, not F>=1. Preserve the earlier generic-function obstruction and proper-term surplus."
+    },
+    {
+      "source": "The eight finite transport bodies are source-reviewed but have no exact compilation package.",
+      "revision": "Record the prepared exact package, Probe and reviewed runner, then the actual fresh resource-guard stop before any upload/Lean attempt.",
+      "note": "Preparation and a queue stop are neither proof success nor compiler failure; old proof counters and accepted source stay unchanged."
+    },
+    {
+      "source": "The prior closing paragraph identifies weighted-measure positivity as an unproved shortcut, without an explicit compatible host or a full proper-term alternative.",
+      "revision": "Two new paragraphs provide the exact three-state common-power host with weighted form -140/19683, then expand only the ac kernel and expose the grouped spectral-prefix and full residual obligations.",
+      "note": "Substantive bounded analytical development, not a stylistic invention. Distinguish a false arbitrary-vector shortcut from the unrefuted target; retain the proper-term slack and the empty-spectrum case. No novelty or formal-validation claim."
+    },
+    {
+      "source": "The returned research advice separates a restricted normalized density theorem, binary exact-marginal construction and obstruction examples, while leaving the general target open.",
+      "revision": "The opening and final subsection explicitly distinguish the finite obligatory classification from a possible rank-three density extension; analytical review, Lean validation, novelty and significance are separate gates.",
+      "note": "Lead with the exact question and limitations; no promotional or breakthrough language."
+    },
+    {
+      "source": "The initial compensation route uses equal spokes and one unit of arm mismatch under a lower host-density bound.",
+      "revision": "The compensation subsection states the separately derived unequal-spoke, arbitrary-mismatch two-diamond theorem, probability normalization, all integer inequalities, its sharper maximum and the sparse-host gap.",
+      "note": "This is substantive analytical development, not paraphrase of Pro's theorem. The complete proof and actual edge/vertex counts remain in the note."
+    },
+    {
+      "source": "The binary construction minimizes a finite Gibbs dual on a box; endpoint correlation alone would be insufficient without uniform singleton marginals.",
+      "revision": "The proof gives the odd-boundary path overcount, both boundary derivative signs, global spin-flip reconstruction and relative-entropy budget in one sequence.",
+      "note": "Expose the exact-marginal bridge rather than hiding it behind a scalar counting inequality. Cite the adjacent Ising/Bethe literature without treating it as an automatic proof of this bridge."
+    },
+    {
+      "source": "A direct mixture violates its budget, and a coloured common-PSD relaxation has density below one.",
+      "revision": "Separate paragraphs give exact finite formulas and explicitly say which proposed routes fail, while preserving the fact that another extension succeeds in the binary mixture example.",
+      "note": "Avoid presenting a construction failure as a counterexample to the target."
+    },
+    {
+      "source": "Common-power positivity suggests a sufficient bilinear comparison, but positivity need not survive a weighted change of measure.",
+      "revision": "The closing subsection prints that precise missing comparison, labels it unproved, and separates this sufficient family from six arbitrary exponents and odd-parity paths.",
+      "note": "Keep conjectural directions visible without inserting them as proved results into the live manuscript."
+    },
+    {
+      "source": "The previous density-free route retained proper-term slack but gave no closed theorem beyond a sufficient positivity condition.",
+      "revision": "A flat-spectrum proposition gives the quantitative bound and complete proof, with component and independent-coordinate extensions stated under explicit extra hypotheses.",
+      "note": "Substantive analytical development, not a style invention. Signed tetrahedron term retained; no general spectrum or novelty claim."
+    },
+    {
+      "source": "The earlier Abel reduction proposed positivity of all unshifted spectral prefixes.",
+      "revision": "Rewrite as a convex combination of R0, proper shifted prefixes R0+S_j, and matched-spoke F0; identify the remaining general obligation.",
+      "note": "Weaker sufficient condition keeps available slack; negative individual coefficients do not refute it."
+    },
+    {
+      "source": "Finite diagnostics and the service proof return were saved separately from the public research fragment.",
+      "revision": "Link reproducible exact-arithmetic code/data/results and a returned Lean candidate with current checkpoint metadata.",
+      "note": "Do not call arithmetic checks simulations proving a universal theorem. Service completion is not independent kernel acceptance; no accepted root or main manuscript change."
+    },
+    {
+      "source": "The compensation proof used the coarse kernel bound1/p, leaving sparse hosts untreated.",
+      "revision": "Keep the actual smoothing norm and derive a finite weighted spectral-gap bound, including A-components and a host-dependent eventual threshold.",
+      "note": "Substantive analytical proof, not a stylistic invention. Explicitly distinguish eventual fixed-host coverage from the unrestricted fixed-length all-host target."
+    },
+    {
+      "source": "Flat-spectrum and coordinate-mixture proofs eliminated or collapsed spectral interactions.",
+      "revision": "Add a nested conditional-expectation theorem with a complete cell-mass induction for arbitrary finite simple graphs, plus an unequal-mass example with a nonzero mixed cubic moment.",
+      "note": "State the additional hierarchy hypothesis. Do not treat arbitrary commuting PSD projections as a hierarchy or infer novelty."
+    },
+    {
+      "source": "The recovered coefficient return awaited a pinned check.",
+      "revision": "Report the actual66955 warning-fatal proof check, actual output review and standard axioms, with canonical integration and historical dependency lineage separately pending.",
+      "note": "Precision about scope is part of the academic edit; the kernel/entropy propositions are not described as Lean-validated."
+    },
+    {
+      "source": "The prior fragment covered flat spectra, coordinate products and partition hierarchies, but did not cover arbitrary weighted three-state common powers.",
+      "revision": "Add the one-spike proposition, exact convex-power/contraction/moment-parity proof, quantitative surplus, equality case and a sparse nonreflection example.",
+      "note": "Substantive analytical theorem, not stylistic invention. Explicitly retain the restricted spectral hypothesis, flat boundary and known equal-exponent literature; no general, novelty or Lean claim."
+    },
+    {
+      "source": "Finite coefficient proof was pinned checked, but its actual kernel energy identity had not been supplied.",
+      "revision": "Explain the direct eight-body finite transport candidate and separate its exact orthonormal algebra from original-host extraction and future warning-fatal validation.",
+      "note": "Written proof bodies are not compiler evidence; no equivalent energy premise or acceptance inflation."
+    },
+    {
+      "source": "The unresolved comparison was expressed through proper spectral prefixes.",
+      "revision": "Add an exact actual-source dissipation identity and a fixed positive/bistochastic generic-function barrier; label the missing energy budget as equivalent to the target.",
+      "note": "This route clarifies what remains unproved, rather than presenting an equivalent reduction as a solution."
+    }
+  ],
+  "preserved": [
+    "Exact formulas and proof obligations",
+    "Definitions and natural-log convention",
+    "Actual graph carriers and counts",
+    "Pro attribution and independent direct-refinement provenance",
+    "Primary-source citations",
+    "No novelty or full-formalization claim"
+  ]
+}

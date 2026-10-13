@@ -1,0 +1,82 @@
+{
+  "reviewer": "/root/unequal6",
+  "review_type": "Independent mathematical proof check by a separate agent; the development discussion was collaborative.",
+  "reviewed_files": {
+    "continuation6_jordan_contraction.md": "f033bbaa190e60125de5e43af03aefeb4dcbb58965637db6ca3a54fd9479c1e1",
+    "continuation6_cubic_subspace.md": "c6e81856a9dcffa37b2031581855ef7de41d64619e1ea6da8be3b1cb2736e556"
+  },
+  "verdict": "PASS_FOR_STATED_THEOREMS",
+  "scope": "The unrestricted common-power density target and unrestricted averaged-star inequality are not proved. This review concerns the written general proofs, not a numerical host or a source-cap necessity claim.",
+  "checks": [
+    {
+      "item": "Original-law source identities",
+      "detail": "The projection frame has E R=I, tr R_i=Q(i,i); actual nonnegative powers preserve PSD fields and mean. No different integration measure enters either proof."
+    },
+    {
+      "item": "Complete spectrum",
+      "detail": "g_st is the sum over all centered eigenvectors, including extra eigenvalue-one modes and eigenvalue-zero modes. For positive exponents, every term is nonnegative and zero modes vanish."
+    },
+    {
+      "item": "Sorted exponent direction",
+      "detail": "For 0<=lambda<=1 and x<=y<=z, lambda^(x+y)>=lambda^(2y), lambda^(x+z)>=lambda^(y+z)>=lambda^(2z). Hence g_xy>=v_y and g_xz>=g_yz>=v_z; the inequality directions are correct."
+    },
+    {
+      "item": "Real triple trace",
+      "detail": "Cyclicity and transposition make tr(XYZ) symmetric for three real symmetric factors, despite possible negative values. No pointwise positivity of three PSD products is invoked."
+    },
+    {
+      "item": "Jordan interval centering",
+      "detail": "On the Hilbert space of symmetric matrix fields, L_A=(AY+YA)/2 is self-adjoint. A quadratic-form interval [a,b] gives norm at most (b-a)/2 after subtracting its midpoint. The resulting lower bound is valid for unrelated Y and Z."
+    },
+    {
+      "item": "Source cap constants",
+      "detail": "0<=M_x<=L I yields interval [-1,L-1]. This gives C>=(L-2)g_yz/2-L sqrt(v_y v_z)/2 and J-d>=g_xy+g_xz+L g_yz/2-L sqrt(v_y v_z)/2. The coefficient L/2 is nonnegative, so the subsequent variance lower bounds are legitimate."
+    },
+    {
+      "item": "Source cap threshold",
+      "detail": "Completing the square gives coefficient 1+L/2-L^2/16. It is nonnegative exactly up to the positive root 4+4 sqrt(2). Substituting the valid cap L=9 gives residual 7 v_z/16. The cap need only hold at the shortest actual time; a uniform first-step cap propagates by Markov averaging."
+    },
+    {
+      "item": "Visible balance",
+      "detail": "B diag(Q)=d implies every positive-time M_s has trace d. It is strictly stronger than merely rank(Q)=d and may hold with nonconstant raw diagonal only when the variation is killed by B."
+    },
+    {
+      "item": "Traceless Jordan compression",
+      "detail": "For traceless Y, ||Y||op^2<=(d-1)||Y||HS^2/d, so tr((M_x-I)Y^2) lies between -||Y||HS^2 and (d-2)||Y||HS^2. The Jordan operator is compressed to the traceless space; invariance under the uncompressed operator is not needed."
+    },
+    {
+      "item": "Balanced rank threshold",
+      "detail": "The interval [-1,d-2] gives midpoint (d-3)/2 and radius (d-1)/2. Completing the square yields (-d^2+10d+7)v_z/16, strictly positive at each integer d from2 through10. Rank1 balance forces its scalar fields equal one; rank0 is trivial. No conclusion about rank11 failure follows."
+    },
+    {
+      "item": "Equality",
+      "detail": "When the displayed coefficient is strictly positive, equality forces v_z=0. The complete nonnegative spectral expansion at positive z then forces B R=I, including disconnected roots. Conversely B R=I gives equality. The endpoint source-cap equality is intentionally unclassified."
+    },
+    {
+      "item": "Cubic-free subspace proof",
+      "detail": "Markov averaging preserves one fixed real linear subspace. Triple traces vanish pointwise under its stated algebraic condition; linear terms vanish only in expectation, which is sufficient. The full quadratic surplus remains."
+    },
+    {
+      "item": "Algebraic examples",
+      "detail": "Fixed off-diagonal block grading annihilates odd triple traces without matrix commutation. Real traceless rank-two matrices satisfy UV+VU=tr(UV)I. D=diag(1,12,-9,-10) has tr D^3=0 but tr D=-6; the stated scalar interval [-1/12,1/10] keeps I+tD PSD."
+    },
+    {
+      "item": "Refinement realization",
+      "detail": "The feature rows v_(i,a)/sqrt(nu_(i,a)) have original weighted Gram I. The projection and pullback root are valid even with zero fields, and conditional probabilities sum to one at every positive kernel composition. The actual source averages to the prescribed PSD field, proving the transport rather than assuming it."
+    },
+    {
+      "item": "Binary channel consequence",
+      "detail": "It separately requires H^2=beta Q and |H|<=S. Original sign averaging leaves only the seven cycles of K4. Projection triangle and quadrilateral bounds give a comparison with coarse F; a separate coarse bound and a valid projection-channel description remain necessary for the original target."
+    },
+    {
+      "item": "Known limitations",
+      "detail": "The proofs impose source-cap, visible-trace, or cubic-subspace structure. None is asserted automatically for arbitrary actual sources. Failed sufficient criteria and negative local products are not treated as target counterexamples."
+    },
+    {
+      "item": "Unbounded-cap cubic-free line family",
+      "detail": "For d=m^3+1 and D=diag(m,-1,...,-1), tr D^3=0 and tr D^2=m^2(m+1). The two original masses 1/(m+1),m/(m+1), with t=1,-1/m, have E t=0 and E t^2=1/m. Thus both PSD fields have mean I and the refresh square multiplies t by rho=(1-epsilon)^2, giving exactly J=d+[m(m+1)]*(rho^(x+y)+rho^(x+z)+rho^(y+z)). For m=9, epsilon=1/1024, the first visible eigenvalue 1+9 rho exceeds 97/10, which exceeds 4+4 sqrt(2); the two visible traces differ. The original-law refinement realizes these fields as an actual projection source, without proving a general binary channel or unrestricted density result."
+    }
+  ],
+  "finite_example_review": "The separate Jordan concrete audit is continuation6_unequal_jordan_review.json, whose bindings identify the files reviewed. No review of a concrete cubic-subspace host is implied by this proof review.",
+  "corrections_required": []
+}

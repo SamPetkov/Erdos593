@@ -1,0 +1,140 @@
+{
+  "date": "2026-10-09",
+  "reviewer": "/root/entropy_gap_round2/budget_transfer_exact_audit",
+  "review_type": "Actual separate-agent conclusion-first analytical proof-route audit using the reverse-lamport skill. Not Lean, novelty clearance, journal acceptance or a full external audit.",
+  "source": {
+    "file": "entropy-gap-attempt.json",
+    "sha256": "e91b30073b788ba2fc797e1ee901f2b2e31e7ff6049ddded954a8baefb4c768b",
+    "read_completely": true,
+    "modified_by_reviewer": false,
+    "earlier_dependency_read_completely": {
+      "file": "../universal-round1-20261009/alphabet-global.json",
+      "sha256": "7047201ed62c14a00f54026e8c7e3b35070b12bd02a07b7a7b09e2630131beff"
+    }
+  },
+  "audit_boundary": {
+    "principal_conclusion": "On the displayed actual K3,3-minus-edge graph G with n=6,m=8, uniform three-color singleton kappa and the exact symmetric table lambda=(1/5400)[[1787,7,6],[7,599,1194],[6,1194,600]], the supplied tau is an actual probability with every singleton kappa and every distinct oriented actual edge lambda, satisfying 8D(lambda||kappa^2)-D(tau||kappa^V)>229/540 nats.",
+    "secondary_conclusions": [
+      "The stated conditional disjoint-block mixture closure has exact cycle-rank entropy surplus beta H(pi), where beta=m-n+c and isolated vertices count as connected components.",
+      "The stated global IID-noise mixture preserves all actual marginals and has lower slack (1-epsilon)Delta-m h(epsilon).",
+      "The added explicit buffered row-zero perturbation lemma has the stated nonuniform-reference KL loss, under both independently imposed TV thresholds; it yields a fixed-graph relative neighborhood and preserves triple feasibility under the separately stated3gamma buffer."
+    ],
+    "accepted_primitive": [
+      "The existing fully source-reviewed uniform binary Potts argument gives a sharp exact witness on finite simple bipartite graphs whose every edge has an endpoint of degree at most3. At agreement s=1/3, it supplies a Gibbs witness with each J_e in[-log2,0]. The exact prior source is identified above, read fully by this reviewer, and its hypotheses match this G. It is accepted here as an earlier analytical result, not a Lean theorem.",
+      "Finite probability marginalization, Shannon entropy and KL chain rules, convexity of KL, mutual information bounded by the mixture-label entropy, and maximal coupling. The source supplies the finite entropy-continuity derivation, so no unexamined black-box continuity bound is required.",
+      "Elementary exact real inequalities: h(t)<=t(log(1/t)+1), e>8/3, log(3/2)>1/3, and rational arithmetic. Natural logarithms and 0log0=0 are used throughout."
+    ],
+    "non_goals": [
+      "No assertion about every alphabet or every positive triple-extendible table.",
+      "No assertion covering all K4-subdivision length tuples for this displayed table.",
+      "No target counterexample, new Sidorenko theorem, Lean validation, novelty or B-level significance conclusion."
+    ]
+  },
+  "obligation_graph": [
+    {"claim": "C0", "route": "R0 primary explicit correction and entropy surplus", "and": ["C1", "C2", "C3", "C4", "C5", "C6"], "status": "discharged"},
+    {"claim": "C1 actual input and actual graph", "route": "R1 table, triple construction and graph geometry", "and": ["O1", "O2", "O3"], "status": "discharged"},
+    {"claim": "C2 exact base witness and surplus", "route": "R2 prior Potts theorem then disjoint-block mixture", "and": ["O4", "C10", "O5"], "status": "discharged"},
+    {"claim": "C3 tau is normalized and has every exact marginal", "route": "R3 row-zero tensor corrections", "and": ["C2", "O6", "O7"], "status": "discharged"},
+    {"claim": "C4 tau is nonnegative on every actual configuration", "route": "R4 exhaustive three-case argument", "and": ["O3", "O5", "O8", "O9", "O10", "O11"], "status": "discharged"},
+    {"claim": "C5 corrected KL slack obeys displayed continuity lower bound", "route": "R5 IID mixing plus total variation and entropy continuity", "and": ["C11", "O12", "O13", "O14"], "status": "discharged"},
+    {"claim": "C6 final slack exceeds229/540", "route": "R6 elementary logarithm bounds and exact subtraction", "and": ["C5", "O15", "O16"], "status": "discharged"},
+    {"claim": "C10 conditional block-mixture closure", "route": "R10 disjoint-support likelihood ratios on each actual component", "and": ["O17", "O18", "O19", "O20"], "status": "discharged"},
+    {"claim": "C11 global IID-noise budget transfer", "route": "R11 KL convexity and mixture-label chain rule", "and": ["O21", "O22", "O23"], "status": "discharged"},
+    {"claim": "C12 general buffered probability and KL bound", "route": "R12 explicit centered correction with nonuniform-reference continuity", "and": ["O24", "O25", "O26", "O27", "O28", "O29", "O30", "C11"], "status": "discharged"},
+    {"claim": "C13 a full-dimensional relative fixed-kappa neighborhood exists", "route": "R13 choose epsilon then a small symmetric row-zero perturbation", "and": ["C12", "O31"], "status": "discharged"},
+    {"claim": "C14 triple extendibility survives under3gamma<=epsilon", "route": "R14 centered three-pair correction to the positive triple mixture", "and": ["O25", "O32", "O33"], "status": "discharged"}
+  ],
+  "critical_findings": {
+    "fatal_errors": [],
+    "scope_errors": [],
+    "actual_reviewed_precision_correction": {
+      "initial_added_section_sha256": "0edd25d8275944270cc686dc268f68ec5bcd29d1649a40c8e0fcdf634dbd225f",
+      "finding": "The phrase 'In a K4 subdivision m>=8' omitted the bipartite qualifier. Plain unsubdivided K4 has6 edges.",
+      "author_repair": "Author changed that phrase to 'In a bipartite K4 subdivision m>=8'. The final source was then fully reread and hashed by this reviewer.",
+      "effect": "Scope precision only; no formula, main theorem or explicit example changes. The positivity implication in fact needs onlym>=3. No failing leaf remains in the final source."
+    },
+    "unavailable_or_circular_leaves": [],
+    "adversarial_checks": [
+      "The graph cut estimate must not be assumed from minimum degree alone. It is supported here by connectedness and the explicit fact that every K3,3-minus-edge edge lies on a4-cycle. Hence no bridge exists and every nontrivial cut contains at least2 edges.",
+      "The lower binary mass needs the bounded Gibbs parameters, not merely existence of any entropy witness. The cited Potts source actually supplies J_e in[-log2,0]; the normalized reference partition is at most1, giving mass at least2^-14.",
+      "Distinct simple actual edges are essential for marginal correction: every other edge has an unintegrated centered endpoint. The supplied graph is simple, so no parallel edge can contribute a second copy of D.",
+      "The correction is signed; normalization and exact marginals alone do not establish a probability. The three configuration classes in C4 are exhaustive and each positivity bound is separately checked.",
+      "Continuity of entropy does not alone transfer a sharp inequality. A quantified positive base surplus is present here, and the finite continuity loss is bounded below that surplus by exact logarithm estimates.",
+      "The obstruction to separately sharp quotient budgets remains valid. The witness deliberately permits correlated global quotient indicators and pays their cost from the original full-table budget. It does not silently replace the target by a quotient-first target.",
+      "The proof is dependent on an earlier source-reviewed analytical Potts theorem. This audit does not relabel that dependency or the present result as Lean-validated."
+    ]
+  },
+  "exact_checks": {
+    "graph": "Branches a,b lie on one side, c,d on the other; L_ab=L_cd=2 and all four cross-branch paths have length1. If x is internal on ab and y internal on cd, the bipartition is {a,b,y} and {c,d,x}; the missing K3,3 edge is xy. Thus n6,m8,c1,beta3, degrees2 or3. Every present edge admits a4-cycle avoiding the sole missing edge.",
+    "table": "Rows of the numerator matrix sum1800, so every singleton is1/3; the table is symmetric and strictly positive. lambda_base has numerator [[1788,6,6],[6,600,1194],[6,1194,600]]. Adding D with numerator [[-1,1,0],[1,-1,0],[0,0,0]] yields exactly the target.",
+    "positive_triple": "eta_0 has singleton kappa and pair lambda_0. eta_base is at least1/2700 on every triple. Each of Dxy,Dxz,Dyz is at least-1/5400, so their sum divided by3 is at least-1/5400. Hence eta>=1/5400. The row-zero property makes pair correction exactly D, singleton correction zero and total correction zero; symmetric D makes the triple exchangeable.",
+    "potts_applicability": "q2, agreement s1/3, target interaction theta=log(s/(1-s))=-log2, finite simple bipartite subcubic G. The full ordered binary pair has diagonal1/6 and offdiagonal1/3 and uniform singleton. Gibbs symmetry supplies the required singleton, not just agreement.",
+    "binary_mass_floor": "tau_B(x)=2^-6 exp(sum_e J_e 1_equal)/Z_ref, with exp(sum)>=2^-8 and Z_ref<=1; thus every binary configuration has mass>=2^-14.",
+    "base_entropy": "H=H(1/3,2/3), I_0=H+(2/3)I_B, D(tau_0||R)=5H+(2/3)D(tau_B||uniform_binary^6)<=5H+(16/3)I_B. Subtracting from8I_0 leaves at least3H.",
+    "centering": "g(x,y)=9Dxy=-psi(x)psi(y)/600, and E_kappa psi=0. Integrating either endpoint gives0. Its direct-edge marginal under R is D, while every other actual edge contribution vanishes after integrating an endpoint not retained in the target marginal.",
+    "mixed_configurations": "A={vertices with color1} is nonempty and proper. At least2 edges cross A; their psi product is0 or-1. Each other edge has product<=1, so S=sum_edges psi_u psi_v<=6. Consequently R sum g>=-R/100, paid by the IID part of nu.",
+    "no_color1_configurations": "The worst correction is-8R/600. The non-IID part of nu is at least(99/100)(2/3)2^-14=33/819200, which is strictly greater than R(8/600-1/100)=1/218700 because33*218700=7217100>819200.",
+    "all_color1_configuration": "nu>=99/(100*3)=33/100, whereas the entire negative correction has magnitude at most8/(600*729). The displayed positive margin is exact.",
+    "variation": "TV(lambda,lambda_base)=(1/2)(4/5400)=1/2700. By triangle inequality, TV(tau,nu)<=(8/2)E_R|g_edge|=(8/2)(4/5400)=2/675. This is an upper bound on actual joint TV, not equality.",
+    "continuity": "For maximal coupling, disagreement has probability d. Conditional on Y and disagreement, X has at mostN-1 alternatives; H(X|Y)<=h(d)+d log(N-1), and the same inequality holds with X,Y interchanged. Their entropy difference is the difference of these conditional entropies, giving the stated bound. The function h(d)+d log(N-1) increases for d<=1-1/N. Both1/2700 forN9 and2/675 forN729 lie strictly inside that interval, so the upper joint TV bound may be substituted.",
+    "logarithms": "H(1/3,2/3)>log(3/2)>1/3. Also-(1-t)log(1-t)<=t, hence h(t)<=t(log(1/t)+1). The partial exponential series gives e>1+1+1/2+1/6=8/3. Therefore log100<5,log8<3,log2700<9,log728<8 and log(675/2)<7, as used by the source. These inequalities are intentionally loose and need no numerical logarithm evaluation.",
+    "final_subtraction": "8h(.01)<48/100; eight pair-continuity losses total<104/2700; joint-continuity loss<32/675. Therefore the final slack exceeds99/100-48/100-104/2700-32/675=229/540>2/5. This audit preserves the author's constant and does not substitute a stronger bound.",
+    "block_closure_edges": "Use independent block labels on different actual connected components, including isolated vertices. Disjoint block supports make the component likelihood ratio pi_i^(1-n_C)*tau_i,C/kappa_i^V(C). Summing gives(n-c)H(pi)+sum_C sum_i pi_i D_i,C; pair KL isH(pi)+sum_i pi_i I_i. The componentwise assumed witness bounds give exactly beta H(pi) surplus. Empty G has n=m=c=0 and one empty-configuration law; one-block H=0 and acyclic beta=0 are harmless boundary cases.",
+    "noise_bound": "With Bernoulli label B, D(P_(B,pair)||P_B*kappa^2)=(1-epsilon)I_0=I(lambda_epsilon)+I(B;pair). Since I(B;pair)<=h(epsilon), pair information is at least(1-epsilon)I_0-h(epsilon). Joint KL convexity givesD(nu||kappa^V)<=(1-epsilon)D(tau_0||kappa^V). These combine into the stated lower slack, including epsilon0 or1. The proof does not claim nonnegative slack for arbitrary epsilon.",
+    "general_buffer": "For a fixed positive kappa and R=kappa^V, nu/R>=epsilon. Every one ofm correction summands is at least-gamma, so tau/R>=epsilon-mgamma>=0. The general row-zero relation is sum_y kappa_y g(x,y)=sum_y Dxy/kappa_x=0. It gives exact normalization/singletons and one D correction on each actual simple edge, for the same endpoint-integration reason as the explicit example.",
+    "nonuniform_reference_loss": "Write D(P||R_j)=-H(P)-E_P log R_j. If TV(P,Q)=t, their signed difference has positive and negative parts of mass t, so the difference of expectations of any bounded f is at mostt( max f-min f). For f=log(kappa^j), this range is exactlyj log(b/a). Hence the source's added terms2d log(b/a) and nmd log(b/a) are correct; no uniform-reference shortcut is being used.",
+    "independent_TV_conditions": "Pair TV=d is checked against1-q^-2, and joint TV<=md is checked independently against1-q^-n. They are not silently deduced from one another. Indeed withm1 and many isolated vertices the second threshold can exceed the first. Both are needed for the monotonic continuity substitution as stated.",
+    "general_continuity_monotonicity": "For0<=t<=1-q^-j, derivative ofh(t)+t log(q^j-1) islog((1-t)(q^j-1)/t)>=0; addingj t log(b/a) preserves monotonicity becauseb>=a>0. Thus E_2(d) and E_n(md) legitimately upper-bound the actual pair/joint KL changes.",
+    "relative_neighborhood": "Delta>0 andh(epsilon)->0 allow choosing a fixed positive epsilon withpositive residual(1-epsilon)Delta-mh(epsilon). AtD0 all continuity losses vanish. On the finite symmetric row-zero affine table space, gamma,d are continuous; sufficiently smallD obeys positivity, both TV thresholds, and a still-positive residual. This is full-dimensional relative to compatible symmetric tables with the same kappa, not a claim that kappa varies or that the radius is uniform inG.",
+    "general_triple_correction": "The correction to eta_epsilon is kappa_x kappa_y kappa_z(gxy+gxz+gyz). Its relative density is bounded below byepsilon-3gamma. Marginalizingz kills the latter two terms and leaveskappa_x kappa_y gxy=Dxy; singleton and mass corrections vanish. Symmetricg ensures exchangeability. Therefore3gamma<=epsilon gives nonnegativity, andstrict inequality gives strict positivity. On a bipartiteK4 subdivisionm>=8, strictmgamma<epsilon implies3gamma<epsilon. The qualifier was explicitly repaired after this audit."
+  },
+  "dependency_table": [
+    {"id":"C0","claim":"Exact witness and slack>229/540 on the displayed table and actual graph","needed_by":"root","route":"R0","classification":"root","support":"C1-C6","status":"discharged"},
+    {"id":"C1","claim":"Actual graph/input satisfy the exact finite target subcase","needed_by":"C0","route":"R1","classification":"major claim","support":"O1-O3","status":"discharged"},
+    {"id":"C2","claim":"Base witness has exact marginals and3H cycle surplus","needed_by":"C0,C3","route":"R2","classification":"major claim","support":"O4,C10,O5","status":"discharged"},
+    {"id":"C3","claim":"Signed correction has total mass1 and all target marginals","needed_by":"C0","route":"R3","classification":"major claim","support":"C2,O6,O7","status":"discharged"},
+    {"id":"C4","claim":"Corrected law is nonnegative on every configuration","needed_by":"C0","route":"R4","classification":"major claim","support":"O3,O5,O8-O11","status":"discharged"},
+    {"id":"C5","claim":"Corrected entropy slack has the displayed quantitative lower bound","needed_by":"C0,C6","route":"R5","classification":"major claim","support":"C11,O12-O14","status":"discharged"},
+    {"id":"C6","claim":"The quantitative lower bound is strictly greater than229/540","needed_by":"C0","route":"R6","classification":"major claim","support":"C5,O15,O16","status":"discharged"},
+    {"id":"C10","claim":"Conditional disjoint-block closure has beta H(pi) surplus","needed_by":"C2,secondary root","route":"R10","classification":"major claim","support":"O17-O20","status":"discharged"},
+    {"id":"C11","claim":"IID-noise mixture slack is at least(1-epsilon)Delta-mh(epsilon)","needed_by":"C5,C12,secondary root","route":"R11","classification":"major claim","support":"O21-O23","status":"discharged"},
+    {"id":"C12","claim":"General buffered correction is an exact probability with the stated KL lower slack","needed_by":"secondary root,C13","route":"R12","classification":"major claim","support":"O24-O30,C11","status":"discharged"},
+    {"id":"C13","claim":"A full-dimensional compatible fixed-kappa relative neighborhood aroundlambda_epsilon exists","needed_by":"secondary root","route":"R13","classification":"major claim","support":"C12,O31","status":"discharged"},
+    {"id":"C14","claim":"Exchangeable triple extension survives under the separately stated3gamma buffer","needed_by":"secondary root","route":"R14","classification":"major claim","support":"O25,O32,O33","status":"discharged"},
+    {"id":"O1","claim":"The displayed table is symmetric, positive and has row sums1/3","needed_by":"C1","route":"R1/AND","classification":"algebraic/logical step","support":"Exact numerator row sums1800 and entry signs","status":"discharged"},
+    {"id":"O2","claim":"The input has an exchangeable strictly positive triple extension","needed_by":"C1","route":"R1/AND","classification":"algebraic/logical step","support":"eta_base plus symmetric row-zero correction; minimum1/5400","status":"discharged"},
+    {"id":"O3","claim":"G is finite, simple, bipartite, connected, subcubic, n6m8, and every nontrivial cut has>=2 edges","needed_by":"C1,C4","route":"R1/AND,R4/AND","classification":"side condition","support":"Actual K3,3-minus-edge identification and every-edge4-cycle","status":"discharged"},
+    {"id":"O4","claim":"Uniform binary Potts sharp witness with parameters[-log2,0] exists on this G","needed_by":"C2","route":"R2/AND","classification":"proved earlier","support":"Fully read alphabet-global.json, exact q2,s1/3 applicability checked","status":"discharged"},
+    {"id":"O5","claim":"Every binary configuration has tau_B mass>=2^-14","needed_by":"C2,C4","route":"R2/AND,R4/AND","classification":"algebraic/logical step","support":"Gibbs reference-normalized partition<=1 and8 parameter bounds","status":"discharged"},
+    {"id":"O6","claim":"g=D/(kappa*kappa)=-psi*psi/600 is centered in both coordinates","needed_by":"C3","route":"R3/AND","classification":"definition","support":"D row sums0 and E_kappa psi0","status":"discharged"},
+    {"id":"O7","claim":"Exactly one correction contributes D to each oriented edge; all total/singleton changes vanish","needed_by":"C3","route":"R3/AND","classification":"algebraic/logical step","support":"Distinct simple edge endpoint integration and O6","status":"discharged"},
+    {"id":"O8","claim":"Mixed, no-color1 and all-color1 classes exhaust configurations","needed_by":"C4","route":"R4/AND","classification":"algebraic/logical step","support":"Trichotomy on occurrence of color1 and other colors","status":"discharged"},
+    {"id":"O9","claim":"Mixed configurations have correction>=-R/100","needed_by":"C4","route":"R4/AND","classification":"algebraic/logical step","support":"O3 cut size>=2 makesS<=6; g=-S/600","status":"discharged"},
+    {"id":"O10","claim":"No-color1 configurations have enough Potts mass to pay worst signed correction","needed_by":"C4","route":"R4/AND","classification":"algebraic/logical step","support":"O5 and33/819200>1/218700","status":"discharged"},
+    {"id":"O11","claim":"All-color1 configuration has enough atom mass to pay correction","needed_by":"C4","route":"R4/AND","classification":"algebraic/logical step","support":"33/100>8/(600*729)","status":"discharged"},
+    {"id":"O12","claim":"Pair TV1/2700 and joint TV<=2/675","needed_by":"C5","route":"R5/AND","classification":"algebraic/logical step","support":"Four nonzero D entries; finite signed-sum triangle inequality","status":"discharged"},
+    {"id":"O13","claim":"Finite entropy continuity is h(delta)+delta log(N-1)","needed_by":"C5","route":"R5/AND","classification":"algebraic/logical step","support":"Source's maximal-coupling conditional-entropy proof, rechecked","status":"discharged"},
+    {"id":"O14","claim":"Variation upper bounds lie in the monotone continuity range forN9,N729","needed_by":"C5","route":"R5/AND","classification":"side condition","support":"1/2700<8/9 and2/675<728/729; derivative nonnegative","status":"discharged"},
+    {"id":"O15","claim":"The five logarithm bounds and H>1/3 used in the final estimate hold","needed_by":"C6","route":"R6/AND","classification":"algebraic/logical step","support":"e>8/3, positive rational power comparisons and integral log lower bound","status":"discharged"},
+    {"id":"O16","claim":"Exact final subtraction equals229/540>2/5","needed_by":"C6","route":"R6/AND","classification":"algebraic/logical step","support":"Rational arithmetic with the source's unchanged looser constants","status":"discharged"},
+    {"id":"O17","claim":"Disjoint blocks have positive pi_i and given exact component witnesses with assumed KL bounds","needed_by":"C10","route":"R10/AND","classification":"hypothesis","support":"Exact closure statement hypotheses","status":"discharged"},
+    {"id":"O18","claim":"Component block mixing preserves every singleton and actual edge table","needed_by":"C10","route":"R10/AND","classification":"algebraic/logical step","support":"Each actual edge belongs to one actual component and conditional witness has that edge law","status":"discharged"},
+    {"id":"O19","claim":"Component KL=(n_C-1)H(pi)+sum_i pi_i D_i,C; pair KL=H(pi)+sum_i pi_i I_i","needed_by":"C10","route":"R10/AND","classification":"algebraic/logical step","support":"Disjoint-support likelihood ratio pi_i^(1-n_C)","status":"discharged"},
+    {"id":"O20","claim":"Summation yields beta=m-n+c surplus with correct empty and isolated cases","needed_by":"C10","route":"R10/AND","classification":"algebraic/logical step","support":"Sum n_C=n, count c, and assumed component KL inequalities","status":"discharged"},
+    {"id":"O21","claim":"Joint/pair IID mixtures preserve the exact requested marginal laws","needed_by":"C11","route":"R11/AND","classification":"definition","support":"nu=(1-epsilon)tau_0+epsilon kappa^V; linear marginalization","status":"discharged"},
+    {"id":"O22","claim":"Joint KL mixture is at most(1-epsilon)D(tau_0||kappa^V)","needed_by":"C11","route":"R11/AND","classification":"named theorem","support":"KL convexity with identical reference and0<=epsilon<=1","status":"discharged"},
+    {"id":"O23","claim":"Pair KL mixture is at least(1-epsilon)I_0-h(epsilon)","needed_by":"C11","route":"R11/AND","classification":"algebraic/logical step","support":"Mixture-label KL chain rule and I(label;pair)<=H(label)","status":"discharged"},
+    {"id":"O24","claim":"Exact general buffered lemma hypotheses hold: n>=2,m>=1,q>=2, positivekappa, exactbasewitnessDelta>0,0<epsilon<1,symmetricrow-zeroD,mgamma<=epsilon,andbothTVthresholds","needed_by":"C12","route":"R12/AND","classification":"hypothesis","support":"Exact added lemma statement, not inferred from the concrete example","status":"discharged"},
+    {"id":"O25","claim":"General g=D/(kappa*kappa) is centered in both coordinates","needed_by":"C12,C14","route":"R12/AND,R14/AND","classification":"definition","support":"Positivekappa and ordinary row-zero sums ofD","status":"discharged"},
+    {"id":"O26","claim":"General tau/R>=epsilon-mgamma>=0","needed_by":"C12","route":"R12/AND","classification":"algebraic/logical step","support":"IID mixture buffer andm bounded signed summands","status":"discharged"},
+    {"id":"O27","claim":"General tau is normalized and has singletonkappa and every oriented edge lambda_epsilon+D","needed_by":"C12","route":"R12/AND","classification":"algebraic/logical step","support":"General centered endpoint integration on actual simple edges","status":"discharged"},
+    {"id":"O28","claim":"General pairTV=d,jointTV<=md","needed_by":"C12","route":"R12/AND","classification":"algebraic/logical step","support":"Definitiond=(1/2)sum|D| and finite correction triangle inequality","status":"discharged"},
+    {"id":"O29","claim":"Nonuniform reference expectation loss is at mostj t log(b/a)","needed_by":"C12","route":"R12/AND","classification":"algebraic/logical step","support":"Signed positive/negative massest and reference-log rangej log(b/a)","status":"discharged"},
+    {"id":"O30","claim":"E_j is increasing on the respective separately imposed pair/joint TVintervals","needed_by":"C12","route":"R12/AND","classification":"side condition","support":"Entropy-continuity derivative plusb>=a>0; boththresholdsO24","status":"discharged"},
+    {"id":"O31","claim":"Fixed positive base slack permits a small epsilon and then an open relativeD-neighborhood meeting all guards","needed_by":"C13","route":"R13/AND","classification":"algebraic/logical step","support":"h(epsilon)->0 and continuity ofgamma,d,E_j atD0; fixedfiniteG,kappa","status":"discharged"},
+    {"id":"O32","claim":"An exchangeable base eta_0 exists and3gamma<=epsilon is separately imposed, strict forpositiveconclusion","needed_by":"C14","route":"R14/AND","classification":"hypothesis","support":"Exact conditional triple-preservation paragraph","status":"discharged"},
+    {"id":"O33","claim":"The three-pair correction has exact pairD,singleton0,mass0,anddensityfloor epsilon-3gamma","needed_by":"C14","route":"R14/AND","classification":"algebraic/logical step","support":"O25centeredintegration,symmetricg andthree absolutegamma bounds","status":"discharged"}
+  ],
+  "execution": {"analytical_audit":true,"heavy_numerical_run":false,"compiler_or_service":false,"manuscript_edit":false,"git_or_github_write":false,"clock_change":false,"files_created":["entropy-gap-audit.json"]},
+  "verdict": {"proof_route":"FOLLOWS","decisive_nodes":["C3","C4","C5","C6","C12","C13","C14"],"description":"Every final supplied route closes under the precisely identified earlier analytical Potts dependency. The explicit displayed target case is covered with strict quantified slack; the block/noise closure and buffered nonuniform-reference perturbation lemmas are correct. One actual scope qualifier was caught and corrected before freezing. The unrestricted arbitrary-alphabet theorem remains open; this bounded analytical audit neither establishes novelty nor substitutes for Lean validation."}
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-10-12 15:06:03 UTC",
+  "scope": "Full common-power density: fixed-host finite exception theorem, not a universal proof",
+  "source": {
+    "path": "full-density-finite-host-certificate.md",
+    "sha256": "2ffcd9ae74ad8dec5486c119ee9f64827dd8db6b47ec2891cbb09f5dfa2c7311",
+    "private_and_public_bytes_identical": true
+  },
+  "checker": {
+    "path": "check_full_density_finite_host.py",
+    "sha256": "80c81acd548d520e1f3ba1c3cc4a4e16eeddc6e7dc8a72235129823eba08579f",
+    "private_and_public_bytes_identical": true,
+    "public_cli_exit": 0,
+    "wall_time_seconds": 0.3243683,
+    "read_only": true,
+    "exact_arithmetic": "fractions.Fraction",
+    "output_path": "full-density-finite-host-checks.json",
+    "output_sha256": "e2f731e713c96aff1dfb21b3923c12c733bd739fe5736b31c3f811355fc287cc",
+    "exhaustive_exceptional_set_run": false,
+    "spectral_fixture": "rho=1/4 is analytically derived from root eigenvalues 1,1/4,-1/2, not numerically estimated"
+  },
+  "source_review": {
+    "root_self_review": "PASS",
+    "root_independent": false,
+    "actual_separate_agent": "density_finite_host_tail_audit",
+    "separate_agent_complete_final_source_and_checker_read": true,
+    "separate_agent_actual_hashes_match": true,
+    "separate_agent_verdict": "PASS",
+    "prior_fixed_host_tail_comparison_read": true,
+    "full_external_audit": false,
+    "lean_validation": false
+  },
+  "audit_boundary": {
+    "tail_conclusion": "For each finite actual original-law host, a computable finite set contains every exponent tuple that could violate F>=1",
+    "hypotheses": "Finite nonempty X, strictly positive mu, actual symmetric entrywise nonnegative Markov T, A=T^2; all five exponents positive",
+    "ordering": "Not required by this tail theorem; the retained target additionally has k>=u and r>=l",
+    "accepted_primitives": ["finite spectral theorem", "orthonormal completeness", "Cauchy-Schwarz", "finite kernel composition and integration", "elementary oscillation contraction and concavity"],
+    "non_goals": ["universal F>=1", "efficient algorithm", "new density coverage or novelty", "Lean acceptance", "manuscript theorem promotion"]
+  },
+  "obligation_graph": [
+    "C0 <- R0 AND(O1,O2,O3,O4,O5)",
+    "C1 unrestricted density <- R1 AND(C0,O6)",
+    "O1 component normalization <- support AND original conditional law",
+    "O2 proper terms positive <- 64-subset expansion AND leaf cancellation AND spectral squared moments",
+    "O3 tetrahedron bound <- pointwise spectral Cauchy-Schwarz AND four degree-three vertex factors",
+    "O4 rational spectral cutoff <- positive diagonal AND connected support AND oscillation contraction",
+    "O5 finite exception set <- four triangle payments AND positive-integer bounds"
+  ],
+  "critical_findings": [
+    "Only the full centered tetrahedron may have either sign; no termwise sign was imposed on its coefficients",
+    "The correct global six-edge factor is p_C^-2, not the deleted-edge factor p_C^-1",
+    "A periodic root may exchange A-components; no local nonnegative square root was assumed",
+    "The earlier tail fixed four exponents; this theorem bounds the exceptional set in all five exponent variables",
+    "The finite enumeration may be enormous and was not performed",
+    "A global violation cannot be inferred from a local component violation alone"
+  ],
+  "dependency_table": [
+    {"id":"C0","claim":"Fixed-host finite exception theorem","needed_by":"C1","route":"R0","classification":"major claim","support":"O1-O5","status":"discharged"},
+    {"id":"O1","claim":"F_global=sum_C p_C^-2 F_C","needed_by":"C0","route":"R0 AND","classification":"definition","support":"original conditional law, connected support and six edge factors","status":"discharged"},
+    {"id":"O2","claim":"Every proper surviving centered term is nonnegative","needed_by":"C0","route":"R0 AND","classification":"algebraic/logical step","support":"four triangles, three cycles, six squared-moment diamonds; 49 leaf terms vanish","status":"discharged"},
+    {"id":"O3","claim":"Absolute tetrahedron <= Gamma rho^N, Gamma<=(mu_min^-1-1)^6 on each component","needed_by":"C0","route":"R0 AND","classification":"algebraic/logical step","support":"Cauchy-Schwarz and normalized completeness","status":"discharged"},
+    {"id":"O4","claim":"rho<=alpha=1-delta/(n-1)<1 with rational data","needed_by":"C0","route":"R0 AND","classification":"algebraic/logical step","support":"primitive stochastic component, common row subprobability and concavity","status":"discharged"},
+    {"id":"O5","claim":"All possible failures lie in a finite five-variable set","needed_by":"C0","route":"R0 AND","classification":"algebraic/logical step","support":"four explicit N-minus-triangle complements and cutoff B","status":"discharged"},
+    {"id":"O6","claim":"Every remaining exceptional tuple passes for every admissible host","needed_by":"C1","route":"R1 AND","classification":"missing","support":"no uniform proof or exhaustive host argument supplied","status":"failing"},
+    {"id":"C1","claim":"Unrestricted density for every admissible host and ordered tuple","needed_by":"root research goal","route":"R1","classification":"major claim","support":"requires O6","status":"failing on this proof route"}
+  ],
+  "verdict": {
+    "fixed_host_finite_exception_theorem": "FOLLOWS",
+    "unrestricted_density": "NOT ESTABLISHED BY THIS PROOF",
+    "decisive_unpaid_obligation": "O6",
+    "semantic_non_entailment_claim": false,
+    "unrestricted_density_counterexample": false
+  }
+}

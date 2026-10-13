@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-07",
+  "policy": "PUBLIC_ONLY_SOURCE_REVIEW_PACKET_NOT_CANONICAL_PROMOTION",
+  "source_copies": {
+    "development-results.tex": "0cb6992730823eae92bf77ed31bd7445b0198f121ceb3c7d256ad2634a18f4b7",
+    "references.bib": "3550dba19cffa0dc68488439d70169e666bdd0465fd9980bdf8984b364c96c34",
+    "publication-comparison.json": "94cf1e14199bdd60a765ba7790c068a877f254d4d6cc0d2ff73909fe57934a7e",
+    "manuscript-source-review.json": "a3e832d53518aba4e362fe7311861c9e6f18c2ace4779815587bbe8b17969885",
+    "candidates/Erdos593/DensityCandidates/LowRankBipartiteNormalForms.lean": "8156d37769957caacd12c0e40bdd0e953deba8a621d0a52df0c00b88ef3fbbf4",
+    "candidates/Erdos593/DensityCandidates/ExposureSparsityCandidate.lean": "c1f4b7bfddaaa9e32d3b37d88819ba16bfca13126d59ee9f56b0c50d25593e0d",
+    "candidates/Erdos593/DensityCandidates/ComplexCertificate.lean": "467e063329942f5a0366051d9330613a6cfcc965cfed76c1e29de86f583da019",
+    "candidates/Erdos593/DensityCandidates/RatioCandidate.lean": "3fee81cbde524ca98fc5b1b4e9ecbcc8248a4993d5e4954a2a71d4d6ab99a92b",
+    "candidates/Erdos593/DensityCandidates/ComplexSparsityCandidate.lean": "12d80da2abb7974e5fdb44fb99c218993af5565f5a2bc30e77ee9316452d2185",
+    "candidates/Erdos593/DensityCandidates/FinitePortContraction.lean": "de46591242e468fcad188660888d2b21215eac12cd7b61fcdaf298ed844b0845",
+    "source-checkpoints/low-rank.json": "4417490d4c723c01ef766e14a7073c5c87e2e831c117f48b61b2fb8d689f4138",
+    "source-checkpoints/balancedness.json": "132e9ea7af6693855fecf99f2b60434466ce5e40caba19f9e8c9c7d673983ede",
+    "source-checkpoints/ports.json": "c1947bf94f3125dacf1d7d2ef14c06b6ae7ce46022085bae7186007e5d091177",
+    "source-checkpoints/binder-body-review.json": "3eaf92221700be17d881e22f15721812e83fdfa398e0cab8f38cf89d231fc7e4",
+    "next-obligations.json": "0337a64d8040d2dd6a2c265f6b0ecfcab5f0068056237df7a6937883e467d4db"
+  }
+}

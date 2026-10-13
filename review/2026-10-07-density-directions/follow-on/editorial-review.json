@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-07",
+  "status": "SOURCE_ONLY_READER_FACING_SYNTHESIS_PENDING_PACKET_REVIEW",
+  "skill": "codex-academic-humanizer",
+  "intensity": "Medium English precision and cohesion pass after separate mathematical development",
+  "scope": "New follow-on-story.tex only. No change to the open manuscript, PR53 manuscript, PDFs, accepted Lean sources or paused clocks.",
+  "author_choice": "Equally visible analytical results and conjectural directions; conjectures retain exact quantified targets and missing obligations.",
+  "comparison": [
+    {"original": "Atoms and their profile do not determine density; one witness distinguishes ports.", "revision": "At every r>=3 the same two C4 expansion atoms and joint profile admit both strict density orderings in bounded regular hosts.", "note": "States the stronger source-derived incomparability result, preserves the existing witness and separates it from a Sidorenko counterexample."},
+    {"original": "Explore rank three to improve the density cutoff.", "revision": "Rank three has four suppressed multigraph cores; theta cases are known positive, and the residual universal inequalities remain conjectural here.", "note": "Replaces a desired theorem by explicit obligations and attributes the known external inequalities."},
+    {"original": "Generalize the balancedness calculation and obtain random-host gains.", "revision": "A spanning exposure certificate proves connectivity and strict density; the known expansion transform transfers it, while positive-excess gains need a separate input.", "note": "Keeps unconditional finite structure and elementary deletion benchmarks distinct from conditional negative-density consequences."},
+    {"original": "Give conjectures equal space and make the paper impactful.", "revision": "Give three equally visible working questions with precise scope, evidence and falsification routes; mathematical value is not a scalar comparison with an unspecified weakest paper.", "note": "Honors the user's choice without novelty or journal promises."}
+  ],
+  "bibliography": {"new_companion": "follow-on-references.bib", "entries": 7, "sources": "Primary-source metadata and existing verified packet entries", "printed_title_note": "The Li-Szegedy arXiv abstract and PDF title both literally print logarithimic. The BibTeX entry preserves that primary title; narrative references to logarithmic calculus describe the method with its standard spelling.", "zotero": "Read-only status returned enabled preference but both local API and connector timed out. No app restart, preference change or library import; primary-source fallback used."},
+  "claim_limits": ["Analytical source review is not Lean validation", "No whole-paper acceptance", "No global novelty or openness certification", "External full audit remains pending", "Known transform, Fubini and Jensen are supporting ingredients, not headline innovations"],
+  "actions": {"compiler_or_version": 0, "jobs_or_proof_services": 0, "main_or_live_manuscript_edits": 0, "pdf_compilation": 0, "clocks": "PAUSED_UNCHANGED"}
+}

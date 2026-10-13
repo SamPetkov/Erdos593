@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-09",
+  "reviewer": "/root/local_entropy_audit_round1",
+  "review_kind": "ACTUAL_SEPARATE_AGENT_COMPLETE_ANALYTICAL_SOURCE_REVIEW",
+  "independent_of_derivation": true,
+  "full_external_audit": false,
+  "source": "alphabet-potts-robustness.json",
+  "source_sha256": "f2c8194f395dcb7dc726b2c0c8f828ee90e4d05bdb10e95c4ff8159406c1e793",
+  "base_source": "alphabet-global.json",
+  "base_source_sha256": "7047201ed62c14a00f54026e8c7e3b35070b12bd02a07b7a7b09e2630131beff",
+  "result": "PASS_AFTER_ONE_EXPLICIT_SCOPE_REPAIR",
+  "initial_source_sha256": "1264314001b8b6dc1bc42f489d0f1a763c53af13594b8696877b219cab60e463",
+  "actual_issue_and_repair": {
+    "issue": "The initial Step 3 said that the analytic fitted family exists throughout all 0<s<1, even though nonbipartite graphs were permitted only in the ferromagnetic regime. That family statement was too broad; it was not part of the correctly restricted theorem statement.",
+    "repair": "The final Step 3 restricts the analytically fitted family to 0<s<1 for bipartite graphs and 1/q<=s<1 for general graphs, with a local analytic inverse at 1/q. It explicitly disclaims an antiferromagnetic family on nonbipartite graphs.",
+    "verification": "The complete initial artifact and complete final artifact were read. The theorem and all other proof steps are unchanged; the interval sentence and honest review metadata carry the repair. This is an actual mathematical scope repair, not relabeled as metadata-only."
+  },
+  "exact_scope": "Finite simple cyclic graphs in which every actual edge has an endpoint of degree at most three; q>=2; interior nonindependent Potts pair parameter 0<s<1, s!=1/q; bipartiteness additionally required when s<1/q. The conclusion is a strict entropy gap at the Potts input and an open compatible full-table neighborhood, not a universal arbitrary-alphabet theorem or an explicit perturbation radius.",
+  "checks": [
+    {
+      "item": "No zero interaction survives",
+      "result": "PASS",
+      "detail": "At a zero edge choose the degree<=3 endpoint. Two active neighbors have equal interactions because their fitted agreements coincide. The neighbor-color max/min comparison is strictly unequal to the zero-edge comparison on the positive-probability event that the two neighbor colors agree and the zero-edge neighbor differs. The one-active-neighbor event is analogous; zero active neighbors give agreement 1/q and contradict KKT. Simplicity makes all relevant neighbors distinct. Both ferromagnetic and antiferromagnetic KKT directions were checked."
+    },
+    {
+      "item": "Strict cycle cap",
+      "result": "PASS",
+      "detail": "Removing a cycle interaction leaves an alternate path with nonzero same-sign couplings. Every two-color conditioning has the correct weak correlation sign. The all-vertices-two-colored event has positive probability and its Ising high-temperature numerator has a positive path term; the bipartition flip gives the strict negative sign in the antiferromagnetic case. Thus removed-edge agreement is strictly above or below 1/q as appropriate. Restoring the cap strictly overshoots the target and contradicts cap KKT, placing each cycle interaction strictly inside the cap. No strict-cap assertion is required for bridges."
+    },
+    {
+      "item": "Covariance, uniqueness and analytic exact fits",
+      "result": "PASS_IN_REPAIRED_APPLICABLE_INTERVAL",
+      "detail": "Restrict a putative constant combination of edge-agreement statistics to two colors. Distinct simple-edge Walsh monomials force every coefficient to vanish. Under full support this affine independence gives strictly positive covariance and hence strictly convex log partition, injective gradient and an invertible expectation Jacobian. The analytic implicit function theorem supplies local exact fits; uniqueness patches them along the applicable interval. The final scope correction is necessary and sufficient here."
+    },
+    {
+      "item": "Entropy derivative and strict gap",
+      "result": "PASS",
+      "detail": "For the unique exact fit C=s sum J-log Z, differentiating cancels all J' terms because each agreement equals s. Hence C'=sum J. The product law at 1/q has C=0. At least one cycle interaction is strictly inside its cap, so m theta-sum J is strictly positive above 1/q and strictly negative below it. Reversing the antiferromagnetic integration direction yields a positive Delta in both regimes. All signs and reference measures agree with the base proof."
+    },
+    {
+      "item": "Complete full-table gauge and exact fitting",
+      "result": "PASS",
+      "detail": "All centered uniform-basis unary features and every oriented-edge product feature form an orthonormal family under the product reference. They are affinely independent modulo constants; therefore their covariance remains positive definite under the full-support Potts law. Tilting that fixed law has a locally invertible expectation map in all these coordinates. Nearby compatible singleton and pair laws give nearby moment vectors, and the complete unary plus pair basis reconstructs every actual edge table exactly. The basis/reference for the inverse map is fixed while kappa varies, so no reference-dependent ambiguity or omitted singleton means enters."
+    },
+    {
+      "item": "Entropy openness",
+      "result": "PASS",
+      "detail": "The exact tilted joint is continuous and full support near the base. For positive singleton and pair laws the two finite KL expressions are continuous. The strictly negative base difference therefore remains negative, with a gap at least Delta/2 after shrinking the compatible neighborhood. This is a rigorous finite-dimensional existence proof; it is neither a numerical fit nor a claim of a uniform explicit radius."
+    },
+    {
+      "item": "Positive triple extension and arbitrary-table nonvacuity",
+      "result": "PASS_FOR_Q_AT_LEAST_THREE",
+      "detail": "Below 1/q the IID weight qs and above 1/q the IID weight (1-s)/(1-1/q) are both strictly positive in the interior. Mixing respectively with the uniform all-distinct or all-equal exchangeable triple produces the exact Potts pair and a positive triple law. For a nearby symmetric probability-table perturbation delta, the displayed Deltaeta is symmetric and has zero total mass. Summing over the third coordinate leaves delta_xy: the two row-drift terms cancel, and the final term vanishes because total delta mass is zero. A sufficiently small perturbation preserves strict positivity. Thus these neighborhoods genuinely contain non-Potts and nonuniform triple-extendible inputs. No false all-parameter binary extension is used."
+    },
+    {
+      "item": "Maximum entropy identity and edge cases",
+      "result": "PASS",
+      "detail": "The Gibbs KL identity D(rho||R)=D(mu_s||R)+D(rho||mu_s) follows from the common edge agreements, with positive mu_s making the expression valid even for zero entries in rho. Forest equality, zero gap at independence, endpoint exclusions, disconnected components and isolated unary coordinates are all stated honestly. No strictness or robustness is inferred at unsupported endpoints."
+    }
+  ],
+  "not_certified": [
+    "Global coverage of all triple-extendible arbitrary pair tables",
+    "An explicit or graph-independent robustness radius",
+    "Robustness at zero-support Potts endpoints",
+    "Lean or other kernel validation",
+    "Novelty, priority, B-level significance or journal readiness",
+    "Full external scholarly audit"
+  ],
+  "execution": {
+    "complete_source_reads": true,
+    "analytical_review": true,
+    "compiler": false,
+    "paid_service": false,
+    "network": false,
+    "numerical_scan": false,
+    "github_mutation": false,
+    "manuscript_edit": false,
+    "clock_change": false,
+    "only_new_artifact": "entropy-potts-robustness-audit.json"
+  }
+}

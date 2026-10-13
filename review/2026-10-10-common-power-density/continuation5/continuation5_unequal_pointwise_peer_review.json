@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "reviewer_route": "unequal5; independent mathematical proof review and isolated exact replay",
+  "files": {
+    "continuation5_search_pointwise.md": "82f49ca3c77586b6998039a8ee0f497d777f579db94614c709212d2498a5ff86",
+    "continuation5_search_pointwise_verify.py": "74b10713d4792687ef26bc625c83c1412df03c82a38346a999e7ae98ea042653",
+    "continuation5_search_pointwise_checks.json": "f185b2111437d07fa1c46335623a12ac7271f0a80941684c76bf9385aba95416"
+  },
+  "isolated_replay_directory": "/tmp/e593_unequal_pointwise_review_0uzoury6",
+  "archived_exact_result_matches": true,
+  "findings": {
+    "original_path_flow_normalization": "PASS; path mass1/2, completion atoms1/4 each, all compositions original pi",
+    "projection": "PASS; weighted Gram at least I from completion rows, rank2 Q, actual compression metric preserved",
+    "pointwise_source_identity": "PASS; trace in the common Gram metric matches original weighted three-leaf expansion",
+    "actual_host": "PASS; nonnegative self-adjoint Markov root, strict positivity, p and W explicit",
+    "full_density_scope": "PASS; direct restriction to original mass1/4 fine block gives F>=16(1-delta)^18>15; no signed cycle positivity assumption",
+    "spectral_count": "PASS; irreducible Jacobi recurrence gives simple nonzero path roots, no opposite pair; determinant separates channel beta; centered multiplicities2+6+2+7=17 and9values",
+    "claim_scope": "Only pointwise negativity. Averaged J>31 remains above rank2. No target counterexample."
+  }
+}

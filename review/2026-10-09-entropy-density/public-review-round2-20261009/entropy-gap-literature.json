@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-09",
+  "author": "/root/entropy_gap_round2",
+  "qualification": "The new explicit construction is mathematically correct, but its displayed graph is not a newly established Sidorenko or universal exact-pair entropy family. The following primary literature already covers every finite pair table on K3,3-minus-edge. Retain the construction as an explicit cross-layer entropy-budget example and route diagnosis, not a novelty claim or B-level advance.",
+  "preserved_source": {"file":"entropy-gap-attempt.json","sha256":"e91b30073b788ba2fc797e1ee901f2b2e31e7ff6049ddded954a8baefb4c768b"},
+  "preserved_actual_audit": {"file":"entropy-gap-audit.json","sha256":"bcee3848acd556936cc4eead6936ee15bf2a608d804447a71ca05ae1446dbe06"},
+  "primary_sources": [
+    {
+      "authors": "David Conlon, Jacob Fox, Benny Sudakov",
+      "title": "Sidorenko's conjecture for a class of graphs: an exposition",
+      "url": "https://arxiv.org/pdf/1209.0184",
+      "result_checked": "Theorem1: Sidorenko holds for every bipartite H having a vertex adjacent to every vertex of the opposite part. This is attributed by the authors to their Geometric and Functional Analysis20(2010),1354-1366 paper, An approximate version of Sidorenko's conjecture. The theorem and its tensor-power proof were read from the primary three-page exposition.",
+      "applicability": "K3,3-minus-edge has two vertices in each part complete to the opposite part, so it meets Theorem1. More generally this checks a known graph-class property, not one actual host-density calculation."
+    },
+    {
+      "author": "Balazs Szegedy",
+      "title": "Sparse graph limits, entropy maximization and transitive graphs",
+      "url": "https://arxiv.org/html/1504.00858",
+      "result_checked": "Section5, especially the definition of Q(H,X) preceding Definition5.3, prescribes the full joint law X on every actual oriented bipartite edge, not an averaged edge marginal. Definition5.3 sets m(H,X) to the maximum entropy in this nonempty compact constraint set. Corollary9.1 equates the universal entropy inequality for every finite X with the known graph's Sidorenko property. These exact definitions and Corollary9.1 were read from the primary source.",
+      "applicability": "For symmetric X=lambda with both marginals kappa and no isolated vertices, the Corollary9.1 right side is |E|H(lambda)-sum_v(deg(v)-1)H(kappa)=nH(kappa)-mI(lambda). The maximizing law has every singleton kappa because every vertex belongs to an edge. Hence D(tau||kappa^V)=nH(kappa)-H(tau)<=mI(lambda). Zero masses in lambda are permitted in the stated finite joint-distribution theorem. The actual selected graph has no isolated vertices."
+    }
+  ],
+  "consequence": "For the selected minimal bipartite K4 subdivision, the arbitrary-alphabet target was already a consequence of known results, including our exact selected table. What the new direct construction contributes to this packet is an explicit quantitative way to spend block/cycle entropy surplus on globally correlated projections and a non-lumpable table correction. Whether the generic closure/correction formulation itself is new is not established.",
+  "remaining_gap": "The full family of all actual bipartite K4 subdivisions, with arbitrary positive path lengths of compatible parity and arbitrary triple-extendible finite pair tables, remains open in this investigation. Most length tuples do not retain an opposite-part-complete vertex. The literature deduction above may not be silently applied to them.",
+  "execution": "Two bounded primary-literature reads only; no paid service, compiler, numerical scan, Git/manuscript write or automation change. The source and actual audit files are preserved unchanged."
+}

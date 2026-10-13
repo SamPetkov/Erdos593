@@ -1,0 +1,72 @@
+% Supporting marginal-feasibility lemma, not a novelty or Lean-acceptance claim.
+\subsection{Which zero-diagonal graph kernels can be lifted?}
+
+The reduction from an expanded graph to a two-coordinate marginal does not
+allow an arbitrary graph kernel to be substituted on the same carrier.
+The following finite criterion makes one obstruction explicit.  It is a
+weighted fractional clique-decomposition condition, not a new claim about
+the general theory of fractional decompositions.
+
+\begin{proposition}[Zero-diagonal marginal criterion]
+Let $r\ge2$, let $\Omega$ be finite, and let $\mu(x)>0$ for every
+$x\in\Omega$, with $\sum_x\mu(x)=1$.  Let $M:\Omega^2\to[0,\infty)$ be
+symmetric with $M(x,x)=0$.  There is a symmetric nonnegative
+$U:\Omega^r\to[0,\infty)$ such that
+\[
+ M(x,y)=\sum_{z_3,\ldots,z_r}
+ U(x,y,z_3,\ldots,z_r)\prod_{i=3}^r\mu(z_i)
+\]
+if and only if there are weights $w_S\ge0$, indexed by the $r$-element
+subsets $S\subseteq\Omega$, satisfying
+\[
+ \mu(x)\mu(y)M(x,y)=\sum_{S\supseteq\{x,y\}}w_S\qquad(x\ne y).
+\]
+Moreover, one can require $U\le1$ if and only if these equations admit
+weights with
+\[
+ 0\le w_S\le(r-2)!\prod_{z\in S}\mu(z).
+\]
+For either corresponding representation,
+$\mathbb E U=r(r-1)\sum_Sw_S$.
+\end{proposition}
+\begin{proof}
+Each diagonal marginal is a finite sum of nonnegative terms with strictly
+positive coefficients.  Its vanishing forces $U(x,x,z_3,\ldots,z_r)=0$.
+Symmetry therefore makes $U$ vanish on every tuple with a repeated
+coordinate.  On an injective tuple with underlying set $S$, its value is
+a single number $u_S$, independent of the order of that tuple.  The
+remaining $r-2$ coordinates have $(r-2)!$ possible orders, so
+\[
+ \mu(x)\mu(y)M(x,y)
+ =(r-2)!\sum_{S\supseteq\{x,y\}}u_S\prod_{z\in S}\mu(z).
+\]
+Set $w_S=(r-2)!u_S\prod_{z\in S}\mu(z)$.  Conversely, any weights
+satisfying the equations define $U$ to be zero on repeated tuples and
+$w_S/((r-2)!\prod_{z\in S}\mu(z))$ on injective tuples.  This kernel is
+symmetric, has exactly the stated marginal, and is bounded by one exactly
+when the displayed upper bounds hold.  Finally, each $S$ occurs in $r!$
+ordered tuples, giving the mean formula.
+\end{proof}
+
+The case $r=2$ recovers $U=M$.  If $|\Omega|<r$, the only possible
+zero-diagonal marginal is $M=0$.  With zero-mass states, the same statement
+applies after restricting to the positive-mass support; no pointwise
+conclusion is implied outside that support.
+
+Even the condition that every supported edge belongs to an $r$-clique is
+not sufficient.  For $r=3$, put the uniform measure on
+$\Omega=\{a,b,c,d\}$, and let $M$ be the adjacency kernel of
+$K_4-\{cd\}$.  The only triangles are $abc$ and $abd$.  The $ac$ and $ad$
+equations force $w_{abc}=w_{abd}=1/16$, whereas the $ab$ equation requires
+$w_{abc}+w_{abd}=1/16$.  Thus no symmetric nonnegative $3$-kernel on this
+carrier has marginal $M$, even without an upper bound on $U$.
+
+This criterion is a small constructive bridge rather than a main
+contribution.  It turns this fixed-carrier lifting problem into a finite
+linear feasibility problem and explains why a graph-level density
+counterexample cannot simply be reused as a higher-uniformity marginal.
+The classical fractional-decomposition framework is represented, for
+example, by Dross, \emph{Fractional Triangle Decompositions in Graphs with
+Large Minimum Degree}, SIAM J. Discrete Math. 30 (2016), 36--42,
+\url{https://doi.org/10.1137/15M1014310}.  No new dense-graph threshold or
+priority claim is made here.

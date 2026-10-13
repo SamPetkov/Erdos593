@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-07",
+  "status": "RUNNER_BODY_SCANNER_FAULT_DIAGNOSED_SOURCE_ONLY",
+  "root_review_independent": false,
+  "external_full_audit": false,
+  "actual_execution": {
+    "jobs": [66840, 66842],
+    "both_job_and_batch_exits": "FAILED1:0",
+    "compiler_or_version_invocations": 0,
+    "joint_attempts": "2of2_SPENT_STOPPED",
+    "new_candidates": "UNCOMPILED",
+    "accepted": false,
+    "third_job_or_budget_reset": false
+  },
+  "diagnosis": {
+    "original_r2_log": "The traceback stops in dependency_snapshot/imports_of/without_comments before the compiler; it does not identify the first failing module.",
+    "local_exact_closure_reproduction": "Init.Meta.Defs is the twentieth visited source and the first local full-body scanner failure.",
+    "source_sha256": "cc77057abfcaf2cfbe2b9b21bce7512a451a3c9e912fffb74518a25a6f467898",
+    "mechanism": "The frozen Python scanner lexes the entire dependency body. It lacks Lean character-literal state and mistakes double quotes inside valid character literals for ordinary string boundaries.",
+    "source_examples": "Valid character-literal tests occur at lines 1091 and 1122; the seven ordered imports end before public section at line19.",
+    "remote_read_only_verification": "One bounded source/hash read exited0 and found the identical Init.Meta.Defs source remotely. This does not retroactively prove the remote first-failure visitation order.",
+    "remote_source_read_original_sha256": "fe61a39dd7d1c0eeb80cbc6aa0a835a9cc9dfccb445a2dc40c433fca0ea3b92b",
+    "remote_read_exit_record_sha256": "adccf95f8d3ab222f82798bb0dc03a7c656ea6f2fe93ec83e3cb109cf2a8b47b"
+  },
+  "separate_header_scanner_candidate": {
+    "sha256": "5c3c373912d35102a4d194e66f0874179660398fad4027280f34b88e67691711",
+    "scope": "Explicit import-header extraction only; ASCII dotted module identifiers in this exact local closure. It is not a full Lean body lexer or semantic parser.",
+    "frozen_r1_r2_tools_modified": false,
+    "remote_runner_installed_or_executed": false,
+    "local_source_only_preflight": {
+      "source_modules": 2434,
+      "prior_successful_header_results_matching": 2427,
+      "valid_source_body_failures_of_old_scanner": 7,
+      "positive_and_negative_fixtures_passed": 22,
+      "local_source_map_sha256": "3f89546cba34bea63afb2138bbe1acca0c125af76b794c487191ace0c35e0310",
+      "report_sha256": "a2e47f697065b26cf83e9c4bc7bf38f07f9c587da07c589a098b547a8164ae8e",
+      "compiler_or_network_actions": 0
+    },
+    "source_diagnosis_review_sha256": "4bedb4354742ddb1f9bcf67e2f77c605430ec451718b353bff7b294403f16ee7",
+    "root_read": "Actual candidate implementation, complete compact reproduction, complete local preflight report and helper diagnosis were read. No compiler success is inferred."
+  },
+  "next_gate": "Review a superseding exact runner and fresh cumulative attempt/resource decision before any new execution. Preserve both original failures and source/package/Probe bytes. Historical dependency artifact lineage and actual theorem/type/axiom validation remain pending.",
+  "accepted_root_manuscript_pdf_private_repository_or_video_process_changes": false,
+  "clocks": "PAUSED_UNCHANGED"
+}

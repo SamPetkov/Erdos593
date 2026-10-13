@@ -1,0 +1,205 @@
+{
+  "date": "2026-10-08",
+  "scope": "Analytical proof-route audit only, not Lean source or kernel validation",
+  "audit_boundary": {
+    "conclusion": "For every six positive exponents, F(a)>=1+2d eta^(S-3m0)+d^2 eta^S on a finite positive probability space with actual nonnegative PSD Markov A=Pi+eta P, 0<=eta<=1, P orthogonal and centered, d=rank P.",
+    "accepted_primitives": [
+      "Finite spectral theorem for self-adjoint operators in the stated mu inner product",
+      "Finite kernel composition and centered orthonormal expansion",
+      "Cauchy-Schwarz under an explicitly nonnegative probability measure",
+      "Finite sums, nonnegative real powers, orthogonal projection identities"
+    ],
+    "supplied_sources": [
+      "research-note.tex: Flat-spectrum comparison and following extensions",
+      "Two distinct direct analytical passes agreed on flat-spectrum and component proofs; a separate helper checked the quantitative and coordinate extensions"
+    ],
+    "external_audit": false,
+    "lean_validated": false
+  },
+  "obligation_graph": [
+    "C0 <- R0 (AND: O1,O2,O3,C1,O7)",
+    "C1 <- R1 (AND: O4,O5,O6)",
+    "C2 component extension <- R2 (AND: C0,O8,O9)",
+    "C3 independent-coordinate extension <- R3 (AND: C0,O10,O11,O12)",
+    "G0 unrestricted ordered host claim <- RG (AND: O13); this proposed sufficient route is not closed"
+  ],
+  "critical_findings": [
+    "The signed tetrahedron coefficient q is retained with precisely the same eta^S factor; its nonnegativity is neither assumed nor required.",
+    "The Gram inequality is in the original probability inner product. The extra L(b,d) is nonnegative, so it can multiply an already established inequality; no weighted-PSD assertion is made.",
+    "The eta=0 case is separate; final powers have positive exponents. Arbitrary multiplicity, zero modes and eta=1 cause no division or lost term.",
+    "Component masses enter with exponent four minus six=-2; local normalization is explicit.",
+    "Independent-coordinate geometry is an additional hypothesis. Mixed cubic moments vanish there, not on arbitrary common-power hosts.",
+    "The full graph/entropy target is not a consequence of the returned finite coefficient proof. The proper shifted-prefix comparison remains unproved."
+  ],
+  "dependency_table": [
+    {
+      "ID": "C0",
+      "claim": "Flat quantitative bound",
+      "needed_by": "root,C2,C3",
+      "route": "R0",
+      "classification": "root",
+      "support": "O1,O2,O3,C1,O7",
+      "status": "discharged"
+    },
+    {
+      "ID": "O1",
+      "claim": "For eta>0, B_j=eta^j P for every j>=1",
+      "needed_by": "C0",
+      "route": "R0",
+      "classification": "algebraic/logical step",
+      "support": "A=Pi+eta P; Pi P=P Pi=0; P^2=P",
+      "status": "discharged"
+    },
+    {
+      "ID": "O2",
+      "claim": "Only empty, triangles, four-cycles, diamonds and K4 survive; proper coefficients are d,d,Delta>=0",
+      "needed_by": "C0",
+      "route": "R0",
+      "classification": "algebraic/logical step",
+      "support": "Centering kills leaves; degree-two orthogonality; cubic moment squares at the two diamond endpoints",
+      "status": "discharged"
+    },
+    {
+      "ID": "O3",
+      "claim": "Each proper exponent contribution dominates eta^(S-6m0) times its homogeneous contribution; tetrahedron agrees exactly",
+      "needed_by": "C0",
+      "route": "R0",
+      "classification": "algebraic/logical step",
+      "support": "Every omitted exponent>=m0, 0<eta<=1, proper coefficients nonnegative; no sign constraint on q",
+      "status": "discharged"
+    },
+    {
+      "ID": "C1",
+      "claim": "Homogeneous F(m0,...,m0)>=(Tr A^(3m0))^2",
+      "needed_by": "C0",
+      "route": "R1",
+      "classification": "major claim",
+      "support": "O4,O5,O6",
+      "status": "discharged"
+    },
+    {
+      "ID": "O4",
+      "claim": "L=A^m0 is nonnegative Markov and L-Pi PSD",
+      "needed_by": "C1",
+      "route": "R1",
+      "classification": "side condition",
+      "support": "Composition of nonnegative Markov kernels; finite nonnegative spectrum",
+      "status": "discharged"
+    },
+    {
+      "ID": "O5",
+      "claim": "F homogeneous>= integral L(b,d)[L^2(b,d)]^2",
+      "needed_by": "C1",
+      "route": "R1",
+      "classification": "algebraic/logical step",
+      "support": "f_bd=L(. ,b)L(. ,d); <f,Lf>>=<f,Pi f>; multiply only by L>=0",
+      "status": "discharged"
+    },
+    {
+      "ID": "O6",
+      "claim": "Last integral>=(Tr L^3)^2=(1+d eta^(3m0))^2",
+      "needed_by": "C1",
+      "route": "R1",
+      "classification": "named theorem",
+      "support": "Cauchy-Schwarz for probability measure L dmu^2; spectral trace with constants, d repeated modes and zero modes",
+      "status": "discharged"
+    },
+    {
+      "ID": "O7",
+      "claim": "eta=0 direct F=1; eta=1 and S=6m0 retained",
+      "needed_by": "C0",
+      "route": "R0",
+      "classification": "side condition",
+      "support": "m0>=1,S>=6m0; final S-3m0,S>0; no eigenvalue division",
+      "status": "discharged"
+    },
+    {
+      "ID": "C2",
+      "claim": "Componentwise quantitative extension",
+      "needed_by": "root",
+      "route": "R2",
+      "classification": "major claim",
+      "support": "C0,O8,O9",
+      "status": "discharged"
+    },
+    {
+      "ID": "O8",
+      "claim": "Local A_C=alpha_C A with conditional mu_C is nonnegative PSD Markov",
+      "needed_by": "C2",
+      "route": "R2",
+      "classification": "definition",
+      "support": "Block restriction of reversible Markov operator; normalize positive component mass",
+      "status": "discharged"
+    },
+    {
+      "ID": "O9",
+      "claim": "F=sum alpha_C^-2 F_C",
+      "needed_by": "C2",
+      "route": "R2",
+      "classification": "algebraic/logical step",
+      "support": "K4 connected, no cross-component kernel; four measure factors and six kernel factors",
+      "status": "discharged"
+    },
+    {
+      "ID": "C3",
+      "claim": "Independent-coordinate mixture bound with sum of local gains",
+      "needed_by": "root",
+      "route": "R3",
+      "classification": "major claim",
+      "support": "C0,O10,O11,O12",
+      "status": "discharged"
+    },
+    {
+      "ID": "O10",
+      "claim": "T convex Markov mixture and A=Pi+sum (t_j s_j)^2 P_j^lift",
+      "needed_by": "C3",
+      "route": "R3",
+      "classification": "hypothesis",
+      "support": "Explicit finite product construction, t_j>=0,sum<=1, orthogonal centered coordinate ranges",
+      "status": "discharged"
+    },
+    {
+      "ID": "O11",
+      "claim": "F=1+sum(F_j-1)",
+      "needed_by": "C3",
+      "route": "R3",
+      "classification": "algebraic/logical step",
+      "support": "Mixed cubic moments zero; orthogonality at degree two; each surviving core connected; positive exponents kill zero modes",
+      "status": "discharged"
+    },
+    {
+      "ID": "O12",
+      "claim": "Local A_j has nonnegative Markov root (1-t_j)Pi_j+t_j S_j",
+      "needed_by": "C3",
+      "route": "R3",
+      "classification": "side condition",
+      "support": "0<=t_j<=1; square gives Pi_j+(t_j s_j)^2 P_j",
+      "status": "discharged"
+    },
+    {
+      "ID": "G0",
+      "claim": "Unrestricted ordered family on all actual common-power hosts",
+      "needed_by": "research target",
+      "route": "RG",
+      "classification": "root",
+      "support": "O13 proposed sufficient route",
+      "status": "open"
+    },
+    {
+      "ID": "O13",
+      "claim": "R0+S_j>=1 for every proper positive spectral cutoff on every actual host",
+      "needed_by": "G0",
+      "route": "RG",
+      "classification": "missing",
+      "support": "No proof supplied; cutoff kernel need not be pointwise nonnegative",
+      "status": "failing"
+    }
+  ],
+  "verdict": {
+    "restricted_proof": "FOLLOWS through R0, R2 and R3 under exactly the displayed extra host hypotheses.",
+    "general_route": "NOT ESTABLISHED BY THIS PROOF: O13 remains unproved. This does not show the target false or exclude another proof.",
+    "numerical_role": "Exact checks corroborate examples only; no universal proof inferred.",
+    "novelty_and_significance": "UNESTABLISHED",
+    "independent_external_review": false
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "baseline": "be6f7637147e0a02e8f03fa4f0ad770370b2327a",
+  "scope": "Source preservation, citation consistency and PDF presence; not proof or Lean acceptance",
+  "checks": {
+    "old_labels_preserved_in_order": true,
+    "all_labels_unique": true,
+    "old_statement_bodies_preserved_in_order": true,
+    "old_proof_bodies_preserved_in_order": true,
+    "old_bracket_displays_preserved_in_order": true,
+    "existing_citation_sequence_preserved": true,
+    "existing_inline_bibliography_keys_preserved": true,
+    "all_references_cited_and_keys_match_bibtex": true,
+    "reference_numbers_first_citation_order": true,
+    "references_and_bibtex_keys_unique": true,
+    "pdf_has_59_pages": true,
+    "date_and_new_theorem_in_pdf": true
+  },
+  "counts": {
+    "labels_before_after": [
+      89,
+      91
+    ],
+    "statements_before_after": [
+      53,
+      54
+    ],
+    "proofs_before_after": [
+      49,
+      50
+    ],
+    "bracket_displays_before_after": [
+      162,
+      175
+    ],
+    "references": 44,
+    "citation_commands": 88,
+    "pdf_pages": 59
+  },
+  "new_labels": [
+    "proposition-weighted-projection-lift",
+    "appendix-weighted-projection"
+  ],
+  "files": {
+    "erdos593_obligatory_triple_systems.tex": {
+      "sha256": "7b0dc06f31631f2c8bd73d5e24c503ee5a7579663f4f6adbc5e9a65c9fc503fe",
+      "bytes": 178332
+    },
+    "erdos593_obligatory_triple_systems.pdf": {
+      "sha256": "dd7301b8d5176d19db528aca551fb832861f642e07559174d7072c02a4fe035b",
+      "bytes": 738205
+    },
+    "references.bib": {
+      "sha256": "b2079ec8a672115f532d33ad5baec73e12a597276601a17b735be647e825e0ae",
+      "bytes": 15323
+    }
+  }
+}

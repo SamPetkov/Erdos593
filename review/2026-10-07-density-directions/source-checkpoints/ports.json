@@ -1,0 +1,197 @@
+{
+  "date": "2026-10-07",
+  "direction": "D3 — port-sensitive finite density calculus, including a concrete D1 private-expansion bridge",
+  "source": {
+    "path": "research/e593-density-development-20261007/d3/FinitePortContraction.lean",
+    "sha256": "de46591242e468fcad188660888d2b21215eac12cd7b61fcdaf298ed844b0845",
+    "suggested_module": "Erdos593.DensityCandidates.FinitePortContraction",
+    "status": "Complete direct-written proof bodies; uncompiled candidate. No kernel acceptance.",
+    "imports": [
+      "Mathlib.Algebra.BigOperators.Ring.Finset",
+      "Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset",
+      "Mathlib.Data.Fintype.BigOperators",
+      "Mathlib.Data.Real.Basic"
+    ],
+    "project_dependencies": [],
+    "definitions": 8,
+    "theorems": 10,
+    "declarations": [
+      {
+        "kind": "def",
+        "name": "finiteMean",
+        "line": 30,
+        "signature": "def finiteMean {A : Type u} [Fintype A] (weight : A → ℝ) (f : A → ℝ) : ℝ"
+      },
+      {
+        "kind": "def",
+        "name": "vertexWeight",
+        "line": 34,
+        "signature": "def vertexWeight {V : Type u} {Ω : Type v} [Fintype V]\n    (μ : Ω → ℝ) (x : V → Ω) : ℝ"
+      },
+      {
+        "kind": "def",
+        "name": "finiteDensity",
+        "line": 39,
+        "signature": "def finiteDensity {V : Type u} {Ω : Type v} [Fintype V] [Fintype Ω]\n    (μ : Ω → ℝ) (f : (V → Ω) → ℝ) : ℝ"
+      },
+      {
+        "kind": "theorem",
+        "name": "vertexWeight_nonnegative",
+        "line": 43,
+        "signature": "theorem vertexWeight_nonnegative {V : Type u} {Ω : Type v} [Fintype V]\n    (μ : Ω → ℝ) (hμ : ∀ a, 0 ≤ μ a) (x : V → Ω) :\n    0 ≤ vertexWeight μ x"
+      },
+      {
+        "kind": "theorem",
+        "name": "vertexWeight_mass",
+        "line": 48,
+        "signature": "theorem vertexWeight_mass {V : Type u} {Ω : Type v}\n    [Fintype V] [Fintype Ω] (μ : Ω → ℝ) (hμ : ∑ a, μ a = 1) :\n    (∑ x : V → Ω, vertexWeight μ x) = 1"
+      },
+      {
+        "kind": "theorem",
+        "name": "dependent_weighted_factorization",
+        "line": 59,
+        "signature": "theorem dependent_weighted_factorization {I : Type u} [Fintype I]\n    {X : I → Type v} [∀ i, Fintype (X i)]\n    (weight : ∀ i, X i → ℝ) (factor : ∀ i, X i → ℝ) :\n    (∑ x : ∀ i, X i, (∏ i, weight i (x i)) * (∏ i, factor i (x i))) =\n      ∏ i, ∑ a, weight i a * factor i a"
+      },
+      {
+        "kind": "theorem",
+        "name": "shared_weighted_contraction",
+        "line": 70,
+        "signature": "theorem shared_weighted_contraction {S : Type u} [Fintype S]\n    {I : Type v} [Fintype I] {X : I → Type w} [∀ i, Fintype (X i)]\n    (sharedWeight : S → ℝ) (weight : ∀ i, X i → ℝ)\n    (factor : S → ∀ i, X i → ℝ) :\n    (∑ y : S × (∀ i, X i),\n      sharedWeight y.1 * (∏ i, weight i (y.2 i)) *\n        (∏ i, factor y.1 i (y.2 i))) =\n      ∑ s, sharedWeight s * ∏ i, ∑ a, weight i a * factor s i a"
+      },
+      {
+        "kind": "def",
+        "name": "splitAssignments",
+        "line": 97,
+        "signature": "def splitAssignments {I : Type u} {Shared : Type v} {Internal : I → Type w}\n    {Ω : Type z} :\n    ((Shared ⊕ Sigma Internal) → Ω) ≃\n      ((Shared → Ω) × (∀ i, Internal i → Ω))"
+      },
+      {
+        "kind": "theorem",
+        "name": "vertexWeight_split",
+        "line": 112,
+        "signature": "theorem vertexWeight_split {I : Type u} {Shared : Type v}\n    {Internal : I → Type w} {Ω : Type z}\n    [Fintype I] [Fintype Shared] [∀ i, Fintype (Internal i)]\n    (μ : Ω → ℝ) (x : (Shared ⊕ Sigma Internal) → Ω) :\n    vertexWeight μ x =\n      vertexWeight μ (fun s : Shared => x (.inl s)) *\n        ∏ i, vertexWeight μ (fun v : Internal i => x (.inr ⟨i, v⟩))"
+      },
+      {
+        "kind": "def",
+        "name": "portMarginal",
+        "line": 124,
+        "signature": "def portMarginal {I : Type u} {Port : I → Type v} {Internal : I → Type w}\n    {Ω : Type z} [∀ i, Fintype (Internal i)] [Fintype Ω]\n    (μ : Ω → ℝ)\n    (kernel : ∀ i, (Port i → Ω) → (Internal i → Ω) → ℝ)\n    (i : I) (s : Port i → Ω) : ℝ"
+      },
+      {
+        "kind": "theorem",
+        "name": "represented_port_contraction",
+        "line": 131,
+        "signature": "theorem represented_port_contraction {I : Type u} {Shared : Type v}\n    {Port : I → Type w} {Internal : I → Type p} {Ω : Type z}\n    [Fintype I] [Fintype Shared] [∀ i, Fintype (Internal i)] [Fintype Ω]\n    (μ : Ω → ℝ) (port : ∀ i, Port i → Shared)\n    (kernel : ∀ i, (Port i → Ω) → (Internal i → Ω) → ℝ) :\n    finiteDensity μ (fun x : (Shared ⊕ Sigma Internal) → Ω =>\n      ∏ i, kernel i (fun p => x (.inl (port i p)))\n        (fun v => x (.inr ⟨i, v⟩))) =\n      finiteMean (vertexWeight μ) (fun s : Shared → Ω =>\n        ∏ i, portMarginal μ kernel i (fun p => s (port i p)))"
+      },
+      {
+        "kind": "def",
+        "name": "reindexAssignments",
+        "line": 162,
+        "signature": "def reindexAssignments {V : Type u} {W : Type v} {Ω : Type w}\n    (d : V ≃ W) : (V → Ω) ≃ (W → Ω)"
+      },
+      {
+        "kind": "theorem",
+        "name": "finiteDensity_reindex",
+        "line": 169,
+        "signature": "theorem finiteDensity_reindex {V : Type u} {W : Type v} {Ω : Type w}\n    [Fintype V] [Fintype W] [Fintype Ω]\n    (d : V ≃ W) (μ : Ω → ℝ) (factor : (W → Ω) → ℝ) :\n    finiteDensity μ (fun x => factor (reindexAssignments d x)) =\n      finiteDensity μ factor"
+      },
+      {
+        "kind": "theorem",
+        "name": "original_carrier_port_contraction",
+        "line": 183,
+        "signature": "theorem original_carrier_port_contraction {V : Type u} {I : Type v}\n    {Shared : Type w} {Port : I → Type w} {Internal : I → Type w} {Ω : Type z}\n    [Fintype V] [Fintype I] [Fintype Shared]\n    [∀ i, Fintype (Internal i)] [Fintype Ω]\n    (d : V ≃ Shared ⊕ Sigma Internal) (μ : Ω → ℝ)\n    (port : ∀ i, Port i → Shared)\n    (kernel : ∀ i, (Port i → Ω) → (Internal i → Ω) → ℝ) :\n    finiteDensity μ (fun x : V → Ω =>\n      ∏ i, kernel i (fun p => x (d.symm (.inl (port i p))))\n        (fun v => x (d.symm (.inr ⟨i, v⟩)))) =\n      finiteMean (vertexWeight μ) (fun s : Shared → Ω =>\n        ∏ i, portMarginal μ kernel i (fun p => s (port i p)))"
+      },
+      {
+        "kind": "def",
+        "name": "atomEdgeKernel",
+        "line": 202,
+        "signature": "def atomEdgeKernel {I : Type u} {AtomEdge : I → Type v}\n    {Port : I → Type w} {Internal : I → Type w} {Slot : Type z} {Ω : Type z}\n    [∀ i, Fintype (AtomEdge i)]\n    (U : (Slot → Ω) → ℝ)\n    (endpoint : ∀ i, AtomEdge i → Slot → Port i ⊕ Internal i)\n    (i : I) (s : Port i → Ω) (x : Internal i → Ω) : ℝ"
+      },
+      {
+        "kind": "theorem",
+        "name": "edge_partition_port_contraction",
+        "line": 213,
+        "signature": "theorem edge_partition_port_contraction\n    {V : Type u} {Edge : Type u} {I : Type v}\n    {Shared : Type w} {Port : I → Type w} {Internal : I → Type w}\n    {AtomEdge : I → Type w} {Slot : Type z} {Ω : Type z}\n    [Fintype V] [Fintype Edge] [Fintype I] [Fintype Shared]\n    [∀ i, Fintype (Internal i)] [∀ i, Fintype (AtomEdge i)] [Fintype Ω]\n    (d : V ≃ Shared ⊕ Sigma Internal) (a : Edge ≃ Sigma AtomEdge)\n    (μ : Ω → ℝ) (U : (Slot → Ω) → ℝ)\n    (port : ∀ i, Port i → Shared) (edge : Edge → Slot → V)\n    (endpoint : ∀ i, AtomEdge i → Slot → Port i ⊕ Internal i)\n    (endpoint_fidelity : ∀ i e k,\n      d (edge (a.symm ⟨i, e⟩) k) =\n        Sum.elim (fun p => Sum.inl (port i p))\n          (fun v => Sum.inr ⟨i, v⟩) (endpoint i e k)) :\n    finiteDensity μ (fun x : V → Ω => ∏ e, U (fun k => x (edge e k))) =\n      finiteMean (vertexWeight μ) (fun s : Shared → Ω =>\n        ∏ i, portMarginal μ (atomEdgeKernel U endpoint) i\n          (fun p => s (port i p)))"
+      },
+      {
+        "kind": "def",
+        "name": "privatePairMarginal",
+        "line": 272,
+        "signature": "def privatePairMarginal {Private : Type u} {Ω : Type v}\n    [Fintype Private] [Fintype Ω] (μ : Ω → ℝ)\n    (U : ((Fin 2 ⊕ Private) → Ω) → ℝ) (s : Fin 2 → Ω) : ℝ"
+      },
+      {
+        "kind": "theorem",
+        "name": "private_expansion_marginal_identity",
+        "line": 280,
+        "signature": "theorem private_expansion_marginal_identity {Core : Type u} {Edge : Type v}\n    {Private : Type w} {Ω : Type z}\n    [Fintype Core] [Fintype Edge] [Fintype Private] [Fintype Ω]\n    (μ : Ω → ℝ) (U : ((Fin 2 ⊕ Private) → Ω) → ℝ)\n    (edge : Edge → Fin 2 → Core) :\n    finiteDensity μ (fun x : (Core ⊕ (Sigma fun _e : Edge => Private)) → Ω =>\n      ∏ e, U (Sum.elim (fun p => x (.inl (edge e p)))\n        (fun v => x (.inr ⟨e, v⟩)))) =\n      finiteDensity μ (fun x : Core → Ω =>\n        ∏ e, privatePairMarginal μ U (fun p => x (edge e p)))"
+      }
+    ]
+  },
+  "exact_question": "For a finite hypergraph represented on its actual vertex/edge carriers, is its homomorphism density the shared-variable contraction of its full atom multi-port marginals?",
+  "inputs_and_conventions": {
+    "sample_law": "A finite sample type Ω and weights μ:Ω→ℝ. Probability interpretation requires μ≥0 and Σμ=1. The finite identities themselves hold for arbitrary real weights and kernels.",
+    "density": "finiteDensity μ F = Σ_{x:V→Ω}(∏_{v:V}μ(x_v))F(x). All assignments are summed; injective density is not being used.",
+    "kernel": "U:(Slot→Ω)→ℝ and edge:Edge→Slot→V are ordered-incidence data. A simple r-uniform hypergraph interpretation additionally checks |Slot|=r, each endpoint map injective, and distinct edge images. Symmetric U makes edge ordering irrelevant; none of these conditions is required for the algebraic equality.",
+    "port_decomposition": "I indexes blocks. Shared is the actual shared-vertex carrier; Port i is its local copy in atom i with port_i:Port i→Shared. Internal i consists of that atom's exclusive actual vertices. d:V≃Shared⊕Σ_i Internal i is an explicit full original-carrier bijection.",
+    "edge_decomposition": "a:Edge≃Σ_i AtomEdge i is an explicit actual edge partition. endpoint_fidelity checks d(edge(a⁻¹(i,e),k)) equals the local endpoint's actual joint/exclusive placement, for every i,e,k.",
+    "marginal": "Φ_i(s)=Σ_{z:Internal i→Ω}(∏_v μ(z_v))∏_{e:AtomEdge i}U(local endpoint assignment using all port values s and internal values z).",
+    "conclusion": "t(H,U)=Σ_{s:Shared→Ω}(∏_v μ(s_v))∏_i Φ_i(s∘port_i). Multi-port factors are retained.",
+    "private_expansion_specialization": "Core⊕Σ_{e:Edge}Private contains each graph edge's own private vertices. With Slot=Fin2⊕Private, M_U(s)=E_z U(Sum.elim s z), exact t(J^[2+|Private|],U)=E_core ∏_e M_U(core endpoints) is proved in the candidate."
+  },
+  "analytical_proof": [
+    "Split each original assignment into its shared assignment and dependent family of internal assignments through a genuine equivalence.",
+    "Reindex independent vertex weights using finite product equivalence, then split the disjoint-sum and dependent-sigma products.",
+    "Conditional on the shared assignment, the finite sum of the product of weighted internal factors equals the product of their finite sums (Fintype.prod_sum).",
+    "Use the original edge partition equivalence and per-endpoint fidelity to transform every original edge factor into the atom's local factor. No density equality is assumed.",
+    "Normalized nonnegative vertex weights are separately proved in vertexWeight_mass and vertexWeight_nonnegative."
+  ],
+  "edge_cases": {
+    "empty_atoms": "Empty atom-index products equal1. Under Σμ=1 all unused vertex samples integrate to1.",
+    "empty_internal_carriers": "Their assignment space is a singleton, so the atom marginal retains its full port kernel.",
+    "isolated_original_vertices": "They may be included as unused Shared coordinates, even though no port references them; normalization then makes their samples contribute1. An adapter using only genuine joints must first split isolated vertices into a separate unused carrier and prove the corresponding normalized deletion identity. That deletion lemma is not separately included here.",
+    "empty_shared_carrier": "The shared assignment is unique; density factors as the product of atom densities.",
+    "several_ports": "The complete correlated multi-port factor is kept. No reduction to a list of independent one-root factors is made.",
+    "empty_sample_space": "The algebra still makes sense. A normalized law cannot exist on an empty Ω, so no nonexistent probability law is asserted.",
+    "nonlinear_or_repeated_endpoints": "Algebra remains valid for ordered incidence data. The candidate does not mistakenly infer simplicity or linearity from it."
+  },
+  "actual_canonical_adapter": {
+    "status": "NOT WRITTEN/NOT COMPILED in this checkpoint. The general original-carrier theorem does not construct these project-specific bijections.",
+    "proposed_carriers": [
+      "Let I be the actual CanonicalAtom.Index, not an assembly-list index.",
+      "Take joint vertices to be original vertices supported by at least two actual atom labels, and include isolated original vertices as unused Shared coordinates for this version.",
+      "Take Internal i to be the original support of atom i minus Shared; these carriers are genuinely disjoint.",
+      "Take Port i to be the actual joint vertices in atom i, with the inclusion into Shared.",
+      "Take AtomEdge i to be the original edge subtype carrying label i. Build a from actual unique atomOf labels.",
+      "Build d from joint membership or the unique atom containing an exclusive original vertex; prove endpoint_fidelity for all original edges before applying the theorem."
+    ],
+    "remaining_checks": "Reconcile actual support partition, original isolated vertices, source types and finite instances against accepted public dependencies. No Intrinsic hypothesis has been inserted into an unrelated unrestricted equivalence; actual canonical adapter assumptions must be stated honestly."
+  },
+  "other_remaining_obligations": {
+    "pendant_forest": "The regular-kernel result that a Berge forest attached through exactly one interface contributes p^t needs actual leaf-edge induction/root transport. It is analytically justified but not a Lean theorem in this candidate.",
+    "tree_messages": "The exact finite contraction can be evaluated by ordinary tree factor-graph messages when the atom–joint incidence graph is a forest. This is classical sum-product/Fubini, not an algorithmic novelty or polynomial-time general homomorphism-counting claim.",
+    "sidorenko": "No density inequality, nonnegative covariance, assembly closure theorem, or counterexample is asserted. The two-atom attachment question remains open.",
+    "d1_endpoint": "The private-expansion identity is now a source-only complete candidate, but full mean-preservation/isomorphism/cycle/theta Sidorenko dependencies still require their own formal statements/proofs."
+  },
+  "source_review": {
+    "main_review": "Author-authorized Codex source/math self-review; independent=false.",
+    "actual_helper": "/root/density_ports_develop/ports_source_review",
+    "helper_record": "research/e593-density-development-20261007/d3/ports-source-review.json",
+    "result": "Actual helper static source/math review PASS after initial classical header repair and independent Internal-universe repair.",
+    "not_claimed": [
+      "Compiler or kernel validation",
+      "Full independent external audit",
+      "Novelty or publication readiness"
+    ]
+  },
+  "resource_and_attempts": {
+    "compiler_attempts": 0,
+    "service_attempts": 0,
+    "compiler_run": "None. Parent owns a hash-frozen bounded runner/resource review and actual dispatch.",
+    "preservation": "All proof bodies/imports/signatures now frozen at source SHA above. No Git/private/manuscript/clocks writes occurred.",
+    "prohibited": "No sorry/new axioms/unsafe/native_decide/run_tac/implemented_by, warning suppression, unlimited options, installations or pin/cache changes."
+  },
+  "story": "This makes attachment geometry an exact density datum instead of an isolated example: the canonical atom list alone discards multi-port information. Finite contraction is standard; its faithful use on the actual decomposition is the organizing contribution.",
+  "novelty_and_credit": {
+    "finite_algebra": "Classical finite Fubini and sum/product factoring; do not present as a novel general principle.",
+    "tree_calculus_source": "Wainwright–Jordan (2008), section2.5.1, https://people.eecs.berkeley.edu/~jordan/sail/readings/wainwright-jordan-fnt.pdf"
+  }
+}

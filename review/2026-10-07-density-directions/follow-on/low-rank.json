@@ -1,0 +1,136 @@
+{
+  "date": "2026-10-07",
+  "reviewer": "/root/density_low_rank_develop",
+  "brief": "follow-on-research-brief.json",
+  "status": "SOURCE_ONLY_BOUNDED_ANALYTICAL_FOLLOW_ON",
+  "scope": "Finite simple vertex-two-connected bipartite cores with actual cycle rank3; single canonical obligatory r-uniform atoms, r>=3. Parallel edges created by suppression are retained. No arbitrary assembly claim.",
+  "decision": "Do not strengthen the proved rank<=2 density cutoff to rank<=3. The rank3 structural list is complete, but a density argument for every admissible path-length and parity case has not been obtained.",
+  "classification_theorem": {
+    "quantifiers": "For every finite simple two-connected bipartite graph J with |E(J)|-|V(J)|+1=3, suppress every maximal path whose internal vertices have degree2, retaining its positive length and all parallel edges.",
+    "conclusion": "The resulting loopless multigraph kernel is B4, triangle T221, alternating-double C4, or K4. Conversely every internally disjoint positive-length subdivision of these kernels that satisfies the parity and simplicity conditions is a finite simple two-connected bipartite graph of cycle rank3.",
+    "two_connectivity_convention": "Original J has at least3 vertices and deletion of any vertex leaves it connected. The two-vertex B4 kernel is not asserted to satisfy the project's >=3-vertex IsTwoVertexConnected predicate; only its no-cut/no-bridge properties are used.",
+    "proof": [
+      "J-v connected implies m-deg(v)>=n-2, hence 2<=deg(v)<=m-n+2=4.",
+      "Handshaking gives sum(deg(v)-2)=2m-2n=4. The branch degree partitions are exactly(4,4),(4,3,3),(3,3,3,3).",
+      "There are at least2 branch vertices. A maximal degree2 path returning to one branch vertex would give a suppressed loop, whose interior is disconnected from the other branch vertices after deleting its root. Therefore no loop is possible.",
+      "Two branch vertices yield4 parallel paths.",
+      "Three branch vertices have pair multiplicities x+y=4,x+z=3,y+z=3, hence2,2,1.",
+      "Four cubic branch vertices without parallel edges force K4. A triple edge would saturate and isolate its two endpoints. For a doubled pair, the two remaining stubs must meet distinct remaining vertices; otherwise the last vertex cannot attain degree3. The remaining degrees force an opposite doubled pair.",
+      "Parity is necessary and sufficient by restricting a two-colouring to branch vertices and alternating along every replacement path. Simplicity fails exactly when a parallel family contains more than one length1 path.",
+      "Each listed kernel has no bridge and no cut vertex. Deleting an internal vertex of a replacement path uses K-edge connectedness; deleting a branch vertex uses K-vertex connectedness and attaches all surviving path segments at other endpoints. Subdivision preserves e-v+1."
+    ]
+  },
+  "kernels": [
+    {
+      "name": "B4",
+      "vertices": 2,
+      "edges_with_multiplicity": 4,
+      "branch_degrees": [4,4],
+      "description": "Four parallel edges between two distinct branch vertices.",
+      "parity": "All4 replacement lengths even, or all4 odd.",
+      "density_coverage": "ALL admissible lengths covered by published generalized-theta results, already known."
+    },
+    {
+      "name": "T221",
+      "vertices": 3,
+      "edges_with_multiplicity": 5,
+      "branch_degrees": [4,3,3],
+      "description": "Triangle with multiplicities2,2,1; the degree4 vertex meets both doubled sides.",
+      "parity": "Each side class has a fixed parity; the3 side parities sum to0 mod2. Thus0 or2 side classes are odd.",
+      "density_coverage": "Several uniform/symmetric families covered below. Arbitrary admissible nonuniform lengths not proved by this checkpoint."
+    },
+    {
+      "name": "C4alt",
+      "vertices": 4,
+      "edges_with_multiplicity": 6,
+      "branch_degrees": [3,3,3,3],
+      "description": "Four-cycle with opposite doubled sides and opposite single sides.",
+      "parity": "Each side class has a fixed parity; the4 side parities sum to0 mod2. Thus0,2 or4 side classes are odd.",
+      "density_coverage": "Uniform even lengths covered below. Arbitrary admissible nonuniform lengths not proved by this checkpoint."
+    },
+    {
+      "name": "K4",
+      "vertices": 4,
+      "edges_with_multiplicity": 6,
+      "branch_degrees": [3,3,3,3],
+      "description": "Simple complete graph on4 branch vertices before replacement by paths.",
+      "parity": "Odd replacement edges form a cut determined by branch colours. Up to permutation: empty cut,1|3 cut with3 odd edges, or2|2 cut with4 odd edges.",
+      "density_coverage": "Uniform even and equal-star/equal-outer-triangle families covered below. Arbitrary admissible nonuniform lengths not proved by this checkpoint."
+    }
+  ],
+  "primary_literature": {
+    "published": "Im, Li and Liu, Sidorenko's conjecture for subdivisions and theta substitutions, Combinatorics, Probability and Computing35(2)(2026),269--279,DOI10.1017/S0963548325100242.",
+    "publisher_pdf": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/7587A22E3A717B29DBAB2A6E99875345/S0963548325100242a.pdf/sidorenkos-conjecture-for-subdivisions-and-theta-substitutions.pdf",
+    "preprint": "https://arxiv.org/html/2408.03491v2",
+    "directly_checked": "Published pages270--271 and278--279: Theorems1.3,1.4,1.6,1.7; Conjecture4.1 and Propositions4.2,4.3. Published parameter offset in Theorem1.6 differs from preprint, so the equal-star consequence below is derived via Theorem1.7 instead.",
+    "coverage": [
+      "B4 arbitrary lengths: Theorem1.3 for all-even paths and Proposition4.3 for all-odd paths.",
+      "T221,C4alt,K4 with every replacement length equal to one even2k: Theorem1.4 second case; respective total path counts5,6,6 meet choose(h,2)=3,6,6.",
+      "T221 with doubled-leg length multisets equal {a,b}, a+b even, and the singleton connector of even length: Theorem1.7 applied to two identical even cycles glued at one vertex, joining their other distinguished vertices by an even path.",
+      "K4 with all3 star paths of one positive length L and all3 outer-triangle paths of one even length2k: Theorem1.7 with H1 a path of length L, H2=K3, and I one endpoint."
+    ],
+    "limitation": "Conjecture4.1 leaves general bipartite subdivision closure of a Sidorenko graph conjectural. None of the checked results certifies EVERY residual rank3 pattern. This bounded check is not an exhaustive bibliography and does not certify all uncovered subfamilies as globally open."
+  },
+  "proved_density_consequence": {
+    "statement": "A single canonical obligatory r-uniform atom, r>=3, of cycle rank3 whose original simple bipartite core has suppressed multigraph kernel B4 is Sidorenko. Therefore a hypothetical non-Sidorenko rank3 single atom must have suppressed kernel T221,C4alt orK4.",
+    "proof": "Every B4 subdivision is an even or odd generalized theta by the branch-colour parity criterion; the cited results make its graph kernel inequality valid. Actual private-coordinate integration gives t(J^[r],U)=t(J,M_U) and mean(M_U)=mean(U), proving the expansion inequality.",
+    "novelty": "Deduction and structural localization, not a new theta inequality, existence claim, or certified priority claim."
+  },
+  "marginal_restriction_theorem": {
+    "quantifiers": "For every integer r>=3, positive weights on Ω={0,1}, and coordinate-permutation-invariant nonnegative U:Ω^r→R, if both diagonal pair marginals vanish then U vanishes pointwise.",
+    "definition": "M_U(a,b)=sum over z∈Ω^(r-2) of (product_j μ(z_j))*U(a,b,z).",
+    "proof": "A zero diagonal is a sum of nonnegative terms with strictly positive coefficients, forcing each U(a,a,z)=0. Every binary tuple of length>=3 has two equal entries; symmetry permutes them into positions1,2. Hence every U value is0.",
+    "essential_hypotheses": "r>=3; full support; nonnegativity; full coordinate symmetry. Normalization and U<=1 are unnecessary for this vanishing result.",
+    "edge_cases": "At r=2 the offdiagonal indicator is a counterexample. With zero-weight states nonzero ignored tuples can survive. Without symmetry U(a,b,z)=1[a!=b] survives. Signed sums can cancel.",
+    "exact_consequence": "A nonzero binary graph kernel with zero diagonal is not an r-kernel pair marginal on the same positive-weight binary carrier. This defeats an unjustified surjectivity argument, not every conceivable graph/expansion converse using other constructions or carriers."
+  },
+  "conjectures_equal_visibility": [
+    {
+      "name": "Rank-three graph-kernel conjecture",
+      "statement": "For every finite simple2connected bipartite J with actual cycle rank3, every finite probability space(Ω,μ) and every symmetric W:Ω²→[0,1], t(J,W)>=(sum_ab μ(a)μ(b)W(a,b))^|E(J)|.",
+      "status": "Working conjecture; stronger than what the atom problem needs. Not proven here and not advertised as a newly discovered open problem.",
+      "exact_remaining_obligation": "Prove the inequality for all admissible positive replacement lengths on T221,C4alt,K4, including every permitted parity cut, or exhibit an exact finite weighted violation. Known subfamilies do not discharge this universal quantifier.",
+      "falsification_route": "Finite full-support rational weights and symmetric rational W with an exact strict density deficit for one admissible core/length choice. A numerical search output without exact verification would remain a diagnostic, not a proof. No search run in this checkpoint."
+    },
+    {
+      "name": "Rank-three single-atom marginal conjecture",
+      "statement": "For every r>=3, every finite simple2connected bipartite J with actual cycle rank3 and every symmetric U:Ω^r→[0,1] on a finite probability space, t(J,M_U)>=(mean U)^|E(J)|; equivalently the actual private expansion J^[r] has the Sidorenko inequality for these kernels.",
+      "status": "Working conjecture. Implied by the graph-kernel conjecture, but the reverse is not asserted.",
+      "exact_remaining_obligation": "Control the three residual kernel inequalities only on the realizable symmetric-r-kernel marginal class. An arbitrary graph-kernel obstruction is not automatically an atom obstruction.",
+      "falsification_route": "Give an actual symmetric nonnegative r-kernel with exact finite weights and strict t(J,M_U)<(mean U)^|E(J)|, preserving original private carrier identity. No counterexample is presumed to exist."
+    }
+  ],
+  "formalization_targets": {
+    "status": "NO new Lean body, elaboration or acceptance in this follow-on; existing low-rank candidates remain governed by root's actual evidence.",
+    "structural_contract": "Actual max-degree bound at cycle rank3; actual branching-cardinality partitions; degree2 path suppression with labelled parallel edges and path lengths; exhaustive finite kernel recognition; colour/path parity and original simplicity transport. Existing SimpleGraph alone cannot represent the suppressed multigraph faithfully.",
+    "marginal_contract": "Finite positive-weight binary carrier, r>=3, nonnegative symmetric dependent-coordinate kernel; weighted diagonal sum zero⇒every term zero; binary repeated-coordinate pigeonhole; permutation transport⇒kernel zero. This bridge does not formalize a Sidorenko endpoint.",
+    "density_endpoint": "Graph/theta inequality plus actual r-uniform expansion/marginal transport remain separate; no new axiom, strengthened premise or tiny algebra lemma substituted for the full endpoint."
+  },
+  "actual_helper_review": {
+    "reviewer": "/root/density_low_rank_develop/low_rank_candidate_source_audit",
+    "structural_verdict": "PASS: exhaustive four kernels, cut constraints, exact parity and simplicity; no missing kernel.",
+    "marginal_verdict": "PASS: vanishing argument and essential hypotheses verified; same-carrier qualification retained.",
+    "complete_follow_on_source_review": "Complete TeX and JSON read. Classification, parity, marginal hierarchy and caution against exhaustive novelty/openness claims PASS. One JSON misdescription of suppressed B4 as simple was caught and minimally repaired to multigraph kernel; theorem mathematics and TeX unchanged.",
+    "reviewed_tex_sha256": "7a1a8aa51df0b0251acc60ea7a908b7de00fcb37ed74f9bdfbfbd744b6a0e307",
+    "pre_repair_reviewed_json_sha256": "b9f022d8e366f57b8c34a753ccb5a9a46dee8ccfbe7672da421c2a6cedb9272a",
+    "scope": "Actual analytical review, not Lean validation, publisher verification or full external certification."
+  },
+  "academic_comparison": [
+    {
+      "working_form": "Maybe all rank3 atoms are theta or already known positive, so improve the cutoff.",
+      "clean_form": "Cycle rank3 has four suppressed multigraph cores. The generalized-theta case is positive; the remaining universal density inequalities are not settled by this checkpoint.",
+      "note": "Replaces a desired conclusion by exhaustive structural obligations."
+    },
+    {
+      "working_form": "Prove the graph inequality; graph and expansion density questions are the same.",
+      "clean_form": "The graph inequality is sufficient. The atom problem uses the realizable marginal subclass, which need not contain arbitrary graph kernels.",
+      "note": "Separates theorem strength and preserves the one-way implication."
+    },
+    {
+      "working_form": "Interesting directions beyond the solution.",
+      "clean_form": "The next rank is reduced to three joint-kernel families with explicit parity and path-length constraints.",
+      "note": "States a concrete story contribution without novelty or journal promises."
+    }
+  ],
+  "actions": "Only new follow-on-low-rank.json and follow-on-low-rank.tex written. No mutation of previous source/main/editor/candidates, no compiler/version/Git/SSH/job/service/clock action. Primary literature read only; bounded mathematical analysis, no broad campaign or numerical search."
+}

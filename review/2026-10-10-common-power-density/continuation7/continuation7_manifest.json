@@ -1,0 +1,139 @@
+{
+  "scope": "bounded continuation7; unrestricted common-power density, U and C unresolved",
+  "base_pr": 62,
+  "base_commit": "bb919054eab3248e45ce1cd0c9a8cf1f39329025",
+  "base_tree": "fb59d00e34f4066c7408fa49206ee8d660b9a011",
+  "files": {
+    "README.md": {
+      "sha256": "fd14db83434379c2947d12da6d20a4888823686bc0f5cc22f608444647008a22",
+      "bytes": 14478
+    },
+    "continuation7_cover_orbits.md": {
+      "sha256": "5abb8e14d216b076b2ae318261884aff55eba2a14f306fc27c318bf420a886ee",
+      "bytes": 13753
+    },
+    "continuation7_cover_orbits_checks.json": {
+      "sha256": "ff98e7388fd7cacf4f69da2b6e2c8ac7ac697bfdb1b7092179e378fe450e3227",
+      "bytes": 1982347
+    },
+    "continuation7_cover_orbits_verify.py": {
+      "sha256": "5e99e72aaf07a04490078c07b526e951649223b565e66119f3f59fce0c49c98a",
+      "bytes": 10264
+    },
+    "continuation7_cover_scan.py": {
+      "sha256": "4042f3bd42400159cf017e0f0d7d764c22bbcf41647b42b26e21810b2ed7364a",
+      "bytes": 3648
+    },
+    "continuation7_cover_scan_results.json": {
+      "sha256": "d817a9e9021beb64735d4455095c7d88042074eb33b6aaf03eff8fe95dfeafcc",
+      "bytes": 145725
+    },
+    "continuation7_cover_source_review.json": {
+      "sha256": "8f944d8676d8aac5c809c6234e859fab3c63810de119af0b0d39561f76b33a31",
+      "bytes": 6037
+    },
+    "continuation7_cover_source_review.py": {
+      "sha256": "4b6f532630e186d19232e6e7cff6c1dfdbb12a3948d17a7490bb57a25947ab6d",
+      "bytes": 9110
+    },
+    "continuation7_opt_ac_discovery.md": {
+      "sha256": "39ce8e923e179880fe89bee074223260e83ff9bc1d0d2854932fd678bc08d1b5",
+      "bytes": 3225
+    },
+    "continuation7_opt_ac_exact.py": {
+      "sha256": "040a8c37eab60254c418751f83b466d64e3fc3ecece5c1a1e812be88ca691769",
+      "bytes": 8349
+    },
+    "continuation7_opt_ac_exact_checks.json": {
+      "sha256": "9e8d1d2a729bf01491b64314318142c128d45ba1fea3800320650ed0e03308c0",
+      "bytes": 7823
+    },
+    "continuation7_opt_ac_obstruction.md": {
+      "sha256": "21bed062f050f6380e265da9287b96e8648538c78393bf78048c4afc845db614",
+      "bytes": 8924
+    },
+    "continuation7_opt_ac_probe.py": {
+      "sha256": "faa09e03327d4b341d860725fdaedfe144188a37a2a55fcac14f313ee54538d4",
+      "bytes": 3663
+    },
+    "continuation7_opt_ac_probe_results.json": {
+      "sha256": "95d4e6d89e8f9499b40d6cbbcef87250d5420d7400400443439a1ed0d4b6c0c8",
+      "bytes": 164609
+    },
+    "continuation7_opt_cover_review.json": {
+      "sha256": "9047c9ba68d91a6e204025fe66329ab727d728be3f83fa3bf802ebe2c6676e62",
+      "bytes": 3130
+    },
+    "continuation7_opt_highrank.log": {
+      "sha256": "1e9aca5fe903113e299d6374be8199c917d9d1facf10eba2b3632f678ae2d4be",
+      "bytes": 1545
+    },
+    "continuation7_opt_highrank.py": {
+      "sha256": "2ed0b4b3ef0e8330b75545ff352b3cab9ca72ec974164bd3e8d21131845de92b",
+      "bytes": 7366
+    },
+    "continuation7_opt_highrank_audit.json": {
+      "sha256": "3cc2d7a51fb5f7efe0f7ede62c7a870a68ec91f3cce93cfaaab0480491f108b3",
+      "bytes": 24512
+    },
+    "continuation7_opt_highrank_audit.py": {
+      "sha256": "c50158d3cb60b8d5b94661ec1b07faf6bf2f52557b68545f7d666971d8dd5510",
+      "bytes": 5819
+    },
+    "continuation7_opt_highrank_report.md": {
+      "sha256": "a9c8e8159fbb27795c2d93c3f76bcb9da1bcaf58a4111d50f467a327ed9ce5f5",
+      "bytes": 8469
+    },
+    "continuation7_opt_highrank_results.json": {
+      "sha256": "4a6746b00d0198b3b17fb4b7410fadfc497b9307203280097f82aae4965ffdfc",
+      "bytes": 1000906
+    },
+    "continuation7_packet_audit.py": {
+      "sha256": "fdf1be8a08b9d4b84672e60700c60aa0788ebcf18c6a7696bde65bdcb71ca5a4",
+      "bytes": 6033
+    },
+    "continuation7_root_review.json": {
+      "sha256": "0b250a75a07ea5c1f985cd1fd70bdbe1e665db0d802c2c46b36f1f71c762de39",
+      "bytes": 13843
+    },
+    "continuation7_root_review.py": {
+      "sha256": "941423b61742feb4b7c40ffcdabf827a359580ba3a8b88ecd430b12c4890d9fb",
+      "bytes": 15732
+    },
+    "continuation7_route_registry.md": {
+      "sha256": "0df7554f8c318ff9b2825a2f43973921c6914e7a00cda6232053bb6de197767b",
+      "bytes": 8000
+    },
+    "continuation7_source_ac_review.json": {
+      "sha256": "bf87444818e90fbe91965b7a0899b073d4b50b954d5ab2e0c14bd20ced029a5e",
+      "bytes": 5992
+    },
+    "continuation7_source_weighted_checks.json": {
+      "sha256": "623420e5ee77690d6d888b508e0b8638456d2cd26a5e5ba30b32172f7d787316",
+      "bytes": 17100
+    },
+    "continuation7_source_weighted_complement.md": {
+      "sha256": "c6708eda5fb08b6dac955ea52795e359ca45413b0c52ebd0f021200a5c282204",
+      "bytes": 13693
+    },
+    "continuation7_source_weighted_verify.py": {
+      "sha256": "d16603298cd73437be896c8068c9afe4b54fdd958e9e5dd36b5771738444d239",
+      "bytes": 13195
+    }
+  },
+  "inherited_dependencies": {
+    "tp2-class.md": "8419e28a80f75806fa70967a87cfdd78b8b0981fee41a9c15f95938297978991",
+    "route-registry.md": "49130d96865070067ce881073edee0e1fae5dd72dae540a4469422c56a8ddab5",
+    "continuation4/continuation4_tensor_projection_lemmas.md": "9d4a862b2d62a5d064ed8a9ae84f5df7de599ec02d31a52896b75b665805491c",
+    "continuation6/continuation6_route_registry.md": "ec99a05e2f88ff24c974555099e3b27b6a1ab42eed6ef49ac697247f1df24bf0"
+  },
+  "excluded_generated_files": [
+    "continuation7_manifest.json",
+    "continuation7_packet_audit.json"
+  ],
+  "exclusion_reason": "Manifest cannot hash itself; generated audit binds the manifest afterward.",
+  "excluded_exploration": [
+    "continuation7_cover_flow_probe.py",
+    "continuation7_cover_flow_probe_results.json"
+  ]
+}

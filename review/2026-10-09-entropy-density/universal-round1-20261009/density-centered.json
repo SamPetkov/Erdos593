@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-09",
+  "agent": "/root/density_centered_round1",
+  "verdict": "UNRESTRICTED_TARGET_UNPROVED; TWO_EXACT_REFLECTION_FACES_CHECKED; ACTUAL_THREE_STATE_NEGATIVE_FULL_CENTERED_TERM; COARSE_ABSOLUTE_AND_ALTERNATE_MODEWISE_ROUTES_REFUTED",
+  "scope": {
+    "target": "Finite nonempty X, positive probability mu, symmetric W in [0,1] of constant weighted row mean p>0. T=W/p is nonnegative self-adjoint Markov, A=T^2, K_j=A^j relative to original mu. F=E K_k(ab)K_(r+h)(ac)K_u(ad)K_r(bc)K_u(bd)K_l(cd)>=1 for k>=u>=1,r>=l>=1,h>=1.",
+    "non_goals": "No replacement by independent colored kernels, no change of reference measure, no additional host density/mixing bound, no claim that individual eigenmode sources are positive, no new compiler/service/Git/manuscript actions.",
+    "evidence": "Finite analytical derivations and a separate helper's checks. Not Lean validation, full external audit, novelty clearance, or a target counterexample."
+  },
+  "read_sources": [
+    "research/e593-substantial-target-20261008/pro-pass6-20261009/prompt-3-common-power-density.txt",
+    "research/e593-substantial-target-20261008/actual-source-positivity-pass5.json"
+  ],
+  "exact_centered_expansion": {
+    "notation": "Pi has kernel 1. U_j=K_j-1 is centered, self-adjoint and PSD; U_s U_t=U_(s+t). Let n=(k,r+h,u,r,u,l) label (ab,ac,ad,bc,bd,cd) and S=sum n.",
+    "identity": "F=1+sum_(four triangles C)[Tr A^(sum_(e in C)n_e)-1]+sum_(three four-cycles C)[Tr A^(sum_(e in C)n_e)-1]+sum_(six missing edges e)D_e+S_6.",
+    "full_term": "S_6=E_abcd product_(e in E(K4)) U_(n_e)(endpoints e).",
+    "leaf_vanishing": "Any selected-edge subgraph with a degree-one vertex contributes zero by centering. The only nonempty proper leaf-free subgraphs of K4 are four triangles, three four-cycles, and six diamonds K4-e.",
+    "cycle_positivity": "A cycle contributes the trace of the product of centered semigroup powers, namely Tr A^(sum n)-1=sum_(i>=1)theta_i^(sum n)>=0, including all extra theta_i=1 modes if disconnected.",
+    "diamond_positivity": "Integrate the diamond's two degree-two vertices. The remaining pair integral is E_xy U_a(x,y)U_b(x,y)U_c(x,y)=sum_(i,j,t>=1)theta_i^a theta_j^b theta_t^c M_(ijt)^2>=0, where M_(ijt)=E_mu phi_i phi_j phi_t. Example D_ab=E_cd U_(r+h+u)(c,d)U_(r+u)(c,d)U_l(c,d).",
+    "conditional_bound_only": "With b_j=(E|U_j|^3)^(1/3), Holder across the three perfect matchings gives |S_6|<=product_e b_(n_e), hence F>=1+C_cycles-product_e b_(n_e). This is a sufficient host-dependent certificate, not a universal proof."
+  },
+  "reflection_faces": {
+    "inner_product": "All inner products and traces are in L^2(mu). Since A^j Pi=Pi and A^j is PSD, <f,A^j f> >= <f,1>^2 for every real f and positive j, without irreducibility.",
+    "h_zero_face": {
+      "scope": "h=0, outside the requested h>=1 but an exact boundary check; k,r,u,l positive, no ordering needed.",
+      "proof": "For fixed c,d, f_cd(x)=K_r(x,c)K_u(x,d). Then F_0=E_cd K_l(c,d)<f_cd,A^k f_cd> >=E_cd K_l(c,d)K_(r+u)(c,d)^2. Expand the latter triangle-with-parallel-edges integral in the complete eigenbasis: sum_(i,j,t>=0)theta_i^l theta_j^(r+u)theta_t^(r+u)M_(ijt)^2>=1, because the (0,0,0) term is 1. Nonnegative weight K_l is used before the PSD comparison."
+    },
+    "tight_ordered_face": {
+      "scope": "k=u and r=l, with any h>=1; every admissible finite host, no added density, dimension, mixing or spectral assumption.",
+      "proof": "For fixed a,c, g_ac(x)=K_u(a,x)K_r(c,x). The b,d factors are symmetric under reflection: F=E_ac K_(r+h)(a,c)<g_ac,A^u g_ac> >=E_ac K_(r+h)(a,c)K_(u+r)(a,c)^2>=1. The final expansion is sum_(i,j,t>=0)theta_i^(r+h)theta_j^(u+r)theta_t^(u+r)M_(ijt)^2 and retains its constant term 1.",
+      "equality_check": "The final square expansion includes the terms i=0,j=t>=1 with M_(0jj)=1, contributing sum_(j>=1)theta_j^(2(u+r)). Hence it is strictly greater than 1 whenever A has any positive nonconstant eigenvalue, including disconnected theta=1 modes. Equality holds exactly when A=Pi, which for self-adjoint T implies T=Pi and W is constant.",
+      "limitation": "If k>u or r>l, the reflected factors differ and one obtains a cross-bilinear form rather than a square. PSD does not provide the same lower bound. This checked face is not the unrestricted ordered target."
+    }
+  },
+  "absolute_compensation_obstruction": {
+    "statement": "No host-independent fixed-coefficient bound |S_6|<=sum_C c_C C_C+sum_e d_e D_e, with nonnegative finite coefficients depending only on exponents, can hold for all admissible hosts. This refutes coarse absolute-value compensation, not a negative-part compensation theorem.",
+    "actual_hosts": "For each integer N>=1, take X={1,...,N}, mu=1/N, H(x,y)=N 1_(x=y)-1, Pi kernel 1, P=I-Pi kernel H. Fix 0<lambda<1, T=Pi+sqrt(lambda)P. T(x,y)=1-sqrt(lambda)+sqrt(lambda)N 1_(x=y)>0 is symmetric Markov. Set p=[1+(N-1)sqrt(lambda)]^(-1), W=pT in (0,1], so the original host requirements hold exactly. A=T^2=Pi+lambda P and U_j=lambda^j H.",
+    "cycles": "For every cycle C, C_C=(N-1)lambda^(sum_(e in C)n_e), since P^m=P and Tr P=N-1.",
+    "diamonds": "Integrating two degree-two vertices uses H composed with H=H. A diamond reduces to E_xy H(x,y)^3=[(N-1)^3-(N-1)]/N=(N-1)(N-2). Thus D_e=(N-1)(N-2)lambda^(S-n_e).",
+    "full_term": "E product_six H=(N-1)(N-2)(N-3), hence S_6=lambda^S(N-1)(N-2)(N-3). Proof: E product_six(1+H)=N^3 because all four vertices must coincide. Subtract the empty term 1, seven cycle terms (N-1), and six diamond terms (N-1)(N-2).",
+    "growth": "For fixed lambda and fixed exponents, S_6 grows as a positive constant times N^3, whereas any fixed positive linear combination of cycles and diamonds grows at most as N^2. This violates the proposed absolute-value bound for large N.",
+    "edge_cases": "N=1 gives all centered terms zero and F=1. N=2 gives S_6=0 and diamonds 0. N=3 gives S_6=0 and diamonds 2 times their lambda weights. For N>=4, S_6 is positive. This family is not a counterexample to F>=1, and the target is in fact immediate from its all-nonnegative centered terms."
+  },
+  "actual_negative_full_centered_term": {
+    "statement": "The full six-centered term S_6 can be negative on an actual strictly positive THREE-state Markov-square host satisfying the target orders. This is not a counterexample to F>=1, and demonstrates that nonnegative proper terms really must compensate a negative full term.",
+    "multiplication_model": "Let L_1=[[0,1,0],[1,1,1],[0,1,-4]], L_2=L_1^2-L_1-I=[[0,0,1],[0,1,-4],[1,-4,20]]. The symmetric matrices commute. Their three distinct common eigenvectors are proportional to (1,t,t^2-t-1), for the three real roots t of t^3+3t^2-6t-4. Distinct real roots follow because L_1 is an irreducible real symmetric tridiagonal matrix.",
+    "actual_measure": "Take X to be those three real roots, phi_1(t)=t, phi_2(t)=t^2-t-1, and mu_t=[1+phi_1(t)^2+phi_2(t)^2]^(-1)>0. Orthogonality and completeness of the normalized common eigenvectors give sum mu=1 and {1,phi_1,phi_2} an orthonormal basis of L^2(mu). The multiplication matrices themselves give cubic moments (M_111,M_112,M_122,M_222)=(1,1,-4,20); no cubic tensor is imposed independently of a probability space.",
+    "actual_host": "Let z=9/10, x=1301^(-2), and T(s,t)=1+sqrt(x)phi_1(s)phi_1(t)+sqrt(z*x)phi_2(s)phi_2(t). The infinity norm of L_1 is <=5, so |phi_1|<=5; the infinity norm of L_2 is <=25, so |phi_2|<=25. Consequently |T-1|<650/1301<1/2. T is strictly positive symmetric Markov by centering; A=T^2 has eigenvalues 1,x,z*x on the actual complete basis. Set W=(2/3)T in (1/3,1), with exact weighted degree p=2/3. No extra states, null masses, or independently chosen kernels occur.",
+    "parameters": "k=r=l=300,u=h=1, so edge exponents are (300,301,1,300,1,300) and S=1203.",
+    "exact_full_term_bound": "Expand S_6 in the two nonconstant modes. Factor x^1203. Assignments with the four long edges ab,ac,bc,cd all in mode 1 have their two short ad,bd edges in modes 1 or 2 and contribute 1+2z-4z^2=-11/25. Any of the other 60 assignments has at least one long edge in mode 2, giving z^(at least 300), and the absolute product of its four cubic moments is <=20^4. Therefore S_6/x^1203 <=-11/25+60*20^4*z^300. Since z^10<1/2, the remainder is <9600000/2^30<9/1000. Thus S_6<-(431/1000)*x^1203<0.",
+    "meaning": "This refutes S_6>=0, not the target. The host is dense p=2/3, and the already-established dense-host compensation covers F. The example also lies within the already-established three-state host class. It is a route diagnostic, not a new unrestricted result or a numerical simulation.",
+    "review": "The helper constructed the finite measure, commuting multiplication matrices, actual root host and spectral contraction. Root checked the polynomial eigenvectors, moment matrices, all four leading assignments, count of 60 remaining assignments, rigorous rational tail, host range and original-measure conventions."
+  },
+  "alternate_spectral_split_obstruction": {
+    "refuted_lemma": "Splitting spectrally on the smoothed ac edge does not make every coefficient positive, even though the remaining two source kernels have ordered exponents k>=u and r>=l.",
+    "actual_measure": "Use the same actual 32-state probability space as actual-source-positivity-pass5.json: six signs R_e, star signs S_a=R_ab R_ac R_ad, S_b=R_ab R_bc R_bd, S_c=R_ac R_bc R_cd, S_d=R_ad R_bd R_cd. Uniform mu on {R:S_a+S_b+S_c-S_d=2}. The R_e are centered orthonormal; the only nonzero distinct cubic moments are the stars, with values +1/2,+1/2,+1/2,-1/2 respectively. Repeated-coordinate cubic moments vanish.",
+    "actual_host": "T=1+sum_e s_e R_e tensor R_e, with s=(2^(-64),1/4,2^(-10),1/8,1/8,1/4) in edge order (ab,ac,ad,bc,bd,cd). Their sum is 3/4+2^(-10)+2^(-64)<1, so T is strictly positive symmetric Markov. Set p=(1+sum s)^(-1), W=pT in (0,1]. A=T^2 has eigenvalues eta=2^(-128),alpha=2^(-4),beta=2^(-20),delta=epsilon=2^(-6),zeta=2^(-4) on the six actual signs. The tested f=R_ab has simple positive eigenvalue eta.",
+    "coefficient": "For g_f^(s,t)(b,d)=E_a f(a)K_s(a,b)K_t(a,d), define H_f=E_bd K_u(b,d)g_f^(k,u)(b,d)g_f^(r,l)(b,d). The actual ac expansion of F is sum_i theta_i^(r+h) H_(phi_i), with every coefficient retained. Choose k=12,u=r=l=1; any h>=1 is allowed.",
+    "zero_eta_source": "Temporarily set eta=0 without changing other source bytes. g_f^(s,t)=1/2[alpha^s beta^t R_ac(b)R_ad(d)+beta^s alpha^t R_ad(b)R_ac(d)+delta^s epsilon^t R_bc(b)R_bd(d)+epsilon^s delta^t R_bd(b)R_bc(d)].",
+    "exact_zero_eta_value": "The constant weight gives (1/4)[alpha^13 beta^2+alpha^2 beta^13+delta^13 epsilon^2+delta^2 epsilon^13]=2^(-94)+2^(-270)+2^(-91). Only the R_cd centered weight has nonzero off-diagonal pairings, with moment product -1/4; it gives -(zeta/16)[alpha^12 beta delta epsilon+beta^12 alpha delta epsilon+delta^12 epsilon alpha beta+epsilon^12 delta alpha beta]=-2^(-88)-2^(-264)-2^(-109). Hence H_0=2^(-94)+2^(-270)+2^(-91)-2^(-88)-2^(-264)-2^(-109)<-55*2^(-94). The positive 2^(-270) is smaller than the subtracted 2^(-264), so the strict upper bound is exact.",
+    "positive_eta_repair": "g_eta^(s,t)-g_0^(s,t)=eta^s f(b)+eta^t f(d), so its sup norm is <=2eta. Every actual or base source has sup norm <=K_(s+t)<=2, and K_1^eta-K_1^0=eta f(b)f(d). The telescoping estimate is <=20eta, and the conservative <=28eta bound suffices. Since eta=2^(-128), H_eta<-55*2^(-94)+28*2^(-128)<0.",
+    "meaning": "This is an actual positive-eigenvalue coefficient obstruction within k>=u and r>=l, not an arbitrary multiplication tensor or independent colored-kernel example. It does not refute F>=1: p>1/2, and the existing dense-host compensation theorem covers the full density in this example. It does not refute a grouped/prefix compensation lemma, either.",
+    "validation": "The helper independently derived the exact cubic-star contractions, all six powers-of-two terms, source perturbation identity and bound. No simulation or compiler attempt."
+  },
+  "next_exact_obligation": "A successful centered-edge argument must control the NEGATIVE full six-edge term using the actual common-semigroup and multiplication-tensor structure. Bounding its absolute value by a dimension-free fixed linear combination of proper terms cannot work. Moving the spectral split to the ac edge does not restore individual coefficient positivity, either. The inequality S_6>=-(C_cycles+sum D_e) itself is equivalent to the target and is not recorded as a newly simplified lemma.",
+  "primary_literature_check": {
+    "sidorenko_2021": "https://emis.de/ft/30662 : Inequalities for doubly nonnegative functions, Corollary 5.2 and Corollary 6.2 prove complete graphs good/extra-good for one doubly nonnegative kernel; this does not authorize six independently weighted powers.",
+    "im_li_liu": "https://arxiv.org/html/2408.03491v2 : Theorem 1.4 retains path-length multiplicity divisibility, Theorem 1.6 has two star-based length classes, and Section 4 states bipartite nonuniform subdivision closure as Conjecture 4.1. No theorem for this full ordered tuple was located in this bounded source check; no novelty inference follows."
+  },
+  "reviews": {
+    "root": "Analytical source review; independent=false.",
+    "helper": "/root/density_centered_round1/centered_tensor_compensation independently derived exact reflection faces and the flat-host absolute-compensation obstruction.",
+    "formal": "No compiler or proof-assistant attempt."
+  }
+}

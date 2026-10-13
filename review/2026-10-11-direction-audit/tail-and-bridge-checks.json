@@ -1,0 +1,165 @@
+{
+  "status": "PASS",
+  "arithmetic": "fractions.Fraction, no floating-point logs",
+  "density_fixed_base_exponents": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "density_hosts": [
+    {
+      "name": "one_state",
+      "components_of_A": [
+        [
+          0
+        ]
+      ],
+      "m": 1,
+      "epsilon": "1",
+      "D": "1",
+      "L": "1",
+      "M_r": "0",
+      "q_star": 0,
+      "certified_h_from": 1,
+      "F_h_1_to_8": {
+        "1": "1",
+        "2": "1",
+        "3": "1",
+        "4": "1",
+        "5": "1",
+        "6": "1",
+        "7": "1",
+        "8": "1"
+      }
+    },
+    {
+      "name": "periodic_root",
+      "components_of_A": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "m": 1,
+      "epsilon": "1",
+      "D": "4",
+      "L": "8",
+      "M_r": "0",
+      "q_star": 0,
+      "certified_h_from": 1,
+      "F_h_1_to_8": {
+        "1": "8",
+        "2": "8",
+        "3": "8",
+        "4": "8",
+        "5": "8",
+        "6": "8",
+        "7": "8",
+        "8": "8"
+      }
+    },
+    {
+      "name": "connected_two_state",
+      "components_of_A": [
+        [
+          0,
+          1
+        ]
+      ],
+      "m": 1,
+      "epsilon": "3/4",
+      "D": "265/256",
+      "L": "265/256",
+      "M_r": "1/4",
+      "q_star": 2,
+      "certified_h_from": 2,
+      "F_h_1_to_8": {
+        "1": "535/512",
+        "2": "2125/2048",
+        "3": "8485/8192",
+        "4": "33925/32768",
+        "5": "135685/131072",
+        "6": "542725/524288",
+        "7": "2170885/2097152",
+        "8": "8683525/8388608"
+      }
+    },
+    {
+      "name": "disconnected_weighted",
+      "components_of_A": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "m": 2,
+      "epsilon": "15/16",
+      "D": "521/128",
+      "L": "521/64",
+      "M_r": "1/2",
+      "q_star": 0,
+      "certified_h_from": 1,
+      "F_h_1_to_8": {
+        "1": "1047/128",
+        "2": "4173/512",
+        "3": "16677/2048",
+        "4": "66693/8192",
+        "5": "266757/32768",
+        "6": "1067013/131072",
+        "7": "4268037/524288",
+        "8": "17072133/2097152"
+      }
+    },
+    {
+      "name": "connected_weighted",
+      "components_of_A": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "m": 2,
+      "epsilon": "127/128",
+      "D": "65569/65536",
+      "L": "65569/65536",
+      "M_r": "1/8",
+      "q_star": 2,
+      "certified_h_from": 4,
+      "F_h_1_to_8": {
+        "1": "524569/524288",
+        "2": "8392849/8388608",
+        "3": "134285329/134217728",
+        "4": "2148565009/2147483648",
+        "5": "34377039889/34359738368",
+        "6": "550032637969/549755813888",
+        "7": "8800522207249/8796093022208",
+        "8": "140808355315729/140737488355328"
+      }
+    }
+  ],
+  "reflection": {
+    "determinant": "-49665/4194304",
+    "quadratic": "-965/2048"
+  },
+  "entropy": {
+    "alphabet_size": 3,
+    "triple_entries_checked": 27,
+    "branch_tuples_checked": 81,
+    "t": "1/1000000",
+    "mu3_squared": "114490/11979",
+    "mu4": "12250/1089",
+    "scaled_error_less_than": 5,
+    "analytic_bridge_excess_greater_than": "10*t^6",
+    "pair_and_triple_positive": true,
+    "all_pair_marginals_exact": true,
+    "nontrivial_deterministic_lumpings": "all three fail"
+  },
+  "scope": "Fixed exact diagnostics supporting two written analytic arguments; not an unrestricted proof, theorem novelty check, or Lean validation."
+}

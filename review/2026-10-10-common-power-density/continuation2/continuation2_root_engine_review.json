@@ -1,0 +1,11 @@
+{
+  "reviewer": "root",
+  "numerical_engine_fixed_gate_passed": true,
+  "checks": 18,
+  "new_searches": 0,
+  "new_optimization_runs": 0,
+  "exact_reference_base_and_cover_match": true,
+  "gate_source_sha256": "bb557bd2b275e1bf2979e4137e8bc01229a91e43c23147753f8f856cf34c172f",
+  "engine_sha256": "07e655e6a2fd1eae054f879f2b12f116e96d38acb5f94829445939d011938d15",
+  "scope": "Independent rerun of the fixed verification gate; no claim of interval-certified sample or universal inequality."
+}

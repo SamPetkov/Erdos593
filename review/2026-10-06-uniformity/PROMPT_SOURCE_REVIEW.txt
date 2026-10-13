@@ -1,0 +1,302 @@
+SUPPLEMENT FOR THE FULL LINEAR-PATTERN CONTINUATION
+7 October 2026
+
+The new all-linear bounds, degree-variance refinement, and attachment example
+were developed from the manuscript's projection argument. No additional
+OpenAI prompt or external finite-field claim is used by these proofs.
+The targeted primary-source comparison below supplements the retained audit
+of the released prompt and comparator material.
+
+EDITORIAL AND TARGETED PRIMARY-SOURCE AUDIT
+7 October 2026. Release manuscript read; no release edits made.
+Candidate exposition: e593_fleshing/editorial_candidate.tex.
+
+Editorial priorities
+1. Explain the role of the pair marginal before the compatibility theorem:
+   the atom has a graph core, but an arbitrary graph kernel need not be a marginal
+   of a symmetric nonnegative r-kernel.
+2. Give exact star/P3 and even-cycle formulas. These distinguish degree variance
+   from centered pair correlations and attach concrete numerical meanings to
+   acyclic assemblies versus cyclic atoms.
+3. Explain the rooted gluing identity. Unrooted densities do not multiply merely
+   because the pattern has a canonical one-point factorization. The included
+   three-state example proves this remains true for regular kernels.
+4. Give a short dependency roadmap distinguishing unconditional classification,
+   universal marginal geometry and projection bounds from the source-specific
+   conditional density deficit.
+5. Optional question: least cyclic rank of a 2-connected bipartite core with a
+   non-Sidorenko private expansion, at fixed r. The conservative bounds supplied
+   here are rank at least2 (rank1 is an even cycle) and at most32 conditional on
+   the source rank-layer input. No optimality, first-posed status, or exhaustive
+   literature certification is claimed. Further known positive graph classes
+   might improve the lower bound; the fragment deliberately does not claim that2
+   is best known.
+
+The star, cycle, rooted gluing, and rank-one observations are classical identities
+or direct consequences, included for explanation rather than novelty. The finite
+three-state example uses U=p+epsilon sum_{i<j} z_i z_j with z uniform on{-1,0,1}.
+It is bounded and one-coordinate regular; a core-rooted C4 expansion has rooted
+profile p^4+epsilon^4(Ez^2)^3 z(x)^2. This supplies an explicit witness that scalar
+factorization fails. No external theorem is needed for that calculation.
+
+Primary sources relevant to these standard tools
+A. Laszlo Lovasz, Subgraph densities in signed graphons and the local
+Simonovits--Sidorenko conjecture, Electronic Journal of Combinatorics18(1)(2011),
+P127. DOI10.37236/614.
+https://www.combinatorics.org/ojs/index.php/eljc/article/download/v18i1p127/pdf/
+Full published paper examined. Section2 defines partially labelled products and
+rooted density identities. Its discussion of even-cycle/Schatten norms supports
+the classical spectral viewpoint behind the examples.
+Important scope: published Theorem4.1, printedp18, assumes mean(W)=1, 0<=W<=2,
+and cut-norm distance from1 at most2^(-8m-2). Theorem5.1 is the L-infinity version
+with radius1/(4m). Theorem5.2 only gives an approximate conclusion under weakened
+boundedness conditions. Do not infer exact fixed-positive-density Sidorenko for
+all p from the manuscript's L2 marginal estimate alone.
+A safe extra consequence would require M_U<=2p (automatic for p>=1/2): then
+r>=2^(16m+5)(1-p)/p suffices, or r(r-1) instead ofr for regularU, by the projection
+bound. This optional corollary was NOT included in the exposition fragment because
+it is tangential to the parent agent's stronger all-linear-pattern development.
+
+B. Yoshiharu Kohayakawa, Brendan Nagle, Vojtech Rodl, Mathias Schacht,
+Weak hypergraph regularity and linear hypergraphs.
+Primary author manuscript:
+https://www.math.uni-hamburg.de/home/schacht/2010/weak_reg.pdf
+Theorem4, p2: for fixed uniformityk and a fixed linear patternF, sufficiently
+quasirandom hosts have approximately d^{e(F)}n^{v(F)} labelled copies. This is
+counting under an explicit quasirandomness hypothesis. It is not the proposed
+high-uniformity estimate for EVERY symmetric bounded hostkernel. Theorem7 concerns
+embedding linear patterns under uniformly positive density. Neither supplies the
+explicit b/r bound or the regular Berge-girth rate proposed in this work.
+
+C. Hyunwoo Lee, On Sidorenko exponents of hypergraphs, arXiv2509.08680v2,
+1October2025.
+https://arxiv.org/abs/2509.08680
+https://arxiv.org/html/2509.08680v2
+Full-text main statements and conclusion examined. Theorems1.4 and1.6 use
+Sidorenko/dominating link hypergraphs; Theorem2.3 bounds the Sidorenko exponent of
+sparse partite patterns. Its exponent convention includes e(F), unlike Nie--Spiro.
+No all-linear symmetric-kernel high-uniformity two-sided estimate or regular
+Berge-girth estimate found. Problem6.3 concerns an exponent bound depending on
+maximum degree; the new absolute-error estimates do not answer that question
+uniformly as hostdensity approacheszero.
+
+D. Jiaxi Nie and Sam Spiro, Sidorenko hypergraphs and random Turan numbers,
+Combinatorial Theory5(4)(2025),Article10. DOI10.5070/C65465676.
+https://escholarship.org/uc/item/0c25t471
+https://escholarship.org/content/qt0c25t471/qt0c25t471.pdf
+Existing local full text rechecked. Theorem1.13 gives one-sided exponent bounds
+for expansions under finite Sidorenko exponent. This is a genuine qualitative
+predecessor, already properly acknowledged. It does not contain the proposed
+all-linear shared-support b/r estimate or regular girth-sensitive absolute error.
+
+E. Hoeffding's1948 orthogonal decomposition remains the classical analytic input.
+Primary publisher record:
+https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-19/issue-3/A-Class-of-Statistics-with-Asymptotically-Normal-Distribution/10.1214/aoms/1177730196.full
+A related modern use in hyperkernels is Li--Liu, arXiv2608.08679v1 Section4:
+https://arxiv.org/html/2608.08679v1
+That work addresses rooted rigidity/stability, not the claimed all-linear
+high-uniformity approximation.
+
+Bounded search conclusion for the newly proposed all-linear theorem
+Targeted searches combined linear hypergraphs, homomorphism densities, symmetry,
+Hoeffding projections, high/large uniformity, regular kernels and Berge girth.
+No competing statement of
+ |t(H,U)-p^m| <= binom(m,2)b p(1-p)/r
+or the regular bound
+ (2^m-1)[b(b-1)p(1-p)/(r(r-1))]^(g/2)
+was located in the primary sources checked. This is a bounded nonfinding, not
+first-priority certification. The decomposition, expansion over edge subsets,
+leaf cancellation, and cycle Cauchy--Schwarz steps are standard tools; the proposed
+contribution is their quantitative uniformity-dependent synthesis and its link to
+all canonical obligatory assemblies. The independent agents are checking the
+mathematical statement and sharpness separately.
+
+
+RETAINED RELEASED-PROMPT AND SOURCE AUDIT
+
+OPENAI/MATH PROMPT AND SUPPORTING-MATERIAL AUDIT
+Checked 7 October 2026. Internal provenance and bounded literature report.
+No manuscript, PR, or remote files were edited; no Lean replay was performed.
+
+1. RELEASE PIN AND WHAT WAS ACTUALLY RELEASED
+
+Repository head refreshed through GitHub's commits/main API:
+  adc7f1241b42e322a6451854ab7e4b4c146bf78a
+  timestamp 2026-10-06T21:58:50Z; initial commit.
+Pinned base URL:
+  https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/
+README records 722 manuscripts in 372 result families and calls the reasoning
+materials abridged summaries, not complete original conversations. The complete
+reasoning_traces directory lists 11 files for ten subjects (221 has PDF and TeX).
+The ten README subjects are:
+  007 Ordinary two-point correlations of multiplicative functions
+  017 The irrationality exponent of pi
+  087 Symmetric and general Mahler conjectures
+  102 Ordinary NP-hardness at the basic semidefinite threshold
+  159 Quasipolynomial bounds for arithmetic progressions
+  197 Kaplansky's direct-finiteness conjecture in characteristic two
+  221 The Mezard-Parisi formula for diluted spin glasses
+  271 Spontaneous magnetization in the quantum Heisenberg ferromagnet
+  287 Isomorphism of free group factors
+  362 The three-dimensional relativistic Vlasov-Maxwell system
+
+Family 161 is NOT in this list. Its released files include the manuscript, source,
+Lean proof modules, challenge, and scope note. No original family161 prompt or
+reasoning summary was found in its complete targeted directories. This conclusion
+uses complete directory listings rather than a truncated whole-repository tree:
+reasoning_traces: 11 entries; ComparatorChallenges: 811 entries;
+family161 build tree: 15 entries, truncated:false; Sidorenko Lean directory:35 files.
+Snapshots and downloaded files are in prompts_scan/.
+
+2. FAMILY161 EXACT TARGET, SCOPE, AND HASHES
+
+Scope URL:
+https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/161.md
+Git blob SHA1: b395e0eaa2462cf72aeea576d6c614cd544da2ec
+SHA256: a1da28a997a9a27cad57f0862cd18e7502aa3129730d3bc7fd7a45fde14d3b1d
+
+Challenge URL:
+https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/SidorenkoCounterexample.lean
+Git blob SHA1: 3f4fa1074f812e2e823350ea50ff1a786e4a1927
+SHA256: 489688f5c4eb60c6dd8cfe0ef69663aaf11e795d6252e9626972764a50187de9
+
+Configuration URL:
+https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/SidorenkoCounterexample.json
+Git blob SHA1: 3fdb7a849e7b1df1fc07013c901e1052b35170f8
+SHA256: 2d3ce04f40de12d67424f8597bf3ea9cbb6f262c9e6e58edbc5ab6f690de52ec
+
+The challenge defines the incidence graph of 22 explicit triples on 13 points,
+using PatternVertex=Fin13 + Fin22. Homomorphism density counts ALL edge-preserving
+maps, including noninjective maps. The target is a positive-sized finite simple
+host with at least one edge and t(H,G)<edgeDensity(G)^66. The challenge contains
+an intentional sorry; it is a comparator specification, not the solution module.
+The JSON selects OAI.Combinatorics.Sidorenko.RandomHost and theorem
+OAI.SidorenkoCounterexample.main, with propext, Quot.sound, Classical.choice as
+permitted axioms. enable_nanoda is false. Actual solution is in RandomHost.lean.
+These observations do not constitute a successful replay or independent proof
+verification.
+
+The scope note explicitly excludes the forcing-conjecture consequence. It does
+not state a formalized r-uniform matching lift, obligatory classification, or exact
+chromatic spectrum. The graph theorem alone also does not supply the stronger
+one-regular, proper-subgraph-flat limiting family needed for our transfer;
+those hypotheses require the manuscript/source argument already being audited.
+The existing Symmetrization.lean is graph-kernel symmetrization, not our matching
+lift. No released family161 prompt asking for the all-uniformity theorem was found.
+
+3. CLOSEST RELEASED COMBINATORICS PROMPT EXCERPT
+
+Read the actual PDF and extracted text:
+https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/reasoning_traces/quasipolynomial-arithmetic-progressions.pdf
+
+Family159 labels both passages 'Original prompt (excerpts)'. Part I asks whether
+every subset of nonnegative integers whose positive reciprocal sum diverges
+contains a nontrivial arithmetic progression of every finite length. A disproof
+must use a fixed missing length at least three. Part II asks for quasipolynomial
+bounds for every length at least three, reusing the earlier bounds. It is not a
+hypergraph-density prompt and supplies no theorem that can be transplanted to593.
+
+Useful process lessons, explicitly interpretations rather than instructions from
+the user: separate qualitative and quantitative targets; retain exact hypotheses
+of previously established inputs; track every parameter loss in a repeated
+construction; distinguish exploratory sketches and failed routes from a finished
+proof. In our setting this means fixed r before the q-limit, recording how q
+may depend on r, and separating the graph source's formal target from new analytic
+and hypergraph claims. The unrelated prompt's restrictions are not blanket rules
+for this manuscript. The family221 prompt has its own requirements; they should
+not be attributed to family161 or to all OpenAI mathematics.
+
+4. SHARP MATCHING COEFFICIENT AND MATCHING-POLYTOPE PRIOR ART
+
+(a) Jack Edmonds, Maximum matching and a polyhedron with 0,1-vertices,
+J. Research National Bureau of Standards B69 (1965),125-130.
+DOI 10.6028/jres.069B.013.
+Primary full paper:
+https://nvlpubs.nist.gov/nistpubs/jres/69B/jresv69Bn1-2p125_A1b.pdf
+Section2, Theorem(P), explicitly describes the convex hull of matchings by
+nonnegativity, degree sums at most1, and odd-set internal sums at most(|S|-1)/2.
+This is the essential classical polyhedral input, not a new theorem here.
+
+(b) Steffen Hoernig, On the minimum correlation between symmetrically distributed
+random variables, Operations Research Letters46(4)(2018),469-471.
+DOI 10.1016/j.orl.2018.06.005.
+Primary institutional metadata and accepted-manuscript link:
+https://novaresearch.unl.pt/en/publications/on-the-minimum-correlation-between-symmetrically-distributed-rand/
+Working-paper full text (retrieved earlier; later access intermittently challenged):
+https://run.unl.pt/bitstream/10362/82727/1/WP626.pdf
+Proposition1 gives the exact minimum common correlation for exchangeable Bernoulli
+variables. At success probability1/2 it is -1/(n-1) for even n and -1/n for odd n.
+Therefore the parity obstruction to the constant matching coefficient is established
+prior art. Cite this connection rather than advertising the binary bound as new.
+
+(c) Rene Allerstorfer, Matthias Christandl, Dmitry Grinko, Ion Nechita, Maris Ozols,
+Denis Rochette, Philip Verduyn Lunel, Monogamy of Highly Symmetric States,
+Communications in Mathematical Physics407(1)(2026),Article21.
+DOI 10.1007/s00220-025-05483-3. Online8December2025.
+Primary full published PDF:
+https://pure.uva.nl/ws/files/298742418/Monogamy_of_Highly_Symmetric_States.pdf
+Lemma4.4, printed pp19-20, equations78-83, averages products over perfect matchings
+(even n) and near-perfect matchings (odd n), obtaining exactly1/(n-1) and1/n as
+mixture coefficients of maximally entangled and maximally mixed pair states.
+This is a close quantum analogue of the matching-average construction. It is not
+the universal classical statement for arbitrary arrays of prescribed pair kernels.
+Their Theorem4.2 concerns special quantum isotropic states and has dimension-dependent
+exceptions, so it must not be asserted as equivalent to the proposed theorem.
+
+(d) Related searches checked finite exchangeability, pair-copula compatibility,
+matching-polytopes and joint distributions. Konstantopoulos--Yuan,
+On the extendibility of finitely exchangeable probability measures,
+https://arxiv.org/pdf/1501.06188, gives general functional extension criteria;
+no matching-polytope characterization located. Hurlimann's2014
+https://link.springer.com/article/10.1186/2195-5832-1-7 concerns realizability of
+trivariate rank-correlation matrices, not arbitrary complete pair distributions.
+These are adjacent frameworks, not demonstrated competing results.
+
+Bounded conclusion: I did not locate the exact universal iff characterization
+that ALL finite bistochastic pair kernels admit jointly diluted marginals iff
+lambda lies in the matching polytope. This is a bounded-search nonfinding, not
+certified priority. The distinct claim is the full universal compatibility region,
+with arbitrary edge-dependent kernels/finite spaces; sufficiency is the familiar
+matching-mixture construction plus Edmonds, while necessity uses both binary
+odd-set tests and large-alphabet involution tests for degrees. Cite the classical
+inputs explicitly. Do not present matching averaging, parity bounds, or Edmonds'
+polytope as new.
+
+5. HIGH-UNIFORMITY DENSITY ESTIMATES: DIRECT COMPARISON
+
+Jiaxi Nie and Sam Spiro, Sidorenko hypergraphs and random Turan numbers,
+Combinatorial Theory5(4)(2025),#10, DOI10.5070/C65465676.
+Primary published paper:
+https://escholarship.org/uc/item/0c25t471
+https://escholarship.org/content/qt0c25t471/qt0c25t471.pdf
+Local complete PDF/text: literature_scan/nie_spiro_2025_published.pdf and
+literature_scan/nie_spiro_published.txt.
+Their Theorem1.13 already implies s(E^r(F))=O_F(1/r) when s(F)<infinity, hence
+fixed-positive-density one-sided asymptotic Sidorenko behavior. For general graph
+F, applying the result after a sufficiently high partite expansion gives the
+analogous qualitative implication; this is our deduction, not their literal
+statement. Their theorem does not state the proposed explicit two-sided
+m(m-1)p(1-p)/r bound or the regular, girth-sensitive O_F(r^-g) bound.
+
+Wassily Hoeffding, A class of statistics with asymptotically normal distribution,
+Annals of Mathematical Statistics19(3)(1948),293-325,
+DOI10.1214/aoms/1177730196, is the standard projection/decomposition source.
+A recent nearby use is Heng Li and Xizhi Liu, Forcing quasirandomness via rooted
+F-densities, arXiv2608.08679v1:
+https://arxiv.org/html/2608.08679v1
+Section4, particularly Proposition4.1 and the following symmetric-hyperkernel
+variance calculation, applies Hoeffding components to rooted rigidity/stability.
+No private-expansion high-uniformity limit statement was located in its full text.
+It is methodological overlap, not a superseding theorem found by this audit.
+
+Targeted searches for expansion densities, uniformity, regular kernels, girth,
+Hoeffding projections, and corresponding matching compatibility did not locate
+the exact new quantitative assertions. The useful bounded distinction is:
+  - already known: one-sided qualitative approximation from Nie--Spiro;
+  - standard tools: Hoeffding orthogonality, leaf cancellation, cycle operator bounds;
+  - proposed additional content: explicit two-sided bounds uniform over all bounded
+    symmetric r-kernels, regular girth-sensitive rate, and sharp cycle examples at
+    density bounded away from zero.
+This report does not certify first priority or substitute for independent proof
+checking. The new results are analytic arguments, not covered by family161's Lean
+challenge.

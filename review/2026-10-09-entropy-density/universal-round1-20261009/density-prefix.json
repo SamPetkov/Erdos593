@@ -1,0 +1,82 @@
+{
+  "date_paris": "2026-10-09",
+  "agent": "/root/density_prefix_round1",
+  "status": "GENERAL_TARGET_OPEN; EXACT_COMPLETE_PREFIX_MECHANISM_AND_STAR_HOST_COMPENSATION_PROVED_ANALYTICALLY",
+  "authorization": "User confirmed a bounded direct mathematical round. Parent assigned an initial approximately20minute complete spectral-prefix/semigroup lane, distinct from centered-expansion and entropy work. No browser/paid/compiler/Git/source-promotion or random scan.",
+  "exact_target": {
+    "host": "Finite nonempty X with mu_x>0,sum mu=1; symmetric W in[0,1],every weighted row sum p>0; T=W/p as kernel relative to ORIGINAL mu; A=T^2,K_j=A^j. Hence A is self-adjoint PSD nonnegative Markov.",
+    "density": "F=E[K_k(a,b)K_(r+h)(a,c)K_u(a,d)K_r(b,c)K_u(b,d)K_l(c,d)]>=1, k>=u>=1,r>=l>=1,h>=1.",
+    "verdict": "No proof or admissible counterexample for this unrestricted target was found in this lane. The complete-prefix sufficient premise is also not proved or refuted on arbitrary hosts."
+  },
+  "inputs": [
+    "research/e593-substantial-target-20261008/pro-pass6-20261009/prompt-3-common-power-density.txt",
+    "research/e593-substantial-target-20261008/unrestricted-semigroup-pass4.json",
+    "research/e593-substantial-target-20261008/continuation-shifted-prefix-pass3.json",
+    "research/e593-substantial-target-20261008/actual-source-positivity-pass5.json",
+    "research/e593-substantial-target-20261008/density-free-operator-pass.json",
+    "research/e593-substantial-target-20261008/continuation-compensation-pass2.json",
+    "research/e593-substantial-target-20261008/weighted-three-state-pass4.json"
+  ],
+  "basis_invariant_prefix_and_abel": {
+    "definitions": "Take a complete real orthonormal eigenbasis phi_0=1 of A,with eigenvalues theta_i in[0,1]. Actual g_i(c,d)=E_x phi_i(x)K_r(x,c)K_u(x,d); q_i(h)=E_cd K_l(c,d)g_i(c,d)(A_c^h g_i)(c,d). For distinct positive nonconstant eigenvalues eta_1>...>eta_m>0,put a_j=eta_j^u sum_(i:theta_i=eta_j,i!=0)q_i(h),P_j=sum_(v<=j)a_v.",
+    "sufficient_premise": "P_j>=0 for every complete nonconstant positive eigenspace prefix. It is stronger than the target, not equivalent to it; its failure would not refute F>=1.",
+    "exact_abel_identity": "F=q_0+sum_(j<m)(eta_j^(k-u)-eta_(j+1)^(k-u))P_j+eta_m^(k-u)P_m. For k=u,this is simply F=q_0+P_m. All coefficients are nonnegative. q_0=E K_l K_(r+u) K_(r+h+u)>=1 by the complete moment-square expansion.",
+    "zero_and_unit_modes": "Zero modes have zero outerweight theta_i^k and zero a_j because u,k>=1; no zero eigenvalue division or0^0 is needed. Centered unit modes are retained in eta=1. If A is disconnected,the unit eigenspace must not be mistaken for constants only. The chosen constant phi_0 is separated,while the projection onto each centered complete repeated eigenspace is basis invariant.",
+    "correction_to_possible_shortcut": "The cutoff M_j=sum_(i in prefix)theta_i^u phi_i tensor phi_i is PSD as an operator but may have negative kernel entries. It must not be treated as an independently chosen nonnegative Markov kernel."
+  },
+  "exact_complete_prefix_commutator_identity": {
+    "definitions": "For any complete nonconstant prefix C,let M_C=sum_(i in C)theta_i^u phi_i tensor phi_i; use the ACTUAL nonnegative root B_l=T^l of K_l. For z in X set D_z=diag(B_l(.,z)),P_z=A^r D_z A^r,Q_z=A^u D_z A^u,R_z=Q_z Hadamard M_C,H=A^(h/2),with real spectral half-power in original L2(mu).",
+    "exact_prefix": "P_C=E_z Tr(A^h P_z R_z). The identity follows from K_l(c,d)=E_z B_l(c,z)B_l(z,d),g_i=A^r diag(phi_i)A^u,and cyclicity of the finite weighted Hilbert-space trace.",
+    "valid_positivity": "D_z>=0,so P_z,Q_z are PSD. M_C is PSD. The finite Schur-product theorem in the original weighted space gives R_z>=0. H>=0. These facts do NOT imply Tr(A^h P_z R_z)>=0,as a triple product of PSD factors can have negative real trace.",
+    "polarization": "P_C=G_C+(1/2)E_z Tr([H,[H,P_z]]R_z),where G_C=E_z Tr(H P_z H R_z)=E_z ||P_z^(1/2)H R_z^(1/2)||_HS^2>=0.",
+    "proof": "The identity HP_zH+(1/2)[H,[H,P_z]]=(A^h P_z+P_z A^h)/2 is a direct matrix expansion. The two latter real traces against R_z agree by transpose/cyclicity,so their common value is Tr(A^h P_z R_z). All traces and norms use original mu.",
+    "spectral_localization": "Let E_alpha be complete eigenspace projections of A,including constants,centered unit modes and zeros. The correction equals sum_(alpha<beta)(alpha^(h/2)-beta^(h/2))^2 E_z Tr(E_alpha P_z E_beta R_z E_alpha). Thus within-band terms never cause the correction; all potential negativity comes from interactions between DISTINCT bands. P_z=A^r D_z A^r kills correction blocks incident to alpha=0 because r>=1.",
+    "independent_computable_bound": "P_C>=G_C-sum_(alpha<beta)(alpha^(h/2)-beta^(h/2))^2 E_z[||E_alpha P_z E_beta||_HS ||E_beta R_z E_alpha||_HS],by Hilbert-Schmidt Cauchy-Schwarz. This is an actual-source computable certificate,not a universal sign proof. If the displayed Gram anchor dominates this explicit off-band bound,a complete prefix is certified nonnegative.",
+    "scope": "This exact identity isolates a distinct-band commutator obstruction honestly. Assuming its error is paid without a proof would simply leave a missing premise. No general domination theorem was obtained."
+  },
+  "complete_prefix_compensation_on_actual_star_family": {
+    "status": "Complete analytical restricted-family certificate; stronger than checking a few prefixes,not universal target coverage or a novelty claim.",
+    "probability_space": "Use the actual32-state space Omega={R in{+1,-1}^6:S_a+S_b+S_c-S_d=2},uniform mu=1/32. Coordinates correspond to K4 edges,and S_v is the product of its3incident coordinates. Each R_e is centered,normalized and mutually orthogonal. The only nonzero centered cubic moments are the four distinct-coordinate stars,with values+1/2,+1/2,+1/2,-1/2. Repeated-coordinate cubic moments vanish.",
+    "host_family": "Let T=Pi+sum_(e in E(K4))s_e R_e tensor R_e be ACTUALLY entrywise nonnegative; no sign is assumed on s_e. It is automatically symmetric Markov. Then A=T^2=Pi+sum theta_e R_e tensor R_e,theta_e=s_e^2,with a zero complement. Scale W=T/M with M=max T>0,p=1/M to obtain an actual admissible bounded regular W. Let m=max_e|s_e| and theta_max=m^2.",
+    "pairwise_root_bound": {
+      "statement": "Actual nonnegativity implies |s_e|+|s_f|<=1 for every distinct e,f; in particular every other root magnitude is at most1-m.",
+      "proof": [
+        "For independent x,y under mu,the six-coordinate product Z=R(x)R(y) has full-cube density2^-6[1+(1/4)(S_a(Z)+S_b(Z)+S_c(Z)+S_d(Z))],because the Fourier coefficients of the original density square under group convolution.",
+        "The four star signs have product1. Thus this density is positive for every Z except the8vectors whose four star signs are all-1. The kernel value1+sum s_e Z_e must be nonnegative at every such attainable Z.",
+        "Choose Z_e=-sign(s_e),with arbitrary signs at zero coefficients. If attainable,this gives sum|s_e|<=1. If forbidden,flipping any one coordinate changes the star signs at its two endpoints to+1,hence gives an attainable Z and the inequality sum|s_e|-2|s_f|<=1 for every f. In either case sum|s_e|-2min_e|s_e|<=1.",
+        "For any pair e,f,the remaining four magnitudes total at least4min|s|,so sum|s|-2min|s|>=|s_e|+|s_f|. This proves the pairwise bound,including zero coefficients and repeated maxima."
+      ]
+    },
+    "prefix_lower_bound": "For every nonempty complete positive nonconstant spectral prefix C,and all u,r,l,h>=1,its P_C satisfies P_C>=theta_max^(3u)[1-(3/2)min(m^(2(2r+h+l)),(1-m)^4)]>=(29/32)theta_max^(3u)>0. The ordered condition r>=l is not needed for this restricted-family prefix certificate.",
+    "finite_proof": [
+      "Expand the five full kernels other thanab into1+their centered spectral kernels;ab is fixed to M_C. Every proper surviving edge-subset core is a triangle,4cycle or diamond. Degree1vertices vanish. Triangles and4cycles have nonnegative eigenvalue weights by degree2orthogonality; diamonds have weights times actual squared cubic moments. The cutoff merely retains nonnegative scalar terms,so all these proper contributions are nonnegative.",
+      "A nonempty top prefix contains every mode withtheta=theta_max. Its abd triangle alone contributes at leasttheta_max^(3u),because all three triangle exponents areu and all three colors equal any included maximal mode.",
+      "For a nonzero full-centered tetrahedron assignment,each vertex's3incident coordinate colors must be one of the four stars. If some but not all selected vertex-stars are repeated,one of the vertices has two neighbors with the same different star;the two corresponding edge colors then coincide,so its cubic moment vanishes. Therefore either all four stars are equal or all four are distinct.",
+      "If all stars are equal,the four cubic signs multiply to+1. If all are distinct,the vertex-stars are a permutation of the four base vertices;there are24such assignments,each using all six distinct coordinate colors exactlyonce,each coefficient-1/16. For a fixedabcolor there are4negative assignments. A prefix can retain at most all24negative assignments.",
+      "Each negative spectral product has totaldegree3u+2r+h+l,so it is bounded bytheta_max^(3u+2r+h+l). Independently,its threeu-edge factors are bounded bytheta_max^(3u);among the remaining3distinct coordinate colors at least2 differ from a fixedmaximal color,and their magnitudes are at most1-m. Their exponents are at least1,so the remaining product is bounded by(1-m)^4. The other remaining factor is at most1.",
+      "The negative sum is therefore at most(24/16)theta_max^(3u)min(m^(2(2r+h+l)),(1-m)^4). Subtract this from the retained positive triangle anchor.",
+      "Ifm<=1/2,then2r+h+l>=4 givesm^(2(2r+h+l))<=1/256,and the coefficient is at most3/512. Ifm>=1/2,then(1-m)^4<=1/16,and the coefficient is at most3/32. The universal restricted-family lower bound29/32follows."
+    ],
+    "edge_cases": [
+      "If all roots vanish,A=Pi and every centered prefix is empty;P_C=0 andF=1.",
+      "For a nonempty prefix,theta_max>0. Zero-coordinate and zero-complement modes have zero outerweight,so are not divided by or retained with positive weight.",
+      "Repeated eigenvalues are retained as whole coordinate-character eigenspaces. A grouped q_i sum is basis invariant; the coordinate basis is used only to evaluate that invariant sum.",
+      "Atm=1,the pairwise root bound forces every other coefficient to0. The centered unit mode is retained,the source family is reducible,and the same certificate is valid.",
+      "Signed roots s_e do not change the argument afterA=T^2;theta_e is nonnegative. No positive-root or full-supportT premise is silently added."
+    ],
+    "relation_to_known_negative_mode": "The supplied actual negative-q_ab example lies in this family,so it has q_ab<0 yet every nonempty complete prefix is strictly positive. This establishes actual collective compensation on that obstruction family; it neither dismisses the negative mode nor converts it into a full-target counterexample.",
+    "coverage_caveat": "This is a special six-character star family,not arbitrary actual moment tensors or arbitrary spectra. Its full-density coverage already belongs to prior compensation regimes; the new output is the stronger complete-prefix sign certificate and exact explanation of the known obstruction. It is not a headline general theorem."
+  },
+  "review": {
+    "root_self_review": true,
+    "independent_external_review": false,
+    "actual_helper": "/root/density_prefix_round1/prefix_counterexample_check",
+    "helper_checked": "Proper subset signs; exactly24 negative full-tetra assignments using six distinct colors; prefix inclusion of maximal tied modes; uniform29/32 bound; actual-nonnegative host extension via convolution and pairwise root bound; signed roots, zeros, repeated eigenspaces and centered unit mode. A separate final check passed the original-mu trace/Hadamard normalization, exact prefix factorization, Gram anchor, double-commutator identity, paired-band coefficient and HS bound. In orthonormal coordinate matrices,R_hat=L(Q_hat Hadamard M_hat)L with L=diag(mu^(-1/2)),so Schur PSD has no missing measure factor. E_1 is the complete unit eigenspace. Actual helper verdict: no flaw found; not a full external audit or formal validation.",
+    "formal_kernel_validation": false,
+    "novelty_or_B_level_acceptance": false,
+    "compiler_service_network_browser_git_actions": 0,
+    "random_scan_or_simulation": false,
+    "only_written_file": "research/e593-substantial-target-20261008/universal-round1-20261009/density-prefix.json"
+  },
+  "next_exact_obligation": "A genuinely general proof would need either a complete-prefix Gram/error domination exploiting actual multiplication/Markov constraints,or a different full-sum route that retainsq_0-1. No generictriple-PSDtrace,endpointpositivity,independent coloredkernels or freely assigned cubic tensor can discharge this. The general theorem remains open."
+}

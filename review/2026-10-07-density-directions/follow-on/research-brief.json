@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-07",
+  "status": "AUTHOR_CONFIRMED_BOUNDED_FOLLOW_ON_EQUAL_THEOREM_CONJECTURE_SPACE",
+  "author_scope": "Continue exploring the same three directions and give conjectural directions equal space; assess substantive value relative to actual recent OpenAI mathematical preprints.",
+  "deliverables": [
+    "Exact useful follow-on theorem statements with analytical proofs or explicit missing lemmas",
+    "Equally visible conjectures with quantified scope, edge cases and falsification routes",
+    "Primary-literature provenance and a concrete contribution-quality comparison, not a ranking promise",
+    "Separate Lean targets/status and a source-reviewed public story note"
+  ],
+  "directions": {
+    "D1": "Finite single canonical obligatory r-uniform atoms, r>=3; Levi cycle rank equals core cycle rank after actual carrier transport. Investigate the rank-three core boundary without assuming a counterexample exists or assembly closure.",
+    "D2": "Finite simple graph private expansion: every core edge gets r-2 distinct private vertices. Examine the exact m2-to-mr transformation and certificate generality; distinguish universal balancedness from positive Sidorenko excess/random-host consequences.",
+    "D3": "Finite normalized homomorphism densities and actual multi-port contraction. Examine complete rooted-profile conditions sufficient for assembly inequalities and whether the unrestricted claim has a concrete obstruction. Scalar densities are not substituted for joint profiles."
+  },
+  "conventions": "Finite simple uniform patterns; all homomorphisms; finite probability weights including zero masses; symmetric nonnegative bounded kernels for inequality claims, separately ordered algebraic kernels for identities; cycle rank e-v+c uses actual carriers. Definitions, universes, quantifiers and external premises remain explicit.",
+  "methods": ["Structural degree-excess classification", "Exact algebraic/subgraph-cardinality derivation", "Small inert counterexample diagnostics when justified", "Primary-source literature comparison", "Adversarial separate-agent source/math review"],
+  "acceptance": "A proof, finite numerical diagnostic, literature input and conjecture are labelled separately. No desired conclusion is assumed. Established external results are attributed rather than advertised as new; no kernel validation or novelty/journal-readiness claim without corresponding evidence.",
+  "resource_scope": "One bounded source-only checkpoint in three parallel mathematical lanes plus a quality-comparison lane. No compiler/version/job/service request, broad automated search or expensive computation. Any later execution needs its own reviewed cumulative-budget/resource decision.",
+  "preserved_state": {"public_only": true, "clocks": "PAUSED", "prior_focused_budget": "2of2_SPENT_STOPPED", "six_density_candidates": "UNCOMPILED", "accepted_root": "UNCHANGED250modules401audits", "open_journal_manuscript_pdf": "UNCHANGED"},
+  "non_goals": ["No broad new research programme", "No unreviewed manuscript/accepted-root integration", "No paid service or external-chat request", "No private export or merge/main push", "No installations/cache/pin/SSH/user-video process changes", "No promise to exceed an unspecified least valuable OpenAI result"],
+  "confirmation_boundary": "User confirmed equal space for conjectural directions. A substantially broader campaign, long-running computation, major code change or new external collaboration requires a new brief and confirmation."
+}

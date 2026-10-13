@@ -1,0 +1,20 @@
+{
+  "reviewer": "/root",
+  "status": "PASS",
+  "scope": "Fixed engine verification only; no new search or optimization.",
+  "isolated_temporary_replay": true,
+  "full_JSON_matches_committed_record": true,
+  "checks": [
+    "Direct weighted six-state original-measure powers and four-vertex sum",
+    "All seven exact signed-cycle terms",
+    "Independent integer fine-density contraction",
+    "Twelve malformed input rejections"
+  ],
+  "hashes": {
+    "continuation3_engine_checks.py": "a95a3b76fe659b1353e891fa756482fcea182c3f5a0a28861ac4dd91391503cd",
+    "continuation3_channel.py": "d99dcf2bcbeb032a724483758bf04612056fa98159c63edfd1592c4655bd8128",
+    "continuation3_config.json": "1f94fdc1e4e921db594426f5c0e8938d570871a372c10ceff72c08ce6930723d",
+    "continuation_cover_engine.py": "1187d00bdafdec7f1ffd3b7ad7ee1b2f2eb8d27f2593fd6ee12808628a14495a",
+    "continuation3_engine_checks.json": "681c83fcfdf290402e2248336c30f203d43a3ea2c7b80a29b62f6e88b2b30ac0"
+  }
+}

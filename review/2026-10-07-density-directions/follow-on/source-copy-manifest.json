@@ -1,0 +1,198 @@
+{
+  "date": "2026-10-07",
+  "status": "EXACT_PUBLIC_SOURCE_COPY_RECONCILED_SOURCE_ONLY",
+  "packet": "review/2026-10-07-density-directions/follow-on",
+  "reviewed_local_source_directory": "research/e593-density-development-20261007",
+  "review_scope": "Bounded author-confirmed follow-on; proved analytical arguments and equally visible working conjectures. No kernel validation, exhaustive literature/novelty certification or full external audit.",
+  "copies": [
+    {
+      "reviewed_local_relative_path": "follow-on-research-brief.json",
+      "public_relative_path": "research-brief.json",
+      "sha256": "83f2056e839d5a2687c0a8ddba813a588e2020130cedeea75562b897e153678f",
+      "bytes": 3529,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-story.tex",
+      "public_relative_path": "story.tex",
+      "sha256": "5436d019efcdb9ed5fd481ebf88210003fee69cade97c014b0d11b283e9eb622",
+      "bytes": 8189,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-editorial-review.json",
+      "public_relative_path": "editorial-review.json",
+      "sha256": "d5ccb650cfb9dbb65f04497e3059365a096e9dd8a951e01dd73197a041bc9b7e",
+      "bytes": 3075,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-references.bib",
+      "public_relative_path": "references.bib",
+      "sha256": "f9ac356e80186e9ad2602071c3a7580cce3bc4a14daae114d03381f17a8dd005",
+      "bytes": 2670,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-low-rank.tex",
+      "public_relative_path": "low-rank.tex",
+      "sha256": "7a1a8aa51df0b0251acc60ea7a908b7de00fcb37ed74f9bdfbfbd744b6a0e307",
+      "bytes": 5731,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-low-rank.json",
+      "public_relative_path": "low-rank.json",
+      "sha256": "31fd1c39058df224edf3c8086ac1fab2c3c67278651c78f5dc5700a5bc77f05c",
+      "bytes": 13926,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-ports.tex",
+      "public_relative_path": "ports.tex",
+      "sha256": "af20f273c1f749ac6bf99516c520bf9bb71fb140794afcaaf1a7fd6d02ca7751",
+      "bytes": 11486,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-ports.json",
+      "public_relative_path": "ports.json",
+      "sha256": "779a3a562133e47cb6d6e72aaef86bb5623e8bc691ea4544811cfafa85e42d93",
+      "bytes": 22896,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-ports-review.json",
+      "public_relative_path": "ports-review.json",
+      "sha256": "8ce8ea3b63e2b50317f920689df3c1f3868c13fd4c1c2124d1b137a94cad02d8",
+      "bytes": 7032,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-marginal-cliques.tex",
+      "public_relative_path": "marginal-cliques.tex",
+      "sha256": "b79d9ed5955d179b861b75d2fdf4ea03fea0a3ff4eb6159a6af7d2e308cd456c",
+      "bytes": 3495,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-marginal-cliques.json",
+      "public_relative_path": "marginal-cliques.json",
+      "sha256": "1493516c3a9b7ed7b7fd15b5e48af2d788acff72e6669ed87e9f6ef513cc9d95",
+      "bytes": 1946,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-marginal-cliques-source-review.json",
+      "public_relative_path": "marginal-cliques-review.json",
+      "sha256": "c7702fbc51aafc5ca9478700e48e052d028f48d6c7bfbb0a8e52b1b667d6d5c5",
+      "bytes": 14019,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-quality-comparison.tex",
+      "public_relative_path": "quality-comparison.tex",
+      "sha256": "c2b178a11c562d55c46042f8c1ec59fb6b968a3569685894703d58f2083dea84",
+      "bytes": 4787,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-quality-comparison.json",
+      "public_relative_path": "quality-comparison.json",
+      "sha256": "d8174ac59ab55103f9d7331e0ec9b6c7255a3da8ed27a353bcf568f4d9b91fc0",
+      "bytes": 14258,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "d2/follow-on-balancedness.tex",
+      "public_relative_path": "balancedness.tex",
+      "sha256": "0ca45423bc46c729cdda970228433cd59010c2e526d9cb5c72b67fad2bb79623",
+      "bytes": 15867,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "d2/follow-on-balancedness.json",
+      "public_relative_path": "balancedness.json",
+      "sha256": "ca995fb9586877061189baeb9a669be3cc5f7d63d4ae9dadb4402208c7b05e9e",
+      "bytes": 17258,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "d2/follow-on-generalization-audit.json",
+      "public_relative_path": "balancedness-review.json",
+      "sha256": "2893c48b811e8ce7dd77d49537487e00bffaaf59e1e1dae53ce7d3000710246f",
+      "bytes": 15125,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "d2/follow-on-literature.json",
+      "public_relative_path": "literature.json",
+      "sha256": "fff3fd7ce35ba179e7fb46af59331c09a2eb08030b322cd1ac7a1b9f6c8f2846",
+      "bytes": 7783,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "d2/follow-on-quantitative-source-check.json",
+      "public_relative_path": "quantitative-source-check.json",
+      "sha256": "384b01a85adfa4b87db58423d34ff11ac0707c94dac0f8859ca92716f5924fcf",
+      "bytes": 7045,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "d2/follow-on-ratio-audit-final.json",
+      "public_relative_path": "quantitative-algebra-review.json",
+      "sha256": "4cdc905113ba81853f4e82d2e21760e89c48a1ec753c901ac8b5cf5505a915e2",
+      "bytes": 8497,
+      "exact_byte_equality": true
+    },
+    {
+      "reviewed_local_relative_path": "follow-on-packet-source-review.json",
+      "public_relative_path": "packet-review.json",
+      "sha256": "d6a48ff1f87afbeb332b61339843c6aa1b5bc34629230868a23fb9539fd73efd",
+      "bytes": 15031,
+      "exact_byte_equality": true
+    }
+  ],
+  "copy_count": 21,
+  "total_copied_bytes": 203645,
+  "packet_source_review": {
+    "file": "packet-review.json",
+    "sha256": "d6a48ff1f87afbeb332b61339843c6aa1b5bc34629230868a23fb9539fd73efd",
+    "actual_separate_agent": true,
+    "external_independent_audit": false,
+    "compiler_acceptance": false
+  },
+  "citation_key_check": {
+    "entries": 7,
+    "keys": [
+      "imliliu2024",
+      "openai161",
+      "niespiro2025",
+      "niespiro_expansions2024",
+      "liszegedy2011",
+      "szegedy2014",
+      "dross2016"
+    ],
+    "cited_keys": [
+      "dross2016",
+      "imliliu2024",
+      "liszegedy2011",
+      "niespiro_expansions2024",
+      "niespiro2025",
+      "openai161",
+      "szegedy2014"
+    ],
+    "undefined": [],
+    "duplicates": [],
+    "fragments": 6
+  },
+  "integrity_boundary": "This manifest binds copied sources, not its own hash. Actual committed and remote Git blobs are checked separately after delivery. Historical ratio audits are preserved locally but not falsely rebound to current D2 sources.",
+  "not_taken": [
+    "compiler/version invocation",
+    "new proof job or service request",
+    "accepted root/audit/standalone change",
+    "main manuscript or open document/PDF change",
+    "private repository export",
+    "clock restart"
+  ]
+}

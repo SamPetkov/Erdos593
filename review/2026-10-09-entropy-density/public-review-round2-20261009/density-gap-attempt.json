@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-09",
+  "agent": "/root/density_gap_round2",
+  "verdict": "UNRESTRICTED_ORDERED_TARGET_STILL_OPEN; QUANTITATIVE_LOCAL_ROBUSTNESS_PROVED_ANALYTICALLY; NO_TARGET_COUNTEREXAMPLE",
+  "authorization": "Root assigned one bounded approximately20-minute source-only analytical gap lane under the user-approved public review round. No compiler, paid request, random/heavy scan, Git, manuscript or accepted-source write.",
+  "target": {
+    "original_host": "Finite nonempty X, original positive probability mu, symmetric W in[0,1] with every weighted row sum p>0. T=W/p is an actual nonnegative self-adjoint Markov kernel; A=T^2 and K_j=A^j use weighted composition relative to that SAME original mu.",
+    "ordered_density": "F=E_mu^4 K_k(a,b)K_(r+h)(a,c)K_u(a,d)K_r(b,c)K_u(b,d)K_l(c,d)>=1 for k>=u>=1,r>=l>=1,h>=1.",
+    "status": "No complete proof or admissible counterexample for this unrestricted target was obtained. An admissible counterexample would have to retain an actual nonnegative Markov root T and bounded regular W, not merely independently chosen positive kernels or a prescribed cubic tensor."
+  },
+  "read_sources": {
+    "round_brief": "research/e593-substantial-target-20261008/public-review-round2-20261009/brief.json",
+    "earlier_results": [
+      "research/e593-substantial-target-20261008/universal-round1-20261009/density-centered.json",
+      "research/e593-substantial-target-20261008/universal-round1-20261009/density-prefix.json",
+      "research/e593-substantial-target-20261008/universal-round1-20261009/density-prefix-next.json",
+      "research/e593-substantial-target-20261008/universal-round1-20261009/density-centered-next.json"
+    ],
+    "two_level_dependency_sha256": "0cd9fabf6d4c2eb0d3195efa29e938f2e3e1e8981bb501566347b70432253946",
+    "actual_public_note": "C:/Users/petko/e593-frontmatter-story-public-20261004/review/2026-10-08-rank-three-entropy/research-note.tex",
+    "public_note_at_read_sha256": "60883a25abe8a00d53ea9f9bf6131f58453befbbeb58f8024133a0c84a39f8ee",
+    "public_note_read_sections": "The full two-diamond/mixing compensation section; the existing hierarchical theorem and proof; the unresolved common-power comparison, shifted-prefix identity, dissipation identity and actual-source obstruction. This artifact does not claim a fresh whole-note audit."
+  },
+  "quantitative_stability_lemma": {
+    "precise_statement": "Fix one finite positive probability space (X,mu), two actual symmetric nonnegative Markov kernels T_0,T relative to mu, and six fixed positive integers n_e. Set N=sum_e n_e, M_0=||T_0||_infinity and epsilon=||T-T_0||_infinity. Let F_n(T)=E_mu^4 product_(e=vw in K4)(T^(2n_e))(x_v,x_w). Then |F_n(T)-F_n(T_0)|<=2N epsilon(M_0+epsilon)^5. The kernel infinity norm means maximum ABSOLUTE ENTRY of the kernel relative to mu, not maximum entry of the row-transition matrix.",
+    "proof": [
+      "For any nonnegative Markov kernel Q relative to mu, left composition averages a kernel row with nonnegative coefficients summing1. Symmetry also gives column averages summing1, so right composition is an infinity-norm contraction. The identity endpoints act exactly as identity; their kernels 1_(x=y)/mu_y create no norm factor in composition.",
+      "The telescoping identity T^s-T_0^s=sum_(j=0)^(s-1) T^j(T-T_0)T_0^(s-1-j) therefore gives ||T^s-T_0^s||_infinity<=s epsilon for every positive integer s. It uses the same original mu on both sides and requires no spectral simplicity, irreducibility or positive lower bound on entries.",
+      "Markov averaging also gives ||T^s||_infinity<=||T||_infinity<=M_0+epsilon and ||T_0^s||_infinity<=M_0 for every s>=1. In particular all six powered factors are nonnegative and bounded by M_0+epsilon.",
+      "Telescope the product of six scalar factors, changing them one at a time. Each replacement contributes at most 2n_e epsilon(M_0+epsilon)^5 pointwise in absolute value. Integrate over the original probability mu^4 and sum the six bounds. This proves the stated inequality."
+    ],
+    "meaning": "This is an elementary finite-kernel Lipschitz estimate. It is not a new universal lower bound by itself and is not a novelty or B-level claim."
+  },
+  "two_level_open_neighborhood_corollary": {
+    "precise_base": "On the same original (X,mu), |X|>=2, let actual T_0 be symmetric nonnegative Markov and suppose A_0=T_0^2=yI+(1-y)Pi+(x-y)P, where P is a real centered orthogonal projection, 0<=y<=x<=1, and A_0 is not Pi. The entire centered spectrum has this form, not two positive values plus an additional unrepresented zero complement.",
+    "buffer_y_positive": "If y>0, define delta_0=y^N[sum_x mu_x^(-2)-1]>0. In the prior common-one-S convex decomposition of each A_0^n, the all-I assignment has weight y^N. Every elementary assignment has density>=1, while the all-I density is sum_x mu_x^(-2). Hence F_n(T_0)>=1+delta_0.",
+    "buffer_y_zero": "If y=0, non-IID means x>0 and rank(P)=d>0. Define delta_0=x^(N-6)[(1+d x^3)^2-1]>0. Here A_0=Pi+xP and A_0^n=(1-x^(n-1))Pi+x^(n-1)A_0. The all-A_0 assignment has weight x^(N-6); the existing homogeneous K4 bound is t(K4,A_0)>=[Tr A_0^3]^2=(1+d x^3)^2. All other assignments have density>=1. Thus the displayed buffer follows. Since N>=6 and x>0, no negative power or ambiguous0^0 occurs.",
+    "explicit_radius": "Let R=min(1,delta_0/[4N(M_0+1)^5]). Every actual symmetric nonnegative Markov T on the SAME original mu with ||T-T_0||_infinity<=R satisfies F_n(T)>=1+delta_0/2. Indeed epsilon<=1 implies the stability error<=2N epsilon(M_0+1)^5<=delta_0/2.",
+    "scope": "The radius depends on the finite host and the fixed tuple. Perturbations may split the centered eigenspaces into three or more distinct bands; no two-level spectral assumption is imposed on T itself. This is a quantitative local extension around a proved host class, not a uniform all-host or all-tuples theorem. A_0=Pi and the singleton case are excluded from the positive-buffer assertion; the singleton density is trivially1."
+  },
+  "explicit_three_band_actual_host": {
+    "purpose": "An exact illustration that the local robustness corollary admits three interacting spectral levels outside several explicitly checked sufficient classes. It is not a target counterexample, a broad numerical test or a novelty claim.",
+    "original_space": "Uniform mu=1/20 on20states. Let T_0=(Pi+I)/2 as an actual kernel: its diagonal entries are21/2 and its off-diagonal entries are1/2. Then A_0=T_0^2=(3/4)Pi+(1/4)I.",
+    "tuple": "Take k=3,r=u=l=h=1, giving six exponents(3,2,1,1,1,1) and N=9. This avoids the three listed reflected faces k=r,u=l; k=r+h,u=l; and k=u,r=l.",
+    "radius": "delta_0=(20^3-1)/4^9=7999/262144. Put R=delta_0/[36*(23/2)^5], which is strictly between0and1. This is the explicit stability radius with M_0=21/2; no decimal or approximate inequality is used.",
+    "actual_perturbation": "Let v=(sqrt(10),-sqrt(10),0,...,0) and w=(0,0,sqrt(10),-sqrt(10),0,...,0). They are centered orthonormal under original mu. Put T=T_0+(R/20)v tensor v+(R/40)w tensor w. The perturbation infinity norm is exactly R/2. All entries of T remain strictly positive: only entries(1,2),(2,1) decrease by R/2, and entries(3,4),(4,3) decrease by R/4, from the positive baseline1/2. Centering gives all weighted row means1, and symmetry is exact.",
+    "bounded_host": "The maximum entry of T is21/2+R/2, attained on the first two diagonal states. Set W=T/(21/2+R/2); then0<W<=1, its weighted row mean is p=(21/2+R/2)^(-1), and T=W/p is the actual root relative to original mu.",
+    "three_centered_bands": "The centered eigenvalues of T are1/2+R/20 on v,1/2+R/40 on w, and1/2 on the17-dimensional remaining centered subspace. Their squares give three distinct positive centered bands of A=T^2. The base is two-level only; the perturbed host is not.",
+    "checked_thresholds_fail": "p<1/4, so the d=0,h=1 density threshold gamma=1/4 fails. At state5, T^2 has diagonal kernel entry23/4, unchanged by the two localized spectral perturbations. Thus max K_1>=23/4, and gamma max K_1>=23/16>1: the existing mixing certificate also fails at this tuple.",
+    "not_hierarchical": "The unique highest centered eigenspace is span(v). If T or A were a nonnegative mixture of nested conditional-expectation projections, constants plus that highest eigenspace would be the range of a conditional-expectation projection, even with repeated partition levels and zero mixture weights. Its kernel would be Pi+v tensor v, whose entry(1,2) is1-10=-9. A conditional-expectation kernel is nonnegative, a contradiction.",
+    "conclusion": "The local stability theorem proves F_n(T)>=1+delta_0/2. This example is outside the checked two-level, nested hierarchy, density/mixing and listed reflection cases. No claim is made that it lies outside every previous sufficient class; in particular an exhaustive tensor-class classification is not part of this illustration.",
+    "actual_separate_audit": "/root/density_gap_round2/nested_kernel_compensation checked the original norms/centering, strict root positivity, exact infinity distance, all eigenvalue multiplicities, normalization/rescaling, state5 diagonal, both failed thresholds, reflected faces and hierarchy exclusion. PASS."
+  },
+  "existing_hierarchy_audit": {
+    "status": "ALREADY_PROVED_IN_PUBLIC_NOTE; NOT_A_NEW_RESULT",
+    "actual_source": "research-note.tex existing Hierarchical common powers proposition, lines511-558 at the read source above.",
+    "separate_helper": "/root/density_gap_round2/nested_kernel_compensation",
+    "verdict": "PASS: the existing recursive proof retains conditional original measures, cell-mass exponent v-m, connected m>=v-1, and power coefficients q_j^s-q_(j+1)^s. Unequal cell masses, zero mixture weights and reducible hosts are handled correctly.",
+    "shorter_check": "For elementary nested conditional-expectation edge kernels, choose a maximum-level spanning forest. Every omitted edge's level is at most each level on its retained forest path. By nesting, that edge's equality constraint follows on the forest support; its factor1/mu(cell)>=1. Pointwise the full product is at least the forest product, whose Markov-kernel density is exactly1. This gives another audit proof, not new coverage.",
+    "boundary": "Nested actual conditional-expectation partitions are essential to this argument. General PSD cutoffs may have negative entries; merely commuting kernels or projections do not satisfy the constraint implication. Tensor-product closures are also already in the public note and are not being relabeled new."
+  },
+  "remaining_compensation_obligation": {
+    "full_expansion": "F=1+four nonnegative centered triangle terms+three nonnegative centered four-cycle terms+six nonnegative centered diamond terms+the potentially negative full six-centered term Q. The coefficients are constrained by actual multiplication moments on the original probability space and by one actual Markov root.",
+    "not_a_shortcut": "Q>=-(triangles+cycles+diamonds) is exactly equivalent to F>=1 and is not recorded as a newly solved lemma. Bounding |Q| by a fixed dimension-free linear combination of proper terms is already refuted on flat hosts with positive Q. Individual actual spectral source coefficients can be negative. A different PSD nonnegative Markov kernel at each edge, even with pairwise commutation, is already refuted.",
+    "prefix_route": "For the ac expansion, group complete positive centered eigenspaces and retain the uncentered diamond surplus R_0>=1. Abel summation reduces a sufficient route to R_0+S_j>=1 for each proper full spectral prefix. Neither bare prefix positivity nor this slack-retaining condition is established on arbitrary hosts. The general criterion cannot be supplied by an arbitrary-vector weighted PSD assertion, which is false even on actual hosts.",
+    "commutator_route": "The exact prefix decomposition has a nonnegative Gram anchor plus distinct-band double-commutator terms. The desired domination requires actual source/multiplication constraints; no general bound was obtained in this round. Loewner ordering of common powers does not on its own justify density monotonicity or a positive triple-PSD trace.",
+    "unresolved_region": "Arbitrary actual finite weighted hosts with genuinely interacting centered spectra, outside the already proved density/mixing, low-state, flat/two-level, hierarchy/tensor and reflected cases and their local neighborhoods. There is no demonstrated admissible counterexample here."
+  },
+  "review_and_actions": {
+    "own_review_independent": false,
+    "actual_separate_helper": "/root/density_gap_round2/nested_kernel_compensation",
+    "helper_stability_verdict": "PASS: weighted kernel-versus-row-matrix normalization, left/right averaging, identity endpoints, exact6factor estimate, both strict buffers, N>=6, non-IID/singleton exclusions, fixed original mu and tuple. This was an actual separate source review, not a full external audit.",
+    "Lean_validation": false,
+    "novelty_clearance": false,
+    "unrestricted_target_closed": false,
+    "B_or_C_result_claim": false,
+    "compiler_paid_service_Git_manuscript_actions": 0,
+    "random_or_heavy_scan": false,
+    "only_new_file": "research/e593-substantial-target-20261008/public-review-round2-20261009/density-gap-attempt.json"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "exact_arithmetic": true,
+  "universal_proof": false,
+  "exhaustive_run": false,
+  "subset_counts": {
+    "empty": 1,
+    "triangle": 4,
+    "four_cycle": 3,
+    "diamond": 6,
+    "tetrahedron": 1,
+    "leaf": 49
+  },
+  "fixed_tuple": [
+    3,
+    2,
+    3,
+    2,
+    1
+  ],
+  "density": "36032285894090715/36028797018963968",
+  "tetrahedron": "2096955/36028797018963968",
+  "proven_lower_bound": "67115263/67108864",
+  "delta": "15/16",
+  "alpha": "17/32",
+  "conservative_cutoff": 7,
+  "component_fixtures": {
+    "one_state": [
+      "1",
+      1
+    ],
+    "periodic_flip": [
+      "8",
+      2
+    ],
+    "periodic_two_component_nonconstant": [
+      "2097355/262144",
+      2
+    ]
+  }
+}

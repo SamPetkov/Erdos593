@@ -1,0 +1,74 @@
+{
+  "status": "PASS",
+  "scope": "reproducibility only; unrestricted target, U and C remain unresolved",
+  "source_sha256": "fdf1be8a08b9d4b84672e60700c60aa0788ebcf18c6a7696bde65bdcb71ca5a4",
+  "manifest_sha256": "aa85a4a8b220a965d441f613b22881250ef25e961b560f8c85b9d53a96f34c98",
+  "frozen_files": 29,
+  "inherited_dependencies": 4,
+  "review_and_certificate_hash_bindings": 22,
+  "runs": [
+    {
+      "source": "continuation7_source_weighted_verify.py",
+      "result": "continuation7_source_weighted_checks.json",
+      "exact_stable_json_match": true,
+      "ignored_timing_fields": [
+        "seconds",
+        "elapsed_seconds"
+      ],
+      "scope": "exact finite certificate/review"
+    },
+    {
+      "source": "continuation7_opt_ac_exact.py",
+      "result": "continuation7_opt_ac_exact_checks.json",
+      "exact_stable_json_match": true,
+      "ignored_timing_fields": [
+        "seconds",
+        "elapsed_seconds"
+      ],
+      "scope": "exact finite certificate/review"
+    },
+    {
+      "source": "continuation7_cover_orbits_verify.py",
+      "result": "continuation7_cover_orbits_checks.json",
+      "exact_stable_json_match": true,
+      "ignored_timing_fields": [
+        "seconds",
+        "elapsed_seconds"
+      ],
+      "scope": "exact finite certificate/review"
+    },
+    {
+      "source": "continuation7_cover_source_review.py",
+      "result": "continuation7_cover_source_review.json",
+      "exact_stable_json_match": true,
+      "ignored_timing_fields": [
+        "seconds",
+        "elapsed_seconds"
+      ],
+      "scope": "exact finite certificate/review"
+    },
+    {
+      "source": "continuation7_root_review.py",
+      "result": "continuation7_root_review.json",
+      "exact_stable_json_match": true,
+      "ignored_timing_fields": [
+        "seconds",
+        "elapsed_seconds"
+      ],
+      "scope": "exact finite certificate/review"
+    },
+    {
+      "source": "continuation7_opt_highrank_audit.py",
+      "result": "continuation7_opt_highrank_audit.json",
+      "exact_stable_json_match": true,
+      "ignored_timing_fields": [
+        "seconds",
+        "elapsed_seconds"
+      ],
+      "scope": "numerical replay only"
+    }
+  ],
+  "all_frozen_inputs_unchanged": true,
+  "optimizer_started": false,
+  "numerical_replay_requested": true
+}

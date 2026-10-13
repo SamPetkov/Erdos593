@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-11",
+  "source": "processed-overlap-positive-cases.md",
+  "source_sha256": "35e59522e076b69d969ab383e2435ec9f59ea4473a14d7191db3a7a40468077b",
+  "scope": "Two complete positive analytical cases of the actual processed-overlap sufficient statement. No unrestricted proof or new density-host coverage.",
+  "target": "Finite positive original mu, actual symmetric nonnegative relative Markov root T; A=T^2,Kj=Aj; r>=l>=1,u>=1,h>=1. q_u=E_a T^u(e,a)K_r(a,c)K_u(a,d); H_u=E_e sqrt(q_u(e,c,d)q_u(e,x,d)); W_u=E_cxd K_h(c,x)K_l(c,d)H_u^2. All compositions and expectations under original mu.",
+  "results": {
+    "balanced_binary": "For uniform +/-1, T=1+txy,-1<=t<=1,lambda=t^2,a=lambda^r,b=lambda^u,L=lambda^l,H=lambda^h: W_u>=1+a^2*b*(1+b^2+H*(3+2b-b^2))/2>=1. Exact concavity/chord proof includes constant, identity and flip endpoints and negative root eigenvalues.",
+    "fixed_host_local": "Fix finite positive mu, a symmetric nonzero relative B with B1=0, and admissible exponents. For sufficiently small nonzero signed epsilon, T=Pi+epsilon B is a strictly positive actual root and W_u>1. The radius depends on the fixed data.",
+    "l_less_r": "n=2(r+u+l): W_u-1=epsilon^n tr(B^n)+O(abs(epsilon)^(n+2min(h,r-l))).",
+    "l_equal_r": "p=u+2r,eta=min(u,2h,2l): W_u-1=epsilon^(2p)tr(B^(2p))/2+O(abs(epsilon)^(2p+eta))."
+  },
+  "analytical_checks": [
+    "Exact balanced feature convolution and off-diagonal affinity; J(1)=(1-b)^2(1+b), not1-b.",
+    "Discriminant sign establishes concavity; endpoint substitution uses L>=a and1-H>=0.",
+    "Signed finite actual-root perturbation: PiB=BPi=0; T^j=Pi+epsilon^j B^j.",
+    "Only the pure a_e*a_f product cancels in the Gram minor; retained cross terms from a_e-1 are higher order.",
+    "Rationalized square-root denominator is uniformly separated from zero on the fixed finite space; actual weighted Gram loss has half the even-trace leading coefficient.",
+    "All pair and cubic terms of D are tracked; l<r and l=r leading orders separated; nonzero self-adjoint B has positive even traces for either sign of epsilon.",
+    "One-state/zero B gives W=1; no host-uniform radius or distant-root inference."
+  ],
+  "review_provenance": {
+    "root_self_review": "Complete rederivation and full source read; independent=false.",
+    "actual_separate_agent_math_review": "A real helper fully read both positive proofs and their final corrected source, returning PASS after one cancellation-wording correction. This is not a full external audit.",
+    "package_qa": "Actual separate-agent three-path QA PASS: public positive proof prefix equals the complete reviewed private source; source hash and JSON match; all links resolve; inline delimiters81/81 and display30/30; unique tags1-12; README diff onlynine-line item23. Root independently reproduced these checks. First staged diff --check found an extra final blank line in the new note; it was removed, no mathematical bytes changed, and the final source hash was updated. Final staged diff --check returned0. No compiler or numerical run.",
+    "external_full_audit": false,
+    "lean_validation": false
+  },
+  "unrestricted_overlap_proved": false,
+  "unrestricted_density_proved": false,
+  "new_density_coverage_claim": false,
+  "novelty_claim": false,
+  "manuscript_or_revision_date_change": false,
+  "compiler_optimizer_or_service_run": false,
+  "monitor_restart": false,
+  "private_chat_export": false,
+  "delivery": "Research-note-only three-path progress update to the existing public draft branch. No main push or merge."
+}

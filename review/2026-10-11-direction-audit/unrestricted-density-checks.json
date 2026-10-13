@@ -1,0 +1,26 @@
+{
+  "command": "python review/2026-10-11-direction-audit/check_unrestricted_density.py",
+  "exit_code": 0,
+  "wall_time_seconds": 0.3394274,
+  "output": {
+    "status": "PASS",
+    "arithmetic": "fractions.Fraction; no floating point",
+    "checks": {
+      "binary_star_actual_density": "535/512",
+      "star_log_upper_bound": "-143/7680",
+      "branch_triangle_defect": "-88559/1000000",
+      "branch_obstruction_actual_density": "345289208771161/100000000000000",
+      "actual_tensor_density_factorization": true,
+      "nonuniform_pair_space_identities": [
+        "4015504445455129451963802631251602217362146375897133790779183521/3991512481307476842682170866452031078400000000000000000000000000",
+        "114738697030743696271885950622875457321/109172306034930053283840000000000000000"
+      ],
+      "zero_increment_weighted_identity": true,
+      "toy_signed_measure_tensor_algebra": true,
+      "toy_measure_is_not_an_actual_host_certificate": true
+    },
+    "unrestricted_density_proved": false,
+    "lean_validation": false,
+    "file_writes": false
+  }
+}

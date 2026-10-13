@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-11",
+  "skill": "codex-academic-humanizer",
+  "intensity": "medium English academic edit",
+  "baseline": "2f09f5800d7c7b551ef2783103c4b5df48148d85",
+  "source_sha256": "7b0dc06f31631f2c8bd73d5e24c503ee5a7579663f4f6adbc5e9a65c9fc503fe",
+  "pdf_sha256": "dd7301b8d5176d19db528aca551fb832861f642e07559174d7072c02a4fe035b",
+  "root_review": {"independent": false, "verdict": "PASS within editorial scope"},
+  "separate_agent": {
+    "agent": "humanizer_final_claim_audit",
+    "actual_diff_and_surrounding_source_read": true,
+    "verdict": "PASS",
+    "checked": [
+      "Reduced/nonempty finite, positive-rank and interior equality restrictions preserved",
+      "Li priority and independent-development attribution preserved",
+      "No parameter-based core-isomorphism uniqueness inserted",
+      "Manuscript proof and accepted Lean export boundary preserved",
+      "Positive reference law, natural logs and actual specified marginal conventions preserved",
+      "Restricted-versus-unrestricted host scopes unchanged",
+      "No theorem, proof, equation, citation, label, date or bibliography change"
+    ],
+    "full_external_audit": false
+  },
+  "detector_goal_achieved": false,
+  "detector_scope": "Abstract prefix and one full passage; GPTZero stale-status result excluded",
+  "whole_manuscript_formalized": false,
+  "new_lean_run": false,
+  "monitors_resumed": false
+}

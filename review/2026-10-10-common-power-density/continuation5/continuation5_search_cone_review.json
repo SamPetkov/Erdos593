@@ -1,0 +1,361 @@
+{
+  "status": "passed",
+  "reviewer": "search5 independent route",
+  "theorem_file": "continuation5_cone_theorem.md",
+  "theorem_sha256": "478f2a3b5def7b324a5392913dfeb8cf8c3bb3848add4984207778c3d8686845",
+  "review_source_sha256": "6ab87850e99885011f71888ffadd5d0a855d12a7ad24916614dea44d9b7d4b8e",
+  "mathematical_review": {
+    "original_law": "Checked R_t normalization, tr(Ra Rb Rc)=Qab Qbc Qca, ER=I on range, and LR=QD_LQ.",
+    "ten_generators": "All ten cases use a,c>=d by the Hilbert-space mean and b>=d by C-Pi PSD; repeated factors use legitimate two-field HS Cauchy-Schwarz.",
+    "permutation_symmetry": "Valid for three real self-adjoint factors by cyclicity and transpose; no sign is inferred from symmetry.",
+    "convexity": "Trilinearity and nonnegative coefficients produce a convex combination of the ten types.",
+    "quadrilaterals": "The quoted proof uses a nonnegative mixture of rank-one kernels and two pairwise PSD pairings; Schur and operator squares are distinct.",
+    "fine_transport": "Original independent signs remove cross terms in composition and odd-degree subsets in the density; all seven remaining cycles are counted.",
+    "coefficients": "For x>y, sum x^(n-1-j)y^j<=sum y^j proves Pi coefficient >=0; x=y and y=1 are separately correct.",
+    "degeneracies": "Rank0, beta0, a centered zero band, repeated bands, disconnected coarse roots and one-state spaces are consistent with the formulas.",
+    "scope": "This remains a restricted binary projection-channel transfer with one common coarse cone. It does not establish the unrestricted target."
+  },
+  "exact_fixture": {
+    "pi": [
+      "2/5",
+      "3/10",
+      "1/5",
+      "1/10"
+    ],
+    "flow": [
+      [
+        "17/50",
+        "1/20",
+        "0",
+        "1/100"
+      ],
+      [
+        "1/20",
+        "9/40",
+        "1/40",
+        "0"
+      ],
+      [
+        "0",
+        "1/40",
+        "13/80",
+        "1/80"
+      ],
+      [
+        "1/100",
+        "0",
+        "1/80",
+        "31/400"
+      ]
+    ],
+    "projection_form": "I - f tensor f / E_pi(f^2)",
+    "f": [
+      "1",
+      "2",
+      "-1",
+      "3"
+    ],
+    "d": 3,
+    "negative_projection_triangle": "-4000/19683",
+    "coarse_projection_noncommutation": true,
+    "a": "625/54",
+    "b": "487477/62208",
+    "c": "94193213/15925248"
+  },
+  "ten_generator_checks": [
+    {
+      "generators": [
+        "I",
+        "I",
+        "I"
+      ],
+      "value": "483275/8748",
+      "table_lower": "390625/8748"
+    },
+    {
+      "generators": [
+        "I",
+        "I",
+        "Pi"
+      ],
+      "value": "625/54",
+      "table_lower": "625/54"
+    },
+    {
+      "generators": [
+        "I",
+        "I",
+        "C"
+      ],
+      "value": "61252025/1679616",
+      "table_lower": "237633825529/11609505792"
+    },
+    {
+      "generators": [
+        "I",
+        "Pi",
+        "Pi"
+      ],
+      "value": "3",
+      "table_lower": "3"
+    },
+    {
+      "generators": [
+        "I",
+        "Pi",
+        "C"
+      ],
+      "value": "487477/62208",
+      "table_lower": "487477/62208"
+    },
+    {
+      "generators": [
+        "I",
+        "C",
+        "C"
+      ],
+      "value": "10420212739/429981696",
+      "table_lower": "237633825529/11609505792"
+    },
+    {
+      "generators": [
+        "Pi",
+        "Pi",
+        "Pi"
+      ],
+      "value": "3",
+      "table_lower": "3"
+    },
+    {
+      "generators": [
+        "Pi",
+        "Pi",
+        "C"
+      ],
+      "value": "3",
+      "table_lower": "3"
+    },
+    {
+      "generators": [
+        "Pi",
+        "C",
+        "C"
+      ],
+      "value": "94193213/15925248",
+      "table_lower": "94193213/15925248"
+    },
+    {
+      "generators": [
+        "C",
+        "C",
+        "C"
+      ],
+      "value": "1828255580761/110075314176",
+      "table_lower": "8872361375263369/760840571584512"
+    }
+  ],
+  "mixed_kernel_direct_original_integral": "132976185749131/11557907988480",
+  "coefficient_checks": [
+    {
+      "x": "1/2",
+      "y": "0",
+      "n": 1,
+      "coefficients": [
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "x": "1/2",
+      "y": "0",
+      "n": 2,
+      "coefficients": [
+        "0",
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "x": "1/2",
+      "y": "0",
+      "n": 5,
+      "coefficients": [
+        "0",
+        "15/16",
+        "1/16"
+      ]
+    },
+    {
+      "x": "1/2",
+      "y": "0",
+      "n": 13,
+      "coefficients": [
+        "0",
+        "4095/4096",
+        "1/4096"
+      ]
+    },
+    {
+      "x": "3/4",
+      "y": "1/3",
+      "n": 1,
+      "coefficients": [
+        "1/3",
+        "0",
+        "2/3"
+      ]
+    },
+    {
+      "x": "3/4",
+      "y": "1/3",
+      "n": 2,
+      "coefficients": [
+        "1/9",
+        "1/6",
+        "13/18"
+      ]
+    },
+    {
+      "x": "3/4",
+      "y": "1/3",
+      "n": 5,
+      "coefficients": [
+        "1/243",
+        "6457/10368",
+        "11605/31104"
+      ]
+    },
+    {
+      "x": "3/4",
+      "y": "1/3",
+      "n": 13,
+      "coefficients": [
+        "1/1594323",
+        "4288594179961/4458050224128",
+        "508359743893/13374150672384"
+      ]
+    },
+    {
+      "x": "1",
+      "y": "2/3",
+      "n": 1,
+      "coefficients": [
+        "2/3",
+        "0",
+        "1/3"
+      ]
+    },
+    {
+      "x": "1",
+      "y": "2/3",
+      "n": 2,
+      "coefficients": [
+        "4/9",
+        "0",
+        "5/9"
+      ]
+    },
+    {
+      "x": "1",
+      "y": "2/3",
+      "n": 5,
+      "coefficients": [
+        "32/243",
+        "0",
+        "211/243"
+      ]
+    },
+    {
+      "x": "1",
+      "y": "2/3",
+      "n": 13,
+      "coefficients": [
+        "8192/1594323",
+        "0",
+        "1586131/1594323"
+      ]
+    },
+    {
+      "x": "3/5",
+      "y": "3/5",
+      "n": 1,
+      "coefficients": [
+        "3/5",
+        "2/5",
+        "0"
+      ]
+    },
+    {
+      "x": "3/5",
+      "y": "3/5",
+      "n": 2,
+      "coefficients": [
+        "9/25",
+        "16/25",
+        "0"
+      ]
+    },
+    {
+      "x": "3/5",
+      "y": "3/5",
+      "n": 5,
+      "coefficients": [
+        "243/3125",
+        "2882/3125",
+        "0"
+      ]
+    },
+    {
+      "x": "3/5",
+      "y": "3/5",
+      "n": 13,
+      "coefficients": [
+        "1594323/1220703125",
+        "1219108802/1220703125",
+        "0"
+      ]
+    },
+    {
+      "x": "1",
+      "y": "1",
+      "n": 1,
+      "coefficients": [
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "x": "1",
+      "y": "1",
+      "n": 2,
+      "coefficients": [
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "x": "1",
+      "y": "1",
+      "n": 5,
+      "coefficients": [
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "x": "1",
+      "y": "1",
+      "n": 13,
+      "coefficients": [
+        "1",
+        "0",
+        "0"
+      ]
+    }
+  ],
+  "limitation": "Finite checks supplement the reviewed finite proof and are not a universal computational certificate."
+}

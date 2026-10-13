@@ -1,0 +1,115 @@
+{
+  "review_type": "ADVERSARIAL_COMPLETE_SOURCE_ONLY_MATHEMATICAL_AUDIT",
+  "date": "2026-10-07",
+  "status": "PASS",
+  "supersedes_review_metadata_only": "For the two exact hashes below, this separate completed source-review record supersedes the source JSON's AWAITING_SEPARATE_SOURCE_REVIEW status and PENDING separate-agent review metadata. The source files remain unchanged. It does not supersede their explicit NOT_LEAN_ACCEPTED limitation.",
+  "sources": [
+    {
+      "path": "C:/Users/petko/OneDrive - Université Paris Sciences et Lettres/Documents/Erdos/research/e593-density-development-20261007/follow-on-marginal-cliques.tex",
+      "sha256": "B79D9ED5955D179B861B75D2FDF4EA03FEA0A3FF4EB6159A6AF7D2E308CD456C",
+      "read": "complete, lines 1-72"
+    },
+    {
+      "path": "C:/Users/petko/OneDrive - Université Paris Sciences et Lettres/Documents/Erdos/research/e593-density-development-20261007/follow-on-marginal-cliques.json",
+      "sha256": "1493516C3A9B7ED7B7FD15B5E48AF2D788ACFF72E6669ED87E9F6EF513CC9D95",
+      "read": "complete JSON document"
+    }
+  ],
+  "audit_boundary": {
+    "exact_contract": "For every integer r>=2, finite carrier Omega, strictly positive normalized probability mu, and symmetric nonnegative M with M(x,x)=0, a fully coordinate-symmetric nonnegative r-kernel U with the displayed two-coordinate marginal exists iff nonnegative weights on all r-element subsets satisfy B_xy=sum_{S containing x,y} w_S, where B_xy=mu(x)mu(y)M(x,y). Such a U can satisfy U<=1 iff a feasible weight vector satisfies w_S<=(r-2)! product_{z in S} mu(z). For corresponding representations, E_{mu^r} U=r(r-1) sum_S w_S.",
+    "conventions": [
+      "Symmetric U means invariant under every permutation of its r coordinates.",
+      "All subset sums range over sets S of cardinality r.",
+      "The r=2 marginal uses the empty sum/product convention for the absent remaining coordinates, with empty product 1 and 0!=1.",
+      "Expectation is under the product probability measure mu^r."
+    ],
+    "accepted_primitives": [
+      "A finite sum of nonnegative terms with strictly positive coefficients vanishes only when every term vanishes.",
+      "Permutation invariance identifies values on ordered injective tuples with the same underlying set.",
+      "A k-element set has k! orders.",
+      "Finite sum rearrangement and elementary algebra with positive denominators."
+    ],
+    "scope": "Supporting fixed-carrier lifting bridge within the confirmed bounded D3 exploration. This audit checks the supplied route and source consistency, including the explicit obstruction; it does not extend the research.",
+    "excluded": [
+      "Novelty or priority certification",
+      "Independent bibliographic or external-source verification",
+      "Universal matching or universal marginal realization theorem",
+      "Density inequality",
+      "Other carriers or transfer mechanisms",
+      "Compiler, Lean, version, service, jobs, Git, main-manuscript, or clock actions"
+    ]
+  },
+  "obligation_graph": [
+    "C0 <- R0 primary equivalence (AND: C5, C6)",
+    "C5 <- R5 primary necessity (AND: H0, H1, O1, O2, O3, O4)",
+    "C6 <- R6 primary construction (AND: H0, H1, O3, O5, O6, O7)",
+    "C1 <- R1 primary capacity correspondence (AND: C5, C6, O5, O8)",
+    "C2 <- R2 primary ordered-tuple expectation (AND: O2, O4, D0, O9)",
+    "C3 <- R3 primary support cases (AND: E1, E2, E3)",
+    "C4 <- R4 primary K4-minus-cd contradiction (AND: O10, O11, O12, O13)"
+  ],
+  "critical_findings": {
+    "mathematical_defects": [],
+    "missing_obligations": [],
+    "circular_dependencies": [],
+    "route_switches": [],
+    "unsupported_global_claims": [],
+    "source_consistency": "The JSON claim, normalization, edge cases, counterexample, and limitations agree with the TeX. Pending-review metadata describes the pre-audit state and is not treated as a mathematical defect.",
+    "nontriangle_weights": "In the obstruction, the zero cd equation and nonnegativity explicitly force w_acd=w_bcd=0. This elementary implication justifies restricting the equations to the two supported triangles.",
+    "zero_mass_qualification": "The criterion applies to the restriction M|_{A^2}, U|_{A^r}, mu|_A on A={x:mu(x)>0}; product-measure marginal sums on A use only states in A. The source correctly avoids extending a pointwise conclusion outside A.",
+    "scope_caution": "The prior-art citation is expository and is not a premise of the elementary proof. Its metadata was not independently verified in this source-only audit."
+  },
+  "dependency_table": [
+    {"id":"C0","exact_claim":"Unbounded marginal existence iff nonnegative feasible subset weights exist.","needed_by":["root"],"route_or_edge":"R0 / AND","classification":"root","support":"TeX lines 10-23 and 32-48, via C5 and C6","status":"discharged"},
+    {"id":"H0","exact_claim":"r is an integer >=2; Omega is finite; every mu(x)>0; sum_x mu(x)=1.","needed_by":["C5","C6","C2","C3"],"route_or_edge":"hypotheses","classification":"hypothesis","support":"TeX lines 11-12; JSON assumptions explicitly state integer r>=2","status":"discharged"},
+    {"id":"H1","exact_claim":"M is nonnegative and symmetric, with M(x,x)=0 for all x.","needed_by":["C5","C6","C3"],"route_or_edge":"hypotheses","classification":"hypothesis","support":"TeX lines 12-13","status":"discharged"},
+    {"id":"C5","exact_claim":"Every admissible U gives nonnegative weights satisfying every distinct-pair equation.","needed_by":["C0","C1"],"route_or_edge":"R5 / AND","classification":"major claim","support":"TeX lines 33-43, via O1-O4","status":"discharged"},
+    {"id":"O1","exact_claim":"For an admissible U, M(x,x)=0 forces U(x,x,z3,...,zr)=0 for every remaining tuple.","needed_by":["C5","O2"],"route_or_edge":"R5 / diagonal equation","classification":"algebraic/logical step","support":"TeX lines 16-17 and 33-34: finite nonnegative summands and strictly positive product coefficients; r=2 has coefficient 1","status":"discharged"},
+    {"id":"O2","exact_claim":"A fully symmetric admissible U vanishes on all repeated-coordinate tuples and has one value u_S on all injective tuples with underlying r-set S.","needed_by":["C5","C2"],"route_or_edge":"R5 / permutation invariance","classification":"algebraic/logical step","support":"TeX lines 35-37: move any repeated pair to the first two coordinates, and permute injective tuples","status":"discharged"},
+    {"id":"O3","exact_claim":"For distinct fixed x,y and an r-set S containing them, the remaining coordinates enumerate S minus {x,y} in exactly (r-2)! orders.","needed_by":["C5","C6"],"route_or_edge":"pair marginal count","classification":"algebraic/logical step","support":"TeX lines 38-41; 0!=1 when r=2","status":"discharged"},
+    {"id":"O4","exact_claim":"Setting w_S=(r-2)!u_S product_{z in S}mu(z) converts the pair marginal into B_xy=sum_{S containing x,y}w_S and gives w_S>=0.","needed_by":["C5","C2"],"route_or_edge":"R5 / weight normalization","classification":"definition","support":"TeX lines 40-43 and positive mu","status":"discharged"},
+    {"id":"C6","exact_claim":"Every nonnegative feasible weight vector constructs an admissible symmetric nonnegative U with exactly the prescribed marginal.","needed_by":["C0","C1"],"route_or_edge":"R6 / AND","classification":"major claim","support":"TeX lines 43-47, via O3 and O5-O7","status":"discharged"},
+    {"id":"O5","exact_claim":"For every r-set S, d_S=(r-2)! product_{z in S}mu(z) is strictly positive, so u_S=w_S/d_S is well-defined.","needed_by":["C6","C1"],"route_or_edge":"construction denominator","classification":"side condition","support":"H0; TeX line 45","status":"discharged"},
+    {"id":"O6","exact_claim":"Define U=0 on repeated tuples and U=w_S/d_S on injective tuples with underlying S; this is nonnegative and fully symmetric.","needed_by":["C6"],"route_or_edge":"R6 / construction","classification":"definition","support":"TeX lines 44-46; nonnegative weights and O5","status":"discharged"},
+    {"id":"O7","exact_claim":"The constructed U gives M(x,y) on each distinct pair by O3 and the feasible equations, and gives 0=M(x,x) on each diagonal pair.","needed_by":["C6"],"route_or_edge":"R6 / exact marginal","classification":"algebraic/logical step","support":"TeX lines 22 and 44-46; divide the weighted equations by positive mu(x)mu(y)","status":"discharged"},
+    {"id":"C1","exact_claim":"An admissible U<=1 exists iff a feasible vector satisfies 0<=w_S<=d_S for every r-set S.","needed_by":["root"],"route_or_edge":"R1 / AND","classification":"root","support":"TeX lines 24-27 and 43-47, via C5, C6, O5, O8","status":"discharged"},
+    {"id":"O8","exact_claim":"For each injective tuple, 0<=u_S<=1 iff 0<=w_S<=d_S; repeated tuples have value 0 and satisfy the bound automatically.","needed_by":["C1"],"route_or_edge":"R1 / positive rescaling","classification":"algebraic/logical step","support":"TeX lines 43-47 and O5","status":"discharged"},
+    {"id":"C2","exact_claim":"For corresponding representations, E_{mu^r}U=r(r-1)sum_S w_S.","needed_by":["root"],"route_or_edge":"R2 / AND","classification":"root","support":"TeX lines 29-30 and 47-48, via O2, O4, D0, O9","status":"discharged"},
+    {"id":"D0","exact_claim":"E_{mu^r}U=sum_{x1,...,xr}U(x1,...,xr) product_i mu(xi).","needed_by":["C2"],"route_or_edge":"product-measure expectation","classification":"definition","support":"Normalized probability mu in H0 and the conventional expectation notation in TeX line 30","status":"discharged"},
+    {"id":"O9","exact_claim":"Each r-set contributes r!u_S product_{z in S}mu(z) to the mean, hence the coefficient of w_S is r!/(r-2)!=r(r-1).","needed_by":["C2"],"route_or_edge":"R2 / tuple count","classification":"algebraic/logical step","support":"TeX lines 47-48; O2, O4, D0; independent check: summing pair equations gives E M=2 binom(r,2) sum_Sw_S","status":"discharged"},
+    {"id":"C3","exact_claim":"The stated r=2, insufficient-carrier, and positive-support qualifications are valid.","needed_by":["root"],"route_or_edge":"R3 / AND","classification":"root","support":"TeX lines 51-54, via E1-E3","status":"discharged"},
+    {"id":"E1","exact_claim":"For r=2, S={x,y}, w_S=mu(x)mu(y)M(x,y), and u_S=M(x,y); the constructed U is M including its zero diagonal.","needed_by":["C3"],"route_or_edge":"R3 / r=2 case","classification":"algebraic/logical step","support":"TeX line 51 and empty-product convention; capacity reduces exactly to M<=1","status":"discharged"},
+    {"id":"E2","exact_claim":"If |Omega|<r, every r-tuple repeats a coordinate, so every admissible U is 0 and every admissible marginal M is 0; conversely U=0 realizes M=0.","needed_by":["C3"],"route_or_edge":"R3 / small carrier","classification":"algebraic/logical step","support":"TeX lines 35-36 and 51-52; no r-element subsets exist","status":"discharged"},
+    {"id":"E3","exact_claim":"If some mu states have mass 0, restricting all objects to A={x:mu(x)>0} restores the stated hypotheses and the criterion on A; nothing here asserts pointwise conclusions outside A.","needed_by":["C3"],"route_or_edge":"R3 / support restriction","classification":"algebraic/logical step","support":"TeX lines 52-54; for x,y in A, each marginal summand with any integrated coordinate outside A has zero coefficient","status":"discharged"},
+    {"id":"C4","exact_claim":"For r=3, uniform four-point mu and the adjacency kernel of K4 minus cd, no nonnegative symmetric U on this carrier has marginal M, despite every supported edge belonging to a triangle.","needed_by":["root"],"route_or_edge":"R4 / AND","classification":"root","support":"TeX lines 56-62, via O10-O13 and C0","status":"discharged"},
+    {"id":"O10","exact_claim":"The cd pair equation has right side w_acd+w_bcd=0, forcing these two weights to vanish; the remaining supported triangles are abc and abd, and all five supported edges lie in at least one of them.","needed_by":["C4","O12"],"route_or_edge":"R4 / support and nonnegativity","classification":"algebraic/logical step","support":"TeX lines 58-59; K4 has four 3-element subsets; M(c,d)=0 and w>=0","status":"discharged"},
+    {"id":"O11","exact_claim":"Every supported pair has B_xy=(1/4)(1/4) times 1=1/16, while B_cd=0.","needed_by":["C4","O12","O13"],"route_or_edge":"R4 / probability normalization","classification":"definition","support":"TeX lines 57-60, uniform four-point measure and adjacency kernel","status":"discharged"},
+    {"id":"O12","exact_claim":"The ac and ad pair equations respectively force w_abc=1/16 and w_abd=1/16 after the nontriangle weights in O10 vanish.","needed_by":["C4","O13"],"route_or_edge":"R4 / exclusive edges","classification":"algebraic/logical step","support":"TeX line 60; O10 and O11","status":"discharged"},
+    {"id":"O13","exact_claim":"The ab equation requires w_abc+w_abd=1/16, but O12 gives 2/16; hence no nonnegative feasible vector exists, and C0 rules out U even without U<=1.","needed_by":["C4"],"route_or_edge":"R4 / contradiction","classification":"algebraic/logical step","support":"TeX lines 60-62; O11 and O12","status":"discharged"}
+  ],
+  "independent_second_check": {
+    "agent": "/root/marginal_clique_audit/independent_factors",
+    "result": "PASS",
+    "scope": "Complete two-source independent audit of factors, iff directions, capacity, mean, support cases, and obstruction",
+    "defects": []
+  },
+  "actions": {
+    "target_files_changed": false,
+    "new_review_json_only": true,
+    "compiler": false,
+    "lean": false,
+    "version": false,
+    "jobs": false,
+    "service": false,
+    "git": false,
+    "main_manuscript": false,
+    "clock": false,
+    "external_research": false
+  },
+  "verdict": {
+    "skill_verdict": "FOLLOWS",
+    "overall": "PASS",
+    "decisive_nodes": ["C0","C1","C2","C3","C4"],
+    "reason": "Every obligation on each supplied route is discharged. No mathematical defect was found in either complete source on the stated fixed-carrier scope. This is analytical source acceptance only and is not compiler or Lean acceptance."
+  }
+}

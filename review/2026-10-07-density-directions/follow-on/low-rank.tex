@@ -1,0 +1,118 @@
+% Source-only follow-on fragment. Analytical statements are not Lean acceptance.
+% Uses the existing imliliu2024 citation key (published CPC version).
+
+\subsection{The next cyclic boundary}
+
+Cycle rank three is not a single theta case.  Its structural possibilities
+can nevertheless be listed exactly.  In the following statement,
+suppression replaces a maximal path whose internal vertices have degree
+two by one edge; parallel edges are retained.
+
+\begin{proposition}[The four rank-three cores]
+\label{density-rank-three-core-list}
+Let $J$ be a finite simple $2$-connected bipartite graph with
+$\beta(J)=|E(J)|-|V(J)|+1=3$.  Suppressing its degree-two vertices gives
+one of the following loopless multigraphs:
+\[
+ B_4,\qquad T_{2,2,1},\qquad C_4^{\mathrm{alt}},\qquad K_4.
+\]
+Here $B_4$ has two vertices and four parallel edges;
+$T_{2,2,1}$ is a triangle with two doubled sides;
+and $C_4^{\mathrm{alt}}$ is a four-cycle with two opposite sides doubled.
+Every edge of the suppressed core is replaced in $J$ by a positive-length
+path, and these paths have disjoint interiors.  Bipartiteness is equivalent
+to the existence of branch-vertex colours $\sigma:V(K)\to\{0,1\}$ such that
+\[
+ L_{uv}\equiv\sigma(u)+\sigma(v)\pmod2
+\]
+for every replacement path.  Original simplicity requires at most one
+length-one path in each parallel family.
+\end{proposition}
+\begin{proof}
+Write $n=|V(J)|$ and $m=|E(J)|$.  Two-connectivity gives minimum degree
+two.  As $J-v$ remains connected, $m-\deg(v)\ge n-2$, so
+$\deg(v)\le m-n+2=4$.  The degree excess is
+\[
+ \sum_v(\deg(v)-2)=2m-2n=4.
+\]
+Thus the branch degrees are $(4,4)$, $(4,3,3)$ or $(3,3,3,3)$.
+There are at least two branch vertices.  A suppressed loop would leave
+its interior disconnected from the other branch vertices after deleting
+its endpoint, and is therefore impossible.
+
+For two branch vertices the four edges are parallel.  For three vertices,
+the three multiplicities satisfy $a+b=4$, $a+c=3$ and $b+c=3$, giving
+$(a,b,c)=(2,2,1)$.  With four cubic vertices, a simple kernel is $K_4$.
+If there is a doubled pair, a third parallel edge would disconnect that
+pair from the other vertices.  The remaining stubs must meet distinct
+vertices: if both met the same vertex, the last vertex could not attain
+degree three.  The remaining degrees then force the opposite doubled
+pair, giving $C_4^{\mathrm{alt}}$.
+
+Alternating colours along each replacement path proves the parity
+criterion in both directions.  Only parallel length-one paths can create
+duplicate original edges.  Conversely the four kernels have no bridge
+or cut vertex, so every simple positive-length subdivision satisfying
+the parity condition is two-connected.  Deleting an internal path vertex
+uses connectivity after removing its kernel edge; deleting a branch
+vertex uses connectivity after removing that branch vertex.  Suppression
+and subdivision preserve $m-n+1$.
+\end{proof}
+
+All subdivisions of $B_4$ allowed by this proposition are generalized
+theta graphs.  Their four lengths have the same parity, and both cases
+are Sidorenko~\citep[Theorem~1.3 and Proposition~4.3]{imliliu2024}.
+Hence a hypothetical non-Sidorenko single atom of rank three must have
+one of the other three suppressed cores.  This is an exclusion, not the
+construction of a counterexample.  The cited paper also proves several
+uniform or symmetric subdivision cases, but does not supply the
+unrestricted nonuniform conclusion needed to raise the present cutoff
+from two to three.
+
+\paragraph{A rank-three conjecture.}
+For every finite simple $2$-connected bipartite graph $J$ of cycle rank
+three and every symmetric $[0,1]$-valued kernel $W$ on a finite probability
+space, one may ask whether
+\[
+ t(J,W)\ge (\mathbb E W)^{|E(J)|}.
+\]
+The classification makes this a question about three residual
+multigraph cores and their admissible path lengths, rather than an
+unspecified search over obligatory systems.  It is a working conjecture
+here, not a claim that a new open problem has been identified.  Our
+bounded literature check has neither proved it nor certified that every
+residual family is unresolved in the full literature.
+
+For the higher-uniformity paper, an even weaker question is sufficient:
+for every $r\ge3$ and symmetric $r$-kernel $U$, does the same inequality
+hold when $W=M_U$ is its two-coordinate marginal?  Indeed,
+\[
+ t(J^{[r]},U)=t(J,M_U),\qquad \mathbb E M_U=\mathbb E U.
+\]
+The unrestricted graph-kernel inequality implies this atom inequality.
+The converse cannot be inferred by treating every graph kernel as an
+available marginal.
+
+\begin{proposition}[A restriction on the marginal class]
+\label{density-binary-marginal-restriction}
+Let $r\ge3$ and let both states of $\Omega=\{0,1\}$ have positive
+probability.  If a symmetric nonnegative $r$-kernel $U$ satisfies
+$M_U(0,0)=M_U(1,1)=0$, then $U=0$ pointwise.
+\end{proposition}
+\begin{proof}
+Each diagonal marginal is a finite sum of nonnegative values
+$U(a,a,z)$ with strictly positive coefficients.  Its vanishing forces
+every such value to vanish.  Every binary $r$-tuple has two equal
+coordinates; symmetry moves these to the first two positions.
+\end{proof}
+
+Thus a nonzero binary graph kernel with zero diagonal is not an
+$r$-kernel marginal on this same carrier.  The full-support,
+nonnegativity, symmetry and $r\ge3$ conditions are essential.  This
+observation limits one reduction route; it does not disprove any
+rank-three density conjecture or rule out other converse arguments.
+
+The useful story is therefore precise: low cyclic complexity supplies
+positive cases, while the next rank is reduced to a short list of
+joint-kernel inequalities.  A proof must control those joint kernels,
+not only the scalar densities of individual paths or pieces.

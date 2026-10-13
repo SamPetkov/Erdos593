@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-11",
+  "source": "collective-correction-budgets.md",
+  "source_sha256": "082708ff072d26d4b9e972d140f3e83273c27e97ad2672a1627db9a3cb528813",
+  "agent_reviewed_sha256": "45c0e7d8e79045f3dcb5bfe49ee1b12225a17d528a3fbcb1d06d643372deec9b",
+  "final_normalization": "One empty EOF line removed; actual git diff is zero inserted lines and one deleted blank line, with no mathematical or prose change",
+  "research_checkpoint": "collective-round2-brief.json",
+  "root_review": {
+    "verdict": "PASS within stated scope",
+    "independent": false,
+    "terminology_correction": "The zero-residual law minimizes relative-entropy cost, not Shannon entropy. Only this prose term was corrected after the full analytical audit."
+  },
+  "separate_agent_review": {
+    "agent": "correction_note_adversarial_review",
+    "actual_full_source_read": true,
+    "verdict": "PASS; no mathematical correction found",
+    "checked": [
+      "Original-law operator identity, separate entrywise and PSD comparisons, Schur-product certificate and spectral budgets",
+      "Conditional overlap floors, zero-support treatment and actual A-component scaling",
+      "Exact-pair support-safe entropy update, preserved log energies and quantitative gain",
+      "Finite dual entropy-gap certificate and its upper bound",
+      "Global positive compensation flow, coordinate floor and exact reverse-divergence identity",
+      "Finite mathematical-flow accuracy bound, with no simulation/runtime assertion",
+      "Actual skew-binary ancestral expansion, negative leading score and positive repaired score"
+    ],
+    "supplementary_child": "A real child source audit of operator and skew-expansion portions also returned PASS",
+    "full_external_audit": false
+  },
+  "status": {
+    "analytical_research_note": true,
+    "unrestricted_density_proved": false,
+    "new_all_host_exponent_region": false,
+    "new_host_coverage": false,
+    "lean_accepted": false,
+    "novelty_cleared": false,
+    "manuscript_theorem_added": false,
+    "new_simulation_or_optimizer": false,
+    "new_pro_or_aristotle_request": false
+  },
+  "remaining_gap": "For every primitive component and ordered exponent tuple, exhibit a trial or operator certificate whose actual fixed-pair energy budget pays its deficit. Convergence to an entropy minimizer does not establish that universal budget."
+}

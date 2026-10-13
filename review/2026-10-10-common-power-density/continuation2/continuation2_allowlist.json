@@ -1,0 +1,73 @@
+{
+  "scope": "Bounded structured actual-host two-cover numerical pass. All target evaluations calibrate the previously proved density compensation class.",
+  "files": [
+    {
+      "name": "continuation2_sign_engine.py",
+      "bytes": 9438,
+      "sha256": "07e655e6a2fd1eae054f879f2b12f116e96d38acb5f94829445939d011938d15"
+    },
+    {
+      "name": "continuation2_search.py",
+      "bytes": 13504,
+      "sha256": "87e1579ed8cc9bfba73c15d9d424f83b2eb19bb702b9573da6df47941e34ab19"
+    },
+    {
+      "name": "continuation2_engine_checks.py",
+      "bytes": 4239,
+      "sha256": "bb557bd2b275e1bf2979e4137e8bc01229a91e43c23147753f8f856cf34c172f"
+    },
+    {
+      "name": "continuation_cover_engine.py",
+      "bytes": 10794,
+      "sha256": "1187d00bdafdec7f1ffd3b7ad7ee1b2f2eb8d27f2593fd6ee12808628a14495a"
+    },
+    {
+      "name": "continuation2_config.json",
+      "bytes": 7403,
+      "sha256": "1a0351d89cf03e50e1d4cb29c69ba3c251973462d8de7df94adff562d1b8f1a7"
+    },
+    {
+      "name": "continuation2_engine_checks.json",
+      "bytes": 2943,
+      "sha256": "806c49754f27e962d144e6bb057bc727d18e2d3bd1f53dc074d7658891a2364d"
+    },
+    {
+      "name": "continuation2_optimizer_starts.json",
+      "bytes": 42619,
+      "sha256": "99f08182fb78999a7d705be6d1d68389a950a3ce9cecfad30e25000285988e34"
+    },
+    {
+      "name": "continuation2_optimizations.json",
+      "bytes": 23153,
+      "sha256": "255cbddc8cb21d8ed0c00797fa0bc4f2616c33e86152348d9584650255208a7d"
+    },
+    {
+      "name": "continuation2_samples.json.gz",
+      "bytes": 635020,
+      "sha256": "bb4edc2b0945c33da4737cf757ba2c45da35f18f38dba1f971b14960e03d0bdd"
+    },
+    {
+      "name": "continuation2_summary.json",
+      "bytes": 11048,
+      "sha256": "cef1e938c5ba2d4db9d24e5765b23c62492b87818c9206d0640f500b917f2cf5"
+    },
+    {
+      "name": "continuation2_optimization_report.md",
+      "bytes": 14390,
+      "sha256": "6ea279cac88e62aecf4c96b1ba2a27cd422d4d74e060fa6424caf8c4b650d72c"
+    },
+    {
+      "name": "continuation2_optimize_direct_audit.json",
+      "bytes": 916,
+      "sha256": "c8f8ef44abb80860e3ed2e62faa46d75d12e5f058e0a486b935913b22afb49dc"
+    },
+    {
+      "name": "continuation2_optimize_provenance_audit.json",
+      "bytes": 8458,
+      "sha256": "8806f9dd6053df309eee0d7b42f5dd06b87a6d2a13a289365307cf2660efe727"
+    }
+  ],
+  "uncompressed_sample_sha256": "1faabaa4f66434e5c0ec43f938cdf57bb959febe2d9733431b4f79a425ddd2b8",
+  "uncompressed_sample_bytes": 9077178,
+  "excludes": "Raw uncompressed sample JSON is replaced by its lossless gzip copy. The detached review JSON binds this manifest separately; unrelated markov/tensor/root files are not in the numerical allowlist."
+}

@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "method": "Root isolated standard-library exact replay of final quantitative checker; output byte-identical",
+  "source_sha256": {
+    "continuation4_tensor_example_verify.py": "dee3340eac7a392d5f2da41a9136056ba342d71b68cbd5d8285712a6c4a3e9cc",
+    "continuation4_projection_verify.py": "4ab0f3f2b28107b46c917536ea7de1acc9c15626b1cf9f93d225264c1cd5b33e",
+    "continuation4_tensor_example_checks.json": "58cd94525d32ac6ce5b960ec959f0b33095f3ac74874b81512f979825be62164",
+    "continuation4_tensor_example.md": "b3a4b87ad9aedd887e17c8a46f915d35b3cf1f891967c9f94eaa4bdb48fb5b80",
+    "continuation4_tensor_projection_lemmas.md": "9d4a862b2d62a5d064ed8a9ae84f5df7de599ec02d31a52896b75b665805491c",
+    "continuation4_boundary_scope.md": "a52ad9f4361599889623669f6becd78f053043e9dd30832480c26f4dcaf9b4ce"
+  },
+  "host_tuple_count": 3,
+  "analytical_review": [
+    "Weighted Gram formula proves arbitrary orthogonal rank-two projection.",
+    "Original sign averaging proves root Markov property and channel power transport.",
+    "Entire centered spectrum counts all seven dimensions including both zero modes.",
+    "Common-cone coefficient y^n and all-identity K4 contribution 148 give displayed coarse surplus.",
+    "Final additional quantitative trace improvement is exactly checked at all three tuples.",
+    "Whole-boundary reflection and all three twin-vertex families are proved with actual sources and pairwise PSD pairings; equality forces T=Pi."
+  ],
+  "scope": "Quantitative projection-channel comparison only; whole reflection boundary already has a density proof."
+}

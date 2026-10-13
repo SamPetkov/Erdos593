@@ -1,0 +1,486 @@
+E593_PROOF_BEGIN_VERSION
+4.32.0
+E593_PROOF_END_VERSION
+E593_PROOF_BEGIN_GITHASH
+8c9756b28d64dab099da31a4c09229a9e6a2ef35
+E593_PROOF_END_GITHASH
+E593_PROOF_BEGIN_ISRELEASE
+true
+E593_PROOF_END_ISRELEASE
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.energy0
+@E593DensityDevelopment.CoefficientCompensationRequest.energy0.{u_1} : {I : Type u_1} →
+  [Fintype.{u_1} I] → (theta : I → Real) → (M : I → I → I → Real) → (k r u h : Nat) → Real
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.energy0
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal
+@E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal.{u_1} : {I : Type u_1} →
+  [Fintype.{u_1} I] → (theta : I → Real) → (M : I → I → I → Real) → (k r u l h : Nat) → Real
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement
+E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement.{u_1} : Prop
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.msum_map_le
+@E593DensityDevelopment.CoefficientCompensationRequest.msum_map_le.{u_1} : ∀ {α : Type u_1} (m : Multiset.{u_1} α)
+  (f g : α → Real) (hfg : ∀ (a : α), @LE.le.{0} Real Real.instLE (f a) (g a)),
+  @LE.le.{0} Real Real.instLE (@Multiset.sum.{0} Real Real.instAddCommMonoid (@Multiset.map.{0, u_1} α Real f m))
+    (@Multiset.sum.{0} Real Real.instAddCommMonoid (@Multiset.map.{0, u_1} α Real g m))
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.msum_map_le
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.msum_map_mul_left
+@E593DensityDevelopment.CoefficientCompensationRequest.msum_map_mul_left.{u_1} : ∀ {α : Type u_1} (m : Multiset.{u_1} α)
+  (c : Real) (f : α → Real),
+  @Eq.{1} Real
+    (@Multiset.sum.{0} Real Real.instAddCommMonoid
+      (@Multiset.map.{0, u_1} α Real
+        (fun (a : α) => @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c (f a)) m))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c
+      (@Multiset.sum.{0} Real Real.instAddCommMonoid (@Multiset.map.{0, u_1} α Real f m)))
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.msum_map_mul_left
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.fsum_le
+@E593DensityDevelopment.CoefficientCompensationRequest.fsum_le.{u_1} : ∀ {α : Type u_1} (s : Finset.{u_1} α)
+  (f g : α → Real) (hfg : ∀ (a : α), @LE.le.{0} Real Real.instLE (f a) (g a)),
+  @LE.le.{0} Real Real.instLE (@Finset.sum.{u_1, 0} α Real Real.instAddCommMonoid s fun (a : α) => f a)
+    (@Finset.sum.{u_1, 0} α Real Real.instAddCommMonoid s fun (a : α) => g a)
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.fsum_le
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.fsum_mul_left
+@E593DensityDevelopment.CoefficientCompensationRequest.fsum_mul_left.{u_1} : ∀ {α : Type u_1} (s : Finset.{u_1} α)
+  (c : Real) (f : α → Real),
+  @Eq.{1} Real
+    (@Finset.sum.{u_1, 0} α Real Real.instAddCommMonoid s fun (a : α) =>
+      @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c (f a))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c
+      (@Finset.sum.{u_1, 0} α Real Real.instAddCommMonoid s fun (a : α) => f a))
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.fsum_mul_left
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.fsum_add
+@E593DensityDevelopment.CoefficientCompensationRequest.fsum_add.{u_1} : ∀ {α : Type u_1} (s : Finset.{u_1} α)
+  (f g : α → Real),
+  @Eq.{1} Real
+    (@Finset.sum.{u_1, 0} α Real Real.instAddCommMonoid s fun (a : α) =>
+      @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd) (f a) (g a))
+    (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+      (@Finset.sum.{u_1, 0} α Real Real.instAddCommMonoid s fun (a : α) => f a)
+      (@Finset.sum.{u_1, 0} α Real Real.instAddCommMonoid s fun (a : α) => g a))
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.fsum_add
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.fsum_comm
+@E593DensityDevelopment.CoefficientCompensationRequest.fsum_comm.{u_1,
+    u_2} : ∀ {α : Type u_1} {β : Type u_2} (s : Finset.{u_1} α) (t : Finset.{u_2} β) (f : α → β → Real),
+  @Eq.{1} Real
+    (@Finset.sum.{u_1, 0} α Real Real.instAddCommMonoid s fun (a : α) =>
+      @Finset.sum.{u_2, 0} β Real Real.instAddCommMonoid t fun (b : β) => f a b)
+    (@Finset.sum.{u_2, 0} β Real Real.instAddCommMonoid t fun (b : β) =>
+      @Finset.sum.{u_1, 0} α Real Real.instAddCommMonoid s fun (a : α) => f a b)
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.fsum_comm
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.triple_sum_swap
+@E593DensityDevelopment.CoefficientCompensationRequest.triple_sum_swap.{u_1} : ∀ {I : Type u_1} [inst : Fintype.{u_1} I]
+  (f : I → I → I → Real),
+  @Eq.{1} Real
+    (@Finset.sum.{u_1, 0} I Real Real.instAddCommMonoid (@Finset.univ.{u_1} I inst) fun (i : I) =>
+      @Finset.sum.{u_1, 0} I Real Real.instAddCommMonoid (@Finset.univ.{u_1} I inst) fun (s : I) =>
+        @Finset.sum.{u_1, 0} I Real Real.instAddCommMonoid (@Finset.univ.{u_1} I inst) fun (t : I) => f i s t)
+    (@Finset.sum.{u_1, 0} I Real Real.instAddCommMonoid (@Finset.univ.{u_1} I inst) fun (i : I) =>
+      @Finset.sum.{u_1, 0} I Real Real.instAddCommMonoid (@Finset.univ.{u_1} I inst) fun (s : I) =>
+        @Finset.sum.{u_1, 0} I Real Real.instAddCommMonoid (@Finset.univ.{u_1} I inst) fun (t : I) => f t s i)
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.triple_sum_swap
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.scalar_rearrangement
+E593DensityDevelopment.CoefficientCompensationRequest.scalar_rearrangement : ∀ (x y : Real)
+  (hx : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) x)
+  (hy : @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) y)
+  (k u : Nat) (huk : @LE.le.{0} Nat instLENat u k),
+  @LE.le.{0} Real Real.instLE
+    (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) x k)
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) y
+          (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) u)))
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) y k)
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) x
+          (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) u))))
+    (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) x u)
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) y
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k u)))
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) y u)
+        (@HPow.hPow.{0, 0, 0} Real Nat Real
+          (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) x
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k u))))
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.scalar_rearrangement
+E593_PROOF_BEGIN_TYPE E593DensityDevelopment.CoefficientCompensationRequest.finite_coefficient_compensation
+E593DensityDevelopment.CoefficientCompensationRequest.finite_coefficient_compensation.{u_1} : E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement.{u_1}
+E593_PROOF_END_TYPE E593DensityDevelopment.CoefficientCompensationRequest.finite_coefficient_compensation
+E593_PROOF_BEGIN_DEF E593DensityDevelopment.CoefficientCompensationRequest.energy0
+def E593DensityDevelopment.CoefficientCompensationRequest.energy0.{v} : {I : Type v} →
+  [Fintype.{v} I] → (theta : I → Real) → (M : I → I → I → Real) → (k r u h : Nat) → Real :=
+fun {I : Type v} [inst : Fintype.{v} I] (theta : I → Real) (M : I → I → I → Real) (k r u h : Nat) =>
+  @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+      (@OfNat.ofNat.{0} Real (nat_lit 4)
+        (@instOfNatAtLeastTwo.{0} Real (nat_lit 4) Real.instNatCast
+          E593DensityDevelopment.CoefficientCompensationRequest.energy0._proof_1)))
+    (@Finset.sum.{v, 0} I Real Real.instAddCommMonoid (@Finset.univ.{v} I inst) fun (i : I) =>
+      @Finset.sum.{v, 0} I Real Real.instAddCommMonoid (@Finset.univ.{v} I inst) fun (s : I) =>
+        @Finset.sum.{v, 0} I Real Real.instAddCommMonoid (@Finset.univ.{v} I inst) fun (t : I) =>
+          @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                  (@HPow.hPow.{0, 0, 0} Real Nat Real
+                    (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                    (theta i) k)
+                  (@HPow.hPow.{0, 0, 0} Real Nat Real
+                    (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                    (theta s)
+                    (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+                      (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) r)))
+                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                  (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                  (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                    (@HPow.hPow.{0, 0, 0} Real Nat Real
+                      (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                      (theta s) h))
+                  (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (theta t)
+                (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+                  (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) u)))
+            (@HPow.hPow.{0, 0, 0} Real Nat Real
+              (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (M i s t)
+              (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+E593_PROOF_END_DEF E593DensityDevelopment.CoefficientCompensationRequest.energy0
+E593_PROOF_BEGIN_DEF E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal
+def E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal.{v} : {I : Type v} →
+  [Fintype.{v} I] → (theta : I → Real) → (M : I → I → I → Real) → (k r u l h : Nat) → Real :=
+fun {I : Type v} [inst : Fintype.{v} I] (theta : I → Real) (M : I → I → I → Real) (k r u l h : Nat) =>
+  @Finset.sum.{v, 0} I Real Real.instAddCommMonoid (@Finset.univ.{v} I inst) fun (i : I) =>
+    @Finset.sum.{v, 0} I Real Real.instAddCommMonoid (@Finset.univ.{v} I inst) fun (s : I) =>
+      @Finset.sum.{v, 0} I Real Real.instAddCommMonoid (@Finset.univ.{v} I inst) fun (t : I) =>
+        @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                  (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (theta i)
+                  u)
+                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                  (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (theta s)
+                  (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) r l)))
+              (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+                (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                  (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (theta s)
+                  h)))
+            (@HPow.hPow.{0, 0, 0} Real Nat Real
+              (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (theta t)
+              (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k u)))
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid))) (M i s t)
+            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+E593_PROOF_END_DEF E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal
+E593_PROOF_BEGIN_DEF E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement
+def E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement.{v} : Prop :=
+∀ (I : Type v) (inst : Fintype.{v} I) (theta : I → Real) (M : I → I → I → Real) (k r u l h : Nat) (c : Real),
+  (∀ (i : I),
+      And
+        (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (theta i))
+        (@LE.le.{0} Real Real.instLE (theta i)
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))) →
+    (∀ (i s t : I), @Eq.{1} Real (M i s t) (M t s i)) →
+      @LE.le.{0} Nat instLENat u k →
+        @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) u →
+          @LE.le.{0} Nat instLENat l r →
+            @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) l →
+              @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) h →
+                @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                    c →
+                  (∀ (x : Real),
+                      @LE.le.{0} Real Real.instLE
+                          (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) x →
+                        @LE.le.{0} Real Real.instLE x
+                            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) →
+                          @LE.le.{0} Real Real.instLE
+                            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                                (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                  (@OfNat.ofNat.{0} Real (nat_lit 4)
+                                    (@instOfNatAtLeastTwo.{0} Real (nat_lit 4) Real.instNatCast
+                                      E593DensityDevelopment.CoefficientCompensationRequest.energy0._proof_1)))
+                                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                  (@instHPow.{0, 0} Real Nat
+                                    (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                  x (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) r l)))
+                              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                (@instHPow.{0, 0} Real Nat
+                                  (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                  (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                    (@instHPow.{0, 0} Real Nat
+                                      (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                    x h))
+                                (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+                            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c
+                              (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+                                (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                  (@instHPow.{0, 0} Real Nat
+                                    (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                  x h)))) →
+                    @LE.le.{0} Real Real.instLE
+                      (@E593DensityDevelopment.CoefficientCompensationRequest.energy0.{v} I inst theta M k r u h)
+                      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c
+                        (@E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal.{v} I inst theta M k r u l
+                          h))
+E593_PROOF_END_DEF E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.energy0
+'E593DensityDevelopment.CoefficientCompensationRequest.energy0' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.energy0
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal
+'E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement
+'E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.compensationStatement
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.msum_map_le
+'E593DensityDevelopment.CoefficientCompensationRequest.msum_map_le' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.msum_map_le
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.msum_map_mul_left
+'E593DensityDevelopment.CoefficientCompensationRequest.msum_map_mul_left' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.msum_map_mul_left
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.fsum_le
+'E593DensityDevelopment.CoefficientCompensationRequest.fsum_le' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.fsum_le
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.fsum_mul_left
+'E593DensityDevelopment.CoefficientCompensationRequest.fsum_mul_left' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.fsum_mul_left
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.fsum_add
+'E593DensityDevelopment.CoefficientCompensationRequest.fsum_add' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.fsum_add
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.fsum_comm
+'E593DensityDevelopment.CoefficientCompensationRequest.fsum_comm' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.fsum_comm
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.triple_sum_swap
+'E593DensityDevelopment.CoefficientCompensationRequest.triple_sum_swap' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.triple_sum_swap
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.scalar_rearrangement
+'E593DensityDevelopment.CoefficientCompensationRequest.scalar_rearrangement' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.scalar_rearrangement
+E593_PROOF_BEGIN_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.finite_coefficient_compensation
+'E593DensityDevelopment.CoefficientCompensationRequest.finite_coefficient_compensation' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+E593_PROOF_END_AXIOM E593DensityDevelopment.CoefficientCompensationRequest.finite_coefficient_compensation
+E593_PROOF_BEGIN_FULL_TARGET_TYPE
+@id.{0}
+  (∀ (I : Type v) (inst : Fintype.{v} I) (theta : I → Real) (M : I → I → I → Real) (k r u l h : Nat) (c : Real),
+    (∀ (i : I),
+        And
+          (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+            (theta i))
+          (@LE.le.{0} Real Real.instLE (theta i)
+            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))) →
+      (∀ (i s t : I), @Eq.{1} Real (M i s t) (M t s i)) →
+        @LE.le.{0} Nat instLENat u k →
+          @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) u →
+            @LE.le.{0} Nat instLENat l r →
+              @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) l →
+                @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) h →
+                  @LE.le.{0} Real Real.instLE
+                      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) c →
+                    (∀ (x : Real),
+                        @LE.le.{0} Real Real.instLE
+                            (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) x →
+                          @LE.le.{0} Real Real.instLE x
+                              (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) →
+                            @LE.le.{0} Real Real.instLE
+                              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                                  (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                                    (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                                    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                    (@OfNat.ofNat.{0} Real (nat_lit 4)
+                                      (@instOfNatAtLeastTwo.{0} Real (nat_lit 4) Real.instNatCast
+                                        (@Nat.instAtLeastTwoHAddOfNat
+                                          (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))
+                                          (@Nat.instNeZeroSucc
+                                            (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))))))
+                                  (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                    (@instHPow.{0, 0} Real Nat
+                                      (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                    x (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) r l)))
+                                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                  (@instHPow.{0, 0} Real Nat
+                                    (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                  (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                                    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                    (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                      (@instHPow.{0, 0} Real Nat
+                                        (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                      x h))
+                                  (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+                              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c
+                                (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+                                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                  (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                    (@instHPow.{0, 0} Real Nat
+                                      (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                    x h)))) →
+                      @LE.le.{0} Real Real.instLE
+                        (@E593DensityDevelopment.CoefficientCompensationRequest.energy0.{v} I inst theta M k r u h)
+                        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c
+                          (@E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal.{v} I inst theta M k r u
+                            l h)))
+  (have this :
+    ∀ (I : Type v) (inst : Fintype.{v} I) (theta : I → Real) (M : I → I → I → Real) (k r u l h : Nat) (c : Real),
+      (∀ (i : I),
+          And
+            (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+              (theta i))
+            (@LE.le.{0} Real Real.instLE (theta i)
+              (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))) →
+        (∀ (i s t : I), @Eq.{1} Real (M i s t) (M t s i)) →
+          @LE.le.{0} Nat instLENat u k →
+            @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) u →
+              @LE.le.{0} Nat instLENat l r →
+                @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) l →
+                  @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) h →
+                    @LE.le.{0} Real Real.instLE
+                        (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) c →
+                      (∀ (x : Real),
+                          @LE.le.{0} Real Real.instLE
+                              (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) x →
+                            @LE.le.{0} Real Real.instLE x
+                                (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) →
+                              @LE.le.{0} Real Real.instLE
+                                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                                  (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                                    (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                                      (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                                      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                      (@OfNat.ofNat.{0} Real (nat_lit 4)
+                                        (@instOfNatAtLeastTwo.{0} Real (nat_lit 4) Real.instNatCast
+                                          (@Nat.instAtLeastTwoHAddOfNat
+                                            (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))
+                                            (@Nat.instNeZeroSucc
+                                              (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))))))
+                                    (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                      (@instHPow.{0, 0} Real Nat
+                                        (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                      x (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) r l)))
+                                  (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                    (@instHPow.{0, 0} Real Nat
+                                      (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                    (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                                      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                      (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                        (@instHPow.{0, 0} Real Nat
+                                          (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                        x h))
+                                    (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+                                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c
+                                  (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+                                    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                    (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                      (@instHPow.{0, 0} Real Nat
+                                        (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                      x h)))) →
+                        @LE.le.{0} Real Real.instLE
+                          (@E593DensityDevelopment.CoefficientCompensationRequest.energy0.{v} I inst theta M k r u h)
+                          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c
+                            (@E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal.{v} I inst theta M k r
+                              u l h)) :=
+    E593DensityDevelopment.CoefficientCompensationRequest.finite_coefficient_compensation.{v};
+  this) : ∀ (I : Type v) (inst : Fintype.{v} I) (theta : I → Real) (M : I → I → I → Real) (k r u l h : Nat) (c : Real),
+  (∀ (i : I),
+      And
+        (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (theta i))
+        (@LE.le.{0} Real Real.instLE (theta i)
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))) →
+    (∀ (i s t : I), @Eq.{1} Real (M i s t) (M t s i)) →
+      @LE.le.{0} Nat instLENat u k →
+        @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) u →
+          @LE.le.{0} Nat instLENat l r →
+            @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) l →
+              @LE.le.{0} Nat instLENat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))) h →
+                @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                    c →
+                  (∀ (x : Real),
+                      @LE.le.{0} Real Real.instLE
+                          (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) x →
+                        @LE.le.{0} Real Real.instLE x
+                            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) →
+                          @LE.le.{0} Real Real.instLE
+                            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                                (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                  (@OfNat.ofNat.{0} Real (nat_lit 4)
+                                    (@instOfNatAtLeastTwo.{0} Real (nat_lit 4) Real.instNatCast
+                                      (@Nat.instAtLeastTwoHAddOfNat
+                                        (@OfNat.ofNat.{0} Nat (nat_lit 3) (instOfNatNat (nat_lit 3)))
+                                        (@Nat.instNeZeroSucc
+                                          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))))))
+                                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                  (@instHPow.{0, 0} Real Nat
+                                    (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                  x (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) r l)))
+                              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                (@instHPow.{0, 0} Real Nat
+                                  (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                  (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                    (@instHPow.{0, 0} Real Nat
+                                      (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                    x h))
+                                (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+                            (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c
+                              (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+                                (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                                (@HPow.hPow.{0, 0, 0} Real Nat Real
+                                  (@instHPow.{0, 0} Real Nat
+                                    (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                                  x h)))) →
+                    @LE.le.{0} Real Real.instLE
+                      (@E593DensityDevelopment.CoefficientCompensationRequest.energy0.{v} I inst theta M k r u h)
+                      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) c
+                        (@E593DensityDevelopment.CoefficientCompensationRequest.diamondTotal.{v} I inst theta M k r u l
+                          h))
+E593_PROOF_END_FULL_TARGET_TYPE

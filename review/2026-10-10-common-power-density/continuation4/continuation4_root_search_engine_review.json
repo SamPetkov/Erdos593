@@ -1,0 +1,20 @@
+{
+  "status": "pass",
+  "reviewer": "root",
+  "independent_of_author": true,
+  "source_bindings": {
+    "continuation4_search_checks.py": "0d14274e5957c70bd4db1f4d5518ea8cc903dc362503be67a3b8588f556cc2bc",
+    "continuation4_search_engine.py": "95c77602388ff2b4242d9417fa651a8bf0cdba2639d04566966ea7cd99a81874",
+    "continuation_cover_engine.py": "1187d00bdafdec7f1ffd3b7ad7ee1b2f2eb8d27f2593fd6ee12808628a14495a"
+  },
+  "archival_result_sha256": "5e78b63cf0072d63e1474bfc4f21411f574a76e6439887af299f144947af488c",
+  "independent_rerun_directory": "/tmp/e593_round4_search_review_r6_sx7k0",
+  "rerun_matches_archival_json": true,
+  "meaningful_checks": {
+    "original_weighted_gate": "Full 8state root and original weighted powers; six independently integrated actual diamond source formulas and independently integrated bipartite double; all seven comparisons match both variable elimination and cleared-integer engine.",
+    "character_transport": "Three original-law even-power decompositions match actual fullstate powers. Actual third character interaction remains in the host.",
+    "controls": "Twenty-one exact original-weight equality/disconnected/bipartite-square cases at simultaneoustupleboundary.",
+    "gradient": "Six directional checks cover both coordinate systems; only numeric sensitivity validation is claimed.",
+    "constraints": "Seven malformed inputs rejected; actual nonnegative symmetric flow parameterization enforces root realization for every accepted finite point."
+  }
+}

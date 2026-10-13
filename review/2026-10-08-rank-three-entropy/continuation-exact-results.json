@@ -1,0 +1,113 @@
+{
+  "Lean_validation": false,
+  "cases": {
+    "hierarchy": {
+      "A_centered_eigenvalues": [
+        "81/100",
+        "16/25"
+      ],
+      "F": "481731187899493193/62500000000000000",
+      "K_l_norm": "693/100",
+      "T": [
+        [
+          "19/10",
+          "1/10",
+          "1/10"
+        ],
+        [
+          "1/10",
+          "23/10",
+          "3/10"
+        ],
+        [
+          "1/10",
+          "3/10",
+          "83/10"
+        ]
+      ],
+      "exponents": [
+        3,
+        2,
+        1,
+        1,
+        1,
+        1
+      ],
+      "gamma": "1/4",
+      "hierarchical_host": true,
+      "mixing_norm_condition": false,
+      "mu": [
+        "1/2",
+        "2/5",
+        "1/10"
+      ],
+      "original_density_condition": false,
+      "p": "10/83"
+    },
+    "mixing": {
+      "F": "1332635032762376877917833976629314836322908134824597/63382530011411470074835160268800000000000000000000",
+      "K_l_norm": "5338684567323/1677721600000",
+      "T": [
+        [
+          "19/4",
+          "1/8",
+          "0",
+          "0",
+          "1/8"
+        ],
+        [
+          "1/8",
+          "19/4",
+          "1/8",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "1/8",
+          "19/4",
+          "1/8",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "1/8",
+          "19/4",
+          "1/8"
+        ],
+        [
+          "1/8",
+          "0",
+          "0",
+          "1/8",
+          "19/4"
+        ]
+      ],
+      "actual_mixing_condition": true,
+      "exponents": [
+        2,
+        6,
+        1,
+        5,
+        1,
+        5
+      ],
+      "gamma": "1/4",
+      "gamma_times_norm": "5338684567323/6710886400000",
+      "mu": [
+        "1/5",
+        "1/5",
+        "1/5",
+        "1/5",
+        "1/5"
+      ],
+      "original_density_condition": false,
+      "p": "4/19"
+    }
+  },
+  "method": "Finite weighted sums with Fraction",
+  "random_search": false,
+  "status": "TWO_FIXED_EXACT_DIAGNOSTICS_PASS",
+  "universal_proof": false
+}

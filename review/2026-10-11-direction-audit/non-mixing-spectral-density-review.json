@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "scope": "Analytical full six-edge density for two structural spectral classes, plus sharpness of the entrywise certificate",
+  "source": "non-mixing-spectral-density.md",
+  "source_sha256": "44d267480b112ee9b31f273c8513d40a52c1c80772b4fb2f77f5c7a58bfda738",
+  "checker": "check_non_mixing_spectral_density.py",
+  "checker_sha256": "f7582c194ce2da589d4faddd69ec6111f3b287fd0922336a17651d43b9e5780c",
+  "checks": "non-mixing-spectral-density-checks.json",
+  "checks_sha256": "5e89622925542112eaaff70a830764d3cd99ce732a758d3722b27babbc7130dc",
+  "root_complete_saved_source_review": "PASS",
+  "root_independent": false,
+  "actual_separate_source_review": {
+    "agent": "collective_maximum_certificate",
+    "complete_saved_source_read": true,
+    "actual_hash_confirmed": true,
+    "verdict": "PASS",
+    "repairs_required": false
+  },
+  "actual_separate_source_code_results_review": {
+    "agent": "density_finite_host_tail_audit",
+    "complete_saved_files_read": true,
+    "actual_hashes_confirmed": true,
+    "verdict": "PASS",
+    "checker_exit_code": 0,
+    "checker_wall_time_seconds": 0.1814962,
+    "returned_json_logically_matches_saved": true
+  },
+  "root_exact_check": {
+    "exit_code": 0,
+    "wall_time_seconds": 0.2051181,
+    "method": "fixed Fraction-only matrices, no optimizer or eigensolve",
+    "record": "normalized returned JSON; not a preserved raw OS stdout byte original"
+  },
+  "proved": [
+    "Flat positive nonconstant spectrum, any active rank: F>=1 for all six positive edge labels, without ordering or a mixing bound",
+    "rank(A-Pi)<=2 and any equal opposite edge lengths: F>=1, including arbitrary positive original laws and inactive zero modes",
+    "Equality in the stated classes iff A=Pi; in the actual self-adjoint root setting iff T=Pi",
+    "For every unequal J,U an actual strictly positive rank-two root can have a negative entry in the specified H representation; this is certificate sharpness only"
+  ],
+  "boundaries_checked": [
+    "positive but nonuniform masses",
+    "kernel zeros",
+    "inactive zero eigenvalues",
+    "additional unit modes",
+    "periodic and reducible roots",
+    "negative root eigenvalues",
+    "all six positive exponents without ordering",
+    "opposite-pair relabeling",
+    "rank zero and rank one",
+    "rho=1",
+    "equality"
+  ],
+  "diagnostics": [
+    "Exact original-law F equals complete pair contraction",
+    "Eight positive axis terms plus centered residual equal F-D",
+    "Splitting a state preserves density and adds an inactive zero mode",
+    "Actual H has negative entries for unequal filters but a matching opposite pair can be relabeled",
+    "A different unequal-opposite tuple has positive exact F without entrywise H success",
+    "Rank-three flat host lies outside previous mass/cap/sufficient mixing guards",
+    "Fixed algebraic sharpness value and one-state/constant/three-stationary-component/binary-flip cases"
+  ],
+  "proof_by_finite_diagnostics": false,
+  "numerical_search": false,
+  "lean_validation": false,
+  "full_external_audit": false,
+  "novelty_claim": false,
+  "unrestricted_density_proved": false,
+  "manuscript_changed": false,
+  "verdict": "FOLLOWS for the two stated structural density classes and the narrowly scoped certificate obstruction; general mixed-spectrum unequal-length collective payment remains open"
+}

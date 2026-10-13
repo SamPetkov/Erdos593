@@ -1,7 +1,28 @@
-# Obligatory Triple Systems: Alternative Proof and Lean Verification
+# Erdős 593: classification, finite structure and quantitative questions
+
+## Current author-review draft and mathematics
+
+The [current manuscript source](review/2026-10-13-readability/erdos593_obligatory_triple_systems.tex)
+includes the finite structural extensions and restricted entropy/density
+comparisons. The [13 October readability review](review/2026-10-13-readability/README.md)
+records six prose-only changes and preserves every proof, equation and citation.
+The preview compiler failed during preparation, so this source update is not
+claimed to have a newly verified PDF. The repository-root PDF below is the
+historical classification release, not the complete current draft.
+
+The latest checked analytical result is
+[full ordered common-power density for rank at most two](review/2026-10-11-direction-audit/rank-two-ordered-density.md).
+It retains arbitrary positive original masses and the actual nonnegative
+Markov root. Arbitrary active rank remains open, and the new entropy/density
+material has no accepted Lean implementation. See the
+[research overview](review/2026-10-11-direction-audit/README.md) for exact
+coverage and the [consolidation record](review/2026-10-13-consolidation/README.md)
+for the preserved historical drafts.
+
+## Verified classification release
 
 **Author:** Samuil Petkov  
-**Manuscript revision:** 21 July 2026
+**Historical root-manuscript revision:** 21 July 2026
 
 This repository contains an alternative proof of the finite classification in
 Erdős Problem 593 and a complete Lean 4 formal verification of the proof
@@ -37,7 +58,7 @@ constructive class is generated from private-vertex expansions of finite
 bipartite graphs and finite edgeless systems under finite disjoint unions and
 one-point amalgamations.
 
-## Manuscript files
+## Historical classification-release files
 
 - `erdos593_obligatory_triple_systems.tex` — canonical A4 `amsart` source.
 - `erdos593_obligatory_triple_systems.pdf` — compiled manuscript.
@@ -85,8 +106,11 @@ and references retain their own rights and attribution requirements.
 
 ## Manuscript synchronization
 
-`erdos593_obligatory_triple_systems.tex` is the sole authoritative manuscript
-source.  The root PDF and Markdown file, the `arxiv/main.*` mirrors,
+For the historical classification release,
+`erdos593_obligatory_triple_systems.tex` is the authoritative manuscript
+source.  The current author-review draft linked above is separate and must
+not be processed by this older release pipeline.  The root PDF and Markdown
+file, the `arxiv/main.*` mirrors,
 `Erdos593_revised.tex`, and `arxiv/Erdos593_arxiv_source.zip` are deterministic
 generated artifacts.  The arXiv ZIP contains only `main.tex`, since the
 bibliography is embedded in that file.  Regenerate everything with:

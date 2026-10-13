@@ -1,0 +1,68 @@
+{
+  "reviewer": "/root/unequal6",
+  "status": "PASS_FOR_STATED_ONE_EDGE_FAMILY",
+  "reviewed_files": {
+    "continuation6_cover_moments.md": "ab436320ce637ac2e8e6670a72e22af3732a51135595c306d033f03717aa6528",
+    "continuation6_cover_moments_verify.py": "70f0c450a3f62ae9a9a55ca0da3a1d6d7f8ac0968688a8e73bded1b8c7eae7be",
+    "continuation6_cover_moments_checks.json": "088589cb90b600fd37ca7c2eeab741041e11dfc414f4a5b980ed7576a427be38"
+  },
+  "review_source_sha256": "c54050716b0736b42527719568ae354b1a932bb7553476b4c8ed6b5eb5f9fd57",
+  "independent_coefficient_reconstruction": {
+    "original_state_count": 32,
+    "original_third_moments_checked": 343,
+    "nonzero_tetrahedron_assignments": 235,
+    "edge_mode_coefficient_count": 294,
+    "all_five_signed_interval_tables_match": {
+      "ac": true,
+      "ad": true,
+      "bc": true,
+      "bd": true,
+      "cd": true
+    },
+    "actual_negative_ab_eigenvalue_at_every_k_ge4": true,
+    "actual_negative_ad_eigenvalue_at_k4": true
+  },
+  "proof_checks": [
+    {
+      "item": "Original measure and orientation",
+      "detail": "Integrating y_a in the one-edge cover pairs D(x_a,y_a) with K(x_sigma_inverse(a),y_a), giving R(x_sigma_inverse(a),x_a). Disjoint permutation cycles factor under the unchanged full product measure."
+    },
+    {
+      "item": "Real spectrum is proved only for this host",
+      "detail": "The range is the seven active characters. Simultaneous triangle sign flips preserve the original law and kernels; seven distinct characters diagonalize the active compression of D. The complementary block can map into the active range but cannot change eigenvalues or power traces."
+    },
+    {
+      "item": "Second moment controls all lengths",
+      "detail": "Real eigenvalues, with algebraic multiplicity, give tr(R^m)=sum lambda^m even without diagonalizability. The l_m<=l_2 inequality yields absolute trace at most tr(R^2)^(m/2). Entrywise nonnegative actual R makes every power trace nonnegative, permitting multiplication over cycles."
+    },
+    {
+      "item": "Negative mode budget",
+      "detail": "For rho>=1,0<w<1,z>=-w/4, the three-mode square defect exceeds w: when z<0 it is at least3w/2-w^2/2>w. The sum of those modes is positive, so adding other nonnegative modes increases the defect."
+    },
+    {
+      "item": "Infinite k range",
+      "detail": "All k dependence is exactly theta_j^k in the reconstructed coefficients. For k>=4, 0<=theta_j^k<=theta_j^4 proves each signed coefficient interval. For ab, the exact bounds give -z/w<2^(-124k-92)<1/4 and w>2^(-(4k+25))."
+    },
+    {
+      "item": "Strict all-sheet deficit",
+      "detail": "The certified trace-square gap is strictly larger than delta_e(k)>0. Real spectrum and rho>=1 also ensure F^2-delta_e(k)>0. Each nontrivial permutation cycle contributes at most that quantity to the appropriate half power; identity cycles contribute F exactly."
+    },
+    {
+      "item": "Spectral count",
+      "detail": "The six centered active functions have five positive square values, with the value2^-6 repeated; the other25 centered eigenvalues vanish. Zero is a sixth entire-centered value, not omitted from the band count."
+    },
+    {
+      "item": "Scope barrier",
+      "detail": "The proof covers one permuted edge among six, all sheet counts, and the displayed tuple family on one reused actual host. It does not factor arbitrary multi-edge permutations, establish real spectra for arbitrary hosts, prove global cover domination, or supply a density counterexample."
+    }
+  ],
+  "isolated_author_replay_matches_except_elapsed_seconds": true,
+  "author_literal_checks_replayed": {
+    "source_entries": 49,
+    "original_density_assignments": 1048576,
+    "weighted_cover_controls": 8,
+    "assignments_per_cover_control": 4096
+  },
+  "original_files_unchanged": true,
+  "scope": "One-edge all-sheet comparisons only; unrestricted target and all-edge cover comparison remain unresolved."
+}

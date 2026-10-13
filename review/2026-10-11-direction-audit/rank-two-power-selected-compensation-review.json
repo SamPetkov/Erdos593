@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "scope": "Analytical selected-power collective payment for rank-two residual strip r<=2u-1 and actual-root ordered corollary",
+  "source": "rank-two-power-selected-compensation.md",
+  "source_sha256": "caa3fcb0b0395e36e068040e4ff41bf0354697caee369b0eebd093d3860906d1",
+  "root_complete_final_saved_source_review": "PASS",
+  "root_independent": false,
+  "actual_separate_complete_saved_source_reviews": [
+    {
+      "agent": "collective_maximum_certificate",
+      "verdict": "FOLLOWS",
+      "complete_final_saved_source_read": true,
+      "actual_hash_confirmed": true
+    },
+    {
+      "agent": "density_finite_host_tail_audit",
+      "verdict": "PASS",
+      "complete_final_saved_source_and_inherited_source_read": true,
+      "actual_hash_confirmed": true
+    }
+  ],
+  "proved": [
+    "A-only rank(A-Pi)=2, J-l<u<r+l,r<=2u-1: F>=1+p^(u+r+l)/2>1.",
+    "With actual nonnegative symmetric root A=T^2, rank(A-Pi)<=2 and r<2u, every original ordered tuple satisfies F>=1.",
+    "All remaining strip tuples with u>=l are paid, since that strip forces r<=2u-2."
+  ],
+  "actual_analytical_checks": [
+    "Four-occurrence signed channel weights and separate triangle credits preserved",
+    "Failure of positive companion implies an explicit tau threshold",
+    "Entrywise nonnegative actual K_v supplies the selected-power wedge",
+    "Positive coefficients and weighted AM-GM bound b²c²",
+    "Integer ceiling and p-power direction reviewed",
+    "All three strip exponent cases paid",
+    "Zero/equal/unit/inactive modes and moment-sign exhaustion",
+    "Actual-root provenance retained outside strip"
+  ],
+  "inherited_source_sha256": "999ee928fcc95ff819df6229e5dff062623aee7434a628d4013ed74fdbf1101a",
+  "retained_gap": "Remaining two-mode X-negative route lies at r>=2u,l>=u+h+1,1<=h<=u-1, still excluding already-paid matching and previous guards. Conditional k transfer does not pay its other sign branch. Arbitrary-rank collective payment is also open.",
+  "new_computation": false,
+  "new_service_request": false,
+  "proof_by_finite_diagnostics": false,
+  "lean_validation": false,
+  "full_external_audit": false,
+  "novelty_claim": false,
+  "unrestricted_density_proved": false,
+  "manuscript_changed": false,
+  "monitors": "paused",
+  "verdict": "Complete actual saved-source reviews support the stated analytical extension, not unrestricted or kernel acceptance."
+}

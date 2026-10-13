@@ -1,0 +1,199 @@
+% Reviewed mathematical development fragment; not a replacement manuscript.
+% Source status is recorded in development-brief.json and the per-direction
+% records. Lean candidates are not accepted merely because this prose is proved.
+
+\subsection{Cyclic content and the boundary of the density inequality}
+
+The canonical description separates two sources of density behaviour: the
+cyclic core of an atom and the locations at which atoms are attached.  The
+following low-rank observation complements the high-rank negative example.
+It is a deduction from graph recognition and known theta inequalities,
+not a new proof of those inequalities.
+
+\begin{proposition}[The low-rank single-atom boundary]
+\label{density-low-rank-atom-boundary}
+Let $r\ge3$, and let $A$ be a single canonical obligatory $r$-uniform atom.
+If the cycle rank of its connected Levi graph is at most two, then $A$ is
+Sidorenko.  Consequently a non-Sidorenko single canonical atom has Levi
+cycle rank at least three.
+\end{proposition}
+\begin{proof}
+A single-edge atom has density $p$ and cycle rank zero.  Otherwise the
+canonical description gives $A=J^{[r]}$, where $J$ is a finite simple
+$2$-connected bipartite graph.  If $n=|V(J)|$ and $m=|E(J)|$, then
+\[
+ \beta(A)=rm-\bigl(n+(r-1)m\bigr)+1=m-n+1=\beta(J).
+\]
+Every vertex of $J$ has degree at least two, so $\beta(J)\ge1$.
+At rank one, the degree sum forces all degrees to be two; thus $J$ is an
+even cycle.  At rank two, the degree excess is
+$\sum_v(\deg(v)-2)=2$.  The possibility of a single vertex of degree four
+is excluded by $2$-connectivity: deleting it would leave two path
+components.  Hence there are exactly two vertices of degree three, and
+the other vertices lie on three internally disjoint paths between them.
+Bipartiteness forces the three path lengths to have the same parity.
+
+For a symmetric $[0,1]$-valued $r$-kernel $U$ on a finite probability
+space, let $M_U$ be its two-coordinate marginal.  Integrating each
+edge's distinct private vertices gives
+\[
+ t(J^{[r]},U)=t(J,M_U),\qquad \mathbb E M_U=\mathbb E U=p.
+\]
+Even cycles are Sidorenko.  Both even and odd generalized theta graphs
+are Sidorenko by Im--Li--Liu, Theorem~1.3 and Proposition~4.3,
+respectively~\citep{imliliu2024}.  These graphon statements apply to a
+finite weighted kernel by representing its states by intervals of the
+corresponding weights.  Therefore $t(J,M_U)\ge p^m$, as required.
+\end{proof}
+
+This proposition concerns one atom.  It neither gives a rank-three
+counterexample nor asserts closure under arbitrary one-point assembly.
+In particular, the all-odd theta case cannot be discarded by imposing
+an odd-order convention on the core.
+
+\subsection{A finite sparsity certificate and sparse random hosts}
+
+Let $J$ be the point--face incidence graph of OpenAI's $13$-point,
+$22$-triangle complex~\citep[finite-complex proposition, part~(ii), and
+exposure-order table]{openai161}.  The following balancedness calculation
+does not use its rank-layer estimate.  We retain the face labels and
+the two exposure orders of the source pinned in the bibliography:
+\[
+\begin{split}
+ &(0,1,2,4,5,16,14,18,20,19,13),\\
+ &(3,9,8,10,11,17,15,12,21,7,6).
+\end{split}
+\]
+After the first triangle, the corresponding new points are, respectively,
+\[
+ (9,2,10,7,5,6,12,8,11,4),\qquad
+ (4,3,11,10,5,6,8,12,1,7).
+\]
+These are directly checked membership and freshness certificates.
+Every nonempty selection of $h$ faces from either order therefore uses
+at least $h+2$ points: its first face uses three points, and every later
+selected face retains its certified new point.
+
+\begin{proposition}[Strict balancedness of the incidence example]
+\label{density-incidence-strict-balance}
+Every subgraph $Q\subseteq J$ with $v(Q)\ge3$ satisfies
+$e(Q)\le2v(Q)-4$.  The graph $J$ is strictly $2$-balanced, with
+\[
+ m_2(J)=\frac{65}{33}.
+\]
+For every $r\ge2$, its private expansion $A_r=J^{[r]}$ is strictly
+$r$-balanced, with
+\[
+ m_r(A_r)=\frac{65}{65r-97}.
+\]
+Here $m_r(H)=\max_{Q\subseteq H,\ v(Q)>r}(e(Q)-1)/(v(Q)-r)$.
+\end{proposition}
+\begin{proof}
+Suppose $Q$ retains $a$ point nodes and $b$ face nodes.  If $a\ge2$,
+at most $2a-4$ faces have all three points retained, by the two exposure
+certificates.  Every other retained face contributes at most two
+incidences, so $e(Q)\le2b+2a-4$.  When $a=1$, the condition $a+b\ge3$
+gives $b\ge2$ and $e(Q)\le b\le2(a+b)-4$; when $a=0$, the assertion
+is immediate.  Removing edges only decreases these bounds.
+
+Since $v(J)=35$ and $e(J)=66$, its $2$-density is $65/33$.
+If $3\le v(Q)<35$, then
+\[
+ \frac{e(Q)-1}{v(Q)-2}
+ \le 2-\frac1{v(Q)-2}<2-\frac1{33}.
+\]
+A proper subgraph on all $35$ vertices has fewer than $66$ edges and
+also gives a strict inequality.
+
+Now select $f\ge2$ edges of $A_r$, and let $v$ be the number of
+endpoints of the corresponding core edges.  Their union contains
+exactly $v+(r-2)f$ vertices, since the private vertices are disjoint.
+Any additional isolated selected vertices can only increase the
+denominator.  The core estimate gives
+\[
+ \frac{f-1}{v+(r-2)f-r}
+ =\frac1{r-2+(v-2)/(f-1)}
+ \le\frac{65}{65r-97}.
+\]
+Strictness follows unless all core edges and vertices are retained
+and no additional isolated vertex is selected.  A selection of one
+edge with more than $r$ vertices has ratio zero; an edgeless selection
+has negative ratio.  Thus neither affects the maximum.
+\end{proof}
+
+This finite calculation places the same atom family in the scope of
+Nie--Spiro's random Tur\'an theorem~\citep{niespiro2025}.
+Write $s(A_r)$ for their Sidorenko excess, namely the supremum of
+$s\in\mathbb R$ for which some finite host $G$ has
+$0<t(A_r,G)=p_r(G)^{66+s}$, with $0<p_r(G)<1$.
+The supremum need not be attained.  Let $G^{(r)}_{n,\rho}$ denote the random
+$r$-uniform hypergraph with edge probability $\rho$.
+Set $\alpha=r-97/65$.  For fixed $r$ and
+$\rho\ge n^{-\alpha}$, their theorem gives, asymptotically almost surely,
+\[
+ \operatorname{ex}(G^{(r)}_{n,\rho},A_r)
+ \ge n^{97/65-o(1)}
+       \bigl(\rho n^{r-97/65}\bigr)^{s(A_r)/(65+s(A_r))}.
+\]
+The balancedness is unconditional.  The conclusion $s(A_r)>0$,
+and hence a positive gain factor when $\rho n^\alpha>1$,
+uses the stated rank-layer and proper-subgraph-flat transfer input.
+No explicit uniform lower bound on $s(A_r)$ or matching upper bound
+is asserted here.
+If $\rho n^\alpha\ge n^\varepsilon$ for a fixed $\varepsilon>0$,
+positive excess gives a polynomial gain.  At the exact threshold the
+displayed gain factor is one.
+
+\subsection{Keeping all attachment ports}
+
+Let the hyperedges of a finite uniform pattern $H$ be partitioned among pieces
+$A_i$.  Let $P$ be its shared vertices and $I_i$ the vertices belonging
+only to piece $i$.  Assume these sets give the full original vertex
+decomposition $P\sqcup\bigsqcup_i I_i$; this is not inferred from an
+edge partition alone.  Isolated vertices can be represented as a
+free factor, or removed when probability weights are normalized.
+The port set of $A_i$ consists of all its
+vertices lying in $P$, not only one chosen root.  For a port assignment
+$x$, put
+\[
+ \Phi_i(x)=\mathbb E_{y\in\Omega^{I_i}}
+                 \prod_{e\in E(A_i)}U\bigl((x\sqcup y)|_e\bigr).
+\]
+The notation means that each factor is evaluated at the actual
+endpoints of its edge.  Independent sampling uses the given finite
+probability weights on $\Omega$.
+
+\begin{proposition}[Exact multi-port contraction]
+\label{density-multiport-contraction}
+With these original edge and vertex decompositions,
+\[
+ t(H,U)=\mathbb E_{x\in\Omega^P}\prod_i\Phi_i(x|_{P\cap V(A_i)}).
+\]
+The identity includes empty products, zero-weight states and pieces
+with several attachment vertices.  It does not require symmetry or
+nonnegativity if the weights and kernel values are interpreted
+algebraically rather than as probabilities and an ordering of the
+input slots of every edge is fixed.
+\end{proposition}
+\begin{proof}
+Fix the shared assignment.  The edge partition groups the factors
+by piece, and the internal assignment carriers are pairwise disjoint.
+The finite sum over their product therefore factors into the product
+of the sums defining $\Phi_i$.  Averaging the shared assignment gives
+the displayed formula.
+\end{proof}
+
+Thus unrooted atom densities are not sufficient attachment data.
+The two-piece one-port case is the covariance identity already used
+in the manuscript.  With several joints, a one-root summary can lose
+correlations between ports of the same atom.  A natural remaining
+question is whether an obligatory assembly whose individual atoms
+are Sidorenko must itself be Sidorenko.  The contraction formula is
+an exact starting point for this question, not a positive or negative
+answer to it.
+
+% The accompanying references.bib contains only the three directly cited
+% primary sources. Im--Li--Liu is cited in its published CPC version;
+% Theorem 1.3 and Proposition 4.3 retain the even/odd parity scopes used here.
+% The Nie--Spiro formula was checked against arXiv:2309.12873, Theorem 1.4;
+% the prose avoids transferring that preprint numbering to the publication.

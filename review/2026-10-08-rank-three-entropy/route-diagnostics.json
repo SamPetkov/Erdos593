@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-08",
+  "scope": "Exact rational four-state diagnostic; individual R_s positivity only",
+  "masses": [
+    "1/4",
+    "1/4",
+    "1/4",
+    "1/4"
+  ],
+  "operator_normalization": "Let L=P/D be the ordinary row-stochastic matrix of T. Relative to uniform mu, the kernel T(x,y)=4P_xy/D, A has operator matrix L^2, and K_j has kernel 4L^(2j). Do not confuse L with the probability-space kernel.",
+  "D": "575156010338000000",
+  "P": [
+    [
+      "429208217716936682",
+      "1622667259420682",
+      "141225499851717965",
+      "3099625509924671"
+    ],
+    [
+      "1622667259420682",
+      "570457683649860690",
+      "1263933653701743",
+      "1811725775016885"
+    ],
+    [
+      "141225499851717965",
+      "1263933653701743",
+      "220601334032062458",
+      "212065242800517834"
+    ],
+    [
+      "3099625509924671",
+      "1811725775016885",
+      "212065242800517834",
+      "358179416252540610"
+    ]
+  ],
+  "N": "1608789",
+  "eigenfunction_numerator_M": [
+    [
+      "910065",
+      "2464323",
+      "929247"
+    ],
+    [
+      "-2327",
+      "1325",
+      "-2786503"
+    ],
+    [
+      "-2588417",
+      "-445357",
+      "930785"
+    ],
+    [
+      "1680679",
+      "-2020291",
+      "926471"
+    ]
+  ],
+  "beta": [
+    "57816/1000000",
+    "697455/1000000",
+    "989109/1000000"
+  ],
+  "original_W": "Choose p=D/(4*570457683649860690) and W(x,y)=P_xy/570457683649860690. Then W is symmetric, strictly positive, bounded by one, and has uniform row mean p. Its normalized kernel W/p is exactly 4P/D.",
+  "exponents": {
+    "k": 1,
+    "u": 1,
+    "r": 6,
+    "l": 6,
+    "h": "any integer >=1"
+  },
+  "negative_coefficient": "R_1<0 for the smallest positive centered eigenvalue theta_1=(57816/1000000)^2. The exact interval is -390859/10^11 < R_1 < -390858/10^11.",
+  "exact_contraction": "Set V=P^2, U=V^6, m=M_column_1. Let C=sum_(b,d)V_bd(sum_a m_a V_ab V_ad)(sum_c m_c U_bc U_cd). Then R_1=4C/(N^2 D^30). This follows from five kernel factors 4L^(2j) and four uniform integration factors, leaving the factor four.",
+  "claims_not_refuted": [
+    "The old unshifted spectral-prefix condition S_j>=0.",
+    "The weaker shifted condition R_0+S_j>=1.",
+    "The target F_h>=1.",
+    "The remaining centered sufficient comparison Q+D_cd>=0."
+  ],
+  "verification": "Recomputed by exact_checks.py; not Lean validation or a target counterexample"
+}

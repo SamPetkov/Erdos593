@@ -1,0 +1,193 @@
+{
+  "date": "2026-10-07",
+  "lane": "D3_rooted_profiles_and_actual_assembly",
+  "status": "BOUNDED_ANALYTICAL_FOLLOW_ON_SOURCE_ONLY_NOT_KERNEL_VALIDATED",
+  "brief": "follow-on-research-brief.json",
+  "scope": {
+    "allowed": "One bounded analytical/primary-source checkpoint under the author-confirmed three-direction brief; new isolated research files only.",
+    "not_done": ["No accepted-source or live-manuscript mutation", "No compiler/version/job/service request", "No Git/external-chat action", "No clock change", "No new universal assembly-closure assertion"]
+  },
+  "conventions": {
+    "host": "Finite set Omega, weights mu(x)>=0 with sum mu=1. Zero-mass states may be deleted; all pointwise conditions below are on supp(mu).",
+    "kernel": "For integer r>=3, a symmetric U:Omega^r->[0,1]. p=E U. Regular means E[U(x,X2,...,Xr)]=p for every x in supp(mu).",
+    "density": "All homomorphisms: t(H,U)=E_assignment product_{e in actual E(H)} U(assignment on the r actual distinct endpoints of e). Isolated vertices integrate to1.",
+    "private_expansion": "J^[r] has the actual core vertices of simple graph J and r-2 distinct new vertices for each actual graph edge. Its expansion edge is the two endpoints plus its own private vertices.",
+    "rooted_profile": "For actual a in V(A), phi_{A,a}(x) is the density after fixing assignment(a)=x and sampling all other actual vertices independently from mu. Its mean is t(A,U).",
+    "assembly_geometry": "The finite hyperedge set is partitioned into nonempty actual piece edge sets. Piece supports are the unions of their edge endpoints. Every vertex in >=2 supports is a joint; all nonjoint support vertices are disjoint between pieces. The bipartite piece-joint incidence graph, with an incidence precisely for membership, is a forest. The union of the supports is the nonisolated carrier. No joint coordinate is counted once per incident piece."
+  },
+  "fresh_source_audit": {
+    "existing_draft": "C:/Users/petko/e593-frontmatter-story-public-20261004/review/2026-10-06-uniformity/erdos593_obligatory_uniform_hypergraphs.tex",
+    "read_ranges": "Density section, approximately lines3423-4510, with focused rereading of lines4418-4505.",
+    "already_present_do_not_readvertise": [
+      "Universal matching-polytope pair-marginal realization and sharp scalar parity coefficients",
+      "Finite-alphabet obstruction and uniform/girth/degree-variance estimates",
+      "Exact one-root covariance formula and identical-root variance formula",
+      "A regular ternary kernel with core-core C4 expansion density greater than private-private density"
+    ],
+    "new_relative_to_the_inspected_draft_only": [
+      "An exact lower bound for core-admissibly rooted even-cycle/edge forest assemblies in regular kernels",
+      "For every r>=3, a bounded regular skew two-point r-kernel with negative core/private covariance for copies of the SAME even-cycle atom",
+      "The reverse strict core-core/private-private density ordering at every uniformity, hence incomparability in regular-kernel homomorphism density when combined with the existing ternary example"
+    ],
+    "novelty": "Not established. Leaf integration, weighted Cauchy-Schwarz, Jensen replica gluing and conditional-independence schemes are classical. The literature check below is not an exhaustive priority search."
+  },
+  "analytical_results": [
+    {
+      "id": "P1_root_safe_forest_criterion",
+      "target": "Root every piece-joint forest component at a piece. For every nonroot piece A_i, let a_i be its actual parent joint. If phi_{A_i,a_i}(x)>=p^{m_i} on supp(mu), and every root piece has t(A_i,U)>=p^{m_i}, where m_i=|E(A_i)|, then t(H,U)>=p^{sum_i m_i}.",
+      "proof": [
+        "Use the full multi-port profiles to represent the product on the genuine original assignment carrier; no scalar product approximation is made.",
+        "Take a nonroot piece of maximum distance from the root. After integrating already eliminated descendant pieces, all its remaining interfaces except the parent joint occur nowhere outside that piece. Its contribution is its one-root profile at the parent coordinate, multiplied by the descendant constants.",
+        "All other factors are nonnegative. Replace the one-root profile by p^{m_i}, integrate the now unused coordinates with mass1, and delete that piece. At a branching joint, messages from the child pieces are multiplied at the SAME variable, with its mu weight retained only once.",
+        "Iterate to the root; apply its unrooted bound. Different forest components have disjoint variables and multiply; isolated vertices contribute1. Edge sets are a partition, so the exponent is the actual hyperedge cardinality."
+      ],
+      "noncircularity": "The local pointwise hypothesis is strictly stronger than unrooted Sidorenko. It is not renamed as an automatic consequence of the atom density inequality. P2 proves it for a concrete root class, while P3 refutes it for a different root class.",
+      "edge_cases": ["p=0 uses nonnegativity, no division", "zero weights are excluded only from pointwise requirements", "no pieces means the edgeless density is1=p^0", "single root piece has no parent-port requirement", "joint degree may exceed2"]
+    },
+    {
+      "id": "P2_core_admissible_even_cycle_assembly",
+      "target": "Let every piece be a single r-edge or C_{2k_i}^[r], k_i>=2. If the actual incidence forest admits piece roots such that every nonroot cycle piece meets its parent at a CORE vertex of that child piece, then for every regular symmetric finite U:Omega^r->[0,1], t(H,U)>=p^{|E(H)|}.",
+      "permitted_parent_locations": "The port in the parent piece may be core or private. Different children may meet the same joint; other attachment vertices of the child cycle may be core or private. Only that child's unique upstream joint must be core.",
+      "proof": [
+        "The pair marginal M(x,y)=E_private U(x,y,private) is nonnegative and symmetric and has weighted row integral p on supp(mu).",
+        "Define K_l(x,y) by integrating M along an l-edge path with endpoints fixed. Induction gives E_y K_l(x,y)=p^l and symmetry K_l(x,y)=K_l(y,x).",
+        "For a cycle of length2k rooted at a core vertex x, private integration followed by splitting the cycle at its opposite vertex gives phi_core(x)=E_y K_k(x,y)^2.",
+        "Weighted Cauchy-Schwarz on a probability space gives phi_core(x)>=(E_y K_k(x,y))^2=p^{2k}.",
+        "A rooted single-edge piece has profile p at every port by regularity. The root cycle has the same unrooted bound by averaging. Apply P1."
+      ],
+      "claim_limit": "This is a regular-kernel lower bound, not the full Sidorenko property, which quantifies over all symmetric kernels. It does not resolve assemblies whose child parent-port is private or assemblies of arbitrary Sidorenko atoms. It supplies a proved geometric sufficient condition rather than assuming nonnegative covariance.",
+      "literature_limit": "The direct proof is classical weighted Cauchy-Schwarz plus leaf integration. An exact classification of how this geometric subclass overlaps hypergraph reflection/coupling classes has not been completed."
+    },
+    {
+      "id": "P2b_one_joint_same_cycle_arbitrary_ports",
+      "target": "For a fixed even cycle expansion B=C_{2k}^[r], identify one chosen vertex from each of n>=1 otherwise disjoint copies at a single common joint, with each chosen vertex independently allowed to be core or private. For every regular symmetric normalized finite kernel, the resulting bouquet satisfies t(H,U)>=p^{2kn}.",
+      "proof": "All core vertices of B are in one automorphism orbit and all private vertices are in another, so the two rooted profiles c and l are well defined. The core profile is pointwise >=p^{2k} by P2, while q=E l=t(B,U)>=p^{2k}. If there are a core-root copies and b private-root copies, then t(H,U)=E c^a l^b >=p^{2ka} E l^b >=p^{2ka} q^b >=p^{2k(a+b)}. The middle step is Jensen for nonnegative l and integer b>=1; for b=0 its expectation is1.",
+      "nontrivial_boundary": "This allows arbitrary port orbits at ONE common joint in copies of the SAME even-cycle atom, despite P3's negative core/private covariance. It does not prove a multi-joint assembly or a mixed list of cycle lengths.",
+      "attribution": "A concrete consequence of classical Jensen and the core-root Cauchy-Schwarz bound, not a novel general gluing principle."
+    },
+    {
+      "id": "P3_same_atom_negative_port_correlation",
+      "target": "For EVERY r>=3 there exist a bounded REGULAR symmetric r-kernel and the Sidorenko atom B_r=C4^[r] for which the core and private rooted profiles have strictly NEGATIVE covariance and the private profile is below p^4 at one state.",
+      "host": {"Omega": ["1", "-1/2"], "mu": ["1/3", "2/3"], "p": "1/2", "a": "1/20", "b": "-1/10", "U": "U(x,y,z)=p+a(xy+xz+yz)+bxyz"},
+      "literal_kernel_values": {"three_positive_coordinates": "11/20", "two_positive_coordinates": "11/20", "one_positive_coordinate": "7/16", "zero_positive_coordinates": "11/20"},
+      "moments": {"E Z": "0", "s=E Z^2": "1/2", "E Z^3": "1/4", "E Z^4": "3/8"},
+      "algebraic_derivation": [
+        "Averaging two coordinates leaves p, so U is regular. Its pair marginal is M(x,y)=p+a xy.",
+        "The l-step path kernel is K_l(x,y)=p^l+a^l s^{l-1}xy for every l>=1, by the centered rank-one composition formula.",
+        "For a core root, c(z)=K_4(z,z)=p^4+a^4s^3 z^2. Put q=t(B,U)=p^4+a^4s^4.",
+        "For a private root, its incident edge contributes U(x,y,z), while the other three expansion edges contribute K_3(x,y). Thus l(z)=E_{x,y} U(x,y,z)K_3(x,y)=q+b a^3s^4 z.",
+        "Set epsilon=a^4s^4=1/2560000. On the two-point support z^2=(1+z)/2. Therefore c(z)=q+epsilon z and l(z)=q-2epsilon z.",
+        "The private-root value l(1)=1/16-1/2560000 is below p^4. Cov(c(Z),l(Z))=-2epsilon^2 E Z^2=-epsilon^2=-1/6553600000000."
+      ],
+      "uniformity_lift": {
+        "host": "The SAME skew two-point probability law for every r>=3.",
+        "a_r": "1/[4(binomial(r,2)+2binomial(r,3))]",
+        "U_r": "1/2+a_r sum_{i<j} z_i z_j -2a_r sum_{i<j<k} z_i z_j z_k",
+        "boundedness": "|z_i|<=1 gives |U_r-1/2|<=a_r[binomial(r,2)+2binomial(r,3)]=1/4. Thus U_r is in[1/4,3/4], symmetric, and every one-coordinate marginal is1/2 because every nonconstant monomial contains at least one averaged centered coordinate.",
+        "marginals": "M_r(x,y)=p+a_rxy; N_r(x,y,z)=p+a_r(xy+xz+yz)-2a_rxyz.",
+        "profiles": "With epsilon_r=a_r^4/16 and q_r=p^4+epsilon_r, the same private-coordinate integration gives c_r(z)=q_r+epsilon_r z and l_r(z)=q_r-2epsilon_r z.",
+        "consequences": "Cov(c_r,l_r)=-epsilon_r^2<0; l_r(1)=p^4-epsilon_r<p^4; Hpp density q_r^2+2epsilon_r^2 exceeds Hcc density q_r^2+epsilon_r^2/2; Hcp density q_r^2-epsilon_r^2=p^8+epsilon_r/8 still exceeds benchmark.",
+        "prototype_recovery": "At r=3, a_r=1/20 and the literal rational cubic witness above is recovered exactly."
+      },
+      "assembly_densities": {
+        "definition": "Hcc,Hpp,Hcp are respectively two copies of B identified at core-core, private-private or core-private roots, with all other actual vertices disjoint.",
+        "actual_parameters": "For the r=3 prototype each has8 hyperedges,15 vertices, connected Levi cycle rank2, two cycle atoms and one joint of atom multiplicity2. At general r each has8 hyperedges and8r-9 vertices, still connected Levi cycle rank2 with the same atom/joint profile.",
+        "Hcc": "q^2+epsilon^2/2",
+        "Hpp": "q^2+2epsilon^2",
+        "Hcp": "q^2-epsilon^2=1/256+1/20480000",
+        "ordering": "Hpp > Hcc > Hcp in this kernel. All three still satisfy the benchmark p^8=1/256."
+      },
+      "precise_boundary": "Sidorenko atoms alone do NOT justify multiplication of their densities at arbitrary ports, even for copies of the same atom in a regular symmetric kernel. This does NOT give a counterexample to assembly Sidorenko closure: the positive unrooted excess dominates the negative covariance in the displayed witness."
+    },
+    {
+      "id": "P4_regular_density_incomparability",
+      "target": "For EVERY r>=3, and Hcc,r,Hpp,r formed from two C4^[r] copies at core-core/private-private roots, neither t(Hcc,r,U)>=t(Hpp,r,U) for every regular symmetric r-kernel U nor its reverse is true.",
+      "proof": "P3's uniformity lift gives t(Hpp,r,U_r)>t(Hcc,r,U_r). For the opposite sign, use the already-present draft example on uniform {-1,0,1}: V_r(z1,...,zr)=1/2+eta sum_{i<j}z_i z_j, with0<eta<=1/[2binomial(r,2)]. Its pair and three-coordinate marginals are1/2+eta xy and1/2+eta(xy+xz+yz). Its private-root C4^[r] profile is constant q0=p^4+eta^4s^4, whereas the core-root profile p^4+eta^4s^3z^2 is nonconstant, with s=2/3. Hence t(Hcc,r,V_r)-t(Hpp,r,V_r)=eta^8s^6 Var(Z^2)=128 eta^8/6561>0. Both kernels are bounded and regular. This proves the two strict directions on actual finite probability spaces at every uniformity.",
+      "story_value": "The same canonical atom list and attachment excess profile do not even determine a host-independent density ordering. A meaningful density theorem must retain port location or full profile data; this is stronger than merely observing unequal densities in one host.",
+      "not_new_piece_of_source": "The positive-ordering witness is already in the current draft and is credited as such; only the reverse witness and incomparability deduction are additional here."
+    }
+  ],
+  "classical_positive_case_not_new": {
+    "common_root_replicas": "If k>=1 copies of one rooted piece (A,a) meet only at their common root, their density is E phi_{A,a}(X)^k >= (E phi_{A,a})^k by Jensen. If A is Sidorenko, this common-root replica is Sidorenko. The same applies when the chosen roots are in one automorphism orbit and symmetry/reindexing makes their profiles identical.",
+    "boundary": "Automorphism-equivalent roots are different from arbitrary ports. P3 supplies negative covariance between the core and private orbits of one cycle-expansion atom. Common-root Jensen does not prove arbitrary tree assembly or multi-port closure.",
+    "attribution": "Jensen and conditional-independence gluing are classical. Li-Szegedy explicitly use restricted densities and stronger smoothness conditions in their gluing calculus; Szegedy develops graph and hypergraph coupling/reflection sufficient conditions. No algorithmic novelty or polynomial-time claim is made."
+  },
+  "equally_visible_questions": [
+    {
+      "id": "C1_regular_cycle_assembly_closure",
+      "quantified_question": "For every r>=3 and every finite simple assembly H of single r-edges and private expansions of even cycles with genuine piece-joint incidence FOREST, is t(H,U)>=p(U)^{|E(H)|} for every finite normalized probability law and every regular symmetric U:Omega^r->[0,1], without any core-port orientation restriction?",
+      "proved_subcase": "P2 core-admissible rootings; P2b all port choices at one joint in copies of a fixed even-cycle atom; also identical-root common-joint replicas by Jensen.",
+      "status": "CONJECTURAL_DIRECTION_UNSETTLED_BY_THIS_CHECKPOINT_NOT_CLAIMED_GLOBALLY_NEW_OR_OPEN",
+      "actual_gap": "Private parent ports do not have the pointwise lower bound required by P1, as P3 proves. A proof must control their joint messages or use a justified coupling/reflection certificate. Negative covariance alone is insufficient for a density deficit.",
+      "falsification_route": "An exact bounded regular symmetric finite kernel and an actual finite forest assembly with t(H,U)<p^{|E(H)|}. Report actual endpoints, kernel values, weights and full density; a negative covariance or profile dip without the final deficit does not falsify it. A one-joint bouquet of copies of a fixed even-cycle atom cannot be a witness by P2b. A multi-joint or mixed-atom obstruction would be needed outside P2's geometric subclass.",
+      "literature_reconciliation": "Before presenting this as an open conjecture in the paper, determine whether the complete assembly class admits existing weakly-thick/reflection certificates under Szegedy's hypergraph theory. This bounded check did not prove that classification."
+    },
+    {
+      "id": "Q2_Sidorenko_atom_assembly",
+      "quantified_question": "If H is an actual finite canonical obligatory r-uniform assembly and every one of its actual canonical atoms is Sidorenko (for all finite symmetric nonnegative bounded kernels), must H itself be Sidorenko?",
+      "status": "BROADER_ATTACHMENT_QUESTION_ALREADY_IN_DEVELOPMENT_RESULTS_NOT_RESOLVED",
+      "why_scalar_data_is_not_a_proof": "For one joint the required product is E phi_A phi_B, not E phi_A E phi_B. At several joints full port profiles are required. P3 disproves a universal covariance-sign shortcut; P1 is an honest additional sufficient local condition, not an automatic consequence of unrooted Sidorenko.",
+      "non_goals": "Do not assume a counterexample exists, do not search a broad programme, and do not turn this question into a claimed theorem or universal positive covariance statement."
+    }
+  ],
+  "formalization_targets_and_remaining_adapters": {
+    "status": "NO_NEW_LEAN_SOURCE_OR_KERNEL_RESULT_IN_THIS_FOLLOW_ON",
+    "frozen_D3_input": "FinitePortContraction.lean SHA de46591242e468fcad188660888d2b21215eac12cd7b61fcdaf298ed844b0845 remains a source candidate; prior focused joint budget2of2 is spent. It is not accepted by these analytical proofs.",
+    "exact_next_targets": [
+      "A finite symmetric weighted path-kernel recursion, its row mass and semigroup/symmetry identities, then the core-root even-cycle squared-sum identity and weighted CS bound.",
+      "A finite original-carrier piece-joint forest with an actual rooted orientation, unique parent joint, original edge partition, normalized isolate adapter and a full-profile leaf-elimination induction. Do not hide this adapter behind an assumed density inequality.",
+      "Exact rational finite host and literal C4 expansion endpoints for P3; compute both rooted profiles and all three eight-edge assignment sums. If later formalized, use kernel reduction/ordinary arithmetic, not native_decide or unreviewed broad automation.",
+      "Canonical original vertex/edge equivalences and endpoint fidelity from accepted structural decomposition to the represented assembly. Intrinsic admission/label equivalence and original-carrier normalization remain separate from the algebraic density identity."
+    ],
+    "accepted_structural_dependencies_available_but_not_density_adapters": [
+      "CanonicalAtomForestReconstruction.atomPointIncidenceGraph_isAcyclic and shared incidence forest",
+      "CanonicalAtomForestReconstruction.atomSupport / sharedAtomPoints / atomEdges_disjoint",
+      "CanonicalAtomTypeDichotomy actual atom restriction single-edge or bipartite private core expansion",
+      "Isolated.isolatedReduction actual incidence/carrier preservation",
+      "Isomorph.Iso.vertexEquiv / edgeEquiv / map_inc_iff"
+    ]
+  },
+  "primary_literature_read": [
+    {
+      "authors": "J. L. Xiang Li and Balazs Szegedy",
+      "title": "On the logarithmic calculus and Sidorenko's conjecture",
+      "arxiv": "1107.1153",
+      "url": "https://arxiv.org/abs/1107.1153",
+      "fulltext": "https://arxiv.org/pdf/1107.1153",
+      "checked_scope": "Definition3.1 restricted subgraph densities; Definition3.2 smoothness; Lemma3.4 gluing on smooth trees. Stronger gluing premises are explicit, not inferred from a bare atom density inequality.",
+      "not_used_as_blackbox": "No blanket arbitrary-hypergraph assembly closure is imported from its graph gluing statements."
+    },
+    {
+      "authors": "Balazs Szegedy",
+      "title": "An information theoretic approach to Sidorenko's conjecture",
+      "arxiv": "1406.6738v3",
+      "url": "https://arxiv.org/abs/1406.6738",
+      "fulltext": "https://arxiv.org/pdf/1406.6738",
+      "checked_scope": "Conditional independent couplings/relative entropy in Section2 and explicit hypergraph weakly-thick/reflection sufficient conditions in Section9, Theorems7and8. These supply classical attribution and an actual remaining classification route, not an automatic certificate for every atom assembly."
+    },
+    {
+      "authors": "Barbara Kaskosz and Lubos Thoma",
+      "title": "Lower bounds for integral functionals generated by bipartite graphs",
+      "journal": "Czechoslovak Mathematical Journal69(2019),571-592",
+      "doi": "10.21136/CMJ.2019.0453-17",
+      "url": "https://articles.math.cas.cz/10.21136/CMJ.2019.0453-17",
+      "fulltext": "https://dml.cz/bitstream/handle/10338.dmlcz/147745/CzechMathJ_69-2019-2_21.pdf",
+      "checked_scope": "Section1 explicitly distinguishes Sidorenko's stronger F-condition from the ordinary F2 Sidorenko property, and recalls classical vertex gluing. Used to avoid claiming that every established gluing theorem needs only the scalar density premise."
+    }
+  ],
+  "review": {
+    "root_of_this_lane": "Self-review; independent=false, analytical source review only.",
+    "separate_helper": "/root/density_ports_develop/rooted_assembly_review verified the path/profile factors, literal kernel values, negative covariance, exact positive final density and leaf-peeling side conditions. Full frozen-artifact review record to follow.",
+    "external_audit": "Not supplied; no full external audit or novelty certification.",
+    "numerics": "No broad automated search. Displayed fractions are derived exactly; a finite diagnostic, if retained, is labelled diagnostic rather than proof."
+  },
+  "scholarly_prose": {
+    "skill": "codex-academic-humanizer, English profile and AI-pattern references read completely.",
+    "influence": "New fragment states hypotheses before the theorem, credits classical gluing, separates the negative covariance witness from a Sidorenko counterexample, and gives the conjecture an explicit falsification standard. No promotional or priority claim.",
+    "comparison_notes": [
+      {"source": "Existing draft: one kernel distinguishes attachment ports.", "revision": "Add a second exact regular kernel giving the reverse strict ordering; conclude incomparability, retaining the existing witness as prior draft material.", "reason": "Substantive mathematical content, not citation/style padding."},
+      {"source": "Development question: Sidorenko atoms might imply assembly closure.", "revision": "Separate a proved core-admissible regular-kernel sufficient condition from the full attachment question.", "reason": "Makes the genuine local geometry hypothesis and remaining proof obligation visible."},
+      {"source": "Generic positive covariance or replica gluing language.", "revision": "Identical-root Jensen is classical; arbitrary core/private roots have negative covariance in P3.", "reason": "Avoids a false universal sign and unsupported gluing novelty."}
+    ]
+  }
+}

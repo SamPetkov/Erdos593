@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-11",
+  "authorization": "The author explicitly asked to check the existing Pro reply, carefully review its mathematics, continue collective compensation, create a goal, and explore connected useful directions.",
+  "target": "For every finite nonempty positive probability space (X,mu), every symmetric nonnegative relative Markov root T under the original mu, A=T^2 and K_j=A^j, and integers k>=u>=1, r>=l>=1, h>=1, prove E_mu^4 K_k(a,b) K_(r+h)(a,c) K_u(a,d) K_r(b,c) K_u(b,d) K_l(c,d)>=1.",
+  "conventions": "Composition uses original mu. K_0 is the weighted identity. Zeros, nonuniform weights, reducible/periodic roots, extra stationary modes and zero modes remain admissible. Natural logarithms for entropy.",
+  "deliverables": [
+    "Audit the final answer in the existing authorized Pro conversation if it returns; otherwise retain pending status honestly.",
+    "A complete proof, genuinely smaller proved positive estimate, or exact unresolved collective obligation.",
+    "At most two connected theorem directions with their actual scope and utility, checked against existing packet to avoid duplication."
+  ],
+  "routes": [
+    "Retain all nonnegative terms in symmetrized Schur/conditional-channel reflection and test a collective remainder bound.",
+    "Construct globally compatible two-ancestor or mixture entropy witnesses, including marginalized latent information rather than an observed-root budget."
+  ],
+  "acceptance": "An analytical proof must discharge all quantifiers, support, normalization, spectral signs, compatibility and boundary cases. Finite arithmetic diagnostics and model advice do not establish universal truth. No Lean acceptance without its separate pinned gates.",
+  "non_goals": "No automatic new Pro/Aristotle submission, broad numerical optimization, expensive compiler run, unrelated research programme, novelty/B-level claim, manuscript theorem promotion or monitor restart.",
+  "cost": "One bounded direct analytical pass, read-only consultation observation, and only short exact-arithmetic checks if justified. A broader campaign, major integration or expensive run requires a new exact checkpoint and confirmation.",
+  "initial_pro_observation": "The existing reply was still generating; no final answer was visible. One submitted question, no retry.",
+  "goal_status": "active",
+  "unrestricted_theorem_proved": false
+}

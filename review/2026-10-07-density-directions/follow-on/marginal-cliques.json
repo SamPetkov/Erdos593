@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-07",
+  "status": "ANALYTICAL_SUPPORT_LEMMA_AWAITING_SEPARATE_SOURCE_REVIEW_NOT_LEAN_ACCEPTED",
+  "scope": "Supporting exact fixed-carrier marginal feasibility within direction D3; no broad search or new execution",
+  "assumptions": ["finite carrier", "strictly positive normalized probability weights", "integer r>=2", "symmetric nonnegative zero-diagonal M"],
+  "claim": "M is the two-coordinate marginal of a symmetric nonnegative r-kernel iff B_xy=mu(x)mu(y)M_xy admits nonnegative fractional K_r weights summing to B_xy on each unordered pair. Bounded U<=1 adds w_S<=(r-2)! product(mu on S).",
+  "normalization": "w_S=(r-2)! u_S product(mu on S); E U=r(r-1) sum_S w_S",
+  "edge_cases": ["r=2 returns U=M", "carrier size less than r forces M=0", "zero masses require restriction to positive support", "boundedness is a separate capacity constraint"],
+  "counterexample": "r=3, uniform four-point carrier, M adjacency of K4 minus cd: the ac and ad equations force both triangle weights 1/16, contradicting the ab equation 1/16.",
+  "prior_art": [{"role": "Classical fractional-decomposition framework; no novelty certificate", "primary_source": "https://doi.org/10.1137/15M1014310", "arxiv": "https://arxiv.org/abs/1503.08191", "title": "Fractional Triangle Decompositions in Graphs with Large Minimum Degree", "author": "Francois Dross", "publication": "SIAM Journal on Discrete Mathematics 30(1) (2016), 36-42"}],
+  "limits": ["Does not solve universal marginal realization already in the draft", "Does not prove a density inequality", "Does not rule out other carriers or other transfer methods", "No originality claim", "No compiler or Lean statement acceptance"],
+  "actions": {"compiler": false, "jobs": false, "service": false, "live_manuscript": false, "git": false, "clocks": "PAUSED_UNCHANGED"},
+  "review": {"root_self_review": true, "independent_full_audit": false, "separate_agent_source_review": "PENDING"}
+}

@@ -1,0 +1,98 @@
+{
+  "date_paris": "2026-10-09",
+  "agent": "/root/density_prefix_round1",
+  "status": "COMPLETE_ANALYTICAL_COMMON_KERNEL_CONE_THEOREM_AND_ARBITRARY_RANK_TWO_LEVEL_COROLLARY; UNIVERSAL_TARGET_STILL_OPEN",
+  "authorization": "Continuation of the same user-confirmed bounded density route, parent bound15:55UTC. Root was notified before changing from unresolved complete-prefix domination to the stronger actual common-kernel cone mechanism. No browser, paid request, compiler, broad diagnostic, Git or manuscript action.",
+  "relation_to_requested_route": "General complete-prefix Gram/error domination remains unproved. The theorem below instead pays interactions collectively through exact nonnegative mixture and graph-contraction structure. It is not being called a general prefix sign theorem or a solution of the unrestricted host target.",
+  "common_kernel_cone_theorem": {
+    "exact_statement": "On any finite nonempty positive probability space (X,mu),let S be an ACTUAL self-adjoint entrywise nonnegative PSD Markov kernel relative to originalmu. Let I(x,y)=1_(x=y)/mu_y and Pi(x,y)=1. Independently for each of the6edges e ofK4,choose a_e,b_e,c_e>=0 with a_e+b_e+c_e=1,and set L_e=a_e I+b_e S+c_e Pi. Then E_(x_a,x_b,x_c,x_d iidmu) product_e L_e(x_v,x_w)>=1.",
+    "precise_scope": "One common actual S is essential. This does not assert positivity for independently chosen or merely commuting nonnegative PSD Markov kernels. I and intermediate kernels may be unbounded as kernels; they remain finite and all composition/integration uses originalmu.",
+    "primitive_facts": [
+      "Since S is self-adjoint PSD and S1=1,constants form an invariant eigenspace and S-Pi is PSD,even with disconnected components and additional unit modes.",
+      "Thus S(x,x)>=1 by testing the PSD kernelS-Pi against a point mass. Also I(x,x)=1/mu_x>=1.",
+      "The Schur square R(x,y)=S(x,y)^2 is PSD. In weighted orthonormal coordinates this follows from Schur product and diagonal congruence; it is NOT the operator power S^2.",
+      "Tr S^j>=1 for every positive integerj,since the constant eigenvalue contributes1 and all other eigenvalues are nonnegative. Operatorpowers and Hadamard powers are distinguished below."
+    ],
+    "mixture_and_contraction_proof": [
+      "Expand the6convex mixtures. There are3^6=729 elementary assignments ofI,S,Pi to the edges. Their nonnegative coefficients sum to1. It suffices to prove that EVERY elementary assignment has density>=1.",
+      "For the subgraph ofIedges,choose a spanning forest having the same components. On the support of its equality constraints,every discarded cyclicIedge equals1/mu_x>=1;off this support,the forest product is0. All remainingS/Pi factors are nonnegative,so deleting cyclicIedges lowers the density.",
+      "Contract each I-tree. A tree component withsvertices ands-1forestIedges contributes mu_x^s mu_x^(-(s-1))=mu_x. Hence each quotient vertex is integrated against ORIGINALmu,not a renormalized measure. ParallelSedges are retained individually; Pi edges can simply be deleted.",
+      "Any Sedge becoming an internal loop has valueS(x,x)>=1,so may be deleted for a lower bound while every remaining factor is nonnegative.",
+      "With4quotientvertices there are noIedges,and the retainedSgraph is a simple subgraph ofK4. Its leaf-stripped core is empty,a triangle,a4cycle,a diamond,orK4. The bounds for each core are supplied below.",
+      "With3 quotient vertices,the original vertices have partition sizes(2,1,1). Its Sedge multiplicities are bounded by(2,2,1). Every retained subgraph has multiplicities s,t in{0,1,2} on the two edges incident to the merged vertex,and v in{0,1} on the remaining edge. All18 possibilities(17 nonempty and the empty graph)are bounded below as detailed below.",
+      "With2quotientvertices,the partition sizes are(3,1) or(2,2). At most3or4parallelSedges remain. Their density is E_xy S(x,y)^n>=1 by Jensen since E_xy S=1,for n>=1;the n=0graph has density1.",
+      "With1quotientvertex all remainingSedges are loops already removed,and its final density is1. Therefore all729elementary assignments,and their convex combination,have density>=1."
+    ],
+    "simple_four_vertex_core_bounds": {
+      "forest": "Repeated leaf deletion uses S1=1; isolated vertices contribute1,so density=1.",
+      "triangle_and_four_cycle": "Their densities are Tr S^3 andTr S^4,both>=1. Attached leaves do not change them.",
+      "diamond": "Its density is E_cd S(c,d)[S^2(c,d)]^2,where S^2 is OPERATOR composition. Since S(c,d)mu_cmu_d is a probability measure,Jensen gives at least[E S(c,d)S^2(c,d)]^2=[Tr S^3]^2>=1.",
+      "full_K4": "Let f_cd(x)=S(x,c)S(x,d). Its density is E_cd S(c,d)<f_cd,Sf_cd>. Since S-Pi is PSD,this is at least E_cd S(c,d)(E_x f_cd)^2=E_cd S(c,d)[S^2(c,d)]^2. The diamond bound then gives t(K4,S)>=[Tr S^3]^2>=1. This is a complete self-contained finite proof,not an assumption of centered tetrahedron positivity."
+    },
+    "three_vertex_multigraph_bounds": {
+      "v_zero": "For s,t in{0,1,2},the density is E_a[E_b S(a,b)^s][E_c S(a,c)^t]. Each bracket is>=1:1for exponent0,exactly1for exponent1,and>=1for exponent2by rowwise Jensen. Their product is therefore>=1.",
+      "v_one_and_s_or_t_zero": "A degree-one vertex integrates away with S1=1. The remaining graph is a single ordinary or double edge,or an empty graph; its density is1or E S^2>=1. This also covers s=t=0.",
+      "one_one_one": "The triangle has densityTr S^3>=1.",
+      "two_one_one_or_one_two_one": "Let R=S Hadamard S,so R is PSD. Integrating the third vertex gives densityTr(R S^2),where S^2 is operatorcomposition. Since S^2-Pi is PSD and the trace of a product of two PSD operators is nonnegative,this is at leastTr(R Pi)=E_xy S(x,y)^2>=1.",
+      "two_two_one": "Integrating the merged vertex gives densityTr(S R^2),where R^2 is operatorcomposition. Since S-Pi is PSD and R^2 is PSD,this is at leastTr(Pi R^2)=||R1||_L2(mu)^2>=[E_xy S(x,y)^2]^2>=1. All traces and norms use originalmu."
+    },
+    "edge_cases": "Zero Sentries,zero eigenvalues,repeated eigenvalues,additional unit modes,disconnected S and arbitrarily unequal positive mu are all permitted. No division by an eigenvalue occurs. On a singleton I=Pi=S and equality holds. General independent edge mixtures can have equality for reasons such as deleting enoughedges; no full equality classification of this cone theorem is claimed."
+  },
+  "arbitrary_rank_two_level_corollary": {
+    "exact_statement": "Let P be ANY real orthogonal projection on originalL2(mu) withP1=0,let0<=y<=x<=1,and suppose A=yI+(1-y)Pi+(x-y)P is ACTUALLY entrywise nonnegative. Then for EVERY6positive integer edge exponents n_e, E product_(e inK4) A^(n_e)(x_v,x_w)>=1. There is no exponent-order hypothesis and no rank-one requirement onP. In particular,this covers the requested ordered tuple whenever the actual A=T^2 has this complete spectralform.",
+    "power_identity": "By mutually orthogonal spectralprojections, A^j=y^j I+(1-y^j)Pi+(x^j-y^j)P for everyj>=1. All coefficients multiplyingPi andP here are not by themselves being claimed to be a nonnegative kernel mixture.",
+    "actual_common_S": "Ify<1,put tau=(x-y)/(1-y) and S=Pi+tau P. Off diagonal,S(x,z)=A(x,z)/(1-y)>=0;on diagonal,S(x,x)=1+tau P(x,x)>=1 becauseP is PSD. ThusS is actual nonnegative self-adjoint PSD Markov,withcentered spectrumtau onP and0onits complement.",
+    "mixture_membership": "For y<1 andx>y,put tau_j=(x^j-y^j)/(1-y^j). Then A^j=y^j I+(1-y^j)S_j,where S_j=Pi+tau_jP. The ratio tau_j/tau=[sum_(a=0)^(j-1)x^(j-1-a)y^a]/[sum_(a=0)^(j-1)y^a]<=1 sincex<=1. Therefore S_j=(1-tau_j/tau)Pi+(tau_j/tau)S,so every A^j lies inconv{I,Pi,S}. Apply the cone theorem independently at all6edges.",
+    "boundaries": [
+      "Ifx=y<1,then A=yI+(1-y)Pi and A^j=y^jI+(1-y^j)Pi directly belongs to the cone withS=Pi;no0/0ratio is used.",
+      "Ify=1,thenx=1 andA=I. The density is sum_z mu_z^(-2)>=1,computed from6identity kernels and4originalmeasures.",
+      "Ify=0,then the corollary reduces to the previously covered flat positive-band case,including an arbitrary zero complement;this boundary is not claimed as newcoverage.",
+      "For x>y>0,the complete centered spectrum must consist ONLY ofxandy. An additional zero complement would be a third centered value and is NOTcovered bythis representation.",
+      "P can have arbitrary multiplicity,includingzero/fullcenteredrank;all spectralforms are basis invariant. Nonconstant unit modes atx=1 are permitted,so irreducibility is notassumed."
+    ],
+    "strictness": "For |X|>=2,equality inthis corollary occurs exactlywhen A=Pi. Ify>0,the allIassignment in the6mixture expansion has positiveweight y^(sum n_e) and densitysum mu^-2>1. Ify=0,x>0,andP!=0,the allSassignment has positiveweight product x^(n_e-1),while t(K4,S)>=[Tr S^3]^2=(1+rank(P)x^3)^2>1. The remaining caseA=Pi has density1. Singleton equalityis automatic.",
+    "genuine_scope_extension": "The prior lazy-one-spike theorem required a simple exceptional TOPcentered eigenvalue. This proof allows arbitrary top-band multiplicity,so forinstance4-statehosts withtopmultiplicity2andpositivebottommultiplicity1 arecovered. This extends a restricted analytical hostclass;it does notsolve generalinteracting spectra or clear novelty."
+  },
+  "explicit_actual_non_one_spike_example": {
+    "mu": ["1/4","1/4","1/4","1/4"],
+    "centered_orthonormal_functions": [
+      ["1","-1","1","-1"],
+      ["1","1","-1","-1"],
+      ["1","-1","-1","1"]
+    ],
+    "T_kernel": [
+      ["9/4","3/4","3/4","1/4"],
+      ["3/4","9/4","1/4","3/4"],
+      ["3/4","1/4","9/4","3/4"],
+      ["1/4","3/4","3/4","9/4"]
+    ],
+    "W_kernel": [
+      ["1","1/3","1/3","1/9"],
+      ["1/3","1","1/9","1/3"],
+      ["1/3","1/9","1","1/3"],
+      ["1/9","1/3","1/3","1"]
+    ],
+    "p": "4/9",
+    "actual_host_check": "AllentriesW liein(0,1],W is symmetric,and eachweightedrowmean is4/9. T=W/p is the displayed actual kernel relative to uniformmu,not the rowtransitionmatrix. T has centered eigenvalues1/2,1/2,1/4 onthethree displayedfunctions.",
+    "A": "A=T^2 has centered eigenvaluesx=1/4withmultiplicity2andy=1/16withmultiplicity1. LetP project onto thefirsttwo centered functions. Then A=yI+(1-y)Pi+(x-y)P. The former one-spike theorem does not cover this multiplicitypattern;the new corollary covers all6arbitrarypositiveexponents.",
+    "S": "S=Pi+(1/5)P,an actual nonnegative PSDMarkovkernel. The normalizedrangeprojectionPi+P is notentrywisenonnegative: its opposite-pairentries are-1. Thus this example is not silently relying on a nonnegative fullspectralprojection. Its ordered-density coverage also belongs to earlierp-threshold cases,so the example demonstrates the structuralextension ratherthan claiming brandneworderedtargetcoverage."
+  },
+  "what_remains_open": {
+    "general_prefix": "No proof of complete spectralprefixnonnegativity or its Gram/error domination on arbitraryhosts was found. The cone theorem bypasses that unproved premise on the stated two-levelclass.",
+    "unrestricted_target": "Generalhosts with three ormore interacting positivecenteredbands,or two positivebands plus a genuinely nonconditional zero complement,remain outside the newcorollary. No arbitraryfinitealphabet entropy theorem follows from this restricted density result.",
+    "noncircularity": "Every cone assignment is discharged by a self-contained finite graph/kernelbound. The target itself,the centered tetrahedrumsign or a weighted-inner-productPSD assertion is not accepted as a primitive."
+  },
+  "review_and_resources": {
+    "root_self_review": true,
+    "root_review_independent": false,
+    "actual_helper": "/root/density_prefix_round1/prefix_counterexample_check",
+    "helper_verdict": "PASS: originalmu normalization,allIforest/loop reductions,all quotientcores,weightedtrace/Hadamard distinctions,all729mixtures,powercone membership,arbitrary topmultiplicity and coveragecaveat. No flaw found. This is a real separate-agent analytical audit,not a full externalreview.",
+    "additional_cross_check": "The parent density-centered lane independently confirmed both dense3-vertex quotient traces and forest/Jensen cases. The parent-spawned two_level_density_audit_round1 read the full draft and passed the mathematics,strictness and actual4-state example; it corrected the bookkeeping count to18 three-vertex submultigraph assignments(17 nonempty),with all cases already covered by the proof. Root also checked the explicit4-state actual W/T/eigenspectrum example analytically.",
+    "formal_validation": false,
+    "novelty_verified": false,
+    "B_or_C_level_claim": false,
+    "compiler_service_browser_network_git_actions": 0,
+    "heavy_diagnostic_or_random_scan": false,
+    "only_new_file": "research/e593-substantial-target-20261008/universal-round1-20261009/density-prefix-next.json"
+  }
+}

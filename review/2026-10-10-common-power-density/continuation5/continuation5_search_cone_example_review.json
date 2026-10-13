@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "reviewer": "search5 independent route",
+  "bindings": {
+    "continuation5_cone_theorem.md": "478f2a3b5def7b324a5392913dfeb8cf8c3bb3848add4984207778c3d8686845",
+    "continuation5_cone_example.md": "cd168d53afb7a0fb8318bb37a6f7f514150b9041e0d46bb470fa5d635cf0eaf9",
+    "continuation5_cone_verify.py": "c4313d4690045d57a694fe3b1c409a11c889566540e91bf42624d9eb34029e8d",
+    "continuation5_cone_checks.json": "444fb122c09d5230a985e2d481290128976b9f02038373454129e71295198d15",
+    "continuation4_projection_verify.py": "4ab0f3f2b28107b46c917536ea7de1acc9c15626b1cf9f93d225264c1cd5b33e"
+  },
+  "isolated_replay_directory": "/tmp/e593_search5_cone_peer_yz6cngae",
+  "isolated_replay_seconds": 1.0649526119232178,
+  "archived_json_reproduced_exactly": true,
+  "scope": "All-exponent restricted common-cone projection lift; the eight-state host itself is frozen PR60 data. No unrestricted density claim.",
+  "mathematical_review": {
+    "original_weights": "Verified coarse relative kernels, full fine mu=pi/2, weighted composition and W row sum p. No conditional measure substituted.",
+    "projection": "Weighted rank-two Gram projection, H^2=beta Q, negative triangle, Q1 neither0 nor1, and original-law noncommutation all checked.",
+    "cone_and_spectrum": "Coarse eigenvalues and exact characteristic polynomial justify x,y; C spectrum is nonnegative, and fine whole-centered values x,y,beta,0 have multiplicities2,1,2,2.",
+    "density_bound": "Original-law sign expansion has exactly four triangles and three quadrilaterals. All-identity coarse term has density sum pi^-2=148 and weight y^N. Tuple3,1,1,1,1 has cycle exponents6,5,4,3,6,7,5.",
+    "reflection_scope": "All four claimed nonreflection tuples fail each of the three stated paired-vertex families; the boundary tuples remain separately labeled.",
+    "count_scope": "55=5 projections times(10 generator triples+1 independent mixture). Eight specifications give seven distinct actual roots because zero channel and rank-zero projection coincide as roots. Fourteen specification/tuple checks give13 distinct root/tuple pairs.",
+    "root_vs_square": "The positive and negative signed-channel roots are distinct actual roots but have the same square. Counts are explicitly actual-root counts, not counts of distinct square kernels.",
+    "degeneracies": "Checked beta0, rank0, equality T=Pi, nonpositive channel eigenvalues via negative H, one coarse atom, weighted disconnected root, and connected bipartite root with disconnected square.",
+    "arithmetic_module": "Reviewed imported weighted mm/power/density/field/charpoly routines; guarded old main is never called and old boundary-only host checker is not imported."
+  },
+  "counts": {
+    "lemma_check_count": 55,
+    "actual_root_specification_count": 8,
+    "distinct_actual_root_count": 7,
+    "root_specification_tuple_count": 14,
+    "distinct_root_tuple_count": 13
+  },
+  "limitation": "Finite replay validates the finite data and implementations. General all-exponent validity rests on the separate reviewed common-cone proof."
+}

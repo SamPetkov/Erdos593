@@ -1,0 +1,61 @@
+{
+  "scope": "Positive collective common-power proof development, 11 October 2026",
+  "root_review": {
+    "reviewer": "Codex root",
+    "independent": false,
+    "verdict": "PASS for stated derivations and witness; unrestricted conclusion remains open"
+  },
+  "separate_agent_review": {
+    "agent": "/root/tail_certificate_review_oct11",
+    "role": "Source and rational-arithmetic audit, not proof author",
+    "verdict": "PASS after constant-index wording clarification",
+    "own_exact_checker_exit_code": 0,
+    "own_exact_checker_seconds": 0.300,
+    "external_full_audit": false
+  },
+  "sources": {
+    "collective-compensation-positive-pass.md": "e9b34c1f130fbe33ca7be5bb4324e874a45601e885837342f7b8320329feede1",
+    "check_collective_compensation.py": "c573ce44f7295fa046358aca30e1f05a3b386d1379f90b237af96df01db2bf3b",
+    "collective-compensation-checks.json": "29c34f76181712f54548b5db03c9092aa60240b6af9f140fd2ea3cfe82c1968c",
+    "collective-compensation-pro-prompt.md": "d9b7c96f0b7f1eea14c95a60f6dfc41b98e8a152a7ab752dca74c242dc01dfea"
+  },
+  "proved_analytical_content": [
+    "Exact five-term original-law Schur grouping and nonnegative first four terms",
+    "One triangle and three diamonds retained jointly with full centered tetrahedron",
+    "Exact positive quadratic minus actual Markov product commutator",
+    "Actual normalized conditional Gram overlap channel with correct support",
+    "Compatible latent-ancestor law and marginalized Gibbs entropy identity",
+    "Exact binary witness payoff greater than 1/50 on an already covered host",
+    "Auxiliary h=0 reflection bound and explicitly limited strengthened trace floor"
+  ],
+  "open": [
+    "Unrestricted h>=1 density inequality",
+    "Universal sign or sufficient collective compensation for M1",
+    "Universal successful adaptive compatible entropy witness",
+    "Formal Lean implementation and acceptance of this new research"
+  ],
+  "proof_boundaries": [
+    "Sample identities are not a universal proof by sampling",
+    "M1 nonnegativity is a stronger sufficient assertion, not proved",
+    "The exact channel-remainder target alone is an equivalent obligation, not progress",
+    "PSD does not sign unequal cross-forms",
+    "No reducible or periodic mode is silently removed",
+    "No new host coverage or novelty inferred from the binary calibration",
+    "No new acceptance inferred from model advice"
+  ],
+  "consultation": {
+    "authorized_question_submitted": true,
+    "observed_model": "GPT-6; Pro maximum effort",
+    "response_status_at_packet_review": "pending",
+    "new_questions": 1,
+    "automatic_retries": 0,
+    "private_transcripts_exported": false,
+    "prepared_typeset_brief_is_byte_exact_sent_prompt": false
+  },
+  "unchanged": [
+    "Manuscript and PDF",
+    "Accepted Lean sources, pins and validation evidence",
+    "Public main and private repository",
+    "Stopped clocks"
+  ]
+}

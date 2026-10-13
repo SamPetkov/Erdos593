@@ -1,0 +1,410 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-13",
+  "repository": "https://github.com/SamPetkov/Erdos593",
+  "preconsolidation_main": "7b4d68b3a523c1f6997feab4588f041190568f61",
+  "total_open_prs": 39,
+  "current_stack": [
+    {
+      "baseRefName": "codex/e593-density-weighted-covers-20261010",
+      "headRefName": "codex/e593-direction-audit-20261011",
+      "headRefOid": "4479e252d01957b1205df23fbf22f0eba80ca238",
+      "isDraft": true,
+      "number": 64,
+      "state": "OPEN",
+      "title": "Audit quantitative directions and integrate weighted projection transfer",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/64"
+    },
+    {
+      "baseRefName": "codex/e593-density-jordan-covers-20261010",
+      "headRefName": "codex/e593-density-weighted-covers-20261010",
+      "headRefOid": "be6f7637147e0a02e8f03fa4f0ad770370b2327a",
+      "isDraft": true,
+      "number": 63,
+      "state": "OPEN",
+      "title": "E593: weighted source compensation and simultaneous cover certificates",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/63"
+    },
+    {
+      "baseRefName": "codex/e593-density-unequal-stars-20261010",
+      "headRefName": "codex/e593-density-jordan-covers-20261010",
+      "headRefOid": "bb919054eab3248e45ce1cd0c9a8cf1f39329025",
+      "isDraft": true,
+      "number": 62,
+      "state": "OPEN",
+      "title": "Prove Jordan source bounds and collective one-edge cover estimates",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/62"
+    },
+    {
+      "baseRefName": "codex/e593-density-projection-covers-20261010",
+      "headRefName": "codex/e593-density-unequal-stars-20261010",
+      "headRefOid": "c7a93e01e29143fd998ee0053b338b575446c3f2",
+      "isDraft": true,
+      "number": 61,
+      "state": "OPEN",
+      "title": "E593: extend projection transfer beyond reflection and bound unequal stars",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/61"
+    },
+    {
+      "baseRefName": "codex/e593-density-signed-channels-20261010",
+      "headRefName": "codex/e593-density-projection-covers-20261010",
+      "headRefOid": "06d17d7ce4d6a1d09891f79ec6feb59cdf68819b",
+      "isDraft": true,
+      "number": 60,
+      "state": "OPEN",
+      "title": "[Research] Projection surplus and canonical-cover source constraints",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/60"
+    },
+    {
+      "baseRefName": "codex/e593-density-refinement-ray-20261010",
+      "headRefName": "codex/e593-density-signed-channels-20261010",
+      "headRefOid": "0e2bdbb74868c1412325afd0a5bf9a4689bf7025",
+      "isDraft": true,
+      "number": 59,
+      "state": "OPEN",
+      "title": "Prove signed-channel surplus bounds and certify commuting coarse-domination failure",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/59"
+    },
+    {
+      "baseRefName": "codex/e593-entropy-density-manuscript-20261009",
+      "headRefName": "codex/e593-density-refinement-ray-20261010",
+      "headRefOid": "707ce09c971083e9ee533f898aa7a88f075c81ea",
+      "isDraft": true,
+      "number": 58,
+      "state": "OPEN",
+      "title": "Prove quantitative block-refinement and actual-root boundary reductions",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/58"
+    },
+    {
+      "baseRefName": "codex/e593-entropy-density-research-20261009",
+      "headRefName": "codex/e593-entropy-density-manuscript-20261009",
+      "headRefOid": "2f8731673a4ad49952c2eb203ed4f00fe4ba85ec",
+      "isDraft": true,
+      "number": 57,
+      "state": "OPEN",
+      "title": "Integrate graph-core comparisons and detailed proofs into the manuscript and PDF",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/57"
+    },
+    {
+      "baseRefName": "codex/e593-rank-three-entropy-20261008",
+      "headRefName": "codex/e593-entropy-density-research-20261009",
+      "headRefOid": "b6acfd0ecefe55a1e7512ac80d1ef63d4652435f",
+      "isDraft": true,
+      "number": 56,
+      "state": "OPEN",
+      "title": "Review exact entropy and common-power density families with two adversarial audits",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/56"
+    },
+    {
+      "baseRefName": "codex/e593-density-directions-20261007",
+      "headRefName": "codex/e593-rank-three-entropy-20261008",
+      "headRefOid": "29ef4fd939194590391865be07c33e6ff7e2e63d",
+      "isDraft": true,
+      "number": 55,
+      "state": "OPEN",
+      "title": "Rank-three research: full binary entropy and actual-source obstruction",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/55"
+    },
+    {
+      "baseRefName": "codex/e593-all-uniformities-20261006",
+      "headRefName": "codex/e593-density-directions-20261007",
+      "headRefOid": "ff98cbb843c0396290f26115b4c080c7a256a296",
+      "isDraft": true,
+      "number": 54,
+      "state": "OPEN",
+      "title": "Review low-rank density, incidence balancedness and multi-port contraction",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/54"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "codex/e593-all-uniformities-20261006",
+      "headRefOid": "3925e6aa58d44fa580548a8546b597029e37e204",
+      "isDraft": true,
+      "number": 53,
+      "state": "OPEN",
+      "title": "Obligatory hypergraphs: classification, spectra and densities of assemblies",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/53"
+    }
+  ],
+  "legacy_drafts": [
+    {
+      "baseRefName": "agent/593-research-extensions-canonical-forest",
+      "headRefName": "agent/593-integrate-block-factorization-spectrum",
+      "headRefOid": "d9f32f08f96259152286b020ede9267259a05731",
+      "isDraft": true,
+      "number": 44,
+      "state": "OPEN",
+      "title": "Integrate exact block-factorization spectra into the Erdős 593 manuscript",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/44"
+    },
+    {
+      "baseRefName": "codex/e593-public-humanization",
+      "headRefName": "agent/593-research-extensions-canonical-forest",
+      "headRefOid": "63920b04a4d366e89e8732dcca65e19e54dadf9d",
+      "isDraft": true,
+      "number": 43,
+      "state": "OPEN",
+      "title": "Develop exact block-factorization spectra for Erdős 593",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/43"
+    },
+    {
+      "baseRefName": "agent/593-attachment-occupancy-collapse",
+      "headRefName": "codex/e593-public-humanization",
+      "headRefOid": "128de7853fcc76cc6ebc301e622eed99e6394eba",
+      "isDraft": true,
+      "number": 42,
+      "state": "OPEN",
+      "title": "Humanize and synchronize the Erdős 593 manuscript",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/42"
+    },
+    {
+      "baseRefName": "agent/593-canonical-attachment-enumeration",
+      "headRefName": "agent/593-attachment-occupancy-collapse",
+      "headRefOid": "72d4bc9b7bf924a745c88e66c560edfdc6951c62",
+      "isDraft": true,
+      "number": 41,
+      "state": "OPEN",
+      "title": "Identify the occupancy law of canonical atom attachments",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/41"
+    },
+    {
+      "baseRefName": "agent/593-shared-point-multiplicity-spectrum",
+      "headRefName": "agent/593-canonical-attachment-enumeration",
+      "headRefOid": "97e59bb67e743f37357502223f78f6d7a9904b26",
+      "isDraft": true,
+      "number": 40,
+      "state": "OPEN",
+      "title": "Enumerate capacity-respecting canonical atom attachments",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/40"
+    },
+    {
+      "baseRefName": "agent/593-manuscript-canonical-atoms",
+      "headRefName": "agent/593-shared-point-multiplicity-spectrum",
+      "headRefOid": "1294dc19134e5bdcb00ab41f8a4bc106221a4a98",
+      "isDraft": true,
+      "number": 39,
+      "state": "OPEN",
+      "title": "Classify shared-point multiplicities in canonical atom forests",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/39"
+    },
+    {
+      "baseRefName": "agent/593-global-component-spectra",
+      "headRefName": "agent/593-manuscript-canonical-atoms",
+      "headRefOid": "6dc7adc6ebc241253693ddd7971e5a8a73624070",
+      "isDraft": true,
+      "number": 38,
+      "state": "OPEN",
+      "title": "Integrate canonical atoms and exact spectra into the Erdős 593 manuscript",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/38"
+    },
+    {
+      "baseRefName": "agent/593-indecomposable-spectrum",
+      "headRefName": "agent/593-global-component-spectra",
+      "headRefOid": "a9149f1d135d9b24bbcc4ac2ecc808756abb1ad0",
+      "isDraft": true,
+      "number": 37,
+      "state": "OPEN",
+      "title": "Extend the canonical atom spectra to all connected components",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/37"
+    },
+    {
+      "baseRefName": "agent/593-canonical-atom-normal-form",
+      "headRefName": "agent/593-indecomposable-spectrum",
+      "headRefOid": "4851060bdf49bbfb30630d4672c5b604df945c88",
+      "isDraft": true,
+      "number": 36,
+      "state": "OPEN",
+      "title": "Add exact canonical atom spectra and boundary rigidity for Erdős 593",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/36"
+    },
+    {
+      "baseRefName": "agent/593-ams-writing-style",
+      "headRefName": "agent/593-canonical-atom-normal-form",
+      "headRefOid": "2288dfd80ef0b20df5c32d8ff50245f35b95f8b9",
+      "isDraft": true,
+      "number": 35,
+      "state": "OPEN",
+      "title": "Give obligatory triple systems a canonical atom normal form",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/35"
+    },
+    {
+      "baseRefName": "agent/593-theorem-by-theorem-audit",
+      "headRefName": "agent/593-ams-writing-style",
+      "headRefOid": "fc0467b7e527122adfab51a3fdfe532c861ff5e8",
+      "isDraft": true,
+      "number": 34,
+      "state": "OPEN",
+      "title": "Audit and normalize Erdős 593 to AMS mathematical-writing standards",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/34"
+    },
+    {
+      "baseRefName": "agent/593-theorem-by-theorem-audit",
+      "headRefName": "agent/593-forest-assembly-master-lemma",
+      "headRefOid": "7bfae9e46bdaa3a3c31d6a3d86f110a332f70ff8",
+      "isDraft": true,
+      "number": 33,
+      "state": "OPEN",
+      "title": "Unify the two Erdős 593 decompositions by a forest-assembly lemma",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/33"
+    },
+    {
+      "baseRefName": "agent/593-bridge-core-certificate",
+      "headRefName": "agent/593-theorem-by-theorem-audit",
+      "headRefOid": "34a964ab8e2b05f9ddb0350de7c952ed4b31470d",
+      "isDraft": true,
+      "number": 32,
+      "state": "OPEN",
+      "title": "Audit Erdős 593 line by line, theorem by theorem",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/32"
+    },
+    {
+      "baseRefName": "agent/593-reader-first-prose-pass",
+      "headRefName": "agent/593-bridge-core-certificate",
+      "headRefOid": "913f61e345c2dbbb73069fc9785f1f4ab76ce9c8",
+      "isDraft": true,
+      "number": 31,
+      "state": "OPEN",
+      "title": "Isolate and certify the bridge-core theorem behind Erdős 593",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/31"
+    },
+    {
+      "baseRefName": "agent/finite-parameter-spectrum",
+      "headRefName": "agent/593-reader-first-prose-pass",
+      "headRefOid": "b6fc9fe0df9bfcddd9dd42701492a2763d396901",
+      "isDraft": true,
+      "number": 30,
+      "state": "OPEN",
+      "title": "Reframe Erdős 593 around the finite bridge-block geometry",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/30"
+    },
+    {
+      "baseRefName": "agent/monochromatic-dependence-hypertutte",
+      "headRefName": "agent/consolidated-matroid-potts-paper",
+      "headRefOid": "57827416bb3bf15a785741c772773baf365db0b3",
+      "isDraft": true,
+      "number": 29,
+      "state": "OPEN",
+      "title": "Consolidate the Berge-matroid and Potts follow-up manuscript",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/29"
+    },
+    {
+      "baseRefName": "agent/berge-cycle-matroid-potts",
+      "headRefName": "agent/monochromatic-dependence-hypertutte",
+      "headRefOid": "42b38b1549adbb7763c38a197ba0205ebdb37d4f",
+      "isDraft": true,
+      "number": 28,
+      "state": "OPEN",
+      "title": "Derive monochromatic-event dependence and hypergraph Tutte collapse",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/28"
+    },
+    {
+      "baseRefName": "agent/uniform-bridge-block-theorem",
+      "headRefName": "agent/berge-cycle-matroid-potts",
+      "headRefOid": "7bdc69da02294ebc0dc5ee82ba5e3d85ca2669af",
+      "isDraft": true,
+      "number": 27,
+      "state": "OPEN",
+      "title": "Derive Berge-cycle matroids and Tutte–Potts coloring identities",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/27"
+    },
+    {
+      "baseRefName": "agent/uniform-one-step-trace",
+      "headRefName": "agent/audit-cycle-collapse",
+      "headRefOid": "c5ea763e204aac6eceb4dbe569b079d4037b6b84",
+      "isDraft": true,
+      "number": 26,
+      "state": "OPEN",
+      "title": "Audit gate 1: certify uniform cycle collapse and sharp hypotheses",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/26"
+    },
+    {
+      "baseRefName": "agent/uniform-one-step-trace",
+      "headRefName": "agent/uniform-exact-bridge-trace",
+      "headRefOid": "846b253bbebd683a7aa14e0fc08f6500e1d292c8",
+      "isDraft": true,
+      "number": 24,
+      "state": "OPEN",
+      "title": "Prove the exact arbitrary-rank bridge-trace converse",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/24"
+    },
+    {
+      "baseRefName": "agent/uniform-lean-kernel",
+      "headRefName": "agent/uniform-one-apex-lift-lean",
+      "headRefOid": "0d46e56de7e521a9de71eb0865c27bf76aaa8ac6",
+      "isDraft": true,
+      "number": 22,
+      "state": "OPEN",
+      "title": "Formalize the uniform one-apex lift and chromatic obstruction",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/22"
+    },
+    {
+      "baseRefName": "agent/iterated-lift-avoidance",
+      "headRefName": "agent/uniform-one-step-trace",
+      "headRefOid": "4d72747eaabf5fd1ad6759debd6a6417f7f4d7f8",
+      "isDraft": true,
+      "number": 21,
+      "state": "OPEN",
+      "title": "Prove the uniform one-step trace theorem and stress-test cycle collapse",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/21"
+    },
+    {
+      "baseRefName": "agent/uniform-bridge-block-theorem",
+      "headRefName": "agent/iterated-lift-avoidance",
+      "headRefOid": "25f9055b996bf60b1ddd60f0ea79954efa2630ec",
+      "isDraft": true,
+      "number": 19,
+      "state": "OPEN",
+      "title": "Develop iterated one-apex avoidance for all uniformities",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/19"
+    },
+    {
+      "baseRefName": "agent/uniform-bridge-block-theorem",
+      "headRefName": "agent/uniform-lean-kernel",
+      "headRefOid": "7d219789ff32641e0f79e94959a2841eac30fb29",
+      "isDraft": true,
+      "number": 18,
+      "state": "OPEN",
+      "title": "Start the uniformity-parametric Lean kernel",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/18"
+    },
+    {
+      "baseRefName": "agent/uniformity-extension-experiments",
+      "headRefName": "agent/uniform-bridge-block-theorem",
+      "headRefOid": "cebd47a1e7cfd7aad3160b9e0dad4a1130ee9448",
+      "isDraft": true,
+      "number": 17,
+      "state": "OPEN",
+      "title": "Prove the uniform bridge-block theorem and add certificates",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/17"
+    },
+    {
+      "baseRefName": "agent/finite-parameter-spectrum",
+      "headRefName": "agent/uniformity-extension-experiments",
+      "headRefOid": "6c25c94c6c292a7e39ad58d7dbe1cbd2d38677f0",
+      "isDraft": true,
+      "number": 16,
+      "state": "OPEN",
+      "title": "Test a uniformity-wide obligatory-hypergraph extension",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/16"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "agent/finite-parameter-spectrum",
+      "headRefOid": "474402d1dac7d3c1107feca618d22e2b5f319722",
+      "isDraft": true,
+      "number": 12,
+      "state": "OPEN",
+      "title": "Add exact finite spectra and document the public Lean chronology",
+      "url": "https://github.com/SamPetkov/Erdos593/pull/12"
+    }
+  ],
+  "policy": {
+    "current_stack": "Review-folder consolidation by ordinary merge preserving ancestry; not promotion of candidate Lean or every analytical statement to accepted formalization",
+    "legacy_drafts": "Archive/defer with exact heads and remote branches retained, not merged or claimed wholly preserved in main",
+    "delete_remote_branches": false,
+    "delete_local_files_or_evidence": false,
+    "canonical_lean_or_workflow_mutation": false,
+    "monitors": "paused"
+  },
+  "operation_status": "planned_not_completed"
+}

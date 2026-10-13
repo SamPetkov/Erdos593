@@ -1,0 +1,70 @@
+[
+  {
+    "n": 3,
+    "M": 3,
+    "width": 4,
+    "legacy_value": 1.000016384095124,
+    "new_value": 1.0000163840951237,
+    "relative_value_error": 1.1102139296998406e-16,
+    "gradient_fd": -0.0002879529947819037,
+    "gradient_analytic": -0.00028795387798728723,
+    "relative_gradient_error": 8.829511342996785e-10,
+    "boundary_gradient_error": 2.8825273863057333e-09
+  },
+  {
+    "n": 4,
+    "M": 4,
+    "width": 4,
+    "legacy_value": 1.0022870066835743,
+    "new_value": 1.0022870066835732,
+    "relative_value_error": 5.54477465477859e-16,
+    "gradient_fd": 0.05086205567828017,
+    "gradient_analytic": 0.05086204895058413,
+    "relative_gradient_error": 6.402073465183507e-09,
+    "boundary_gradient_error": 9.025507745289378e-10
+  },
+  {
+    "M": 3,
+    "connected_switch_classes": 41,
+    "widths": [
+      3,
+      4
+    ],
+    "seconds": 0.02397012710571289
+  },
+  {
+    "M": 4,
+    "connected_switch_classes": 604,
+    "widths": [
+      3,
+      4,
+      5
+    ],
+    "seconds": 0.6587796211242676
+  },
+  {
+    "exact_case": "independent",
+    "comparison_sign": 0,
+    "numerator_digits": 113
+  },
+  {
+    "exact_case": "identity",
+    "comparison_sign": -1,
+    "numerator_digits": 61
+  },
+  {
+    "input_validation": "passed",
+    "rejected_calls": 53,
+    "invalid_tuple_cases": 13,
+    "invalid_cover_cases": 11,
+    "invalid_exact_host_cases": 5,
+    "numpy_integer_inputs_accepted": true
+  },
+  {
+    "exact_case": "sample_roundoff_maximum",
+    "stored_certificate_exact_equal": true,
+    "target_defect_sign": 1,
+    "cover_comparison_sign": -1,
+    "original_mu_and_W_admissibility": "checked exactly"
+  }
+]

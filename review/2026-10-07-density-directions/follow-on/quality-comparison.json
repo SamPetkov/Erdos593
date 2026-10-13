@@ -1,0 +1,119 @@
+{
+  "date": "2026-10-07",
+  "status": "BOUNDED_PRIMARY_SOURCE_CONTRIBUTION_BENCHMARK_NOT_RANKING_OR_PROOF_ACCEPTANCE",
+  "research_brief_sha256": "83f2056e839d5a2687c0a8ddba813a588e2020130cedeea75562b897e153678f",
+  "local_sources": {
+    "development_results": {
+      "path": "research/e593-density-development-20261007/development-results.tex",
+      "sha256": "0cb6992730823eae92bf77ed31bd7445b0198f121ceb3c7d256ad2634a18f4b7",
+      "read_scope": "Complete three-direction fragment; analytical assertions and attribution, not kernel validation"
+    },
+    "current_extended_draft": {
+      "path": "C:/Users/petko/e593-frontmatter-story-public-20261004/review/2026-10-06-uniformity/erdos593_obligatory_uniform_hypergraphs.tex",
+      "sha256": "fd871a747a40104cc92bc145f9e664e18fbd1b6e9bcda0faf72a662616679278",
+      "draft_head": "3925e6aa58d44fa580548a8546b597029e37e204",
+      "read_scope": "Abstract, introduction contribution map, exact universal-marginal/approximation/regular-girth/linear-pattern statements, conditional all-rank density theorem and corollary; not a complete proof audit of all 5433 lines"
+    },
+    "validation_status": "The public review packet records two precompiler runner failures, zero new compiler runs, six uncompiled Lean candidates, unchanged accepted root and pending full-manuscript formalization. This comparison does not rerun those checks."
+  },
+  "catalogue_scope": {
+    "repository": "https://github.com/openai/math",
+    "read_commit": "adc7f1241b42e322a6451854ab7e4b4c146bf78a",
+    "primary_readme": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/README.md",
+    "primary_contents": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/CONTENTS.md",
+    "primary_overview": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/overview.tex",
+    "recorded_collection": "722 manuscripts in 372 families; heterogeneous verification. README expressly says some unformalized outputs could have issues.",
+    "selected_preprints": 3,
+    "selection_rule": "Relevant contribution shapes, not an attempt to locate or certify a least valuable member",
+    "inspection_boundary": "Primary checked-in TeX and documented Lean scopes. PDF fetching was rejected by the browser's content-type handling; no independent compiler/comparator/proof acceptance or catalogue-wide correctness assessment."
+  },
+  "benchmarks": [
+    {
+      "family": "161",
+      "title": "A counterexample to Sidorenko's conjecture",
+      "source": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-counterexample-to-Sidorenkos-conjecture-September-23-2026/build/sections/introduction.tex",
+      "source_locations": "Main theorem lines 17-24; method/dependencies lines 49-127 and 328-337",
+      "stated_contribution": "An explicit 35-vertex, 66-edge bipartite pattern and a finite simple host violating the ordinary all-homomorphism Sidorenko bound.",
+      "documented_lean_scope": "Fixed finite-host counterexample only; the forcing-conjecture consequence is explicitly outside that statement.",
+      "lean_scope_source": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/161.md",
+      "lesson_for_e593": "Distinguish the borrowed graph and rank-layer construction from a new all-uniformity transfer, obligatory-atom specialization or sharp boundary. A counterexample is substantive because it falsifies an exact claim, not because of its page count or Lean declaration count.",
+      "audit_limit": "The manuscript asserts the negative result; this benchmark did not independently audit its rank-layer proof or execute its Lean files."
+    },
+    {
+      "family": "160",
+      "title": "Quantitative Superexponential Bounds for van der Waerden Numbers",
+      "source": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Quantitative-Superexponential-Bounds-for-van-der-Waerden-Numbers-September-23-2026/build/sections/01-introduction.tex",
+      "source_locations": "Main theorem lines 16-32; prior-bound comparison lines 34-67; quantitative construction lines 104-145",
+      "stated_contribution": "One absolute threshold works for all r>=2 in W_r(k)>k^(10^(-5) k floor(log_2 r)), yielding the full superexponential limit even for two colors.",
+      "documented_lean_scope": "The uniform lower bound, associated limits, finiteness and boundary values; sharper intermediate estimates are excluded from the described scope.",
+      "lean_scope_source": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/160.md",
+      "lesson_for_e593": "State the quantifier improvement and exact comparison with existing bounds. A matching sharp example or a new uniform range is stronger evidence of added mathematical content than many unconnected corollaries.",
+      "audit_limit": "This is a source-described benchmark, not an independent validation of the coloring construction or its global theorem."
+    },
+    {
+      "family": "175",
+      "title": "Graph Decompositions at the Integral Expectation Threshold",
+      "source": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Graph-Decompositions-at-the-Integral-Expectation-Threshold-October-5-2026/build/main.tex",
+      "source_locations": "Main theorem lines 76-91; scope/input/method lines 93-151; imported discrete-convexity statement lines 169-182",
+      "stated_contribution": "A universal bounded edge partition of any finite graph into fixed pieces, each with ordinary containment threshold at most a universal multiple of the original integral expectation threshold; essential companion input is discrete convexity.",
+      "explicit_limitation": "Separate piece embeddings need not agree on shared vertices. Therefore this does not provide a compatible gluing reconstructing the whole graph at that threshold.",
+      "documented_lean_scope": "Family175 catalogue lists threshold equivalence and discrete convexity, not the graph-decomposition endpoint itself.",
+      "lean_scope_source": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/175.md",
+      "lesson_for_e593": "A consequence of a major prior input can still be substantive if it supplies an exact new conversion theorem. For our assemblies, shared-port compatibility must be proved rather than inferred from scalar atom densities or independent embeddings.",
+      "audit_limit": "Actual child source benchmark plus this agent's primary introduction/input check; not a full independent mathematical or compiler audit."
+    }
+  ],
+  "prior_e593_credit": {
+    "source": "https://arxiv.org/abs/2606.24882v2",
+    "full_primary": "https://arxiv.org/html/2606.24882v2",
+    "finding": "Eric Li's preprint was first submitted 23 June 2026; v2 states the triple-system classification, exact uncountable avoidance spectrum and Lean verification. The current E593 draft already acknowledges this chronology and independent proof development.",
+    "boundary": "Do not advertise a first solution of593, the triple avoidance dichotomy or a new first Lean proof without a genuine prior-art comparison. The source's verification claim is reported, not independently rechecked here. A bounded term search finding no partition-lattice theorem is not an exhaustive novelty certificate."
+  },
+  "contribution_criteria": [
+    {"criterion": "Additional mathematical claim", "acceptance": "Name the exact new theorem or falsified conjecture, separate it from Li, Reiher, Im-Li-Liu, Nie-Spiro and the borrowed OpenAI construction, and inspect materially overlapping primary results."},
+    {"criterion": "Breadth and exact quantifiers", "acceptance": "Record uniformity, connectedness, reducedness, original carriers, host type and all boundary cases. Stronger universal scope must be genuinely proved, not supplied as an input."},
+    {"criterion": "Sharpness or obstruction", "acceptance": "Give equality cases, an optimal order/range, a concrete counterexample, or a precise remaining gap. A rank>=3 necessary condition is not an example at rank3."},
+    {"criterion": "Reusable method", "acceptance": "Expose a general certificate, carrier-faithful transfer or checkable joint-profile condition that another problem can use. A direct finite Fubini identity alone is supporting infrastructure."},
+    {"criterion": "Evidence and formalization fidelity", "acceptance": "Audit every theorem's actual mathematical proof and dependencies, then match the exported Lean statements/definitions/axioms and original successful runs. Declaration counts, service output and static source review are not this acceptance."},
+    {"criterion": "Community utility and coherent exposition", "acceptance": "Supply a small set of discoverable APIs, explicit witnesses/certificates and a concise main argument. References, appendices, formalization and conjectures serve that argument rather than manufacture impact by volume."}
+  ],
+  "assessment": {
+    "answer_to_at_least_least_valuable": "No evidence supports that promise: mathematical value has no canonical scalar ordering, the collection has heterogeneous verification, and no least valuable result was selected or audited.",
+    "positive_case": "A complete new theorem connecting canonical cyclic structure to a sharp density boundary, universally valid marginal constraint, or capacity/port-compatible assembly criterion could make a substantive research paper. The existing exact spectra and assembly geometry may already supply substantial independent value if their novelty and remaining interfaces survive full audits.",
+    "current_limitation": "The present status does not establish that final value, whole-manuscript correctness or complete Lean verification. The new density candidates remain uncompiled. The all-uniformity negative result remains explicitly conditional on the external rank-layer estimate.",
+    "no_journal_promise": true,
+    "no_model_capability_comparison": true
+  },
+  "three_direction_claim_control": {
+    "low_rank": "A useful story boundary deduced from canonical recognition and known theta inequalities; not a new proof of those inequalities, not a rank3 counterexample, and not arbitrary assembly closure.",
+    "balancedness": "The specific certificate and its universal selected-subgraph proof can be useful; the general m2-to-mr private-expansion transformation is already Nie-Spiro Lemma4.2, directly checked at https://arxiv.org/html/2408.03406v2 (statement and proof lines652-667 in the retrieved text). Present it as attributed infrastructure and a formalization target, not new mathematics.",
+    "multi_port": "The full original-carrier contraction identifies missing attachment information. Its finite-sum identity is elementary; substantive further value requires a proved inequality/obstruction or exact compatible-assembly theorem, not an assumed correlation sign."
+  },
+  "current_draft_stronger_targets": {
+    "source_claims_not_certified_here": [
+      "All-finite-uniformity classification and actual canonical description",
+      "Exact canonical spectra and fixed-atom profile/lattice geometry",
+      "Universal pair-marginal realization characterized by the matching polytope",
+      "Sharp uniformity-dependent density approximation and regular girth/Berge-girth decay",
+      "Conditional all-uniformity non-Sidorenko obligatory atoms and expansion-conjecture consequence"
+    ],
+    "recommended_story": "Infinite uncountable-chromatic forcing determines allowable canonical atoms; finite density depends on both cyclic content and compatible attachment profiles. Exact assembly geometry explains what can vary while the atoms remain fixed.",
+    "selection_gate": "Retain only the strongest audited endpoints in the main story. Keep elementary support, implementation details and broader conjectural exploration separate. Do not call these targets new or accepted solely because they appear in the draft."
+  },
+  "equal_conjectural_space": {
+    "author_choice_respected": true,
+    "standard": "Give exact conjectures equal visible exposition, with quantifiers, evidence, prior-art relation, boundary cases and a concrete falsification route; distinguish them from theorems at every appearance.",
+    "value_boundary": "A well-motivated conjecture can focus future work, but equal space does not make it a proved contribution or compensate for an unverified principal theorem. No broad new campaign is authorized by this note."
+  },
+  "academic_style_review": {
+    "skill": "codex-academic-humanizer",
+    "use": "English medium precision pass for the separate benchmark note; clean fragment plus claim-control comparison below. No imitation of a named researcher, no revision of the live manuscript.",
+    "comparison": [
+      {"source_framing": "Will the final paper be at least as valuable as the least valuable recent OpenAI result?", "revised_framing": "Assess exact additional theorems, sharpness, reusable methods, dependency fidelity and utility; do not assert a catalogue-wide ranking.", "reason": "Replaces an unsupported scalar promise with auditable contribution criteria."},
+      {"source_framing": "Use the solution of593 to add new mathematics.", "revised_framing": "Credit the earlier classification and distinguish the independent proof from new structural/density consequences.", "reason": "Preserves chronology and makes the actual added content visible."},
+      {"source_framing": "Give conjectural directions equal space.", "revised_framing": "Give equally visible exact questions, evidence and falsification tests, while marking them as conjectural.", "reason": "Honors the author without conflating exploratory value with theorem acceptance."}
+    ]
+  },
+  "actions": {"compiler_or_version_commands": 0, "jobs_or_service_requests": 0, "git_mutations": 0, "live_manuscript_edits": 0, "pdf_compilation": 0, "clocks": "PAUSED_UNCHANGED", "private_export": false},
+  "review": {"agent": "openai_contribution_comparison", "independent_full_audit": false, "bounded_primary_source_check": true, "helper": "threshold_benchmark source-only comparison, not correctness certification"}
+}

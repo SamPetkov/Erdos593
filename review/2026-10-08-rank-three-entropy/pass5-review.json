@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-09",
+  "scope": "Bounded analytical proof and exact new transport preparation; public draft only",
+  "source_sha256": "60883a25abe8a00d53ea9f9bf6131f58453befbbeb58f8024133a0c84a39f8ee",
+  "root_self_review": true,
+  "independent": false,
+  "actual_separate_agent_checks": true,
+  "external_full_audit": "PENDING",
+  "binary_entropy": {
+    "status": "ANALYTICAL_PROOF_OBLIGATIONS_DISCHARGED_NOT_LEAN_VALIDATED",
+    "quantifiers": "Every finite simple graph of maximum degree<=3, all r in[0,1], uniform binary singleton law kappa, every actual edge pair law lambda_r(s,t)=(1+r st)/4, D(tau||kappa^V)<=|E|I(r). Bipartite graphs all r in[-1,1]. Isolates and empty graphs permitted.",
+    "application": "Every simple actual bipartiteK4 subdivision, all positive path lengths including1 and entire exchangeable-triple uniform binary interval[-1/3,1]. No graph-edge average substitution.",
+    "obligation_graph": [
+      "Existence <- compact finite box [0,atanh(r)]^E and continuous finite Gibbs objective, separately r=0/r=1 endpoints.",
+      "Positive-edge exactness <- interior derivative plus upper-face derivative and nonnegative removed-edge correlation from exact finite parity expansion.",
+      "Zero-edge exactness <- lower-face correlation>=r AND subcubic endpoint has at most2active neighbors; 0/1neighbor direct cases; 2neighbor conditional mean A*a+B*b withA,B>=0, active equal correlations and distinct-neighbor fullsupport forceA=B, binary pointwise aw+bw<=1+ab supplies correlation<=r.",
+      "Actual pair-law reconstruction <- global spin-flip uniform singletons plus everyedgecorrelationr.",
+      "KL budget <- exact weightededgeexpectations plus nonnegative even-subgraph partition lower bound and logcosh convex-conjugate identity.",
+      "Endpoints <- iid at0; one independent spin percomponent at1 andn-components<=m; bipartitionflip fornegative correlations.",
+      "Tripleinterval <- E[(sigma1+sigma2+sigma3)^2]>=1 necessity and eta_rho=(1+rho(xy+xz+yz))/8 sufficiency."
+    ],
+    "complete_candidate_sha256": "b326fce2885834fb766c61de9bf4005c0270b77165fde567b882fd19bb9694d7",
+    "bounded_47_row_dependency_audit_sha256": "c641fb89918b5336b89216713fbde75c6a85ec8db92b3cb73a744e67d705be4f",
+    "final_public_source_specific_helper_audit_sha256": "954a8e069ecaad7f66dbe01aa55f90a9a6afc46134aeecf1bc73be92d86661d4",
+    "actual_separate_adversarial_audit": "Complete frozen source read; FOLLOWS analytical only. Root also read full proof and all audit rows. Final public proof retains all hypotheses and corrects only prose about one zero sign difference.",
+    "remaining": "Nonuniform binary singletons, arbitrary finite alphabets, formalization and novelty/importance assessment."
+  },
+  "actual_source_obstruction": {
+    "source": "actual-source-obstruction-pass5.json",
+    "sha256": "01691cfd177eca2c58bf492af37ff22af305331a7298c48b92129f345a6df84b",
+    "status": "EXACT_ANALYTICAL_COUNTEREXAMPLE_TO_STRONGER_MODEWISE_POSITIVITY",
+    "certificate": "Actual positive eigenmode eta=2^-128 of one strictly positive common-power host has q_f(8)<=-66554167313/2^154 at r=l=1,u=4.",
+    "review": "Actual separate mathematical helper and root checked positive32-state measure, common-host admissibility, actual moment contractions and28eta perturbation estimate. No numerical scan or Lean claim.",
+    "boundary": "Not F<1. Constant and othermode surplus remain; universal interacting-spectrum density still open."
+  },
+  "finite_transport": {
+    "status": "EXACT_SOURCE_PACKAGE_RUNNER_REVIEWED_FRESH_QUEUE_GUARD_STOP_NOT_LEAN_FAILURE",
+    "candidate_sha256": "e5aecb13aad04a5da598808737d5191e403102ecb25eecf941e50a202269e250",
+    "source_archive_sha256": "aadcaa69bf185a5df96d5053ccb692e86a24e450c9daaa4b46e3a6e89497eac5",
+    "freeze_sha256": "b1991955b19adc8329fe786d6ae756e1dec71bf1008d2ef280d6bd4da0ba7a73",
+    "Probe_sha256": "992c9071968b1a9412314eb99f796ffe09099cb837ec5e48a1bd58ab1f02fc33",
+    "source_math_and_actual_separate_runner_review": "PASS; exact deterministic archive/Probe,16negative parserfixtures, AST and Bash syntax. Minor parser framing permissiveness recorded; no actual proof output exists to validate.",
+    "runner_review_sha256": "f300867df44aaf818e58291c8aa2eb6020f5ec85a1cd61217c5b9028689508d9",
+    "planned_output": "13fulltypes/7definitions/13orderedstandardaxioms and3compiler metadata blocks; not captured",
+    "new_compiler_attempts": 0,
+    "new_source_uploads": 0,
+    "new_jobs": 0,
+    "stop": "Procida reachable and nine exact clean pins PASS. Another existing user job made fresh user_queue_nonempty guard FAIL before remotecontrol reservation/upload; only a local reservation was created and preserved. No otherjob action or blindretry.",
+    "joint_new_limit": 2,
+    "pending": "Resource-eligible actual focused capture, historical dependency artifact lineage, actual host extraction and canonical integration."
+  },
+  "primary_literature": {
+    "inverse_Ising_KKT": {"url": "https://arxiv.org/abs/1905.00516", "support": "Lauritzen-Uhler-Zwiernik Cor3.7 establishes constrained inverse-Ising/KKT framework, not the full subcubic saturation conclusion."},
+    "entropy_formulation": {"url": "https://arxiv.org/abs/1504.00858", "support": "Szegedy Cor9.1 relates all finite prescribed-edge entropy budgets to Sidorenko; binary specialization is not the unrestricted quantifier."},
+    "partition_comparison": {"url": "https://arxiv.org/abs/1202.6035", "support": "Ruozzi Cor4.2 gives binary log-supermodular Bethe partition lower bound, not actual prescribed marginal feasibility alone."},
+    "root_direct_primary_reads": true,
+    "exact_subcubic_result_found_in_bounded_check": false,
+    "novelty_established": false,
+    "B_level_significance_established": false
+  },
+  "preservation": {
+    "accepted_modules": 250,
+    "ordered_accepted_audits": 401,
+    "accepted_source_changes": false,
+    "live_manuscript_or_PDF_changes": false,
+    "accepted_coefficient_job66955_replayed": false,
+    "old_counters": "coefficientproof1of2/API2of2/density2of2/service1of1 unchanged",
+    "new_Aristotle_POST": false,
+    "canonical_acceptance": false,
+    "clocks": "PAUSED",
+    "merge": false
+  },
+  "historical_reviews": "pass4-review.json and earlier snapshots are retained as historical source-bound records, not silently relabeled as current whole-note audits."
+}

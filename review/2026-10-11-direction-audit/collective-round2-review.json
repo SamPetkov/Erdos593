@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-11",
+  "status": "analytical-regions-reviewed; unrestricted-open",
+  "author_scope": "Check existing Pro, review carefully, develop collective compensation and only connected useful mathematical directions; goal created explicitly, clocks remain paused.",
+  "goal": {
+    "status": "active",
+    "unrestricted_proof": false,
+    "token_budget": null
+  },
+  "root_review": {
+    "reviewer": "Codex root",
+    "independent": false,
+    "scope": "Full regional proof, equality/stability, zero and periodic cases, exact channel identities, logarithmic transfer and rational mixture certificate"
+  },
+  "separate_agent_review": {
+    "reviewer": "community_value_oct11",
+    "status": "PASS",
+    "external_full_audit": false,
+    "observed_reviews": [
+      {
+        "scope": "Complete regional note and channel checker",
+        "note_sha256": "3c7aa5f0fd26acc7d55634897bbf32cbbebd133c81af9f0582ffbb1831656f99",
+        "checker_sha256": "68de2e78c9c3b1de501bc4b87ca4284b989bae884c245cc1028b5d73daeeb2d0",
+        "read_only_execution": {
+          "exit_code": 0,
+          "wall_time_seconds": 0.324,
+          "cases": 12
+        }
+      },
+      {
+        "scope": "Logarithmic lemma and exact four-surplus identity",
+        "status": "PASS",
+        "new_run": false
+      },
+      {
+        "scope": "Complete revised regional note and full mixture note/checker",
+        "note_sha256": "2fa29fd18a0356c3d05a406797aabb8f632ec6b40c9a2442f5b3660424058952",
+        "mixture_note_sha256": "889021079ab367fd38b7852057b5659bccbe12eb314e561ccdf264aab3318ee4",
+        "mixture_checker_sha256": "9106f0fc37d4893cbdf0eb8518ee066e2c6facb6dbfcecca26e4f8a733da2796",
+        "read_only_execution": {
+          "exit_code": 0,
+          "wall_time_seconds": 0.291,
+          "configurations": 16
+        },
+        "rational_log_tail": "Audited j0..18, power39 remainder and coefficient sign handling"
+      }
+    ]
+  },
+  "claims": {
+    "all_host_regions": "u+l<=r+h or u>=r+l",
+    "consequences": "All min(u,l)=1 or h>=2l-1; also r>=u,k>=2u or u>=r+h,k>=2r+h",
+    "stability": "D>=(1+delta/2)^2,delta=E_mu²(sqrt(T^(w+s+t))-1)^2; equality iff T=Pi",
+    "log_transfer": "J_T(2s,2t)>=I_T(s+t)>=I_T(2t)>=0 for integer0<=s<=t",
+    "positive_surplus": "Exact Dirichlet plus three PSD/Schur forms; original measure retained",
+    "finite_mixture": "Two negative trial payoffs, positive half-mixture; one already covered binary/reflection benchmark"
+  },
+  "remaining": {
+    "residual_strip": "l>=2,1<=h<=2l-2,r>=l,r+h-l+1<=u<=r+l-1,k>=u, minus the additional covered orientations/reflection families",
+    "channel_gap": "Pay positive scalar deficit using actual four surplus terms when E g sqrt(L)<1.",
+    "entropy_gap": "Pay actual marginalized four-leaf/group information, not observed-root entropy or incompatible pair laws.",
+    "example_unclosed_tuple": [
+      5,
+      4,
+      5,
+      3,
+      1
+    ],
+    "literature_novelty": "Not cleared; primary Im-Li-Liu and Li-Szegedy read for restricted-results/method context only.",
+    "lean_accepted": false,
+    "manuscript_revision": false
+  },
+  "pro": {
+    "response": "complete and fully read",
+    "submissions_this_consultation": 1,
+    "retries": 0,
+    "raw_transcript_export": false,
+    "contribution": "Same region proof, exact surplus decomposition, log transfer and rational mixture example. Advice independently audited, not kernel evidence."
+  },
+  "artifacts": {
+    "brief_sha256": "b6252f7d6276904206b47c87144c8184c38dfe0a8c125609b7e0067a864dede4",
+    "channel_check_output_sha256": "e7b3f7424294f736b5be76f8522faae0cc405ed6e1137132b83d7693a8630093",
+    "mixture_check_output_sha256": "ebc75dc21bab414ba444a4c05732a9be617d7a3f9eef4417afdfee47b5885c43"
+  },
+  "resources": {
+    "lean": 0,
+    "optimizer": 0,
+    "new_aristotle": 0,
+    "new_pro": 0,
+    "root_channel_executions": 2,
+    "root_mixture_executions": 2,
+    "reviewer_channel_executions": 1,
+    "reviewer_mixture_executions": 1,
+    "checks": "Only standard-library, subsecond exact finite arithmetic."
+  },
+  "preservation": "Old packets, accepted Lean source/pins, manuscript/PDF, workflows, main/private repositories and paused clocks unchanged. Current scoped draft research-note delivery only."
+}

@@ -1,0 +1,280 @@
+{
+  "date": "2026-10-07",
+  "scope": "Exact next obligations after the current candidate packet. Read-only dependency inspection plus this metadata file; no compiler, network, Git, manuscript, private-repository or clock change.",
+  "status": "The root's current focused run/output is pending here. These are unproved follow-on interfaces, not acceptance or completed manuscript coverage.",
+  "policy": "Retain original finite vertex/edge carriers and every endpoint. Do not replace a missing structural or density theorem with an equivalent conclusion as a hypothesis.",
+  "source_basis": {
+    "public_main": "7b4d68b3a523c1f6997feab4588f041190568f61",
+    "draft": "3925e6aa58d44fa580548a8546b597029e37e204",
+    "read_checkout": "C:/Users/petko/e593-frontmatter-story-public-20261004/formalization",
+    "caution": "Existing files were inspected directly. Their retained acceptance is parent evidence; this metadata does not redo source/artifact/kernel reconciliation. Some old source comments still say scaffold/candidate.",
+    "current_D3_source": "de46591242e468fcad188660888d2b21215eac12cd7b61fcdaf298ed844b0845"
+  },
+  "next": [
+    {
+      "id": "N1-D3-original-canonical-carriers",
+      "priority": 1,
+      "exact_target": "For every finite TripleSystem F with Linear F and BridgeAtEveryEdge F, construct actual canonical vertex/edge decompositions and prove endpoint fidelity, so edge_partition_port_contraction applies to F's all-homomorphism density.",
+      "quantifiers": "F:TripleSystem V E; finite V,E; actual Index F, not a supplied list of atoms. Ordered triple-edge enumerations have domain Fin3. Intrinsic may be used to connect the canonical labels to classical blocks, but is not required by the finite contraction identity itself.",
+      "definitions": {
+        "I": "CanonicalAtom.Index F with a genuinely derived Fintype instance via atomOf_surjective and Finite.of_surjective.",
+        "atomEdges": "{e:E // atomOf F hLinear hBridge e=A}, retaining original e values.",
+        "joint": "{x:V // x∈sharedAtomPoints F hLinear hBridge}. This is the existing actual carrier whose multiplicity is at least2.",
+        "active": "{x:V // ¬F.IsIsolated x}. First delete isolated vertices using N2; do not replace them silently.",
+        "internal": "For each A, {x:V // x∈atomSupport F hLinear hBridge A ∧ x∉sharedAtomPoints F hLinear hBridge}.",
+        "ports": "For each A, {x:V // x∈atomSupport F hLinear hBridge A ∧ x∈sharedAtomPoints F hLinear hBridge}; map to joint by original Subtype.val.",
+        "d": "active ≃ joint ⊕ Sigma internal.",
+        "a": "E ≃ Sigma atomEdges; a is the inverse of the genuine sigma-fibre equivalence of atomOf.",
+        "edgeOrdering": "For each original edge e, choose and prove an equivalence Fin3 ≃ {x:V // F.Inc x e}; lift endpoints to active using not_isolated_of_inc."
+      },
+      "proof_obligations": [
+        "Every active original point lies in at least one actual atom support: use a witnessing incident edge and its actual atomOf.",
+        "Outside the joint carrier there is exactly one supporting atom; derive this from mem_sharedAtomPoints/multiplicity, not an assumed ownership function.",
+        "Construct d and prove both inverse equations using original vertex values and the unique atom owner.",
+        "Construct a from Equiv.sigmaFiberEquiv, retaining actual edge values; prove all original edges accounted for exactly once.",
+        "Construct local endpoint maps into ports[A]⊕internal[A], and prove d(edge(a⁻¹(A,e),k)) equals that endpoint's actual joint/exclusive placement for every A,e,k.",
+        "Prove all edge orderings give the same density for symmetric U; until then the identity is only for explicitly fixed consistent ordered endpoints.",
+        "Apply the current contraction theorem only after these original-carrier/type checks; do not call generic Fubini alone the canonical-assembly endpoint."
+      ],
+      "actual_dependencies": [
+        {
+          "module": "Erdos593.TripleSystem.CanonicalAtomPartition",
+          "declarations": [
+            "Index",
+            "atomOf",
+            "edges",
+            "atomOf_surjective"
+          ],
+          "sha256": "180c96b4b7b111560cb698e14cf68b27896176e1d4a99e41ca17efd700937d02"
+        },
+        {
+          "module": "Erdos593.TripleSystem.CanonicalAtomForestReconstruction",
+          "declarations": [
+            "atomSupport",
+            "atomFinset",
+            "mem_atomFinset",
+            "atomIncident",
+            "sharedAtomPoints",
+            "mem_sharedAtomPoints",
+            "atomEdges_disjoint"
+          ],
+          "sha256": "2e7b0b66b7e9eaa0424a672a84a24df21d54612359b3d62cedf61095e0c5ade4"
+        },
+        {
+          "module": "Erdos593.TripleSystem.CanonicalAtomCounting",
+          "declarations": [
+            "atomEdgeCount",
+            "pointMultiplicity",
+            "sum_atomEdgeCount"
+          ],
+          "note": "sum_atomEdgeCount already uses Equiv.sigmaFiberEquiv(atomOf) on actual original edges.",
+          "sha256": "8256fbe9139bac74e07fbb8b90beb514895e44b2d8b05417e344909299801e9b"
+        },
+        {
+          "module": "Erdos593.TripleSystem.EdgeRestriction",
+          "declarations": [
+            "edgeSupportSet",
+            "EdgeSupport",
+            "edgeRestriction"
+          ]
+        },
+        {
+          "module": "Erdos593.TripleSystem.SupportedClassicalBlockLabels",
+          "declarations": [
+            "supportedBlock_iff_canonicalAtom"
+          ],
+          "note": "Only needed when advertising the canonical carrier as the classical-block carrier under Intrinsic; it is not required for the algebra."
+        },
+        {
+          "module": "Erdos593.DensityCandidates.FinitePortContraction",
+          "declarations": [
+            "edge_partition_port_contraction",
+            "original_carrier_port_contraction"
+          ],
+          "status": "Current candidate/output pending, not yet called accepted here."
+        }
+      ],
+      "boundary": "These inspected canonical APIs are for triples (r=3). General r-uniform canonical extraction in Pro sections11-13 has not been imported into the accepted Lean project. Do not advertise the r=3 carrier adapter as all-uniformity formalization.",
+      "cost": "A coherent finite structural adapter, likely one small module plus density-ordering support, after exact source/API review. No launch authorized by this metadata."
+    },
+    {
+      "id": "N2-D3-normalized-isolate-deletion",
+      "priority": 1,
+      "exact_target": "For finite carriers Z,A, finite Ω and μ:Ω→ℝ with Σμ=1, and every factor F:(A→Ω)→ℝ, prove finiteDensity μ (fun x:Z⊕A→Ω => F(fun a=>x(inr a))) = finiteDensity μ F.",
+      "assumptions": "Only normalization is needed for this equality. Nonnegativity is separately retained for probability interpretation. No Nonempty V/E/Ω premise is added; normalization already excludes empty Ω.",
+      "original_system_target": "For every finite TripleSystem F and symmetric U, prove density(F,U)=density(F.isolatedReduction,U) using the exact same original edge-index type E and the lifted original endpoints.",
+      "proof_obligations": [
+        "Split the full original vertex carrier V as IsolatedPoint⊕NonIsolatedPoint using a genuine subtype-complement equivalence.",
+        "Split assignments and independent weights, integrate the unused isolated assignment to1 using vertexWeight_mass.",
+        "Use isolatedReduction_inc and not_isolated_of_inc to prove that every original edge factor depends only on the active assignment.",
+        "Cover E empty, V empty, all-isolated systems, and zero individual sample weights."
+      ],
+      "actual_dependencies": [
+        {
+          "module": "Erdos593.TripleSystem.Isolated",
+          "declarations": [
+            "NonIsolatedPoint",
+            "isolatedReduction",
+            "not_isolated_of_inc",
+            "not_isolated_iff_exists_inc",
+            "isolatedReduction_inc",
+            "isolatedReduction_edge_ncard",
+            "isolatedReduction_simple"
+          ],
+          "sha256": "b6b14641cb9cf0951ff7564cbacc6ed641fbe550ef9279d8189885d2dfd3cae2"
+        },
+        {
+          "module": "Erdos593.DensityCandidates.FinitePortContraction",
+          "declarations": [
+            "vertexWeight_mass",
+            "finiteDensity_reindex"
+          ],
+          "status": "Current candidate/output pending"
+        }
+      ],
+      "not_a_hidden_premise": "Do not require HasNoIsolatedPoints just to state a whole-system density identity. This deletion theorem is the missing normalized adapter when Shared must mean actual joints only.",
+      "cost": "Small finite-sum/equivalence proof; keep separate from any forest/canonical reconstruction."
+    },
+    {
+      "id": "N3-D2-private-expansion-actual-carrier",
+      "priority": 2,
+      "exact_target": "For every finite simple graph J and integer r>=2, define the actual expansion carrier V(J)⊕(J.edgeSet×Fin(r-2)), edge carrier J.edgeSet, and incidences; prove r distinct incident vertices per edge, edge injectivity, exact selected-edge support counts, and the actual-subgraph transport used by strict r-balancedness.",
+      "definitions": {
+        "incidence": "For core v, incidence means v∈the original Sym2 edge; for private(e',k), incidence with edge e means e'=e.",
+        "orientation": "Choose both original distinct endpoints of each graph edge consistently. A bijection Fin2⊕Fin(r-2)≃incidentPoints(e) must be proved, not just inferred from a cardinal formula.",
+        "whole_counts": "|E(A_r)|=|E(J)|, |V(A_r)|=|V(J)|+(r-2)|E(J)|. For the specific J:66 edges,35 vertices, hence66r-97 vertices.",
+        "selected_counts": "For selected original graph edges B, define coreVertices(B) as the union of their actual endpoints. Their complete expanded support has |coreVertices(B)|+(r-2)|B| points. Distinct private carriers are tied to their original edge labels.",
+        "eligible_subgraph": "An expanded subhypergraph consists of a selected edge set B and a selected ambient vertex set W containing each selected complete expanded edge. W may contain extra isolated points; they only increase the denominator.",
+        "density_ratio": "m_r uses actual eligible subhypergraphs with |W|>r and integer/rational numerator |B|-1, not Nat truncated subtraction.",
+        "specific_threshold": "m_r(A_r)=65/(65r-97); strictness requires a proper actual vertex/edge selection, not an assumed strict cardinal inequality."
+      },
+      "proof_obligations": [
+        "Construct the original incidence graph J from Fin13 point nodes and the actual Fin22 face nodes; transport the two tagged exposure classes through the certified original-label bijection.",
+        "If using SimpleGraph.Subgraph rather than the exact finite incidence model, prove selected vertex and unordered-edge carrier bijections/cardinalities. The candidate incidence sigma count must equal actual graph edge count.",
+        "Prove every expanded hyperedge retains both distinct original endpoints and r-2 private points, and different hyperedges have different point sets.",
+        "Prove the whole and selected support cardinal formulas through genuine disjoint carrier equivalences.",
+        "For f=|B|>=2, apply the current selected-core cross-product inequality to actual core endpoint count. Added isolated W vertices increase the denominator, including equality/properness cases.",
+        "Treat f=0 and f=1 separately: eligible denominators are positive, numerators are -1 and0. Do not apply a theorem requiring f>=2 to them.",
+        "Prove equality forces the whole actual core selection and no extra isolated vertices. If all35 core vertices and all66 edges are selected, finite containment gives full carriers.",
+        "If exposing a supremum/max m_r definition, prove whole-graph attainment and all selected eligible ratios bounded/strict; cross-product arithmetic alone is not yet this endpoint.",
+        "Before an atom-rank claim, prove actual component preservation and cycle-rank preservation for this general r expansion; do not insert component count as an assumption."
+      ],
+      "actual_existing_dependencies": [
+        {
+          "module": "Erdos593.TripleSystem.Expansion",
+          "declarations": [
+            "PrivateVertexExpansion.Point",
+            "PrivateVertexExpansion.Edge",
+            "PrivateVertexExpansion.Inc",
+            "PrivateVertexExpansion.incidenceSet_ncard",
+            "PrivateVertexExpansion.incidenceSet_injective",
+            "privateVertexExpansion"
+          ],
+          "scope": "Existing construction is r=3 only.",
+          "sha256": "8eedb4203064487022b53cda4fcc165cc6919c6aa325ce2e27aaea0737685387"
+        },
+        {
+          "module": "Erdos593.TripleSystem.ExpansionComponents",
+          "declarations": [
+            "privateVertexExpansion_core_reachable_iff",
+            "privateVertexExpansion_componentEquiv",
+            "privateVertexExpansion_component_card"
+          ],
+          "scope": "Accepted explicit r=3 component preservation includes isolated core vertices/empty graph; general r version remains new.",
+          "sha256": "10abd3fd0dfee1b4725c3eb509f2bd57b314d4475d48e69cdeab335ede19b190"
+        },
+        {
+          "module": "Erdos593.DensityCandidates.FinitePortContraction",
+          "declarations": [
+            "private_expansion_marginal_identity"
+          ],
+          "scope": "Finite sum identity on a represented expansion, not original SimpleGraph/hypergraph geometry or rank counts; current output pending."
+        }
+      ],
+      "external_boundary": "The finite balance proof does not prove positivity of Nie–Spiro s(A_r). The external rank-layer extraction, non-Sidorenko transfer and random Turán theorem remain separate analytical/literature dependencies.",
+      "cost": "A genuine new finite uniform-hypergraph representation plus subgraph transport; not merely a one-line arithmetic wrapper."
+    },
+    {
+      "id": "N4-D1-density-inequalities-and-transport",
+      "priority": 3,
+      "exact_target": "For every finite probability law μ, every symmetric W:Ω×Ω→[0,1], every t>=2, and every positive simple theta length triple with all-even or all-odd lengths, prove the corresponding graph homomorphism density is at least (E W) raised to the actual original graph edge count.",
+      "missing_theorems": [
+        "Density invariance under actual graph/hypergraph incidence isomorphism and edge ordering permutations.",
+        "For every r>=3 symmetric U:Ω^r→[0,1], pair marginal M_U is symmetric, satisfies0<=M_U<=1 and E M_U=E U. The current source candidate proves the expansion density equality, not all these probability properties.",
+        "Even-cycle finite-weighted-kernel Sidorenko inequality.",
+        "All-even generalized theta finite-weighted-kernel inequality, including all allowed positive lengths.",
+        "All-odd generalized theta finite-weighted-kernel inequality, including at most one direct length-one branch."
+      ],
+      "existing_structural_dependencies": [
+        {
+          "module": "Erdos593.Graph.BoundaryCoreRecognition",
+          "declarations": [
+            "bipartite_rank_one_even_cycle"
+          ],
+          "sha256": "696bef192260b634a8662a7666bef1e3e10757715595daf78ca78df3fb6665b0"
+        },
+        {
+          "module": "Erdos593.Graph.ThetaRecognition",
+          "declarations": [
+            "rank_two_iso_theta"
+          ],
+          "sha256": "71e7f20d63e880d8cd2bae7be85a1976aafd3fa882fd2d3f7c3a77fc3a1faf80"
+        },
+        {
+          "module": "Erdos593.DensityCandidates.LowRankBipartiteNormalForms",
+          "declarations": [
+            "low_rank_bipartite_normal_form",
+            "three_paths_uniform_parity"
+          ],
+          "status": "Candidate/current focused output pending"
+        },
+        {
+          "module": "Erdos593.TripleSystem.CanonicalAtomTypeDichotomy",
+          "declarations": [
+            "atomRestriction_is_singleEdge_or_cycleBlockExpansion"
+          ],
+          "scope": "Already supplies genuine incidence Iso for actual r=3 canonical restrictions.",
+          "sha256": "26f4b68e3e7a89d4a7e423f83be8acf45e1e0a3dc8a77b7257cd7895301b3cef"
+        },
+        {
+          "module": "Erdos593.TripleSystem.CanonicalAtomCoreStructure",
+          "declarations": [
+            "cycleBlockCore_isTwoVertexConnected",
+            "cycleBlockCore_isBipartite"
+          ],
+          "sha256": "325785979400758a5a32072883e30e357044c1fbc5be1f924d8f9af595309354"
+        },
+        {
+          "module": "Erdos593.TripleSystem.CanonicalAtomCoreRank",
+          "declarations": [
+            "cycleBlock_atom_cycleRank_eq_core",
+            "atom_cycleRank_eq_zero_iff_singleton"
+          ],
+          "scope": "r=3 actual rank transport already proved: do not duplicate it.",
+          "sha256": "abf22ccb199fb4e27472f3b0cae10c941707d0a598dc43fec7662f3c55123c9c"
+        },
+        {
+          "module": "Erdos593.TripleSystem.Isomorph",
+          "declarations": [
+            "Iso.vertexEquiv",
+            "Iso.edgeEquiv",
+            "Iso.map_inc_iff"
+          ],
+          "scope": "Incidence transport is present; probability-density transport is still new.",
+          "sha256": "2dc9fd1b84ca7299fff7d6d8c786429f5eb5e1fc7b3899a7dfe90e720599e3cd"
+        }
+      ],
+      "external_dependency": "Im–Li–Liu Theorem1.3 and Proposition4.3, https://arxiv.org/html/2408.03491v2. These are analytical primary-source results, not accepted imported Lean theorems or axioms.",
+      "honest_search_result": "No density/Sidorenko theorem was found in the inspected public Erdos593 source or the local Mathlib Combinatorics tree. This bounded source search is not an exhaustive assertion about all Lean libraries.",
+      "formalization_route": "First finish elementary density definitions, mean/isomorphism/ordering transport and the r=3 original-atom specialization. Then freeze exact standalone cycle/theta inequality targets. The all-even theta result is substantive; do not call it a one-line Hölder argument or assume it as a new axiom to declare the endpoint formalized.",
+      "endpoint": "For single actual r=3 canonical atom A with actual Levi cycle rank<=2, combine existing shape/rank transport, the new normal form, density isomorphism/expansion identities and both theta inequalities. For all r>=3, separately prove the higher-uniformity atom-shape/rank adapter before advertising the same fully formalized conclusion."
+    }
+  ],
+  "non_goals": [
+    "No assumption that covariance between different rooted atoms is nonnegative.",
+    "No proof that arbitrary assemblies of low-rank Sidorenko atoms are Sidorenko.",
+    "No priority, rank3 counterexample existence, random-host optimality, full-paper formalization or journal-readiness claim.",
+    "No reuse of the current run's later success/failure without reading its actual original types/axioms/logs."
+  ],
+  "recommended_sequence": "N2 normalization/isolates plus D1 marginal probability properties; N1 actual r=3 canonical-port adapter; N3 actual finite expansion/subgraph/cardinality adapter; then a distinct exact cycle/theta density proof checkpoint. Preserve current original candidate evidence and attempt accounting."
+}

@@ -1,0 +1,121 @@
+{
+  "date": "2026-10-11",
+  "scope": "Bounded direct pass on the unrestricted ordered common-power density inequality; public review notes only",
+  "parent_head": "6b3be0b1c1dba9b987e3b7132595c01b11b3d9d4",
+  "target": {
+    "edge_order": [
+      "ab",
+      "ac",
+      "ad",
+      "bc",
+      "bd",
+      "cd"
+    ],
+    "exponents": [
+      "k",
+      "r+h",
+      "u",
+      "r",
+      "u",
+      "l"
+    ],
+    "constraints": [
+      "k>=u>=1",
+      "r>=l>=1",
+      "h>=1"
+    ],
+    "actual_root_required": true,
+    "original_probability_law_retained": true,
+    "status": "OPEN"
+  },
+  "source_hashes": {
+    "unrestricted-density-pass.md": "94f65b84fa81453a976f7615a9de62cb7eee6d2b0a54e939b1b514b50fdded6d",
+    "check_unrestricted_density.py": "98f49c6052a0cabf671db8961d4be53051a6db3746afb43325184b719fe801dc",
+    "unrestricted-density-checks.json": "dbe51e9356d7c2e055cfcead18a01d6ec42b85c5547c3ba9739463382ee7891a",
+    "../2026-10-10-common-power-density/continuation2/continuation2_tensor.md": "1a79cabc0c33fa42da6655fca695f347b164dcad879973574dc2b20f1ee4651c"
+  },
+  "findings": [
+    {
+      "claim": "A host-independent positive lower bound at a fixed exponent tuple implies the sharp density inequality",
+      "status": "source proof reviewed",
+      "novelty_claim": false,
+      "restriction": "Constant must not depend on host, dimension, minimum mass or normalization"
+    },
+    {
+      "claim": "Universal total negative ac spectral variation <= deleted-edge surplus",
+      "status": "REFUTED analytically for actual positive rational roots and finite tensor hosts",
+      "target_counterexample": false,
+      "proof_input": "Previously verified actual32state negative fan coefficient plus admissible prime perturbation and tensor amplification",
+      "numerical_search": false
+    },
+    {
+      "claim": "Original-law Markov-star variational certificate logF>=R",
+      "status": "source proof reviewed",
+      "universal_R_nonnegative": false,
+      "exact_obstruction": "R < -143/7680 while F=535/512",
+      "scope": "No fixed additive correction to this particular certificate works on all its actual tensor powers"
+    },
+    {
+      "claim": "Prescribing all powered branch pair marginals",
+      "status": "INFEASIBLE on allowed actual binary hosts",
+      "exact_obstruction": "1+(81/100)^3-2*(81/100)=-88559/1000000",
+      "entropy_target_counterexample": false
+    },
+    {
+      "claim": "Weighted pair-space trace factorization",
+      "status": "source proof reviewed and small nonuniform exact checks passed",
+      "scope": "Identity only; triplePSD positivity and Gamma Markov property cannot be assumed"
+    }
+  ],
+  "reviews": {
+    "root": {
+      "reviewer": "Codex root",
+      "independent": false,
+      "status": "PASS on exact hypotheses, zeros, original-law products, trace normalization, finite-check scope and final clarity changes"
+    },
+    "tensor_source": {
+      "reviewer": "/root/density_tensor_global_oct11",
+      "status": "PASS on actual saved negative-variation section at94e07bb4 before two prose clarifications",
+      "compute": "none",
+      "boundary": "Relies on the previously independently checked original32state exact coefficient"
+    },
+    "separate_full_source": {
+      "reviewer": "/root/tail_certificate_review_oct11",
+      "status": "PASS on final clarified source SHA94f65b84fa81453a976f7615a9de62cb7eee6d2b0a54e939b1b514b50fdded6d, checker and saved actual exit0 output",
+      "compute": "no rerun",
+      "requested_clarifications": [
+        "Quantify positive integer triangle exponents",
+        "State exactly that no host-independent finite C makes R+C nonnegative"
+      ],
+      "external_citation_review": false
+    },
+    "full_external_audit": "PENDING"
+  },
+  "small_checks": {
+    "command": "python review/2026-10-11-direction-audit/check_unrestricted_density.py",
+    "actual_exit_code": 0,
+    "actual_wall_seconds": 0.3394274,
+    "output": "unrestricted-density-checks.json",
+    "arithmetic": "exact Fraction",
+    "toy_signed_measure_is_not_actual_host": true,
+    "old_certificate_replayed": false
+  },
+  "limitations": {
+    "unrestricted_proof": false,
+    "unrestricted_counterexample": false,
+    "lean_accepted": false,
+    "novelty_assessed": false,
+    "publication_readiness": false,
+    "manuscript_pdf_changed": false,
+    "accepted_lean_sources_changed": false
+  },
+  "operations": {
+    "optimizer_runs": 0,
+    "lean_runs": 0,
+    "procida_jobs": 0,
+    "aristotle_requests": 0,
+    "new_pro_requests": 0,
+    "monitor_changes": 0,
+    "source_packages_changed": 0
+  }
+}

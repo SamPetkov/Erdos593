@@ -1,0 +1,407 @@
+{
+  "base_commit": "707ce09c971083e9ee533f898aa7a88f075c81ea",
+  "scope": "Actual-root restricted mathematical progress and exact stronger-premise obstructions; unrestricted target unresolved. Manifest excludes its own hash, which is bound by the final Git commit.",
+  "verified_review_source_bindings": 49,
+  "historical_source_bindings": [
+    {
+      "record": "continuation3_optimize_weighted_review_run.json",
+      "source": "continuation3_channel_spectrum_verify.py",
+      "run_source_sha256": "c7730b67f25c83eaef8f353521ff759ecf2e78c5c095e77071510d0b5798434b",
+      "current_source_sha256": "c5f0876e4dba09b9dc85ef478834b7e41ab021ad5e8572186a65d8d70bc1846b",
+      "verified_difference": "Exactly one documentation word: five -> six fixed coarse spaces; executable code and result unchanged. The independent final review acknowledges both source hashes."
+    }
+  ],
+  "relative_markdown_links_resolve": true,
+  "files": [
+    {
+      "path": "review/2026-10-10-common-power-density/README.md",
+      "bytes": 5023,
+      "sha256": "1e454d8d9b6ed334d9a445779538734ba29105818f2b1bcd0cf700a078e974a0",
+      "git_blob_sha": "4fa75b3cdec98ecb952585835cdacaf15d81ebcc"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/README.md",
+      "bytes": 11479,
+      "sha256": "5f367273187072fb7dd5d326b1ce9a02015d3e02e5d57e813bc22f469df79e37",
+      "git_blob_sha": "c858a91a67f3d67df078ba087ab603687ee901cd"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_allowlist.json",
+      "bytes": 2697,
+      "sha256": "baddb159e424402b383c979ffc37cd86184e6b644b4b8d3a95ddc5a151022d47",
+      "git_blob_sha": "3c2da11c5886292d87c57831bc9fff5ac0b0b279"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_channel_review.json",
+      "bytes": 4824,
+      "sha256": "297bc74e030739bac7e2112ee47f127e6066c76b9fa259d85eba73284419ab29",
+      "git_blob_sha": "4e306efde9bde28c36a1b0a965e29d5231eecb87"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_config.json",
+      "bytes": 7403,
+      "sha256": "1a0351d89cf03e50e1d4cb29c69ba3c251973462d8de7df94adff562d1b8f1a7",
+      "git_blob_sha": "e900737a4b2c13031de220b3b3a95fb5aadc3ef6"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_engine_checks.json",
+      "bytes": 2943,
+      "sha256": "806c49754f27e962d144e6bb057bc727d18e2d3bd1f53dc074d7658891a2364d",
+      "git_blob_sha": "68191474cc64344159e1a08197965b1e9643e7ea"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_engine_checks.py",
+      "bytes": 4239,
+      "sha256": "bb557bd2b275e1bf2979e4137e8bc01229a91e43c23147753f8f856cf34c172f",
+      "git_blob_sha": "66f06114385cda2d593e0ff8d8877c59f8fd9456"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_markov.md",
+      "bytes": 15077,
+      "sha256": "fe29877e2df9cf8d9f42790c9541916ea9e7fb2f01f79c3d388808ead8bb71b5",
+      "git_blob_sha": "04093c0bd49ee4286ca6fc515e35d9312c315607"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_markov_checks.json",
+      "bytes": 1558,
+      "sha256": "190777ab4dbaf9a30717127d96f5d1f91c5deb77f55047281b55bbbf1ac699e9",
+      "git_blob_sha": "ba5af154e8d563067bc30d91dce8c1614741c90d"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_markov_probe.py",
+      "bytes": 2005,
+      "sha256": "c5487b9b561cfa070de9f3b33e9fc6b49b0f8c5d03edd96e3d4efede533e3071",
+      "git_blob_sha": "91911a2dffd89c8b85e598398768b87a2119d0ff"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_markov_probe_q4.json",
+      "bytes": 1128,
+      "sha256": "abf7c644ce16b824e427f1820906ced7e7dfcf71bc82963f6fe1151d090610be",
+      "git_blob_sha": "3a0b9bf60b92e3bb13d72168d77a3c6742b2ebe2"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_markov_verify.py",
+      "bytes": 5318,
+      "sha256": "93fb504c7c8b75ccf07f2cc81c6a71da1cecc47523e696f562490cd50f5e4a3f",
+      "git_blob_sha": "934e6212d55875700f78a1b312017f51fdc9e80f"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_optimization_report.md",
+      "bytes": 14390,
+      "sha256": "6ea279cac88e62aecf4c96b1ba2a27cd422d4d74e060fa6424caf8c4b650d72c",
+      "git_blob_sha": "b69b61d5b91f7418f4f1f50de993e40670f635d1"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_optimizations.json",
+      "bytes": 23153,
+      "sha256": "255cbddc8cb21d8ed0c00797fa0bc4f2616c33e86152348d9584650255208a7d",
+      "git_blob_sha": "4cc06699104aa2c75f8e14a1d043d7f13696de6c"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_optimize_direct_audit.json",
+      "bytes": 916,
+      "sha256": "c8f8ef44abb80860e3ed2e62faa46d75d12e5f058e0a486b935913b22afb49dc",
+      "git_blob_sha": "104697e7eb08ecc07f8d81066f739c08038b2bc1"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_optimize_independent_review.json",
+      "bytes": 6292,
+      "sha256": "4a93ae0f4ae899d9d3992cfabad15c8e5c0b632dfe93e54b65c981bce1e609fc",
+      "git_blob_sha": "ba722ff85ecdc37a19bbf1dbb33736d705d5233f"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_optimize_provenance_audit.json",
+      "bytes": 8458,
+      "sha256": "8806f9dd6053df309eee0d7b42f5dd06b87a6d2a13a289365307cf2660efe727",
+      "git_blob_sha": "3bb79cc8b39ac512b47ea92dfad9c86f0640715a"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_optimizer_starts.json",
+      "bytes": 42619,
+      "sha256": "99f08182fb78999a7d705be6d1d68389a950a3ce9cecfad30e25000285988e34",
+      "git_blob_sha": "a948ab51bbfc7230920bfa0254d7e0aa8db509b4"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_root_checks.json",
+      "bytes": 1383,
+      "sha256": "7bcd0307370b867efde82871a87bd44e165e36003669cc6c2fa528896005a63d",
+      "git_blob_sha": "a7a577bf784bd5454e822757d2b5127b6bea59c8"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_root_engine_review.json",
+      "bytes": 492,
+      "sha256": "fc936a336f6fe11fb9e2dc31053db27b40c63ae6cbddc8058152e587a1211e6f",
+      "git_blob_sha": "796ad5ce989d1191c073390648257505e15cef47"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_root_verify.py",
+      "bytes": 3392,
+      "sha256": "cff895cc2c616177107f9c3ae9e8d1c0b3138c04ef344faddd60fb7e3f1515f6",
+      "git_blob_sha": "4ed4b375fbaf0109218b96a3fef17a14f3c07486"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_samples.json.gz",
+      "bytes": 635020,
+      "sha256": "bb4edc2b0945c33da4737cf757ba2c45da35f18f38dba1f971b14960e03d0bdd",
+      "git_blob_sha": "23bee38ae437da8fe3e503ad1bb17231d09ef907"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_search.py",
+      "bytes": 13504,
+      "sha256": "87e1579ed8cc9bfba73c15d9d424f83b2eb19bb702b9573da6df47941e34ab19",
+      "git_blob_sha": "60183f199aea5c305e5cfc6432e209d5d66c523d"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_sign_engine.py",
+      "bytes": 9438,
+      "sha256": "07e655e6a2fd1eae054f879f2b12f116e96d38acb5f94829445939d011938d15",
+      "git_blob_sha": "34e510177cf652bd7f53bc9cdab1c8d6bafef37c"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_signed_channel.md",
+      "bytes": 8131,
+      "sha256": "99e0ac8170087bff086ac89d73821c6b514378a7fb3ed28accaedc5801268196",
+      "git_blob_sha": "f5c2167f91d4cd7e4da2ff664202518b0dfcb1fd"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_signed_channel_markov_review.json",
+      "bytes": 1316,
+      "sha256": "7fd1c87cf840423e6dc0d141ea5d6bf5fd1576a2575439914520e3e88482762f",
+      "git_blob_sha": "439cf15968f9638ab258d364068bbcfef7961b8c"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_summary.json",
+      "bytes": 11048,
+      "sha256": "cef1e938c5ba2d4db9d24e5765b23c62492b87818c9206d0640f500b917f2cf5",
+      "git_blob_sha": "991a0f616b5a716d6e809acd252c07e19859bef8"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_tensor.md",
+      "bytes": 12483,
+      "sha256": "1a79cabc0c33fa42da6655fca695f347b164dcad879973574dc2b20f1ee4651c",
+      "git_blob_sha": "80769a26d9126c151ab840e6fea9b4b03d3df72b"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_weighted_channels_checks.json",
+      "bytes": 5360,
+      "sha256": "20d1a08c06c5076d56a6cc43f3ab5b444a80229d36a974a8f6e935926eec688a",
+      "git_blob_sha": "63d404b96cde6d72ee00cd9e8a225a41a86c8466"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_weighted_channels_verify.py",
+      "bytes": 10529,
+      "sha256": "476c1352ab8a8b0b1f5a69dd85f7b05ac1c79fc2db4247e2dbc66950dc490aca",
+      "git_blob_sha": "bef7b6a69cc50b35b704803255229e614853b93e"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_weighted_examples.md",
+      "bytes": 7895,
+      "sha256": "c5b83bb0f27fbaae258bf4c8daae27db3ff5bf01954291cb0be439cc6fdd332f",
+      "git_blob_sha": "6d29d79dee2561cd0f48f40f3d08d7e1a865db8c"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_weighted_review.json",
+      "bytes": 3014,
+      "sha256": "2c129230e2af2ad4fadcc039f1970afcecaeeadc29e03a08009891b9aff4a915",
+      "git_blob_sha": "0589624d26030ed2f9130ad05931b50ea546c72f"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation2_weighted_signed_example_markov_review.json",
+      "bytes": 1890,
+      "sha256": "3298dd2c8ee57870fdea7a0fd41e9609ac95df2fee3fd01d997dce9f27d982e1",
+      "git_blob_sha": "c4d7378e7da2f10ecbf043f7dfd0743a9803927f"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_allowlist.json",
+      "bytes": 2238,
+      "sha256": "d9e3aa1b970896c2d4e6f1aca7bc715e64f094e0f7ab027514f2fec2dc10715a",
+      "git_blob_sha": "c22e5a6bba9aa5a74b639e3d09f50aefa2613a2a"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_audit.json",
+      "bytes": 106823,
+      "sha256": "fe334e7a1e6b3aba10db41f7fd5f65fbbd716c0ab40108f825aa4d16939d5675",
+      "git_blob_sha": "e30d8280ae0767c4837d0d01f9f9c8451df1dfae"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_audit.py",
+      "bytes": 8553,
+      "sha256": "bc347ecfe62d063263a9ea5ac340aca033420f0d34a583d14d38bb9b5fb94d0b",
+      "git_blob_sha": "8663ae275eb52d679d6e4444905d5a2c45d85b4a"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_channel.py",
+      "bytes": 14255,
+      "sha256": "d99dcf2bcbeb032a724483758bf04612056fa98159c63edfd1592c4655bd8128",
+      "git_blob_sha": "972c5fb9081759f837f2bd766e01cd79364cd5fc"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_channel_spectrum.md",
+      "bytes": 10515,
+      "sha256": "281854b8ab03a40173e87230ddf743d0343c11ad54166781b5a0dcf07eca6d17",
+      "git_blob_sha": "b212f3913de6afea18f979c73f24f27614e6543d"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_channel_spectrum_checks.json",
+      "bytes": 46956,
+      "sha256": "69d399803e7abe785591023005a23797644815a87fbe663fd23f398129983fc9",
+      "git_blob_sha": "f36790149111d7020e4e788118e76a607837a045"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_channel_spectrum_review.json",
+      "bytes": 2445,
+      "sha256": "9def507a4a5bfb125210fd7c1a254d4ccf615a803682a48ae9d31ca2bbc06a92",
+      "git_blob_sha": "0ead9d7e92e8bddad55d2d889ed6026d532412a1"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_channel_spectrum_verify.py",
+      "bytes": 11717,
+      "sha256": "c5f0876e4dba09b9dc85ef478834b7e41ab021ad5e8572186a65d8d70bc1846b",
+      "git_blob_sha": "654005a8dbcb2cbd060d6a8d7a13ee6b058b3a2d"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_config.json",
+      "bytes": 156856,
+      "sha256": "1f94fdc1e4e921db594426f5c0e8938d570871a372c10ceff72c08ce6930723d",
+      "git_blob_sha": "a5266a61b35933c805524a83ac650de1a726af77"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_engine_checks.json",
+      "bytes": 2752,
+      "sha256": "681c83fcfdf290402e2248336c30f203d43a3ea2c7b80a29b62f6e88b2b30ac0",
+      "git_blob_sha": "e870311b719efa7f06df1bfe4ceae62b1544f116"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_engine_checks.py",
+      "bytes": 3439,
+      "sha256": "a95a3b76fe659b1353e891fa756482fcea182c3f5a0a28861ac4dd91391503cd",
+      "git_blob_sha": "32886c564f1bc5367a448dfb025e765b1a53beba"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_markov.md",
+      "bytes": 11359,
+      "sha256": "50e1da11ff69bf2094252e469b897c339ce2da5f5fc6f89c4bbd32d4b425b28e",
+      "git_blob_sha": "d24c45bf4cc9e8602676917f9b66ba501ed3e682"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_numerical_report.md",
+      "bytes": 12530,
+      "sha256": "d48bbeeaf0d5bba3e335e4b57da647df4d5626bc74a87028268808d9efcea82a",
+      "git_blob_sha": "996ddd3c3b85575dd5058583eded1cfda9614f32"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_optimizations.json",
+      "bytes": 50172,
+      "sha256": "ca22fc4d3ae3bca0acf5fde38c0ec06684acc8b43fb78ae216637c5b0be30c8d",
+      "git_blob_sha": "e164716ffb76e6e2cb3680fdea74d69bf2c4c701"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_optimize_obstruction_checks.json",
+      "bytes": 2245,
+      "sha256": "46379e373d7283fed616009fc5d1f938e40e2f43841c9cf18df0fb9cf094ebf8",
+      "git_blob_sha": "83321681fa4b895d447c3b01ad82564b9fd878c7"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_optimize_obstruction_review.json",
+      "bytes": 3793,
+      "sha256": "5ce447fd11eae76c0237604bff4e63acc45827eb34735a3ae2ed6b5becde02ff",
+      "git_blob_sha": "4bdb88ac4768dfcb6c931a788be6fed336e0fc8c"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_optimize_obstruction_verify.py",
+      "bytes": 2329,
+      "sha256": "2613f83529cac74630e3749098aa11acdf74c9b76b7ea39b5da2eb63a92543bc",
+      "git_blob_sha": "4e00ed489180bb1c17d891bf4e246be75a78eee9"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_optimize_weighted_independent_checks.json",
+      "bytes": 1404,
+      "sha256": "b05eb610e29205676ebdc550889f0b9f766d114cc6573568da814b795fa71773",
+      "git_blob_sha": "bcca01f2991ba986407001cafabe0f3c106dfdd4"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_optimize_weighted_independent_verify.py",
+      "bytes": 2976,
+      "sha256": "e1ecb2d4da403565b5cbb7b3883386c9fcd5bbd079adb426f34b4304e8a65ea4",
+      "git_blob_sha": "6a5b260029e9bfcd1bce29687dfde5105b45f61a"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_optimize_weighted_review.json",
+      "bytes": 4794,
+      "sha256": "694bd53575a75b429e7765ebad47035f5a151989713e7c7f8942c6c2dfdf7367",
+      "git_blob_sha": "704841755ba011c79b37deda5fc6e5bb887a6ac7"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_optimize_weighted_review_run.json",
+      "bytes": 858,
+      "sha256": "5d5aed747a2a4282ec8f651433cc7c785823786feca093f325d942a1b2b0db3c",
+      "git_blob_sha": "db9797aa75214c5537788c57fe57c4fb3197b5b8"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_optimizer_starts.json",
+      "bytes": 28021,
+      "sha256": "d7d68d735822b44ea54cc2cab75c7c279b56272b1c74dfdc4da5f4f155858f18",
+      "git_blob_sha": "9f375d4826304272974d1e2f95dafd7a3012cb9e"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_peer_notes_review.json",
+      "bytes": 3091,
+      "sha256": "4a967af44405141114e04953710dbb052e1bbd6b8eb8993142a2bf3e32434c70",
+      "git_blob_sha": "e0b50fabd449970af3c5a3fbbda6eba11585d182"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_root_engine_review.json",
+      "bytes": 973,
+      "sha256": "fd77d0c14460a0fd50909b4af2eb43929a964f60a07195f0b45f3255b3180101",
+      "git_blob_sha": "cc30737861c2b7dcb77a536675e48ae93689a090"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_root_obstruction_review.json",
+      "bytes": 1521,
+      "sha256": "b9ca22ae86f0e49792f2153cc7a107757c71ad1998ace2f9be9a6955614ee163",
+      "git_blob_sha": "84e701debf40a7e505ffcdf00d7fa99e4da1da67"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_samples.json",
+      "bytes": 373505,
+      "sha256": "f6fb4f01bc303d116f66e1781f10d726dca7cf19a5620ace5024352b2099f54b",
+      "git_blob_sha": "f4b8bda3f194ac3c1d4c09396e4e5b0a67c85a2c"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_seed_exact.json",
+      "bytes": 509,
+      "sha256": "0bbf2c9b687d1353a717b02a24abb46ac99206af2d9b28d3a14496da7e5a288e",
+      "git_blob_sha": "38154a2451c40f0c5b8a305ede81d73d57f63551"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_summary.json",
+      "bytes": 5310,
+      "sha256": "714525a89485fa9f3e3383fccad67b989470afdeb4e152e991a1604baf74f18e",
+      "git_blob_sha": "82ef8092c0aeb3f4262c56ecb227ed27b680dbc9"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_tensor.md",
+      "bytes": 17218,
+      "sha256": "2035c00ec32d4ceddcc90089ee7e024e516dfa72994052ffbe53e65273a3ba7c",
+      "git_blob_sha": "374042fa7e5b550f839b6174c16ff31d90d45b9f"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation3_weighted_spectrum.md",
+      "bytes": 5426,
+      "sha256": "ba9589214fc11530af4aad8c49d4d8a673b3c4a914191d6f251b06c320734591",
+      "git_blob_sha": "09d3329ff18ea070d74d4b6cadd65367f933a25d"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/continuation_cover_engine.py",
+      "bytes": 10794,
+      "sha256": "1187d00bdafdec7f1ffd3b7ad7ee1b2f2eb8d27f2593fd6ee12808628a14495a",
+      "git_blob_sha": "e8d1b87a31af08eb71d22755f4ca06f02ad508b8"
+    },
+    {
+      "path": "review/2026-10-10-common-power-density/continuation2/route-registry.md",
+      "bytes": 7681,
+      "sha256": "b61f3bad96c4d4d781103bd60466c8fba61b5bce6e48eae38aab46b4b57feb9d",
+      "git_blob_sha": "5def3687d8ab46fed35e9283171ba5b97e5f2030"
+    }
+  ]
+}

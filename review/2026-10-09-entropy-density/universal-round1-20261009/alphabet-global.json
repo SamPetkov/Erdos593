@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-09",
+  "author": "alphabet_global_round1",
+  "scope": "Confirmed bounded direct mathematical round; no compiler, service, Git, manuscript or existing-source changes.",
+  "full_arbitrary_alphabet_target": "UNRESOLVED",
+  "analytical_result": {
+    "status": "COMPLETE SELF-CONTAINED ANALYTICAL CANDIDATE; ACTUAL SEPARATE-AGENT ARGUMENT AUDIT FOUND NO FATAL FLAW; NOT LEAN-VALIDATED",
+    "name": "Uniform Potts exact-marginal sharp entropy on low-endpoint-degree graphs",
+    "statement": "Let q>=2, Omega={1,...,q}, kappa uniform, G a finite simple graph, m=|E(G)|, and s in [0,1]. Set lambda_s(x,x)=s/q and lambda_s(x,y)=(1-s)/(q(q-1)) when x!=y. Assume every edge has at least one endpoint of degree at most 3. If s<1/q also assume G is bipartite; if s>=1/q bipartiteness is unnecessary. Then a law tau on the actual Omega^{V(G)} has every singleton kappa, every actual edge lambda_s, and D(tau||kappa^{V(G)})<=m I_q(s), where I_q(s)=s log(qs)+(1-s)log(q(1-s)/(q-1)), with 0log0=0.",
+    "relation_to_requested_target": "Every bipartite K4 subdivision is simple and subcubic, so this proves the requested target for the entire uniform q-state Potts pair family, including q>=3, negative association, and zero diagonal/off-diagonal masses. It does not prove the target for arbitrary symmetric pair tables or arbitrary singleton laws. The given exchangeable triple eta is not needed in this subcase. For q>=3 every s is itself triple-extendible: mix a uniform all-equal triple with a uniform ordered triple of three distinct colors. The theorem also covers q=2 outside the triple-extendible range, without making that range part of the target.",
+    "proof": [
+      {
+        "step": "1. Parameter and finite Gibbs model",
+        "argument": "For 0<s<1 with s!=1/q define theta(s)=log((q-1)s/(1-s)). Use the normalized partition function Z(J)=E_{kappa^V} exp(sum_e J_e 1[X_u=X_v]) and mu_J=Z(J)^(-1) kappa^V exp(sum_e J_e 1[X_u=X_v]). For theta>0 let J_e range in [0,theta]; for theta<0 let J_e range in [theta,0]. Minimize F(J)=log Z(J)-s sum_e J_e on this compact box. A minimizer exists, all its configurations have positive probability, and partial_e F=P_mu(X_u=X_v)-s. Global permutation of all q colors leaves the law invariant. Consequently every singleton is uniform, and the law of every pair of distinct vertices is a Potts pair determined solely by its total agreement probability. In particular P(X_a=x,X_b=y) depends only on whether x=y, so the ordered pair is exchangeable. All statements use actual vertices and actual edge parameters; isolated vertices remain independent uniform variables."
+      },
+      {
+        "step": "2. Weighted same-color sign in a removed-edge model",
+        "argument": "If every J_e>=0, any two distinct vertices u,v satisfy P(X_u=X_v)>=1/q. If every J_e<=0 and G is bipartite, vertices u,v in opposite parts satisfy P(X_u=X_v)<=1/q. To prove this, condition on the set S of vertices whose color is 1 or 2 and on the exact colors outside S. An edge from S to its complement has unequal endpoint colors and therefore contributes no same-color interaction. The conditional law on S is thus a zero-field Ising model with couplings J_e/2 on the induced graph, using 1[X_u=X_v]=(1+sigma_u sigma_v)/2. In the ferromagnetic case the high-temperature expansion gives nonnegative correlation: the denominator is a sum over even edge sets and the numerator over edge sets with odd-degree boundary {u,v}, with all tanh(J_e/2)>=0. In the antiferromagnetic bipartite case flip spins on one bipartition class to obtain a ferromagnetic model; for opposite-side u,v the original correlation is nonpositive. The conditional probabilities of colors (1,1) and (1,2) therefore have the required comparison. Average the conditioning and use global color symmetry: their unconditional values are a/q and (1-a)/(q(q-1)), where a=P(X_u=X_v). The comparison is equivalent to a>=1/q or a<=1/q. If u or v is outside S, both compared events are impossible. No independence of S or its outside colors is assumed. This is a weighted version of the known two-color conditioning mechanism, not a claimed novel correlation principle."
+      },
+      {
+        "step": "3. Every nonzero interaction fits its actual edge",
+        "argument": "An interior nonzero interaction fits by the derivative equation. For the far face J_e=theta, remove the interaction on e while leaving all other interactions fixed. Let a_0 be the agreement probability in that removed-edge law. Restoring J_e multiplies agreement odds a_0/(1-a_0) by exp(theta), since the pair law is a Potts pair. When theta>0, Step 2 gives a_0>=1/q, so the restored agreement is at least s; the upper-face KKT derivative gives agreement<=s. When theta<0, Step 2 gives a_0<=1/q, so the restored agreement is at most s; the lower-face KKT derivative gives agreement>=s. Hence cap-face edges also fit. The cap is finite because 0<s<1. This argument uses the original graph with only one interaction set to zero, not a separately fitted removed graph."
+      },
+      {
+        "step": "4. Equality of two active interactions at a zero face",
+        "argument": "Consider a zero-interaction edge v-w and choose its endpoint v of degree at most 3. Its conditional color law given all other actual colors depends on at most two nonzero-interaction neighbors a,b. If there are two, both incident edges already fit by Step 3. Write their interactions J_1,J_2 and their realized colors A,B. For A=B the conditional probabilities of colors A and B agree. For A!=B their difference is (exp(J_1)-exp(J_2))/(q-2+exp(J_1)+exp(J_2)), independently of the particular unequal colors. Thus P(X_v=X_a)-P(X_v=X_b)=P(X_a!=X_b)(exp(J_1)-exp(J_2))/(q-2+exp(J_1)+exp(J_2)). Both left terms equal s and full support gives P(X_a!=X_b)>0. It follows that J_1=J_2. This also works for q=2, when q-2=0. The neighbors a and b are distinct because the graph is simple."
+      },
+      {
+        "step": "5. Zero-face saturation on the original edge",
+        "argument": "With equal positive interactions J_1=J_2>0, either neighbor color maximizes the conditional probability of the color at v: if A=B its weight is exp(2J_1) and every other weight is 1; if A!=B each neighbor weight is exp(J_1) and all other weights are 1. Therefore, for every realization of all other colors, P(X_v=X_w|others)<=P(X_v=X_a|others). Averaging gives the zero-edge agreement<=s, while the lower-face KKT inequality gives agreement>=s. For equal negative interactions, the same neighbor colors minimize the conditional probabilities, so the pointwise inequality reverses; the upper-face KKT inequality reverses too and again forces agreement=s. With one active neighbor its color is similarly the conditional maximum or minimum. With no active neighbor the agreement is 1/q, which contradicts the relevant zero-face KKT inequality because s differs from 1/q. Thus every actual edge fits. Color symmetry upgrades agreement=s to the full prescribed pair lambda_s, not merely an averaged agreement constraint."
+      },
+      {
+        "step": "6. Sharp entropy by finite-mesh interpolation",
+        "argument": "For each parameter u strictly between 0 and 1 in the interval joining 1/q to s, choose any fitted minimizer mu_u supplied by Steps 1-5; at u=1/q use mu_0=kappa^V. Let C_u=D(mu_u||kappa^V), S_u=sum_e J_e(u). Direct expansion of the Gibbs likelihood gives D(mu_v||mu_u)=C_v-C_u+(u-v)S_u, because every actual edge agreement under mu_v is v and every one under mu_u is u. If 1/q<=v<u<=s, then C_u-C_v<=(u-v)S_u<=m(u-v)theta(u). If s<=u<v<=1/q, then J_e(u)>=theta(u), and the negative factor u-v gives C_u-C_v<=(u-v)S_u<=m(u-v)theta(u). Telescope over a finite mesh moving monotonically from 1/q to the target s. The resulting oriented Riemann sums converge to m integral_{1/q}^{s} theta(u)du=m I_q(s), since I_q'(u)=theta(u) and I_q(1/q)=0. The final target law mu_s is fixed before meshes are chosen; only auxiliary laws at mesh points are selected. No continuity, uniqueness or differentiability of the family of minimizers is assumed."
+      },
+      {
+        "step": "7. Independence and zero-support endpoints",
+        "argument": "For s=1/q the independent reference is an exact witness with zero divergence. For s=0 or 1 take s_epsilon=(1-epsilon)s+epsilon/q. The preceding interior result gives laws with all exact marginals lambda_{s_epsilon} and the entropy bound. The actual joint probability simplex is finite-dimensional and compact; choose a convergent subsequence. Marginalization is continuous, and D(tau||kappa^V) is continuous because the reference is strictly positive and xlogx extends continuously at zero. I_q is also continuous at 0 and 1. The limiting witness therefore has every exact endpoint pair law and the same sharp bound. For a one-color alphabet the unique joint law gives the trivial result. No vertex identification, injective-coloring assumption or arbitrary conditional law at a positive-mass event is introduced."
+      }
+    ],
+    "nonuniform_refinement_corollary": {
+      "status": "ANALYTICAL DEDUCTION FROM THE UNIFORM-POTTS CANDIDATE, NOT GENERAL NONUNIFORM TABLES",
+      "statement": "Suppose a finite alphabet Omega with positive kappa has a partition into q nonempty classes C_1,...,C_q, each of kappa-mass 1/q. Define lambda(x,y)=q^2 kappa(x)kappa(y) lambda_s^Potts(c(x),c(y)). Under the same graph/sign hypotheses, the exact sharp-entropy witness exists for this nonuniform refined pair law.",
+      "proof": "Take the proved color-level witness and, conditionally on each actual vertex's color i, sample its refined state independently according to q kappa restricted to C_i. All singleton and edge laws are exactly the stated laws. The conditional lift agrees with the conditional product reference given the color vector, hence joint KL is exactly the color-level KL, and pair KL is exactly I_q(s). This preserves the bound without claiming that every positive kappa admits equal-mass classes or that every symmetric lambda has this form."
+    },
+    "literature_and_novelty": {
+      "known_primary_source": "Peter Csikvari and Zhicong Lin, Sidorenko's conjecture, colorings and independent sets, Electronic Journal of Combinatorics 24(1) (2017), P1.2; https://arxiv.org/pdf/1603.05888 . Theorem 1.1 and its proof give the proper-coloring cross-part agreement sign by conditioning to two colors; Corollary 1.2 gives the sharp coloring-count lower bound. Those results include the s=0 uniform proper-coloring entropy endpoint by global color symmetry. The weighted inverse-fitting proof above is not attributed to that theorem without a full comparison.",
+      "claims_not_made": ["No novelty or priority claim", "No B-level significance assessment", "No full arbitrary-alphabet theorem", "No Lean or external-audit acceptance", "No unresolved graph Sidorenko property used as a lemma"]
+    }
+  },
+  "global_markov_bridge_route": {
+    "status": "SUFFICIENT CONSTRUCTION IDENTIFIED BUT UNIVERSAL FEASIBILITY REFUTED EXACTLY",
+    "notation": "P(x,y)=lambda(x,y)/kappa(x) is a stationary reversible Markov transition. Let lambda_L(x,y)=kappa(x) P^L(x,y), I_L=D(lambda_L||kappa^2), and I=I_1. The L-step stationary path law M_L has singleton kappa, every consecutive edge lambda, endpoint pair lambda_L, and D(M_L||kappa^{L+1})=L I.",
+    "conditional_bridge_lemma": "For the six paths of a K4 subdivision, suppose a four-branch law rho has every pair (i,j) exactly lambda_{L_ij}. Given these four actual branch colors, sample the six internally disjoint path interiors independently using the stationary Markov bridge M_{L_ij} conditioned on its endpoints. The resulting actual-vertex law tau has every original edge lambda. Its exact divergence identity is D(tau||kappa^V)=m I+D(rho||kappa^4)-sum_{i<j} I_{L_ij}. Thus D(rho||kappa^4)<=sum I_{L_ij} is a sufficient entropy condition. Length-one paths have empty interiors; zero-probability endpoint pairs are never visited by rho and may have arbitrary bridge definitions. This is not a necessary characterization of all exact-edge witnesses, because those witnesses need not give Markov-powered branch endpoint laws.",
+    "exact_obstruction": {
+      "alphabet_and_input": "Uniform spins {-1,+1}; lambda has correlation r=9/10. A valid exchangeable triple extension is 9/10 times the uniform all-equal spin triple plus 1/10 times the independent uniform triple.",
+      "actual_graph": "All four branch vertices have the same bipartition parity. Let L_ab=10 and the other five internally disjoint path lengths equal 2. All six lengths are positive even, so this is an actual simple bipartite K4 subdivision with m=20 and n=18.",
+      "infeasibility": "If a four-branch law had the six prescribed Markov-powered pairs, its spin correlations would be E[ab]=r^10 and all other pair correlations r^2. Then E[(a+b-c-d)^2]=4+2(r^10-3r^2)=-813215599/5000000000<0, impossible for a square. Hence no such branch law rho exists. The target itself is not refuted: this is inside the analytically proved uniform-binary case. It refutes only simultaneous stationary-Markov bridge gluing as a universal route, even before checking its entropy cost."
+    },
+    "failure_contract": "Any general gluing proof must allow genuine non-Markov endpoint laws on some long paths, or refit branch and interior laws jointly. It cannot insist that all branch pair laws equal lambda raised to each path length. The exchangeable local triple extension does not fix this global variance obstruction."
+  },
+  "shared_triple_orbit_gluing_obstruction": {
+    "status": "EXACT COUNTEREXAMPLE TO A CONSTRUCTION ROUTE, NOT TO THE TARGET",
+    "tempting_route": "An exchangeable finite triple law is a convex combination of its permutation-orbit laws. Each orbit uses at most three colors: all equal, two equal, or three distinct. One might hope to sample a single orbit globally, use an exact witness for that orbit's pair law on the whole graph, and then mix. This does preserve the target edge and singleton laws, but it need not preserve the sharp KL budget.",
+    "input": "Take eta to be three independent uniform Bernoulli(1/2) variables. Then kappa is uniform binary and lambda=kappa^2. Let Z be the number of ones in the sampled triple orbit: Z has Binomial(3,1/2) law, and each singleton in orbit Z has mean Z/3.",
+    "impossibility_proof": "The target budget is m D(lambda||kappa^2)=0; since KL is nonnegative, the only permissible actual-vertex law tau is kappa^V, the IID law. Suppose a shared-orbit construction has E[X_v|Z]=Z/3 at every one of the n actual vertices, as any mixture of witnesses for the orbit's singleton law would. Then Var(sum_v X_v)>=Var(E[sum_v X_v|Z])=n^2 Var(Z)/9=n^2/12. But under the required IID law Var(sum_v X_v)=n/4. These are incompatible whenever n>3. Every bipartite K4 subdivision has more than three vertices. Thus a single shared orbit cannot implement the sharp target even at the independent pair law, despite all component binary/three-color subcases being available.",
+    "failure_contract": "A universal eta-informed proof cannot inherit the sharp bound merely by globally mixing independently solved triple-orbit components. It needs spatially varying auxiliary data or a true global refitting argument, with their exact entropy cost controlled. This test and the Markov-power variance test above are two obstructions within the same global-gluing route; neither is evidence that the target is false."
+  },
+  "argument_audit": {
+    "reviewer": "actual child agent /root/alphabet_global_round1/potts_zero_face_audit",
+    "result": "NO FATAL FLAW FOUND",
+    "scope": "Independent direct mathematical reconstruction of two-color sign, cap/KKT directions, zero-face saturation, oriented reverse-KL telescoping, finite-simplex limits and original graph carriers. Not a full external scholarly audit, novelty determination or kernel validation.",
+    "precision_notes": [
+      "Use the next-target Gibbs law in the SECOND slot of KL: D(mu_previous||mu_next). Steps 6 above already use this direction explicitly; the note prevents misreading it as D(mu_next||mu_previous).",
+      "Two-color conditioning can be encoded by T_x=0 for colors 1 or 2 and T_x=X_x otherwise, making clear that outside fixed colors create no field.",
+      "The zero-face comparison is strict on the positive-probability event X_a=X_b!=X_w, or X_a!=X_w with one active neighbor. Thus no zero interaction survives at a nonindependent interior target. Strictness is not needed for the entropy bound.",
+      "The coefficient m is sharp on a matching: independent prescribed edge pairs give exact divergence m I_q(s)."
+    ]
+  },
+  "remaining_global_question": "For a completely general 3-extendible pair lambda, find a non-Markov joint construction or a multistate exact inverse fit that respects all actual-edge tables and the sharp budget. The Potts proof uses full color-permutation symmetry at the zero face; exchangeability of a general eta alone supplies no such symmetry. No replacement of this missing argument by a differently named equivalent Sidorenko target is accepted.",
+  "execution": {
+    "analytical_proof": true,
+    "numerical_simulation": false,
+    "heavy_run": false,
+    "compiler_or_aristotle": false,
+    "git_or_github": false,
+    "manuscript_or_date_edit": false,
+    "clock_change": false,
+    "external_source_read": "One bounded primary-paper check of Csikvari-Lin (2017), to prevent novelty overclaim."
+  }
+}
