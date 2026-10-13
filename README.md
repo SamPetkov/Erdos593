@@ -6,9 +6,13 @@ The [current manuscript source](review/2026-10-13-readability/erdos593_obligator
 includes the finite structural extensions and restricted entropy/density
 comparisons. The [13 October readability review](review/2026-10-13-readability/README.md)
 records six prose-only changes and preserves every proof, equation and citation.
-The preview compiler failed during preparation, so this source update is not
-claimed to have a newly verified PDF. The repository-root PDF below is the
-historical classification release, not the complete current draft.
+The [59-page current-draft PDF](review/2026-10-14-publication-recovery/erdos593_author_review.pdf)
+was compiled from that exact source on 14 October 2026. The
+[build and integration record](review/2026-10-14-publication-recovery/README.md)
+records source integrity, resolved references and citations, and rendered-page
+inspection. This is an author-review preview; the unrestricted density theorem
+remains open. The repository-root PDF below is the historical classification
+release.
 
 The checked analytical coverage includes
 [full ordered common-power density for rank at most two](review/2026-10-11-direction-audit/rank-two-ordered-density.md).

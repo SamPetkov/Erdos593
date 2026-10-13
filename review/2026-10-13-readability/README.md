@@ -11,4 +11,9 @@ The newly reviewed rank-at-most-two density result is supplied in the [research 
 
 The built-in LaTeX compiler could not prepare the preview: it returned `windows sandbox: path contains invalid UTF-8 characters`. A second attempt used the existing short-path alias of the same file after its hash was checked and failed with the same preparation diagnostic. No TeX-success or refreshed-PDF claim is made. No replacement editor tab, separate PDF, Lean run, cache/pin/install change, monitor restart or deletion was performed.
 
-This is a prose-and-source review packet; a successful compilation of the revised draft and full mathematical/release integration remain separate gates.
+The exact revised source was subsequently compiled locally on 14 October 2026
+using the existing MiKTeX installation after the app preview preparer reproduced
+the same UTF-8 error. The [59-page PDF and build record](../2026-10-14-publication-recovery/README.md)
+preserve this source hash and resolve the preview-build gate. No proof, equation,
+citation or source byte was changed by that build. Full mathematical/release
+integration remains a separate gate.
