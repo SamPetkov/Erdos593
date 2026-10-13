@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-13",
+  "recorded_at_utc": "2026-10-13T07:31:01Z",
+  "source": "compatible-block-density.md",
+  "source_sha256": "9b4d23778993775dfbe9237d6c2ef3bc60de6de391f81140cfdb20ea7d413aba",
+  "target": "For the exact original-law ordered six-edge tuple, compatible block roots with independently paid local densities satisfy F(T)>=F(Q). Independently paid macro density then gives F(T)>=1.",
+  "root_self_review": {
+    "independent": false,
+    "verdict": "PASS",
+    "scope": "Complete actual saved proof, exact root and even-power normalization, holding-path coefficients, proper-subgraph cases, original-label conditional expansion, high-rank applications, concentrated family, macro credit and circularity boundary"
+  },
+  "actual_separate_agent_reviews": [
+    {
+      "agent": "higher_rank_joint_wedge_13",
+      "initial_complete_source_sha256": "3301ac4a0c2c270ac0c1b938791c5738f9e01d6b5fda8e7aa686590d2fcf1e9d",
+      "final_complete_saved_source_sha256": "9b4d23778993775dfbe9237d6c2ef3bc60de6de391f81140cfdb20ea7d413aba",
+      "verdict": "PASS",
+      "actual_full_reread_after_addition": true,
+      "checks": "All proof sections reread; Eq9 has exact exponent k+J+r+l+2u, exact Ez3, distinct constant and full-six-edge credit, no double payment or unrestricted inference"
+    },
+    {
+      "agent": "sector_conditioning_payment_13",
+      "initial_complete_source_sha256": "3301ac4a0c2c270ac0c1b938791c5738f9e01d6b5fda8e7aa686590d2fcf1e9d",
+      "final_complete_saved_source_sha256": "9b4d23778993775dfbe9237d6c2ef3bc60de6de391f81140cfdb20ea7d413aba",
+      "verdict": "PASS",
+      "actual_full_reread_after_addition": true,
+      "checks": "Complete conditional operator/expansion review; new macro-credit passage removed in memory recovers exact initial hash, and updated Eq9 is analytically verified"
+    }
+  ],
+  "independently_discharged_examples": [
+    "Macro rank<=2 and all local ranks<=2, using the previously source-reviewed full ordered theorem",
+    "Flat-spectrum macro root with arbitrarily many nonconstant two-state local roots: connected active rank 2N-1, nonuniform positive masses allowed",
+    "Concentrated three-distinct-mode root: F(T)>=F(Q)>=1+(16/25)^(k+J+r+l+2u)*(1-2epsilon)^4/[epsilon^2(1-epsilon)^2], every allowed epsilon and ordered tuple"
+  ],
+  "rank_two_dependency_source": "rank-two-ordered-density.md",
+  "rank_two_dependency_sha256": "fc382cd7bd513ab52358afedcaa6f28750f17dcf92218b6542018088e2a509bc",
+  "flat_spectrum_dependency_source": "non-mixing-spectral-density.md",
+  "flat_spectrum_dependency_sha256": "44d267480b112ee9b31f273c8513d40a52c1c80772b4fb2f77f5c7a58bfda738",
+  "method": "Finite analytical proof, exact six-edge expansion; bounded reverse-Lamport obligation audit separates conditional theorem from unrestricted goal",
+  "numerical_or_optimizer_run": false,
+  "lean_or_aristotle_run": false,
+  "lean_validation": false,
+  "full_external_audit": false,
+  "novelty_claim": false,
+  "unrestricted_density_proved": false,
+  "unrestricted_missing_obligation": "An arbitrary root need not have constant off-fiber blocks and the required local invariant subspaces. A noncircular reduction or a different collective payment is not supplied.",
+  "manuscript_changed_by_this_result": false,
+  "monitors": "paused",
+  "goal_status": "active"
+}
