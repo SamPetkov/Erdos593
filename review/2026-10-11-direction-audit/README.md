@@ -6,9 +6,19 @@ This packet began with a bounded, source-mapped audit of public draft PRs
 manuscript addition. The baseline is PR63 commit
 `be6f7637147e0a02e8f03fa4f0ad770370b2327a`.
 
-The latest analytical result is [ordered density under compatible block
-substitution](compatible-block-density.md). An exact nonnegative expansion
-preserves independently paid local and macro six-edge densities. This gives
+The latest analytical result is [tetrahedral density with two positive
+spectral levels](two-level-colored-density.md). For nonsingular PSD
+nonnegative Markov operators, arbitrary multiplicities and six independent
+positive edge lengths are allowed. A positive identity/common-projection
+expansion pays every quotient graph and retains an explicit strict margin.
+The extension with zero modes requires a nonnegative full range projection;
+a strictly positive actual root shows why that condition is not automatic.
+The [complete final-source reviews](two-level-colored-density-review.json)
+cover all normalization and boundary cases.
+
+The preceding [ordered density under compatible block
+substitution](compatible-block-density.md) uses an exact nonnegative expansion
+that preserves independently paid local and macro six-edge densities. This gives
 connected mixed-spectrum hosts of unbounded active rank and an explicit
 positive credit in a concentrated three-mode family. The construction does
 not represent every root, so the unrestricted arbitrary-host question stays
@@ -281,6 +291,18 @@ positive exponents. It does not reduce an arbitrary root to this class.
     [two complete final saved-source reviews](compatible-block-density-review.json)
     check every conditional leaf. No arbitrary-root reduction or unrestricted
     theorem follows, and no numerical, Lean or new service run was used.
+
+33. [Two positive spectral levels with arbitrary multiplicity](two-level-colored-density.md):
+    a nonsingular PSD nonnegative Markov operator pays every six independent
+    positive edge lengths, not just the ordered placement. Its proof includes
+    the common-projection lemma with arbitrary edge coefficients and every
+    identity contraction of K4. The all-identity term gives the explicit
+    margin q^(sum n_e)(sum_x mu(x)^(-2)-1). With zero modes, a verified
+    nonnegative range projection permits exact partition lumping; a signed
+    range projection does not. Two complete actual final-source audits
+    recorded in the [review](two-level-colored-density-review.json) pass.
+    Three positive centered levels and general signed-range two-level hosts
+    remain outside this proof. No numerical, Lean or new service run was used.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean

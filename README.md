@@ -16,8 +16,13 @@ It retains arbitrary positive original masses and the actual nonnegative
 Markov root. The new [compatible block substitution theorem](review/2026-10-11-direction-audit/compatible-block-density.md)
 extends independently paid roots to connected mixed-spectrum hosts of
 arbitrarily large active rank. It retains the full local and macro densities,
-including an explicit concentrated-family credit. General roots need not
-have this block structure, so unrestricted density remains open; the new
+including an explicit concentrated-family credit. A separate
+[two-level spectral theorem](review/2026-10-11-direction-audit/two-level-colored-density.md)
+pays six independently chosen positive edge lengths for nonsingular
+positive-semidefinite nonnegative Markov operators with at most two distinct
+positive centered eigenvalues, of arbitrary multiplicity. Its zero-mode
+extension requires a nonnegative spectral range projection. General roots
+need not have either structure, so unrestricted density remains open; the new
 entropy/density material has no accepted Lean implementation. See the
 [research overview](review/2026-10-11-direction-audit/README.md) for exact
 coverage and the [consolidation record](review/2026-10-13-consolidation/README.md)
@@ -124,7 +129,7 @@ python scripts/sync_manuscript_artifacts.py
 ```
 
 CI reruns the same synchronization and fails when a committed mirror differs
-from the canonical TeX source.  The synchronization script does not modify the
-Lean formalization.  Markdown generation is pinned to Pandoc 3.1.3; set the
+from the historical release TeX source. The synchronization script does not
+modify the Lean formalization. Markdown generation is pinned to Pandoc 3.1.3; set the
 `PANDOC` environment variable to a compatible executable when another version
 is first on `PATH`.

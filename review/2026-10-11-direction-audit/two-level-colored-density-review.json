@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-13",
+  "source": "two-level-colored-density.md",
+  "source_sha256": "85bce0f5740255f8e58809add005c36788b1bbae39fced04ea82dec9a22bef64",
+  "exact_target": "Finite positive original mu, self-adjoint PSD nonnegative Markov A=Pi+pP+qQ, P+Q=I-Pi,0<q<=p<=1: every six independent positive integers n_e gives F>=1+q^(sum n_e)*(sum_x mu(x)^(-2)-1). Multiplicities arbitrary; no centered zero modes in main theorem.",
+  "additional_extension": "If centered zero modes occur, the same two-positive-level theorem applies when the entire nonzero spectral range projection E is explicitly entrywise nonnegative. It is conditional expectation onto a partition; exact lumped density has no prefactor and uses original component masses.",
+  "root_self_review": {
+    "independent": false,
+    "verdict": "PASS",
+    "complete_final_source_read": true,
+    "checks": "All equations1-19, original-law identity convention, colored-flat nine-term expansion,64 nonnegative mixtures,all quotient cases,explicit all-identity margin,PSD and q<1 scope,zero/unit/q1 boundaries,rangeprojectioncounterexample and partitionlumping."
+  },
+  "actual_separate_agent_reviews": [
+    {
+      "agent": "twolevel_final_source_audit_13",
+      "verdict": "PASS",
+      "complete_final_source_read": true,
+      "final_source_sha256": "85bce0f5740255f8e58809add005c36788b1bbae39fced04ea82dec9a22bef64",
+      "checks": "Full equations1-19 and conclusion-first dependency audit. Separate helper checked triangle, contraction and lumping at prior repaired hash.",
+      "prior_repaired_hash": "bc14c0ced45ccb2539bd507c6ddd136c417ad49505825a14ba0742216b3f1e14"
+    },
+    {
+      "agent": "midpoint_commutator_payment_13",
+      "verdict": "PASS",
+      "complete_final_source_read": true,
+      "final_source_sha256": "85bce0f5740255f8e58809add005c36788b1bbae39fced04ea82dec9a22bef64",
+      "checks": "Independent complete nine-pairing expansion, quotient and mass bookkeeping,quantitative margin,signed-E obstruction,exact extension with q1case; final precision revision reread."
+    }
+  ],
+  "preserved_review_history": {
+    "initial_source_sha256": "7b7bee4802ee4593078b79d88c47d96a0a1edeb60c2aaf9b4d8b74a436e03a26",
+    "initial_audit": "Core theorem valid; opening needed explicit PSD/distinctlevels, and eq18 needed q<1 with q1 separate.",
+    "repaired_source_sha256": "bc14c0ced45ccb2539bd507c6ddd136c417ad49505825a14ba0742216b3f1e14",
+    "repaired_audit": "Two complete actual source audits PASS; optional continuity sentence precision then repaired.",
+    "final_revision": "Only qualify the identity-perturbation warning by two distinct positive centered levels plus zeros, and wrap opening. No equation changed from repaired source.",
+    "compiler_or_mathematical_failure": false
+  },
+  "analytical_method": "Positive identity/common-projection mixture and complete finite K4 quotient payment; no numerical agreement used as proof.",
+  "source_dependency": "The proof of the colored-flat base is fully included, not assumed from same-power flat theorem. Previously proved rank-two result only identifies the signed-E example as already paid.",
+  "unrestricted_missing_obligation": "Operators with three or more positive centered levels, and two levels with a signed range projection, are not reduced to this class. Repeated minimum-eigenvalue peeling and identity perturbation are not a completed induction.",
+  "humanizer_comparison": [
+    {
+      "original": "A genuine collective closure is complete analytically: two positive centered spectral levels, arbitrary multiplicities, no inactive zero modes, and all six independent positive edge labels.",
+      "revised": "A nonsingular positive-semidefinite nonnegative Markov operator with at most two distinct positive centered eigenvalues satisfies the tetrahedral density inequality for every six independently chosen positive edge lengths.",
+      "note": "States the mathematical subject and its hypotheses directly; removes process narration and implicit PSD qualification."
+    },
+    {
+      "original": "All remaining factors are nonnegative. We may therefore first discard these cycle factors.",
+      "revised": "All unselected edge factors are still nonnegative. We may discard these cycle factors pointwise.",
+      "note": "Keeps the exact stage of the proof visible, before expansions involving signed P entries."
+    },
+    {
+      "original": "The identity/flat-projector route above is a genuinely different complete payment for nonsingular two-level hosts.",
+      "revised": "The general operator may have three or more positive centered levels, or two levels with a signed range projection. Neither case is covered by this proof.",
+      "note": "Makes the remaining obstruction concrete rather than describing the research process; preserves the limited analytical scope."
+    }
+  ],
+  "numerical_or_optimizer_run": false,
+  "lean_or_aristotle_run": false,
+  "lean_validation": false,
+  "full_external_audit": false,
+  "novelty_claim": false,
+  "unrestricted_density_proved": false,
+  "manuscript_changed_by_this_result": false
+}
