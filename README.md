@@ -10,11 +10,15 @@ The preview compiler failed during preparation, so this source update is not
 claimed to have a newly verified PDF. The repository-root PDF below is the
 historical classification release, not the complete current draft.
 
-The latest checked analytical result is
+The checked analytical coverage includes
 [full ordered common-power density for rank at most two](review/2026-10-11-direction-audit/rank-two-ordered-density.md).
 It retains arbitrary positive original masses and the actual nonnegative
-Markov root. Arbitrary active rank remains open, and the new entropy/density
-material has no accepted Lean implementation. See the
+Markov root. The new [compatible block substitution theorem](review/2026-10-11-direction-audit/compatible-block-density.md)
+extends independently paid roots to connected mixed-spectrum hosts of
+arbitrarily large active rank. It retains the full local and macro densities,
+including an explicit concentrated-family credit. General roots need not
+have this block structure, so unrestricted density remains open; the new
+entropy/density material has no accepted Lean implementation. See the
 [research overview](review/2026-10-11-direction-audit/README.md) for exact
 coverage and the [consolidation record](review/2026-10-13-consolidation/README.md)
 for the preserved historical drafts.

@@ -1,10 +1,19 @@
-# Direction audit and weighted projection transfer — 11 October 2026
+# Direction audit and collective density results — 13 October 2026
 
-This is a bounded, source-mapped audit of public draft PRs
+This packet began with a bounded, source-mapped audit of public draft PRs
 [#58](https://github.com/SamPetkov/Erdos593/pull/58)–
 [#63](https://github.com/SamPetkov/Erdos593/pull/63), followed by one connected
 manuscript addition. The baseline is PR63 commit
 `be6f7637147e0a02e8f03fa4f0ad770370b2327a`.
+
+The latest analytical result is [ordered density under compatible block
+substitution](compatible-block-density.md). An exact nonnegative expansion
+preserves independently paid local and macro six-edge densities. This gives
+connected mixed-spectrum hosts of unbounded active rank and an explicit
+positive credit in a concentrated three-mode family. The construction does
+not represent every root, so the unrestricted arbitrary-host question stays
+open. Its [complete saved-source reviews](compatible-block-density-review.json)
+cover the normalization, edge subsets, holding bound and circularity boundary.
 
 The [revised manuscript and PDF](../2026-10-02/README.md) now state a
 **weighted flat-complement transfer**: under the displayed original-law,
@@ -258,6 +267,20 @@ positive exponents. It does not reduce an arbitrary root to this class.
     periodic/reducible roots and outer-region stitching. This closes the
     two-mode analytical problem, not arbitrary rank, Lean formalization or
     literature-wide novelty clearance.
+
+32. [Compatible block substitution](compatible-block-density.md):
+    holding bounds give an actual global Markov root whose even powers have
+    nonnegative local coefficients. Every proper selected subgraph is paid
+    directly, and the sole full local K4 uses its independently proved ordered
+    density. Consequently the global density is at least the full macro
+    density. Rank-two and flat-spectrum bases give connected roots of arbitrary
+    active rank, with nonuniform masses and mixed eigenvalues. In a concentrated
+    three-mode example, the retained macro six-edge term supplies an explicit
+    epsilon^(-2) positive credit; individual negative entries are not charged
+    against an insufficient external reserve. The
+    [two complete final saved-source reviews](compatible-block-density-review.json)
+    check every conditional leaf. No arbitrary-root reduction or unrestricted
+    theorem follows, and no numerical, Lean or new service run was used.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean
