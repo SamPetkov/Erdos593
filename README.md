@@ -110,11 +110,8 @@ and references retain their own rights and attribution requirements.
 
 ## Manuscript synchronization
 
-For the historical classification release,
-`erdos593_obligatory_triple_systems.tex` is the authoritative manuscript
-source.  The current author-review draft linked above is separate and must
-not be processed by this older release pipeline.  The root PDF and Markdown
-file, the `arxiv/main.*` mirrors,
+`erdos593_obligatory_triple_systems.tex` is the sole authoritative manuscript
+source.  The root PDF and Markdown file, the `arxiv/main.*` mirrors,
 `Erdos593_revised.tex`, and `arxiv/Erdos593_arxiv_source.zip` are deterministic
 generated artifacts.  The arXiv ZIP contains only `main.tex`, since the
 bibliography is embedded in that file.  Regenerate everything with:
