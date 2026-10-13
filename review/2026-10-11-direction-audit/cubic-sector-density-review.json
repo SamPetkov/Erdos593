@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-13",
+  "source": "cubic-sector-density.md",
+  "source_sha256": "e9b721e646554cc9f3a2de294a92eae81d6f948510ffc1a09ee65fe047c892bd",
+  "exact_claim": "Finite positive original law; orthogonal centered projections with vanishing cross-sector cubic moments; R_e=1+sum_s t_e,s P_s,t_e,s>=0. If only R_ac is entrywise nonnegative, the six-edge K4 density is >=1. Actual positive powers of A satisfy arbitrary six positive integer labels, strictly unless A=Pi.",
+  "ordered_extension": "For an actual symmetric nonnegative Markov root T and A=T^2, exhaust the positive centered subspace by orthogonal A-invariant cubic-orthogonal blocks. Each flat or at most two-dimensional block is paid at every original ordered tuple k>=u>=1,r>=l>=1,h>=1,J=r+h. Inside-strip local polynomial bounds use full actual kernels; outside-strip Jensen is applied to the full actual root.",
+  "root_self_review": {
+    "independent": false,
+    "verdict": "PASS",
+    "complete_final_source_read": true,
+    "checks": "All equations1-19, fourteen surviving diagrams, nine pairings, actual-W replacement, strictness, product original-law normalization and signed range, complete rank-two contraction and every retained branch, distinct block-local triangles, zero/unit/equal-filter and whole-host outside-strip boundaries."
+  },
+  "actual_separate_agent_reviews": [
+    {
+      "agent": "midpoint_commutator_payment_13",
+      "verdict": "PASS",
+      "complete_final_source_read": true,
+      "final_source_sha256": "e9b721e646554cc9f3a2de294a92eae81d6f948510ffc1a09ee65fe047c892bd",
+      "checks": "Entire final source and all three rank-two payment sources, explicit spectral table and whole-host Jensen source read. Full-kernel D_v,W_v locality, selected-power domains, no compressed positivity, single global constant and distinct per-block credits checked."
+    },
+    {
+      "agent": "conditional_joint_payment_13",
+      "verdict": "PASS",
+      "complete_final_source_read": true,
+      "final_source_sha256": "e9b721e646554cc9f3a2de294a92eae81d6f948510ffc1a09ee65fe047c892bd",
+      "checks": "Entire final source and every retained spectral/payment/Jensen dependency independently reread. Equations1-19, actual-weight sign, zero-mode killing, unit-mode retention, flat and one-dimensional blocks and exhaustive exponent-region stitching verified."
+    }
+  ],
+  "preserved_review_history": {
+    "first_flat_sector_source_sha256": "0919b2c8885149d8a431422c58c2612d1a8a2110c8b3a298cc52dc2f738f74ba",
+    "first_flat_sector_audit": "Complete source equations1-13 PASS.",
+    "extended_source_sha256": "70c18fe32e4dc279464382e552c6c2f95c95c1ca5d5b3fe0d4f15b090b7b21ec",
+    "extended_audit": "Substantive derivation passed; explicit J,K definition needed for self-contained notation.",
+    "final_precision": "J=r+h,K_v=A^v and inner-index range specified; table and branch links point directly to the retained sources; plural grammar. No equation or hypothesis changed. Both complete final-hash rereads PASS."
+  },
+  "dependency_scope": "Finite spectral and kernel algebra; common-projection payment included in full. Ordered extension explicitly rechecks the previously saved complete rank-two polynomial estimates and whole-host Jensen theorem, not an assertion that each compressed kernel is admissible.",
+  "remaining_gap": "General roots have interacting cubic blocks. This condition is not implied by actual nonnegative root positivity. Neither this theorem nor the product example is an arbitrary-root reduction.",
+  "humanizer_comparison": [
+    {
+      "original": "FULL AUDITED CONDITIONAL CLOSURE + EXACT DEFECT",
+      "revised": "Tetrahedral density under cubic orthogonality",
+      "note": "Names the subject and condition without inflated research-process claims."
+    },
+    {
+      "original": "The simple diagram argument alone does NOT sign F_s because 1+eta_s P_s may be signed.",
+      "revised": "This identity alone does not sign F_s: the kernel 1+t_ac,s P_s need not be nonnegative. We retain the actual weight W to prove that sign.",
+      "note": "Keeps the precise sign obligation and resolution together."
+    },
+    {
+      "original": "No E>=0/one-sector nonnegativity/full-space closure assumed.",
+      "revised": "The unrestricted ordered theorem therefore still requires a payment of the interacting-block remainder.",
+      "note": "The hypotheses and proof retain all exclusions; the conclusion states the exact remaining obligation."
+    }
+  ],
+  "numerical_or_optimizer_run": false,
+  "lean_or_aristotle_run": false,
+  "lean_validation": false,
+  "full_external_audit": false,
+  "novelty_claim": false,
+  "unrestricted_density_proved": false,
+  "manuscript_changed_by_this_result": false
+}

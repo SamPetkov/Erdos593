@@ -6,7 +6,18 @@ This packet began with a bounded, source-mapped audit of public draft PRs
 manuscript addition. The baseline is PR63 commit
 `be6f7637147e0a02e8f03fa4f0ad770370b2327a`.
 
-The latest analytical result is [tetrahedral density with two positive
+The latest conditional result is [tetrahedral density under cubic
+orthogonality](cubic-sector-density.md). It permits arbitrarily many spectral
+rates, inactive zero modes and a signed range projection. Vanishing mixed
+third moments localize every surviving centered diagram, while the full
+actual kernel pays the possibly signed local contraction. Flat blocks allow
+six independent positive lengths; flat or two-dimensional blocks allow the
+original ordered lengths. Explicit nonuniform coordinate-refreshing roots
+satisfy the hypotheses. The [complete saved-source reviews](cubic-sector-density-review.json)
+check the original measure, triangle accounting and every boundary case.
+Mixed cubic interactions remain the missing general payment.
+
+The preceding analytical result is [tetrahedral density with two positive
 spectral levels](two-level-colored-density.md). For nonsingular PSD
 nonnegative Markov operators, arbitrary multiplicities and six independent
 positive edge lengths are allowed. A positive identity/common-projection
@@ -303,6 +314,20 @@ positive exponents. It does not reduce an arbitrary root to this class.
     recorded in the [review](two-level-colored-density-review.json) pass.
     Three positive centered levels and general signed-range two-level hosts
     remain outside this proof. No numerical, Lean or new service run was used.
+
+34. [Cubic-orthogonal spectral blocks](cubic-sector-density.md):
+    an exact centered-diagram decomposition and an actual-kernel squared
+    weight pay each flat block, even when its formal local kernel is signed.
+    The proof covers six independently chosen positive lengths. For blocks
+    of dimension at most two, cubic orthogonality also localizes the previously
+    proved ordered compensation, with each block spending only its own
+    triangle credits. Nonuniform product-coordinate roots have arbitrarily
+    many rates and negative range-projection entries. These conditional
+    results do not assume that arbitrary roots admit such a decomposition.
+    Two complete final-source audits are recorded in the
+    [review](cubic-sector-density-review.json). The interacting-block
+    remainder, Lean formalization and literature-wide novelty comparison
+    remain open. No numerical, compiler or new service run was used.
 
 The original classification and accepted finite structural Lean tree are
 unchanged. **None of the new entropy/density material has an accepted Lean

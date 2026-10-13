@@ -22,7 +22,14 @@ pays six independently chosen positive edge lengths for nonsingular
 positive-semidefinite nonnegative Markov operators with at most two distinct
 positive centered eigenvalues, of arbitrary multiplicity. Its zero-mode
 extension requires a nonnegative spectral range projection. General roots
-need not have either structure, so unrestricted density remains open; the new
+need not have that structure. The new
+[cubic-orthogonality theorem](review/2026-10-11-direction-audit/cubic-sector-density.md)
+allows arbitrarily many spectral rates and a signed range projection when
+mixed third moments vanish between the stated spectral blocks. Flat blocks
+permit six independent positive edge lengths; flat or two-dimensional blocks
+permit the original ordered lengths. Nonuniform coordinate-refreshing roots
+give explicit examples. Mixed cubic interactions in general roots remain
+unpaid, so unrestricted density is still open; the new
 entropy/density material has no accepted Lean implementation. See the
 [research overview](review/2026-10-11-direction-audit/README.md) for exact
 coverage and the [consolidation record](review/2026-10-13-consolidation/README.md)
