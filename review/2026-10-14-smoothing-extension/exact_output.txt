@@ -1,0 +1,10 @@
+checked independent tree, multistar, and calibrated matched stars
+checked identity_nonuniform tree, multistar, and calibrated matched stars
+checked period_two tree, multistar, and calibrated matched stars
+checked negative tree, multistar, and calibrated matched stars
+checked extra_unit_zero tree, multistar, and calibrated matched stars
+checked supplied_three tree, multistar, and calibrated matched stars
+checked positive_singular tree, multistar, and calibrated matched stars
+calibrated_C9 V interval (2.1376980560831713, 2.1376980560831713)
+calibrated_C9 star interval (1.463263798318625, 1.463263798318625)
+PASS 1669 exact assertions
