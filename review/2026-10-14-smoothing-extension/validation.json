@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-14",
+  "base_commit": "7253f524a406d51e7b64929a673846591a72a62f",
+  "scope": "Tree/chord theorem and normalized short-edge trial; general asymmetric trial budget and unrestricted density remain open",
+  "analytical_review": "Single-assistant derivation and self-audit; no independent reviewer",
+  "exact_replay": {
+    "command": "python exact_checks.py",
+    "exit_code": 0,
+    "counted_assertions": 1669,
+    "root_fixtures": 8,
+    "base_records": 22,
+    "log_sign_method": "directed rational/dyadic enclosures imported from the two-star checker"
+  },
+  "dependency_sha256": "24a88e06b04914a57e07c258e300847324f13dc9a60ec9c6f5afed7a5d21d24e",
+  "lean_run": false,
+  "independent_review": false,
+  "hashes": {
+    "README.md": "f594d9bee288e8317ce6a2af31854b709f22542524f6ff3ae502b00fd66835f5",
+    "proof.md": "058620ec9f5a75e595702216de8d40cc5b6bde4f3472e7d7d6e0f212faf8dd62",
+    "short_edge.md": "c7b6d9023a2135a25a569a2108412a27f7e0d4ced92f17b3048cb581efba3d31",
+    "exact_checks.py": "d08f4e7f9ff02d5f071a3b79674b6810bba5778af2763eb58d2875aa44c4b420",
+    "exact_output.txt": "41313c6bf4aef8a85730594d07db73cf65fc7917cf4596334e37a1062335afb2"
+  }
+}
