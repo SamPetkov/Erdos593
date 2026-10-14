@@ -866,6 +866,10 @@ review/2026-10-13-consolidation/preconsolidation-inventory.json
 review/2026-10-13-readability/README.md
 review/2026-10-13-readability/comparison.md
 review/2026-10-13-readability/erdos593_obligatory_triple_systems.tex
+review/2026-10-14-publication-recovery/README.md
+review/2026-10-14-publication-recovery/build-verification.json
+review/2026-10-14-publication-recovery/erdos593_author_review.pdf
+review/2026-10-14-publication-recovery/pr-inventory.json
 scripts/check_verified_snapshot.py
 scripts/sync_manuscript_artifacts.py
 tmp/ARISTOTLE_LOG.proposed.md
