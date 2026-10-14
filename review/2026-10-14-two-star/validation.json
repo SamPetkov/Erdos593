@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-14",
+  "base_commit": "70675e5ce5646718df4e6fd4f93c509ef3447a77",
+  "scope": "Two stated all-host exponent ranges; unrestricted theorem remains open",
+  "analytical_review": "Single-assistant derivation and self-audit; no independent reviewer",
+  "exact_replay": {
+    "command": "python exact_checks.py",
+    "exit_code": 0,
+    "counted_assertions": 687,
+    "log_sign_method": "directed 256-bit dyadic bounds, 100 terms, exact remainder"
+  },
+  "lean_run": false,
+  "independent_review": false,
+  "hashes": {
+    "proof.md": "ad094b95f62891b229c814aa17406633227852d4e84c4387c9ca979f7acae9e6",
+    "exact_checks.py": "24a88e06b04914a57e07c258e300847324f13dc9a60ec9c6f5afed7a5d21d24e",
+    "exact_output.txt": "45e5f10fdb9176c5426cbe52ed74b9385fe377c4bd53b46c8cae55a20c298ba9",
+    "README.md": "be39e2fbfbc2aa5e826707947a4f2729c9d3d976afa8466496c1a3d5f5756dd3"
+  }
+}

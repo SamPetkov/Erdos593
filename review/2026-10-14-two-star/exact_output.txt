@@ -1,0 +1,14 @@
+checked singleton both orientations
+checked independent_nonuniform both orientations
+checked identity_nonuniform both orientations
+checked period_two both orientations
+checked negative_mode both orientations
+checked reducible_extra_unit_zero both orientations
+checked positive_singular_four both orientations
+checked supplied_positive_three both orientations
+checked supplied_zero_three both orientations
+checked generic_five both orientations
+PASS 687 exact assertions
+strict_A F= 1.000124270451095 V enclosure= (0.00012182424008934218, 0.00012182424008934218)
+strict_B F= 1.0002939210459627 V enclosure= (0.00027854228342948925, 0.00027854228342948925)
+positive_short_edge_obstruction F= 9.475444078444024 V enclosure= (-0.32185729536364854, -0.32185729536364854)
